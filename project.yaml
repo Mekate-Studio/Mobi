@@ -1,0 +1,4 @@
+modules:
+  - shared
+  - android-app
+  - ios-app

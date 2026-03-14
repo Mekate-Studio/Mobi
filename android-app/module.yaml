@@ -1,0 +1,17 @@
+product: android/app
+
+dependencies:
+  - ../shared
+  - androidx.activity:activity-compose:1.8.2
+
+settings:
+  compose: enabled
+  junit: junit-4
+  android:
+    namespace: com.example.myfirstapp
+    applicationId: com.example.myfirstapp
+    minSdk: 23
+    compileSdk: 36
+    targetSdk: 36
+    versionCode: 1
+    versionName: "1.0"

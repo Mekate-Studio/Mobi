@@ -1,3 +1,10 @@
+.DS_Store
 /.gradle/
+/.amper/
+/.amper-cache/
+/build/
+/android-app/build/
+/ios-app/build/
+/shared/build/
 local.properties
 /.idea/

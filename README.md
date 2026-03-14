@@ -1,7 +1,80 @@
+# Kotlin Multiplatform + Amper
+
+This repository is now an [Amper](https://www.amper.org/) project with a small
+Kotlin Multiplatform setup:
+
+- `shared`: common Compose UI and shared Kotlin logic
+- `android-app`: Android application target
+- `ios-app`: iOS application target
+
+The sample app still renders a simple greeting, but the UI now comes from shared
+multiplatform code instead of an Android-only XML layout.
+
+# Project layout
+
+```text
+project.yaml
+shared/
+android-app/
+ios-app/
+```
+
+- `project.yaml` is the Amper entrypoint for the workspace.
+- Each module has its own `module.yaml`.
+- The checked-in `amper` and `amper.bat` scripts are the project wrapper.
+
+# Requirements
+
+- JDK 17+
+- Android SDK for Android builds
+- Xcode for iOS builds
+
+Amper will download additional toolchains on first build if they are missing.
+In sandboxed or CI environments, set `AMPER_BOOTSTRAP_CACHE_DIR` to a writable
+project-local path such as `.amper-cache`.
+
+# Common commands
+
+Build everything:
+
+```bash
+AMPER_BOOTSTRAP_CACHE_DIR=$PWD/.amper-cache ./amper build
+```
+
+Build just the Android app:
+
+```bash
+AMPER_BOOTSTRAP_CACHE_DIR=$PWD/.amper-cache ./amper build -m android-app -p android -v debug
+```
+
+Run tests:
+
+```bash
+AMPER_BOOTSTRAP_CACHE_DIR=$PWD/.amper-cache ./amper test -m shared -p android
+```
+
+Open or generate the iOS Xcode project:
+
+```bash
+AMPER_BOOTSTRAP_CACHE_DIR=$PWD/.amper-cache ./amper build -m ios-app
+```
+
+After the first iOS build, Amper manages `ios-app/module.xcodeproj`.
+
+# CI and release tooling
+
+GitLab CI and fastlane now invoke Amper instead of Gradle. They use a
+project-local Amper cache (`.amper-cache`), and the Play Store lanes still
+expect Android signing and Google Play credentials to be configured before
+publishing will work.
+
+
+
+
 # Introduction
 
 This is a template for doing Android development using GitLab and [fastlane](https://fastlane.tools/).
-It is based on the tutorial for Android apps in general that can be found [here](https://developer.android.com/training/basics/firstapp/). 
+It is based on the tutorial for Android apps in general that can be found [here](https://developer.android.com/training/basics/firstapp/).
 If you're learning Android at the same time, you can also follow along that
 tutorial and learn how to do everything all at once.
 
@@ -54,7 +127,7 @@ for every pipeline run would be very slow.
 ### Gradle configuration
 
 The gradle configuration is exactly as output by Android Studio except for the
-version name being updated to 
+version name being updated to
 
 Instead of:
 
@@ -68,7 +141,7 @@ You'll want to update this for whatever versioning scheme you prefer.
 
 ### Build configuration (`.gitlab-ci.yml`)
 
-The sample project also contains a basic `.gitlab-ci.yml` which will successfully 
+The sample project also contains a basic `.gitlab-ci.yml` which will successfully
 build the Android application.
 
 Note that for publishing to the test channels or production, you'll need to set
