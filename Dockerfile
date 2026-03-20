@@ -33,4 +33,3 @@ COPY Gemfile.lock .
 COPY Gemfile .
 RUN gem install bundler
 RUN bundle install
-RUN bundle update fastlane

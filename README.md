@@ -68,92 +68,206 @@ project-local Amper cache (`.amper-cache`), and the Play Store lanes still
 expect Android signing and Google Play credentials to be configured before
 publishing will work.
 
-
-
-
-# Introduction
-
-This is a template for doing Android development using GitLab and [fastlane](https://fastlane.tools/).
-It is based on the tutorial for Android apps in general that can be found [here](https://developer.android.com/training/basics/firstapp/).
-If you're learning Android at the same time, you can also follow along that
-tutorial and learn how to do everything all at once.
+The pipeline uses the root `Dockerfile` to build a reusable Android/fastlane
+image and then runs the fastlane lanes from `.gitlab-ci.yml` inside that image.
 
 # Reference links
 
 - [GitLab CI Documentation](https://docs.gitlab.com/ee/ci/)
-- [Blog post: Android publishing with GitLab and fastlane](https://about.gitlab.com/2019/01/28/android-publishing-with-gitlab-and-fastlane/)
+- [GitLab Runner Docker executor](https://docs.gitlab.com/runner/executors/docker/)
+- [Fastlane Android release deployment](https://docs.fastlane.tools/getting-started/android/release-deployment/)
+- [fastlane `upload_to_play_store` setup](https://docs.fastlane.tools/actions/upload_to_play_store/)
+- [GitLab blog post: Android publishing with GitLab and fastlane](https://about.gitlab.com/2019/01/28/android-publishing-with-gitlab-and-fastlane/)
 
-You'll definitely want to read through the blog post since that walks you in detail
-through a working production configuration using this model.
+# How The Pipeline Works
 
-# Getting started
+## GitLab CI
 
-First thing is to follow the [Android tutorial](https://developer.android.com/training/basics/firstapp/) and
-get Android Studio installed on your machine, so you can do development using
-the Android IDE. Other IDE options are possible, but not directly described or
-supported here. If you're using your own IDE, it should be fairly straightforward
-to convert these instructions to use with your preferred toolchain.
+GitLab orchestrates the pipeline from `.gitlab-ci.yml`:
 
-## What's contained in this project
+- `environment`: build or refresh the branch-specific Docker image used by the
+  rest of the jobs
+- `build`: run `fastlane buildDebug` and `fastlane buildRelease`
+- `test`: run `fastlane test`
+- `internal`, `alpha`, `beta`, `production`: manual Play Store deployment and
+  promotion lanes
 
-### Android code
+The production promotion job is limited to the default branch.
 
-The state of this project is as if you followed the first few steps in the linked
-[Android tutorial](https://developer.android.com/training/basics/firstapp/) and
-have created your project. You're definitely going to want to open up the
-project and change the settings to match what you plan to build. In particular,
-you're at least going to want to change the following:
+## Docker
 
-- Application Name: "My First App"
-- Company Domain: "example.com"
+The root `Dockerfile` defines the CI build environment:
 
-### Fastlane files
+- JDK 17
+- Android command-line tools and SDK packages matching `android-app/module.yaml`
+- Ruby, Bundler, and the gems from `Gemfile.lock`
 
-It also has fastlane setup per our [blog post](https://about.gitlab.com/2019/01/28/android-publishing-with-gitlab-and-fastlane/) on
-getting GitLab CI set up with fastlane. Note that you may want to update your
-fastlane bundle to the latest version; if a newer version is available, the pipeline
-job output will tell you.
+Using a custom image keeps Android SDK installation out of every job and makes
+the build environment more repeatable.
 
-### Dockerfile build environment
+## Fastlane
 
-In the root there is a Dockerfile which defines a build environment which will be
-used to ensure consistent and reliable builds of your Android application using
-the correct Android SDK and other details you expect. Feel free to add any
-build-time tools or whatever else you need here.
+Fastlane is the command layer between GitLab and Amper:
 
-We generate this environment as needed because installing the Android SDK
-for every pipeline run would be very slow.
+- `buildDebug` and `buildRelease` call `./amper build`
+- `test` calls `./amper test`
+- `internal` uploads the latest release artifact to the Play internal track
+- the promotion lanes move an already-uploaded build across Play tracks
 
-### Gradle configuration
+The Play configuration lives in `fastlane/Appfile` and is now driven by
+environment variables so the same setup works both in CI and locally.
 
-The gradle configuration is exactly as output by Android Studio except for the
-version name being updated to
+# CI Configuration
 
-Instead of:
+## Versioning
 
-`versionName "1.0"`
+Before Android builds run, CI applies version values to
+`android-app/module.yaml`:
 
-It is now set to:
+- `VERSION_CODE` defaults to `CI_PIPELINE_IID`
+- `VERSION_NAME` defaults to `1.0-<CI_COMMIT_SHORT_SHA>`
 
-`versionName "1.0-${System.env.VERSION_SHA}"`
+This is handled by `scripts/ci/apply_android_version.sh`. It keeps
+`versionCode` increasing for Play Store uploads without requiring manual edits to
+the module file.
 
-You'll want to update this for whatever versioning scheme you prefer.
+## Required GitLab variables
 
-### Build configuration (`.gitlab-ci.yml`)
+Set these in GitLab CI/CD before using the publish jobs:
 
-The sample project also contains a basic `.gitlab-ci.yml` which will successfully
-build the Android application.
+- `GOOGLE_PLAY_JSON_KEY`: either the raw service-account JSON content or a
+  GitLab file variable pointing to that JSON file
+- `ANDROID_PACKAGE_NAME`: optional override if you changed the package name from
+  `com.example.myfirstapp`
+- `ANDROID_KEYSTORE_FILE` or `ANDROID_KEYSTORE_BASE64`: the Android release
+  keystore as either a file variable or a base64-encoded value
+- `ANDROID_KEYSTORE_PASSWORD`: the keystore password
+- `ANDROID_KEY_ALIAS`: the alias of the upload key inside the keystore
+- `ANDROID_KEY_PASSWORD`: the password for that key alias
 
-Note that for publishing to the test channels or production, you'll need to set
-up your secret API key. The stub code is here for that, but please see our
-[blog post](https://about.gitlab.com/2019/01/28/android-publishing-with-gitlab-and-fastlane/) for
-details on how to set this up completely. In the meantime, publishing steps will fail.
+You still need Android signing configured for release builds if you plan to
+publish to Google Play.
 
-The build script also handles automatic versioning by relying on the CI pipeline
-ID to generate a unique, ever increasing number. If you have a different versioning
-scheme you may want to change this.
+## GitLab provisioning checklist
 
-```yaml
-    - "export VERSION_CODE=$(($CI_PIPELINE_IID)) && echo $VERSION_CODE"
-    - "export VERSION_SHA=`echo ${CI_COMMIT_SHA:0:8}` && echo $VERSION_SHA"
+Use this checklist to make the CI pipeline fully operational:
+
+1. Enable a GitLab Runner that can run Docker jobs.
+2. Make sure the runner allows Docker-in-Docker for the `environment` stage.
+3. Confirm the project container registry is enabled, because the pipeline
+   pushes the CI image to `$CI_REGISTRY_IMAGE`.
+4. Add `GOOGLE_PLAY_JSON_KEY` in GitLab CI/CD settings.
+5. Add `ANDROID_PACKAGE_NAME` if your app no longer uses
+   `com.example.myfirstapp`.
+6. Add the Android signing variables:
+   `ANDROID_KEYSTORE_FILE` or `ANDROID_KEYSTORE_BASE64`,
+   `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and
+   `ANDROID_KEY_PASSWORD`.
+7. Protect production secrets if you only want them available on the default
+   branch.
+
+For Google Play itself, provision these items first:
+
+1. Create the app in Google Play Console.
+2. Create a Google Cloud service account with Android Publisher access.
+3. Grant that service account access to the app in Play Console.
+4. Download the service-account JSON key and store it in
+   `GOOGLE_PLAY_JSON_KEY`.
+
+For Android release signing, the repository now uses Amper's official
+`settings.android.signing` support with `android-app/keystore.properties`. In
+CI, the keystore and properties file are generated by
+`scripts/ci/write_android_signing_files.sh` from the signing variables above.
+An example properties file is committed at
+`android-app/keystore.properties.example`.
+
+# Running Locally
+
+You can run the same build and test steps locally without GitLab:
+
+```bash
+bundle install
+export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
+export VERSION_CODE=1
+export VERSION_NAME="1.0-local"
+./scripts/ci/apply_android_version.sh
+bundle exec fastlane buildDebug
+bundle exec fastlane test
+bundle exec fastlane buildRelease
 ```
+
+To approximate CI more closely, run the commands inside the repo Docker image:
+
+```bash
+docker build -t b3-ci .
+docker run --rm -it -v "$PWD:/work" -w /work b3-ci bundle exec fastlane buildDebug
+```
+
+For local Play uploads, set one of the following first:
+
+- `GOOGLE_PLAY_JSON_KEY_FILE=/absolute/path/to/google-play-key.json`
+- `GOOGLE_PLAY_JSON_KEY='{"type":"service_account",...}'`
+
+If you use `GOOGLE_PLAY_JSON_KEY`, you can materialize it with:
+
+```bash
+./scripts/ci/write_google_play_key.sh "$PWD/google_play_api_key.json"
+export GOOGLE_PLAY_JSON_KEY_FILE="$PWD/google_play_api_key.json"
+```
+
+## Local provisioning checklist
+
+To run the pipeline steps locally, provision this machine with:
+
+1. JDK 17 or newer.
+2. Ruby and Bundler.
+3. Docker Desktop or another working Docker Engine install if you want to mimic
+   CI with the repo image.
+4. Android SDK command-line tools and the SDK packages needed by the project if
+   you want to build outside Docker.
+5. Xcode if you also want to build the iOS app.
+
+Recommended local setup flow:
+
+1. Install gems with `bundle install`.
+2. Export `AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"`.
+3. Run `./scripts/ci/apply_android_version.sh` after setting `VERSION_CODE` and
+   `VERSION_NAME`.
+4. Run `bundle exec fastlane buildDebug`.
+5. Run `bundle exec fastlane test`.
+6. Materialize signing files with `./scripts/ci/write_android_signing_files.sh`.
+7. Run `bundle exec fastlane buildRelease`.
+
+If you want to exercise publishing locally, also provision:
+
+1. A Google Play service-account JSON key.
+2. `GOOGLE_PLAY_JSON_KEY_FILE` or `GOOGLE_PLAY_JSON_KEY`.
+3. Android release signing values:
+   `ANDROID_KEYSTORE_FILE` or `ANDROID_KEYSTORE_BASE64`,
+   `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and
+   `ANDROID_KEY_PASSWORD`.
+
+The fastest way to approximate CI locally is:
+
+1. Install Docker.
+2. Run `docker build -t b3-ci .`.
+3. Run the fastlane lanes inside that image.
+
+If you want to validate the GitLab YAML itself, use GitLab CI Lint in the
+project UI after committing changes.
+
+## Local signing example
+
+If you already have a keystore on disk, this is the simplest local setup:
+
+```bash
+export ANDROID_KEYSTORE_FILE="$PWD/secrets/upload-keystore.jks"
+export ANDROID_KEYSTORE_PASSWORD="your-keystore-password"
+export ANDROID_KEY_ALIAS="upload"
+export ANDROID_KEY_PASSWORD="your-key-password"
+./scripts/ci/write_android_signing_files.sh
+bundle exec fastlane buildRelease
+```
+
+If you prefer not to keep the keystore as a file path in your shell, you can
+base64-encode it and use `ANDROID_KEYSTORE_BASE64` instead.

@@ -10,9 +10,6 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:android)
 
 def amper_cache_dir
@@ -49,9 +46,12 @@ platform :android do
 
   desc "Submit a new Internal Build to Play Store"
   lane :internal do
+    artifact = latest_android_artifact!(pattern: "build/**/*release*.{apk,aab}")
+
     upload_to_play_store(
       track: 'internal',
-      apk: latest_android_artifact!(pattern: "build/**/*release*.{apk,aab}")
+      aab: File.extname(artifact) == ".aab" ? artifact : nil,
+      apk: File.extname(artifact) == ".apk" ? artifact : nil
     )
   end
 

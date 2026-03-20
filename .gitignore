@@ -8,3 +8,6 @@
 /shared/build/
 local.properties
 /.idea/
+android-app/keystore.properties
+android-app/*.jks
+android-app/*.keystore

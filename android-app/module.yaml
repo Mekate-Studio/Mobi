@@ -13,5 +13,8 @@ settings:
     minSdk: 23
     compileSdk: 36
     targetSdk: 36
+    signing:
+      enabled: true
+      propertiesFile: ./keystore.properties
     versionCode: 1
     versionName: "1.0"

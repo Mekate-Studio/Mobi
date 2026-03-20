@@ -9,6 +9,9 @@ stages:
 
 variables:
   AMPER_BOOTSTRAP_CACHE_DIR: "$CI_PROJECT_DIR/.amper-cache"
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
 
 cache:
   key: amper-cache
@@ -17,12 +20,13 @@ cache:
 
 
 .updateContainerJob:
-  image: docker:stable
+  image: docker:27.3.1
   stage: environment
   services:
-    - docker:dind
+    - name: docker:27.3.1-dind
+      alias: docker
   script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
@@ -38,7 +42,7 @@ ensureContainer:
   allow_failure: true
   before_script:
     - "mkdir -p ~/.docker && echo '{\"experimental\": \"enabled\"}' > ~/.docker/config.json"
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
     # Skip update container `script` if the container already exists
     # via https://gitlab.com/gitlab-org/gitlab-ce/issues/26866#note_97609397 -> https://stackoverflow.com/a/52077071/796832
     - docker manifest inspect $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG > /dev/null && exit || true
@@ -47,15 +51,33 @@ ensureContainer:
       - Dockerfile
 
 
-.build_job:
+.android_job:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  stage: build
   before_script:
     - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
-    - chmod +x amper
+    - chmod +x amper scripts/ci/*.sh
+    - export VERSION_CODE="${CI_PIPELINE_IID:-1}"
+    - export VERSION_SHA="${CI_COMMIT_SHORT_SHA:-local}"
+    - export VERSION_NAME="1.0-${VERSION_SHA}"
+    - ./scripts/ci/apply_android_version.sh
+
+.build_job:
+  extends: .android_job
+  stage: build
   artifacts:
     paths:
       - build
+
+.release_job:
+  extends: .build_job
+  before_script:
+    - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
+    - chmod +x amper scripts/ci/*.sh
+    - export VERSION_CODE="${CI_PIPELINE_IID:-1}"
+    - export VERSION_SHA="${CI_COMMIT_SHORT_SHA:-local}"
+    - export VERSION_NAME="1.0-${VERSION_SHA}"
+    - ./scripts/ci/apply_android_version.sh
+    - ./scripts/ci/write_android_signing_files.sh
 
 buildDebug:
   extends: .build_job
@@ -63,37 +85,38 @@ buildDebug:
     - bundle exec fastlane buildDebug
 
 buildRelease:
-  extends: .build_job
+  extends: .release_job
   script:
     - bundle exec fastlane buildRelease
   environment:
     name: production
 
 testDebug:
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  extends: .android_job
   stage: test
   dependencies:
     - buildDebug
-  before_script:
-    - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
-    - chmod +x amper
   script:
     - bundle exec fastlane test
 
 .promote_job:
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  extends: .android_job
   when: manual
   dependencies: [ ]
   before_script:
-    - echo You need to add your google_play_api_key.json file for this to work. Please see project's README.md. && false
     - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
-    - chmod +x amper
+    - chmod +x amper scripts/ci/*.sh
+    - export VERSION_CODE="${CI_PIPELINE_IID:-1}"
+    - export VERSION_SHA="${CI_COMMIT_SHORT_SHA:-local}"
+    - export VERSION_NAME="1.0-${VERSION_SHA}"
+    - ./scripts/ci/apply_android_version.sh
+    - export GOOGLE_PLAY_JSON_KEY_FILE="$CI_PROJECT_DIR/google_play_api_key.json"
+    - ./scripts/ci/write_google_play_key.sh "$GOOGLE_PLAY_JSON_KEY_FILE" > /dev/null
   after_script:
-    - rm -f ~/google_play_api_key.json
+    - rm -f "$CI_PROJECT_DIR/google_play_api_key.json"
 
 publishInternal:
   extends: .promote_job
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: internal
   dependencies:
     - buildRelease
@@ -116,9 +139,7 @@ promoteBeta:
 promoteProduction:
   extends: .promote_job
   stage: production
-  # We only allow production promotion on master because
-  # in this way you can protect production scoped secret variables
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
   script:
     - bundle exec fastlane promote_beta_to_production
