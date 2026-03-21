@@ -8,6 +8,11 @@ stages:
 
 variables:
   AMPER_BOOTSTRAP_CACHE_DIR: "$CI_PROJECT_DIR/.amper-cache"
+  PATH: "/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/4.0.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+  BUNDLE_PATH: "$CI_PROJECT_DIR/.bundle"
+  BUNDLE_BIN: "$CI_PROJECT_DIR/.bundle/bin"
+  GEM_HOME: "/opt/homebrew/lib/ruby/gems/4.0.0"
+  GEM_PATH: "/opt/homebrew/lib/ruby/gems/4.0.0"
 
 cache:
   key: amper-cache
@@ -21,6 +26,8 @@ cache:
   before_script:
     - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
     - chmod +x amper scripts/ci/*.sh
+    - ruby --version
+    - bundle --version
     - bundle install
     - export VERSION_CODE="${CI_PIPELINE_IID:-1}"
     - export VERSION_SHA="${CI_COMMIT_SHORT_SHA:-local}"
