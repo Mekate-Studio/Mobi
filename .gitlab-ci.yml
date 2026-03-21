@@ -93,6 +93,19 @@ iosBuildDebug:
       - build/tasks/_ios-app_buildIosAppIosX64Debug
       - ios-app/module.xcodeproj
 
+iosBuildRelease:
+  extends: .ios_job
+  stage: build
+  script:
+    - ./scripts/ci/run_amper_with_logs.sh build -m ios-app
+  artifacts:
+    paths:
+      - build/logs
+      - build/tasks/_ios-app_buildIosAppIosArm64Debug
+      - build/tasks/_ios-app_buildIosAppIosSimulatorArm64Debug
+      - build/tasks/_ios-app_buildIosAppIosX64Debug
+      - ios-app/module.xcodeproj
+
 .promote_job:
   extends: .android_job
   when: manual
