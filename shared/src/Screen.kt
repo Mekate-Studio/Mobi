@@ -1,4 +1,4 @@
-package com.example.myfirstapp.shared
+package studio.mekate.b3.shared
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

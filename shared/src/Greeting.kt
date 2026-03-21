@@ -1,4 +1,4 @@
-package com.example.myfirstapp.shared
+package studio.mekate.b3.shared
 
 fun buildGreeting(name: String): String = "Hello, $name!"
 

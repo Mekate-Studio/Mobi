@@ -8,8 +8,8 @@ settings:
   compose: enabled
   junit: junit-4
   android:
-    namespace: com.example.myfirstapp
-    applicationId: com.example.myfirstapp
+    namespace: studio.mekate.b3
+    applicationId: studio.mekate.b3
     minSdk: 23
     compileSdk: 36
     targetSdk: 36

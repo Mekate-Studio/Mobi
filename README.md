@@ -138,7 +138,7 @@ Set these in GitLab CI/CD before using the publish jobs:
 - `GOOGLE_PLAY_JSON_KEY`: either the raw service-account JSON content or a
   GitLab file variable pointing to that JSON file
 - `ANDROID_PACKAGE_NAME`: optional override if you changed the package name from
-  `com.example.myfirstapp`
+  `studio.mekate.b3`
 - `ANDROID_KEYSTORE_FILE` or `ANDROID_KEYSTORE_BASE64`: the Android release
   keystore as either a file variable or a base64-encoded value
 - `ANDROID_KEYSTORE_PASSWORD`: the keystore password
@@ -158,7 +158,7 @@ Use this checklist to make the CI pipeline fully operational:
    pushes the CI image to `$CI_REGISTRY_IMAGE`.
 4. Add `GOOGLE_PLAY_JSON_KEY` in GitLab CI/CD settings.
 5. Add `ANDROID_PACKAGE_NAME` if your app no longer uses
-   `com.example.myfirstapp`.
+   `studio.mekate.b3`.
 6. Add the Android signing variables:
    `ANDROID_KEYSTORE_FILE` or `ANDROID_KEYSTORE_BASE64`,
    `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and
