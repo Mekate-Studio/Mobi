@@ -304,9 +304,11 @@ The current runner choice already prepares the repo for iOS CI:
 - Apple signing, certificates, and provisioning profiles should be added only
   when the iOS target is ready for CI
 
+The first CI shape now added for iOS is `iosBuildDebug`, which runs `./amper build -m ios-app`
+on the macOS runner and stores the generated Xcode build outputs and logs as artifacts.
+
 A reasonable future job layout is:
 
-- `iosBuildDebug`
 - `iosTest`
 - `iosArchive`
 - `iosTestFlight`

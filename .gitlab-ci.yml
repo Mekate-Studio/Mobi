@@ -50,6 +50,16 @@ cache:
     paths:
       - build
 
+.ios_job:
+  tags:
+    - macos
+  before_script:
+    - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
+    - chmod +x amper scripts/ci/*.sh
+    - export JAVA_HOME="$(/usr/libexec/java_home)"
+    - echo "JAVA_HOME=$JAVA_HOME"
+    - xcodebuild -version
+
 buildDebug:
   extends: .build_job
   script:
@@ -69,6 +79,19 @@ testDebug:
     - buildDebug
   script:
     - ./scripts/ci/run_fastlane_with_amper_logs.sh test
+
+iosBuildDebug:
+  extends: .ios_job
+  stage: build
+  script:
+    - ./scripts/ci/run_amper_with_logs.sh build -m ios-app
+  artifacts:
+    paths:
+      - build/logs
+      - build/tasks/_ios-app_buildIosAppIosArm64Debug
+      - build/tasks/_ios-app_buildIosAppIosSimulatorArm64Debug
+      - build/tasks/_ios-app_buildIosAppIosX64Debug
+      - ios-app/module.xcodeproj
 
 .promote_job:
   extends: .android_job
