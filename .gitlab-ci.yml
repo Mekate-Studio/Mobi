@@ -50,16 +50,13 @@ cache:
     paths:
       - build
 
-.release_job:
-  extends: .build_job
-
 buildDebug:
   extends: .build_job
   script:
     - ./scripts/ci/run_fastlane_with_amper_logs.sh buildDebug
 
 buildRelease:
-  extends: .release_job
+  extends: .build_job
   script:
     - ./scripts/ci/run_fastlane_with_amper_logs.sh buildRelease
   environment:
