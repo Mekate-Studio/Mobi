@@ -11,21 +11,30 @@ if [ -z "$VERSION_CODE" ] || [ -z "$VERSION_NAME" ]; then
   exit 1
 fi
 
-python3 - "$MODULE_FILE" "$VERSION_CODE" "$VERSION_NAME" <<'PY'
-from pathlib import Path
-import re
-import sys
+tmp_file="$(mktemp)"
+code_updated=0
+name_updated=0
 
-module_file = Path(sys.argv[1])
-version_code = sys.argv[2]
-version_name = sys.argv[3]
+while IFS= read -r line; do
+  case "$line" in
+    *versionCode:*)
+      printf '%s\n' "${line%%versionCode:*}versionCode: ${VERSION_CODE}" >> "$tmp_file"
+      code_updated=1
+      ;;
+    *versionName:*)
+      printf '%s\n' "${line%%versionName:*}versionName: \"${VERSION_NAME}\"" >> "$tmp_file"
+      name_updated=1
+      ;;
+    *)
+      printf '%s\n' "$line" >> "$tmp_file"
+      ;;
+  esac
+done < "$MODULE_FILE"
 
-text = module_file.read_text()
-text, code_count = re.subn(r'(^\s*versionCode:\s*).+$', rf'\g<1>{version_code}', text, flags=re.MULTILINE)
-text, name_count = re.subn(r'(^\s*versionName:\s*).+$', rf'\g<1>"{version_name}"', text, flags=re.MULTILINE)
+if [ "$code_updated" -ne 1 ] || [ "$name_updated" -ne 1 ]; then
+  rm -f "$tmp_file"
+  echo "Could not update versionCode/versionName in module file" >&2
+  exit 1
+fi
 
-if code_count != 1 or name_count != 1:
-    raise SystemExit("Could not update versionCode/versionName in module file")
-
-module_file.write_text(text)
-PY
+mv "$tmp_file" "$MODULE_FILE"
