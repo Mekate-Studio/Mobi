@@ -25,6 +25,11 @@ if [ -d build/logs ]; then
   done
 else
   echo "No build/logs directory found."
+  if [ -d build ]; then
+    echo
+    echo "Recent files under build/:"
+    find build -maxdepth 4 -type f | sort | tail -n 50 || true
+  fi
 fi
 
 exit 1
