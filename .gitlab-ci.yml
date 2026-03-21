@@ -60,6 +60,7 @@ ensureContainer:
     - export VERSION_SHA="${CI_COMMIT_SHORT_SHA:-local}"
     - export VERSION_NAME="1.0-${VERSION_SHA}"
     - ./scripts/ci/apply_android_version.sh
+    - if [ -n "${ANDROID_KEYSTORE_FILE:-}" ] || [ -n "${ANDROID_KEYSTORE_BASE64:-}" ]; then ./scripts/ci/write_android_signing_files.sh; fi
 
 .build_job:
   extends: .android_job
@@ -70,24 +71,16 @@ ensureContainer:
 
 .release_job:
   extends: .build_job
-  before_script:
-    - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
-    - chmod +x amper scripts/ci/*.sh
-    - export VERSION_CODE="${CI_PIPELINE_IID:-1}"
-    - export VERSION_SHA="${CI_COMMIT_SHORT_SHA:-local}"
-    - export VERSION_NAME="1.0-${VERSION_SHA}"
-    - ./scripts/ci/apply_android_version.sh
-    - ./scripts/ci/write_android_signing_files.sh
 
 buildDebug:
   extends: .build_job
   script:
-    - bundle exec fastlane buildDebug
+    - ./scripts/ci/run_fastlane_with_amper_logs.sh buildDebug
 
 buildRelease:
   extends: .release_job
   script:
-    - bundle exec fastlane buildRelease
+    - ./scripts/ci/run_fastlane_with_amper_logs.sh buildRelease
   environment:
     name: production
 
@@ -97,7 +90,7 @@ testDebug:
   dependencies:
     - buildDebug
   script:
-    - bundle exec fastlane test
+    - ./scripts/ci/run_fastlane_with_amper_logs.sh test
 
 .promote_job:
   extends: .android_job
