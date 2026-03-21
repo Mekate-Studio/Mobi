@@ -12,16 +12,24 @@
 
 default_platform(:android)
 
+def project_root
+  File.expand_path("..", __dir__)
+end
+
+def amper_path
+  File.join(project_root, "amper")
+end
+
 def amper_cache_dir
-  ENV["AMPER_BOOTSTRAP_CACHE_DIR"] || File.expand_path("../.amper-cache", __dir__)
+  ENV["AMPER_BOOTSTRAP_CACHE_DIR"] || File.join(project_root, ".amper-cache")
 end
 
 def amper!(command)
-  sh("AMPER_BOOTSTRAP_CACHE_DIR='#{amper_cache_dir}' ./amper #{command}")
+  sh("cd '#{project_root}' && AMPER_BOOTSTRAP_CACHE_DIR='#{amper_cache_dir}' '#{amper_path}' #{command}")
 end
 
 def latest_android_artifact!(pattern: "build/**/*.{apk,aab}")
-  candidates = Dir[pattern]
+  candidates = Dir[File.join(project_root, pattern)]
   UI.user_error!("No Android artifact found under build/") if candidates.empty?
 
   candidates.max_by { |path| File.mtime(path) }

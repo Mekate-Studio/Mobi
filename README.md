@@ -199,9 +199,13 @@ bundle exec fastlane buildRelease
 To approximate CI more closely, run the commands inside the repo Docker image:
 
 ```bash
-docker build -t b3-ci .
+docker build --platform linux/amd64 -t b3-ci .
 docker run --rm -it -v "$PWD:/work" -w /work b3-ci bundle exec fastlane buildDebug
 ```
+
+On Apple Silicon Macs, use an `amd64` container for Android builds. The Android
+toolchain inside the image can fail under `arm64` with AAPT2 startup errors even
+when the image itself builds successfully.
 
 For local Play uploads, set one of the following first:
 
@@ -250,7 +254,7 @@ If you want to exercise publishing locally, also provision:
 The fastest way to approximate CI locally is:
 
 1. Install Docker.
-2. Run `docker build -t b3-ci .`.
+2. On Apple Silicon, run `docker build --platform linux/amd64 -t b3-ci .`.
 3. Run the fastlane lanes inside that image.
 
 If you want to validate the GitLab YAML itself, use GitLab CI Lint in the
