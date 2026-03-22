@@ -21,7 +21,9 @@ cmd=(
   -project "${project_root}/ios-app/module.xcodeproj"
   -scheme app
   -configuration "${configuration}"
-  -destination "generic/platform=iOS Simulator"
+  -sdk iphonesimulator
+  -arch arm64
+  -destination "platform=iOS Simulator,name=iPhone 16"
   -derivedDataPath "${derived_data_dir}"
   CODE_SIGNING_ALLOWED=NO
   CODE_SIGNING_REQUIRED=NO
