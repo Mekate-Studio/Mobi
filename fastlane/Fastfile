@@ -10,6 +10,8 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
+require "shellwords"
+
 default_platform(:android)
 
 def project_root
@@ -58,12 +60,20 @@ def ios_development_team!
   ENV.fetch("IOS_DEVELOPMENT_TEAM")
 end
 
+def ios_provisioning_profile_specifier!
+  ENV.fetch("IOS_PROVISIONING_PROFILE_SPECIFIER")
+end
+
 def ios_version
   ENV.fetch("IOS_VERSION", "1.0")
 end
 
 def ios_build_number
   ENV.fetch("IOS_BUILD_NUMBER", ENV.fetch("CI_PIPELINE_IID", "1"))
+end
+
+def shell_escape(value)
+  Shellwords.escape(value)
 end
 
 def app_store_connect_api_key_from_env!
@@ -130,15 +140,18 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         method: "app-store",
-        signingStyle: "automatic",
-        teamID: ios_development_team!
+        signingStyle: "manual",
+        teamID: ios_development_team!,
+        provisioningProfiles: {
+          ios_bundle_identifier! => ios_provisioning_profile_specifier!
+        }
       },
       xcargs: [
-        "CODE_SIGN_STYLE=Automatic",
-        "DEVELOPMENT_TEAM=#{ios_development_team!}",
-        "PRODUCT_BUNDLE_IDENTIFIER=#{ios_bundle_identifier!}",
-        "MARKETING_VERSION=#{ios_version}",
-        "CURRENT_PROJECT_VERSION=#{ios_build_number}"
+        "DEVELOPMENT_TEAM=#{shell_escape(ios_development_team!)}",
+        "PRODUCT_BUNDLE_IDENTIFIER=#{shell_escape(ios_bundle_identifier!)}",
+        "PROVISIONING_PROFILE_SPECIFIER=#{shell_escape(ios_provisioning_profile_specifier!)}",
+        "MARKETING_VERSION=#{shell_escape(ios_version)}",
+        "CURRENT_PROJECT_VERSION=#{shell_escape(ios_build_number)}"
       ].join(" "),
       output_directory: File.join(project_root, "build", "ios"),
       output_name: "ios-app"

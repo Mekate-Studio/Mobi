@@ -364,6 +364,8 @@ The release/TestFlight flow expects these build-time values:
 - `IOS_BUNDLE_IDENTIFIER`: the real App Store bundle ID, for example
   `studio.mekate.b3`
 - `IOS_DEVELOPMENT_TEAM`: your Apple Developer team ID
+- `IOS_PROVISIONING_PROFILE_SPECIFIER`: the exact Xcode provisioning profile
+  name used for the App Store release build, for example `b3 app store`
 - `IOS_VERSION`: optional marketing version, defaults to `1.0`
 - `IOS_BUILD_NUMBER`: optional build number, defaults to `CI_PIPELINE_IID`
 
