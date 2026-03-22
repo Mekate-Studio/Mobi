@@ -114,6 +114,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A93CF0D4D71D4D59A2C85A01 /* Embed Amper Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Amper Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -eu\nAmperFrameworksDir=\"${TARGET_BUILD_DIR}/AmperFrameworks\"\nAppFrameworksDir=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\nif [ ! -d \"${AmperFrameworksDir}\" ]; then\n  exit 0\nfi\n\nmkdir -p \"${AppFrameworksDir}\"\n/usr/bin/rsync -a \"${AmperFrameworksDir}/\" \"${AppFrameworksDir}/\"\n\nif [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n  find \"${AppFrameworksDir}\" -maxdepth 1 -name \"*.framework\" -type d -exec /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --generate-entitlement-der {} \\;\nfi\n\n/bin/rm -rf \"${AmperFrameworksDir}\"\n";
+		};
 		A93CF46588F1B180AC5404FB /* Build Kotlin with Amper */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -128,20 +142,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# !AMPER KMP INTEGRATION STEP!\n# This script is managed by Amper, do not edit manually!\n\"${AMPER_WRAPPER_PATH}\" tool xcode-integration\n";
-		};
-		A93CF0D4D71D4D59A2C85A01 /* Embed Amper Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Amper Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -eu\nAmperFrameworksDir=\"${TARGET_BUILD_DIR}/AmperFrameworks\"\nAppFrameworksDir=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\nif [ ! -d \"${AmperFrameworksDir}\" ]; then\n  exit 0\nfi\n\nmkdir -p \"${AppFrameworksDir}\"\n/usr/bin/rsync -a \"${AmperFrameworksDir}/\" \"${AppFrameworksDir}/\"\n\nif [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n  find \"${AppFrameworksDir}\" -maxdepth 1 -name \"*.framework\" -type d -exec /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --generate-entitlement-der {} \\;\nfi\n\n/bin/rm -rf \"${AmperFrameworksDir}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
