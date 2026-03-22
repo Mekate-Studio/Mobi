@@ -211,6 +211,8 @@ The repository is set up around a macOS runner now:
   Android SDK, and Amper available on the Mac
 - This avoids the Linux shared-runner incompatibilities encountered during setup
 - The same runner model can later host iOS jobs that need Xcode
+- `iosBuildDebug` and `iosBuildRelease` are unsigned simulator-only Xcode sanity
+  builds for CI
 - `iosArchiveRelease` is the manual CI checkpoint for generating the signed IPA
 - `iosTestFlight` is the manual CI job that uploads the archived IPA artifact to
   TestFlight on the default branch
@@ -345,8 +347,9 @@ The current runner choice already prepares the repo for iOS CI:
 - Apple signing, certificates, and provisioning profiles should be added only
   when the iOS target is ready for CI
 
-The first CI shape now added for iOS is `iosBuildDebug`, which runs `./amper build -m ios-app`
-on the macOS runner and stores the generated Xcode build outputs and logs as artifacts.
+The current iOS sanity jobs are `iosBuildDebug` and `iosBuildRelease`, which run
+unsigned simulator-only `xcodebuild` invocations on the macOS runner and store
+the generated logs and derived data as artifacts.
 
 A reasonable future job layout is:
 
@@ -422,12 +425,13 @@ To make signing work on the macOS runner, provision the host itself with:
    prefer manual signing later.
 5. An App Store Connect API key with permission to upload builds.
 
-The most practical first setup on a self-hosted Mac is automatic signing:
+The most practical release setup on this self-hosted Mac is a manual
+distribution-signing path for Release/TestFlight:
 
 1. Create the App ID in Apple Developer for `IOS_BUNDLE_IDENTIFIER`.
 2. Open the generated Xcode project once on the runner host.
-3. Select the `app` target, choose your team, and confirm Xcode can resolve
-   signing for Release builds.
+3. Select the `app` target and confirm Release signing resolves with your
+   Apple Distribution certificate and App Store provisioning profile.
 4. Run `bundle exec fastlane ios buildRelease` locally on the runner host.
 5. When that works, trigger `iosArchiveRelease` in GitLab.
 6. After the archive job succeeds, trigger `iosTestFlight`.

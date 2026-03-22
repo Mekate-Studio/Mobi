@@ -114,26 +114,22 @@ iosBuildDebug:
   extends: .ios_job
   stage: build
   script:
-    - ./scripts/ci/run_amper_with_logs.sh build -m ios-app
+    - ./scripts/ci/run_xcodebuild_with_logs.sh Debug
   artifacts:
     paths:
       - build/logs
-      - build/tasks/_ios-app_buildIosAppIosArm64Debug
-      - build/tasks/_ios-app_buildIosAppIosSimulatorArm64Debug
-      - build/tasks/_ios-app_buildIosAppIosX64Debug
+      - build/xcode-derived-data
       - ios-app/module.xcodeproj
 
 iosBuildRelease:
   extends: .ios_job
   stage: build
   script:
-    - ./scripts/ci/run_amper_with_logs.sh build -m ios-app
+    - ./scripts/ci/run_xcodebuild_with_logs.sh Release
   artifacts:
     paths:
       - build/logs
-      - build/tasks/_ios-app_buildIosAppIosArm64Debug
-      - build/tasks/_ios-app_buildIosAppIosSimulatorArm64Debug
-      - build/tasks/_ios-app_buildIosAppIosX64Debug
+      - build/xcode-derived-data
       - ios-app/module.xcodeproj
 
 iosArchiveRelease:
