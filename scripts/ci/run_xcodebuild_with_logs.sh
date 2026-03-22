@@ -17,14 +17,14 @@ log_file="${log_dir}/xcodebuild-ios-${configuration}.log"
 mkdir -p "${log_dir}" "${derived_data_dir}"
 
 simulator_name="$(
-  xcrun simctl list devices available | awk '
-    /^-- iOS / { ios = 1; next }
-    /^-- / { ios = 0 }
-    ios && /iPhone/ {
-      sub(/^[[:space:]]*/, "", $0)
-      sub(/ \\(.*/, "", $0)
-      print
-      exit
+  xcrun simctl list devices available | sed -n '
+    /^-- iOS /,/^-- / {
+      /iPhone/ {
+        s/^[[:space:]]*//
+        s/ (.*$//
+        p
+        q
+      }
     }
   '
 )"
