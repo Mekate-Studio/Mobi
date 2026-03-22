@@ -16,13 +16,31 @@ log_file="${log_dir}/xcodebuild-ios-${configuration}.log"
 
 mkdir -p "${log_dir}" "${derived_data_dir}"
 
+simulator_name="$(
+  xcrun simctl list devices available | awk '
+    /^-- iOS / { ios = 1; next }
+    /^-- / { ios = 0 }
+    ios && /iPhone/ {
+      sub(/^[[:space:]]*/, "", $0)
+      sub(/ \\(.*/, "", $0)
+      print
+      exit
+    }
+  '
+)"
+
+if [[ -z "${simulator_name}" ]]; then
+  echo "No available iPhone simulator found on this runner" >&2
+  exit 1
+fi
+
 cmd=(
   xcodebuild
   -project "${project_root}/ios-app/module.xcodeproj"
   -scheme app
   -configuration "${configuration}"
   -sdk iphonesimulator
-  -destination "platform=iOS Simulator,name=iPhone 16"
+  -destination "platform=iOS Simulator,name=${simulator_name}"
   -derivedDataPath "${derived_data_dir}"
   CODE_SIGNING_ALLOWED=NO
   CODE_SIGNING_REQUIRED=NO
