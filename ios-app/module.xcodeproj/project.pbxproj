@@ -64,6 +64,7 @@
 				A93CF19A71E94FF8EAB2A48D /* Sources */,
 				A93CFB18D8F0162B8642836E /* Frameworks */,
 				A93CF1127A893585707018F1 /* Resources */,
+				A93CF0D4D71D4D59A2C85A01 /* Embed Amper Frameworks */,
 			);
 			buildRules = (
 			);
@@ -127,6 +128,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# !AMPER KMP INTEGRATION STEP!\n# This script is managed by Amper, do not edit manually!\n\"${AMPER_WRAPPER_PATH}\" tool xcode-integration\n";
+		};
+		A93CF0D4D71D4D59A2C85A01 /* Embed Amper Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Amper Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -eu\nAmperFrameworksDir=\"${TARGET_BUILD_DIR}/AmperFrameworks\"\nAppFrameworksDir=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\nif [ ! -d \"${AmperFrameworksDir}\" ]; then\n  exit 0\nfi\n\nmkdir -p \"${AppFrameworksDir}\"\n/usr/bin/rsync -a \"${AmperFrameworksDir}/\" \"${AppFrameworksDir}/\"\n\nif [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n  find \"${AppFrameworksDir}\" -maxdepth 1 -name \"*.framework\" -type d -exec /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --generate-entitlement-der {} \\;\nfi\n\n/bin/rm -rf \"${AmperFrameworksDir}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
