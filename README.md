@@ -336,7 +336,7 @@ production.
 
 The repository now includes the first TestFlight-oriented scaffolding:
 
-- fastlane iOS lanes for `buildRelease` and `testflight`
+- fastlane iOS lanes for `buildRelease` and `uploadTestFlight`
 - a manual `iosTestFlight` GitLab job on the macOS runner
 - a CI helper script that materializes the App Store Connect API key file
 

@@ -73,6 +73,27 @@ Promote Beta to Production
 
 ----
 
+
+## iOS
+
+### ios buildRelease
+
+```sh
+[bundle exec] fastlane ios buildRelease
+```
+
+Builds the iOS app for release/TestFlight delivery
+
+### ios uploadTestFlight
+
+```sh
+[bundle exec] fastlane ios uploadTestFlight
+```
+
+Uploads a signed iOS release build to TestFlight
+
+----
+
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 
 More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).

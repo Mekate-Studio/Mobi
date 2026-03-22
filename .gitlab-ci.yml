@@ -160,7 +160,7 @@ iosTestFlight:
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
   script:
-    - bundle exec fastlane ios testflight
+    - bundle exec fastlane ios uploadTestFlight
   after_script:
     - rm -f "$CI_PROJECT_DIR/fastlane/AuthKey.p8"
 

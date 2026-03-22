@@ -146,7 +146,7 @@ platform :ios do
   end
 
   desc "Uploads a signed iOS release build to TestFlight"
-  lane :testflight do
+  lane :uploadTestFlight do
     api_key = app_store_connect_api_key_from_env!
     ipa = Dir[File.join(project_root, "build", "ios", "**", "*.ipa")].empty? ? buildRelease : latest_ios_ipa!
 
