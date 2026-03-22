@@ -4,6 +4,7 @@ stages:
   - internal
   - alpha
   - beta
+  - testflight
   - production
 
 variables:
@@ -60,6 +61,35 @@ cache:
     - echo "JAVA_HOME=$JAVA_HOME"
     - xcodebuild -version
 
+.ios_fastlane_job:
+  extends: .ios_job
+  before_script:
+    - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
+    - chmod +x amper scripts/ci/*.sh
+    - export JAVA_HOME="$(/usr/libexec/java_home)"
+    - echo "JAVA_HOME=$JAVA_HOME"
+    - xcodebuild -version
+    - ruby --version
+    - bundle --version
+    - bundle install
+    - export IOS_BUILD_NUMBER="${IOS_BUILD_NUMBER:-${CI_PIPELINE_IID:-1}}"
+    - export IOS_VERSION="${IOS_VERSION:-1.0}"
+
+.ios_testflight_job:
+  extends: .ios_fastlane_job
+  before_script:
+    - mkdir -p "$AMPER_BOOTSTRAP_CACHE_DIR"
+    - chmod +x amper scripts/ci/*.sh
+    - export JAVA_HOME="$(/usr/libexec/java_home)"
+    - echo "JAVA_HOME=$JAVA_HOME"
+    - xcodebuild -version
+    - ruby --version
+    - bundle --version
+    - bundle install
+    - export IOS_BUILD_NUMBER="${IOS_BUILD_NUMBER:-${CI_PIPELINE_IID:-1}}"
+    - export IOS_VERSION="${IOS_VERSION:-1.0}"
+    - ./scripts/ci/write_app_store_connect_api_key.sh "$CI_PROJECT_DIR/fastlane/AuthKey.p8" > /dev/null
+
 buildDebug:
   extends: .build_job
   script:
@@ -105,6 +135,34 @@ iosBuildRelease:
       - build/tasks/_ios-app_buildIosAppIosSimulatorArm64Debug
       - build/tasks/_ios-app_buildIosAppIosX64Debug
       - ios-app/module.xcodeproj
+
+iosArchiveRelease:
+  extends: .ios_fastlane_job
+  stage: build
+  when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  script:
+    - bundle exec fastlane ios buildRelease
+  artifacts:
+    paths:
+      - build/ios
+      - ios-app/module.xcodeproj
+  after_script:
+    - rm -f "$CI_PROJECT_DIR/fastlane/AuthKey.p8"
+
+iosTestFlight:
+  extends: .ios_testflight_job
+  stage: testflight
+  when: manual
+  dependencies:
+    - iosArchiveRelease
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  script:
+    - bundle exec fastlane ios testflight
+  after_script:
+    - rm -f "$CI_PROJECT_DIR/fastlane/AuthKey.p8"
 
 .promote_job:
   extends: .android_job

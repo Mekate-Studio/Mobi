@@ -35,6 +35,46 @@ def latest_android_artifact!(pattern: "build/**/*.{apk,aab}")
   candidates.max_by { |path| File.mtime(path) }
 end
 
+def latest_ios_ipa!(pattern: "build/ios/**/*.ipa")
+  candidates = Dir[File.join(project_root, pattern)]
+  UI.user_error!("No iOS ipa found under build/ios/") if candidates.empty?
+
+  candidates.max_by { |path| File.mtime(path) }
+end
+
+def ios_project_path
+  File.join(project_root, "ios-app", "module.xcodeproj")
+end
+
+def ios_scheme
+  ENV.fetch("IOS_SCHEME", "app")
+end
+
+def ios_bundle_identifier!
+  ENV.fetch("IOS_BUNDLE_IDENTIFIER")
+end
+
+def ios_development_team!
+  ENV.fetch("IOS_DEVELOPMENT_TEAM")
+end
+
+def ios_version
+  ENV.fetch("IOS_VERSION", "1.0")
+end
+
+def ios_build_number
+  ENV.fetch("IOS_BUILD_NUMBER", ENV.fetch("CI_PIPELINE_IID", "1"))
+end
+
+def app_store_connect_api_key_from_env!
+  app_store_connect_api_key(
+    key_id: ENV.fetch("APP_STORE_CONNECT_KEY_ID"),
+    issuer_id: ENV.fetch("APP_STORE_CONNECT_ISSUER_ID"),
+    key_filepath: ENV.fetch("APP_STORE_CONNECT_API_KEY_FILE"),
+    in_house: false
+  )
+end
+
 platform :android do
 
   desc "Builds the debug code"
@@ -76,5 +116,44 @@ platform :android do
   desc "Promote Beta to Production"
   lane :promote_beta_to_production do
     upload_to_play_store(track: 'beta', track_promote_to: 'production')
+  end
+end
+
+platform :ios do
+  desc "Builds the iOS app for release/TestFlight delivery"
+  lane :buildRelease do
+    build_ios_app(
+      project: ios_project_path,
+      scheme: ios_scheme,
+      configuration: "Release",
+      clean: true,
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        signingStyle: "automatic",
+        teamID: ios_development_team!
+      },
+      xcargs: [
+        "CODE_SIGN_STYLE=Automatic",
+        "DEVELOPMENT_TEAM=#{ios_development_team!}",
+        "PRODUCT_BUNDLE_IDENTIFIER=#{ios_bundle_identifier!}",
+        "MARKETING_VERSION=#{ios_version}",
+        "CURRENT_PROJECT_VERSION=#{ios_build_number}"
+      ].join(" "),
+      output_directory: File.join(project_root, "build", "ios"),
+      output_name: "ios-app"
+    )
+  end
+
+  desc "Uploads a signed iOS release build to TestFlight"
+  lane :testflight do
+    api_key = app_store_connect_api_key_from_env!
+    ipa = Dir[File.join(project_root, "build", "ios", "**", "*.ipa")].empty? ? buildRelease : latest_ios_ipa!
+
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: ipa,
+      skip_waiting_for_build_processing: true
+    )
   end
 end

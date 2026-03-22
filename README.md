@@ -331,3 +331,69 @@ remaining steps are:
 
 The recommended first successful publishing milestone is `publishInternal`, not
 production.
+
+# iOS Signing And TestFlight
+
+The repository now includes the first TestFlight-oriented scaffolding:
+
+- fastlane iOS lanes for `buildRelease` and `testflight`
+- a manual `iosTestFlight` GitLab job on the macOS runner
+- a CI helper script that materializes the App Store Connect API key file
+
+Before `iosTestFlight` can actually upload a build, you still need to provide:
+
+- `IOS_BUNDLE_IDENTIFIER`
+- `IOS_DEVELOPMENT_TEAM`
+- `APP_STORE_CONNECT_KEY_ID`
+- `APP_STORE_CONNECT_ISSUER_ID`
+- `APP_STORE_CONNECT_API_KEY_FILE` or `APP_STORE_CONNECT_API_KEY_BASE64`
+
+In addition, the macOS runner must have a working Apple signing setup for the
+app's release build. The current repository does not yet commit Apple signing
+configuration or provisioning assets.
+
+The CI path is now split into two manual iOS release steps:
+
+- `iosArchiveRelease`: builds and exports the signed release `.ipa`
+- `iosTestFlight`: uploads the exported `.ipa` to TestFlight
+
+That keeps signing/export validation separate from the actual upload.
+
+The release/TestFlight flow expects these build-time values:
+
+- `IOS_BUNDLE_IDENTIFIER`: the real App Store bundle ID, for example
+  `studio.mekate.b3`
+- `IOS_DEVELOPMENT_TEAM`: your Apple Developer team ID
+- `IOS_VERSION`: optional marketing version, defaults to `1.0`
+- `IOS_BUILD_NUMBER`: optional build number, defaults to `CI_PIPELINE_IID`
+
+Fastlane now injects the bundle identifier, team ID, version, and build number
+at build time instead of relying on the generated Xcode project defaults.
+
+To make signing work on the macOS runner, provision the host itself with:
+
+1. Xcode installed and selected with `xcode-select`.
+2. The Apple account added in Xcode if you want Xcode-managed automatic signing.
+3. Access to the target bundle identifier inside the Apple Developer team.
+4. Any required signing certificates and provisioning profiles installed if you
+   prefer manual signing later.
+5. An App Store Connect API key with permission to upload builds.
+
+The most practical first setup on a self-hosted Mac is automatic signing:
+
+1. Create the App ID in Apple Developer for `IOS_BUNDLE_IDENTIFIER`.
+2. Open the generated Xcode project once on the runner host.
+3. Select the `app` target, choose your team, and confirm Xcode can resolve
+   signing for Release builds.
+4. Run `bundle exec fastlane ios buildRelease` locally on the runner host.
+5. When that works, trigger `iosArchiveRelease` in GitLab.
+6. After the archive job succeeds, trigger `iosTestFlight`.
+
+The recommended order for iOS delivery is:
+
+1. Keep `iosBuildDebug` and `iosBuildRelease` green.
+2. Add Apple signing to the macOS runner.
+3. Add the App Store Connect API key variables.
+4. Trigger `iosArchiveRelease` manually on the default branch.
+5. Trigger `iosTestFlight` after the archive job succeeds.
+6. Verify the build appears in TestFlight before automating anything further.
