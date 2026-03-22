@@ -22,7 +22,6 @@ cmd=(
   -scheme app
   -configuration "${configuration}"
   -sdk iphonesimulator
-  -arch arm64
   -destination "platform=iOS Simulator,name=iPhone 16"
   -derivedDataPath "${derived_data_dir}"
   CODE_SIGNING_ALLOWED=NO
