@@ -152,6 +152,23 @@ During branch-based setup and testing, these variables must not be protected if
 you want non-protected branches to receive them. Once your release flow moves to
 protected branches, protect the signing and Play secrets again.
 
+For iOS archive and TestFlight jobs, set these as well:
+
+- `IOS_BUNDLE_IDENTIFIER`: the iOS bundle identifier, currently
+  `studio.mekate.b3`
+- `IOS_DEVELOPMENT_TEAM`: your Apple team ID
+- `IOS_PROVISIONING_PROFILE_SPECIFIER`: the exact App Store provisioning profile
+  name used for Release signing, for example `b3 app store`
+- `APP_STORE_CONNECT_KEY_ID`: the App Store Connect API key ID
+- `APP_STORE_CONNECT_ISSUER_ID`: the App Store Connect issuer ID
+- `APP_STORE_CONNECT_API_KEY_FILE` or `APP_STORE_CONNECT_API_KEY_BASE64`: the
+  `.p8` App Store Connect API key as either a GitLab file variable or a
+  base64-encoded value
+
+The iOS signing material itself remains on the macOS runner host through Xcode
+and your installed certificates/profiles. GitLab only supplies the App Store
+Connect API key used for upload.
+
 ## GitLab provisioning checklist
 
 Use this checklist to make the CI pipeline fully operational:
@@ -194,6 +211,9 @@ The repository is set up around a macOS runner now:
   Android SDK, and Amper available on the Mac
 - This avoids the Linux shared-runner incompatibilities encountered during setup
 - The same runner model can later host iOS jobs that need Xcode
+- `iosArchiveRelease` is the manual CI checkpoint for generating the signed IPA
+- `iosTestFlight` is the manual CI job that uploads the archived IPA artifact to
+  TestFlight on the default branch
 
 If you later add more mobile repositories, consider a group runner instead of a
 project-only runner.
@@ -258,6 +278,27 @@ Recommended local setup flow:
 5. Run `bundle exec fastlane test`.
 6. Materialize signing files with `./scripts/ci/write_android_signing_files.sh`.
 7. Run `bundle exec fastlane buildRelease`.
+
+For local iOS archive and TestFlight flows, also set:
+
+- `IOS_BUNDLE_IDENTIFIER`
+- `IOS_DEVELOPMENT_TEAM`
+- `IOS_PROVISIONING_PROFILE_SPECIFIER`
+- `APP_STORE_CONNECT_KEY_ID`
+- `APP_STORE_CONNECT_ISSUER_ID`
+- `APP_STORE_CONNECT_API_KEY_FILE` or `APP_STORE_CONNECT_API_KEY_BASE64`
+
+Recommended local iOS commands:
+
+```bash
+export IOS_BUNDLE_IDENTIFIER="studio.mekate.b3"
+export IOS_DEVELOPMENT_TEAM="YOUR_TEAM_ID"
+export IOS_PROVISIONING_PROFILE_SPECIFIER="YOUR_APP_STORE_PROFILE"
+export IOS_VERSION="1.0"
+export IOS_BUILD_NUMBER="1"
+bundle exec fastlane ios buildRelease
+bundle exec fastlane ios uploadTestFlight
+```
 
 If you want to exercise publishing locally, also provision:
 

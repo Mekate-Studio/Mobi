@@ -145,6 +145,7 @@ iosArchiveRelease:
   script:
     - bundle exec fastlane ios buildRelease
   artifacts:
+    when: always
     paths:
       - build/ios
       - ios-app/module.xcodeproj
@@ -160,6 +161,7 @@ iosTestFlight:
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
   script:
+    - export IOS_IPA_PATH="$CI_PROJECT_DIR/build/ios/ios-app.ipa"
     - bundle exec fastlane ios uploadTestFlight
   after_script:
     - rm -f "$CI_PROJECT_DIR/fastlane/AuthKey.p8"
