@@ -17,14 +17,20 @@ log_file="${log_dir}/xcodebuild-ios-${configuration}.log"
 mkdir -p "${log_dir}" "${derived_data_dir}"
 
 simulator_id="$(
-  xcrun simctl list devices available | sed -n '
-    /^-- iOS /,/^-- / {
-      /iPhone/ {
-        s/.*(\([A-F0-9-][A-F0-9-]*\)).*/\1/p
-        q
+  xcodebuild \
+    -project "${project_root}/ios-app/module.xcodeproj" \
+    -scheme app \
+    -sdk iphonesimulator \
+    -showdestinations 2>/dev/null | sed -n '
+      /Available destinations for the "app" scheme:/,/Ineligible destinations/ {
+        /platform:iOS Simulator/ {
+          /name:iPhone/ {
+            s/.*id:\([^,}]*\).*/\1/p
+            q
+          }
+        }
       }
-    }
-  '
+    '
 )"
 
 if [[ -z "${simulator_id}" ]]; then
