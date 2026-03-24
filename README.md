@@ -169,6 +169,31 @@ The iOS signing material itself remains on the macOS runner host through Xcode
 and your installed certificates/profiles. GitLab only supplies the App Store
 Connect API key used for upload.
 
+## Variables to protect again
+
+Once you are done testing from non-protected branches, protect these GitLab
+variables again:
+
+- `ANDROID_KEYSTORE_FILE` or `ANDROID_KEYSTORE_BASE64`
+- `ANDROID_KEYSTORE_PASSWORD`
+- `ANDROID_KEY_ALIAS`
+- `ANDROID_KEY_PASSWORD`
+- `GOOGLE_PLAY_JSON_KEY`
+- `IOS_BUNDLE_IDENTIFIER`
+- `IOS_DEVELOPMENT_TEAM`
+- `IOS_PROVISIONING_PROFILE_SPECIFIER`
+- `APP_STORE_CONNECT_KEY_ID`
+- `APP_STORE_CONNECT_ISSUER_ID`
+- `APP_STORE_CONNECT_API_KEY_FILE` or `APP_STORE_CONNECT_API_KEY_BASE64`
+
+The simplest release posture is:
+
+- keep the secrets above protected
+- keep `iosArchiveRelease`, `iosTestFlight`, `publishInternal`, and production
+  promotion jobs on the default branch
+- use unprotected variables only temporarily when you are actively debugging
+  branch pipelines
+
 ## GitLab provisioning checklist
 
 Use this checklist to make the CI pipeline fully operational:
@@ -257,6 +282,49 @@ If you use `GOOGLE_PLAY_JSON_KEY`, you can materialize it with:
 ./scripts/ci/write_google_play_key.sh "$PWD/google_play_api_key.json"
 export GOOGLE_PLAY_JSON_KEY_FILE="$PWD/google_play_api_key.json"
 ```
+
+# Final iOS Flow
+
+The working iOS flow is now split into two layers:
+
+- `iosBuildDebug` and `iosBuildRelease`: unsigned simulator-only CI sanity
+  builds
+- `iosArchiveRelease` and `iosTestFlight`: signed device archive and upload
+  jobs
+
+That separation is intentional. Normal CI feedback does not depend on Apple
+provisioning, while real release delivery still uses the signed Release path.
+
+## Local iOS release flow
+
+1. Make sure Xcode on the macOS machine has:
+   - your Apple Distribution certificate
+   - the App Store provisioning profile for `studio.mekate.b3`
+2. Export:
+   - `IOS_BUNDLE_IDENTIFIER`
+   - `IOS_DEVELOPMENT_TEAM`
+   - `IOS_PROVISIONING_PROFILE_SPECIFIER`
+   - `APP_STORE_CONNECT_KEY_ID`
+   - `APP_STORE_CONNECT_ISSUER_ID`
+   - `APP_STORE_CONNECT_API_KEY_FILE`
+3. Run:
+
+```bash
+bundle exec fastlane ios buildRelease
+bundle exec fastlane ios uploadTestFlight
+```
+
+## GitLab iOS release flow
+
+1. Keep `iosBuildDebug` and `iosBuildRelease` green.
+2. Trigger `iosArchiveRelease` manually on the default branch.
+3. Confirm the archive job publishes `build/ios/ios-app.ipa` as an artifact.
+4. Trigger `iosTestFlight`.
+5. Confirm the build appears in App Store Connect and finishes TestFlight
+   processing.
+
+The `iosTestFlight` job uploads the archived IPA artifact directly, so it does
+not need to rebuild the app if `iosArchiveRelease` already succeeded.
 
 ## Local provisioning checklist
 
