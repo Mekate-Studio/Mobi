@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ci_lib_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ci_project_root="$(cd "${ci_lib_dir}/../.." && pwd)"
+
+export CI_PROJECT_DIR="${CI_PROJECT_DIR:-${ci_project_root}}"
+export AMPER_BOOTSTRAP_CACHE_DIR="${AMPER_BOOTSTRAP_CACHE_DIR:-${CI_PROJECT_DIR}/.amper-cache}"
+
+ci_log() {
+  printf '[ci] %s\n' "$*"
+}
+
+ci_has_cmd() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+ci_require_cmd() {
+  if ! ci_has_cmd "$1"; then
+    printf 'Required command not found: %s\n' "$1" >&2
+    exit 1
+  fi
+}
+
+ci_detect_context() {
+  local engine build_number build_sha branch default_branch
+
+  if [[ -n "${GITLAB_CI:-}" ]]; then
+    engine="gitlab"
+    build_number="${CI_PIPELINE_IID:-1}"
+    build_sha="${CI_COMMIT_SHORT_SHA:-${CI_COMMIT_SHA:-local}}"
+    build_sha="${build_sha:0:8}"
+    branch="${CI_COMMIT_BRANCH:-${CI_COMMIT_REF_NAME:-local}}"
+    default_branch="${CI_DEFAULT_BRANCH:-${DEFAULT_BRANCH:-main}}"
+  elif [[ -n "${GITHUB_ACTIONS:-}" ]]; then
+    engine="github"
+    build_number="${GITHUB_RUN_NUMBER:-1}"
+    build_sha="${GITHUB_SHA:-local}"
+    build_sha="${build_sha:0:8}"
+    branch="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-local}}"
+    default_branch="${GITHUB_DEFAULT_BRANCH:-${DEFAULT_BRANCH:-main}}"
+  else
+    engine="local"
+    build_number="${BUILD_NUMBER:-1}"
+    build_sha="${BUILD_SHA:-local}"
+    build_sha="${build_sha:0:8}"
+    branch="${BUILD_BRANCH:-local}"
+    default_branch="${DEFAULT_BRANCH:-main}"
+  fi
+
+  export CI_ENGINE="${CI_ENGINE:-$engine}"
+  export BUILD_NUMBER="${BUILD_NUMBER:-$build_number}"
+  export BUILD_SHA="${BUILD_SHA:-$build_sha}"
+  export BUILD_BRANCH="${BUILD_BRANCH:-$branch}"
+  export DEFAULT_BRANCH="${DEFAULT_BRANCH:-$default_branch}"
+  export IS_DEFAULT_BRANCH="false"
+
+  if [[ "${BUILD_BRANCH}" == "${DEFAULT_BRANCH}" ]]; then
+    export IS_DEFAULT_BRANCH="true"
+  fi
+
+  export VERSION_CODE="${VERSION_CODE:-$BUILD_NUMBER}"
+  export VERSION_SHA="${VERSION_SHA:-$BUILD_SHA}"
+  export VERSION_NAME="${VERSION_NAME:-1.0-${VERSION_SHA}}"
+  export IOS_BUILD_NUMBER="${IOS_BUILD_NUMBER:-$BUILD_NUMBER}"
+  export IOS_VERSION="${IOS_VERSION:-1.0}"
+
+  ci_log "engine=${CI_ENGINE} branch=${BUILD_BRANCH} default_branch=${DEFAULT_BRANCH} build_number=${BUILD_NUMBER} sha=${BUILD_SHA}"
+}
+
+ci_prepare_workspace() {
+  mkdir -p "${AMPER_BOOTSTRAP_CACHE_DIR}"
+  chmod +x "${CI_PROJECT_DIR}/amper" "${CI_PROJECT_DIR}"/scripts/ci/*.sh
+}
+
+ci_set_java_home() {
+  if [[ -x /usr/libexec/java_home ]]; then
+    export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home)}"
+  fi
+
+  if [[ -n "${JAVA_HOME:-}" ]]; then
+    ci_log "JAVA_HOME=${JAVA_HOME}"
+  fi
+}
+
+ci_bundle_install() {
+  ci_require_cmd ruby
+  ci_require_cmd bundle
+
+  ruby --version
+  bundle --version
+
+  (
+    cd "${CI_PROJECT_DIR}"
+    bundle install
+  )
+}
+
+ci_prepare_android_job() {
+  ci_detect_context
+  ci_prepare_workspace
+  ci_set_java_home
+  ci_bundle_install
+
+  if [[ -n "${ANDROID_HOME:-}" ]]; then
+    ci_log "ANDROID_HOME=${ANDROID_HOME}"
+  fi
+
+  if [[ -n "${ANDROID_SDK_ROOT:-}" ]]; then
+    ci_log "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}"
+  fi
+
+  (
+    cd "${CI_PROJECT_DIR}"
+    ./scripts/ci/apply_android_version.sh
+  )
+
+  if [[ -n "${ANDROID_KEYSTORE_FILE:-}" || -n "${ANDROID_KEYSTORE_BASE64:-}" ]]; then
+    ci_log "Android signing material detected"
+    (
+      cd "${CI_PROJECT_DIR}"
+      ./scripts/ci/write_android_signing_files.sh
+    )
+  else
+    ci_log "Android signing material missing"
+  fi
+}
+
+ci_prepare_android_promotion_job() {
+  ci_prepare_android_job
+  export GOOGLE_PLAY_JSON_KEY_FILE="${CI_PROJECT_DIR}/google_play_api_key.json"
+
+  (
+    cd "${CI_PROJECT_DIR}"
+    ./scripts/ci/write_google_play_key.sh "${GOOGLE_PLAY_JSON_KEY_FILE}" >/dev/null
+  )
+}
+
+ci_cleanup_google_play_key() {
+  rm -f "${CI_PROJECT_DIR}/google_play_api_key.json"
+}
+
+ci_prepare_ios_job() {
+  ci_detect_context
+  ci_prepare_workspace
+  ci_set_java_home
+  ci_require_cmd xcodebuild
+  xcodebuild -version
+}
+
+ci_prepare_ios_fastlane_job() {
+  ci_prepare_ios_job
+  ci_bundle_install
+}
+
+ci_prepare_ios_testflight_job() {
+  ci_prepare_ios_fastlane_job
+
+  (
+    cd "${CI_PROJECT_DIR}"
+    ./scripts/ci/write_app_store_connect_api_key.sh "${CI_PROJECT_DIR}/fastlane/AuthKey.p8" >/dev/null
+  )
+}
+
+ci_cleanup_app_store_connect_key() {
+  rm -f "${CI_PROJECT_DIR}/fastlane/AuthKey.p8"
+}

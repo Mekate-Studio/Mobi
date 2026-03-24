@@ -63,28 +63,72 @@ After the first iOS build, Amper manages `ios-app/module.xcodeproj`.
 
 # CI and release tooling
 
-GitLab CI and fastlane now invoke Amper instead of Gradle. They use a
-project-local Amper cache (`.amper-cache`), and the Play Store lanes still
-expect Android signing and Google Play credentials to be configured before
-publishing will work.
+The repository now has a portable CI layout:
 
-The active CI path for this repository is now a self-hosted macOS GitLab runner.
-That is the right long-term shape for the project because Android already works
-there and future iOS CI will require macOS and Xcode anyway.
+- `fastlane/` contains the platform build and release lanes
+- `scripts/ci/lib.sh` normalizes CI context and common bootstrap logic
+- `scripts/ci/job_*.sh` are the shared job entrypoints
+- `.gitlab-ci.yml` is a thin GitLab adapter
+- `.github/workflows/mobile-ci.yml` is a thin GitHub Actions adapter
+
+That means the build and release logic lives in the repository, while GitLab and
+GitHub only decide when jobs run, which secrets are available, and which runner
+executes them.
+
+The shared pipeline still uses a project-local Amper cache (`.amper-cache`),
+and the Play Store lanes still expect Android signing and Google Play
+credentials to be configured before publishing will work.
+
+The active runner model remains macOS because Android already works there and
+future iOS CI requires Xcode.
 
 # Reference links
 
 - [GitLab CI Documentation](https://docs.gitlab.com/ee/ci/)
 - [GitLab Runner Docker executor](https://docs.gitlab.com/runner/executors/docker/)
+- [GitHub Actions Documentation](https://docs.github.com/actions)
 - [Fastlane Android release deployment](https://docs.fastlane.tools/getting-started/android/release-deployment/)
 - [fastlane `upload_to_play_store` setup](https://docs.fastlane.tools/actions/upload_to_play_store/)
 - [GitLab blog post: Android publishing with GitLab and fastlane](https://about.gitlab.com/2019/01/28/android-publishing-with-gitlab-and-fastlane/)
 
 # How The Pipeline Works
 
+## Shared job layer
+
+The common job entrypoint is `scripts/ci/run_job.sh`, which accepts a portable
+job name such as:
+
+- `android-build-debug`
+- `android-build-release`
+- `android-test`
+- `ios-build-debug`
+- `ios-build-release`
+- `ios-archive-release`
+- `ios-testflight`
+- `publish-internal`
+- `promote-alpha`
+- `promote-beta`
+- `promote-production`
+
+These scripts all source `scripts/ci/lib.sh`, which computes portable values
+such as:
+
+- `BUILD_NUMBER`
+- `BUILD_SHA`
+- `BUILD_BRANCH`
+- `DEFAULT_BRANCH`
+- `VERSION_CODE`
+- `VERSION_NAME`
+- `IOS_BUILD_NUMBER`
+
+GitLab and GitHub-specific variable names are translated there, so the shared
+job scripts do not depend directly on `CI_PIPELINE_IID`, `CI_COMMIT_SHORT_SHA`,
+or `GITHUB_RUN_NUMBER`.
+
 ## GitLab CI
 
-GitLab orchestrates the pipeline from `.gitlab-ci.yml`:
+GitLab orchestrates the pipeline from `.gitlab-ci.yml`, but the jobs are now
+thin wrappers around `scripts/ci/run_job.sh <job-name>`:
 
 - `build`: run `fastlane buildDebug` and `fastlane buildRelease`
 - `test`: run `fastlane test`
@@ -93,6 +137,22 @@ GitLab orchestrates the pipeline from `.gitlab-ci.yml`:
 
 The Android jobs are tagged to run on a `macos` runner. Production promotion is
 limited to the default branch.
+
+## GitHub Actions
+
+GitHub Actions can run the same shared job dispatcher from
+`.github/workflows/mobile-ci.yml`.
+
+The workflow currently mirrors the GitLab shape with:
+
+- push and pull request validation jobs
+- manual `workflow_dispatch` release targets
+- artifact handoff between archive and publish steps
+- environment gates for the manual release jobs
+
+If you want parity with the current GitLab runner model, switch `runs-on` from
+`macos-15` to your self-hosted GitHub labels, for example
+`[self-hosted, macOS]`.
 
 ## Docker
 
@@ -127,32 +187,29 @@ environment variables so the same setup works both in CI and locally.
 Before Android builds run, CI applies version values to
 `android-app/module.yaml`:
 
-- `VERSION_CODE` defaults to `CI_PIPELINE_IID`
-- `VERSION_NAME` defaults to `1.0-<CI_COMMIT_SHORT_SHA>`
+- `VERSION_CODE` defaults to the normalized `BUILD_NUMBER`
+- `VERSION_NAME` defaults to `1.0-<BUILD_SHA>`
 
 This is handled by `scripts/ci/apply_android_version.sh`. It keeps
 `versionCode` increasing for Play Store uploads without requiring manual edits to
 the module file.
 
-## Required GitLab variables
+## Shared release variables
 
-Set these in GitLab CI/CD before using the publish jobs:
+These variables are used by both GitLab CI and GitHub Actions for Android
+release jobs:
 
 - `GOOGLE_PLAY_JSON_KEY`: either the raw service-account JSON content or a
-  GitLab file variable pointing to that JSON file
+  CI file secret pointing to that JSON file
 - `ANDROID_PACKAGE_NAME`: optional override if you changed the package name from
   `studio.mekate.b3`
 - `ANDROID_KEYSTORE_FILE` or `ANDROID_KEYSTORE_BASE64`: the Android release
-  keystore as either a file variable or a base64-encoded value
+  keystore as either a file secret or a base64-encoded value
 - `ANDROID_KEYSTORE_PASSWORD`: the keystore password
 - `ANDROID_KEY_ALIAS`: the alias of the upload key inside the keystore
 - `ANDROID_KEY_PASSWORD`: the password for that key alias
 
-During branch-based setup and testing, these variables must not be protected if
-you want non-protected branches to receive them. Once your release flow moves to
-protected branches, protect the signing and Play secrets again.
-
-For iOS archive and TestFlight jobs, set these as well:
+For iOS archive and TestFlight jobs, both CI engines use these as well:
 
 - `IOS_BUNDLE_IDENTIFIER`: the iOS bundle identifier, currently
   `studio.mekate.b3`
@@ -162,12 +219,27 @@ For iOS archive and TestFlight jobs, set these as well:
 - `APP_STORE_CONNECT_KEY_ID`: the App Store Connect API key ID
 - `APP_STORE_CONNECT_ISSUER_ID`: the App Store Connect issuer ID
 - `APP_STORE_CONNECT_API_KEY_FILE` or `APP_STORE_CONNECT_API_KEY_BASE64`: the
-  `.p8` App Store Connect API key as either a GitLab file variable or a
+  `.p8` App Store Connect API key as either a CI file secret or a
   base64-encoded value
 
 The iOS signing material itself remains on the macOS runner host through Xcode
-and your installed certificates/profiles. GitLab only supplies the App Store
+and your installed certificates/profiles. CI only supplies the App Store
 Connect API key used for upload.
+
+## GitLab variables
+
+Set the shared release variables above in GitLab CI/CD before using the publish
+jobs.
+
+During branch-based setup and testing, these variables must not be protected if
+you want non-protected branches to receive them. Once your release flow moves to
+protected branches, protect the signing and Play secrets again.
+
+## GitHub secrets
+
+Set the same shared release variables as GitHub Actions secrets, ideally scoped
+through environments such as `play-internal`, `play-alpha`, `play-beta`,
+`play-production`, `ios-release`, and `testflight`.
 
 ## Variables to protect again
 
@@ -196,7 +268,7 @@ The simplest release posture is:
 
 ## GitLab provisioning checklist
 
-Use this checklist to make the CI pipeline fully operational:
+Use this checklist to make the GitLab pipeline fully operational:
 
 1. Enable a GitLab Runner that can run Docker jobs.
 2. For this repository, prefer a self-hosted macOS runner with the `shell`
@@ -245,9 +317,12 @@ The repository is set up around a macOS runner now:
 If you later add more mobile repositories, consider a group runner instead of a
 project-only runner.
 
+That same runner model maps cleanly to GitHub Actions if you register a
+self-hosted macOS runner there as well.
+
 # Running Locally
 
-You can run the same build and test steps locally without GitLab:
+You can run the same build and test steps locally without either CI engine:
 
 ```bash
 bundle install
@@ -258,6 +333,22 @@ export VERSION_NAME="1.0-local"
 bundle exec fastlane buildDebug
 bundle exec fastlane test
 bundle exec fastlane buildRelease
+```
+
+You can also run the shared job dispatcher directly:
+
+```bash
+./scripts/ci/run_job.sh android-build-debug
+./scripts/ci/run_job.sh android-test
+./scripts/ci/run_job.sh android-build-release
+```
+
+For a friendlier local workflow, use the repo `Justfile`:
+
+```bash
+just android-build-debug
+just android-test
+just ios-build-release
 ```
 
 To approximate CI more closely, run the commands inside the repo Docker image:
@@ -326,6 +417,15 @@ bundle exec fastlane ios uploadTestFlight
 The `iosTestFlight` job uploads the archived IPA artifact directly, so it does
 not need to rebuild the app if `iosArchiveRelease` already succeeded.
 
+## GitHub Actions iOS release flow
+
+1. Run the `Mobile CI` workflow with `release_target=iosArchiveRelease` or
+   `release_target=iosTestFlight`.
+2. Keep the iOS release secrets in the `ios-release` and `testflight`
+   environments.
+3. For `iosTestFlight`, the workflow archives first and then uploads the IPA in
+   a dependent job.
+
 ## Local provisioning checklist
 
 To run the pipeline steps locally, provision this machine with:
@@ -386,7 +486,8 @@ The fastest way to approximate CI locally is:
 3. Run the fastlane lanes inside that image.
 
 If you want to validate the GitLab YAML itself, use GitLab CI Lint in the
-project UI after committing changes.
+project UI after committing changes. For GitHub Actions, use the workflow editor
+or `gh workflow view` once the repository is mirrored there.
 
 ## Local signing example
 
@@ -406,7 +507,8 @@ base64-encode it and use `ANDROID_KEYSTORE_BASE64` instead.
 
 # Future iOS CI
 
-The current runner choice already prepares the repo for iOS CI:
+The current runner choice already prepares the repo for iOS CI on either GitLab
+or GitHub:
 
 - iOS jobs should run on the same `macos` runner
 - Xcode and `xcodebuild` will be required on the runner host
