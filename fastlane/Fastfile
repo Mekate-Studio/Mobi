@@ -99,6 +99,7 @@ platform :android do
   desc "Builds the release code"
   lane :buildRelease do
     amper!("build -m android-app -p android -v release")
+    sh("cd '#{project_root}' && ./scripts/ci/build_android_aab.sh")
   end
 
   desc "Runs all the tests"

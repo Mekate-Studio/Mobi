@@ -173,6 +173,7 @@ jobs themselves now run directly on macOS.
 Fastlane is the command layer between GitLab and Amper:
 
 - `buildDebug` and `buildRelease` call `./amper build`
+- Android `buildRelease` now also produces a signed `.aab` for Play uploads
 - `test` calls `./amper test`
 - `internal` uploads the latest release artifact to the Play internal track
 - the promotion lanes move an already-uploaded build across Play tracks
@@ -545,6 +546,9 @@ remaining steps are:
 
 The recommended first successful publishing milestone is `publishInternal`, not
 production.
+
+For new Play apps, the internal upload path should use the generated Android App
+Bundle (`.aab`) rather than only an APK.
 
 # iOS Signing And TestFlight
 
