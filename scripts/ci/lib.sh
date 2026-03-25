@@ -93,6 +93,49 @@ ci_path_add() {
   esac
 }
 
+ci_is_android_sdk_dir() {
+  local candidate="${1:-}"
+
+  [[ -n "${candidate}" ]] || return 1
+  [[ -d "${candidate}" ]] || return 1
+
+  [[ -d "${candidate}/platform-tools" ]] \
+    || [[ -d "${candidate}/cmdline-tools" ]] \
+    || [[ -d "${candidate}/build-tools" ]]
+}
+
+ci_resolve_android_sdk_root() {
+  local candidate=""
+
+  for candidate in \
+    "${ANDROID_SDK_ROOT:-}" \
+    "${ANDROID_HOME:-}" \
+    "${HOME:-}/Library/Android/sdk" \
+    "${HOME:-}/Library/Android/SDK"
+  do
+    if [[ -z "${candidate}" ]]; then
+      continue
+    fi
+
+    if [[ "${candidate}" == *:* ]]; then
+      ci_log "Ignoring malformed Android SDK path: ${candidate}"
+      continue
+    fi
+
+    if ci_is_android_sdk_dir "${candidate}"; then
+      export ANDROID_HOME="${candidate}"
+      export ANDROID_SDK_ROOT="${candidate}"
+      ci_log "Using Android SDK at ${candidate}"
+      return 0
+    fi
+  done
+
+  unset ANDROID_HOME || true
+  unset ANDROID_SDK_ROOT || true
+  ci_log "Android SDK path not auto-detected"
+  return 1
+}
+
 ci_configure_path() {
   local ruby_prefix=""
   local entry=""
@@ -170,6 +213,7 @@ ci_prepare_android_job() {
   ci_detect_context
   ci_prepare_workspace
   ci_set_java_home
+  ci_resolve_android_sdk_root || true
   ci_bundle_install
 
   if [[ -n "${ANDROID_HOME:-}" ]]; then
