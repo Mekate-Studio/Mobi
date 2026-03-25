@@ -74,30 +74,69 @@ ci_prepare_workspace() {
   chmod +x "${CI_PROJECT_DIR}/amper" "${CI_PROJECT_DIR}"/scripts/ci/*.sh
 }
 
-ci_prefer_homebrew_ruby() {
+ci_path_add() {
+  local candidate="${1:-}"
+
+  if [[ -z "${candidate}" || ! -d "${candidate}" || ! -r "${candidate}" || ! -x "${candidate}" ]]; then
+    return 0
+  fi
+
+  case ":${CI_EFFECTIVE_PATH:-}:" in
+    *":${candidate}:"*) ;;
+    *)
+      if [[ -n "${CI_EFFECTIVE_PATH:-}" ]]; then
+        CI_EFFECTIVE_PATH="${CI_EFFECTIVE_PATH}:${candidate}"
+      else
+        CI_EFFECTIVE_PATH="${candidate}"
+      fi
+      ;;
+  esac
+}
+
+ci_configure_path() {
   local ruby_prefix=""
-  local candidate_bin=""
+  local entry=""
+  local sdk_root=""
+  local original_path="${PATH:-}"
 
   if ci_has_cmd brew; then
     ruby_prefix="$(brew --prefix ruby 2>/dev/null || true)"
   fi
 
-  for candidate_bin in \
-    "${ruby_prefix:+${ruby_prefix}/bin}" \
-    /opt/homebrew/opt/ruby/bin \
-    /usr/local/opt/ruby/bin
-  do
-    if [[ -n "${candidate_bin}" && -x "${candidate_bin}/ruby" && -x "${candidate_bin}/bundle" ]]; then
-      case ":${PATH}:" in
-        *":${candidate_bin}:"*) ;;
-        *) export PATH="${candidate_bin}:${PATH}" ;;
-      esac
-      ci_log "Using Ruby from ${candidate_bin}"
-      return 0
-    fi
+  CI_EFFECTIVE_PATH=""
+
+  ci_path_add "${ruby_prefix:+${ruby_prefix}/bin}"
+  ci_path_add /opt/homebrew/opt/ruby/bin
+  ci_path_add /usr/local/opt/ruby/bin
+
+  if [[ -n "${JAVA_HOME:-}" ]]; then
+    ci_path_add "${JAVA_HOME}/bin"
+  fi
+
+  sdk_root="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
+  if [[ -n "${sdk_root}" ]]; then
+    ci_path_add "${sdk_root}/cmdline-tools/latest/bin"
+    ci_path_add "${sdk_root}/platform-tools"
+  fi
+
+  IFS=':' read -r -a ci_original_path_entries <<< "${original_path}"
+  for entry in "${ci_original_path_entries[@]}"; do
+    ci_path_add "${entry}"
   done
 
-  ci_log "Homebrew Ruby not found; using PATH-provided Ruby"
+  ci_path_add /opt/homebrew/bin
+  ci_path_add /opt/homebrew/sbin
+  ci_path_add /usr/local/bin
+  ci_path_add /usr/local/sbin
+  ci_path_add /usr/bin
+  ci_path_add /bin
+  ci_path_add /usr/sbin
+  ci_path_add /sbin
+
+  export PATH="${CI_EFFECTIVE_PATH}"
+  unset CI_EFFECTIVE_PATH
+
+  ci_log "PATH configured"
 }
 
 ci_set_java_home() {
@@ -111,12 +150,13 @@ ci_set_java_home() {
 }
 
 ci_bundle_install() {
-  ci_prefer_homebrew_ruby
+  ci_configure_path
   ci_require_cmd ruby
   ci_require_cmd bundle
 
   ci_log "ruby=$(command -v ruby)"
   ci_log "bundle=$(command -v bundle)"
+  ci_log "java=$(command -v java)"
   ruby --version
   bundle --version
 
