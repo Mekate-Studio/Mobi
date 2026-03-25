@@ -74,6 +74,32 @@ ci_prepare_workspace() {
   chmod +x "${CI_PROJECT_DIR}/amper" "${CI_PROJECT_DIR}"/scripts/ci/*.sh
 }
 
+ci_prefer_homebrew_ruby() {
+  local ruby_prefix=""
+  local candidate_bin=""
+
+  if ci_has_cmd brew; then
+    ruby_prefix="$(brew --prefix ruby 2>/dev/null || true)"
+  fi
+
+  for candidate_bin in \
+    "${ruby_prefix:+${ruby_prefix}/bin}" \
+    /opt/homebrew/opt/ruby/bin \
+    /usr/local/opt/ruby/bin
+  do
+    if [[ -n "${candidate_bin}" && -x "${candidate_bin}/ruby" && -x "${candidate_bin}/bundle" ]]; then
+      case ":${PATH}:" in
+        *":${candidate_bin}:"*) ;;
+        *) export PATH="${candidate_bin}:${PATH}" ;;
+      esac
+      ci_log "Using Ruby from ${candidate_bin}"
+      return 0
+    fi
+  done
+
+  ci_log "Homebrew Ruby not found; using PATH-provided Ruby"
+}
+
 ci_set_java_home() {
   if [[ -x /usr/libexec/java_home ]]; then
     export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home)}"
@@ -85,9 +111,12 @@ ci_set_java_home() {
 }
 
 ci_bundle_install() {
+  ci_prefer_homebrew_ruby
   ci_require_cmd ruby
   ci_require_cmd bundle
 
+  ci_log "ruby=$(command -v ruby)"
+  ci_log "bundle=$(command -v bundle)"
   ruby --version
   bundle --version
 
