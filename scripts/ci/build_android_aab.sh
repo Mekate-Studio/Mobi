@@ -17,9 +17,24 @@ if [[ -x /usr/libexec/java_home ]]; then
   export JAVA_HOME="${JAVA_HOME:-$(/usr/libexec/java_home)}"
 fi
 
+gradle_bin="${GRADLE_BIN:-}"
+
+if [[ -z "${gradle_bin}" ]]; then
+  gradle_bin="$(find "${HOME}/.gradle/wrapper/dists/gradle-8.14.3-bin" -path '*/gradle-8.14.3/bin/gradle' -type f 2>/dev/null | head -n 1 || true)"
+fi
+
+if [[ -z "${gradle_bin}" ]]; then
+  gradle_bin="$(command -v gradle || true)"
+fi
+
+if [[ -z "${gradle_bin}" ]]; then
+  echo "No Gradle binary found for building the Android App Bundle" >&2
+  exit 1
+fi
+
 cd "${generated_gradle_project}"
 
-gradle \
+"${gradle_bin}" \
   --no-daemon \
   -p "${generated_gradle_project}" \
   bundleRelease
