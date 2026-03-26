@@ -209,13 +209,7 @@ ci_bundle_install() {
   )
 }
 
-ci_prepare_android_job() {
-  ci_detect_context
-  ci_prepare_workspace
-  ci_set_java_home
-  ci_resolve_android_sdk_root || true
-  ci_bundle_install
-
+ci_log_android_sdk_env() {
   if [[ -n "${ANDROID_HOME:-}" ]]; then
     ci_log "ANDROID_HOME=${ANDROID_HOME}"
   fi
@@ -223,6 +217,15 @@ ci_prepare_android_job() {
   if [[ -n "${ANDROID_SDK_ROOT:-}" ]]; then
     ci_log "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}"
   fi
+}
+
+ci_prepare_android_job() {
+  ci_detect_context
+  ci_prepare_workspace
+  ci_set_java_home
+  ci_resolve_android_sdk_root || true
+  ci_bundle_install
+  ci_log_android_sdk_env
 
   (
     cd "${CI_PROJECT_DIR}"
@@ -262,14 +265,7 @@ ci_prepare_ios_job() {
   ci_configure_path
   ci_require_cmd xcodebuild
   xcodebuild -version
-
-  if [[ -n "${ANDROID_HOME:-}" ]]; then
-    ci_log "ANDROID_HOME=${ANDROID_HOME}"
-  fi
-
-  if [[ -n "${ANDROID_SDK_ROOT:-}" ]]; then
-    ci_log "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}"
-  fi
+  ci_log_android_sdk_env
 }
 
 ci_prepare_ios_fastlane_job() {

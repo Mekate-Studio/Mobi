@@ -13,19 +13,6 @@ fi
 
 echo
 echo "amper failed; printing recent Amper/Xcode logs if present..."
-
-if [ -d build/logs ]; then
-  find build/logs -type f \( -name "*.stderr" -o -name "*.stdout" -o -name "*.log" \) -print | sort | tail -n 10 | while IFS= read -r log_file; do
-    echo
-    echo "===== ${log_file} ====="
-    tail -n 200 "$log_file" || true
-  done
-fi
-
-find build/tasks -type f \( -name "xcodebuild.log" -o -name "*.log" \) -print | sort | tail -n 10 | while IFS= read -r log_file; do
-  echo
-  echo "===== ${log_file} ====="
-  tail -n 200 "$log_file" || true
-done
+./scripts/ci/print_recent_logs.sh amper
 
 exit 1
