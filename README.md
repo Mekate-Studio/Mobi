@@ -66,7 +66,13 @@ After the first iOS build, Amper manages `ios-app/module.xcodeproj`.
 The repository now has a portable CI layout:
 
 - `fastlane/` contains the platform build and release lanes
-- `scripts/ci/lib.sh` normalizes CI context and common bootstrap logic
+- `scripts/ci/lib.sh` is the entrypoint for shared CI shell helpers
+- `scripts/ci/lib/` splits CI helpers by concern:
+  - `common.sh`
+  - `context.sh`
+  - `env.sh`
+  - `android.sh`
+  - `ios.sh`
 - `scripts/ci/job_*.sh` are the shared job entrypoints
 - `.gitlab-ci.yml` is a thin GitLab adapter
 - `.github/workflows/mobile-ci.yml` is a thin GitHub Actions adapter

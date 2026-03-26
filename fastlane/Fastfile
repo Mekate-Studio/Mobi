@@ -93,6 +93,52 @@ def android_play_release_status
   ENV.fetch("ANDROID_PLAY_RELEASE_STATUS", "draft")
 end
 
+def android_release_artifact!
+  latest_android_artifact!(pattern: "build/**/*release*.{apk,aab}")
+end
+
+def android_release_upload_options
+  artifact = android_release_artifact!
+
+  {
+    track: "internal",
+    release_status: android_play_release_status,
+    aab: File.extname(artifact) == ".aab" ? artifact : nil,
+    apk: File.extname(artifact) == ".apk" ? artifact : nil
+  }
+end
+
+def ios_export_options
+  {
+    method: "app-store",
+    signingStyle: "manual",
+    teamID: ios_development_team!,
+    provisioningProfiles: {
+      ios_bundle_identifier! => ios_provisioning_profile_specifier!
+    }
+  }
+end
+
+def ios_xcargs
+  [
+    "DEVELOPMENT_TEAM=#{shell_escape(ios_development_team!)}",
+    "PRODUCT_BUNDLE_IDENTIFIER=#{shell_escape(ios_bundle_identifier!)}",
+    "PROVISIONING_PROFILE_SPECIFIER=#{shell_escape(ios_provisioning_profile_specifier!)}",
+    "MARKETING_VERSION=#{shell_escape(ios_version)}",
+    "CURRENT_PROJECT_VERSION=#{shell_escape(ios_build_number)}"
+  ].join(" ")
+end
+
+def resolved_ios_ipa!
+  if ios_ipa_path && File.exist?(ios_ipa_path)
+    ios_ipa_path
+  elsif Dir[File.join(project_root, "build", "ios", "**", "*.ipa")].empty?
+    buildRelease
+  else
+    latest_ios_ipa!
+  end
+end
+
 platform :android do
 
   desc "Builds the debug code"
@@ -113,14 +159,7 @@ platform :android do
 
   desc "Submit a new Internal Build to Play Store"
   lane :internal do
-    artifact = latest_android_artifact!(pattern: "build/**/*release*.{apk,aab}")
-
-    upload_to_play_store(
-      track: 'internal',
-      release_status: android_play_release_status,
-      aab: File.extname(artifact) == ".aab" ? artifact : nil,
-      apk: File.extname(artifact) == ".apk" ? artifact : nil
-    )
+    upload_to_play_store(**android_release_upload_options)
   end
 
   desc "Promote Internal to Alpha"
@@ -148,21 +187,8 @@ platform :ios do
       configuration: "Release",
       clean: true,
       export_method: "app-store",
-      export_options: {
-        method: "app-store",
-        signingStyle: "manual",
-        teamID: ios_development_team!,
-        provisioningProfiles: {
-          ios_bundle_identifier! => ios_provisioning_profile_specifier!
-        }
-      },
-      xcargs: [
-        "DEVELOPMENT_TEAM=#{shell_escape(ios_development_team!)}",
-        "PRODUCT_BUNDLE_IDENTIFIER=#{shell_escape(ios_bundle_identifier!)}",
-        "PROVISIONING_PROFILE_SPECIFIER=#{shell_escape(ios_provisioning_profile_specifier!)}",
-        "MARKETING_VERSION=#{shell_escape(ios_version)}",
-        "CURRENT_PROJECT_VERSION=#{shell_escape(ios_build_number)}"
-      ].join(" "),
+      export_options: ios_export_options,
+      xcargs: ios_xcargs,
       output_directory: File.join(project_root, "build", "ios"),
       output_name: "ios-app"
     )
@@ -171,17 +197,10 @@ platform :ios do
   desc "Uploads a signed iOS release build to TestFlight"
   lane :uploadTestFlight do
     api_key = app_store_connect_api_key_from_env!
-    ipa = if ios_ipa_path && File.exist?(ios_ipa_path)
-            ios_ipa_path
-          elsif Dir[File.join(project_root, "build", "ios", "**", "*.ipa")].empty?
-            buildRelease
-          else
-            latest_ios_ipa!
-          end
 
     upload_to_testflight(
       api_key: api_key,
-      ipa: ipa,
+      ipa: resolved_ios_ipa!,
       skip_waiting_for_build_processing: true
     )
   end
