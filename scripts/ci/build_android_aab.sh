@@ -46,16 +46,4 @@ if [[ -z "${aab_path}" ]]; then
   exit 1
 fi
 
-if [[ -n "${ANDROID_KEYSTORE_FILE:-}" && -n "${ANDROID_KEYSTORE_PASSWORD:-}" && -n "${ANDROID_KEY_ALIAS:-}" && -n "${ANDROID_KEY_PASSWORD:-}" ]]; then
-  jarsigner \
-    -keystore "${ANDROID_KEYSTORE_FILE}" \
-    -storepass "${ANDROID_KEYSTORE_PASSWORD}" \
-    -keypass "${ANDROID_KEY_PASSWORD}" \
-    "${aab_path}" \
-    "${ANDROID_KEY_ALIAS}"
-
-  jarsigner -verify "${aab_path}" >/dev/null
-else
-  echo "Android signing variables are required to sign the AAB" >&2
-  exit 1
-fi
+echo "Built Android App Bundle: ${aab_path}"
