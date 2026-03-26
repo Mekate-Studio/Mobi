@@ -258,8 +258,18 @@ ci_prepare_ios_job() {
   ci_detect_context
   ci_prepare_workspace
   ci_set_java_home
+  ci_resolve_android_sdk_root || true
+  ci_configure_path
   ci_require_cmd xcodebuild
   xcodebuild -version
+
+  if [[ -n "${ANDROID_HOME:-}" ]]; then
+    ci_log "ANDROID_HOME=${ANDROID_HOME}"
+  fi
+
+  if [[ -n "${ANDROID_SDK_ROOT:-}" ]]; then
+    ci_log "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}"
+  fi
 }
 
 ci_prepare_ios_fastlane_job() {
