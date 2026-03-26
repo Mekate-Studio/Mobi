@@ -176,6 +176,9 @@ Fastlane is the command layer between GitLab and Amper:
 - Android `buildRelease` now also produces a signed `.aab` for Play uploads
 - `test` calls `./amper test`
 - `internal` uploads the latest release artifact to the Play internal track
+- `internal` defaults to a Play release status of `draft` via
+  `ANDROID_PLAY_RELEASE_STATUS`, which is required while the Play app is still
+  in draft state
 - the promotion lanes move an already-uploaded build across Play tracks
 
 The Play configuration lives in `fastlane/Appfile` and is now driven by
@@ -202,6 +205,8 @@ release jobs:
 
 - `GOOGLE_PLAY_JSON_KEY`: either the raw service-account JSON content or a
   CI file secret pointing to that JSON file
+- `ANDROID_PLAY_RELEASE_STATUS`: optional Play release status override for
+  Android uploads; defaults to `draft` until the Play app leaves draft state
 - `ANDROID_PACKAGE_NAME`: optional override if you changed the package name from
   `studio.mekate.b3`
 - `ANDROID_KEYSTORE_FILE` or `ANDROID_KEYSTORE_BASE64`: the Android release
