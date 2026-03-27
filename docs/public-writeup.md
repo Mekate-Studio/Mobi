@@ -75,6 +75,40 @@ That separation turns the CI pipeline into something more like an API:
 Those names are the contract. GitHub Actions and GitLab both call the same job
 names, and local development can call them too.
 
+## A cleaner way to publish this as a reproducible example
+
+One thing I would do if I were sharing this more broadly is keep a separate
+minimal repository whose only job is to demonstrate the CI pattern.
+
+Amper makes that easier because the current CLI can scaffold a suitable starting
+point for you.
+
+If you already have the Amper CLI available locally, you can start with:
+
+```bash
+mkdir my-kmp-ci-app
+cd my-kmp-ci-app
+amper init compose-multiplatform
+```
+
+I verified locally on March 27, 2026 that `amper init compose-multiplatform`
+works non-interactively and produces a fresh project.
+
+That is a strong public starting point because it gives readers a generated
+baseline first, and then your article only has to explain what CI-specific files
+to add and why.
+
+The generated template is not quite the smallest possible mobile-only repo
+because it also includes a `jvm-app/` module, but that is not a blocker:
+
+- you can leave it in place and ignore it in CI
+- or you can remove it later if you want the example repo to be strictly
+  Android + iOS + shared
+
+Either way, it is much easier for readers to trust a flow that starts with a
+project-generation command than a flow that starts with "copy this whole sample
+repo and hope your paths match."
+
 ## What the GitHub Actions layer looks like
 
 The workflow is intentionally thin. A job installs a little toolchain setup and

@@ -11,6 +11,36 @@ It assumes you want the same overall model as this repository:
 - Amper for Kotlin Multiplatform builds
 - macOS runners so Android and iOS can live in one pipeline
 
+## 0. Start from a fresh Amper project
+
+If you already have the Amper CLI available locally, the cleanest starting point
+is to scaffold a new project first and then layer the CI files on top.
+
+In a new directory, run:
+
+```bash
+mkdir my-kmp-ci-app
+cd my-kmp-ci-app
+amper init compose-multiplatform
+```
+
+I verified locally on March 27, 2026 that the current Amper CLI exposes an
+`init` command and that `amper init compose-multiplatform` generates a fresh
+project non-interactively.
+
+That template gives you a very good baseline for this CI setup because it
+already creates:
+
+- `android-app/`
+- `ios-app/`
+- `shared/`
+- `project.yaml`
+- checked-in `amper` wrappers
+
+It also creates a `jvm-app/` module. You can keep that if you want an extra
+desktop target, or remove it later if you want the smallest possible mobile-only
+repo.
+
 ## 1. Copy the core files
 
 The minimum reusable pieces are:
@@ -38,6 +68,9 @@ The minimum reusable pieces are:
 
 If your project structure differs, update paths in those files before wiring up
 the workflow.
+
+If you started from `amper init compose-multiplatform`, the generated structure
+is already close enough that the path adjustments should be small.
 
 ## 2. Understand the job contract
 

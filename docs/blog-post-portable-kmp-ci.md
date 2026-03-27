@@ -96,6 +96,43 @@ They give the team a shared vocabulary. They let local development and CI talk
 about the same operations. They make it obvious what belongs in the repo and
 what belongs in the CI adapter.
 
+## If I were publishing this as a public example, I would start with Amper
+
+One improvement I would absolutely make when sharing this with other teams is to
+use a separate minimal repository as the public reproduction target.
+
+And importantly, that repo does not need to be hand-assembled from scratch.
+
+The current Amper CLI can scaffold a strong starting point for this setup:
+
+```bash
+mkdir my-kmp-ci-app
+cd my-kmp-ci-app
+amper init compose-multiplatform
+```
+
+I verified locally on March 27, 2026 that `amper init compose-multiplatform`
+works non-interactively and generates a fresh project.
+
+That matters for the story.
+
+It means the article can start with a command readers can run, not just a repo
+they are supposed to copy. It also means the public sample can stay focused on
+the CI pattern itself instead of also having to justify a bunch of unrelated app
+boilerplate.
+
+The generated project includes:
+
+- `android-app/`
+- `ios-app/`
+- `shared/`
+- `project.yaml`
+- checked-in `amper` wrappers
+
+It also includes a `jvm-app/` module. For a strict mobile-only sample, I would
+either remove that module after generation or just leave it in place and ignore
+it in CI until there is a reason to use it.
+
 ## What "thin CI" actually looks like
 
 Once the real job logic moves into the repo, the GitHub Actions workflow gets
