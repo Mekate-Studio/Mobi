@@ -41,14 +41,11 @@ It also creates a `jvm-app/` module. You can keep that if you want an extra
 desktop target, or remove it later if you want the smallest possible mobile-only
 repo.
 
-If you want to see what that trimmed mobile-only result looks like, there is now
-a concrete scaffold in this repository at
-[`examples/minimal-public-sample-repo/`](../examples/minimal-public-sample-repo/README.md).
-Inside this repository, that sample can be refreshed from the latest Amper
-template with
-[`scripts/regenerate_minimal_public_sample_repo.sh`](../scripts/regenerate_minimal_public_sample_repo.sh).
-When published as its own repository, the sample also includes
-`./scripts/regenerate_from_amper.sh` so it can rebuild its app layer in place.
+If you want to see what that trimmed mobile-only result looks like, the
+published sample repository is:
+[Portable KMP CI Sample](https://github.com/Mekate-Studio/Portable-KMP-CI).
+That sample includes `./scripts/regenerate_from_amper.sh` so it can rebuild its
+app layer in place when the Amper template changes.
 
 ## 1. Copy the core files
 

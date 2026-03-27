@@ -16,23 +16,12 @@ Actions guide:
 
 - [GitHub Actions Quickstart](docs/quickstart-github-actions.md)
 - [Public Write-Up](docs/public-writeup.md)
-- [Blog Post Version](examples/minimal-public-sample-repo/docs/portable-kmp-ci.md)
+- [Blog Post Version](https://github.com/Mekate-Studio/Portable-KMP-CI/blob/main/docs/portable-kmp-ci.md)
 - [Minimal Public Sample Repo Blueprint](docs/minimal-public-sample-repo.md)
 
-There is also a concrete companion scaffold you can split into its own
-repository:
+There is also a published companion sample repository:
 
-- [Minimal Public Sample Repo](examples/minimal-public-sample-repo/README.md)
-
-To refresh that companion scaffold from the latest Amper template, run:
-
-```bash
-./scripts/regenerate_minimal_public_sample_repo.sh
-```
-
-That companion scaffold also includes its own
-`./scripts/regenerate_from_amper.sh` command, so it can be published as a
-standalone GitHub repo and refreshed in place later.
+- [Portable KMP CI Sample](https://github.com/Mekate-Studio/Portable-KMP-CI)
 
 Reference material lives here:
 

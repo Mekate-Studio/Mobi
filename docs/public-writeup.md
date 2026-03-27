@@ -110,21 +110,13 @@ project-generation command than a flow that starts with "copy this whole sample
 repo and hope your paths match."
 
 I also recommend publishing a concrete companion sample repository alongside the
-article. In this repository, that shape now exists under
-[`examples/minimal-public-sample-repo/`](../examples/minimal-public-sample-repo/README.md)
+article. In this case, that published sample now lives at
+[Portable KMP CI Sample](https://github.com/Mekate-Studio/Portable-KMP-CI)
 as a mobile-only scaffold derived from the Amper template.
 
-To keep that sample maintainable, this repository also includes
-[`scripts/regenerate_minimal_public_sample_repo.sh`](../scripts/regenerate_minimal_public_sample_repo.sh).
-It reruns `amper init compose-multiplatform`, trims the generated project back
-to Android + iOS + shared, and reapplies the CI overlay. That means the public
-sample can be refreshed from a command when Amper evolves instead of slowly
-drifting away from the article.
-
-The companion sample itself now also includes a self-contained
-`./scripts/regenerate_from_amper.sh`, so if you publish that folder as its own
-GitHub repository it can delete and rebuild the Amper-generated app layer
-without depending on this parent repository.
+That sample includes its own self-contained
+`./scripts/regenerate_from_amper.sh`, so it can delete and rebuild the
+Amper-generated app layer when the template changes.
 
 ## What the GitHub Actions layer looks like
 

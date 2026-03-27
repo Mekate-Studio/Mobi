@@ -3,10 +3,8 @@
 This document defines the smallest separate repository I would create to
 demonstrate the CI pattern from this project in a clean, reproducible way.
 
-A concrete scaffold based on this plan now exists in this repository at
-[`examples/minimal-public-sample-repo/`](../examples/minimal-public-sample-repo/README.md).
-It can be regenerated from the current Amper template with
-[`scripts/regenerate_minimal_public_sample_repo.sh`](../scripts/regenerate_minimal_public_sample_repo.sh).
+A concrete version of this plan now lives in the published sample repository:
+[Portable KMP CI Sample](https://github.com/Mekate-Studio/Portable-KMP-CI).
 
 The goal is not to publish a polished app. The goal is to publish the minimum
 Kotlin Multiplatform project that still exercises:
@@ -31,21 +29,8 @@ amper init compose-multiplatform
 I verified locally on March 27, 2026 that the current Amper CLI supports
 `amper init compose-multiplatform` non-interactively.
 
-If you are maintaining the companion sample inside this repository, you do not
-need to repeat those manual steps each time. Run:
-
-```bash
-./scripts/regenerate_minimal_public_sample_repo.sh
-```
-
-That script reruns `amper init compose-multiplatform`, trims the generated
-project back to Android + iOS + shared, and overlays the CI files that belong
-to this setup.
-
-The generated companion sample now also contains its own
-`./scripts/regenerate_from_amper.sh` command, so if you publish that folder as
-a standalone GitHub repository it can delete and recreate its Amper-generated
-app layer in place without depending on this parent repository.
+The published sample includes its own `./scripts/regenerate_from_amper.sh`
+command so it can delete and recreate its Amper-generated app layer in place.
 
 ## What to keep from the Amper scaffold
 
@@ -266,9 +251,8 @@ succeeded:
 That is a good signal that the public sample repo can stay mobile-focused
 without keeping the generated JVM app around.
 
-I also scaffolded the concrete companion sample under
-[`examples/minimal-public-sample-repo/`](../examples/minimal-public-sample-repo/README.md)
-and validated its documented local smoke-test path sequentially with:
+I also scaffolded the concrete companion sample and validated its documented
+local smoke-test path sequentially with:
 
 ```bash
 ./scripts/ci/run_job.sh android-build-debug
@@ -302,19 +286,6 @@ export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
 ```
 
 8. Commit that baseline before adding release secrets.
-
-## Keeping the sample and blog post current
-
-This repository now has a single maintenance command for refreshing the sample
-against a newer Amper release:
-
-```bash
-./scripts/regenerate_minimal_public_sample_repo.sh
-```
-
-My recommendation is to use that script whenever Amper changes its generated
-project layout, then rerun the documented smoke tests and update the blog post
-only where the scaffolding story actually changed.
 
 ## My recommendation
 
