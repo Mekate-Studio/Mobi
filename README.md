@@ -15,6 +15,8 @@ If you want to reuse this setup in another project, start with the GitHub
 Actions guide:
 
 - [GitHub Actions Quickstart](docs/quickstart-github-actions.md)
+- [Public Write-Up](docs/public-writeup.md)
+- [Blog Post Version](docs/blog-post-portable-kmp-ci.md)
 
 Reference material lives here:
 
