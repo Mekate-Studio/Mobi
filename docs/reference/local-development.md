@@ -31,6 +31,7 @@ the Shell Script plugin is enabled.
 Recommended daily entry points:
 
 ```bash
+just doctor
 just android-run
 just android-build-debug
 just ios-open
@@ -44,6 +45,9 @@ multiple Android devices are connected, set `ANDROID_SERIAL` first.
 `just ios-open` opens [`ios-app/module.xcodeproj`](../../ios-app/module.xcodeproj)
 in Xcode, where you can use the standard iOS run/debug loop against a simulator
 or device.
+
+`just doctor` checks the expected local toolchain and shows whether an Android
+device or emulator is already available for `just android-run`.
 
 ## Shared job dispatcher
 

@@ -16,7 +16,13 @@ require_cmd() {
 }
 
 select_device() {
-  mapfile -t devices < <(adb devices | awk 'NR > 1 && $2 == "device" { print $1 }')
+  local devices=()
+  local device=""
+
+  while IFS= read -r device; do
+    [[ -n "${device}" ]] || continue
+    devices+=("${device}")
+  done < <(adb devices | awk 'NR > 1 && $2 == "device" { print $1 }')
 
   if [[ ${#devices[@]} -eq 0 ]]; then
     echo "No Android device or emulator is ready. Start one, then run again." >&2

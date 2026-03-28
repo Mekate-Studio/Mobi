@@ -3,6 +3,9 @@ set shell := ["zsh", "-lic"]
 default:
   @just --list
 
+doctor:
+  ./scripts/dev/doctor.sh
+
 android-build-debug:
   ./scripts/ci/run_job.sh android-build-debug
 
