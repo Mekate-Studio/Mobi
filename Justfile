@@ -6,11 +6,20 @@ default:
 doctor:
   ./scripts/dev/doctor.sh
 
+android-emulators:
+  ./scripts/dev/android_emulators.sh
+
 android-build-debug:
   ./scripts/ci/run_job.sh android-build-debug
 
 android-run:
   ./scripts/dev/android_run.sh
+
+android-run-debug:
+  ./scripts/dev/android_run_wait_for_debugger.sh
+
+android-start avd:
+  ./scripts/dev/android_start_emulator.sh "{{avd}}"
 
 android-build-release:
   ./scripts/ci/run_job.sh android-build-release

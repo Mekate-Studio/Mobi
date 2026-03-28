@@ -32,7 +32,10 @@ Recommended daily entry points:
 
 ```bash
 just doctor
+just android-emulators
+just android-start <avd-name>
 just android-run
+just android-run-debug
 just android-build-debug
 just ios-open
 just ios-build-debug
@@ -41,6 +44,16 @@ just ios-build-debug
 `just android-run` builds the debug APK with the same repo-owned flow used by
 CI, installs it with `adb`, and launches `studio.mekate.b3.MainActivity`. If
 multiple Android devices are connected, set `ANDROID_SERIAL` first.
+
+`just android-run-debug` does the same install flow, but launches the app with
+`am start -D`, so the process waits for a debugger. After that, use `Run >
+Attach debugger to Android process` in Android Studio or IntelliJ IDEA and
+select `studio.mekate.b3`.
+
+`just android-emulators` lists the locally available Android Virtual Devices.
+
+`just android-start <avd-name>` starts a named emulator in the background and
+writes its output to `build/logs/android-emulator-<avd-name>.log`.
 
 `just ios-open` opens [`ios-app/module.xcodeproj`](../../ios-app/module.xcodeproj)
 in Xcode, where you can use the standard iOS run/debug loop against a simulator
