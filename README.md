@@ -99,6 +99,11 @@ just android-test
 just ios-build-debug
 ```
 
+The iOS build jobs target a generic iOS Simulator destination and force a
+single simulator architecture matching the host. That removes the dependency on
+a precreated simulator device. The remaining host requirement is that Xcode has
+an iOS Simulator runtime installed.
+
 ## Why this layout works
 
 The main idea is to keep orchestration separate from implementation:

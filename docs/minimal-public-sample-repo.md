@@ -261,9 +261,11 @@ local smoke-test path sequentially with:
 ./scripts/ci/run_job.sh ios-build-debug
 ```
 
-The `ios-build-release` path remains part of the sample workflow, but on local
-machines it can still be sensitive to simulator availability on the host. For
-that reason, `ios-build-debug` is the more reliable local baseline check.
+The iOS build jobs now target a generic iOS Simulator destination and force a
+single simulator architecture matching the host. That removes the dependency on
+a precreated simulator device. The remaining host requirement is that Xcode has
+an iOS Simulator runtime installed, so `ios-build-debug` remains the safer
+local baseline check.
 
 ## Suggested bootstrap sequence for the separate repo
 

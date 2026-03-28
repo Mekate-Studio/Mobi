@@ -13,29 +13,13 @@ project_root="$(cd "$(dirname "$0")/../.." && pwd)"
 log_dir="${project_root}/build/logs"
 derived_data_dir="${project_root}/build/xcode-derived-data"
 log_file="${log_dir}/xcodebuild-ios-${configuration}.log"
+host_arch="$(uname -m)"
+simulator_arch="arm64"
 
 mkdir -p "${log_dir}" "${derived_data_dir}"
 
-simulator_id="$(
-  xcodebuild \
-    -project "${project_root}/ios-app/module.xcodeproj" \
-    -scheme app \
-    -sdk iphonesimulator \
-    -showdestinations 2>/dev/null | sed -n '
-      /Available destinations for the "app" scheme:/,/Ineligible destinations/ {
-        /platform:iOS Simulator/ {
-          /name:iPhone/ {
-            s/.*id:\([^,}]*\).*/\1/p
-            q
-          }
-        }
-      }
-    '
-)"
-
-if [[ -z "${simulator_id}" ]]; then
-  echo "No available iPhone simulator found on this runner" >&2
-  exit 1
+if [[ "${host_arch}" == "x86_64" ]]; then
+  simulator_arch="x86_64"
 fi
 
 cmd=(
@@ -44,8 +28,11 @@ cmd=(
   -scheme app
   -configuration "${configuration}"
   -sdk iphonesimulator
-  -destination "id=${simulator_id}"
+  -destination "generic/platform=iOS Simulator"
+  -arch "${simulator_arch}"
   -derivedDataPath "${derived_data_dir}"
+  ONLY_ACTIVE_ARCH=YES
+  ARCHS="${simulator_arch}"
   CODE_SIGNING_ALLOWED=NO
   CODE_SIGNING_REQUIRED=NO
   build

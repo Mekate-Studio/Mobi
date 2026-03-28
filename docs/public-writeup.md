@@ -276,6 +276,11 @@ That changes the debugging experience quite a bit. If the shared job works
 locally, most later failures are usually about runner provisioning, secrets, or
 artifact handoff, not about hidden YAML behavior.
 
+For the iOS build-only jobs, this setup now uses a generic iOS Simulator
+destination and forces a single simulator architecture matching the host. That
+avoids depending on a precreated simulator device while still working around
+Amper's current limitation around multi-architecture simulator builds.
+
 ## What I would recommend to teams copying this setup
 
 If you want to reproduce this pattern in another repository, copy the smallest

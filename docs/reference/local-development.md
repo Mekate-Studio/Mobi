@@ -7,7 +7,7 @@ One of the goals of this CI design is that the same job contract works locally.
 - JDK 21+
 - Ruby and Bundler
 - Android SDK for Android jobs
-- Xcode for iOS jobs
+- Xcode with an installed iOS Simulator runtime for iOS jobs
 
 Set a writable Amper cache before running build commands:
 
@@ -29,6 +29,11 @@ The fastest way to exercise the same paths CI uses is through
 ```
 
 This is the best path for reproducing CI behavior without pushing commits.
+
+The iOS build jobs target a generic iOS Simulator destination and force a
+single simulator architecture matching the host. That removes the dependency on
+a precreated simulator device while still avoiding Amper's current
+multi-architecture simulator build limitation.
 
 ## Just recipes
 
