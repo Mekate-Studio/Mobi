@@ -15,6 +15,36 @@ Set a writable Amper cache before running build commands:
 export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
 ```
 
+## IDE flow without Gradle sync
+
+Because this repository uses Amper instead of Gradle as the project model,
+Android Studio will not generate the normal Android run configurations for the
+app module. The supported low-friction workflow is:
+
+- use the checked-in shell run configurations under `.run/`
+- use repo-owned scripts under `scripts/dev/`
+- treat Xcode as the primary runner/debugger for iOS
+
+If your JetBrains IDE does not show the shared `.run` configurations, make sure
+the Shell Script plugin is enabled.
+
+Recommended daily entry points:
+
+```bash
+just android-run
+just android-build-debug
+just ios-open
+just ios-build-debug
+```
+
+`just android-run` builds the debug APK with the same repo-owned flow used by
+CI, installs it with `adb`, and launches `studio.mekate.b3.MainActivity`. If
+multiple Android devices are connected, set `ANDROID_SERIAL` first.
+
+`just ios-open` opens [`ios-app/module.xcodeproj`](../../ios-app/module.xcodeproj)
+in Xcode, where you can use the standard iOS run/debug loop against a simulator
+or device.
+
 ## Shared job dispatcher
 
 The fastest way to exercise the same paths CI uses is through

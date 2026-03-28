@@ -6,6 +6,9 @@ default:
 android-build-debug:
   ./scripts/ci/run_job.sh android-build-debug
 
+android-run:
+  ./scripts/dev/android_run.sh
+
 android-build-release:
   ./scripts/ci/run_job.sh android-build-release
 
@@ -14,6 +17,9 @@ android-test:
 
 ios-build-debug:
   ./scripts/ci/run_job.sh ios-build-debug
+
+ios-open:
+  ./scripts/dev/ios_open.sh
 
 ios-build-release:
   ./scripts/ci/run_job.sh ios-build-release
