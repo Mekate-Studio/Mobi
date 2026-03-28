@@ -4,7 +4,7 @@ One of the goals of this CI design is that the same job contract works locally.
 
 ## Prerequisites
 
-- JDK 17+
+- JDK 21+
 - Ruby and Bundler
 - Android SDK for Android jobs
 - Xcode for iOS jobs

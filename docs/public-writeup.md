@@ -128,7 +128,7 @@ then hands off to the shared dispatcher:
 - uses: actions/setup-java@v4
   with:
     distribution: temurin
-    java-version: "17"
+    java-version: "21"
 - uses: ruby/setup-ruby@v1
   with:
     bundler-cache: true
