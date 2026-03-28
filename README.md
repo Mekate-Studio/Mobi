@@ -120,3 +120,30 @@ The main idea is to keep orchestration separate from implementation:
 
 This makes the setup easier to test locally, easier to port between CI
 platforms, and easier to explain to other teams.
+
+## Scheduled maintenance
+
+This repository can refresh tracked dependency state through scheduled GitLab
+pipelines:
+
+- `refreshBundlerLockfile` updates [`Gemfile.lock`](Gemfile.lock) with
+  `bundle update fastlane`, runs
+  [`./scripts/ci/run_job.sh android-build-debug`](scripts/ci/run_job.sh), and
+  opens a merge request if the lockfile changed.
+- `refreshAmperDependencies` updates the explicit Amper-managed Android
+  dependency versions in
+  [`android-app/module.yaml`](android-app/module.yaml), runs the same smoke
+  test, and opens a merge request if a tracked version changed.
+
+To enable merge request creation from scheduled pipelines, configure these
+GitLab CI variables:
+
+- `GITLAB_MAINTENANCE_TOKEN`: token with API and repository write access
+- `GITLAB_MAINTENANCE_USERNAME`: optional push username, defaults to `oauth2`
+- `GITLAB_MAINTENANCE_GIT_NAME`: optional Git author name for maintenance
+  commits
+- `GITLAB_MAINTENANCE_GIT_EMAIL`: optional Git author email for maintenance
+  commits
+
+The Amper refresh job also accepts `ACTIVITY_COMPOSE_VERSION` if you want to
+override the discovered latest version during a manual or scheduled pipeline.
