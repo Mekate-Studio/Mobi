@@ -12,3 +12,7 @@ android-app/keystore.properties
 android-app/*.jks
 android-app/*.keystore
 fastlane/AuthKey.p8
+fastlane/report.xml
+secrets/
+ios-app/module.xcodeproj/project.xcworkspace/
+ios-app/module.xcodeproj/xcuserdata/
