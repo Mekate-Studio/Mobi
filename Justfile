@@ -25,7 +25,7 @@ android-build-release:
   ./scripts/ci/run_job.sh android-build-release
 
 android-test:
-  ./scripts/ci/run_job.sh android-test
+  ./scripts/dev/android_test.sh
 
 ios-build-debug:
   ./scripts/ci/run_job.sh ios-build-debug

@@ -16,3 +16,4 @@ fastlane/report.xml
 secrets/
 ios-app/module.xcodeproj/project.xcworkspace/
 ios-app/module.xcodeproj/xcuserdata/
+/.gradle-user-home/

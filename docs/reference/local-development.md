@@ -36,6 +36,7 @@ just android-emulators
 just android-start <avd-name>
 just android-run
 just android-run-debug
+just android-test
 just android-build-debug
 just ios-open
 just ios-build-debug
@@ -49,6 +50,11 @@ multiple Android devices are connected, set `ANDROID_SERIAL` first.
 `am start -D`, so the process waits for a debugger. After that, use `Run >
 Attach debugger to Android process` in Android Studio or IntelliJ IDEA and
 select `studio.mekate.b3`.
+
+`just android-test` runs `./amper test -m shared -p android` directly, stores
+JUnit XML under `build/reports/shared/android`, and prints a compact test
+summary with failure details. This is the recommended local and IDE-friendly
+test entry point.
 
 `just android-emulators` lists the locally available Android Virtual Devices.
 
@@ -76,6 +82,9 @@ The fastest way to exercise the same paths CI uses is through
 ```
 
 This is the best path for reproducing CI behavior without pushing commits.
+Use `just android-test` instead when you want cleaner local test output in the
+terminal or through the shared `.run/Android Test` configuration in IntelliJ
+IDEA / Android Studio.
 
 The iOS build jobs target a generic iOS Simulator destination and force a
 single simulator architecture matching the host. That removes the dependency on
