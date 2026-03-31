@@ -1,4 +1,4 @@
-package studio.mekate.b3.shared
+package studio.mekate.b3.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

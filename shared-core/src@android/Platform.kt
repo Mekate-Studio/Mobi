@@ -1,3 +1,3 @@
-package studio.mekate.b3.shared
+package studio.mekate.b3.core
 
 actual fun platformName(): String = "Android"

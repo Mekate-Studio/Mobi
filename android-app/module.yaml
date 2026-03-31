@@ -1,7 +1,7 @@
 product: android/app
 
 dependencies:
-  - ../shared
+  - ../shared-feature-home
   - androidx.activity:activity-compose:1.8.2
 
 settings:

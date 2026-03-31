@@ -1,4 +1,6 @@
 modules:
+  - shared-core
+  - shared-feature-home
   - shared
   - android-app
   - ios-app

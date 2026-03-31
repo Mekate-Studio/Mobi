@@ -35,8 +35,12 @@ Reference material lives here:
 
 - [`project.yaml`](project.yaml): Amper
   workspace entrypoint
-- [`shared/`](shared): shared Kotlin and
-  Compose code
+- [`shared-core/`](shared-core): shared
+  domain and platform-agnostic Kotlin logic
+- [`shared-feature-home/`](shared-feature-home): first
+  shared feature module with reusable Compose UI
+- [`shared/`](shared): compatibility
+  bridge while the old shared module is being phased out
 - [`android-app/`](android-app): Android
   app target
 - [`ios-app/`](ios-app): iOS app target

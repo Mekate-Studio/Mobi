@@ -1,8 +1,12 @@
 # Mobile Architecture
 
-This project currently starts from a very small Kotlin Multiplatform skeleton:
+This project currently uses an early split of the target structure:
 
-- [`shared/`](../../shared): shared Kotlin and Compose code
+- [`shared-core/`](../../shared-core): shared Kotlin domain and platform logic
+- [`shared-feature-home/`](../../shared-feature-home): first shared feature
+  module with reusable Compose UI
+- [`shared/`](../../shared): compatibility bridge while older imports are
+  phased out
 - [`android-app/`](../../android-app): Android app host
 - [`ios-app/`](../../ios-app): iOS app host
 
@@ -280,23 +284,23 @@ Native when the platform experience matters:
 
 ## Migration plan for this repo
 
-The current repository has one shared screen rendered directly by both apps:
+The current repository already contains the first shared split:
 
-- [`shared/src/Screen.kt`](../../shared/src/Screen.kt)
-- [`android-app/src/MainActivity.kt`](../../android-app/src/MainActivity.kt)
-- [`ios-app/src/iosApp.swift`](../../ios-app/src/iosApp.swift)
+- [`shared-core/`](../../shared-core)
+- [`shared-feature-home/`](../../shared-feature-home)
+- [`shared/`](../../shared)
 
 The recommended implementation order is:
 
-1. Introduce shared core modules for domain, data, and dependency wiring.
-2. Introduce one shared feature module with a clear contract and state
-   producer.
-3. Add Android presentation wiring with Circuit around that feature.
-4. Add iOS presentation wiring with TCA around the same feature contract.
-5. Add shared Compose UI only for the first feature where reuse is clearly
-   worth it.
-6. Move the current demo screen into either a shared feature UI module or a
-   native proof-of-concept screen, then remove the old direct-hosting pattern.
+1. Expand `shared-core` into domain, data, and dependency wiring modules as
+   the app grows.
+2. Add more `shared-feature-*` modules with explicit feature contracts and
+   state producers.
+3. Add Android presentation wiring with Circuit around each feature.
+4. Add iOS presentation wiring with TCA around the same feature contracts.
+5. Keep shared Compose UI only where the reuse remains clearly worth it.
+6. Remove the compatibility `shared/` bridge once app code no longer depends on
+   the old package surface.
 
 ## Default engineering rules
 
