@@ -2,6 +2,7 @@ product:
   type: ios/app
 
 dependencies:
+  - ../shared-feature-home
   - ../shared-ui-home
 
 settings:

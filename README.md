@@ -46,6 +46,7 @@ Reference material lives here:
 - [`android-app/`](android-app): Android
   app target
 - [`ios-app/`](ios-app): iOS app target
+  with native SwiftUI shell and shared Kotlin feature backing
 - [`.github/workflows/mobile-ci.yml`](.github/workflows/mobile-ci.yml):
   GitHub Actions adapter
 - [`.gitlab-ci.yml`](.gitlab-ci.yml):

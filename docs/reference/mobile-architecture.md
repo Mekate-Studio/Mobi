@@ -96,6 +96,11 @@ code can expose feature contracts and state, but not Circuit `Screen`,
 Koin may power the shared Kotlin graph, but Swift should depend on small KMP
 facades or adapters instead of reaching deeply into a Kotlin DI container.
 
+The current home flow follows this rule by using a native SwiftUI shell in
+[`ios-app/src/`](../../ios-app/src) that consumes the shared Kotlin
+`HomeFeatureStateFactory` rather than rendering the shared Compose route as the
+main app root.
+
 ### Shared
 
 - Kotlin Multiplatform for domain, data, and feature workflows
