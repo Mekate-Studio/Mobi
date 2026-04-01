@@ -2,7 +2,9 @@ product: android/app
 
 dependencies:
   - ../shared-feature-home
+  - ../shared-ui-home
   - androidx.activity:activity-compose:1.8.2
+  - com.slack.circuit:circuit-foundation:0.31.0
 
 settings:
   compose: enabled

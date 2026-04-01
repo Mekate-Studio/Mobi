@@ -4,7 +4,9 @@ This project currently uses an early split of the target structure:
 
 - [`shared-core/`](../../shared-core): shared Kotlin domain and platform logic
 - [`shared-feature-home/`](../../shared-feature-home): first shared feature
-  module with reusable Compose UI
+  contract and state module
+- [`shared-ui-home/`](../../shared-ui-home): reusable Compose Multiplatform
+  UI for the home feature
 - [`shared/`](../../shared): compatibility bridge while older imports are
   phased out
 - [`android-app/`](../../android-app): Android app host
@@ -288,6 +290,7 @@ The current repository already contains the first shared split:
 
 - [`shared-core/`](../../shared-core)
 - [`shared-feature-home/`](../../shared-feature-home)
+- [`shared-ui-home/`](../../shared-ui-home)
 - [`shared/`](../../shared)
 
 The recommended implementation order is:

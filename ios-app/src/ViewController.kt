@@ -1,4 +1,4 @@
 import androidx.compose.ui.window.ComposeUIViewController
-import studio.mekate.b3.feature.home.HomeScreen
+import studio.mekate.b3.ui.home.HomeRoute
 
-fun ViewController() = ComposeUIViewController { HomeScreen() }
+fun ViewController() = ComposeUIViewController { HomeRoute() }

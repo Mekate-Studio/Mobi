@@ -3,9 +3,7 @@ product:
   platforms: [android, iosArm64, iosSimulatorArm64, iosX64]
 
 dependencies:
-  - ../shared-core
   - ../shared-feature-home
-  - ../shared-ui-home
   - $compose.foundation: exported
   - $compose.material3: exported
 

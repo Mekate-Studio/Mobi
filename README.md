@@ -38,7 +38,9 @@ Reference material lives here:
 - [`shared-core/`](shared-core): shared
   domain and platform-agnostic Kotlin logic
 - [`shared-feature-home/`](shared-feature-home): first
-  shared feature module with reusable Compose UI
+  shared feature contract and state module
+- [`shared-ui-home/`](shared-ui-home): reusable
+  Compose Multiplatform home feature UI
 - [`shared/`](shared): compatibility
   bridge while the old shared module is being phased out
 - [`android-app/`](android-app): Android
