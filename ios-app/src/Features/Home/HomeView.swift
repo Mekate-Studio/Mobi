@@ -1,13 +1,4 @@
-import KotlinModules
 import SwiftUI
-
-struct ComposeHomeView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> some UIViewController {
-        ViewControllerKt.ViewController()
-    }
-
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
-}
 
 struct HomeView: View {
     @ObservedObject var store: HomeStore
@@ -55,11 +46,6 @@ struct HomeView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(Color(red: 0.12, green: 0.38, blue: 0.84))
-
-                    ComposeHomeView()
-                        .frame(height: 0)
-                        .opacity(0.0)
-                        .accessibilityHidden(true)
                 }
                 .padding(24)
             }

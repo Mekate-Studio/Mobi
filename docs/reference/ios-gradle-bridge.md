@@ -215,6 +215,31 @@ This gives the team three useful modes:
 
 This switch is also the simplest rollback mechanism during the rollout.
 
+In this repository, the Xcode project now supports exactly that switch through
+the `KOTLIN_IOS_BUILDER` environment variable:
+
+- `amper`: current default path
+- `gradle`: temporary direct-integration bridge for iOS
+
+When using the Gradle path, set `GRADLE_USER_HOME` to a writable cache such as
+`$PWD/.gradle-user-home` in local development and CI.
+
+The debug simulator path is already verified in this repository with:
+
+```bash
+KOTLIN_IOS_BUILDER=gradle \
+GRADLE_USER_HOME="$PWD/.gradle-user-home" \
+./scripts/ci/run_job.sh ios-build-debug
+```
+
+The unsigned release simulator path is also verified with:
+
+```bash
+KOTLIN_IOS_BUILDER=gradle \
+GRADLE_USER_HOME="$PWD/.gradle-user-home" \
+./scripts/ci/run_job.sh ios-build-release
+```
+
 ## Stage 4: Prove the bridge locally before touching CI
 
 The first local success criteria should be narrow:

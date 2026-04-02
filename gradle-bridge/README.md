@@ -31,12 +31,15 @@ Verified so far:
 
 1. `:shared-kit:assemble`
 2. `bridgeDoctor`
+3. `KOTLIN_IOS_BUILDER=gradle ./scripts/ci/run_job.sh ios-build-debug`
+4. `KOTLIN_IOS_BUILDER=gradle ./scripts/ci/run_job.sh ios-build-release`
 
-The next bootstrap step is to wire Xcode to the bridge through a switchable
-build phase, then verify:
+The next bootstrap step is to prove the release-oriented paths, then verify:
 
 1. `:shared-kit:embedAndSignAppleFrameworkForXcode`
-2. iOS app builds from Xcode with `KOTLIN_IOS_BUILDER=gradle`
+2. `bundle exec fastlane ios buildRelease`
+3. `./scripts/ci/run_job.sh ios-archive-release`
+4. `./scripts/ci/run_job.sh ios-testflight`
 
 ## Source ownership
 

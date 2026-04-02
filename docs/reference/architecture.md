@@ -54,6 +54,13 @@ variables, but the rest of the pipeline only sees normalized values like:
 - `VERSION_NAME`
 - `IOS_BUILD_NUMBER`
 
+The iOS helpers also normalize the temporary Kotlin builder selection used by
+the Xcode project:
+
+- `KOTLIN_IOS_BUILDER=amper` keeps the current Amper path
+- `KOTLIN_IOS_BUILDER=gradle` switches iOS to the Gradle bridge
+- `GRADLE_USER_HOME` points the bridge at a repo-local Gradle cache
+
 ### 4. Platform command layer
 
 [`fastlane/Fastfile`](../../fastlane/Fastfile)
