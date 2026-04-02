@@ -20,7 +20,6 @@ stages:
 
 variables:
   AMPER_BOOTSTRAP_CACHE_DIR: "$CI_PROJECT_DIR/.amper-cache"
-  GRADLE_USER_HOME: "$HOME/.gradle-user-home/$CI_PROJECT_PATH_SLUG"
   LANG: "en_US.UTF-8"
   LC_ALL: "en_US.UTF-8"
 
@@ -45,6 +44,7 @@ cache:
     - macos
   variables:
     KOTLIN_IOS_BUILDER: "gradle"
+    GRADLE_USER_HOME: "$HOME/.gradle-user-home/$CI_PROJECT_PATH_SLUG"
 
 .ios_fastlane_job:
   extends: .ios_job
