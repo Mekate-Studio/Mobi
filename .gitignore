@@ -20,6 +20,12 @@ android-app/*.keystore
 fastlane/AuthKey.p8
 fastlane/report.xml
 secrets/
-ios-app/module.xcodeproj/project.xcworkspace/
+ios-app/module.xcodeproj/project.xcworkspace/*
+!ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/
+ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/*
+!ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/*
+!ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+ios-app/module.xcodeproj/project.xcworkspace/xcuserdata/
 ios-app/module.xcodeproj/xcuserdata/
 /.gradle-user-home/
