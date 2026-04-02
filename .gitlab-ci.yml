@@ -44,6 +44,8 @@ cache:
 .ios_job:
   tags:
     - macos
+  variables:
+    KOTLIN_IOS_BUILDER: "gradle"
 
 .ios_fastlane_job:
   extends: .ios_job

@@ -240,6 +240,34 @@ GRADLE_USER_HOME="$PWD/.gradle-user-home" \
 ./scripts/ci/run_job.sh ios-build-release
 ```
 
+The signed archive and IPA export path is also verified in this repository with
+the Gradle bridge selected:
+
+```bash
+PATH=/opt/homebrew/opt/ruby/bin:$PATH \
+KOTLIN_IOS_BUILDER=gradle \
+IOS_BUNDLE_IDENTIFIER=studio.mekate.b3 \
+IOS_DEVELOPMENT_TEAM=6GAE983XW9 \
+IOS_PROVISIONING_PROFILE_SPECIFIER="b3 app store" \
+bundle exec fastlane ios buildRelease
+```
+
+That command produced:
+
+- `build/ios/ios-app.ipa`
+- `build/ios/ios-app.app.dSYM.zip`
+
+The remaining unverified step is `ios-testflight`, which still requires App
+Store Connect API credentials to be available in the active shell or CI job.
+
+The repository now defaults the Gradle bridge in two places:
+
+- iOS jobs in GitHub Actions and GitLab CI
+- the Fastlane `ios buildRelease` lane
+
+This keeps the release path aligned with the bridge even when the shell has not
+manually exported `KOTLIN_IOS_BUILDER=gradle`.
+
 ## Stage 4: Prove the bridge locally before touching CI
 
 The first local success criteria should be narrow:

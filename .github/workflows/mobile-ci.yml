@@ -30,7 +30,6 @@ env:
   DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
   AMPER_BOOTSTRAP_CACHE_DIR: ${{ github.workspace }}/.amper-cache
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
-  KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER }}
 
 jobs:
   android_build_debug:
@@ -88,6 +87,8 @@ jobs:
 
   ios_build_debug:
     runs-on: macos-15
+    env:
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -102,6 +103,8 @@ jobs:
 
   ios_build_release:
     runs-on: macos-15
+    env:
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -120,6 +123,8 @@ jobs:
       - ios_build_release
     runs-on: macos-15
     environment: ios-release
+    env:
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -144,6 +149,8 @@ jobs:
       - ios_archive_release
     runs-on: macos-15
     environment: testflight
+    env:
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4

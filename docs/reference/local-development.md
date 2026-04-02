@@ -83,6 +83,10 @@ bundle exec fastlane ios buildRelease
 That keeps the local flow close to the eventual CI and TestFlight path while
 the bridge is in use.
 
+The repo-owned iOS CI jobs and the Fastlane `ios buildRelease` lane now default
+to `KOTLIN_IOS_BUILDER=gradle`, so the explicit export is mainly useful for
+local Xcode builds and local `run_job.sh` invocations.
+
 `just doctor` checks the expected local toolchain and shows whether an Android
 device or emulator is already available for `just android-run`.
 

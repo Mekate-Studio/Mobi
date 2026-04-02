@@ -61,6 +61,10 @@ the Xcode project:
 - `KOTLIN_IOS_BUILDER=gradle` switches iOS to the Gradle bridge
 - `GRADLE_USER_HOME` points the bridge at a repo-local Gradle cache
 
+In the current bridge phase, the iOS CI jobs and Fastlane release lane default
+to `KOTLIN_IOS_BUILDER=gradle` so archive and TestFlight flows exercise the
+same Kotlin framework path that was validated locally.
+
 ### 4. Platform command layer
 
 [`fastlane/Fastfile`](../../fastlane/Fastfile)

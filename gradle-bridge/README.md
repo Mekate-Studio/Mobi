@@ -33,13 +33,17 @@ Verified so far:
 2. `bridgeDoctor`
 3. `KOTLIN_IOS_BUILDER=gradle ./scripts/ci/run_job.sh ios-build-debug`
 4. `KOTLIN_IOS_BUILDER=gradle ./scripts/ci/run_job.sh ios-build-release`
+5. `KOTLIN_IOS_BUILDER=gradle bundle exec fastlane ios buildRelease`
 
 The next bootstrap step is to prove the release-oriented paths, then verify:
 
 1. `:shared-kit:embedAndSignAppleFrameworkForXcode`
-2. `bundle exec fastlane ios buildRelease`
-3. `./scripts/ci/run_job.sh ios-archive-release`
-4. `./scripts/ci/run_job.sh ios-testflight`
+2. `./scripts/ci/run_job.sh ios-testflight`
+
+The signed archive and IPA export are now verified with the Gradle bridge.
+The remaining unverified release step is the TestFlight upload itself, which
+still depends on App Store Connect API credentials being present in the shell
+or CI environment.
 
 ## Source ownership
 

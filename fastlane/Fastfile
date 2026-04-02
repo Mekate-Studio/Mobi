@@ -52,6 +52,39 @@ def ios_project_path
   File.join(project_root, "ios-app", "module.xcodeproj")
 end
 
+def ios_kotlin_builder
+  ENV.fetch("KOTLIN_IOS_BUILDER", "gradle")
+end
+
+def ios_gradle_user_home
+  ENV.fetch("GRADLE_USER_HOME", File.join(project_root, ".gradle-user-home"))
+end
+
+def with_ios_kotlin_builder_env
+  previous_builder = ENV["KOTLIN_IOS_BUILDER"]
+  previous_gradle_user_home = ENV["GRADLE_USER_HOME"]
+
+  ENV["KOTLIN_IOS_BUILDER"] = ios_kotlin_builder
+  ENV["GRADLE_USER_HOME"] = ios_gradle_user_home
+
+  UI.message("Using iOS Kotlin builder: #{ENV['KOTLIN_IOS_BUILDER']}")
+  UI.message("Using GRADLE_USER_HOME: #{ENV['GRADLE_USER_HOME']}")
+
+  yield
+ensure
+  if previous_builder.nil?
+    ENV.delete("KOTLIN_IOS_BUILDER")
+  else
+    ENV["KOTLIN_IOS_BUILDER"] = previous_builder
+  end
+
+  if previous_gradle_user_home.nil?
+    ENV.delete("GRADLE_USER_HOME")
+  else
+    ENV["GRADLE_USER_HOME"] = previous_gradle_user_home
+  end
+end
+
 def ios_scheme
   ENV.fetch("IOS_SCHEME", "app")
 end
@@ -181,17 +214,19 @@ end
 platform :ios do
   desc "Builds the iOS app for release/TestFlight delivery"
   lane :buildRelease do
-    build_ios_app(
-      project: ios_project_path,
-      scheme: ios_scheme,
-      configuration: "Release",
-      clean: true,
-      export_method: "app-store",
-      export_options: ios_export_options,
-      xcargs: ios_xcargs,
-      output_directory: File.join(project_root, "build", "ios"),
-      output_name: "ios-app"
-    )
+    with_ios_kotlin_builder_env do
+      build_ios_app(
+        project: ios_project_path,
+        scheme: ios_scheme,
+        configuration: "Release",
+        clean: true,
+        export_method: "app-store",
+        export_options: ios_export_options,
+        xcargs: ios_xcargs,
+        output_directory: File.join(project_root, "build", "ios"),
+        output_name: "ios-app"
+      )
+    end
   end
 
   desc "Uploads a signed iOS release build to TestFlight"
