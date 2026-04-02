@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ci_configure_ios_kotlin_builder() {
-  export KOTLIN_IOS_BUILDER="${KOTLIN_IOS_BUILDER:-amper}"
+  export KOTLIN_IOS_BUILDER="${KOTLIN_IOS_BUILDER:-gradle}"
 
   if [[ -n "${GITLAB_CI:-}" ]]; then
     local gitlab_gradle_base="${CI_BUILDS_DIR:-${HOME:-${CI_PROJECT_DIR}}}"

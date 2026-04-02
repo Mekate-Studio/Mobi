@@ -65,8 +65,8 @@ writes its output to `build/logs/android-emulator-<avd-name>.log`.
 in Xcode, where you can use the standard iOS run/debug loop against a simulator
 or device.
 
-By default, the iOS project builds Kotlin through Amper. To exercise the
-temporary Gradle bridge instead, set:
+By default, the iOS project builds Kotlin through the temporary Gradle bridge.
+To override the cache location explicitly, set:
 
 ```bash
 export KOTLIN_IOS_BUILDER=gradle
@@ -80,12 +80,11 @@ Then run the same local entry points, for example:
 bundle exec fastlane ios buildRelease
 ```
 
-That keeps the local flow close to the eventual CI and TestFlight path while
-the bridge is in use.
+That keeps the local flow aligned with the CI and TestFlight path while the
+bridge is in use.
 
-The repo-owned iOS CI jobs and the Fastlane `ios buildRelease` lane now default
-to `KOTLIN_IOS_BUILDER=gradle`, so the explicit export is mainly useful for
-local Xcode builds and local `run_job.sh` invocations.
+If you need to switch back temporarily for debugging, set
+`KOTLIN_IOS_BUILDER=amper` before launching the same commands.
 
 `just doctor` checks the expected local toolchain and shows whether an Android
 device or emulator is already available for `just android-run`.

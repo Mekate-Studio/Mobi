@@ -18,7 +18,7 @@ simulator_arch="arm64"
 
 mkdir -p "${log_dir}" "${derived_data_dir}"
 
-echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-amper}"
+echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-gradle}"
 echo "Using GRADLE_USER_HOME=${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
 
 if [[ "${host_arch}" == "x86_64" ]]; then

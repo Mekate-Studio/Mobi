@@ -57,8 +57,8 @@ variables, but the rest of the pipeline only sees normalized values like:
 The iOS helpers also normalize the temporary Kotlin builder selection used by
 the Xcode project:
 
-- `KOTLIN_IOS_BUILDER=amper` keeps the current Amper path
-- `KOTLIN_IOS_BUILDER=gradle` switches iOS to the Gradle bridge
+- `KOTLIN_IOS_BUILDER=gradle` is the current default and uses the Gradle bridge
+- `KOTLIN_IOS_BUILDER=amper` switches back to the legacy Amper path
 - `GRADLE_USER_HOME` points the bridge at a repo-local Gradle cache
 
 In the current bridge phase, the iOS CI jobs and Fastlane release lane default
