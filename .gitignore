@@ -1,11 +1,17 @@
 .DS_Store
 /.gradle/
+/gradle-bridge/.gradle/
 /.amper/
 /.amper-cache/
 /build/
+/gradle-bridge/build/
+/gradle-bridge/shared-kit/build/
 /android-app/build/
 /ios-app/build/
 /shared/build/
+/shared-core/build/
+/shared-feature-home/build/
+/shared-ui-home/build/
 local.properties
 /.idea/
 android-app/keystore.properties

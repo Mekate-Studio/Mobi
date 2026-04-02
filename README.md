@@ -27,6 +27,7 @@ Reference material lives here:
 
 - [CI Architecture](docs/reference/architecture.md)
 - [Mobile Architecture](docs/reference/mobile-architecture.md)
+- [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
 - [Secrets Reference](docs/reference/secrets.md)
 - [Local Development](docs/reference/local-development.md)
 - [Troubleshooting](docs/reference/troubleshooting.md)

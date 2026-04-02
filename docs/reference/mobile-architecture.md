@@ -310,6 +310,11 @@ The recommended implementation order is:
 6. Remove the compatibility `shared/` bridge once app code no longer depends on
    the old package surface.
 
+For the temporary case where iOS needs a traditional Xcode plus Gradle bridge
+before the Amper iOS path is ready, use the dedicated rollout guide:
+
+- [iOS Gradle Bridge Migration](ios-gradle-bridge.md)
+
 ## Default engineering rules
 
 - Prefer shared business logic over duplicated business logic.
