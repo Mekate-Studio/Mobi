@@ -46,9 +46,10 @@ still depends on App Store Connect API credentials being present in the shell
 or CI environment.
 
 For GitLab shell runners, keep `GRADLE_USER_HOME` outside the repo checkout for
-iOS jobs only. That prevents Git cleanup from failing before the job starts
-when the previous bridge run left Gradle daemon or lock files under the
-workspace, without changing Android's existing Amper behavior.
+iOS jobs only, ideally under `$CI_BUILDS_DIR/.gradle-user-home`. That prevents
+Git cleanup from failing before the job starts when the previous bridge run
+left Gradle daemon or lock files under the workspace, without changing
+Android's existing Amper behavior.
 
 ## Source ownership
 

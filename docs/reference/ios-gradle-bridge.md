@@ -269,10 +269,11 @@ This keeps the release path aligned with the bridge even when the shell has not
 manually exported `KOTLIN_IOS_BUILDER=gradle`.
 
 On GitLab shell runners, the iOS jobs should keep `GRADLE_USER_HOME` outside
-`$CI_PROJECT_DIR`. That avoids checkout failures caused by Git cleanup trying
-to remove a live Gradle home from the previous job while daemon or lock files
-are still present. Keep that override scoped to iOS jobs so Android/Amper jobs
-retain their original Gradle bootstrap behavior.
+`$CI_PROJECT_DIR`, preferably under `$CI_BUILDS_DIR/.gradle-user-home`. That
+avoids checkout failures caused by Git cleanup trying to remove a live Gradle
+home from the previous job while daemon or lock files are still present. Keep
+that override scoped to iOS jobs so Android/Amper jobs retain their original
+Gradle bootstrap behavior.
 
 ## Stage 4: Prove the bridge locally before touching CI
 

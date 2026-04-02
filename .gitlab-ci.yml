@@ -44,7 +44,7 @@ cache:
     - macos
   variables:
     KOTLIN_IOS_BUILDER: "gradle"
-    GRADLE_USER_HOME: "$HOME/.gradle-user-home/$CI_PROJECT_PATH_SLUG"
+    GRADLE_USER_HOME: "$CI_BUILDS_DIR/.gradle-user-home/$CI_PROJECT_PATH_SLUG"
 
 .ios_fastlane_job:
   extends: .ios_job

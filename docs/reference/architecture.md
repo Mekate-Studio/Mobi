@@ -65,10 +65,11 @@ In the current bridge phase, the iOS CI jobs and Fastlane release lane default
 to `KOTLIN_IOS_BUILDER=gradle` so archive and TestFlight flows exercise the
 same Kotlin framework path that was validated locally.
 
-GitLab shell runners use an external Gradle home for iOS jobs so checkout
-cleanup does not trip over a live `.gradle-user-home` from a previous bridge
-run. Android jobs keep their original Amper behavior and do not inherit that
-iOS-specific Gradle home setting.
+GitLab shell runners use an external Gradle home for iOS jobs, ideally under
+`$CI_BUILDS_DIR/.gradle-user-home`, so checkout cleanup does not trip over a
+live `.gradle-user-home` from a previous bridge run. Android jobs keep their
+original Amper behavior and do not inherit that iOS-specific Gradle home
+setting.
 
 ### 4. Platform command layer
 
