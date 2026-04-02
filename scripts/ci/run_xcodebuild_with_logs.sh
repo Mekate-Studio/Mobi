@@ -10,33 +10,27 @@ if [[ -z "${configuration}" ]]; then
 fi
 
 project_root="$(cd "$(dirname "$0")/../.." && pwd)"
+configuration_slug="$(printf '%s' "${configuration}" | tr '[:upper:]' '[:lower:]')"
 log_dir="${project_root}/build/logs"
-derived_data_dir="${project_root}/build/xcode-derived-data"
+derived_data_dir="${project_root}/build/xcode-derived-data-cli-${configuration_slug}"
 log_file="${log_dir}/xcodebuild-ios-${configuration}.log"
-host_arch="$(uname -m)"
-simulator_arch="arm64"
 
 mkdir -p "${log_dir}" "${derived_data_dir}"
 
 echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-gradle}"
 echo "Using GRADLE_USER_HOME=${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
-
-if [[ "${host_arch}" == "x86_64" ]]; then
-  simulator_arch="x86_64"
-fi
+echo "Using SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
 
 cmd=(
   xcodebuild
-  -project "${project_root}/ios-app/module.xcodeproj"
+  -workspace "${project_root}/ios-app/module.xcodeproj/project.xcworkspace"
   -scheme app
   -configuration "${configuration}"
-  -sdk iphonesimulator
   -destination "generic/platform=iOS Simulator"
   -derivedDataPath "${derived_data_dir}"
-  ONLY_ACTIVE_ARCH=YES
-  ARCHS="${simulator_arch}"
   CODE_SIGNING_ALLOWED=NO
   CODE_SIGNING_REQUIRED=NO
+  "SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
   build
 )
 

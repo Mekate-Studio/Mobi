@@ -1,7 +1,8 @@
+import ComposableArchitecture
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject var store: HomeStore
+    let store: StoreOf<HomeFeature>
 
     var body: some View {
         NavigationStack {
@@ -18,14 +19,14 @@ struct HomeView: View {
 
                 VStack(spacing: 24) {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(store.state.title)
+                        Text(store.title)
                             .font(.system(size: 28, weight: .bold, design: .rounded))
-                        Text(store.state.message)
+                        Text(store.message)
                             .font(.title3.weight(.semibold))
-                        Text(store.state.supportingText)
+                        Text(store.supportingText)
                             .font(.body)
                             .foregroundStyle(.secondary)
-                        Text("Refresh count: \(store.state.refreshCount)")
+                        Text("Refresh count: \(store.refreshCount)")
                             .font(.caption.weight(.bold))
                             .textCase(.uppercase)
                             .foregroundStyle(.blue)
@@ -39,7 +40,7 @@ struct HomeView: View {
                     )
 
                     Button(action: { store.send(.refreshTapped) }) {
-                        Text(store.state.primaryActionLabel)
+                        Text(store.primaryActionLabel)
                             .font(.headline)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 18)

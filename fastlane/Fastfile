@@ -48,6 +48,10 @@ def ios_ipa_path
   ENV["IOS_IPA_PATH"]
 end
 
+def ios_workspace_path
+  File.join(project_root, "ios-app", "module.xcodeproj", "project.xcworkspace")
+end
+
 def ios_project_path
   File.join(project_root, "ios-app", "module.xcodeproj")
 end
@@ -60,15 +64,26 @@ def ios_gradle_user_home
   ENV.fetch("GRADLE_USER_HOME", File.join(project_root, ".gradle-user-home"))
 end
 
+def ios_swift_enable_explicit_modules
+  ENV.fetch("SWIFT_ENABLE_EXPLICIT_MODULES", "NO")
+end
+
+def ios_derived_data_path
+  ENV.fetch("IOS_DERIVED_DATA_PATH", File.join(project_root, "build", "xcode-derived-data-release"))
+end
+
 def with_ios_kotlin_builder_env
   previous_builder = ENV["KOTLIN_IOS_BUILDER"]
   previous_gradle_user_home = ENV["GRADLE_USER_HOME"]
+  previous_swift_enable_explicit_modules = ENV["SWIFT_ENABLE_EXPLICIT_MODULES"]
 
   ENV["KOTLIN_IOS_BUILDER"] = ios_kotlin_builder
   ENV["GRADLE_USER_HOME"] = ios_gradle_user_home
+  ENV["SWIFT_ENABLE_EXPLICIT_MODULES"] = ios_swift_enable_explicit_modules
 
   UI.message("Using iOS Kotlin builder: #{ENV['KOTLIN_IOS_BUILDER']}")
   UI.message("Using GRADLE_USER_HOME: #{ENV['GRADLE_USER_HOME']}")
+  UI.message("Using SWIFT_ENABLE_EXPLICIT_MODULES: #{ENV['SWIFT_ENABLE_EXPLICIT_MODULES']}")
 
   yield
 ensure
@@ -82,6 +97,12 @@ ensure
     ENV.delete("GRADLE_USER_HOME")
   else
     ENV["GRADLE_USER_HOME"] = previous_gradle_user_home
+  end
+
+  if previous_swift_enable_explicit_modules.nil?
+    ENV.delete("SWIFT_ENABLE_EXPLICIT_MODULES")
+  else
+    ENV["SWIFT_ENABLE_EXPLICIT_MODULES"] = previous_swift_enable_explicit_modules
   end
 end
 
@@ -158,7 +179,8 @@ def ios_xcargs
     "PRODUCT_BUNDLE_IDENTIFIER=#{shell_escape(ios_bundle_identifier!)}",
     "PROVISIONING_PROFILE_SPECIFIER=#{shell_escape(ios_provisioning_profile_specifier!)}",
     "MARKETING_VERSION=#{shell_escape(ios_version)}",
-    "CURRENT_PROJECT_VERSION=#{shell_escape(ios_build_number)}"
+    "CURRENT_PROJECT_VERSION=#{shell_escape(ios_build_number)}",
+    "SWIFT_ENABLE_EXPLICIT_MODULES=#{shell_escape(ios_swift_enable_explicit_modules)}"
   ].join(" ")
 end
 
@@ -220,6 +242,7 @@ platform :ios do
         scheme: ios_scheme,
         configuration: "Release",
         clean: true,
+        derived_data_path: ios_derived_data_path,
         export_method: "app-store",
         export_options: ios_export_options,
         xcargs: ios_xcargs,

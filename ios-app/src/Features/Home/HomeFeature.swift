@@ -1,49 +1,64 @@
+import ComposableArchitecture
 import Foundation
-import KotlinModules
 
-struct HomeViewState: Equatable {
-    var title = ""
-    var message = ""
-    var supportingText = ""
-    var refreshCount = 0
-    var primaryActionLabel = "Refresh shared state"
+@Reducer
+struct HomeFeature {
+    @ObservableState
+    struct State: Equatable {
+        var title = ""
+        var message = ""
+        var supportingText = ""
+        var refreshCount = 0
+        var primaryActionLabel = "Refresh shared state"
 
-    mutating func apply(sharedState: HomeFeatureState) {
-        title = sharedState.title
-        message = sharedState.message
-        supportingText = sharedState.supportingText
-        refreshCount = Int(sharedState.refreshCount)
-        primaryActionLabel = sharedState.primaryActionLabel
-    }
-}
-
-enum HomeAction {
-    case task
-    case refreshTapped
-}
-
-final class HomeStore: ObservableObject {
-    @Published private(set) var state = HomeViewState()
-
-    private let stateFactory: HomeFeatureStateFactory
-
-    init(stateFactory: HomeFeatureStateFactory = HomeFeatureStateFactory()) {
-        self.stateFactory = stateFactory
+        mutating func apply(
+            title: String,
+            message: String,
+            supportingText: String,
+            refreshCount: Int,
+            primaryActionLabel: String
+        ) {
+            self.title = title
+            self.message = message
+            self.supportingText = supportingText
+            self.refreshCount = refreshCount
+            self.primaryActionLabel = primaryActionLabel
+        }
     }
 
-    func send(_ action: HomeAction) {
-        switch action {
-        case .task:
-            state.apply(sharedState: stateFactory.create(refreshCount: Int32(state.refreshCount)))
+    enum Action: Equatable {
+        case task
+        case refreshTapped
+    }
 
-        case .refreshTapped:
-            let nextRefreshCount = Int(
-                stateFactory.reduce(
-                    refreshCount: Int32(state.refreshCount),
-                    event: HomeFeatureEventRefreshClicked.shared
+    @Dependency(\.homeFeatureClient) private var homeFeatureClient
+
+    var body: some ReducerOf<Self> {
+        Reduce { state, action in
+            switch action {
+            case .task:
+                let sharedState = homeFeatureClient.create(state.refreshCount)
+                state.apply(
+                    title: sharedState.title,
+                    message: sharedState.message,
+                    supportingText: sharedState.supportingText,
+                    refreshCount: Int(sharedState.refreshCount),
+                    primaryActionLabel: sharedState.primaryActionLabel
                 )
-            )
-            state.apply(sharedState: stateFactory.create(refreshCount: Int32(nextRefreshCount)))
+                return .none
+
+            case .refreshTapped:
+                let nextRefreshCount = homeFeatureClient.reduce(state.refreshCount)
+                let sharedState = homeFeatureClient.create(nextRefreshCount)
+                state.apply(
+                    title: sharedState.title,
+                    message: sharedState.message,
+                    supportingText: sharedState.supportingText,
+                    refreshCount: Int(sharedState.refreshCount),
+                    primaryActionLabel: sharedState.primaryActionLabel
+                )
+                return .none
+            }
         }
     }
 }

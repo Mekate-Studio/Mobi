@@ -4,6 +4,7 @@ set -euo pipefail
 
 ci_configure_ios_kotlin_builder() {
   export KOTLIN_IOS_BUILDER="${KOTLIN_IOS_BUILDER:-gradle}"
+  export SWIFT_ENABLE_EXPLICIT_MODULES="${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
 
   if [[ -n "${GITLAB_CI:-}" ]]; then
     local gitlab_gradle_base="${CI_BUILDS_DIR:-${HOME:-${CI_PROJECT_DIR}}}"
@@ -34,6 +35,7 @@ ci_configure_ios_kotlin_builder() {
 
   printf 'Using iOS Kotlin builder: %s\n' "${KOTLIN_IOS_BUILDER}"
   printf 'Using GRADLE_USER_HOME: %s\n' "${GRADLE_USER_HOME}"
+  printf 'Using SWIFT_ENABLE_EXPLICIT_MODULES: %s\n' "${SWIFT_ENABLE_EXPLICIT_MODULES}"
 }
 
 ci_prepare_ios_job() {
