@@ -4,7 +4,14 @@ set -euo pipefail
 
 ci_configure_ios_kotlin_builder() {
   export KOTLIN_IOS_BUILDER="${KOTLIN_IOS_BUILDER:-amper}"
-  export GRADLE_USER_HOME="${GRADLE_USER_HOME:-${CI_PROJECT_DIR}/.gradle-user-home}"
+
+  if [[ -z "${GRADLE_USER_HOME:-}" ]]; then
+    if [[ -n "${GITLAB_CI:-}" ]]; then
+      export GRADLE_USER_HOME="${HOME}/.gradle-user-home/${CI_PROJECT_PATH_SLUG:-b3}"
+    else
+      export GRADLE_USER_HOME="${CI_PROJECT_DIR}/.gradle-user-home"
+    fi
+  fi
 
   case "${KOTLIN_IOS_BUILDER}" in
     amper|gradle)

@@ -20,7 +20,7 @@ stages:
 
 variables:
   AMPER_BOOTSTRAP_CACHE_DIR: "$CI_PROJECT_DIR/.amper-cache"
-  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle-user-home"
+  GRADLE_USER_HOME: "$HOME/.gradle-user-home/$CI_PROJECT_PATH_SLUG"
   LANG: "en_US.UTF-8"
   LC_ALL: "en_US.UTF-8"
 
@@ -28,7 +28,6 @@ cache:
   key: amper-cache
   paths:
     - .amper-cache/
-    - .gradle-user-home/
 
 .android_job:
   tags:

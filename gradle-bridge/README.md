@@ -45,6 +45,10 @@ The remaining unverified release step is the TestFlight upload itself, which
 still depends on App Store Connect API credentials being present in the shell
 or CI environment.
 
+For GitLab shell runners, keep `GRADLE_USER_HOME` outside the repo checkout.
+That prevents Git cleanup from failing before the job starts when the previous
+job left Gradle daemon or lock files under the workspace.
+
 ## Source ownership
 
 `shared-kit` compiles directly from the existing shared source folders:

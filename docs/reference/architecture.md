@@ -65,6 +65,10 @@ In the current bridge phase, the iOS CI jobs and Fastlane release lane default
 to `KOTLIN_IOS_BUILDER=gradle` so archive and TestFlight flows exercise the
 same Kotlin framework path that was validated locally.
 
+GitLab shell runners use a Gradle home outside the repo checkout to avoid
+pre-job cleanup failures on `.gradle-user-home` when a previous Gradle daemon
+or file lock is still alive.
+
 ### 4. Platform command layer
 
 [`fastlane/Fastfile`](../../fastlane/Fastfile)
