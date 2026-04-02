@@ -41,3 +41,4 @@ class HomeFeatureStateFactory {
         }
     }
 }
+//ok now we can proceed to the original goal of adding TCA to the iOS app and replicate a similar architecture we have in Circuit considering the shared feature parts of feature-home
