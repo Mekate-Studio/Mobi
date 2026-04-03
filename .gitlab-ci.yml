@@ -64,7 +64,7 @@ buildRelease:
   environment:
     name: production
 
-testDebug:
+androidTest:
   extends: .android_job
   stage: test
   dependencies:
