@@ -5,11 +5,20 @@ set -eu
 mode="${1:-generic}"
 known_d8_kotlin_metadata_pattern="WARNING: D8: Unexpected error during rewriting of Kotlin metadata|WARNING: D8: An error occurred when parsing kotlin metadata"
 known_debug_noise_pattern="DEBUG .* Exception on loading scripting plugin"
-error_match_pattern="Caused by:|^\\* What went wrong:|^FAILURE: Build failed|Exception in thread|(^|[^[:alnum:]_./-])[[:alnum:]_$.]+(Exception|Error):"
+error_match_pattern="Caused by:|^\\* What went wrong:|^FAILURE: Build failed|^> Task .* FAILED|^Execution failed for task|^error:|Command PhaseScriptExecution failed|Exception in thread|(^|[^[:alnum:]_./-])[[:alnum:]_$.]+(Exception|Error):"
 
 count_known_d8_kotlin_metadata_warnings() {
   log_file="$1"
   grep -E -c "${known_d8_kotlin_metadata_pattern}" "${log_file}" 2>/dev/null || true
+}
+
+count_error_matches() {
+  log_file="$1"
+  temp_matches="${TMPDIR:-/tmp}/amper-log-grep-count.$$"
+
+  grep -E -n "${error_match_pattern}" "${log_file}" >"${temp_matches}" 2>/dev/null || true
+  grep -E -v "${known_d8_kotlin_metadata_pattern}|${known_debug_noise_pattern}" "${temp_matches}" 2>/dev/null | wc -l | tr -d ' ' || true
+  rm -f "${temp_matches}"
 }
 
 print_log_tail() {
@@ -60,6 +69,9 @@ print_build_logs() {
     | tail -n 10 \
     | while IFS= read -r log_file; do
         if [ "${mode}" = "fastlane" ]; then
+          if [ "$(count_error_matches "${log_file}")" -eq 0 ]; then
+            continue
+          fi
           print_fastlane_error_matches "${log_file}"
         fi
         print_log_tail "${log_file}"
