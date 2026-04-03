@@ -5,6 +5,8 @@ This project currently uses an early split of the target structure:
 - [`shared-core/`](../../shared-core): shared Kotlin domain and platform logic
 - [`shared-feature-home/`](../../shared-feature-home): first shared feature
   contract and state module
+- [`shared-di/`](../../shared-di): shared Metro graph and Kotlin
+  composition-root helpers
 - [`shared-ui-home/`](../../shared-ui-home): reusable Compose Multiplatform
   UI for the home feature, including the optional `SharedHomeScreen` entry
   point
@@ -19,6 +21,7 @@ The key architecture decisions are also captured in ADRs:
 - [ADR 0001: Native shells with shared feature state](../adr/0001-native-shells-with-shared-feature-state.md)
 - [ADR 0002: Shared Compose entry points live in feature UI modules](../adr/0002-shared-compose-entry-points-live-in-feature-ui-modules.md)
 - [ADR 0003: Xcode owns Swift packages while the Gradle bridge builds Kotlin for iOS](../adr/0003-xcode-owns-swift-packages-and-gradle-builds-kotlin-for-ios.md)
+- [ADR 0004: Metro owns shared Kotlin dependency injection](../adr/0004-metro-owns-shared-kotlin-dependency-injection.md)
 
 ## Goals
 
@@ -86,7 +89,8 @@ Use native UI when:
 
 - Jetpack Compose for Android UI
 - Slack Circuit for screen routing, presenters, and UI composition
-- Koin for dependency injection
+- Metro-backed shared Kotlin factories consumed from an Android composition
+  root
 
 Circuit should stay inside Android-facing presentation modules. Shared KMP
 code can expose feature contracts and state, but not Circuit `Screen`,
@@ -98,8 +102,9 @@ code can expose feature contracts and state, but not Circuit `Screen`,
 - TCA for reducers, stores, and navigation state
 - Explicit dependency injection into stores and dependencies
 
-Koin may power the shared Kotlin graph, but Swift should depend on small KMP
-facades or adapters instead of reaching deeply into a Kotlin DI container.
+Metro powers the shared Kotlin graph, but Swift should still depend on small
+KMP facades or adapters instead of reaching into a Kotlin DI container
+directly.
 
 The current home flow follows this rule by using a native SwiftUI shell in
 [`ios-app/src/`](../../ios-app/src) that consumes the shared Kotlin
@@ -132,7 +137,7 @@ reliably detect shared schemes from the nested workspace path in this repo.
 
 - Kotlin Multiplatform for domain, data, and feature workflows
 - Compose Multiplatform for reusable UI where it earns its place
-- Koin with compiler-plugin-based configuration for shared dependency wiring
+- Metro for compile-time shared dependency injection
 
 ## Current home data flow
 
@@ -140,7 +145,9 @@ The current home feature is intentionally small, but it already follows the
 target contract:
 
 ```text
-shared-core.PlatformContextProvider
+shared-core.PlatformNameProvider
+  -> shared-di.SharedApplicationGraph
+  -> shared-core.PlatformContextProvider
   -> shared-feature-home.HomeFeatureStateFactory
   -> android Circuit presenter / iOS TCA dependency client / shared Compose route
   -> Android Compose UI / SwiftUI / SharedHomeScreen
@@ -152,8 +159,14 @@ Concretely:
   exposes platform context as a shared input primitive.
 - [`shared-feature-home/src/HomeFeature.kt`](../../shared-feature-home/src/HomeFeature.kt)
   turns that core input into feature state and a small shared reducer.
+- [`shared-di/src/SharedDependencies.kt`](../../shared-di/src/SharedDependencies.kt)
+  owns the Metro graph and shared Kotlin composition-root helpers.
 - [`android-app/src/MainActivity.kt`](../../android-app/src/MainActivity.kt)
-  exposes a native home destination and a second shared UI destination.
+  creates one Metro-backed shared feature factory and feeds both the native and
+  shared Compose home demos from it.
+- [`ios-app/src/AppDependencies.swift`](../../ios-app/src/AppDependencies.swift)
+  creates the native iOS composition root and injects shared Kotlin factories
+  into TCA and shared Compose wrappers.
 - [`ios-app/src/Features/Home/HomeFeatureClient.swift`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
   adapts the shared feature factory into TCA dependencies.
 - [`ios-app/src/Features/Home/SharedHomeDemoView.swift`](../../ios-app/src/Features/Home/SharedHomeDemoView.swift)
@@ -168,8 +181,8 @@ Concretely:
 The key rule is that dependencies point inward toward shared business logic.
 
 ```text
-android-app -> android feature/presentation -> shared feature -> shared core
-ios-app     -> ios feature/presentation     -> shared feature -> shared core
+android-app -> android feature/presentation -> shared-di -> shared feature -> shared core
+ios-app     -> ios feature/presentation     -> shared-di bridge helpers -> shared feature -> shared core
 shared compose ui -------------------------> shared feature -> shared core
 ```
 
@@ -203,6 +216,10 @@ shared-data/
   local/
   remote/
   repository/
+
+shared-di/
+  Metro graphs
+  shared composition roots
 
 shared-feature-home/
   contract/
@@ -276,19 +293,20 @@ when the platforms naturally differ.
 
 ## Dependency injection
 
-Use Koin as the shared DI solution for Kotlin code with the compiler-plugin
-approach enabled.
+Use Metro as the shared DI solution for Kotlin code.
 
 Recommended DI ownership:
 
-- shared modules define and register shared services
-- Android uses Koin directly in app startup and feature wiring
+- shared modules define injectable constructors and shared graphs
+- `shared-di` owns graph creation and graph-facing helper functions
+- Android requests shared feature factories from `shared-di` in app startup and
+  screen composition
 - iOS receives shared dependencies through explicit factories or bridge types
 
 Recommended iOS bridge pattern:
 
 - define a small Kotlin `AppGraph` or `FeatureGraph`
-- expose feature factories needed by Swift
+- expose feature factories needed by Swift through tiny Kotlin bridge helpers
 - inject those factories into TCA dependencies or store initializers
 
 This keeps Swift code testable and avoids hiding dependencies behind a
@@ -351,6 +369,7 @@ The current repository already contains the first shared split:
 
 - [`shared-core/`](../../shared-core)
 - [`shared-feature-home/`](../../shared-feature-home)
+- [`shared-di/`](../../shared-di)
 - [`shared-ui-home/`](../../shared-ui-home)
 
 The recommended implementation order is:
@@ -375,7 +394,7 @@ before the Amper iOS path is ready, use the dedicated rollout guide:
 - Prefer shared Compose for leaf features before using it for the whole app.
 - Keep framework types at the edges.
 - Keep feature contracts small and explicit.
-- Make iOS dependencies explicit even when backed by Koin on the Kotlin side.
+- Make iOS dependencies explicit even when backed by Metro on the Kotlin side.
 
 ## Practical rule of thumb
 

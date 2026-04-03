@@ -41,6 +41,8 @@ Reference material lives here:
   domain and platform-agnostic Kotlin logic
 - [`shared-feature-home/`](shared-feature-home): first
   shared feature contract and state module
+- [`shared-di/`](shared-di): shared Metro graph
+  and Kotlin composition-root helpers for app code and tests
 - [`shared-ui-home/`](shared-ui-home): reusable
   Compose Multiplatform home feature UI, including the optional
   `SharedHomeScreen` entry point

@@ -27,6 +27,7 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
+import studio.mekate.b3.di.SharedDependencies
 import studio.mekate.b3.feature.home.HomeFeatureEvent
 import studio.mekate.b3.feature.home.HomeFeatureState
 import studio.mekate.b3.feature.home.HomeFeatureStateFactory
@@ -46,6 +47,9 @@ class MainActivity : ComponentActivity() {
 private fun AppShell() {
     var destination by rememberSaveable { mutableIntStateOf(AppDestination.NativeHome.ordinal) }
     val selectedDestination = AppDestination.entries[destination]
+    val homeFeatureStateFactory = remember {
+        SharedDependencies.createDefaultHomeFeatureStateFactory()
+    }
 
     Scaffold(
         bottomBar = {
@@ -62,8 +66,14 @@ private fun AppShell() {
         },
     ) { paddingValues ->
         when (selectedDestination) {
-            AppDestination.NativeHome -> HomeCircuitHost(modifier = Modifier.padding(paddingValues))
-            AppDestination.SharedComposeDemo -> SharedHomeScreen(modifier = Modifier.padding(paddingValues))
+            AppDestination.NativeHome -> HomeCircuitHost(
+                stateFactory = homeFeatureStateFactory,
+                modifier = Modifier.padding(paddingValues),
+            )
+            AppDestination.SharedComposeDemo -> SharedHomeScreen(
+                stateFactory = homeFeatureStateFactory,
+                modifier = Modifier.padding(paddingValues),
+            )
         }
     }
 }
@@ -78,11 +88,12 @@ private enum class AppDestination(
 
 @Composable
 private fun HomeCircuitHost(
+    stateFactory: HomeFeatureStateFactory,
     modifier: Modifier = Modifier,
 ) {
     val circuit = remember {
         Circuit.Builder()
-            .addPresenterFactory(HomePresenterFactory(HomeFeatureStateFactory()))
+            .addPresenterFactory(HomePresenterFactory(stateFactory))
             .addUiFactory(HomeUiFactory())
             .build()
     }

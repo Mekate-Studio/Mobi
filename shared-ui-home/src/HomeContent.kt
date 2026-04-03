@@ -24,8 +24,8 @@ import studio.mekate.b3.feature.home.HomeFeatureStateFactory
 
 @Composable
 fun SharedHomeScreen(
+    stateFactory: HomeFeatureStateFactory,
     modifier: Modifier = Modifier,
-    stateFactory: HomeFeatureStateFactory = remember { HomeFeatureStateFactory() },
 ) {
     var refreshCount by rememberSaveable { mutableIntStateOf(0) }
     val state = remember(refreshCount, stateFactory) {

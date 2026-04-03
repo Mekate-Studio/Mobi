@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.metro)
 }
 
 kotlin {
@@ -23,10 +24,12 @@ kotlin {
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material3)
+                implementation(libs.metro.runtime)
             }
             kotlin.srcDirs(
                 "../../shared-core/src",
                 "../../shared-feature-home/src",
+                "../../shared-di/src",
                 "../../shared-ui-home/src",
             )
         }
@@ -38,6 +41,7 @@ kotlin {
             kotlin.srcDirs(
                 "../../shared-core/test",
                 "../../shared-feature-home/test",
+                "../../shared-di/test",
             )
         }
 

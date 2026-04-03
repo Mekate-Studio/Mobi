@@ -1,3 +1,12 @@
 product:
   type: lib
   platforms: [android, iosArm64, iosSimulatorArm64, iosX64]
+
+dependencies:
+  - dev.zacsweers.metro:runtime:0.12.1
+
+settings:
+  kotlin:
+    compilerPlugins:
+      - id: dev.zacsweers.metro.compiler
+        dependency: dev.zacsweers.metro:compiler:0.12.1

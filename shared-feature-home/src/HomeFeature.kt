@@ -1,5 +1,6 @@
 package studio.mekate.b3.feature.home
 
+import dev.zacsweers.metro.Inject
 import studio.mekate.b3.core.PlatformContextProvider
 
 data class HomeFeatureState(
@@ -14,11 +15,10 @@ sealed interface HomeFeatureEvent {
     data object RefreshClicked : HomeFeatureEvent
 }
 
+@Inject
 class HomeFeatureStateFactory(
     private val platformContextProvider: PlatformContextProvider,
 ) {
-    constructor() : this(PlatformContextProvider())
-
     fun create(refreshCount: Int): HomeFeatureState {
         val platform = platformContextProvider.current().name
         val title = "Native shell, shared feature"

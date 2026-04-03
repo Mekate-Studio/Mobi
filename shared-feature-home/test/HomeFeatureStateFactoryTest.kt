@@ -1,13 +1,14 @@
 package studio.mekate.b3.feature.home
 
 import studio.mekate.b3.core.PlatformContextProvider
+import studio.mekate.b3.core.PlatformNameProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class HomeFeatureStateFactoryTest {
     private val factory = HomeFeatureStateFactory(
-        platformContextProvider = PlatformContextProvider { "TestOS" },
+        platformContextProvider = PlatformContextProvider(PlatformNameProvider { "TestOS" }),
     )
 
     @Test
