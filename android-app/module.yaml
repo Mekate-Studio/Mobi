@@ -6,7 +6,7 @@ dependencies:
   - ../shared-feature-home
   - ../shared-ui-home
   - androidx.activity:activity-compose:1.8.2
-  - com.slack.circuit:circuit-foundation:0.31.0
+  - com.slack.circuit:circuit-foundation:0.33.1
   - dev.zacsweers.metro:runtime:0.12.1
 
 settings:
