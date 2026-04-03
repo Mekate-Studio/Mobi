@@ -5,7 +5,7 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 source "${script_dir}/common.sh"
 
-report_dir="${project_root}/build/reports/shared/android"
+report_dir="${project_root}/build/reports/shared-feature-home/android"
 amper_home="${AMPER_USER_HOME:-${project_root}/build/amper-user-home}"
 default_gradle_user_home="${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
 amper_tmp_dir="${project_root}/build/tmp/amper"
@@ -136,7 +136,7 @@ run_amper_test() {
     mkdir -p "${HOME}/Library/Caches/JetBrains/Amper/telemetry"
 
     cd "${project_root}"
-    ./amper test -m shared -p android "$@"
+    ./amper test -m shared-feature-home -p android "$@"
   ) >"${attempt_log_path}" 2>&1
 }
 

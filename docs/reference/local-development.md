@@ -51,10 +51,10 @@ multiple Android devices are connected, set `ANDROID_SERIAL` first.
 Attach debugger to Android process` in Android Studio or IntelliJ IDEA and
 select `studio.mekate.b3`.
 
-`just android-test` runs `./amper test -m shared -p android` directly, stores
-JUnit XML under `build/reports/shared/android`, and prints a compact test
-summary with failure details. This is the recommended local and IDE-friendly
-test entry point.
+`just android-test` runs `./amper test -m shared-feature-home -p android`
+directly, stores JUnit XML under `build/reports/shared-feature-home/android`,
+and prints a compact test summary with failure details. This is the
+recommended local and IDE-friendly test entry point.
 
 `just android-emulators` lists the locally available Android Virtual Devices.
 
@@ -107,10 +107,11 @@ Use `just android-test` instead when you want cleaner local test output in the
 terminal or through the shared `.run/Android Test` configuration in IntelliJ
 IDEA / Android Studio.
 
-The iOS build jobs target a generic iOS Simulator destination and force a
-single simulator architecture matching the host. That removes the dependency on
-a precreated simulator device while still avoiding Amper's current
-multi-architecture simulator build limitation.
+The iOS build jobs target a generic iOS Simulator destination, prefer the
+shared Xcode workspace when Swift packages are present, and set
+`SWIFT_ENABLE_EXPLICIT_MODULES=NO` for the CLI path. That keeps the CLI build
+aligned with the TCA-based iOS setup without depending on a precreated
+simulator device.
 
 ## Just recipes
 

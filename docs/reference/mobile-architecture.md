@@ -6,14 +6,19 @@ This project currently uses an early split of the target structure:
 - [`shared-feature-home/`](../../shared-feature-home): first shared feature
   contract and state module
 - [`shared-ui-home/`](../../shared-ui-home): reusable Compose Multiplatform
-  UI for the home feature
-- [`shared/`](../../shared): compatibility bridge while older imports are
-  phased out
+  UI for the home feature, including the optional `SharedHomeScreen` entry
+  point
 - [`android-app/`](../../android-app): Android app host
 - [`ios-app/`](../../ios-app): iOS app host
 
 The target architecture keeps that simple base, but grows it into a
 native-first app shell with shared business logic and selective shared UI.
+
+The key architecture decisions are also captured in ADRs:
+
+- [ADR 0001: Native shells with shared feature state](../adr/0001-native-shells-with-shared-feature-state.md)
+- [ADR 0002: Shared Compose entry points live in feature UI modules](../adr/0002-shared-compose-entry-points-live-in-feature-ui-modules.md)
+- [ADR 0003: Xcode owns Swift packages while the Gradle bridge builds Kotlin for iOS](../adr/0003-xcode-owns-swift-packages-and-gradle-builds-kotlin-for-ios.md)
 
 ## Goals
 
@@ -128,6 +133,31 @@ reliably detect shared schemes from the nested workspace path in this repo.
 - Kotlin Multiplatform for domain, data, and feature workflows
 - Compose Multiplatform for reusable UI where it earns its place
 - Koin with compiler-plugin-based configuration for shared dependency wiring
+
+## Current home data flow
+
+The current home feature is intentionally small, but it already follows the
+target contract:
+
+```text
+shared-core.PlatformContextProvider
+  -> shared-feature-home.HomeFeatureStateFactory
+  -> android Circuit presenter / iOS TCA dependency client / shared Compose route
+  -> Android Compose UI / SwiftUI / SharedHomeScreen
+```
+
+Concretely:
+
+- [`shared-core/src/PlatformContext.kt`](../../shared-core/src/PlatformContext.kt)
+  exposes platform context as a shared input primitive.
+- [`shared-feature-home/src/HomeFeature.kt`](../../shared-feature-home/src/HomeFeature.kt)
+  turns that core input into feature state and a small shared reducer.
+- [`android-app/src/MainActivity.kt`](../../android-app/src/MainActivity.kt)
+  adapts the shared feature state into a Circuit screen.
+- [`ios-app/src/Features/Home/HomeFeatureClient.swift`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
+  adapts the shared feature factory into TCA dependencies.
+- [`shared-ui-home/src/HomeContent.kt`](../../shared-ui-home/src/HomeContent.kt)
+  exposes `SharedHomeScreen` for the optional shared Compose rendering path.
 
 ## Dependency rules
 
@@ -318,7 +348,6 @@ The current repository already contains the first shared split:
 - [`shared-core/`](../../shared-core)
 - [`shared-feature-home/`](../../shared-feature-home)
 - [`shared-ui-home/`](../../shared-ui-home)
-- [`shared/`](../../shared)
 
 The recommended implementation order is:
 
@@ -329,8 +358,6 @@ The recommended implementation order is:
 3. Add Android presentation wiring with Circuit around each feature.
 4. Add iOS presentation wiring with TCA around the same feature contracts.
 5. Keep shared Compose UI only where the reuse remains clearly worth it.
-6. Remove the compatibility `shared/` bridge once app code no longer depends on
-   the old package surface.
 
 For the temporary case where iOS needs a traditional Xcode plus Gradle bridge
 before the Amper iOS path is ready, use the dedicated rollout guide:

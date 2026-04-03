@@ -1,4 +1,9 @@
-# A Portable CI Setup for Kotlin Multiplatform Mobile
+# Legacy Blueprint: A Portable CI Setup for Kotlin Multiplatform Mobile
+
+This document is kept as a legacy sample blueprint for the older public CI
+write-up flow. It is still useful as a reproducible publishing/reference
+artifact, but it does not describe the current `b3` mobile architecture
+verbatim anymore.
 
 Most Kotlin Multiplatform CI write-ups stop at "here is my GitHub Actions file."
 That is useful for one repository, but it is hard to reuse, hard to test

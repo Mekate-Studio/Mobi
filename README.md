@@ -15,9 +15,9 @@ If you want to reuse this setup in another project, start with the GitHub
 Actions guide:
 
 - [GitHub Actions Quickstart](docs/quickstart-github-actions.md)
-- [Public Write-Up](docs/public-writeup.md)
+- [Legacy Public Write-Up Blueprint](docs/public-writeup.md)
 - [Blog Post Version](https://github.com/Mekate-Studio/Portable-KMP-CI/blob/main/docs/portable-kmp-ci.md)
-- [Minimal Public Sample Repo Blueprint](docs/minimal-public-sample-repo.md)
+- [Legacy Minimal Public Sample Repo Blueprint](docs/minimal-public-sample-repo.md)
 
 There is also a published companion sample repository:
 
@@ -27,6 +27,7 @@ Reference material lives here:
 
 - [CI Architecture](docs/reference/architecture.md)
 - [Mobile Architecture](docs/reference/mobile-architecture.md)
+- [Architecture Decisions](docs/adr/README.md)
 - [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
 - [Secrets Reference](docs/reference/secrets.md)
 - [Local Development](docs/reference/local-development.md)
@@ -41,13 +42,13 @@ Reference material lives here:
 - [`shared-feature-home/`](shared-feature-home): first
   shared feature contract and state module
 - [`shared-ui-home/`](shared-ui-home): reusable
-  Compose Multiplatform home feature UI
-- [`shared/`](shared): compatibility
-  bridge while the old shared module is being phased out
+  Compose Multiplatform home feature UI, including the optional
+  `SharedHomeScreen` entry point
 - [`android-app/`](android-app): Android
   app target
 - [`ios-app/`](ios-app): iOS app target
   with native SwiftUI shell and shared Kotlin feature backing
+- [`docs/adr/`](docs/adr): architecture decision records
 - [`.github/workflows/mobile-ci.yml`](.github/workflows/mobile-ci.yml):
   GitHub Actions adapter
 - [`.gitlab-ci.yml`](.gitlab-ci.yml):
@@ -108,10 +109,10 @@ just android-test
 just ios-build-debug
 ```
 
-The iOS build jobs target a generic iOS Simulator destination and force a
-single simulator architecture matching the host. That removes the dependency on
-a precreated simulator device. The remaining host requirement is that Xcode has
-an iOS Simulator runtime installed.
+The iOS build jobs target a generic iOS Simulator destination, disable explicit
+Swift modules for the CLI path, and prefer the Xcode workspace when the Swift
+package graph is present. The remaining host requirement is that Xcode has an
+iOS Simulator runtime installed.
 
 ## Why this layout works
 

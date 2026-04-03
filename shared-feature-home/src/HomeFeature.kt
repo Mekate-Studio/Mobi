@@ -1,7 +1,6 @@
 package studio.mekate.b3.feature.home
 
-import studio.mekate.b3.core.buildGreeting
-import studio.mekate.b3.core.platformName
+import studio.mekate.b3.core.PlatformContextProvider
 
 data class HomeFeatureState(
     val title: String,
@@ -15,15 +14,19 @@ sealed interface HomeFeatureEvent {
     data object RefreshClicked : HomeFeatureEvent
 }
 
-class HomeFeatureStateFactory {
+class HomeFeatureStateFactory(
+    private val platformContextProvider: PlatformContextProvider,
+) {
+    constructor() : this(PlatformContextProvider())
+
     fun create(refreshCount: Int): HomeFeatureState {
-        val platform = platformName()
+        val platform = platformContextProvider.current().name
         val title = "Native shell, shared feature"
-        val message = buildGreeting("$platform from shared KMP")
+        val message = "Shared feature state flowing into the $platform shell."
         val supportingText = when (refreshCount) {
-            0 -> "This feature state lives in shared code and can be rendered by native or shared UI."
-            1 -> "The shared reducer has already handled one refresh for $platform."
-            else -> "The shared reducer has handled $refreshCount refreshes for $platform."
+            0 -> "shared-core exposes platform context, shared-feature-home turns it into feature state, and platform shells decide how to render it."
+            1 -> "The shared reducer has already handled one refresh for the $platform shell."
+            else -> "The shared reducer has handled $refreshCount refreshes for the $platform shell."
         }
 
         return HomeFeatureState(

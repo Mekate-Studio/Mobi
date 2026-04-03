@@ -23,7 +23,7 @@ import studio.mekate.b3.feature.home.HomeFeatureState
 import studio.mekate.b3.feature.home.HomeFeatureStateFactory
 
 @Composable
-fun HomeRoute(
+fun SharedHomeScreen(
     modifier: Modifier = Modifier,
     stateFactory: HomeFeatureStateFactory = remember { HomeFeatureStateFactory() },
 ) {
