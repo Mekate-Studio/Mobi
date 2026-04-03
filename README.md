@@ -60,6 +60,12 @@ Reference material lives here:
 - [`fastlane/Fastfile`](fastlane/Fastfile):
   build and release lanes
 
+The app now exposes two visible home demos on both platforms:
+
+- `Native Home`: native shell consuming `shared-feature-home`
+- `Shared UI`: Compose Multiplatform screen consuming the same shared feature
+  state through `shared-ui-home`
+
 ## Supported CI jobs
 
 The shared dispatcher accepts these portable job names:

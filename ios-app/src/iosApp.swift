@@ -5,14 +5,24 @@ import SwiftUI
 struct iosApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView(
-                store: Store(
-                    initialState: HomeFeature.State(),
-                    reducer: {
-                        HomeFeature()
-                    }
+            TabView {
+                HomeView(
+                    store: Store(
+                        initialState: HomeFeature.State(),
+                        reducer: {
+                            HomeFeature()
+                        }
+                    )
                 )
-            )
+                .tabItem {
+                    Label("Native Home", systemImage: "iphone")
+                }
+
+                SharedHomeDemoView()
+                    .tabItem {
+                        Label("Shared UI", systemImage: "square.stack.3d.up")
+                    }
+            }
         }
     }
 }

@@ -153,11 +153,15 @@ Concretely:
 - [`shared-feature-home/src/HomeFeature.kt`](../../shared-feature-home/src/HomeFeature.kt)
   turns that core input into feature state and a small shared reducer.
 - [`android-app/src/MainActivity.kt`](../../android-app/src/MainActivity.kt)
-  adapts the shared feature state into a Circuit screen.
+  exposes a native home destination and a second shared UI destination.
 - [`ios-app/src/Features/Home/HomeFeatureClient.swift`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
   adapts the shared feature factory into TCA dependencies.
+- [`ios-app/src/Features/Home/SharedHomeDemoView.swift`](../../ios-app/src/Features/Home/SharedHomeDemoView.swift)
+  embeds the shared Compose entry point in a SwiftUI tab.
 - [`shared-ui-home/src/HomeContent.kt`](../../shared-ui-home/src/HomeContent.kt)
   exposes `SharedHomeScreen` for the optional shared Compose rendering path.
+- [`shared-ui-home/src@ios/ViewController.kt`](../../shared-ui-home/src@ios/ViewController.kt)
+  exports an iOS view-controller factory for that shared Compose screen.
 
 ## Dependency rules
 

@@ -44,18 +44,21 @@ kotlin {
         val iosX64Main by getting {
             kotlin.srcDirs(
                 "../../shared-core/src@ios",
+                "../../shared-ui-home/src@ios",
             )
         }
 
         val iosArm64Main by getting {
             kotlin.srcDirs(
                 "../../shared-core/src@ios",
+                "../../shared-ui-home/src@ios",
             )
         }
 
         val iosSimulatorArm64Main by getting {
             kotlin.srcDirs(
                 "../../shared-core/src@ios",
+                "../../shared-ui-home/src@ios",
             )
         }
     }
