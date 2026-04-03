@@ -15,6 +15,7 @@ log_dir="${project_root}/build/logs"
 derived_data_dir="${project_root}/build/xcode-derived-data-cli-${configuration_slug}"
 log_file="${log_dir}/xcodebuild-ios-${configuration}.log"
 workspace_path="${project_root}/ios-app/module.xcodeproj/project.xcworkspace"
+workspace_contents_path="${workspace_path}/contents.xcworkspacedata"
 project_path="${project_root}/ios-app/module.xcodeproj"
 
 mkdir -p "${log_dir}" "${derived_data_dir}"
@@ -25,11 +26,11 @@ echo "Using SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
 
 cmd=(xcodebuild)
 
-if [[ -d "${workspace_path}" ]]; then
+if [[ -f "${workspace_contents_path}" ]]; then
   echo "Using Xcode workspace=${workspace_path}"
   cmd+=(-workspace "${workspace_path}")
 else
-  echo "Using Xcode project=${project_path} (workspace missing)"
+  echo "Using Xcode project=${project_path} (workspace metadata missing)"
   cmd+=(-project "${project_path}")
 fi
 

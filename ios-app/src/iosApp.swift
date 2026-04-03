@@ -3,27 +3,17 @@ import SwiftUI
 
 @main
 struct iosApp: App {
-    private let appDependencies = AppDependencies()
+    private let appServices = AppServices()
 
     var body: some Scene {
         WindowGroup {
             TabView {
-                HomeView(
-                    store: Store(
-                        initialState: HomeFeature.State(),
-                        reducer: {
-                            HomeFeature()
-                        },
-                        withDependencies: {
-                            $0.homeFeatureClient = appDependencies.homeFeatureClient
-                        }
-                    )
-                )
+                HomeView(store: appServices.makeHomeStore())
                 .tabItem {
                     Label("Native Home", systemImage: "iphone")
                 }
 
-                SharedHomeDemoView(factory: appDependencies.sharedHomeViewControllerFactory)
+                SharedHomeDemoView(factory: appServices.sharedHomeViewControllerFactory)
                     .tabItem {
                         Label("Shared UI", systemImage: "square.stack.3d.up")
                     }
