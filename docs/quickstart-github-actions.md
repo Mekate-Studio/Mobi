@@ -89,6 +89,7 @@ Use this set as the baseline contract:
 - `android-build-release`
 - `android-test`
 - `ios-build-debug`
+- `ios-test`
 - `ios-build-release`
 - `ios-archive-release`
 - `ios-testflight`
@@ -125,6 +126,7 @@ Run the lowest-risk jobs first:
 ./scripts/ci/run_job.sh android-build-debug
 ./scripts/ci/run_job.sh android-test
 ./scripts/ci/run_job.sh ios-build-debug
+./scripts/ci/run_job.sh ios-test
 ```
 
 If those work locally, most later CI issues will be environment or secrets
@@ -212,7 +214,8 @@ This setup intentionally makes release jobs manual.
 Recommended rollout order:
 
 1. Get `android-build-debug`, `android-build-release`, `android-test`,
-   `ios-build-debug`, and `ios-build-release` green on pull requests.
+   `ios-build-debug`, `ios-test`, and `ios-build-release` green on pull
+   requests.
 2. Run `publishInternal` manually and confirm the Android artifact reaches Play
    internal testing.
 3. Run `iosArchiveRelease` manually and confirm an `.ipa` is produced.

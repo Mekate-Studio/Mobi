@@ -210,6 +210,7 @@ platform :android do
   desc "Runs all the tests"
   lane :test do
     amper!("test -m shared-feature-home -p android")
+    amper!("test -m android-app -p android")
   end
 
   desc "Submit a new Internal Build to Play Store"

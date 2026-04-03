@@ -202,6 +202,27 @@ Concretely:
 - [`shared-ui-home/src@ios/ViewController.kt`](../../shared-ui-home/src@ios/ViewController.kt)
   exports an iOS view-controller factory for that shared Compose screen.
 
+## Testing bootstrap
+
+The current testing foundation focuses on state transitions at the native
+presentation seams.
+
+- Android keeps Circuit presentation logic testable through
+  [`android-app/src/home/HomePresenterStateProducer.kt`](../../android-app/src/home/HomePresenterStateProducer.kt).
+  The presenter delegates state creation and event transitions to that small
+  seam, and
+  [`android-app/test/home/HomePresenterStateProducerTest.kt`](../../android-app/test/home/HomePresenterStateProducerTest.kt)
+  verifies the shared-state-to-presenter-state mapping plus the refresh
+  transition.
+- iOS keeps TCA state transitions testable through
+  [`ios-app/tests/Features/Home/HomeFeatureTests.swift`](../../ios-app/tests/Features/Home/HomeFeatureTests.swift).
+  Those tests use `TestStore` against the real reducer while stubbing the
+  `HomeFeatureClient` dependency, so reducer behavior is verified without
+  needing the full Kotlin bridge at test time.
+
+This gives both platforms a stable bootstrap for feature-state tests today
+while leaving room to add deeper UI, navigation, and integration tests later.
+
 ## Dependency rules
 
 The key rule is that dependencies point inward toward shared business logic.

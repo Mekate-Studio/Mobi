@@ -17,26 +17,16 @@ import studio.mekate.b3.feature.home.HomeFeatureStateFactory
 class HomePresenter(
     private val stateFactory: HomeFeatureStateFactory,
 ) : Presenter<HomeScreenState> {
+    private val stateProducer = HomePresenterStateProducer(stateFactory)
+
     @Composable
     override fun present(): HomeScreenState {
         var refreshCount by rememberSaveable { mutableIntStateOf(0) }
-        val featureState = remember(refreshCount, stateFactory) {
-            stateFactory.create(refreshCount = refreshCount)
+        return remember(refreshCount, stateProducer) {
+            stateProducer.create(refreshCount = refreshCount) { updatedRefreshCount ->
+                refreshCount = updatedRefreshCount
+            }
         }
-
-        return HomeScreenState(
-            featureState = featureState,
-            eventSink = { event ->
-                when (event) {
-                    HomeScreenEvent.RefreshClicked -> {
-                        refreshCount = stateFactory.reduce(
-                            refreshCount = refreshCount,
-                            event = HomeFeatureEvent.RefreshClicked,
-                        )
-                    }
-                }
-            },
-        )
     }
 }
 

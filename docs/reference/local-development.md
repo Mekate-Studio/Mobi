@@ -40,6 +40,7 @@ just android-test
 just android-build-debug
 just ios-open
 just ios-build-debug
+just ios-test
 ```
 
 `just android-run` builds the debug APK with the same repo-owned flow used by
@@ -51,10 +52,10 @@ multiple Android devices are connected, set `ANDROID_SERIAL` first.
 Attach debugger to Android process` in Android Studio or IntelliJ IDEA and
 select `studio.mekate.b3`.
 
-`just android-test` runs `./amper test -m shared-feature-home -p android`
-directly, stores JUnit XML under `build/reports/shared-feature-home/android`,
-and prints a compact test summary with failure details. This is the
-recommended local and IDE-friendly test entry point.
+`just android-test` runs the shared feature tests and the Android app tests,
+stores JUnit XML under `build/reports/shared-feature-home/android` and
+`build/reports/android-app/android`, and prints a compact summary for both.
+This is the recommended local and IDE-friendly Android test entry point.
 
 `just android-emulators` lists the locally available Android Virtual Devices.
 
@@ -99,6 +100,7 @@ The fastest way to exercise the same paths CI uses is through
 ./scripts/ci/run_job.sh android-test
 ./scripts/ci/run_job.sh android-build-release
 ./scripts/ci/run_job.sh ios-build-debug
+./scripts/ci/run_job.sh ios-test
 ./scripts/ci/run_job.sh ios-build-release
 ```
 
@@ -121,6 +123,7 @@ The repo also exposes common jobs through [`Justfile`](../../Justfile):
 just android-build-debug
 just android-test
 just ios-build-debug
+just ios-test
 just ios-build-release
 ```
 

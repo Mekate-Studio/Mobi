@@ -83,6 +83,19 @@ iosBuildDebug:
       - build/xcode-derived-data
       - ios-app/module.xcodeproj
 
+iosTest:
+  extends: .ios_job
+  stage: test
+  dependencies:
+    - iosBuildDebug
+  script:
+    - ./scripts/ci/run_job.sh ios-test
+  artifacts:
+    paths:
+      - build/logs
+      - build/xcode-derived-data-cli-tests
+      - ios-app/module.xcodeproj
+
 iosBuildRelease:
   extends: .ios_job
   stage: build

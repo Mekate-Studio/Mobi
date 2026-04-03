@@ -101,6 +101,24 @@ jobs:
       - name: Build iOS debug
         run: ./scripts/ci/run_job.sh ios-build-debug
 
+  ios_test:
+    runs-on: macos-15
+    needs:
+      - ios_build_debug
+    env:
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Run iOS tests
+        run: ./scripts/ci/run_job.sh ios-test
+
   ios_build_release:
     runs-on: macos-15
     env:

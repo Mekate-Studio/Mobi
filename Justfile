@@ -30,6 +30,9 @@ android-test:
 ios-build-debug:
   ./scripts/ci/run_job.sh ios-build-debug
 
+ios-test:
+  ./scripts/ci/run_job.sh ios-test
+
 ios-open:
   ./scripts/dev/ios_open.sh
 

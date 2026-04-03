@@ -5,7 +5,10 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 source "${script_dir}/common.sh"
 
-report_dir="${project_root}/build/reports/shared-feature-home/android"
+modules=(
+  "shared-feature-home"
+  "android-app"
+)
 amper_home="${AMPER_USER_HOME:-${project_root}/build/amper-user-home}"
 default_gradle_user_home="${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
 amper_tmp_dir="${project_root}/build/tmp/amper"
@@ -124,6 +127,8 @@ find_latest_amper_log_dir() {
 run_amper_test() {
   local gradle_home="${1:?gradle home required}"
   shift
+  local module_name="${1:?module name required}"
+  shift
   local attempt_log_path="${1:?attempt log path required}"
   shift
 
@@ -136,7 +141,7 @@ run_amper_test() {
     mkdir -p "${HOME}/Library/Caches/JetBrains/Amper/telemetry"
 
     cd "${project_root}"
-    ./amper test -m shared-feature-home -p android "$@"
+    ./amper test -m "${module_name}" -p android "$@"
   ) >"${attempt_log_path}" 2>&1
 }
 
@@ -177,8 +182,12 @@ prepare_clean_gradle_user_home() {
   printf '%s\n' "${clean_gradle_home}"
 }
 
-mkdir -p "${AMPER_BOOTSTRAP_CACHE_DIR}" "${amper_home}" "${default_gradle_user_home}" "${report_dir}" "${amper_tmp_dir}" "${project_root}/build/logs"
-rm -f "${report_dir}"/TEST-*.xml
+mkdir -p "${AMPER_BOOTSTRAP_CACHE_DIR}" "${amper_home}" "${default_gradle_user_home}" "${amper_tmp_dir}" "${project_root}/build/logs"
+for module_name in "${modules[@]}"; do
+  report_dir="${project_root}/build/reports/${module_name}/android"
+  mkdir -p "${report_dir}"
+  rm -f "${report_dir}"/TEST-*.xml
+done
 rm -f "${command_log_path}"
 
 ci_set_java_home
@@ -191,55 +200,69 @@ echo "Project root: ${project_root}"
 echo "Amper cache:  ${AMPER_BOOTSTRAP_CACHE_DIR}"
 echo "Amper home:   ${amper_home}"
 echo "Gradle home:  ${default_gradle_user_home}"
+echo "Modules:      ${modules[*]}"
 echo "Command log:  ${command_log_path}"
 echo "Verbose log:  set ANDROID_TEST_VERBOSE=1 to stream Amper output"
 
-set +e
-attempt1_log_path="${project_root}/build/logs/android-test-command.attempt1.log"
-run_amper_test "${default_gradle_user_home}" "${attempt1_log_path}" "$@"
-command_status=$?
+overall_status=0
 
-if [[ "${command_status}" -ne 0 ]] && {
-  command_log_mentions_missing_gradle_metadata "${attempt1_log_path}" || latest_amper_logs_mention_missing_gradle_metadata
-}; then
-  clean_gradle_user_home="$(prepare_clean_gradle_user_home)"
-  echo "Detected stale Gradle transform metadata. Retrying once with a clean Gradle home..."
-  echo "Clean Gradle: ${clean_gradle_user_home}"
-  retry_log_path="${project_root}/build/logs/android-test-command.attempt2.log"
-  run_amper_test "${clean_gradle_user_home}" "${retry_log_path}" "$@"
-  retry_status=$?
+for module_name in "${modules[@]}"; do
+  module_log_path="${project_root}/build/logs/android-test-command-${module_name}.log"
+
+  set +e
+  attempt1_log_path="${project_root}/build/logs/android-test-command-${module_name}.attempt1.log"
+  run_amper_test "${default_gradle_user_home}" "${module_name}" "${attempt1_log_path}" "$@"
+  command_status=$?
+
+  if [[ "${command_status}" -ne 0 ]] && {
+    command_log_mentions_missing_gradle_metadata "${attempt1_log_path}" || latest_amper_logs_mention_missing_gradle_metadata
+  }; then
+    clean_gradle_user_home="$(prepare_clean_gradle_user_home)"
+    echo "Detected stale Gradle transform metadata while testing ${module_name}. Retrying once with a clean Gradle home..."
+    echo "Clean Gradle: ${clean_gradle_user_home}"
+    retry_log_path="${project_root}/build/logs/android-test-command-${module_name}.attempt2.log"
+    run_amper_test "${clean_gradle_user_home}" "${module_name}" "${retry_log_path}" "$@"
+    retry_status=$?
+
+    {
+      cat "${attempt1_log_path}"
+      printf '\n%s\n' "=== Retry with clean Gradle user home ==="
+      printf '%s\n\n' "GRADLE_USER_HOME=${clean_gradle_user_home}"
+      cat "${retry_log_path}"
+    } >"${module_log_path}"
+
+    command_status="${retry_status}"
+  else
+    cp "${attempt1_log_path}" "${module_log_path}"
+  fi
+  set -e
 
   {
-    cat "${attempt1_log_path}"
-    printf '\n%s\n' "=== Retry with clean Gradle user home ==="
-    printf '%s\n\n' "GRADLE_USER_HOME=${clean_gradle_user_home}"
-    cat "${retry_log_path}"
-  } >"${command_log_path}"
+    printf '\n%s\n' "=== Module: ${module_name} ==="
+    cat "${module_log_path}"
+  } >>"${command_log_path}"
 
-  command_status="${retry_status}"
-else
-  cp "${attempt1_log_path}" "${command_log_path}"
-fi
-set -e
+  report_dir="${project_root}/build/reports/${module_name}/android"
+  print_test_summary "${report_dir}"
+
+  latest_amper_log_dir="$(find_latest_amper_log_dir || true)"
+  if [[ -n "${latest_amper_log_dir}" ]]; then
+    echo
+    echo "Amper logs for ${module_name}"
+    echo "  - ${latest_amper_log_dir}/info.log"
+    echo "  - ${latest_amper_log_dir}/debug.log"
+  fi
+
+  if [[ "${command_status}" -ne 0 ]]; then
+    overall_status="${command_status}"
+    echo
+    echo "Recent command output for ${module_name}"
+    tail -n 80 "${module_log_path}" || true
+  fi
+done
 
 if [[ "${ANDROID_TEST_VERBOSE:-0}" == "1" ]]; then
   cat "${command_log_path}"
 fi
 
-print_test_summary "${report_dir}"
-
-latest_amper_log_dir="$(find_latest_amper_log_dir || true)"
-if [[ -n "${latest_amper_log_dir}" ]]; then
-  echo
-  echo "Amper logs"
-  echo "  - ${latest_amper_log_dir}/info.log"
-  echo "  - ${latest_amper_log_dir}/debug.log"
-fi
-
-if [[ "${command_status}" -ne 0 ]]; then
-  echo
-  echo "Recent command output"
-  tail -n 80 "${command_log_path}" || true
-fi
-
-exit "${command_status}"
+exit "${overall_status}"

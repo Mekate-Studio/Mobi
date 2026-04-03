@@ -76,6 +76,7 @@ The shared dispatcher accepts these portable job names:
 - `android-build-release`
 - `android-test`
 - `ios-build-debug`
+- `ios-test`
 - `ios-build-release`
 - `ios-archive-release`
 - `ios-testflight`
@@ -107,6 +108,7 @@ Run a few shared jobs locally:
 ./scripts/ci/run_job.sh android-build-debug
 ./scripts/ci/run_job.sh android-test
 ./scripts/ci/run_job.sh ios-build-debug
+./scripts/ci/run_job.sh ios-test
 ```
 
 You can also use the repo [`Justfile`](Justfile):
@@ -115,12 +117,22 @@ You can also use the repo [`Justfile`](Justfile):
 just android-build-debug
 just android-test
 just ios-build-debug
+just ios-test
 ```
 
 The iOS build jobs target a generic iOS Simulator destination, disable explicit
 Swift modules for the CLI path, and prefer the Xcode workspace when the Swift
 package graph is present. The remaining host requirement is that Xcode has an
 iOS Simulator runtime installed.
+
+The current test bootstrap covers state transitions on both native shells:
+
+- Android tests the Circuit-facing transition seam through
+  [`HomePresenterStateProducer`](android-app/src/home/HomePresenterStateProducer.kt),
+  which adapts shared feature state into the presenter/UI contract.
+- iOS tests the TCA reducer with a real `TestStore` in
+  [`HomeFeatureTests.swift`](ios-app/tests/Features/Home/HomeFeatureTests.swift),
+  stubbing the shared client to verify reducer-driven state transitions.
 
 ## Why this layout works
 
