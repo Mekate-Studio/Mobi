@@ -1,15 +1,21 @@
 product: android/app
 
 dependencies:
+  - ../shared-core
   - ../shared-di
   - ../shared-feature-home
   - ../shared-ui-home
   - androidx.activity:activity-compose:1.8.2
   - com.slack.circuit:circuit-foundation:0.31.0
+  - dev.zacsweers.metro:runtime:0.12.1
 
 settings:
   compose: enabled
   junit: junit-4
+  kotlin:
+    compilerPlugins:
+      - id: dev.zacsweers.metro.compiler
+        dependency: dev.zacsweers.metro:compiler:0.12.1
   android:
     namespace: studio.mekate.b3
     applicationId: studio.mekate.b3

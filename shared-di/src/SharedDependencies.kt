@@ -10,6 +10,7 @@ import studio.mekate.b3.feature.home.HomeFeatureStateFactory
 
 @DependencyGraph
 interface SharedApplicationGraph {
+    val platformNameProvider: PlatformNameProvider
     val platformContextProvider: PlatformContextProvider
     val homeFeatureStateFactory: HomeFeatureStateFactory
 

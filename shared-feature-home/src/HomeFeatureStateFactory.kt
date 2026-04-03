@@ -3,18 +3,6 @@ package studio.mekate.b3.feature.home
 import dev.zacsweers.metro.Inject
 import studio.mekate.b3.core.PlatformContextProvider
 
-data class HomeFeatureState(
-    val title: String,
-    val message: String,
-    val supportingText: String,
-    val refreshCount: Int,
-    val primaryActionLabel: String,
-)
-
-sealed interface HomeFeatureEvent {
-    data object RefreshClicked : HomeFeatureEvent
-}
-
 @Inject
 class HomeFeatureStateFactory(
     private val platformContextProvider: PlatformContextProvider,

@@ -96,6 +96,14 @@ Circuit should stay inside Android-facing presentation modules. Shared KMP
 code can expose feature contracts and state, but not Circuit `Screen`,
 `Presenter`, or `Ui` implementations.
 
+The current Android home flow follows a Metro-backed `AndroidAppGraph` pattern:
+the shared Metro graph owns shared feature factories, and the Android graph
+owns Circuit-specific factories and the `Circuit` instance itself. Circuit
+codegen is intentionally deferred for now; the official codegen docs focus on
+Anvil, Hilt, and kotlin-inject-anvil flows, so this repo keeps Metro plus
+Circuit on explicit factories until the Metro path is more clearly documented
+for this toolchain.
+
 ### iOS
 
 - SwiftUI for native UI
@@ -162,8 +170,15 @@ Concretely:
 - [`shared-di/src/SharedDependencies.kt`](../../shared-di/src/SharedDependencies.kt)
   owns the Metro graph and shared Kotlin composition-root helpers.
 - [`android-app/src/MainActivity.kt`](../../android-app/src/MainActivity.kt)
-  creates one Metro-backed shared feature factory and feeds both the native and
-  shared Compose home demos from it.
+  stays small and delegates to Android composition-root wiring.
+- [`android-app/src/AndroidAppGraph.kt`](../../android-app/src/AndroidAppGraph.kt)
+  owns the Android Metro graph, Circuit instance, and Circuit-specific
+  factories.
+- [`android-app/src/home/`](../../android-app/src/home)
+  contains split Circuit screen, presenter, and UI files for the home feature.
+- [`android-app/src/AppShell.kt`](../../android-app/src/AppShell.kt)
+  composes the shared graph and Android graph, then routes between the native
+  and shared Compose demos.
 - [`ios-app/src/AppDependencies.swift`](../../ios-app/src/AppDependencies.swift)
   creates the native iOS composition root and injects shared Kotlin factories
   into TCA and shared Compose wrappers.
