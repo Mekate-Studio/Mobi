@@ -8,16 +8,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HomeFeatureStateHolderTest {
-    private val stateFactory = HomeFeatureStateFactory(
-        platformContextProvider = PlatformContextProvider(
-            platformNameProvider = PlatformNameProvider { "TestOS" },
-        ),
-    )
-
     @Test
-    fun emitsInitialAndRefreshedSharedState() = runTest {
-        val holder = HomeFeatureStateHolder(stateFactory = stateFactory)
+    fun `should emit refreshed shared state when refresh event is received`() = runTest {
+        // given
+        val holder = createStateHolder()
 
+        // when / then
         holder.state.test {
             val initialState = awaitItem()
             assertEquals(0, initialState.refreshCount)
@@ -37,5 +33,19 @@ class HomeFeatureStateHolderTest {
             )
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    private fun createStateHolder(
+        platformName: String = "TestOS",
+        initialRefreshCount: Int = 0,
+    ): HomeFeatureStateHolder {
+        return HomeFeatureStateHolder(
+            stateFactory = HomeFeatureStateFactory(
+                platformContextProvider = PlatformContextProvider(
+                    platformNameProvider = PlatformNameProvider { platformName },
+                ),
+            ),
+            initialRefreshCount = initialRefreshCount,
+        )
     }
 }

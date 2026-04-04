@@ -7,21 +7,18 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HomePresenterStateProducerTest {
-    private val producer = HomePresenterStateProducer(
-        stateFactory = HomeFeatureStateFactory(
-            platformContextProvider = PlatformContextProvider(
-                platformNameProvider = PlatformNameProvider { "TestOS" },
-            ),
-        ),
-    )
-
     @Test
-    fun createsInitialStateAndRefreshTransition() {
+    fun `should create refreshed presenter state when refresh event is sent`() {
+        // given
+        val producer = createStateProducer()
         var refreshCount = 0
 
+        // when
         val initialState = producer.create(refreshCount = refreshCount) { updatedRefreshCount ->
             refreshCount = updatedRefreshCount
         }
+
+        // then
         assertEquals("Native shell, shared feature", initialState.featureState.title)
         assertEquals("Shared feature state flowing into the TestOS shell.", initialState.featureState.message)
         assertEquals(
@@ -40,6 +37,18 @@ class HomePresenterStateProducerTest {
         assertEquals(
             "The shared reducer has already handled one refresh for the TestOS shell.",
             refreshedState.featureState.supportingText,
+        )
+    }
+
+    private fun createStateProducer(
+        platformName: String = "TestOS",
+    ): HomePresenterStateProducer {
+        return HomePresenterStateProducer(
+            stateFactory = HomeFeatureStateFactory(
+                platformContextProvider = PlatformContextProvider(
+                    platformNameProvider = PlatformNameProvider { platformName },
+                ),
+            ),
         )
     }
 }
