@@ -50,7 +50,7 @@ fun AppShell() {
             }
 
             AppDestination.SharedComposeDemo -> SharedHomeScreen(
-                stateFactory = sharedGraph.homeFeatureStateFactory,
+                service = sharedGraph.homeFeatureService,
                 modifier = Modifier.padding(paddingValues),
             )
         }

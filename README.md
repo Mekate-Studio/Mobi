@@ -68,6 +68,12 @@ The app now exposes two visible home demos on both platforms:
 - `Shared UI`: Compose Multiplatform screen consuming the same shared feature
   state through `shared-ui-home`
 
+That shared home feature now goes beyond static state: both platforms consume a
+shared asynchronous repository flow from Kotlin. Pressing the counter action
+loads the next fibonacci value through a fake repository/web-API seam, and the
+native shells plus the shared Compose screen all render the same loading and
+loaded states from the shared layer.
+
 ## Supported CI jobs
 
 The shared dispatcher accepts these portable job names:
@@ -127,6 +133,7 @@ iOS Simulator runtime installed.
 
 The current test bootstrap covers state transitions on both native shells:
 
+- Shared Kotlin tests cover the async repository and feature service directly.
 - Android tests the Circuit-facing transition seam through
   [`HomePresenterStateProducer`](android-app/src/home/HomePresenterStateProducer.kt),
   which adapts shared feature state into the presenter/UI contract.

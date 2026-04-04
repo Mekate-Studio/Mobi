@@ -2,29 +2,36 @@ package studio.mekate.b3.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Inject
-import studio.mekate.b3.feature.home.HomeFeatureEvent
-import studio.mekate.b3.feature.home.HomeFeatureStateFactory
+import kotlinx.coroutines.launch
+import studio.mekate.b3.feature.home.HomeFeatureService
 
 class HomePresenter(
-    private val stateFactory: HomeFeatureStateFactory,
+    private val service: HomeFeatureService,
 ) : Presenter<HomeScreenState> {
-    private val stateProducer = HomePresenterStateProducer(stateFactory)
+    private val stateProducer = HomePresenterStateProducer(service)
 
     @Composable
     override fun present(): HomeScreenState {
-        var refreshCount by rememberSaveable { mutableIntStateOf(0) }
-        return remember(refreshCount, stateProducer) {
-            stateProducer.create(refreshCount = refreshCount) { updatedRefreshCount ->
-                refreshCount = updatedRefreshCount
+        var featureState by remember(stateProducer) { mutableStateOf(stateProducer.initialState()) }
+        val scope = rememberCoroutineScope()
+
+        return remember(featureState, stateProducer, scope) {
+            stateProducer.create(featureState = featureState) { currentCounterValue ->
+                if (!featureState.isLoading) {
+                    scope.launch {
+                        featureState = stateProducer.loadingState(counterValue = currentCounterValue)
+                        featureState = stateProducer.refreshedState(counterValue = currentCounterValue)
+                    }
+                }
             }
         }
     }
@@ -32,7 +39,7 @@ class HomePresenter(
 
 @Inject
 class HomePresenterFactory(
-    private val stateFactory: HomeFeatureStateFactory,
+    private val service: HomeFeatureService,
 ) : Presenter.Factory {
     override fun create(
         screen: Screen,
@@ -40,7 +47,7 @@ class HomePresenterFactory(
         context: CircuitContext,
     ): Presenter<*>? {
         return when (screen) {
-            HomeScreen -> HomePresenter(stateFactory)
+            HomeScreen -> HomePresenter(service)
             else -> null
         }
     }

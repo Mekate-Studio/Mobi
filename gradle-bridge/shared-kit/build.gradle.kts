@@ -25,6 +25,7 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material3)
                 implementation(libs.metro.runtime)
+                implementation(libs.kotlinx.coroutines.core)
             }
             kotlin.srcDirs(
                 "../../shared-core/src",
@@ -37,6 +38,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.kotlinx.coroutines.test)
             }
             kotlin.srcDirs(
                 "../../shared-core/test",

@@ -4,8 +4,9 @@ struct HomeScreenContent: View {
     let title: String
     let message: String
     let supportingText: String
-    let refreshCount: Int
+    let counterValue: Int
     let primaryActionLabel: String
+    let isLoading: Bool
     let onRefreshTapped: () -> Void
 
     var body: some View {
@@ -25,11 +26,12 @@ struct HomeScreenContent: View {
                     title: title,
                     message: message,
                     supportingText: supportingText,
-                    refreshCount: refreshCount
+                    counterValue: counterValue
                 )
 
                 HomePrimaryActionButton(
                     title: primaryActionLabel,
+                    isLoading: isLoading,
                     action: onRefreshTapped
                 )
             }

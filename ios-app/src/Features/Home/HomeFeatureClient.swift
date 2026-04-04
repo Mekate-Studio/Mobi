@@ -3,23 +3,22 @@ import Foundation
 @preconcurrency import KotlinModules
 
 struct HomeFeatureClient {
-    var create: @Sendable (_ refreshCount: Int) -> HomeFeatureState
-    var reduce: @Sendable (_ refreshCount: Int) -> Int
+    var initialState: @Sendable () -> HomeFeatureState
+    var loadingState: @Sendable (_ counterValue: Int) -> HomeFeatureState
+    var refresh: @Sendable (_ counterValue: Int) async throws -> HomeFeatureState
 }
 
 extension HomeFeatureClient {
-    init(stateFactory: HomeFeatureStateFactory) {
+    init(service: HomeFeatureService) {
         self.init(
-            create: { refreshCount in
-                stateFactory.create(refreshCount: Int32(refreshCount))
+            initialState: {
+                service.initialState(counterValue: 0)
             },
-            reduce: { refreshCount in
-                Int(
-                    stateFactory.reduce(
-                        refreshCount: Int32(refreshCount),
-                        event: HomeFeatureEventRefreshClicked.shared
-                    )
-                )
+            loadingState: { counterValue in
+                service.loadingState(counterValue: Int32(counterValue))
+            },
+            refresh: { counterValue in
+                try await service.refresh(counterValue: Int32(counterValue))
             }
         )
     }
@@ -27,7 +26,7 @@ extension HomeFeatureClient {
 
 extension HomeFeatureClient: DependencyKey {
     static let liveValue = HomeFeatureClient(
-        stateFactory: SharedDependencies.shared.createDefaultHomeFeatureStateFactory()
+        service: SharedDependencies.shared.createDefaultHomeFeatureService()
     )
 }
 

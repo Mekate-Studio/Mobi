@@ -1,28 +1,31 @@
 package studio.mekate.b3.home
 
-import studio.mekate.b3.feature.home.HomeFeatureEvent
-import studio.mekate.b3.feature.home.HomeFeatureStateFactory
+import studio.mekate.b3.feature.home.HomeFeatureService
+import studio.mekate.b3.feature.home.HomeFeatureState
 
 class HomePresenterStateProducer(
-    private val stateFactory: HomeFeatureStateFactory,
+    private val service: HomeFeatureService,
 ) {
-    fun create(
-        refreshCount: Int,
-        onRefreshCountChanged: (Int) -> Unit,
-    ): HomeScreenState {
-        val featureState = stateFactory.create(refreshCount = refreshCount)
+    fun initialState(): HomeFeatureState = service.initialState()
 
+    fun loadingState(
+        counterValue: Int,
+    ): HomeFeatureState = service.loadingState(counterValue = counterValue)
+
+    suspend fun refreshedState(
+        counterValue: Int,
+    ): HomeFeatureState = service.refresh(counterValue = counterValue)
+
+    fun create(
+        featureState: HomeFeatureState,
+        onRefreshRequested: (Int) -> Unit,
+    ): HomeScreenState {
         return HomeScreenState(
             featureState = featureState,
             eventSink = { event ->
                 when (event) {
                     HomeScreenEvent.RefreshClicked -> {
-                        onRefreshCountChanged(
-                            stateFactory.reduce(
-                                refreshCount = refreshCount,
-                                event = HomeFeatureEvent.RefreshClicked,
-                            ),
-                        )
+                        onRefreshRequested(featureState.counterValue)
                     }
                 }
             },

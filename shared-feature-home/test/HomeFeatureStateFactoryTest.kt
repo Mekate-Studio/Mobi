@@ -8,35 +8,40 @@ import kotlin.test.assertTrue
 
 class HomeFeatureStateFactoryTest {
     @Test
-    fun `should create initial shared state when refresh count is zero`() {
+    fun `should have initial shared state when counter value is zero`() {
         // given
         val factory = createStateFactory()
 
         // when
-        val state = factory.create(refreshCount = 0)
+        val state = factory.create(
+            counterValue = 0,
+            isLoading = false,
+        )
 
         // then
         assertEquals("Native shell, shared feature", state.title)
         assertEquals("Shared feature state flowing into the TestOS shell.", state.message)
-        assertEquals("Refresh shared state", state.primaryActionLabel)
-        assertEquals(0, state.refreshCount)
+        assertEquals("Load next counter value", state.primaryActionLabel)
+        assertEquals(0, state.counterValue)
+        assertEquals(false, state.isLoading)
         assertTrue(state.supportingText.contains("shared-core"))
     }
 
     @Test
-    fun `should increment refresh count when refresh clicked event is reduced`() {
+    fun `should have loading shared state when counter refresh is in progress`() {
         // given
         val factory = createStateFactory()
-        val currentRefreshCount = 2
 
         // when
-        val nextRefreshCount = factory.reduce(
-            refreshCount = currentRefreshCount,
-            event = HomeFeatureEvent.RefreshClicked,
+        val state = factory.create(
+            counterValue = 3,
+            isLoading = true,
         )
 
         // then
-        assertEquals(3, nextRefreshCount)
+        assertEquals(3, state.counterValue)
+        assertTrue(state.isLoading)
+        assertTrue(state.supportingText.contains("Loading the next fibonacci counter value"))
     }
 
     private fun createStateFactory(

@@ -6,6 +6,7 @@
 kotlin = "2.3.20"
 compose = "1.9.0"
 metro = "0.12.1"
+coroutines = "1.10.2"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -15,3 +16,5 @@ metro = { id = "dev.zacsweers.metro", version.ref = "metro" }
 
 [libraries]
 metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }

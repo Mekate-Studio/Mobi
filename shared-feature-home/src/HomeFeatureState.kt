@@ -4,6 +4,7 @@ data class HomeFeatureState(
     val title: String,
     val message: String,
     val supportingText: String,
-    val refreshCount: Int,
+    val counterValue: Int,
     val primaryActionLabel: String,
+    val isLoading: Boolean,
 )

@@ -7,28 +7,26 @@ import studio.mekate.b3.core.PlatformContextProvider
 class HomeFeatureStateFactory(
     private val platformContextProvider: PlatformContextProvider,
 ) {
-    fun create(refreshCount: Int): HomeFeatureState {
+    fun create(
+        counterValue: Int,
+        isLoading: Boolean,
+    ): HomeFeatureState {
         val platform = platformContextProvider.current().name
         val title = "Native shell, shared feature"
         val message = "Shared feature state flowing into the $platform shell."
-        val supportingText = when (refreshCount) {
-            0 -> "shared-core exposes platform context, shared-feature-home turns it into feature state, and platform shells decide how to render it."
-            1 -> "The shared reducer has already handled one refresh for the $platform shell."
-            else -> "The shared reducer has handled $refreshCount refreshes for the $platform shell."
+        val supportingText = when {
+            isLoading -> "Loading the next fibonacci counter value from the fake repository for the $platform shell."
+            counterValue == 0 -> "shared-core exposes platform context, shared-feature-home fetches counter values from a fake repository, and platform shells decide how to render them."
+            else -> "The fake repository returned fibonacci counter value $counterValue for the $platform shell."
         }
 
         return HomeFeatureState(
             title = title,
             message = message,
             supportingText = supportingText,
-            refreshCount = refreshCount,
-            primaryActionLabel = "Refresh shared state",
+            counterValue = counterValue,
+            primaryActionLabel = "Load next counter value",
+            isLoading = isLoading,
         )
-    }
-
-    fun reduce(refreshCount: Int, event: HomeFeatureEvent): Int {
-        return when (event) {
-            HomeFeatureEvent.RefreshClicked -> refreshCount + 1
-        }
     }
 }

@@ -9,12 +9,21 @@ struct HomeFeature {
         Reduce { state, action in
             switch action {
             case .task:
-                state.apply(sharedState: homeFeatureClient.create(state.refreshCount))
+                state.apply(sharedState: homeFeatureClient.initialState())
                 return .none
 
             case .refreshTapped:
-                let nextRefreshCount = homeFeatureClient.reduce(state.refreshCount)
-                state.apply(sharedState: homeFeatureClient.create(nextRefreshCount))
+                let currentCounterValue = state.counterValue
+                state.apply(sharedState: homeFeatureClient.loadingState(currentCounterValue))
+                return .run { send in
+                    let sharedState = try await homeFeatureClient.refresh(currentCounterValue)
+                    var loadedState = State()
+                    loadedState.apply(sharedState: sharedState)
+                    await send(.sharedStateLoaded(loadedState))
+                }
+
+            case let .sharedStateLoaded(loadedState):
+                state = loadedState
                 return .none
             }
         }

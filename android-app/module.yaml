@@ -9,6 +9,9 @@ dependencies:
   - com.slack.circuit:circuit-foundation:0.33.1
   - dev.zacsweers.metro:runtime:0.12.1
 
+test-dependencies:
+  - org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2
+
 settings:
   compose: enabled
   junit: junit-4

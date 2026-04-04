@@ -6,30 +6,57 @@ import Testing
 @Suite("HomeFeature")
 struct HomeFeatureTests {
     @MainActor
-    @Test("should load initial shared state when task is sent")
-    func shouldLoadInitialSharedStateWhenTaskIsSent() async {
+    @Test("should have initial shared state when task is sent")
+    func shouldHaveInitialSharedStateWhenTaskIsSent() async {
         // given
         let store = HomeFeatureTestFactory.makeStore()
 
         // when / then
         await store.send(.task) {
-            $0 = HomeFeatureTestFactory.expectedState(refreshCount: 0)
+            $0 = HomeFeatureTestFactory.expectedState(counterValue: 0)
         }
     }
 
     @MainActor
-    @Test("should refresh shared state when refresh action is sent after task")
-    func shouldRefreshSharedStateWhenRefreshActionIsSentAfterTask() async {
+    @Test("should have loading shared state when refresh action is sent after task")
+    func shouldHaveLoadingSharedStateWhenRefreshActionIsSentAfterTask() async {
         // given
         let store = HomeFeatureTestFactory.makeStore()
 
         await store.send(.task) {
-            $0 = HomeFeatureTestFactory.expectedState(refreshCount: 0)
+            $0 = HomeFeatureTestFactory.expectedState(counterValue: 0)
         }
 
         // when / then
         await store.send(.refreshTapped) {
-            $0 = HomeFeatureTestFactory.expectedState(refreshCount: 1)
+            $0 = HomeFeatureTestFactory.expectedState(
+                counterValue: 0,
+                isLoading: true
+            )
+        }
+        await store.skipReceivedActions()
+    }
+
+    @MainActor
+    @Test("should have refreshed shared state when repository load completes after refresh action is sent")
+    func shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent() async {
+        // given
+        let store = HomeFeatureTestFactory.makeStore()
+
+        await store.send(.task) {
+            $0 = HomeFeatureTestFactory.expectedState(counterValue: 0)
+        }
+
+        await store.send(.refreshTapped) {
+            $0 = HomeFeatureTestFactory.expectedState(
+                counterValue: 0,
+                isLoading: true
+            )
+        }
+
+        // when / then
+        await store.receive(.sharedStateLoaded(HomeFeatureTestFactory.expectedState(counterValue: 1))) {
+            $0 = HomeFeatureTestFactory.expectedState(counterValue: 1)
         }
     }
 }
@@ -45,34 +72,80 @@ private enum HomeFeatureTestFactory {
 
     static func makeHomeFeatureClient() -> HomeFeatureClient {
         HomeFeatureClient(
-            create: { refreshCount in
-                makeSharedState(refreshCount: refreshCount)
+            initialState: {
+                makeSharedState(counterValue: 0)
             },
-            reduce: { refreshCount in
-                refreshCount + 1
+            loadingState: { counterValue in
+                makeSharedState(
+                    counterValue: counterValue,
+                    isLoading: true
+                )
+            },
+            refresh: { counterValue in
+                await Task.yield()
+                return makeSharedState(counterValue: nextCounterValue(after: counterValue))
             }
         )
     }
 
     static func makeSharedState(
-        refreshCount: Int,
+        counterValue: Int,
+        isLoading: Bool = false
     ) -> HomeFeatureState {
         HomeFeatureState(
             title: "Native shell, shared feature",
             message: "Shared feature state flowing into the TestOS shell.",
-            supportingText: refreshCount == 0
-                ? "shared-core exposes platform context, shared-feature-home turns it into feature state, and platform shells decide how to render it."
-                : "The shared reducer has already handled one refresh for the TestOS shell.",
-            refreshCount: Int32(refreshCount),
-            primaryActionLabel: "Refresh shared state"
+            supportingText: supportingText(
+                counterValue: counterValue,
+                isLoading: isLoading
+            ),
+            counterValue: Int32(counterValue),
+            primaryActionLabel: "Load next counter value",
+            isLoading: isLoading
         )
     }
 
     static func expectedState(
-        refreshCount: Int,
+        counterValue: Int,
+        isLoading: Bool = false
     ) -> HomeFeature.State {
         var state = HomeFeature.State()
-        state.apply(sharedState: makeSharedState(refreshCount: refreshCount))
+        state.apply(
+            sharedState: makeSharedState(
+                counterValue: counterValue,
+                isLoading: isLoading
+            )
+        )
         return state
+    }
+
+    static func supportingText(
+        counterValue: Int,
+        isLoading: Bool
+    ) -> String {
+        if isLoading {
+            return "Loading the next fibonacci counter value from the fake repository for the TestOS shell."
+        }
+
+        if counterValue == 0 {
+            return "shared-core exposes platform context, shared-feature-home fetches counter values from a fake repository, and platform shells decide how to render them."
+        }
+
+        return "The fake repository returned fibonacci counter value \(counterValue) for the TestOS shell."
+    }
+
+    static func nextCounterValue(after counterValue: Int) -> Int {
+        if counterValue < 1 { return 1 }
+
+        var previous = 0
+        var current = 1
+
+        while current <= counterValue {
+            let next = previous + current
+            previous = current
+            current = next
+        }
+
+        return current
     }
 }

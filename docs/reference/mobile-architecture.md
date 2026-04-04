@@ -161,13 +161,15 @@ reliably detect shared schemes from the nested workspace path in this repo.
 ## Current home data flow
 
 The current home feature is intentionally small, but it already follows the
-target contract:
+target contract and now includes an asynchronous shared data source:
 
 ```text
 shared-core.PlatformNameProvider
   -> shared-di.SharedApplicationGraph
   -> shared-core.PlatformContextProvider
+  -> shared-core.CounterRepository
   -> shared-feature-home.HomeFeatureStateFactory
+  -> shared-feature-home.HomeFeatureService
   -> android Circuit presenter / iOS TCA dependency client / shared Compose route
   -> Android Compose UI / SwiftUI / SharedHomeScreen
 ```
@@ -176,8 +178,15 @@ Concretely:
 
 - [`shared-core/src/PlatformContext.kt`](../../shared-core/src/PlatformContext.kt)
   exposes platform context as a shared input primitive.
+- [`shared-core/src/CounterRepository.kt`](../../shared-core/src/CounterRepository.kt)
+  exposes an asynchronous shared repository contract and a fake implementation
+  that simulates a web API delay before returning the next fibonacci counter
+  value.
 - [`shared-feature-home/src/HomeFeatureStateFactory.kt`](../../shared-feature-home/src/HomeFeatureStateFactory.kt)
-  turns that core input into feature state and a small shared reducer.
+  turns shared core inputs into feature state for loading and loaded cases.
+- [`shared-feature-home/src/HomeFeatureService.kt`](../../shared-feature-home/src/HomeFeatureService.kt)
+  is the shared feature-level async seam that coordinates repository work and
+  produces feature state for all platform shells.
 - [`shared-di/src/SharedDependencies.kt`](../../shared-di/src/SharedDependencies.kt)
   owns the Metro graph and shared Kotlin composition-root helpers.
 - [`android-app/src/MainActivity.kt`](../../android-app/src/MainActivity.kt)
@@ -194,7 +203,7 @@ Concretely:
   creates the native iOS composition root and injects shared Kotlin factories
   into TCA and shared Compose wrappers.
 - [`ios-app/src/Features/Home/HomeFeatureClient.swift`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
-  adapts the shared feature factory into TCA dependencies.
+  adapts the shared feature service into TCA dependencies.
 - [`ios-app/src/Features/Home/SharedHomeDemoView.swift`](../../ios-app/src/Features/Home/SharedHomeDemoView.swift)
   embeds the shared Compose entry point in a SwiftUI tab.
 - [`shared-ui-home/src/HomeContent.kt`](../../shared-ui-home/src/HomeContent.kt)
@@ -205,20 +214,21 @@ Concretely:
 ## Testing bootstrap
 
 The current testing foundation focuses on state transitions at the native
-presentation seams.
+presentation seams and the shared async workflow.
 
 - Android keeps Circuit presentation logic testable through
   [`android-app/src/home/HomePresenterStateProducer.kt`](../../android-app/src/home/HomePresenterStateProducer.kt).
   The presenter delegates state creation and event transitions to that small
   seam, and
   [`android-app/test/home/HomePresenterStateProducerTest.kt`](../../android-app/test/home/HomePresenterStateProducerTest.kt)
-  verifies the shared-state-to-presenter-state mapping plus the refresh
+  verifies the shared-state-to-presenter-state mapping plus the async refresh
   transition.
-- Shared Kotlin flow-based feature state can be tested directly with Turbine.
-  [`shared-feature-home/src/HomeFeatureStateHolder.kt`](../../shared-feature-home/src/HomeFeatureStateHolder.kt)
-  exposes a small reusable `StateFlow` holder around the shared reducer, and
-  [`shared-feature-home/test/HomeFeatureStateHolderTest.kt`](../../shared-feature-home/test/HomeFeatureStateHolderTest.kt)
-  verifies its emissions with Turbine.
+- Shared repositories and feature services are tested directly in Kotlin.
+  [`shared-core/test/FakeCounterRepositoryTest.kt`](../../shared-core/test/FakeCounterRepositoryTest.kt)
+  verifies the fake async repository contract, and
+  [`shared-feature-home/test/HomeFeatureServiceTest.kt`](../../shared-feature-home/test/HomeFeatureServiceTest.kt)
+  verifies that feature-level loading and loaded states are produced from that
+  repository.
 - iOS keeps TCA state transitions testable through
   [`ios-app/tests/Features/Home/HomeFeatureTests.swift`](../../ios-app/tests/Features/Home/HomeFeatureTests.swift).
   Those tests use `TestStore` against the real reducer while stubbing the

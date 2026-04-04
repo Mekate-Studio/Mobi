@@ -3,16 +3,19 @@ package studio.mekate.b3.di
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
+import studio.mekate.b3.core.CounterRepository
+import studio.mekate.b3.core.FakeCounterRepository
 import studio.mekate.b3.core.PlatformContextProvider
 import studio.mekate.b3.core.PlatformNameProvider
 import studio.mekate.b3.core.platformName
-import studio.mekate.b3.feature.home.HomeFeatureStateFactory
+import studio.mekate.b3.feature.home.HomeFeatureService
 
 @DependencyGraph
 interface SharedApplicationGraph {
     val platformNameProvider: PlatformNameProvider
     val platformContextProvider: PlatformContextProvider
-    val homeFeatureStateFactory: HomeFeatureStateFactory
+    val counterRepository: CounterRepository
+    val homeFeatureService: HomeFeatureService
 
     @DependencyGraph.Factory
     fun interface Factory {
@@ -20,6 +23,11 @@ interface SharedApplicationGraph {
             @Provides platformNameProvider: PlatformNameProvider,
         ): SharedApplicationGraph
     }
+
+    @Provides
+    fun provideCounterRepository(
+        repository: FakeCounterRepository,
+    ): CounterRepository = repository
 }
 
 object SharedDependencies {
@@ -34,13 +42,13 @@ object SharedDependencies {
         return createGraph(platformNameProvider = PlatformNameProvider(::platformName))
     }
 
-    fun createHomeFeatureStateFactory(
+    fun createHomeFeatureService(
         platformNameProvider: PlatformNameProvider,
-    ): HomeFeatureStateFactory {
-        return createGraph(platformNameProvider).homeFeatureStateFactory
+    ): HomeFeatureService {
+        return createGraph(platformNameProvider).homeFeatureService
     }
 
-    fun createDefaultHomeFeatureStateFactory(): HomeFeatureStateFactory {
-        return createDefaultGraph().homeFeatureStateFactory
+    fun createDefaultHomeFeatureService(): HomeFeatureService {
+        return createDefaultGraph().homeFeatureService
     }
 }

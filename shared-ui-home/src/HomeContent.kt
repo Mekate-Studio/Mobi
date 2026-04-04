@@ -10,33 +10,42 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import studio.mekate.b3.feature.home.HomeFeatureEvent
 import studio.mekate.b3.feature.home.HomeFeatureState
-import studio.mekate.b3.feature.home.HomeFeatureStateFactory
+import studio.mekate.b3.feature.home.HomeFeatureService
 
 @Composable
 fun SharedHomeScreen(
-    stateFactory: HomeFeatureStateFactory,
+    service: HomeFeatureService,
     modifier: Modifier = Modifier,
 ) {
-    var refreshCount by rememberSaveable { mutableIntStateOf(0) }
-    val state = remember(refreshCount, stateFactory) {
-        stateFactory.create(refreshCount = refreshCount)
+    var state by remember(service) { mutableStateOf(service.initialState()) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(service) {
+        state = service.initialState()
     }
 
     HomeContent(
         state = state,
         modifier = modifier,
         onEvent = { event ->
-            refreshCount = stateFactory.reduce(refreshCount = refreshCount, event = event)
+            if (!state.isLoading) {
+                scope.launch {
+                    state = service.loadingState(counterValue = state.counterValue)
+                    state = service.refresh(counterValue = state.counterValue)
+                }
+            }
         },
     )
 }
@@ -75,13 +84,14 @@ fun HomeContent(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
-                        text = "Refresh count: ${state.refreshCount}",
+                        text = "Counter value: ${state.counterValue}",
                         style = MaterialTheme.typography.labelLarge,
                     )
                     Button(
+                        enabled = !state.isLoading,
                         onClick = { onEvent(HomeFeatureEvent.RefreshClicked) },
                     ) {
-                        Text(state.primaryActionLabel)
+                        Text(if (state.isLoading) "Loading…" else state.primaryActionLabel)
                     }
                 }
             }
