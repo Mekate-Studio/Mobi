@@ -4,6 +4,7 @@ import com.slack.circuit.foundation.Circuit
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
+import studio.mekate.b3.core.CounterRepository
 import studio.mekate.b3.core.PlatformNameProvider
 import studio.mekate.b3.di.SharedApplicationGraph
 import studio.mekate.b3.home.HomePresenterFactory
@@ -25,6 +26,13 @@ interface AndroidAppGraph {
         sharedApplicationGraph: SharedApplicationGraph,
     ): PlatformNameProvider {
         return sharedApplicationGraph.platformNameProvider
+    }
+
+    @Provides
+    fun provideCounterRepository(
+        sharedApplicationGraph: SharedApplicationGraph,
+    ): CounterRepository {
+        return sharedApplicationGraph.counterRepository
     }
 
     @Provides
