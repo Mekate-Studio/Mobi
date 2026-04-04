@@ -214,6 +214,11 @@ presentation seams.
   [`android-app/test/home/HomePresenterStateProducerTest.kt`](../../android-app/test/home/HomePresenterStateProducerTest.kt)
   verifies the shared-state-to-presenter-state mapping plus the refresh
   transition.
+- Shared Kotlin flow-based feature state can be tested directly with Turbine.
+  [`shared-feature-home/src/HomeFeatureStateHolder.kt`](../../shared-feature-home/src/HomeFeatureStateHolder.kt)
+  exposes a small reusable `StateFlow` holder around the shared reducer, and
+  [`shared-feature-home/test/HomeFeatureStateHolderTest.kt`](../../shared-feature-home/test/HomeFeatureStateHolderTest.kt)
+  verifies its emissions with Turbine.
 - iOS keeps TCA state transitions testable through
   [`ios-app/tests/Features/Home/HomeFeatureTests.swift`](../../ios-app/tests/Features/Home/HomeFeatureTests.swift).
   Those tests use `TestStore` against the real reducer while stubbing the
