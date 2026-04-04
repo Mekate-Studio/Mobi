@@ -4,9 +4,11 @@ import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
 import studio.mekate.b3.core.CounterRepository
+import studio.mekate.b3.core.CounterRequestFailurePolicy
 import studio.mekate.b3.core.FakeCounterRepository
 import studio.mekate.b3.core.PlatformContextProvider
 import studio.mekate.b3.core.PlatformNameProvider
+import studio.mekate.b3.core.RandomCounterRequestFailurePolicy
 import studio.mekate.b3.core.platformName
 import studio.mekate.b3.feature.home.HomeFeatureService
 
@@ -28,6 +30,11 @@ interface SharedApplicationGraph {
     fun provideCounterRepository(
         repository: FakeCounterRepository,
     ): CounterRepository = repository
+
+    @Provides
+    fun provideCounterRequestFailurePolicy(
+        policy: RandomCounterRequestFailurePolicy,
+    ): CounterRequestFailurePolicy = policy
 }
 
 object SharedDependencies {

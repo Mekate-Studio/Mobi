@@ -12,6 +12,7 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.launch
+import studio.mekate.b3.feature.home.CounterLoadable
 import studio.mekate.b3.feature.home.HomeFeatureService
 
 class HomePresenter(
@@ -26,7 +27,7 @@ class HomePresenter(
 
         return remember(featureState, stateProducer, scope) {
             stateProducer.create(featureState = featureState) { currentCounterValue ->
-                if (!featureState.isLoading) {
+                if (featureState.counterLoadable !is CounterLoadable.Loading) {
                     scope.launch {
                         featureState = stateProducer.loadingState(counterValue = currentCounterValue)
                         featureState = stateProducer.refreshedState(counterValue = currentCounterValue)

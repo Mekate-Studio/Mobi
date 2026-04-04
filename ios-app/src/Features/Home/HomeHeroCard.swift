@@ -4,7 +4,7 @@ struct HomeHeroCard: View {
     let title: String
     let message: String
     let supportingText: String
-    let counterValue: Int
+    let counterLoadable: HomeCounterLoadable
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -15,7 +15,7 @@ struct HomeHeroCard: View {
             Text(supportingText)
                 .font(.body)
                 .foregroundStyle(.secondary)
-            Text("Counter value: \(counterValue)")
+            Text(counterLoadable.displayedCounterText)
                 .font(.caption.weight(.bold))
                 .textCase(.uppercase)
                 .foregroundStyle(.blue)

@@ -2,6 +2,7 @@ package studio.mekate.b3.core
 
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 interface CounterRepository {
     suspend fun fetchNextCounterValue(
@@ -9,12 +10,42 @@ interface CounterRepository {
     ): Int
 }
 
+interface CounterRequestFailurePolicy {
+    fun shouldFail(
+        currentCounterValue: Int,
+    ): Boolean
+}
+
 @Inject
-class FakeCounterRepository : CounterRepository {
+class RandomCounterRequestFailurePolicy : CounterRequestFailurePolicy {
+    override fun shouldFail(
+        currentCounterValue: Int,
+    ): Boolean = Random.nextInt(100) < FAILURE_PERCENTAGE
+
+    internal companion object {
+        const val FAILURE_PERCENTAGE = 35
+    }
+}
+
+class CounterRepositoryException(
+    message: String = DEFAULT_MESSAGE,
+) : RuntimeException(message) {
+    companion object {
+        const val DEFAULT_MESSAGE = "The fake repository failed to load the next fibonacci counter value."
+    }
+}
+
+@Inject
+class FakeCounterRepository(
+    private val failurePolicy: CounterRequestFailurePolicy,
+) : CounterRepository {
     override suspend fun fetchNextCounterValue(
         currentCounterValue: Int,
     ): Int {
         delay(API_DELAY_MILLIS)
+        if (failurePolicy.shouldFail(currentCounterValue)) {
+            throw CounterRepositoryException()
+        }
         return nextFibonacciValueAfter(currentCounterValue)
     }
 

@@ -1,0 +1,29 @@
+package studio.mekate.b3.feature.home
+
+sealed interface CounterLoadable {
+    data object Initial : CounterLoadable
+
+    data class Loading(
+        val previousValue: Int?,
+    ) : CounterLoadable
+
+    data class Loaded(
+        val value: Int,
+    ) : CounterLoadable
+
+    data class Error(
+        val previousValue: Int?,
+        val message: String,
+    ) : CounterLoadable
+}
+
+fun CounterLoadable.currentValueOrNull(): Int? {
+    return when (this) {
+        CounterLoadable.Initial -> null
+        is CounterLoadable.Loading -> previousValue
+        is CounterLoadable.Loaded -> value
+        is CounterLoadable.Error -> previousValue
+    }
+}
+
+fun CounterLoadable.currentValueForRefresh(): Int = currentValueOrNull() ?: 0

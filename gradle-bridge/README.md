@@ -13,6 +13,7 @@ This bridge should own only:
 - the Kotlin framework consumed by Xcode
 - iOS-facing Kotlin compiler configuration
 - the Gradle direct integration task used by Xcode
+- SKIE configuration for Swift-facing Kotlin interop
 
 This bridge should not own:
 
@@ -60,3 +61,12 @@ Android's existing Amper behavior.
 - [`../shared-ui-home`](../shared-ui-home)
 
 Do not create a second Kotlin source tree under this folder.
+
+## SKIE usage
+
+The bridge currently enables SKIE for sealed hierarchy ergonomics on the Swift
+side so iOS can switch over shared Kotlin sealed states cleanly.
+
+This bridge does not currently rely on SKIE coroutine or Flow interop. Those
+features are intentionally disabled here, and the iOS app continues to use the
+standard Kotlin suspend bridge for async calls.

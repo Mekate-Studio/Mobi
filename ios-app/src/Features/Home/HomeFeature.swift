@@ -13,10 +13,10 @@ struct HomeFeature {
                 return .none
 
             case .refreshTapped:
-                let currentCounterValue = state.counterValue
+                let currentCounterValue = state.counterLoadable.currentValueForRefresh
                 state.apply(sharedState: homeFeatureClient.loadingState(currentCounterValue))
                 return .run { send in
-                    let sharedState = try await homeFeatureClient.refresh(currentCounterValue)
+                    let sharedState = await homeFeatureClient.refresh(currentCounterValue)
                     var loadedState = State()
                     loadedState.apply(sharedState: sharedState)
                     await send(.sharedStateLoaded(loadedState))

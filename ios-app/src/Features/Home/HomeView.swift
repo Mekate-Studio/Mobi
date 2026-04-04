@@ -10,9 +10,8 @@ struct HomeView: View {
                 title: store.title,
                 message: store.message,
                 supportingText: store.supportingText,
-                counterValue: store.counterValue,
+                counterLoadable: store.counterLoadable,
                 primaryActionLabel: store.primaryActionLabel,
-                isLoading: store.isLoading,
                 onRefreshTapped: refreshTapped
             )
             .navigationTitle("Home")

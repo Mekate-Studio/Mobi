@@ -1,8 +1,20 @@
+import co.touchlab.skie.configuration.FlowInterop
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.metro)
+    alias(libs.plugins.skie)
+}
+
+skie {
+    features {
+        coroutinesInterop.set(false)
+        group {
+            FlowInterop.Enabled(false)
+        }
+    }
 }
 
 kotlin {

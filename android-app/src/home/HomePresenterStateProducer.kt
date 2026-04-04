@@ -2,6 +2,7 @@ package studio.mekate.b3.home
 
 import studio.mekate.b3.feature.home.HomeFeatureService
 import studio.mekate.b3.feature.home.HomeFeatureState
+import studio.mekate.b3.feature.home.currentValueForRefresh
 
 class HomePresenterStateProducer(
     private val service: HomeFeatureService,
@@ -25,7 +26,9 @@ class HomePresenterStateProducer(
             eventSink = { event ->
                 when (event) {
                     HomeScreenEvent.RefreshClicked -> {
-                        onRefreshRequested(featureState.counterValue)
+                        onRefreshRequested(
+                            featureState.counterLoadable.currentValueForRefresh(),
+                        )
                     }
                 }
             },

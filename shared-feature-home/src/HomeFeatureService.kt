@@ -1,6 +1,7 @@
 package studio.mekate.b3.feature.home
 
 import dev.zacsweers.metro.Inject
+import studio.mekate.b3.core.CounterRepositoryException
 import studio.mekate.b3.core.CounterRepository
 
 @Inject
@@ -8,12 +9,9 @@ class HomeFeatureService(
     private val stateFactory: HomeFeatureStateFactory,
     private val counterRepository: CounterRepository,
 ) {
-    fun initialState(
-        counterValue: Int = 0,
-    ): HomeFeatureState {
+    fun initialState(): HomeFeatureState {
         return stateFactory.create(
-            counterValue = counterValue,
-            isLoading = false,
+            counterLoadable = CounterLoadable.Initial,
         )
     }
 
@@ -21,21 +19,42 @@ class HomeFeatureService(
         counterValue: Int,
     ): HomeFeatureState {
         return stateFactory.create(
-            counterValue = counterValue,
-            isLoading = true,
+            counterLoadable = CounterLoadable.Loading(
+                previousValue = counterValue.takeIf { it > 0 },
+            ),
         )
     }
 
     suspend fun refresh(
         counterValue: Int,
     ): HomeFeatureState {
-        val nextCounterValue = counterRepository.fetchNextCounterValue(
-            currentCounterValue = counterValue,
-        )
+        return try {
+            val nextCounterValue = counterRepository.fetchNextCounterValue(
+                currentCounterValue = counterValue,
+            )
 
+            stateFactory.create(
+                counterLoadable = CounterLoadable.Loaded(
+                    value = nextCounterValue,
+                ),
+            )
+        } catch (error: CounterRepositoryException) {
+            errorState(
+                counterValue = counterValue,
+                message = error.message ?: CounterRepositoryException.DEFAULT_MESSAGE,
+            )
+        }
+    }
+
+    fun errorState(
+        counterValue: Int,
+        message: String,
+    ): HomeFeatureState {
         return stateFactory.create(
-            counterValue = nextCounterValue,
-            isLoading = false,
+            counterLoadable = CounterLoadable.Error(
+                previousValue = counterValue.takeIf { it > 0 },
+                message = message,
+            ),
         )
     }
 }

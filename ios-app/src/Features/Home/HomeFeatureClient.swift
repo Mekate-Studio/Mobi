@@ -5,20 +5,27 @@ import Foundation
 struct HomeFeatureClient {
     var initialState: @Sendable () -> HomeFeatureState
     var loadingState: @Sendable (_ counterValue: Int) -> HomeFeatureState
-    var refresh: @Sendable (_ counterValue: Int) async throws -> HomeFeatureState
+    var refresh: @Sendable (_ counterValue: Int) async -> HomeFeatureState
 }
 
 extension HomeFeatureClient {
     init(service: HomeFeatureService) {
         self.init(
             initialState: {
-                service.initialState(counterValue: 0)
+                service.initialState()
             },
             loadingState: { counterValue in
                 service.loadingState(counterValue: Int32(counterValue))
             },
             refresh: { counterValue in
-                try await service.refresh(counterValue: Int32(counterValue))
+                do {
+                    return try await service.refresh(counterValue: Int32(counterValue))
+                } catch {
+                    return service.errorState(
+                        counterValue: Int32(counterValue),
+                        message: error.localizedDescription
+                    )
+                }
             }
         )
     }

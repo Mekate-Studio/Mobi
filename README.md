@@ -70,9 +70,11 @@ The app now exposes two visible home demos on both platforms:
 
 That shared home feature now goes beyond static state: both platforms consume a
 shared asynchronous repository flow from Kotlin. Pressing the counter action
-loads the next fibonacci value through a fake repository/web-API seam, and the
-native shells plus the shared Compose screen all render the same loading and
-loaded states from the shared layer.
+loads the next fibonacci value through a fake repository/web-API seam. That
+shared state is modeled as a type-driven async lifecycle instead of booleans:
+initial, loading, loaded, and error all flow from the shared layer into the
+native shells and the shared Compose screen. The fake repository now also
+fails randomly so both platforms exercise the full state spectrum.
 
 ## Supported CI jobs
 
@@ -133,10 +135,11 @@ iOS Simulator runtime installed.
 
 The current test bootstrap covers state transitions on both native shells:
 
-- Shared Kotlin tests cover the async repository and feature service directly.
+- Shared Kotlin tests cover the async repository and feature service directly,
+  including success and error transitions.
 - Android tests the Circuit-facing transition seam through
   [`HomePresenterStateProducer`](android-app/src/home/HomePresenterStateProducer.kt),
-  which adapts shared feature state into the presenter/UI contract.
+  which adapts the shared sealed async state into the presenter/UI contract.
 - iOS tests the TCA reducer with a real `TestStore` in
   [`HomeFeatureTests.swift`](ios-app/tests/Features/Home/HomeFeatureTests.swift),
   stubbing the shared client to verify reducer-driven state transitions.

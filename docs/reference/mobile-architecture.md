@@ -23,6 +23,7 @@ The key architecture decisions are also captured in ADRs:
 - [ADR 0003: Xcode owns Swift packages while the Gradle bridge builds Kotlin for iOS](../adr/0003-xcode-owns-swift-packages-and-gradle-builds-kotlin-for-ios.md)
 - [ADR 0004: Metro owns shared Kotlin dependency injection](../adr/0004-metro-owns-shared-kotlin-dependency-injection.md)
 - [ADR 0005: iOS uses TCA dependencies with a lightweight app composition root](../adr/0005-ios-uses-tca-dependencies-with-a-lightweight-app-composition-root.md)
+- [ADR 0006: Shared async feature state uses sealed loadable and SKIE](../adr/0006-shared-async-feature-state-uses-sealed-loadable-and-skie.md)
 
 ## Goals
 
@@ -111,6 +112,7 @@ for this toolchain.
 - TCA for reducers, stores, and navigation state
 - Explicit dependency injection into stores and dependencies
 - A small app composition root instead of a separate Swift DI container
+- SKIE on the Gradle bridge for shared sealed-state ergonomics in Swift
 
 Metro powers the shared Kotlin graph, but Swift should still depend on small
 KMP facades or adapters instead of reaching into a Kotlin DI container
@@ -118,8 +120,8 @@ directly.
 
 The app currently keeps that Swift boundary intentionally lightweight. The app
 root owns an `AppServices` composition root that creates the shared
-`HomeFeatureStateFactory` once, adapts it into TCA dependencies, and reuses the
-same shared factory for the optional shared Compose tab. That keeps iOS aligned
+`HomeFeatureService` once, adapts it into TCA dependencies, and reuses the
+same shared service for the optional shared Compose tab. That keeps iOS aligned
 with native Swift patterns while avoiding overlapping DI systems between TCA
 and a second Swift container. A library like Factory can still be a good fit if
 the iOS-native service graph grows meaningfully, but it is not needed for the
@@ -127,12 +129,13 @@ current feature set.
 
 The current home flow follows this rule by using a native SwiftUI shell in
 [`ios-app/src/`](../../ios-app/src) that consumes the shared Kotlin
-`HomeFeatureStateFactory` rather than rendering the shared Compose route as the
+`HomeFeatureService` rather than rendering the shared Compose route as the
 main app root.
 
 The home flow now uses that next step: a native TCA reducer and store in
 [`ios-app/src/Features/Home/`](../../ios-app/src/Features/Home) that adapt the
-shared Kotlin `HomeFeatureStateFactory` into SwiftUI state.
+shared Kotlin `HomeFeatureService` and its sealed async state into SwiftUI
+state.
 
 One implementation detail matters for automation: Xcode GUI builds work with
 the current TCA package setup, and the CLI path is stable when two conditions
@@ -151,6 +154,10 @@ There is one tooling split to keep in mind: the low-level CI wrapper uses the
 workspace path for raw `xcodebuild`, while Fastlane archives against the plain
 `.xcodeproj` because Fastlane's Xcodeproj-based scheme discovery does not
 reliably detect shared schemes from the nested workspace path in this repo.
+SKIE is enabled on the Gradle bridge specifically for sealed hierarchy
+ergonomics, while SKIE coroutine and Flow interop are currently disabled. This
+repo still uses the standard Kotlin suspend bridge for async calls and only
+leans on SKIE for the shared sealed-state experience.
 
 ### Shared
 
@@ -181,12 +188,15 @@ Concretely:
 - [`shared-core/src/CounterRepository.kt`](../../shared-core/src/CounterRepository.kt)
   exposes an asynchronous shared repository contract and a fake implementation
   that simulates a web API delay before returning the next fibonacci counter
-  value.
+  value or randomly throwing a fake repository error.
+- [`shared-feature-home/src/CounterLoadable.kt`](../../shared-feature-home/src/CounterLoadable.kt)
+  models the feature's async lifecycle as explicit sealed states: initial,
+  loading, loaded, and error.
 - [`shared-feature-home/src/HomeFeatureStateFactory.kt`](../../shared-feature-home/src/HomeFeatureStateFactory.kt)
-  turns shared core inputs into feature state for loading and loaded cases.
+  turns shared core inputs and async lifecycle into shared feature state.
 - [`shared-feature-home/src/HomeFeatureService.kt`](../../shared-feature-home/src/HomeFeatureService.kt)
   is the shared feature-level async seam that coordinates repository work and
-  produces feature state for all platform shells.
+  produces sealed async feature state for all platform shells.
 - [`shared-di/src/SharedDependencies.kt`](../../shared-di/src/SharedDependencies.kt)
   owns the Metro graph and shared Kotlin composition-root helpers.
 - [`android-app/src/MainActivity.kt`](../../android-app/src/MainActivity.kt)
@@ -204,6 +214,9 @@ Concretely:
   into TCA and shared Compose wrappers.
 - [`ios-app/src/Features/Home/HomeFeatureClient.swift`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
   adapts the shared feature service into TCA dependencies.
+- [`ios-app/src/Features/Home/HomeCounterLoadable.swift`](../../ios-app/src/Features/Home/HomeCounterLoadable.swift)
+  maps the shared Kotlin sealed async state into a native Swift enum for TCA
+  and SwiftUI rendering.
 - [`ios-app/src/Features/Home/SharedHomeDemoView.swift`](../../ios-app/src/Features/Home/SharedHomeDemoView.swift)
   embeds the shared Compose entry point in a SwiftUI tab.
 - [`shared-ui-home/src/HomeContent.kt`](../../shared-ui-home/src/HomeContent.kt)
@@ -227,8 +240,8 @@ presentation seams and the shared async workflow.
   [`shared-core/test/FakeCounterRepositoryTest.kt`](../../shared-core/test/FakeCounterRepositoryTest.kt)
   verifies the fake async repository contract, and
   [`shared-feature-home/test/HomeFeatureServiceTest.kt`](../../shared-feature-home/test/HomeFeatureServiceTest.kt)
-  verifies that feature-level loading and loaded states are produced from that
-  repository.
+  verifies that feature-level initial, loading, loaded, and error states are
+  produced from that repository.
 - iOS keeps TCA state transitions testable through
   [`ios-app/tests/Features/Home/HomeFeatureTests.swift`](../../ios-app/tests/Features/Home/HomeFeatureTests.swift).
   Those tests use `TestStore` against the real reducer while stubbing the

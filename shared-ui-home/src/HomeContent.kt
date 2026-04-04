@@ -20,9 +20,11 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import studio.mekate.b3.feature.home.CounterLoadable
 import studio.mekate.b3.feature.home.HomeFeatureEvent
 import studio.mekate.b3.feature.home.HomeFeatureState
 import studio.mekate.b3.feature.home.HomeFeatureService
+import studio.mekate.b3.feature.home.currentValueForRefresh
 
 @Composable
 fun SharedHomeScreen(
@@ -40,10 +42,11 @@ fun SharedHomeScreen(
         state = state,
         modifier = modifier,
         onEvent = { event ->
-            if (!state.isLoading) {
+            if (state.counterLoadable !is CounterLoadable.Loading) {
                 scope.launch {
-                    state = service.loadingState(counterValue = state.counterValue)
-                    state = service.refresh(counterValue = state.counterValue)
+                    val currentCounterValue = state.counterLoadable.currentValueForRefresh()
+                    state = service.loadingState(counterValue = currentCounterValue)
+                    state = service.refresh(counterValue = currentCounterValue)
                 }
             }
         },
@@ -56,6 +59,19 @@ fun HomeContent(
     onEvent: (HomeFeatureEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val counterValueText = when (val counterLoadable = state.counterLoadable) {
+        CounterLoadable.Initial -> "Counter value: Not loaded yet"
+        is CounterLoadable.Loading -> {
+            counterLoadable.previousValue?.let { "Counter value: $it" } ?: "Counter value: Loading first result…"
+        }
+
+        is CounterLoadable.Loaded -> "Counter value: ${counterLoadable.value}"
+        is CounterLoadable.Error -> {
+            counterLoadable.previousValue?.let { "Counter value: $it" } ?: "Counter value: No value available"
+        }
+    }
+    val isLoading = state.counterLoadable is CounterLoadable.Loading
+
     MaterialTheme {
         Column(
             modifier = modifier
@@ -84,14 +100,14 @@ fun HomeContent(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
-                        text = "Counter value: ${state.counterValue}",
+                        text = counterValueText,
                         style = MaterialTheme.typography.labelLarge,
                     )
                     Button(
-                        enabled = !state.isLoading,
+                        enabled = !isLoading,
                         onClick = { onEvent(HomeFeatureEvent.RefreshClicked) },
                     ) {
-                        Text(if (state.isLoading) "Loading…" else state.primaryActionLabel)
+                        Text(if (isLoading) "Loading…" else state.primaryActionLabel)
                     }
                 }
             }
