@@ -35,11 +35,14 @@ For the home feature, that sealed async state is `CounterLoadable` with:
 - `Initial`
 - `Loading(previousValue)`
 - `Loaded(value)`
-- `Error(previousValue, message)`
+- `Error(previousValue, reason)`
 
 The shared Kotlin service catches repository failures and returns an error
 state instead of letting expected repository failures leak into platform
 reducers or presenters.
+User-facing error copy is not carried by the shared feature state. Shared
+Kotlin now exposes a typed failure reason, and platform rendering layers map
+that reason into localized strings.
 
 On iOS, Swift maps the shared sealed async state into a native Swift enum for
 TCA state and SwiftUI rendering. SKIE is enabled on the Gradle bridge for
