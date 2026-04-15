@@ -1,26 +1,24 @@
 package studio.mekate.b3.feature.home
 
 import dev.zacsweers.metro.Inject
-import studio.mekate.b3.core.CounterRepositoryException
 import studio.mekate.b3.core.CounterRepository
+import studio.mekate.b3.core.CounterRepositoryException
+import kotlin.coroutines.cancellation.CancellationException
 
 @Inject
 class HomeFeatureService(
-    private val stateFactory: HomeFeatureStateFactory,
     private val counterRepository: CounterRepository,
 ) {
     fun initialState(): HomeFeatureState {
-        return stateFactory.create(
-            counterLoadable = CounterLoadable.Initial,
-        )
+        return state(counterLoadable = CounterLoadable.Initial)
     }
 
     fun loadingState(
         counterValue: Int,
     ): HomeFeatureState {
-        return stateFactory.create(
+        return state(
             counterLoadable = CounterLoadable.Loading(
-                previousValue = counterValue.takeIf { it > 0 },
+                previousValue = counterValue.toPreviousValue(),
             ),
         )
     }
@@ -33,15 +31,17 @@ class HomeFeatureService(
                 currentCounterValue = counterValue,
             )
 
-            stateFactory.create(
+            state(
                 counterLoadable = CounterLoadable.Loaded(
                     value = nextCounterValue,
                 ),
             )
-        } catch (error: CounterRepositoryException) {
+        } catch (error: Throwable) {
+            if (error is CancellationException) throw error
+
             errorState(
                 counterValue = counterValue,
-                message = error.message ?: CounterRepositoryException.DEFAULT_MESSAGE,
+                message = error.toFeatureErrorMessage(),
             )
         }
     }
@@ -50,11 +50,42 @@ class HomeFeatureService(
         counterValue: Int,
         message: String,
     ): HomeFeatureState {
-        return stateFactory.create(
+        return state(
             counterLoadable = CounterLoadable.Error(
-                previousValue = counterValue.takeIf { it > 0 },
+                previousValue = counterValue.toPreviousValue(),
                 message = message,
             ),
         )
+    }
+
+    fun unexpectedErrorState(
+        counterValue: Int,
+    ): HomeFeatureState {
+        return errorState(
+            counterValue = counterValue,
+            message = DEFAULT_UNEXPECTED_REFRESH_ERROR_MESSAGE,
+        )
+    }
+
+    private fun state(
+        counterLoadable: CounterLoadable,
+    ): HomeFeatureState {
+        return HomeFeatureState(
+            counterLoadable = counterLoadable,
+        )
+    }
+
+    private fun Throwable.toFeatureErrorMessage(): String {
+        return when (this) {
+            is CounterRepositoryException -> message ?: CounterRepositoryException.DEFAULT_MESSAGE
+            else -> DEFAULT_UNEXPECTED_REFRESH_ERROR_MESSAGE
+        }
+    }
+
+    private fun Int.toPreviousValue(): Int? = takeIf { it > 0 }
+
+    internal companion object {
+        const val DEFAULT_UNEXPECTED_REFRESH_ERROR_MESSAGE =
+            "Something went wrong while loading the next fibonacci counter value."
     }
 }

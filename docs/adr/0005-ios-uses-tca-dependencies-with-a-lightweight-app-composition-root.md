@@ -9,8 +9,8 @@ The project now has:
 
 - Metro as the shared Kotlin dependency injection system
 - TCA as the iOS presentation architecture
-- small Kotlin bridge types like `HomeFeatureStateFactory` that Swift can
-  consume directly
+- small Kotlin bridge types like `HomeFeatureService` that Swift can consume
+  directly
 
 The first iOS pass introduced an `AppDependencies` object to hold shared
 factories and native adapters. That worked, but it felt closer to a cross-stack
@@ -32,6 +32,8 @@ The iOS app uses a lightweight app composition root plus TCA dependencies.
 - TCA feature reducers consume those bridges through `DependencyValues`.
 - Shared Compose wrappers on iOS reuse the same bridge objects from
   `AppServices`.
+- TCA dependency keys do not construct their own live shared graph. They are
+  expected to be injected from `AppServices`.
 
 The project does not add Factory at this stage.
 
@@ -44,5 +46,6 @@ already covers feature-level injection cleanly.
 - iOS keeps a more idiomatic Swift shape at the app root
 - TCA stays the single dependency story inside feature reducers
 - shared Kotlin dependencies are still created once and reused consistently
+- accidental fallback construction paths are easier to catch during development
 - the repo avoids mixing TCA dependency injection with a second Swift container
   before the complexity justifies it

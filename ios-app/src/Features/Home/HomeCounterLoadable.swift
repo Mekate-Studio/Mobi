@@ -58,6 +58,22 @@ enum HomeCounterLoadable: Equatable {
         }
     }
 
+    var supportingText: String {
+        switch self {
+        case .initial:
+            return "Tap the action to load the next fibonacci counter value from the fake repository."
+        case .loading:
+            return "Loading the next fibonacci counter value from the fake repository."
+        case let .loaded(value):
+            return "The fake repository returned fibonacci counter value \(value)."
+        case let .error(previousValue, message):
+            if let previousValue {
+                return "\(message) Showing last known counter value \(previousValue)."
+            }
+            return "\(message) No fibonacci counter value was loaded yet."
+        }
+    }
+
     var isLoading: Bool {
         if case .loading = self {
             return true

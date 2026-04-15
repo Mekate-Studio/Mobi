@@ -59,18 +59,7 @@ fun HomeContent(
     onEvent: (HomeFeatureEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val counterValueText = when (val counterLoadable = state.counterLoadable) {
-        CounterLoadable.Initial -> "Counter value: Not loaded yet"
-        is CounterLoadable.Loading -> {
-            counterLoadable.previousValue?.let { "Counter value: $it" } ?: "Counter value: Loading first result…"
-        }
-
-        is CounterLoadable.Loaded -> "Counter value: ${counterLoadable.value}"
-        is CounterLoadable.Error -> {
-            counterLoadable.previousValue?.let { "Counter value: $it" } ?: "Counter value: No value available"
-        }
-    }
-    val isLoading = state.counterLoadable is CounterLoadable.Loading
+    val contentCopy = state.toContentCopy()
 
     MaterialTheme {
         Column(
@@ -88,29 +77,92 @@ fun HomeContent(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Text(
-                        text = state.title,
+                        text = contentCopy.title,
                         style = MaterialTheme.typography.headlineSmall,
                     )
                     Text(
-                        text = state.message,
+                        text = contentCopy.message,
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
-                        text = state.supportingText,
+                        text = contentCopy.supportingText,
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
-                        text = counterValueText,
+                        text = contentCopy.counterValueText,
                         style = MaterialTheme.typography.labelLarge,
                     )
                     Button(
-                        enabled = !isLoading,
+                        enabled = !contentCopy.isLoading,
                         onClick = { onEvent(HomeFeatureEvent.RefreshClicked) },
                     ) {
-                        Text(if (isLoading) "Loading…" else state.primaryActionLabel)
+                        Text(if (contentCopy.isLoading) "Loading…" else contentCopy.primaryActionLabel)
                     }
                 }
             }
+        }
+    }
+}
+
+private data class HomeContentCopy(
+    val title: String,
+    val message: String,
+    val supportingText: String,
+    val counterValueText: String,
+    val primaryActionLabel: String,
+    val isLoading: Boolean,
+)
+
+private fun HomeFeatureState.toContentCopy(): HomeContentCopy {
+    val loadable = counterLoadable
+
+    return HomeContentCopy(
+        title = "Shared feature, platform rendering",
+        message = "Shared business logic feeding a platform-specific screen.",
+        supportingText = loadable.toSupportingText(),
+        counterValueText = loadable.toCounterValueText(),
+        primaryActionLabel = "Load next counter value",
+        isLoading = loadable is CounterLoadable.Loading,
+    )
+}
+
+private fun CounterLoadable.toSupportingText(): String {
+    return when (this) {
+        CounterLoadable.Initial -> {
+            "Tap the action to load the next fibonacci counter value from the fake repository."
+        }
+
+        is CounterLoadable.Loading -> {
+            "Loading the next fibonacci counter value from the fake repository."
+        }
+
+        is CounterLoadable.Loaded -> {
+            "The fake repository returned fibonacci counter value $value."
+        }
+
+        is CounterLoadable.Error -> {
+            buildString {
+                append(message)
+                if (previousValue != null) {
+                    append(" Showing last known counter value $previousValue.")
+                } else {
+                    append(" No fibonacci counter value was loaded yet.")
+                }
+            }
+        }
+    }
+}
+
+private fun CounterLoadable.toCounterValueText(): String {
+    return when (this) {
+        CounterLoadable.Initial -> "Counter value: Not loaded yet"
+        is CounterLoadable.Loading -> {
+            previousValue?.let { "Counter value: $it" } ?: "Counter value: Loading first result…"
+        }
+
+        is CounterLoadable.Loaded -> "Counter value: $value"
+        is CounterLoadable.Error -> {
+            previousValue?.let { "Counter value: $it" } ?: "Counter value: No value available"
         }
     }
 }

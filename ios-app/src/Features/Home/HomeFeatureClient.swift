@@ -21,9 +21,8 @@ extension HomeFeatureClient {
                 do {
                     return try await service.refresh(counterValue: Int32(counterValue))
                 } catch {
-                    return service.errorState(
-                        counterValue: Int32(counterValue),
-                        message: error.localizedDescription
+                    return service.unexpectedErrorState(
+                        counterValue: Int32(counterValue)
                     )
                 }
             }
@@ -33,7 +32,21 @@ extension HomeFeatureClient {
 
 extension HomeFeatureClient: DependencyKey {
     static let liveValue = HomeFeatureClient(
-        service: SharedDependencies.shared.createDefaultHomeFeatureService()
+        initialState: {
+            fatalError(
+                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root."
+            )
+        },
+        loadingState: { _ in
+            fatalError(
+                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root."
+            )
+        },
+        refresh: { _ in
+            fatalError(
+                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root."
+            )
+        }
     )
 }
 

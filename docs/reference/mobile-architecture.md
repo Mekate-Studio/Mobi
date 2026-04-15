@@ -129,6 +129,9 @@ with native Swift patterns while avoiding overlapping DI systems between TCA
 and a second Swift container. A library like Factory can still be a good fit if
 the iOS-native service graph grows meaningfully, but it is not needed for the
 current feature set.
+The repo now enforces that direction more strictly: `DependencyValues` keys are
+injection seams, not hidden fallback composition roots. Stores are expected to
+be created through `AppServices`.
 
 The current home flow follows this rule by using a native SwiftUI shell in
 [`ios-app/src/`](../../ios-app/src) that consumes the shared Kotlin
@@ -174,11 +177,8 @@ The current home feature is intentionally small, but it already follows the
 target contract and now includes an asynchronous shared data source:
 
 ```text
-shared-core.PlatformNameProvider
-  -> shared-di.SharedApplicationGraph
-  -> shared-core.PlatformContextProvider
+shared-di.SharedApplicationGraph
   -> shared-core.CounterRepository
-  -> shared-feature-home.HomeFeatureStateFactory
   -> shared-feature-home.HomeFeatureService
   -> android Circuit presenter / iOS TCA dependency client / shared Compose route
   -> Android Compose UI / SwiftUI / SharedHomeScreen
@@ -186,8 +186,6 @@ shared-core.PlatformNameProvider
 
 Concretely:
 
-- [`shared-core/src/PlatformContext.kt`](../../shared-core/src/PlatformContext.kt)
-  exposes platform context as a shared input primitive.
 - [`shared-core/src/CounterRepository.kt`](../../shared-core/src/CounterRepository.kt)
   exposes an asynchronous shared repository contract and a fake implementation
   that simulates a web API delay before returning the next fibonacci counter
@@ -195,11 +193,10 @@ Concretely:
 - [`shared-feature-home/src/CounterLoadable.kt`](../../shared-feature-home/src/CounterLoadable.kt)
   models the feature's async lifecycle as explicit sealed states: initial,
   loading, loaded, and error.
-- [`shared-feature-home/src/HomeFeatureStateFactory.kt`](../../shared-feature-home/src/HomeFeatureStateFactory.kt)
-  turns shared core inputs and async lifecycle into shared feature state.
 - [`shared-feature-home/src/HomeFeatureService.kt`](../../shared-feature-home/src/HomeFeatureService.kt)
   is the shared feature-level async seam that coordinates repository work and
-  produces sealed async feature state for all platform shells.
+  produces sealed async feature state for all platform shells while also
+  normalizing repository failures into a shared error contract.
 - [`shared-di/src/SharedDependencies.kt`](../../shared-di/src/SharedDependencies.kt)
   owns the Metro graph and shared Kotlin composition-root helpers.
 - [`android-app/src/MainActivity.kt`](../../android-app/src/MainActivity.kt)

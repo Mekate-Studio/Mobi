@@ -13,10 +13,9 @@ The project needed a shared DI foundation that:
 - remains easy to override in tests
 - does not force Swift code to reach into a cross-language service locator
 
-The earlier code path created `PlatformContextProvider` and
-`HomeFeatureStateFactory` directly at call sites. That was enough to bootstrap
-the first feature, but it did not establish a reusable graph or a repeatable
-composition-root pattern.
+The earlier code path created shared feature collaborators directly at call
+sites. That was enough to bootstrap the first feature, but it did not
+establish a reusable graph or a repeatable composition-root pattern.
 
 ## Decision
 
@@ -32,10 +31,9 @@ The project uses Metro for shared Kotlin dependency injection.
 ## Current home flow
 
 ```text
-PlatformNameProvider
-  -> SharedApplicationGraph
-  -> PlatformContextProvider
-  -> HomeFeatureStateFactory
+SharedApplicationGraph
+  -> CounterRepository
+  -> HomeFeatureService
   -> Android Circuit / iOS TCA / shared Compose adapters
 ```
 

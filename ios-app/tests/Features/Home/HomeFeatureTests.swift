@@ -12,10 +12,11 @@ struct HomeFeatureTests {
         // given
         let store = HomeFeatureTestFactory.makeStore()
 
-        // when / then
-        await store.send(.task) {
-            $0 = HomeFeatureTestFactory.expectedState(loadable: .initial)
-        }
+        // when
+        await store.send(.task)
+
+        // then
+        #expect(store.state == HomeFeatureTestFactory.expectedState(loadable: .initial))
     }
 
     @MainActor
@@ -24,9 +25,8 @@ struct HomeFeatureTests {
         // given
         let store = HomeFeatureTestFactory.makeStore()
 
-        await store.send(.task) {
-            $0 = HomeFeatureTestFactory.expectedState(loadable: .initial)
-        }
+        await store.send(.task)
+        #expect(store.state == HomeFeatureTestFactory.expectedState(loadable: .initial))
 
         await store.send(.refreshTapped) {
             $0 = HomeFeatureTestFactory.expectedState(
@@ -51,9 +51,8 @@ struct HomeFeatureTests {
             )
         )
 
-        await store.send(.task) {
-            $0 = HomeFeatureTestFactory.expectedState(loadable: .initial)
-        }
+        await store.send(.task)
+        #expect(store.state == HomeFeatureTestFactory.expectedState(loadable: .initial))
 
         await store.send(.refreshTapped) {
             $0 = HomeFeatureTestFactory.expectedState(
@@ -83,6 +82,7 @@ struct HomeFeatureTests {
 }
 
 private enum HomeFeatureTestFactory {
+    @MainActor
     static func makeStore(
         refreshResult: HomeCounterLoadable = .loaded(value: 1)
     ) -> TestStore<HomeFeature.State, HomeFeature.Action> {
@@ -128,10 +128,6 @@ private enum HomeFeatureTestFactory {
         loadable: HomeCounterLoadable
     ) -> HomeFeatureState {
         HomeFeatureState(
-            title: "Native shell, shared feature",
-            message: "Shared feature state flowing into the TestOS shell.",
-            supportingText: supportingText(loadable: loadable),
-            primaryActionLabel: "Load next counter value",
             counterLoadable: makeSharedLoadable(loadable: loadable)
         )
     }
@@ -144,24 +140,6 @@ private enum HomeFeatureTestFactory {
             sharedState: makeSharedState(loadable: loadable)
         )
         return state
-    }
-
-    static func supportingText(
-        loadable: HomeCounterLoadable
-    ) -> String {
-        switch loadable {
-        case .initial:
-            return "shared-core exposes platform context, shared-feature-home fetches counter values from a fake repository, and platform shells decide how to render them."
-        case .loading:
-            return "Loading the next fibonacci counter value from the fake repository for the TestOS shell."
-        case let .loaded(value):
-            return "The fake repository returned fibonacci counter value \(value) for the TestOS shell."
-        case let .error(previousValue, message):
-            if let previousValue {
-                return "\(message) Showing last known counter value \(previousValue) in the TestOS shell."
-            }
-            return "\(message) No fibonacci counter value was loaded yet for the TestOS shell."
-        }
     }
 
     static func makeSharedLoadable(

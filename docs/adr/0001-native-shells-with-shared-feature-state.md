@@ -21,7 +21,7 @@ The app uses native presentation shells with shared feature state:
 
 - `shared-core` owns platform-agnostic primitives and cross-platform inputs
 - `shared-di` owns shared dependency graphs and composition-root helpers
-- `shared-feature-*` modules own feature state factories, events, and reducers
+- `shared-feature-*` modules own feature state, events, and services
 - Android adapts shared feature state through Circuit presenters and screens
 - iOS adapts shared feature state through TCA dependencies, reducers, and
   SwiftUI views
@@ -38,10 +38,9 @@ shared-core -> shared-feature-home -> platform adapters -> platform UI
 Current home feature flow:
 
 ```text
-PlatformNameProvider
-  -> SharedApplicationGraph
-  -> PlatformContextProvider
-  -> HomeFeatureStateFactory
+SharedApplicationGraph
+  -> CounterRepository
+  -> HomeFeatureService
   -> HomePresenter / HomeFeatureClient / SharedHomeScreen
   -> Android Compose UI / SwiftUI / shared Compose UI
 ```

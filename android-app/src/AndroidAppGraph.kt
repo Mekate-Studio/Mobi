@@ -5,7 +5,6 @@ import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
 import studio.mekate.b3.core.CounterRepository
-import studio.mekate.b3.core.PlatformNameProvider
 import studio.mekate.b3.di.SharedApplicationGraph
 import studio.mekate.b3.home.HomePresenterFactory
 import studio.mekate.b3.home.HomeUiFactory
@@ -19,13 +18,6 @@ interface AndroidAppGraph {
         fun create(
             @Provides sharedApplicationGraph: SharedApplicationGraph,
         ): AndroidAppGraph
-    }
-
-    @Provides
-    fun providePlatformNameProvider(
-        sharedApplicationGraph: SharedApplicationGraph,
-    ): PlatformNameProvider {
-        return sharedApplicationGraph.platformNameProvider
     }
 
     @Provides

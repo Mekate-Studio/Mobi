@@ -2,15 +2,26 @@ package studio.mekate.b3.feature.home
 
 import kotlinx.coroutines.test.runTest
 import studio.mekate.b3.core.FakeCounterRepository
-import studio.mekate.b3.core.PlatformContextProvider
-import studio.mekate.b3.core.PlatformNameProvider
 import studio.mekate.b3.core.CounterRepositoryException
+import studio.mekate.b3.core.CounterRepository
 import studio.mekate.b3.core.CounterRequestFailurePolicy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class HomeFeatureServiceTest {
+    @Test
+    fun `should have initial loadable state when feature has not loaded a counter value`() {
+        // given
+        val service = createService(shouldFail = false)
+
+        // when
+        val state = service.initialState()
+
+        // then
+        assertIs<CounterLoadable.Initial>(state.counterLoadable)
+    }
+
     @Test
     fun `should have loading loadable state when refresh is in progress`() {
         // given
@@ -22,10 +33,6 @@ class HomeFeatureServiceTest {
         // then
         val loading = assertIs<CounterLoadable.Loading>(state.counterLoadable)
         assertEquals(2, loading.previousValue)
-        assertEquals(
-            "Loading the next fibonacci counter value from the fake repository for the TestOS shell.",
-            state.supportingText,
-        )
     }
 
     @Test
@@ -39,10 +46,6 @@ class HomeFeatureServiceTest {
         // then
         val loaded = assertIs<CounterLoadable.Loaded>(state.counterLoadable)
         assertEquals(3, loaded.value)
-        assertEquals(
-            "The fake repository returned fibonacci counter value 3 for the TestOS shell.",
-            state.supportingText,
-        )
     }
 
     @Test
@@ -57,22 +60,34 @@ class HomeFeatureServiceTest {
         val error = assertIs<CounterLoadable.Error>(state.counterLoadable)
         assertEquals(2, error.previousValue)
         assertEquals(CounterRepositoryException.DEFAULT_MESSAGE, error.message)
-        assertEquals(
-            "${CounterRepositoryException.DEFAULT_MESSAGE} Showing last known counter value 2 in the TestOS shell.",
-            state.supportingText,
+    }
+
+    @Test
+    fun `should have generic error loadable state when refresh fails unexpectedly`() = runTest {
+        // given
+        val service = HomeFeatureService(
+            counterRepository = object : CounterRepository {
+                override suspend fun fetchNextCounterValue(
+                    currentCounterValue: Int,
+                ): Int {
+                    error("Boom")
+                }
+            },
         )
+
+        // when
+        val state = service.refresh(counterValue = 2)
+
+        // then
+        val error = assertIs<CounterLoadable.Error>(state.counterLoadable)
+        assertEquals(2, error.previousValue)
+        assertEquals(HomeFeatureService.DEFAULT_UNEXPECTED_REFRESH_ERROR_MESSAGE, error.message)
     }
 
     private fun createService(
-        platformName: String = "TestOS",
         shouldFail: Boolean,
     ): HomeFeatureService {
         return HomeFeatureService(
-            stateFactory = HomeFeatureStateFactory(
-                platformContextProvider = PlatformContextProvider(
-                    platformNameProvider = PlatformNameProvider { platformName },
-                ),
-            ),
             counterRepository = FakeCounterRepository(
                 failurePolicy = object : CounterRequestFailurePolicy {
                     override fun shouldFail(
