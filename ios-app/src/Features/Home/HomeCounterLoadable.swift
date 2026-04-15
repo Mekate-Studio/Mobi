@@ -5,7 +5,7 @@ enum HomeCounterLoadable: Equatable {
     case initial
     case loading(previousValue: Int?)
     case loaded(value: Int)
-    case error(previousValue: Int?, message: String)
+    case error(previousValue: Int?, reason: HomeCounterLoadFailureReason)
 
     init(sharedLoadable: CounterLoadable) {
         switch onEnum(of: sharedLoadable) {
@@ -21,7 +21,7 @@ enum HomeCounterLoadable: Equatable {
         case let .error(error):
             self = .error(
                 previousValue: error.previousValue?.intValue,
-                message: error.message
+                reason: HomeCounterLoadFailureReason(sharedReason: error.reason)
             )
         }
     }
@@ -66,11 +66,11 @@ enum HomeCounterLoadable: Equatable {
             return "Loading the next fibonacci counter value from the fake repository."
         case let .loaded(value):
             return "The fake repository returned fibonacci counter value \(value)."
-        case let .error(previousValue, message):
+        case let .error(previousValue, reason):
             if let previousValue {
-                return "\(message) Showing last known counter value \(previousValue)."
+                return "\(reason.headlineText) Showing last known counter value \(previousValue)."
             }
-            return "\(message) No fibonacci counter value was loaded yet."
+            return "\(reason.headlineText) No fibonacci counter value was loaded yet."
         }
     }
 
@@ -80,5 +80,28 @@ enum HomeCounterLoadable: Equatable {
         }
 
         return false
+    }
+}
+
+enum HomeCounterLoadFailureReason: Equatable {
+    case repositoryUnavailable
+    case unexpected
+
+    init(sharedReason: CounterLoadFailureReason) {
+        switch onEnum(of: sharedReason) {
+        case .repositoryUnavailable:
+            self = .repositoryUnavailable
+        case .unexpected:
+            self = .unexpected
+        }
+    }
+
+    var headlineText: String {
+        switch self {
+        case .repositoryUnavailable:
+            return "The fake repository failed to load the next fibonacci counter value."
+        case .unexpected:
+            return "Something went wrong while loading the next fibonacci counter value."
+        }
     }
 }

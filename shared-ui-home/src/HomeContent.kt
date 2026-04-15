@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import studio.mekate.b3.feature.home.CounterLoadable
+import studio.mekate.b3.feature.home.CounterLoadFailureReason
 import studio.mekate.b3.feature.home.HomeFeatureEvent
 import studio.mekate.b3.feature.home.HomeFeatureState
 import studio.mekate.b3.feature.home.HomeFeatureService
@@ -142,13 +143,25 @@ private fun CounterLoadable.toSupportingText(): String {
 
         is CounterLoadable.Error -> {
             buildString {
-                append(message)
+                append(reason.headlineText())
                 if (previousValue != null) {
                     append(" Showing last known counter value $previousValue.")
                 } else {
                     append(" No fibonacci counter value was loaded yet.")
                 }
             }
+        }
+    }
+}
+
+private fun CounterLoadFailureReason.headlineText(): String {
+    return when (this) {
+        CounterLoadFailureReason.RepositoryUnavailable -> {
+            "The fake repository failed to load the next fibonacci counter value."
+        }
+
+        CounterLoadFailureReason.Unexpected -> {
+            "Something went wrong while loading the next fibonacci counter value."
         }
     }
 }

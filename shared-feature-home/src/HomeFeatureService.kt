@@ -41,19 +41,19 @@ class HomeFeatureService(
 
             errorState(
                 counterValue = counterValue,
-                message = error.toFeatureErrorMessage(),
+                reason = error.toFailureReason(),
             )
         }
     }
 
     fun errorState(
         counterValue: Int,
-        message: String,
+        reason: CounterLoadFailureReason,
     ): HomeFeatureState {
         return state(
             counterLoadable = CounterLoadable.Error(
                 previousValue = counterValue.toPreviousValue(),
-                message = message,
+                reason = reason,
             ),
         )
     }
@@ -63,7 +63,7 @@ class HomeFeatureService(
     ): HomeFeatureState {
         return errorState(
             counterValue = counterValue,
-            message = DEFAULT_UNEXPECTED_REFRESH_ERROR_MESSAGE,
+            reason = CounterLoadFailureReason.Unexpected,
         )
     }
 
@@ -75,17 +75,12 @@ class HomeFeatureService(
         )
     }
 
-    private fun Throwable.toFeatureErrorMessage(): String {
+    private fun Throwable.toFailureReason(): CounterLoadFailureReason {
         return when (this) {
-            is CounterRepositoryException -> message ?: CounterRepositoryException.DEFAULT_MESSAGE
-            else -> DEFAULT_UNEXPECTED_REFRESH_ERROR_MESSAGE
+            is CounterRepositoryException -> CounterLoadFailureReason.RepositoryUnavailable
+            else -> CounterLoadFailureReason.Unexpected
         }
     }
 
     private fun Int.toPreviousValue(): Int? = takeIf { it > 0 }
-
-    internal companion object {
-        const val DEFAULT_UNEXPECTED_REFRESH_ERROR_MESSAGE =
-            "Something went wrong while loading the next fibonacci counter value."
-    }
 }

@@ -47,7 +47,7 @@ struct HomeFeatureTests {
         let store = HomeFeatureTestFactory.makeStore(
             refreshResult: .error(
                 previousValue: nil,
-                message: "The fake repository failed to load the next fibonacci counter value."
+                reason: .repositoryUnavailable
             )
         )
 
@@ -66,7 +66,7 @@ struct HomeFeatureTests {
                 HomeFeatureTestFactory.expectedState(
                     loadable: .error(
                         previousValue: nil,
-                        message: "The fake repository failed to load the next fibonacci counter value."
+                        reason: .repositoryUnavailable
                     )
                 )
             )
@@ -74,7 +74,7 @@ struct HomeFeatureTests {
             $0 = HomeFeatureTestFactory.expectedState(
                 loadable: .error(
                     previousValue: nil,
-                    message: "The fake repository failed to load the next fibonacci counter value."
+                    reason: .repositoryUnavailable
                 )
             )
         }
@@ -111,10 +111,10 @@ private enum HomeFeatureTestFactory {
                 switch refreshResult {
                 case .loaded:
                     resolvedLoadable = .loaded(value: nextCounterValue(after: counterValue))
-                case .error(_, let message):
+                case .error(_, let reason):
                     resolvedLoadable = .error(
                         previousValue: counterValue > 0 ? counterValue : nil,
-                        message: message
+                        reason: reason
                     )
                 default:
                     resolvedLoadable = refreshResult
@@ -154,11 +154,22 @@ private enum HomeFeatureTestFactory {
             )
         case let .loaded(value):
             return CounterLoadableLoaded(value: Int32(value))
-        case let .error(previousValue, message):
+        case let .error(previousValue, reason):
             return CounterLoadableError(
                 previousValue: previousValue.map { KotlinInt(int: Int32($0)) },
-                message: message
+                reason: makeSharedFailureReason(reason: reason)
             )
+        }
+    }
+
+    static func makeSharedFailureReason(
+        reason: HomeCounterLoadFailureReason
+    ) -> CounterLoadFailureReason {
+        switch reason {
+        case .repositoryUnavailable:
+            return CounterLoadFailureReasonRepositoryUnavailable.shared
+        case .unexpected:
+            return CounterLoadFailureReasonUnexpected.shared
         }
     }
 

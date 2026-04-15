@@ -13,7 +13,7 @@ sealed interface CounterLoadable {
 
     data class Error(
         val previousValue: Int?,
-        val message: String,
+        val reason: CounterLoadFailureReason,
     ) : CounterLoadable
 }
 

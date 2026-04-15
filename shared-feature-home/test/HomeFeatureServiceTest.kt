@@ -2,7 +2,6 @@ package studio.mekate.b3.feature.home
 
 import kotlinx.coroutines.test.runTest
 import studio.mekate.b3.core.FakeCounterRepository
-import studio.mekate.b3.core.CounterRepositoryException
 import studio.mekate.b3.core.CounterRepository
 import studio.mekate.b3.core.CounterRequestFailurePolicy
 import kotlin.test.Test
@@ -59,7 +58,7 @@ class HomeFeatureServiceTest {
         // then
         val error = assertIs<CounterLoadable.Error>(state.counterLoadable)
         assertEquals(2, error.previousValue)
-        assertEquals(CounterRepositoryException.DEFAULT_MESSAGE, error.message)
+        assertEquals(CounterLoadFailureReason.RepositoryUnavailable, error.reason)
     }
 
     @Test
@@ -81,7 +80,7 @@ class HomeFeatureServiceTest {
         // then
         val error = assertIs<CounterLoadable.Error>(state.counterLoadable)
         assertEquals(2, error.previousValue)
-        assertEquals(HomeFeatureService.DEFAULT_UNEXPECTED_REFRESH_ERROR_MESSAGE, error.message)
+        assertEquals(CounterLoadFailureReason.Unexpected, error.reason)
     }
 
     private fun createService(

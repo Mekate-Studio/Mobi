@@ -5,6 +5,7 @@ import studio.mekate.b3.core.FakeCounterRepository
 import studio.mekate.b3.core.CounterRequestFailurePolicy
 import studio.mekate.b3.feature.home.HomeFeatureService
 import studio.mekate.b3.feature.home.CounterLoadable
+import studio.mekate.b3.feature.home.CounterLoadFailureReason
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -64,6 +65,7 @@ class HomePresenterStateProducerTest {
         // then
         val error = assertIs<CounterLoadable.Error>(refreshedState.counterLoadable)
         assertEquals(1, error.previousValue)
+        assertEquals(CounterLoadFailureReason.RepositoryUnavailable, error.reason)
     }
 
     private fun createStateProducer(
