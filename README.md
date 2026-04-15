@@ -27,6 +27,7 @@ Reference material lives here:
 
 - [CI Architecture](docs/reference/architecture.md)
 - [Mobile Architecture](docs/reference/mobile-architecture.md)
+- [How To Add A Feature](docs/reference/how-to-add-a-feature.md)
 - [Architecture Decisions](docs/adr/README.md)
 - [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
 - [Secrets Reference](docs/reference/secrets.md)
@@ -178,12 +179,19 @@ pipelines:
 To enable merge request creation from scheduled pipelines, configure these
 GitLab CI variables:
 
-- `GITLAB_MAINTENANCE_TOKEN`: token with API and repository write access
+- `GITLAB_MAINTENANCE_TOKEN`: preferred token with API and repository write
+  access
+- `GITLAB_TOKEN`, `GITLAB_API_TOKEN`, or `GL_TOKEN`: accepted fallback names
+  for the same token if your GitLab setup already uses one of those conventions
 - `GITLAB_MAINTENANCE_USERNAME`: optional push username, defaults to `oauth2`
 - `GITLAB_MAINTENANCE_GIT_NAME`: optional Git author name for maintenance
   commits
 - `GITLAB_MAINTENANCE_GIT_EMAIL`: optional Git author email for maintenance
   commits
+
+`CI_JOB_TOKEN` is not sufficient here because GitLab only permits read access to
+the Merge Requests API for job tokens, while this maintenance script creates a
+new merge request.
 
 The Amper refresh job also accepts `ACTIVITY_COMPOSE_VERSION` if you want to
 override the discovered latest version during a manual or scheduled pipeline.

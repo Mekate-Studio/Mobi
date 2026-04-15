@@ -25,6 +25,9 @@ The key architecture decisions are also captured in ADRs:
 - [ADR 0005: iOS uses TCA dependencies with a lightweight app composition root](../adr/0005-ios-uses-tca-dependencies-with-a-lightweight-app-composition-root.md)
 - [ADR 0006: Shared async feature state uses sealed loadable and SKIE](../adr/0006-shared-async-feature-state-uses-sealed-loadable-and-skie.md)
 
+For a practical implementation blueprint, see
+[How To Add A Feature](./how-to-add-a-feature.md).
+
 ## Goals
 
 - Keep Kotlin Multiplatform as the source of truth for domain, data, and

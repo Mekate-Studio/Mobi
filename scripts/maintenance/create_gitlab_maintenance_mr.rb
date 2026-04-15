@@ -71,7 +71,7 @@ end
 ci_project_url = Maintenance.env!("CI_PROJECT_URL")
 ci_project_id = Maintenance.env!("CI_PROJECT_ID")
 ci_api_v4_url = Maintenance.env!("CI_API_V4_URL")
-gitlab_token = Maintenance.env!("GITLAB_MAINTENANCE_TOKEN")
+gitlab_token = Maintenance.first_env!("GITLAB_MAINTENANCE_TOKEN", "GITLAB_TOKEN", "GITLAB_API_TOKEN", "GL_TOKEN")
 
 Maintenance.run!("git", "config", "user.name", ENV.fetch("GITLAB_MAINTENANCE_GIT_NAME", "CI Maintenance Bot"))
 Maintenance.run!("git", "config", "user.email", ENV.fetch("GITLAB_MAINTENANCE_GIT_EMAIL", "ci-maintenance-bot@example.invalid"))

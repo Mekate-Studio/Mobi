@@ -3,6 +3,7 @@ package studio.mekate.b3.core
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.delay
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
 
 interface CounterRepository {
     suspend fun fetchNextCounterValue(
@@ -42,7 +43,7 @@ class FakeCounterRepository(
     override suspend fun fetchNextCounterValue(
         currentCounterValue: Int,
     ): Int {
-        delay(API_DELAY_MILLIS)
+        delay(API_DELAY_MILLIS.milliseconds)
         if (failurePolicy.shouldFail(currentCounterValue)) {
             throw CounterRepositoryException()
         }

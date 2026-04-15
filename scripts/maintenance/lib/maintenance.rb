@@ -35,6 +35,15 @@ module Maintenance
     abort("Missing required environment variable: #{key}")
   end
 
+  def first_env!(*keys)
+    keys.each do |key|
+      value = ENV[key]
+      return value unless value.nil? || value.empty?
+    end
+
+    abort("Missing required environment variable. Expected one of: #{keys.join(', ')}")
+  end
+
   def get(uri_string, headers: {})
     uri = URI(uri_string)
     request = Net::HTTP::Get.new(uri)
