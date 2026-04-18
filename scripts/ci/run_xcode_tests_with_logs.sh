@@ -16,6 +16,16 @@ echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-gradle}"
 echo "Using GRADLE_USER_HOME=${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
 echo "Using SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
 
+if [[ -n "${SKIP_MACRO_VALIDATION:-}" ]]; then
+  skip_macro_validation="${SKIP_MACRO_VALIDATION}"
+elif [[ -n "${GITHUB_ACTIONS:-}" ]]; then
+  skip_macro_validation="YES"
+else
+  skip_macro_validation="NO"
+fi
+
+echo "Using SKIP_MACRO_VALIDATION=${skip_macro_validation}"
+
 simulator_udid="$(
   xcrun simctl list devices available --json | ruby -rjson -e '
     data = JSON.parse(STDIN.read)
@@ -35,6 +45,10 @@ if [[ -f "${workspace_contents_path}" ]]; then
 else
   echo "Using Xcode project=${project_path} (workspace metadata missing)"
   cmd+=(-project "${project_path}")
+fi
+
+if [[ "${skip_macro_validation}" == "YES" ]]; then
+  cmd+=(-skipMacroValidation)
 fi
 
 cmd+=(
