@@ -37,7 +37,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             .amper-cache
@@ -94,7 +94,7 @@ jobs:
       - android_build_debug
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             .amper-cache
@@ -129,7 +129,7 @@ jobs:
       KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             .amper-cache
@@ -165,7 +165,7 @@ jobs:
       KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: |
             .amper-cache
