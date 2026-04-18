@@ -1,18 +1,17 @@
 # CI Architecture
 
-This repository uses a layered CI design so the mobile pipeline stays portable
-and understandable.
+This repository uses a layered CI design so the mobile pipeline stays
+understandable and repository-owned.
 
 ## The layers
 
 ### 1. CI adapters
 
-These are the thinnest layer:
+This is the thinnest layer:
 
 - [`.github/workflows/mobile-ci.yml`](../../.github/workflows/mobile-ci.yml)
-- [`.gitlab-ci.yml`](../../.gitlab-ci.yml)
 
-They only decide:
+It only decides:
 
 - when jobs run
 - which runner executes them
@@ -38,13 +37,14 @@ actually do?"
 [`scripts/ci/lib/`](../../scripts/ci/lib):
 
 - `common.sh`: logging, workspace prep, Java setup
-- `context.sh`: normalize GitHub, GitLab, and local environment variables
+- `context.sh`: normalize GitHub-oriented and local environment variables
 - `env.sh`: PATH, Bundler, Android SDK detection
 - `android.sh`: Android prep, signing files, Play key materialization
 - `ios.sh`: Xcode checks, Fastlane prep, App Store Connect key materialization
 
-This is where the portability comes from. GitHub and GitLab expose different
-variables, but the rest of the pipeline only sees normalized values like:
+This is where the shared execution layer stays stable. The workflow and the
+local shell may expose different variables, but the rest of the pipeline only
+sees normalized values like:
 
 - `BUILD_NUMBER`
 - `BUILD_SHA`
@@ -64,12 +64,6 @@ the Xcode project:
 In the current bridge phase, the iOS CI jobs and Fastlane release lane default
 to `KOTLIN_IOS_BUILDER=gradle` so archive and TestFlight flows exercise the
 same Kotlin framework path that was validated locally.
-
-GitLab shell runners use an external Gradle home for iOS jobs, ideally under
-`$CI_BUILDS_DIR/.gradle-user-home`, so checkout cleanup does not trip over a
-live `.gradle-user-home` from a previous bridge run. Android jobs keep their
-original Amper behavior and do not inherit that iOS-specific Gradle home
-setting.
 
 ### 4. Platform command layer
 
@@ -128,7 +122,6 @@ YAML file:
 
 - people can run the same job names locally
 - CI logic is reviewable without opening the Actions UI
-- provider migration is easier because the scripts stay stable
 - release steps are explicit and intentionally separated
 
 If you share this setup with others, emphasize the stable job contract and the

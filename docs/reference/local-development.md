@@ -44,13 +44,13 @@ just ios-test
 ```
 
 `just android-run` builds the debug APK with the same repo-owned flow used by
-CI, installs it with `adb`, and launches `studio.mekate.b3.MainActivity`. If
+CI, installs it with `adb`, and launches `studio.mekate.mobi.MainActivity`. If
 multiple Android devices are connected, set `ANDROID_SERIAL` first.
 
 `just android-run-debug` does the same install flow, but launches the app with
 `am start -D`, so the process waits for a debugger. After that, use `Run >
 Attach debugger to Android process` in Android Studio or IntelliJ IDEA and
-select `studio.mekate.b3`.
+select `studio.mekate.mobi`.
 
 `just android-test` runs the shared feature tests and the Android app tests,
 stores JUnit XML under `build/reports/shared-feature-home/android` and
@@ -108,6 +108,10 @@ This is the best path for reproducing CI behavior without pushing commits.
 Use `just android-test` instead when you want cleaner local test output in the
 terminal or through the shared `.run/Android Test` configuration in IntelliJ
 IDEA / Android Studio.
+
+When the Android debug smoke jobs run without release signing material, the repo
+creates ignored local debug signing files under `android-app/` so a clean clone
+can still build. Android release jobs remain explicitly signing-driven.
 
 The iOS build jobs target a generic iOS Simulator destination, prefer the
 shared Xcode workspace when Swift packages are present, and set

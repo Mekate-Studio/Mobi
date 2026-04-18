@@ -20,6 +20,104 @@ materially new architectural concern.
 If a new file makes you ask "is this behavior or presentation?", that usually
 answers where it should live.
 
+## Mental model
+
+Use these diagrams as the fast architectural reference before following the
+feature checklist.
+
+### Feature flow
+
+```mermaid
+flowchart LR
+    A["shared-core: Platform/data layer"] --> B["shared-feature-*: Feature service"]
+    B --> C["shared-feature-*: Shared state contract"]
+
+    C --> D["Android: Circuit presenter"]
+    C --> E["iOS: TCA client and reducer"]
+    C --> F["Shared UI: Compose Multiplatform screen"]
+
+    D --> G["Android native Compose UI"]
+    E --> H["SwiftUI screen"]
+    F --> I["Android shared-ui route"]
+    F --> J["iOS shared-ui route via ViewController bridge"]
+```
+
+The important part is the middle seam: shared Kotlin owns the feature
+workflow and typed state contract, then Android, iOS, and optional shared
+Compose each adapt that contract in their own rendering layer.
+
+### Ownership split
+
+```mermaid
+flowchart TB
+    A["Shared Kotlin"] --> A1["Domain and data logic"]
+    A --> A2["Feature workflows and state"]
+    A --> A3["Optional shared Compose UI"]
+
+    B["Android native"] --> B1["Circuit screens"]
+    B --> B2["Circuit presenters"]
+    B --> B3["Metro Android graph"]
+
+    C["iOS native"] --> C1["TCA reducers and stores"]
+    C --> C2["SwiftUI views"]
+    C --> C3["AppServices composition root"]
+
+    A --> B
+    A --> C
+```
+
+This is the intended split of responsibilities: shared Kotlin owns reusable
+behavior, while each platform owns its native shell and its platform-specific
+composition root.
+
+### Sequence
+
+```mermaid
+sequenceDiagram
+    participant UI as Native UI / Shared UI
+    participant P as Android Presenter or iOS TCA Reducer
+    participant S as Shared Feature Service
+    participant R as Repository
+
+    UI->>P: User triggers action
+    P->>S: Request updated state
+    S-->>P: Loading state
+    P-->>UI: Render loading
+
+    P->>S: Perform feature work
+    S->>R: Load or save domain data
+    alt Success
+        R-->>S: Domain result
+        S-->>P: Shared success state
+        P-->>UI: Render success
+    else Failure
+        R-->>S: Domain failure
+        S-->>P: Shared error state
+        P-->>UI: Render error
+    end
+```
+
+This sequence is what we want to preserve as features grow: the native shell
+reacts to user intent, shared Kotlin performs the business work, and the UI
+renders typed state transitions instead of reproducing domain rules locally.
+
+## Ownership map
+
+Use this table when deciding where a new file should land.
+
+| Concern | Own it here | Current reference |
+| --- | --- | --- |
+| Domain models, repository contracts, data access, API and persistence adapters | `shared-core/` | `CounterRepository.kt`, `PlatformContext.kt` |
+| Shared feature rules, typed async state, feature orchestration | `shared-feature-*/` | `HomeFeatureState.kt`, `CounterLoadable.kt`, `HomeFeatureService.kt` |
+| Shared Kotlin dependency graph and construction helpers | `shared-di/` | `SharedDependencies.kt` |
+| Optional reusable shared Compose screen | `shared-ui-*/` | `HomeContent.kt` |
+| Android presenter orchestration and Circuit contracts | `android-app/` | `HomePresenter.kt`, `HomeScreen.kt` |
+| Android native Compose rendering and app navigation | `android-app/` | `HomeUi.kt`, `AppShell.kt` |
+| Android platform composition root | `android-app/` | `AndroidAppGraph.kt` |
+| iOS reducer, actions, effects, and state mapping | `ios-app/` | `HomeFeature.swift`, `HomeFeature+State.swift`, `HomeCounterLoadable.swift` |
+| iOS native SwiftUI rendering and navigation | `ios-app/` | `HomeView.swift`, `RootView.swift` |
+| iOS platform composition root and dependency injection bridge | `ios-app/` | `AppServices.swift`, `HomeFeatureClient.swift` |
+
 ## Suggested module shape
 
 For a feature named `profile`, the default module shape should be:

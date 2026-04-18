@@ -2,7 +2,7 @@
 
 This document is kept as a legacy sample blueprint for the older public CI
 write-up flow. It is still useful as a reproducible publishing/reference
-artifact, but it does not describe the current `b3` mobile architecture
+artifact, but it does not describe the current `Mobi` mobile architecture
 verbatim anymore.
 
 Most Kotlin Multiplatform CI write-ups stop at "here is my GitHub Actions file."

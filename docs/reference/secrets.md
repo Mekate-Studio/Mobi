@@ -37,6 +37,13 @@ These are turned into:
 by
 [`scripts/ci/write_android_signing_files.sh`](../../scripts/ci/write_android_signing_files.sh).
 
+Debug-oriented smoke flows do not require these secrets. When
+`./scripts/ci/run_job.sh android-build-debug` or
+`./scripts/ci/run_job.sh android-test` runs without Android signing inputs, the
+repo generates ignored local debug signing files under `android-app/` so a
+clean clone can still exercise the Android smoke path. Release-oriented Android
+jobs still expect the explicit signing inputs above.
+
 ### Optional Android variables
 
 - `ANDROID_PACKAGE_NAME`: override Play package name
@@ -92,7 +99,7 @@ export ANDROID_KEY_PASSWORD="your-key-password"
 Example iOS local setup:
 
 ```bash
-export IOS_BUNDLE_IDENTIFIER="studio.mekate.b3"
+export IOS_BUNDLE_IDENTIFIER="studio.mekate.mobi"
 export IOS_DEVELOPMENT_TEAM="YOUR_TEAM_ID"
 export IOS_PROVISIONING_PROFILE_SPECIFIER="YOUR_APP_STORE_PROFILE"
 export APP_STORE_CONNECT_KEY_ID="YOUR_KEY_ID"

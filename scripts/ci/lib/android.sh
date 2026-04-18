@@ -22,7 +22,21 @@ ci_prepare_android_job() {
       ./scripts/ci/write_android_signing_files.sh
     )
   else
-    ci_log "Android signing material missing"
+    case "${CI_ANDROID_SIGNING_MODE:-auto}" in
+      debug-smoke)
+        ci_log "Android signing material missing; generating local debug signing files for smoke flow"
+        (
+          cd "${CI_PROJECT_DIR}"
+          ./scripts/ci/ensure_android_debug_signing_files.sh
+        )
+        ;;
+      release)
+        ci_log "Android signing material missing for release-oriented flow"
+        ;;
+      *)
+        ci_log "Android signing material missing"
+        ;;
+    esac
   fi
 }
 

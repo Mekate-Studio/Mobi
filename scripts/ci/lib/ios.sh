@@ -8,7 +8,7 @@ ci_configure_ios_kotlin_builder() {
 
   if [[ -n "${GITLAB_CI:-}" ]]; then
     local gitlab_gradle_base="${CI_BUILDS_DIR:-${HOME:-${CI_PROJECT_DIR}}}"
-    local gitlab_gradle_home="${gitlab_gradle_base}/.gradle-user-home/${CI_PROJECT_PATH_SLUG:-b3}"
+    local gitlab_gradle_home="${gitlab_gradle_base}/.gradle-user-home/${CI_PROJECT_PATH_SLUG:-mobi}"
 
     if [[ -z "${GRADLE_USER_HOME:-}" || "${GRADLE_USER_HOME}" == "/.gradle-user-home/"* ]]; then
       export GRADLE_USER_HOME="${gitlab_gradle_home}"
@@ -17,7 +17,7 @@ ci_configure_ios_kotlin_builder() {
 
   if [[ -z "${GRADLE_USER_HOME:-}" ]]; then
     if [[ -n "${GITLAB_CI:-}" ]]; then
-      export GRADLE_USER_HOME="${CI_BUILDS_DIR:-${HOME:-${CI_PROJECT_DIR}}}/.gradle-user-home/${CI_PROJECT_PATH_SLUG:-b3}"
+      export GRADLE_USER_HOME="${CI_BUILDS_DIR:-${HOME:-${CI_PROJECT_DIR}}}/.gradle-user-home/${CI_PROJECT_PATH_SLUG:-mobi}"
     else
       export GRADLE_USER_HOME="${CI_PROJECT_DIR}/.gradle-user-home"
     fi

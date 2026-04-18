@@ -1,12 +1,12 @@
-package studio.mekate.b3.home
+package studio.mekate.mobi.home
 
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.screen.Screen
 import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
 import dev.zacsweers.metro.Inject
-import studio.mekate.b3.feature.home.HomeFeatureEvent
-import studio.mekate.b3.ui.home.HomeContent
+import studio.mekate.mobi.feature.home.HomeFeatureEvent
+import studio.mekate.mobi.ui.home.HomeContent
 
 @Inject
 class HomeUiFactory : Ui.Factory {

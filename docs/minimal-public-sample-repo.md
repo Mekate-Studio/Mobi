@@ -2,7 +2,7 @@
 
 This document is kept as a legacy sample blueprint for the public mobile CI
 example repository. It still describes the historical sample shape we used to
-explain the CI pattern, but it is not intended to mirror the current `b3`
+explain the CI pattern, but it is not intended to mirror the current `Mobi`
 module layout one-to-one.
 
 This document defines the smallest separate repository I would create to

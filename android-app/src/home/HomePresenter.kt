@@ -1,4 +1,4 @@
-package studio.mekate.b3.home
+package studio.mekate.mobi.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,8 +12,8 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.launch
-import studio.mekate.b3.feature.home.CounterLoadable
-import studio.mekate.b3.feature.home.HomeFeatureService
+import studio.mekate.mobi.feature.home.CounterLoadable
+import studio.mekate.mobi.feature.home.HomeFeatureService
 
 class HomePresenter(
     private val service: HomeFeatureService,

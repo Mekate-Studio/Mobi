@@ -17,16 +17,19 @@ shift || true
 
 case "${job_name}" in
   android-build-debug)
+    export CI_ANDROID_SIGNING_MODE="${CI_ANDROID_SIGNING_MODE:-debug-smoke}"
     ci_prepare_android_job
     cd "${CI_PROJECT_DIR}"
     ./scripts/ci/run_fastlane_with_amper_logs.sh buildDebug "$@"
     ;;
   android-build-release)
+    export CI_ANDROID_SIGNING_MODE="${CI_ANDROID_SIGNING_MODE:-release}"
     ci_prepare_android_job
     cd "${CI_PROJECT_DIR}"
     ./scripts/ci/run_fastlane_with_amper_logs.sh buildRelease "$@"
     ;;
   android-test)
+    export CI_ANDROID_SIGNING_MODE="${CI_ANDROID_SIGNING_MODE:-debug-smoke}"
     ci_prepare_android_job
     cd "${CI_PROJECT_DIR}"
     ./scripts/ci/run_fastlane_with_amper_logs.sh test "$@"

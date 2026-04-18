@@ -1,13 +1,13 @@
-package studio.mekate.b3.di
+package studio.mekate.mobi.di
 
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.createGraphFactory
-import studio.mekate.b3.core.CounterRepository
-import studio.mekate.b3.core.CounterRequestFailurePolicy
-import studio.mekate.b3.core.FakeCounterRepository
-import studio.mekate.b3.core.RandomCounterRequestFailurePolicy
-import studio.mekate.b3.feature.home.HomeFeatureService
+import studio.mekate.mobi.core.CounterRepository
+import studio.mekate.mobi.core.CounterRequestFailurePolicy
+import studio.mekate.mobi.core.FakeCounterRepository
+import studio.mekate.mobi.core.RandomCounterRequestFailurePolicy
+import studio.mekate.mobi.feature.home.HomeFeatureService
 
 @DependencyGraph
 interface SharedApplicationGraph {

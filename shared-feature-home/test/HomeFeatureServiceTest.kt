@@ -1,9 +1,9 @@
-package studio.mekate.b3.feature.home
+package studio.mekate.mobi.feature.home
 
 import kotlinx.coroutines.test.runTest
-import studio.mekate.b3.core.FakeCounterRepository
-import studio.mekate.b3.core.CounterRepository
-import studio.mekate.b3.core.CounterRequestFailurePolicy
+import studio.mekate.mobi.core.FakeCounterRepository
+import studio.mekate.mobi.core.CounterRepository
+import studio.mekate.mobi.core.CounterRequestFailurePolicy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

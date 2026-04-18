@@ -48,6 +48,7 @@ jobs:
         run: ./scripts/ci/run_job.sh android-build-debug
 
   android_build_release:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_target == 'publishInternal'
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -120,6 +121,7 @@ jobs:
         run: ./scripts/ci/run_job.sh ios-test
 
   ios_build_release:
+    if: github.event_name == 'workflow_dispatch' && contains(fromJson('["iosArchiveRelease","iosTestFlight"]'), github.event.inputs.release_target) && github.ref_name == env.DEFAULT_BRANCH
     runs-on: macos-15
     env:
       KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}

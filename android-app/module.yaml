@@ -20,13 +20,13 @@ settings:
       - id: dev.zacsweers.metro.compiler
         dependency: dev.zacsweers.metro:compiler:0.12.1
   android:
-    namespace: studio.mekate.b3
-    applicationId: studio.mekate.b3
+    namespace: studio.mekate.mobi
+    applicationId: studio.mekate.mobi
     minSdk: 23
     compileSdk: 36
     targetSdk: 36
     signing:
       enabled: true
       propertiesFile: ./keystore.properties
-    versionCode: 98
-    versionName: "1.0-a809b0f8"
+    versionCode: 1
+    versionName: "1.0-local"

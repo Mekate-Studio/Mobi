@@ -1,8 +1,8 @@
-package studio.mekate.b3.home
+package studio.mekate.mobi.home
 
-import studio.mekate.b3.feature.home.HomeFeatureService
-import studio.mekate.b3.feature.home.HomeFeatureState
-import studio.mekate.b3.feature.home.currentValueForRefresh
+import studio.mekate.mobi.feature.home.HomeFeatureService
+import studio.mekate.mobi.feature.home.HomeFeatureState
+import studio.mekate.mobi.feature.home.currentValueForRefresh
 
 class HomePresenterStateProducer(
     private val service: HomeFeatureService,

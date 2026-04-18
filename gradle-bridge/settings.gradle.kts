@@ -1,4 +1,4 @@
-rootProject.name = "b3-gradle-bridge"
+rootProject.name = "mobi-gradle-bridge"
 
 pluginManagement {
     repositories {

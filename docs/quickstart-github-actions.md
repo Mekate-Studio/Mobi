@@ -101,7 +101,6 @@ Use this set as the baseline contract:
 If you keep those names stable, it becomes much easier to:
 
 - run the same jobs locally
-- switch between GitHub Actions and GitLab CI
 - explain the pipeline to other people
 
 ## 3. Verify the scripts locally first
@@ -189,7 +188,7 @@ Add these to the appropriate Play environments:
 - `ANDROID_KEYSTORE_PASSWORD`
 - `ANDROID_KEY_ALIAS`
 - `ANDROID_KEY_PASSWORD`
-- `ANDROID_PACKAGE_NAME` if your package is not `studio.mekate.b3`
+- `ANDROID_PACKAGE_NAME` if your package is not `studio.mekate.mobi`
 - `ANDROID_PLAY_RELEASE_STATUS` if you need a non-default Play status
 
 ### iOS release secrets

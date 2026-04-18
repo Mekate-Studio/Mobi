@@ -1,8 +1,8 @@
-package studio.mekate.b3.feature.home
+package studio.mekate.mobi.feature.home
 
 import dev.zacsweers.metro.Inject
-import studio.mekate.b3.core.CounterRepository
-import studio.mekate.b3.core.CounterRepositoryException
+import studio.mekate.mobi.core.CounterRepository
+import studio.mekate.mobi.core.CounterRepositoryException
 import kotlin.coroutines.cancellation.CancellationException
 
 @Inject

@@ -1,4 +1,4 @@
-package studio.mekate.b3.feature.home
+package studio.mekate.mobi.feature.home
 
 sealed interface HomeFeatureEvent {
     data object RefreshClicked : HomeFeatureEvent

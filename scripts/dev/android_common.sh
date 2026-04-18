@@ -5,7 +5,7 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${script_dir}/common.sh"
 
-android_package_name="studio.mekate.b3"
+android_package_name="studio.mekate.mobi"
 android_main_activity="${android_package_name}.MainActivity"
 
 android_require_cmd() {

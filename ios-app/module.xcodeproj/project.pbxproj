@@ -248,7 +248,7 @@
 				"CODE_SIGNING_REQUIRED[sdk=iphoneos*]" = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6GAE983XW9;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -263,7 +263,7 @@
 					"@loader_path/Frameworks",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = studio.mekate.b3;
+				PRODUCT_BUNDLE_IDENTIFIER = studio.mekate.mobi;
 				PRODUCT_MODULE_NAME = app;
 				PRODUCT_NAME = "ios-app";
 				SDKROOT = iphoneos;
@@ -290,7 +290,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6GAE983XW9;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -302,11 +302,11 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = studio.mekate.b3;
+				PRODUCT_BUNDLE_IDENTIFIER = studio.mekate.mobi;
 				PRODUCT_MODULE_NAME = app;
 				PRODUCT_NAME = "ios-app";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "b3 app store";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1 2";
@@ -325,7 +325,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6GAE983XW9;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -338,7 +338,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = studio.mekate.b3Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = studio.mekate.mobiTests;
 				PRODUCT_MODULE_NAME = appTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -356,7 +356,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6GAE983XW9;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -369,7 +369,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = studio.mekate.b3Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = studio.mekate.mobiTests;
 				PRODUCT_MODULE_NAME = appTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

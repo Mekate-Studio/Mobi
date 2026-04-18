@@ -1,4 +1,4 @@
-package studio.mekate.b3.ui.home
+package studio.mekate.mobi.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,12 +20,12 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import studio.mekate.b3.feature.home.CounterLoadable
-import studio.mekate.b3.feature.home.CounterLoadFailureReason
-import studio.mekate.b3.feature.home.HomeFeatureEvent
-import studio.mekate.b3.feature.home.HomeFeatureState
-import studio.mekate.b3.feature.home.HomeFeatureService
-import studio.mekate.b3.feature.home.currentValueForRefresh
+import studio.mekate.mobi.feature.home.CounterLoadable
+import studio.mekate.mobi.feature.home.CounterLoadFailureReason
+import studio.mekate.mobi.feature.home.HomeFeatureEvent
+import studio.mekate.mobi.feature.home.HomeFeatureState
+import studio.mekate.mobi.feature.home.HomeFeatureService
+import studio.mekate.mobi.feature.home.currentValueForRefresh
 
 @Composable
 fun SharedHomeScreen(

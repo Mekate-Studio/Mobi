@@ -1,4 +1,4 @@
-package studio.mekate.b3.core
+package studio.mekate.mobi.core
 
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.delay

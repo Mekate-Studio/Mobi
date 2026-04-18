@@ -1,10 +1,10 @@
-package studio.mekate.b3.home
+package studio.mekate.mobi.home
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
-import studio.mekate.b3.feature.home.HomeFeatureState
+import studio.mekate.mobi.feature.home.HomeFeatureState
 
 data object HomeScreen : Screen {
     override fun describeContents(): Int = 0

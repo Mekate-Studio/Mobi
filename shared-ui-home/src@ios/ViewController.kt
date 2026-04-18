@@ -1,7 +1,7 @@
-package studio.mekate.b3.ui.home
+package studio.mekate.mobi.ui.home
 
 import androidx.compose.ui.window.ComposeUIViewController
-import studio.mekate.b3.feature.home.HomeFeatureService
+import studio.mekate.mobi.feature.home.HomeFeatureService
 
 class SharedHomeViewControllerFactory(
     private val service: HomeFeatureService,

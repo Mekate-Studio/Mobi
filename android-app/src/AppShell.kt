@@ -1,4 +1,4 @@
-package studio.mekate.b3
+package studio.mekate.mobi
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
@@ -14,9 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.CircuitContent
-import studio.mekate.b3.di.SharedDependencies
-import studio.mekate.b3.home.HomeScreen
-import studio.mekate.b3.ui.home.SharedHomeScreen
+import studio.mekate.mobi.di.SharedDependencies
+import studio.mekate.mobi.home.HomeScreen
+import studio.mekate.mobi.ui.home.SharedHomeScreen
 
 @Composable
 fun AppShell() {

@@ -1,4 +1,4 @@
-package studio.mekate.b3
+package studio.mekate.mobi
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

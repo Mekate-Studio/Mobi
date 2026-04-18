@@ -1,6 +1,6 @@
-package studio.mekate.b3.di
+package studio.mekate.mobi.di
 
-import studio.mekate.b3.feature.home.CounterLoadable
+import studio.mekate.mobi.feature.home.CounterLoadable
 import kotlin.test.Test
 import kotlin.test.assertIs
 

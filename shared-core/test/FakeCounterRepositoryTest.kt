@@ -1,4 +1,4 @@
-package studio.mekate.b3.core
+package studio.mekate.mobi.core
 
 import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runTest

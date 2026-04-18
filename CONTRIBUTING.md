@@ -1,40 +1,67 @@
-## Developer Certificate of Origin and License
+# Contributing
 
-By contributing to GitLab B.V., you accept and agree to the following terms and
-conditions for your present and future contributions submitted to GitLab B.V.
-Except for the license granted herein to GitLab B.V. and recipients of software
-distributed by GitLab B.V., you reserve all right, title, and interest in and to
-your Contributions.
+`Mobi` is primarily a reference architecture repository and a public place to
+explain, test, and evolve architectural ideas. Contributions are welcome, but
+the bar for acceptance is whether a change makes the architecture clearer,
+stronger, or easier to reuse.
 
-All contributions are subject to the Developer Certificate of Origin and license set out at [docs.gitlab.com/ce/legal/developer_certificate_of_origin](https://docs.gitlab.com/ce/legal/developer_certificate_of_origin).
+## Where To Start
 
-_This notice should stay as the first item in the CONTRIBUTING.md file._
+- Use GitHub Discussions for architecture questions, tradeoff discussions, and
+  proposal shaping.
+- Use GitHub Issues for bugs, documentation gaps, broken setup paths, and
+  concrete improvement requests.
+- For larger changes, start with a discussion or issue before opening a pull
+  request.
+- Small documentation fixes and focused corrections are good pull request
+  candidates right away.
 
-## Code of conduct
+## What Fits This Repo
 
-As contributors and maintainers of this project, we pledge to respect all people
-who contribute through reporting issues, posting feature requests, updating
-documentation, submitting pull requests or patches, and other activities.
+Good contributions usually do one or more of these:
 
-We are committed to making participation in this project a harassment-free
-experience for everyone, regardless of level of experience, gender, gender
-identity and expression, sexual orientation, disability, personal appearance,
-body size, race, ethnicity, age, or religion.
+- clarify the reference architecture story
+- improve developer onboarding or validation steps
+- strengthen tests around architectural seams
+- fix examples that are too project-specific, brittle, or confusing
+- improve docs, ADRs, and explanation quality
 
-Examples of unacceptable behavior by participants include the use of sexual
-language or imagery, derogatory comments or personal attacks, trolling, public
-or private harassment, insults, or other unprofessional conduct.
+Changes are less likely to fit when they:
 
-Project maintainers have the right and responsibility to remove, edit, or reject
-comments, commits, code, wiki edits, issues, and other contributions that are
-not aligned to this Code of Conduct. Project maintainers who do not follow the
-Code of Conduct may be removed from the project team.
+- add product-specific features that do not support the reference
+  architecture story
+- depend on private infrastructure, private credentials, or unpublished assets
+- increase complexity without improving the educational or architectural value
 
-This code of conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community.
+## Pull Request Expectations
 
-Instances of abusive, harassing, or otherwise unacceptable behavior can be
-reported by emailing contact@gitlab.com.
+- Keep changes focused and explain the architectural motivation clearly.
+- Update related docs when behavior, structure, or recommended patterns change.
+- Preserve the repo's reference-quality tone: prefer explicitness over clever
+  shortcuts.
+- If you intentionally change an architectural direction, update the relevant
+  ADR or supporting documentation in the same pull request when practical.
 
-This Code of Conduct is adapted from the [Contributor Covenant](https://contributor-covenant.org), version 1.1.0,
-available at [https://contributor-covenant.org/version/1/1/0/](https://contributor-covenant.org/version/1/1/0/).
+## Rights And Licensing
+
+By submitting a contribution, you confirm that:
+
+- you have the right to submit the contribution
+- you are intentionally submitting it under the repository's published license
+  terms
+- you understand that maintainers may request additional contributor paperwork
+  for substantial contributions before merge
+
+That last point is important because Mekate Studio may preserve future
+relicensing flexibility for parts of the project. If a CLA or similar policy is
+formalized, this document will be updated accordingly.
+
+## Conduct
+
+Please be respectful, constructive, and specific. Maintainership may reject,
+edit, or close contributions and conversations that are hostile, low-signal, or
+misaligned with the purpose of the repository.
+
+A dedicated code-of-conduct and reporting path should live separately from this
+file. Until that is added, keep collaboration professional and assume public
+GitHub spaces are the default channel for project interaction.

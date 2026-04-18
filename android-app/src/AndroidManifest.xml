@@ -14,11 +14,11 @@
 
     <application
         android:allowBackup="true"
-        android:label="B3"
+        android:label="Mobi"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity
-            android:name="studio.mekate.b3.MainActivity"
+            android:name="studio.mekate.mobi.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
