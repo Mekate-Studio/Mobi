@@ -52,7 +52,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       - name: Build Android debug
         run: ./scripts/ci/run_job.sh android-build-debug
       - name: Upload CI logs
@@ -77,7 +77,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       - name: Build Android release
         run: ./scripts/ci/run_job.sh android-build-release
       - name: Upload Android artifacts
@@ -109,7 +109,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       - name: Run Android tests
         run: ./scripts/ci/run_job.sh android-test
       - name: Upload CI logs
@@ -275,7 +275,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       - name: Download Android release build
         uses: actions/download-artifact@v4
         with:
@@ -297,7 +297,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       - name: Promote internal to alpha
         run: ./scripts/ci/run_job.sh promote-alpha
 
@@ -314,7 +314,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       - name: Promote alpha to beta
         run: ./scripts/ci/run_job.sh promote-beta
 
@@ -331,6 +331,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       - name: Promote beta to production
         run: ./scripts/ci/run_job.sh promote-production
