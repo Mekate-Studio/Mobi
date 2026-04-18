@@ -34,8 +34,17 @@ env:
 jobs:
   android_build_debug:
     runs-on: macos-15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .amper-cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-smoke-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -46,6 +55,15 @@ jobs:
       - uses: android-actions/setup-android@v3
       - name: Build Android debug
         run: ./scripts/ci/run_job.sh android-build-debug
+      - name: Upload CI logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-logs-${{ github.job }}
+          if-no-files-found: ignore
+          path: |
+            build/logs
+            build/tasks
 
   android_build_release:
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_target == 'publishInternal'
@@ -71,10 +89,19 @@ jobs:
 
   android_test:
     runs-on: macos-15
+    timeout-minutes: 45
     needs:
       - android_build_debug
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .amper-cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-smoke-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -85,13 +112,31 @@ jobs:
       - uses: android-actions/setup-android@v3
       - name: Run Android tests
         run: ./scripts/ci/run_job.sh android-test
+      - name: Upload CI logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-logs-${{ github.job }}
+          if-no-files-found: ignore
+          path: |
+            build/logs
+            build/tasks
 
   ios_build_debug:
     runs-on: macos-15
+    timeout-minutes: 45
     env:
       KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .amper-cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-smoke-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -101,15 +146,33 @@ jobs:
           bundler-cache: true
       - name: Build iOS debug
         run: ./scripts/ci/run_job.sh ios-build-debug
+      - name: Upload CI logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-logs-${{ github.job }}
+          if-no-files-found: ignore
+          path: |
+            build/logs
+            build/tasks
 
   ios_test:
     runs-on: macos-15
+    timeout-minutes: 45
     needs:
       - ios_build_debug
     env:
       KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .amper-cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-smoke-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -119,6 +182,15 @@ jobs:
           bundler-cache: true
       - name: Run iOS tests
         run: ./scripts/ci/run_job.sh ios-test
+      - name: Upload CI logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-logs-${{ github.job }}
+          if-no-files-found: ignore
+          path: |
+            build/logs
+            build/tasks
 
   ios_build_release:
     if: github.event_name == 'workflow_dispatch' && contains(fromJson('["iosArchiveRelease","iosTestFlight"]'), github.event.inputs.release_target) && github.ref_name == github.event.repository.default_branch
