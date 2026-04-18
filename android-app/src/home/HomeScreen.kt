@@ -9,14 +9,18 @@ import studio.mekate.mobi.feature.home.HomeFeatureState
 data object HomeScreen : Screen {
     override fun describeContents(): Int = 0
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) = Unit
+    override fun writeToParcel(
+        parcel: Parcel,
+        flags: Int,
+    ) = Unit
 
     @JvmField
-    val CREATOR: Parcelable.Creator<HomeScreen> = object : Parcelable.Creator<HomeScreen> {
-        override fun createFromParcel(parcel: Parcel): HomeScreen = HomeScreen
+    val CREATOR: Parcelable.Creator<HomeScreen> =
+        object : Parcelable.Creator<HomeScreen> {
+            override fun createFromParcel(parcel: Parcel): HomeScreen = HomeScreen
 
-        override fun newArray(size: Int): Array<HomeScreen?> = arrayOfNulls(size)
-    }
+            override fun newArray(size: Int): Array<HomeScreen?> = arrayOfNulls(size)
+        }
 }
 
 data class HomeScreenState(

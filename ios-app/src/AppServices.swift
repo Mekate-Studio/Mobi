@@ -7,11 +7,11 @@ struct AppServices {
     let sharedHomeViewControllerFactory: SharedHomeViewControllerFactory
 
     init(
-        homeFeatureService: HomeFeatureService = SharedDependencies.shared.createDefaultHomeFeatureService()
+        homeFeatureService: HomeFeatureService = SharedDependencies.shared.createDefaultHomeFeatureService(),
     ) {
-        self.homeFeatureClient = HomeFeatureClient(service: homeFeatureService)
-        self.sharedHomeViewControllerFactory = SharedHomeViewControllerFactory(
-            service: homeFeatureService
+        homeFeatureClient = HomeFeatureClient(service: homeFeatureService)
+        sharedHomeViewControllerFactory = SharedHomeViewControllerFactory(
+            service: homeFeatureService,
         )
     }
 
@@ -23,7 +23,7 @@ struct AppServices {
             },
             withDependencies: {
                 $0.homeFeatureClient = homeFeatureClient
-            }
+            },
         )
     }
 }

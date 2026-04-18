@@ -1,14 +1,14 @@
+@testable import app
 import ComposableArchitecture
 import Foundation
 @preconcurrency import KotlinModules
 import Testing
-@testable import app
 
 @Suite("HomeFeature")
 struct HomeFeatureTests {
     @MainActor
-    @Test("should have initial shared state when task is sent")
-    func shouldHaveInitialSharedStateWhenTaskIsSent() async {
+    @Test
+    func `should have initial shared state when task is sent`() async {
         // given
         let store = HomeFeatureTestFactory.makeStore()
 
@@ -20,8 +20,8 @@ struct HomeFeatureTests {
     }
 
     @MainActor
-    @Test("should have refreshed shared state when repository load completes after refresh action is sent")
-    func shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent() async {
+    @Test
+    func `should have refreshed shared state when repository load completes after refresh action is sent`() async {
         // given
         let store = HomeFeatureTestFactory.makeStore()
 
@@ -30,7 +30,7 @@ struct HomeFeatureTests {
 
         await store.send(.refreshTapped) {
             $0 = HomeFeatureTestFactory.expectedState(
-                loadable: .loading(previousValue: nil)
+                loadable: .loading(previousValue: nil),
             )
         }
 
@@ -41,14 +41,14 @@ struct HomeFeatureTests {
     }
 
     @MainActor
-    @Test("should have error shared state when repository load fails after refresh action is sent")
-    func shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent() async {
+    @Test
+    func `should have error shared state when repository load fails after refresh action is sent`() async {
         // given
         let store = HomeFeatureTestFactory.makeStore(
             refreshResult: .error(
                 previousValue: nil,
-                reason: .repositoryUnavailable
-            )
+                reason: .repositoryUnavailable,
+            ),
         )
 
         await store.send(.task)
@@ -56,7 +56,7 @@ struct HomeFeatureTests {
 
         await store.send(.refreshTapped) {
             $0 = HomeFeatureTestFactory.expectedState(
-                loadable: .loading(previousValue: nil)
+                loadable: .loading(previousValue: nil),
             )
         }
 
@@ -66,16 +66,16 @@ struct HomeFeatureTests {
                 HomeFeatureTestFactory.expectedState(
                     loadable: .error(
                         previousValue: nil,
-                        reason: .repositoryUnavailable
-                    )
-                )
-            )
+                        reason: .repositoryUnavailable,
+                    ),
+                ),
+            ),
         ) {
             $0 = HomeFeatureTestFactory.expectedState(
                 loadable: .error(
                     previousValue: nil,
-                    reason: .repositoryUnavailable
-                )
+                    reason: .repositoryUnavailable,
+                ),
             )
         }
     }
@@ -84,7 +84,7 @@ struct HomeFeatureTests {
 private enum HomeFeatureTestFactory {
     @MainActor
     static func makeStore(
-        refreshResult: HomeCounterLoadable = .loaded(value: 1)
+        refreshResult: HomeCounterLoadable = .loaded(value: 1),
     ) -> TestStore<HomeFeature.State, HomeFeature.Action> {
         TestStore(initialState: HomeFeature.State()) {
             HomeFeature()
@@ -94,7 +94,7 @@ private enum HomeFeatureTestFactory {
     }
 
     static func makeHomeFeatureClient(
-        refreshResult: HomeCounterLoadable
+        refreshResult: HomeCounterLoadable,
     ) -> HomeFeatureClient {
         HomeFeatureClient(
             initialState: {
@@ -102,74 +102,73 @@ private enum HomeFeatureTestFactory {
             },
             loadingState: { counterValue in
                 makeSharedState(
-                    loadable: .loading(previousValue: counterValue > 0 ? counterValue : nil)
+                    loadable: .loading(previousValue: counterValue > 0 ? counterValue : nil),
                 )
             },
             refresh: { counterValue in
                 await Task.yield()
-                let resolvedLoadable: HomeCounterLoadable
-                switch refreshResult {
+                let resolvedLoadable: HomeCounterLoadable = switch refreshResult {
                 case .loaded:
-                    resolvedLoadable = .loaded(value: nextCounterValue(after: counterValue))
-                case .error(_, let reason):
-                    resolvedLoadable = .error(
+                    .loaded(value: nextCounterValue(after: counterValue))
+                case let .error(_, reason):
+                    .error(
                         previousValue: counterValue > 0 ? counterValue : nil,
-                        reason: reason
+                        reason: reason,
                     )
                 default:
-                    resolvedLoadable = refreshResult
+                    refreshResult
                 }
                 return makeSharedState(loadable: resolvedLoadable)
-            }
+            },
         )
     }
 
     static func makeSharedState(
-        loadable: HomeCounterLoadable
+        loadable: HomeCounterLoadable,
     ) -> HomeFeatureState {
         HomeFeatureState(
-            counterLoadable: makeSharedLoadable(loadable: loadable)
+            counterLoadable: makeSharedLoadable(loadable: loadable),
         )
     }
 
     static func expectedState(
-        loadable: HomeCounterLoadable
+        loadable: HomeCounterLoadable,
     ) -> HomeFeature.State {
         var state = HomeFeature.State()
         state.apply(
-            sharedState: makeSharedState(loadable: loadable)
+            sharedState: makeSharedState(loadable: loadable),
         )
         return state
     }
 
     static func makeSharedLoadable(
-        loadable: HomeCounterLoadable
+        loadable: HomeCounterLoadable,
     ) -> CounterLoadable {
         switch loadable {
         case .initial:
-            return CounterLoadableInitial.shared
+            CounterLoadableInitial.shared
         case let .loading(previousValue):
-            return CounterLoadableLoading(
-                previousValue: previousValue.map { KotlinInt(int: Int32($0)) }
+            CounterLoadableLoading(
+                previousValue: previousValue.map { KotlinInt(int: Int32($0)) },
             )
         case let .loaded(value):
-            return CounterLoadableLoaded(value: Int32(value))
+            CounterLoadableLoaded(value: Int32(value))
         case let .error(previousValue, reason):
-            return CounterLoadableError(
+            CounterLoadableError(
                 previousValue: previousValue.map { KotlinInt(int: Int32($0)) },
-                reason: makeSharedFailureReason(reason: reason)
+                reason: makeSharedFailureReason(reason: reason),
             )
         }
     }
 
     static func makeSharedFailureReason(
-        reason: HomeCounterLoadFailureReason
+        reason: HomeCounterLoadFailureReason,
     ) -> CounterLoadFailureReason {
         switch reason {
         case .repositoryUnavailable:
-            return CounterLoadFailureReasonRepositoryUnavailable.shared
+            CounterLoadFailureReasonRepositoryUnavailable.shared
         case .unexpected:
-            return CounterLoadFailureReasonUnexpected.shared
+            CounterLoadFailureReasonUnexpected.shared
         }
     }
 

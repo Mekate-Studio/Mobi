@@ -31,6 +31,17 @@ check_cmd() {
   fi
 }
 
+check_optional_cmd() {
+  local cmd="$1"
+  local label="${2:-$1}"
+
+  if command -v "${cmd}" >/dev/null 2>&1; then
+    pass "${label}: $(command -v "${cmd}")"
+  else
+    warn "${label}: not installed"
+  fi
+}
+
 print_emulator_help() {
   local emulator_cmd=""
   local found=0
@@ -148,6 +159,14 @@ else
 fi
 
 print_android_devices
+
+echo
+echo "Optional quality tools"
+check_optional_cmd ktlint "ktlint"
+check_optional_cmd detekt "detekt"
+check_optional_cmd swiftformat "SwiftFormat"
+check_optional_cmd swiftlint "SwiftLint"
+check_optional_cmd shellcheck "ShellCheck"
 
 echo
 if [[ "${status}" -eq 0 ]]; then

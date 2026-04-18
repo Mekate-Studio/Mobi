@@ -1,0 +1,14 @@
+included:
+  - ios-app/src
+  - ios-app/tests
+
+excluded:
+  - ios-app/src/Assets.xcassets
+  - ios-app/module.xcodeproj
+
+disabled_rules:
+  - line_length
+  - trailing_comma
+  - trailing_whitespace
+
+reporter: xcode

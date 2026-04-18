@@ -48,6 +48,7 @@ Run the main local smoke path:
 ./scripts/ci/run_job.sh android-test
 ./scripts/ci/run_job.sh ios-build-debug
 ./scripts/ci/run_job.sh ios-test
+./scripts/ci/run_job.sh quality-check
 ```
 
 That path is the fastest way to validate that a clean clone can exercise the
@@ -100,6 +101,23 @@ The main pattern is:
 
 That keeps the runtime and release mechanics close to the architecture instead
 of hiding them inside CI configuration alone.
+
+## Linting and Static Analysis
+
+The repository keeps quality checks behind repo-owned scripts instead of
+pushing tool orchestration into CI or the Gradle bridge.
+
+- `just format` applies Kotlin and Swift formatting
+- `just lint` verifies Kotlin, Swift, and shell quality checks
+- `just check` runs the current quality gate
+
+The current tool split is:
+
+- `ktlint` for Kotlin formatting checks and autofix
+- `detekt` for Kotlin static analysis
+- `SwiftFormat` for Swift formatting checks and autofix
+- `SwiftLint` for Swift linting
+- `ShellCheck` for repo-owned shell scripts
 
 ## Current Example Surface
 

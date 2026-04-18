@@ -8,6 +8,8 @@ One of the goals of this CI design is that the same job contract works locally.
 - Ruby and Bundler
 - Android SDK for Android jobs
 - Xcode with an installed iOS Simulator runtime for iOS jobs
+- `ktlint`, `detekt`, `SwiftFormat`, `SwiftLint`, and `ShellCheck` for the
+  quality commands
 
 Set a writable Amper cache before running build commands:
 
@@ -32,6 +34,9 @@ Recommended daily entry points:
 
 ```bash
 just doctor
+just format
+just lint
+just check
 just android-emulators
 just android-start <avd-name>
 just android-run
@@ -90,6 +95,15 @@ If you need to switch back temporarily for debugging, set
 `just doctor` checks the expected local toolchain and shows whether an Android
 device or emulator is already available for `just android-run`.
 
+`just format` applies Kotlin and Swift formatting through repo-owned scripts.
+
+`just lint` runs Kotlin formatting checks, Kotlin static analysis, Swift
+formatting checks, Swift linting, and `ShellCheck` for the repo-owned shell
+scripts.
+
+`just check` currently runs the same quality gate as `just lint`, which makes
+it the easiest single command to use locally and in CI.
+
 ## Shared job dispatcher
 
 The fastest way to exercise the same paths CI uses is through
@@ -99,6 +113,7 @@ The fastest way to exercise the same paths CI uses is through
 ./scripts/ci/run_job.sh android-build-debug
 ./scripts/ci/run_job.sh android-test
 ./scripts/ci/run_job.sh android-build-release
+./scripts/ci/run_job.sh quality-check
 ./scripts/ci/run_job.sh ios-build-debug
 ./scripts/ci/run_job.sh ios-test
 ./scripts/ci/run_job.sh ios-build-release
@@ -126,6 +141,7 @@ The repo also exposes common jobs through [`Justfile`](../../Justfile):
 ```bash
 just android-build-debug
 just android-test
+just check
 just ios-build-debug
 just ios-test
 just ios-build-release

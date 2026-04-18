@@ -17,13 +17,12 @@ sealed interface CounterLoadable {
     ) : CounterLoadable
 }
 
-fun CounterLoadable.currentValueOrNull(): Int? {
-    return when (this) {
+fun CounterLoadable.currentValueOrNull(): Int? =
+    when (this) {
         CounterLoadable.Initial -> null
         is CounterLoadable.Loading -> previousValue
         is CounterLoadable.Loaded -> value
         is CounterLoadable.Error -> previousValue
     }
-}
 
 fun CounterLoadable.currentValueForRefresh(): Int = currentValueOrNull() ?: 0

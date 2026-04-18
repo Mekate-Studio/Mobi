@@ -3,6 +3,15 @@ set shell := ["zsh", "-lic"]
 default:
   @just --list
 
+format:
+  ./scripts/dev/format.sh
+
+lint:
+  ./scripts/dev/lint.sh
+
+check:
+  ./scripts/dev/check.sh
+
 doctor:
   ./scripts/dev/doctor.sh
 

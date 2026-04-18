@@ -49,10 +49,12 @@ fun AppShell() {
                 }
             }
 
-            AppDestination.SharedComposeDemo -> SharedHomeScreen(
-                service = sharedGraph.homeFeatureService,
-                modifier = Modifier.padding(paddingValues),
-            )
+            AppDestination.SharedComposeDemo -> {
+                SharedHomeScreen(
+                    service = sharedGraph.homeFeatureService,
+                    modifier = Modifier.padding(paddingValues),
+                )
+            }
         }
     }
 }

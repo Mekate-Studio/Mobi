@@ -20,27 +20,19 @@ interface SharedApplicationGraph {
     }
 
     @Provides
-    fun provideCounterRepository(
-        repository: FakeCounterRepository,
-    ): CounterRepository = repository
+    fun provideCounterRepository(repository: FakeCounterRepository): CounterRepository = repository
 
     @Provides
-    fun provideCounterRequestFailurePolicy(
-        policy: RandomCounterRequestFailurePolicy,
-    ): CounterRequestFailurePolicy = policy
+    fun provideCounterRequestFailurePolicy(policy: RandomCounterRequestFailurePolicy): CounterRequestFailurePolicy =
+        policy
 }
 
 object SharedDependencies {
-    fun createGraph(): SharedApplicationGraph {
-        return createGraphFactory<SharedApplicationGraph.Factory>()
+    fun createGraph(): SharedApplicationGraph =
+        createGraphFactory<SharedApplicationGraph.Factory>()
             .create()
-    }
 
-    fun createDefaultGraph(): SharedApplicationGraph {
-        return createGraph()
-    }
+    fun createDefaultGraph(): SharedApplicationGraph = createGraph()
 
-    fun createDefaultHomeFeatureService(): HomeFeatureService {
-        return createDefaultGraph().homeFeatureService
-    }
+    fun createDefaultHomeFeatureService(): HomeFeatureService = createDefaultGraph().homeFeatureService
 }

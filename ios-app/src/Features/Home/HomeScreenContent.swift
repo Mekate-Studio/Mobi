@@ -16,7 +16,7 @@ struct HomeScreenContent: View {
                     Color(red: 0.87, green: 0.93, blue: 0.99),
                 ],
                 startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                endPoint: .bottomTrailing,
             )
             .ignoresSafeArea()
 
@@ -25,13 +25,13 @@ struct HomeScreenContent: View {
                     title: title,
                     message: message,
                     supportingText: supportingText,
-                    counterLoadable: counterLoadable
+                    counterLoadable: counterLoadable,
                 )
 
                 HomePrimaryActionButton(
                     title: primaryActionLabel,
                     isLoading: counterLoadable.isLoading,
-                    action: onRefreshTapped
+                    action: onRefreshTapped,
                 )
             }
             .padding(24)

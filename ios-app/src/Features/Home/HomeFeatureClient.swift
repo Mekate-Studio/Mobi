@@ -22,10 +22,10 @@ extension HomeFeatureClient {
                     return try await service.refresh(counterValue: Int32(counterValue))
                 } catch {
                     return service.unexpectedErrorState(
-                        counterValue: Int32(counterValue)
+                        counterValue: Int32(counterValue),
                     )
                 }
-            }
+            },
         )
     }
 }
@@ -34,19 +34,19 @@ extension HomeFeatureClient: DependencyKey {
     static let liveValue = HomeFeatureClient(
         initialState: {
             fatalError(
-                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root."
+                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root.",
             )
         },
         loadingState: { _ in
             fatalError(
-                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root."
+                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root.",
             )
         },
         refresh: { _ in
             fatalError(
-                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root."
+                "HomeFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root.",
             )
-        }
+        },
     )
 }
 

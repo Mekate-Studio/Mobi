@@ -16,6 +16,14 @@ fi
 shift || true
 
 case "${job_name}" in
+  quality-check)
+    ci_prepare_workspace
+    ci_set_java_home
+    ci_resolve_android_sdk_root || true
+    ci_configure_path
+    cd "${CI_PROJECT_DIR}"
+    ./scripts/dev/check.sh "$@"
+    ;;
   android-build-debug)
     export CI_ANDROID_SIGNING_MODE="${CI_ANDROID_SIGNING_MODE:-debug-smoke}"
     ci_prepare_android_job
@@ -89,6 +97,7 @@ case "${job_name}" in
     printf 'Unknown CI job: %s\n' "${job_name}" >&2
     printf 'Supported jobs:\n' >&2
     printf '  %s\n' \
+      quality-check \
       android-build-debug \
       android-build-release \
       android-test \

@@ -6,22 +6,16 @@ import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
 interface CounterRepository {
-    suspend fun fetchNextCounterValue(
-        currentCounterValue: Int,
-    ): Int
+    suspend fun fetchNextCounterValue(currentCounterValue: Int): Int
 }
 
 interface CounterRequestFailurePolicy {
-    fun shouldFail(
-        currentCounterValue: Int,
-    ): Boolean
+    fun shouldFail(currentCounterValue: Int): Boolean
 }
 
 @Inject
 class RandomCounterRequestFailurePolicy : CounterRequestFailurePolicy {
-    override fun shouldFail(
-        currentCounterValue: Int,
-    ): Boolean = Random.nextInt(100) < FAILURE_PERCENTAGE
+    override fun shouldFail(currentCounterValue: Int): Boolean = Random.nextInt(100) < FAILURE_PERCENTAGE
 
     internal companion object {
         const val FAILURE_PERCENTAGE = 35
@@ -40,9 +34,7 @@ class CounterRepositoryException(
 class FakeCounterRepository(
     private val failurePolicy: CounterRequestFailurePolicy,
 ) : CounterRepository {
-    override suspend fun fetchNextCounterValue(
-        currentCounterValue: Int,
-    ): Int {
+    override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int {
         delay(API_DELAY_MILLIS.milliseconds)
         if (failurePolicy.shouldFail(currentCounterValue)) {
             throw CounterRepositoryException()
@@ -53,9 +45,7 @@ class FakeCounterRepository(
     internal companion object {
         const val API_DELAY_MILLIS: Long = 150
 
-        fun nextFibonacciValueAfter(
-            currentCounterValue: Int,
-        ): Int {
+        fun nextFibonacciValueAfter(currentCounterValue: Int): Int {
             if (currentCounterValue < 1) return 1
 
             var previous = 0

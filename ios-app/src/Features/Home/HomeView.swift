@@ -12,7 +12,7 @@ struct HomeView: View {
                 supportingText: store.supportingText,
                 counterLoadable: store.counterLoadable,
                 primaryActionLabel: store.primaryActionLabel,
-                onRefreshTapped: refreshTapped
+                onRefreshTapped: refreshTapped,
             )
             .navigationTitle("Home")
         }

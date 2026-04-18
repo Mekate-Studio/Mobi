@@ -21,7 +21,7 @@ enum HomeCounterLoadable: Equatable {
         case let .error(error):
             self = .error(
                 previousValue: error.previousValue?.intValue,
-                reason: HomeCounterLoadFailureReason(sharedReason: error.reason)
+                reason: HomeCounterLoadFailureReason(sharedReason: error.reason),
             )
         }
     }
@@ -29,13 +29,13 @@ enum HomeCounterLoadable: Equatable {
     var currentValueForRefresh: Int {
         switch self {
         case .initial:
-            return 0
+            0
         case let .loading(previousValue):
-            return previousValue ?? 0
+            previousValue ?? 0
         case let .loaded(value):
-            return value
+            value
         case let .error(previousValue, _):
-            return previousValue ?? 0
+            previousValue ?? 0
         }
     }
 
@@ -99,9 +99,9 @@ enum HomeCounterLoadFailureReason: Equatable {
     var headlineText: String {
         switch self {
         case .repositoryUnavailable:
-            return "The fake repository failed to load the next fibonacci counter value."
+            "The fake repository failed to load the next fibonacci counter value."
         case .unexpected:
-            return "Something went wrong while loading the next fibonacci counter value."
+            "Something went wrong while loading the next fibonacci counter value."
         }
     }
 }

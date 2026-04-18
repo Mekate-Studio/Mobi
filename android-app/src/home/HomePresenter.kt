@@ -46,10 +46,9 @@ class HomePresenterFactory(
         screen: Screen,
         navigator: Navigator,
         context: CircuitContext,
-    ): Presenter<*>? {
-        return when (screen) {
+    ): Presenter<*>? =
+        when (screen) {
             HomeScreen -> HomePresenter(service)
             else -> null
         }
-    }
 }

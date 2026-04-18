@@ -25,7 +25,7 @@ struct HomeHeroCard: View {
         .background(
             RoundedRectangle(cornerRadius: 28, style: .continuous)
                 .fill(.ultraThinMaterial)
-                .shadow(color: Color.black.opacity(0.08), radius: 24, y: 12)
+                .shadow(color: Color.black.opacity(0.08), radius: 24, y: 12),
         )
     }
 }

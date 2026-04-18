@@ -16,15 +16,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import studio.mekate.mobi.feature.home.CounterLoadable
+import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.home.CounterLoadFailureReason
+import studio.mekate.mobi.feature.home.CounterLoadable
 import studio.mekate.mobi.feature.home.HomeFeatureEvent
-import studio.mekate.mobi.feature.home.HomeFeatureState
 import studio.mekate.mobi.feature.home.HomeFeatureService
+import studio.mekate.mobi.feature.home.HomeFeatureState
 import studio.mekate.mobi.feature.home.currentValueForRefresh
 
 @Composable
@@ -64,9 +64,10 @@ fun HomeContent(
 
     MaterialTheme {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(24.dp),
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -127,8 +128,8 @@ private fun HomeFeatureState.toContentCopy(): HomeContentCopy {
     )
 }
 
-private fun CounterLoadable.toSupportingText(): String {
-    return when (this) {
+private fun CounterLoadable.toSupportingText(): String =
+    when (this) {
         CounterLoadable.Initial -> {
             "Tap the action to load the next fibonacci counter value from the fake repository."
         }
@@ -152,10 +153,9 @@ private fun CounterLoadable.toSupportingText(): String {
             }
         }
     }
-}
 
-private fun CounterLoadFailureReason.headlineText(): String {
-    return when (this) {
+private fun CounterLoadFailureReason.headlineText(): String =
+    when (this) {
         CounterLoadFailureReason.RepositoryUnavailable -> {
             "The fake repository failed to load the next fibonacci counter value."
         }
@@ -164,18 +164,22 @@ private fun CounterLoadFailureReason.headlineText(): String {
             "Something went wrong while loading the next fibonacci counter value."
         }
     }
-}
 
-private fun CounterLoadable.toCounterValueText(): String {
-    return when (this) {
-        CounterLoadable.Initial -> "Counter value: Not loaded yet"
+private fun CounterLoadable.toCounterValueText(): String =
+    when (this) {
+        CounterLoadable.Initial -> {
+            "Counter value: Not loaded yet"
+        }
+
         is CounterLoadable.Loading -> {
             previousValue?.let { "Counter value: $it" } ?: "Counter value: Loading first result…"
         }
 
-        is CounterLoadable.Loaded -> "Counter value: $value"
+        is CounterLoadable.Loaded -> {
+            "Counter value: $value"
+        }
+
         is CounterLoadable.Error -> {
             previousValue?.let { "Counter value: $it" } ?: "Counter value: No value available"
         }
     }
-}

@@ -17,7 +17,7 @@ count_error_matches() {
   temp_matches="${TMPDIR:-/tmp}/amper-log-grep-count.$$"
 
   grep -E -n "${error_match_pattern}" "${log_file}" >"${temp_matches}" 2>/dev/null || true
-  grep -E -v "${known_d8_kotlin_metadata_pattern}|${known_debug_noise_pattern}" "${temp_matches}" 2>/dev/null | wc -l | tr -d ' ' || true
+  grep -E -c -v "${known_d8_kotlin_metadata_pattern}|${known_debug_noise_pattern}" "${temp_matches}" 2>/dev/null || true
   rm -f "${temp_matches}"
 }
 

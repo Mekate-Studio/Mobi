@@ -21,29 +21,23 @@ interface AndroidAppGraph {
     }
 
     @Provides
-    fun provideCounterRepository(
-        sharedApplicationGraph: SharedApplicationGraph,
-    ): CounterRepository {
-        return sharedApplicationGraph.counterRepository
-    }
+    fun provideCounterRepository(sharedApplicationGraph: SharedApplicationGraph): CounterRepository =
+        sharedApplicationGraph.counterRepository
 
     @Provides
     fun provideCircuit(
         homePresenterFactory: HomePresenterFactory,
         homeUiFactory: HomeUiFactory,
-    ): Circuit {
-        return Circuit.Builder()
+    ): Circuit =
+        Circuit
+            .Builder()
             .addPresenterFactory(homePresenterFactory)
             .addUiFactory(homeUiFactory)
             .build()
-    }
 }
 
 object AndroidDependencies {
-    fun createGraph(
-        sharedApplicationGraph: SharedApplicationGraph,
-    ): AndroidAppGraph {
-        return createGraphFactory<AndroidAppGraph.Factory>()
+    fun createGraph(sharedApplicationGraph: SharedApplicationGraph): AndroidAppGraph =
+        createGraphFactory<AndroidAppGraph.Factory>()
             .create(sharedApplicationGraph)
-    }
 }
