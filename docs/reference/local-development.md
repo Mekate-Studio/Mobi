@@ -104,6 +104,27 @@ scripts.
 `just check` currently runs the same quality gate as `just lint`, which makes
 it the easiest single command to use locally and in CI.
 
+## IntelliJ commit checks
+
+IntelliJ IDEA's `Analyze code` commit check runs the IDE inspection profile,
+not the repo-owned quality tools. To keep the commit workflow aligned with the
+project's established analysis path, use the versioned Git hook in
+[`/.githooks/pre-commit`](../../.githooks/pre-commit) instead.
+
+Activate the repo hooks once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Then in IntelliJ IDEA:
+
+- disable the `Analyze code` commit check
+- enable `Run Git hooks`
+
+That makes IDE commits run the same repo-owned lint gate used elsewhere in the
+repository instead of a separate IDE-only inspection profile.
+
 ## Shared job dispatcher
 
 The fastest way to exercise the same paths CI uses is through
