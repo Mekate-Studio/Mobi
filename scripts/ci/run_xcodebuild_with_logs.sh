@@ -24,13 +24,9 @@ echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-gradle}"
 echo "Using GRADLE_USER_HOME=${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
 echo "Using SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
 
-if [[ -n "${SKIP_MACRO_VALIDATION:-}" ]]; then
-  skip_macro_validation="${SKIP_MACRO_VALIDATION}"
-elif [[ -n "${GITHUB_ACTIONS:-}" ]]; then
-  skip_macro_validation="YES"
-else
-  skip_macro_validation="NO"
-fi
+# shellcheck source=./lib/xcode.sh
+source "${project_root}/scripts/ci/lib/xcode.sh"
+skip_macro_validation="$(ci_resolve_skip_macro_validation)"
 
 echo "Using SKIP_MACRO_VALIDATION=${skip_macro_validation}"
 

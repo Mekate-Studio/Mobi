@@ -3,6 +3,8 @@
 set -euo pipefail
 
 project_root="$(cd "$(dirname "$0")/../.." && pwd)"
+# shellcheck source=./lib/android_generated_gradle.sh
+source "${project_root}/scripts/ci/lib/android_generated_gradle.sh"
 generated_gradle_project="${project_root}/build/tasks/_android-app_buildAndroidRelease/gradle-project"
 release_bundle_pattern='*/outputs/bundle/release/*.aab'
 
@@ -14,7 +16,9 @@ resolve_gradle_bin() {
     return 0
   fi
 
-  gradle_bin="$(find "${HOME}/.gradle/wrapper/dists/gradle-8.14.3-bin" -path '*/gradle-8.14.3/bin/gradle' -type f 2>/dev/null | head -n 1 || true)"
+  local wrapper_root="${GRADLE_USER_HOME:-${HOME}/.gradle}/wrapper/dists/gradle-${android_generated_gradle_version}-${android_generated_gradle_distribution_type}"
+
+  gradle_bin="$(find "${wrapper_root}" -path "*/gradle-${android_generated_gradle_version}/bin/gradle" -type f 2>/dev/null | head -n 1 || true)"
   if [[ -n "${gradle_bin}" ]]; then
     printf '%s\n' "${gradle_bin}"
     return 0
