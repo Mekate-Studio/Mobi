@@ -7,8 +7,8 @@ import Testing
 @Suite("HomeFeature")
 struct HomeFeatureTests {
     @MainActor
-    @Test
-    func `should have initial shared state when task is sent`() async {
+    @Test("should have initial shared state when task is sent")
+    func shouldHaveInitialSharedStateWhenTaskIsSent() async {
         // given
         let store = HomeFeatureTestFactory.makeStore()
 
@@ -20,8 +20,8 @@ struct HomeFeatureTests {
     }
 
     @MainActor
-    @Test
-    func `should have refreshed shared state when repository load completes after refresh action is sent`() async {
+    @Test("should have refreshed shared state when repository load completes after refresh action is sent")
+    func shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent() async {
         // given
         let store = HomeFeatureTestFactory.makeStore()
 
@@ -41,8 +41,8 @@ struct HomeFeatureTests {
     }
 
     @MainActor
-    @Test
-    func `should have error shared state when repository load fails after refresh action is sent`() async {
+    @Test("should have error shared state when repository load fails after refresh action is sent")
+    func shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent() async {
         // given
         let store = HomeFeatureTestFactory.makeStore(
             refreshResult: .error(
