@@ -64,6 +64,7 @@ If you are approaching this repo as a reader first, these are the most useful
 entry points:
 
 - [Mobile Architecture](docs/reference/mobile-architecture.md)
+- [Platform Direction](docs/reference/platform-direction.md)
 - [Architecture Decisions](docs/adr/README.md)
 - [How To Add A Feature](docs/reference/how-to-add-a-feature.md)
 - [Local Development](docs/reference/local-development.md)
