@@ -1,11 +1,4 @@
-## Purpose
-
-Define the first narrow mobile discovery capability for the car-sharing
-platform: a rider can open a nearby vehicle map, see their location context,
-and view a refreshable rider-centered map snapshot of nearby vehicles under
-realistic loading and failure conditions.
-
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Show rider position on the nearby vehicle map
 
@@ -137,7 +130,7 @@ initial load while the nearby vehicle map remains visible.
 - **WHEN** a refresh is in progress
 - **THEN** the previous snapshot remains visible until the new snapshot is
   ready
-  - **AND** the app indicates that refresh is in progress
+- **AND** the app indicates that refresh is in progress
 
 ### Requirement: Preserve the last successful snapshot within a bounded stale window
 
