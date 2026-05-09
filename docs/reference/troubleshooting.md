@@ -30,10 +30,12 @@ Fix:
 - run Android jobs through [`scripts/ci/run_job.sh`](../../scripts/ci/run_job.sh)
 - keep `AMPER_USER_HOME` on a workspace-owned path, such as
   `$PWD/.amper-user-home`
+- do not restore Amper's `.m2.cache` from GitHub Actions cache
 
 The shared CI layer sets `AMPER_USER_HOME`, `AMPER_TMP_DIR`, and
-`AMPER_JAVA_OPTIONS` so Amper does not depend on partially restored or
-runner-owned cache state.
+`AMPER_JAVA_OPTIONS`, and Android job prep clears Amper's `.m2.cache` before
+dependency resolution so Amper does not depend on partially restored cache
+state.
 
 ## Android SDK is not detected
 
