@@ -11,8 +11,6 @@
 #
 
 require "shellwords"
-require "fileutils"
-require "tmpdir"
 
 default_platform(:android)
 
@@ -28,48 +26,8 @@ def amper_cache_dir
   ENV["AMPER_BOOTSTRAP_CACHE_DIR"] || File.join(project_root, ".amper-cache")
 end
 
-def amper_user_home
-  ENV["AMPER_USER_HOME"] || File.join(project_root, ".amper-user-home")
-end
-
-def amper_maven_cache
-  File.join(amper_user_home, "Library", "Caches", "JetBrains", "Amper", ".m2.cache")
-end
-
-def kotlin_compat_version
-  ENV.fetch("KOTLIN_STDLIB_COMPAT_VERSION", "2.3.20")
-end
-
-def ensure_empty_jar!(path)
-  return if File.exist?(path)
-
-  Dir.mktmpdir("mobi-empty-jar") do |dir|
-    manifest_dir = File.join(dir, "META-INF")
-    FileUtils.mkdir_p(manifest_dir)
-    File.write(File.join(manifest_dir, "MANIFEST.MF"), "Manifest-Version: 1.0\n")
-    sh("cd #{Shellwords.escape(dir)} && jar cf #{Shellwords.escape(path)} META-INF")
-  end
-end
-
-def ensure_kotlin_compat_jar!(artifact)
-  version = kotlin_compat_version
-  artifact_dir = File.join(amper_maven_cache, "org", "jetbrains", "kotlin", artifact, version)
-  jar_path = File.join(artifact_dir, "#{artifact}-#{version}.jar")
-
-  FileUtils.mkdir_p(artifact_dir)
-  ensure_empty_jar!(jar_path)
-end
-
-def ensure_kotlin_compat_jars!
-  # These Kotlin artifacts are compatibility-only jars, but Amper currently
-  # still passes their resolved paths to the generated Android bridge.
-  ensure_kotlin_compat_jar!("kotlin-stdlib-jdk7")
-  ensure_kotlin_compat_jar!("kotlin-stdlib-jdk8")
-end
-
 def amper!(command)
-  ensure_kotlin_compat_jars!
-  sh("cd '#{project_root}' && AMPER_BOOTSTRAP_CACHE_DIR='#{amper_cache_dir}' '#{amper_path}' #{command}")
+  sh("cd '#{project_root}' && AMPER_BOOTSTRAP_CACHE_DIR='#{amper_cache_dir}' ./scripts/ci/run_amper_with_logs.sh #{command}")
 end
 
 def latest_android_artifact!(pattern: "build/**/*.{apk,aab}")
