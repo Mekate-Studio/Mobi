@@ -12,10 +12,34 @@ max_attempts="${AMPER_MISSING_ARTIFACT_RETRIES:-20}"
 log_dir="${project_root}/build/logs"
 mkdir -p "${log_dir}"
 
-extract_missing_dependency_path() {
+extract_missing_dependency_path_from_file() {
   local log_path="${1:?log path required}"
 
   sed -n "s/.*File '\([^']*\)' was returned from dependency resolution, but is missing on disk.*/\1/p" "${log_path}" | head -n 1
+}
+
+find_missing_dependency_path() {
+  local attempt_log="${1:?attempt log path required}"
+  local missing_path=""
+  local log_file=""
+
+  missing_path="$(extract_missing_dependency_path_from_file "${attempt_log}")"
+  if [[ -n "${missing_path}" ]]; then
+    printf '%s\n' "${missing_path}"
+    return 0
+  fi
+
+  while IFS= read -r log_file; do
+    missing_path="$(extract_missing_dependency_path_from_file "${log_file}")"
+    if [[ -n "${missing_path}" ]]; then
+      printf '%s\n' "${missing_path}"
+      return 0
+    fi
+  done < <(
+    find "${log_dir}" -type f \( -name 'info.log' -o -name 'debug.log' \) -print0 2>/dev/null \
+      | xargs -0 ls -t 2>/dev/null \
+      | head -n 40
+  )
 }
 
 create_placeholder_archive() {
@@ -34,7 +58,7 @@ create_placeholder_archive() {
   rm -rf "${temp_dir}"
 }
 
-materialize_missing_dependency() {
+materialize_artifact_path() {
   local artifact_path="${1:?artifact path required}"
   local maven_relative_path=""
   local artifact_url=""
@@ -79,9 +103,41 @@ materialize_missing_dependency() {
   esac
 }
 
+materialize_missing_dependency() {
+  local artifact_path="${1:?artifact path required}"
+  local artifact_dir=""
+  local artifact_file=""
+  local sibling_file=""
+
+  materialize_artifact_path "${artifact_path}"
+
+  artifact_dir="$(dirname "${artifact_path}")"
+  artifact_file="$(basename "${artifact_path}")"
+
+  case "${artifact_file}" in
+    *-cinterop-interop.klib)
+      sibling_file="${artifact_file%-cinterop-interop.klib}.klib"
+      ;;
+    *.klib)
+      sibling_file="${artifact_file%.klib}-cinterop-interop.klib"
+      ;;
+    *)
+      sibling_file=""
+      ;;
+  esac
+
+  if [[ -n "${sibling_file}" && ! -f "${artifact_dir}/${sibling_file}" ]]; then
+    echo "Materializing related Amper KLIB artifact:"
+    echo "  ${artifact_dir}/${sibling_file}"
+    materialize_artifact_path "${artifact_dir}/${sibling_file}"
+  fi
+}
+
 attempt=1
 while true; do
   attempt_log="${log_dir}/amper-command-attempt-${attempt}-$$.log"
+
+  echo "Running Amper attempt ${attempt}/${max_attempts}: ./amper $*"
 
   set +e
   ./amper "$@" 2>&1 | tee "${attempt_log}"
@@ -92,7 +148,7 @@ while true; do
     exit 0
   fi
 
-  missing_path="$(extract_missing_dependency_path "${attempt_log}")"
+  missing_path="$(find_missing_dependency_path "${attempt_log}")"
   if [[ -z "${missing_path}" || "${attempt}" -ge "${max_attempts}" ]]; then
     break
   fi
