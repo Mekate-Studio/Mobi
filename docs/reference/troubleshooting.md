@@ -33,9 +33,10 @@ Fix:
 - do not restore Amper's `.m2.cache` from GitHub Actions cache
 
 The shared CI layer sets `AMPER_USER_HOME`, `AMPER_TMP_DIR`, and
-`AMPER_JAVA_OPTIONS`, and Android job prep clears Amper's `.m2.cache` before
-dependency resolution so Amper does not depend on partially restored cache
-state.
+`AMPER_JAVA_OPTIONS`. The Android Fastlane wrapper also preflights the tiny
+Kotlin JDK7/JDK8 compatibility jars before calling Amper, because Amper can
+resolve those paths even when the final `2.3.20` companion jars are absent from
+the resolver cache.
 
 ## Android SDK is not detected
 

@@ -2,19 +2,9 @@
 
 set -euo pipefail
 
-ci_reset_android_amper_maven_cache() {
-  local amper_maven_cache="${AMPER_USER_HOME:?}/Library/Caches/JetBrains/Amper/.m2.cache"
-
-  if [[ -d "${amper_maven_cache}" ]]; then
-    ci_log "Clearing Amper Maven cache for Android dependency resolution"
-    rm -rf "${amper_maven_cache}"
-  fi
-}
-
 ci_prepare_android_job() {
   ci_detect_context
   ci_prepare_workspace
-  ci_reset_android_amper_maven_cache
   ci_set_java_home
   ci_resolve_android_sdk_root || true
   ci_bundle_install
