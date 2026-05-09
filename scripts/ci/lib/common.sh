@@ -18,7 +18,14 @@ ci_require_cmd() {
 }
 
 ci_prepare_workspace() {
-  mkdir -p "${AMPER_BOOTSTRAP_CACHE_DIR}"
+  export AMPER_USER_HOME="${AMPER_USER_HOME:-${CI_PROJECT_DIR}/.amper-user-home}"
+  export AMPER_TMP_DIR="${AMPER_TMP_DIR:-${CI_PROJECT_DIR}/build/tmp/amper}"
+  export AMPER_JAVA_OPTIONS="${AMPER_JAVA_OPTIONS:+${AMPER_JAVA_OPTIONS} }-Duser.home=${AMPER_USER_HOME} -Djava.io.tmpdir=${AMPER_TMP_DIR}"
+
+  mkdir -p \
+    "${AMPER_BOOTSTRAP_CACHE_DIR}" \
+    "${AMPER_USER_HOME}/Library/Caches/JetBrains/Amper/telemetry" \
+    "${AMPER_TMP_DIR}"
   chmod +x "${CI_PROJECT_DIR}/amper" "${CI_PROJECT_DIR}"/scripts/ci/*.sh
 }
 

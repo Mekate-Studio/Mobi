@@ -3,6 +3,7 @@
 /gradle-bridge/.gradle/
 /.amper/
 /.amper-cache/
+/.amper-user-home/
 /build/
 /gradle-bridge/build/
 /gradle-bridge/shared-kit/build/

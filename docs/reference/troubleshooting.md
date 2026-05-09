@@ -17,6 +17,24 @@ export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
 The shared CI layer already defaults this to a writable project-local path in
 [`scripts/ci/lib.sh`](../../scripts/ci/lib.sh).
 
+## Amper dependency resolution returns a missing file
+
+Symptom:
+
+- Android CI fails during `resolveDependenciesAndroid`
+- the error says a file under `Library/Caches/JetBrains/Amper/.m2.cache` was
+  returned from dependency resolution but is missing on disk
+
+Fix:
+
+- run Android jobs through [`scripts/ci/run_job.sh`](../../scripts/ci/run_job.sh)
+- keep `AMPER_USER_HOME` on a workspace-owned path, such as
+  `$PWD/.amper-user-home`
+
+The shared CI layer sets `AMPER_USER_HOME`, `AMPER_TMP_DIR`, and
+`AMPER_JAVA_OPTIONS` so Amper does not depend on partially restored or
+runner-owned cache state.
+
 ## Android SDK is not detected
 
 Symptom:

@@ -41,6 +41,7 @@ jobs:
         with:
           path: |
             .amper-cache
+            .amper-user-home
             .gradle-user-home
           key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
           restore-keys: |
@@ -98,6 +99,7 @@ jobs:
         with:
           path: |
             .amper-cache
+            .amper-user-home
             .gradle-user-home
           key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
           restore-keys: |
@@ -133,6 +135,7 @@ jobs:
         with:
           path: |
             .amper-cache
+            .amper-user-home
             .gradle-user-home
           key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
           restore-keys: |
@@ -169,6 +172,7 @@ jobs:
         with:
           path: |
             .amper-cache
+            .amper-user-home
             .gradle-user-home
           key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
           restore-keys: |
