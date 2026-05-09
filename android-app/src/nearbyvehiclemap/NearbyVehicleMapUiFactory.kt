@@ -1,0 +1,282 @@
+package studio.mekate.mobi.nearbyvehiclemap
+
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.slack.circuit.runtime.CircuitContext
+import com.slack.circuit.runtime.screen.Screen
+import com.slack.circuit.runtime.ui.Ui
+import com.slack.circuit.runtime.ui.ui
+import dev.zacsweers.metro.Inject
+import studio.mekate.mobi.core.NearbyVehicle
+import studio.mekate.mobi.core.RiderLocation
+
+@Inject
+class NearbyVehicleMapUiFactory : Ui.Factory {
+    override fun create(
+        screen: Screen,
+        context: CircuitContext,
+    ): Ui<*>? =
+        when (screen) {
+            NearbyVehicleMapScreen -> {
+                ui<NearbyVehicleMapScreenState> { state, modifier ->
+                    NearbyVehicleMapContent(
+                        state = state,
+                        modifier = modifier,
+                    )
+                }
+            }
+
+            else -> {
+                null
+            }
+        }
+}
+
+@Composable
+private fun NearbyVehicleMapContent(
+    state: NearbyVehicleMapScreenState,
+    modifier: Modifier = Modifier,
+) {
+    val presentation = state.featureState.toNearbyVehicleMapPresentation()
+    val permissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                state.eventSink(NearbyVehicleMapScreenEvent.LocationPermissionGranted)
+            } else {
+                state.eventSink(NearbyVehicleMapScreenEvent.LocationPermissionDenied)
+            }
+        }
+
+    MaterialTheme {
+        Column(
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = presentation.title,
+                style = MaterialTheme.typography.headlineMedium,
+            )
+            Text(
+                text = presentation.message,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            NearbyVehicleCoordinateMap(
+                riderLocation = presentation.riderLocation,
+                vehicles = presentation.vehicles,
+                overlay = presentation.overlay,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+            )
+            NearbyVehicleMapActions(
+                presentation = presentation,
+                onPermissionRequested = {
+                    permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                },
+                onRefreshRequested = {
+                    state.eventSink(
+                        NearbyVehicleMapScreenEvent.ManualRefreshRequested(
+                            nowMillis = System.currentTimeMillis(),
+                        ),
+                    )
+                },
+                onLocationLossRequested = {
+                    state.eventSink(NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable)
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun NearbyVehicleMapActions(
+    presentation: NearbyVehicleMapPresentation,
+    onPermissionRequested: () -> Unit,
+    onRefreshRequested: () -> Unit,
+    onLocationLossRequested: () -> Unit,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Button(onClick = onPermissionRequested) {
+            Text("Use rider location")
+        }
+        OutlinedButton(
+            enabled = presentation.canRequestRefresh,
+            onClick = onRefreshRequested,
+        ) {
+            Text(presentation.primaryActionLabel)
+        }
+    }
+    OutlinedButton(onClick = onLocationLossRequested) {
+        Text("Simulate temporary location loss")
+    }
+}
+
+@Composable
+private fun NearbyVehicleCoordinateMap(
+    riderLocation: RiderLocation?,
+    vehicles: List<NearbyVehicle>,
+    overlay: NearbyVehicleMapOverlayPresentation,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(28.dp),
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFEAF3ED)),
+        ) {
+            CoordinateMapCanvas(
+                riderLocation = riderLocation,
+                vehicles = vehicles,
+            )
+            CoordinateMapHeader()
+            CoordinateMapOverlay(overlay = overlay)
+            WaitingForRiderLocationLabel(riderLocation = riderLocation)
+            CoordinateMapLegend()
+        }
+    }
+}
+
+@Composable
+private fun CoordinateMapCanvas(
+    riderLocation: RiderLocation?,
+    vehicles: List<NearbyVehicle>,
+) {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        drawCoordinateGrid()
+        if (riderLocation != null) {
+            val center = Offset(size.width / 2f, size.height / 2f)
+            drawRiderMarker(center = center)
+            vehicles.forEach { vehicle ->
+                drawVehicleMarker(
+                    vehicle = vehicle,
+                    riderLocation = riderLocation,
+                    center = center,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CoordinateMapHeader() {
+    Column(
+        modifier =
+            Modifier
+                .padding(18.dp),
+    ) {
+        Text(
+            text = "Rider-centered coordinate map",
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "No SDK key required; markers are projected from shared lat/lon state.",
+            style = MaterialTheme.typography.bodySmall,
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.CoordinateMapOverlay(overlay: NearbyVehicleMapOverlayPresentation) {
+    if (overlay.headline != null && overlay.message != null) {
+        Column(
+            modifier =
+                Modifier
+                    .align(if (overlay.blocksMap) Alignment.Center else Alignment.BottomCenter)
+                    .padding(18.dp)
+                    .background(
+                        color = if (overlay.blocksMap) Color(0xEE2E241C) else Color(0xEEFFF8E8),
+                        shape = RoundedCornerShape(18.dp),
+                    ).padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = overlay.headline,
+                color = if (overlay.blocksMap) Color.White else Color(0xFF5F3B00),
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Text(
+                text = overlay.message,
+                color = if (overlay.blocksMap) Color.White else Color(0xFF5F3B00),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.WaitingForRiderLocationLabel(riderLocation: RiderLocation?) {
+    if (riderLocation == null) {
+        Text(
+            text = "Waiting for rider position",
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .background(Color(0xDDFFFFFF), RoundedCornerShape(20.dp))
+                    .padding(18.dp),
+            style = MaterialTheme.typography.titleMedium,
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.CoordinateMapLegend() {
+    Row(
+        modifier =
+            Modifier
+                .align(Alignment.BottomStart)
+                .padding(18.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        LegendDot(color = Color(0xFF0E5F41))
+        Text("Rider")
+        LegendDot(color = Color(0xFFD97A35))
+        Text("Vehicle")
+    }
+}
+
+@Composable
+private fun LegendDot(color: Color) {
+    Box(
+        modifier =
+            Modifier
+                .size(12.dp)
+                .background(color, RoundedCornerShape(6.dp)),
+    )
+}

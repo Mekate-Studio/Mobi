@@ -122,14 +122,17 @@ The current tool split is:
 
 ## Current Example Surface
 
-The current sample app exposes two visible home flows on both platforms:
+The current sample app exposes three visible flows on both platforms:
 
 - `Native Home`: a native shell consuming shared feature state
-- `Shared UI`: a shared Compose screen consuming the same feature state
+- `Nearby Map`: a lightweight native coordinate map consuming shared map state
+- `Shared UI`: a shared Compose screen consuming the same home feature state
 
-The shared feature includes an asynchronous repository seam so both native
-shells and the shared UI can exercise the same loading, success, and failure
-states.
+The home feature includes an asynchronous repository seam so both native shells
+and the shared UI can exercise the same loading, success, and failure states.
+The nearby map feature keeps map product rules in shared Kotlin while Android
+and iOS draw a functional rider-centered coordinate map without requiring an
+external map SDK or API key.
 
 ## Contributing And Support
 

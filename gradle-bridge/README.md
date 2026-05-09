@@ -58,6 +58,7 @@ Android's existing Amper behavior.
 
 - [`../shared-core`](../shared-core)
 - [`../shared-feature-home`](../shared-feature-home)
+- [`../shared-feature-nearby-vehicle-map`](../shared-feature-nearby-vehicle-map)
 - [`../shared-ui-home`](../shared-ui-home)
 
 Do not create a second Kotlin source tree under this folder.

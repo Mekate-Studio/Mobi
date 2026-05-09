@@ -42,7 +42,7 @@ class FakeCounterRepository(
         return nextFibonacciValueAfter(currentCounterValue)
     }
 
-    internal companion object {
+    companion object {
         const val API_DELAY_MILLIS: Long = 150
 
         fun nextFibonacciValueAfter(currentCounterValue: Int): Int {

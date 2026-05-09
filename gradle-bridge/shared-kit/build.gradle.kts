@@ -42,6 +42,7 @@ kotlin {
             kotlin.srcDirs(
                 "../../shared-core/src",
                 "../../shared-feature-home/src",
+                "../../shared-feature-nearby-vehicle-map/src",
                 "../../shared-di/src",
                 "../../shared-ui-home/src",
             )
@@ -55,6 +56,7 @@ kotlin {
             kotlin.srcDirs(
                 "../../shared-core/test",
                 "../../shared-feature-home/test",
+                "../../shared-feature-nearby-vehicle-map/test",
                 "../../shared-di/test",
             )
         }

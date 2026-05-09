@@ -3,6 +3,7 @@ product:
 
 dependencies:
   - ../shared-feature-home
+  - ../shared-feature-nearby-vehicle-map
   - ../shared-ui-home
 
 settings:

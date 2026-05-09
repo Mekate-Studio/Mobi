@@ -1,0 +1,299 @@
+@testable import app
+import ComposableArchitecture
+import Foundation
+@preconcurrency import KotlinModules
+import Testing
+
+@Suite("NearbyVehicleMapFeature")
+struct NearbyVehicleMapFeatureTests {
+    @MainActor
+    @Test("should have resolving rider location when task is sent")
+    func shouldHaveResolvingRiderLocationWhenTaskIsSent() async {
+        // given
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore()
+
+        // when
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+
+        // then
+        #expect(store.state.message == "Grant while-in-use location access to center discovery around the rider.")
+        #expect(store.state.overlay == .none)
+    }
+
+    @MainActor
+    @Test("should wire denied permission into blocking overlay")
+    func shouldWireDeniedPermissionIntoBlockingOverlay() async {
+        // given
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore()
+
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+
+        // when
+        await store.send(.locationPermissionResponse(.denied)) {
+            $0 = NearbyVehicleMapFeatureTestFactory.deniedState()
+        }
+
+        // then
+        #expect(store.state.overlay == .blockingFailure)
+        #expect(store.state.canRequestRefresh == false)
+    }
+
+    @MainActor
+    @Test("should load rider centered snapshot after permission is granted")
+    func shouldLoadRiderCenteredSnapshotAfterPermissionIsGranted() async {
+        // given
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore()
+
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+
+        await store.send(.locationPermissionResponse(.granted)) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
+        }
+
+        // when / then
+        await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState())) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadedState()
+        }
+    }
+
+    @MainActor
+    @Test("should request visible refresh when refresh is due")
+    func shouldRequestVisibleRefreshWhenRefreshIsDue() async {
+        // given
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore()
+
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+        await store.send(.locationPermissionResponse(.granted)) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
+        }
+        await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState())) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadedState()
+        }
+
+        // when
+        await store.send(.visibleRefreshDue(nowMillis: 11000)) {
+            $0 = NearbyVehicleMapFeatureTestFactory.refreshingState()
+        }
+
+        // then
+        await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2))) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2)
+        }
+    }
+
+    @MainActor
+    @Test("should keep last rider location when live location becomes temporarily unavailable")
+    func shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable() async {
+        // given
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore()
+
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+        await store.send(.locationPermissionResponse(.granted)) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
+        }
+        await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState())) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadedState()
+        }
+
+        // when
+        await store.send(.locationPermissionResponse(.temporarilyUnavailable)) {
+            $0 = NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState()
+        }
+
+        // then
+        #expect(store.state.riderLocation?.latitude == 55.6761)
+        #expect(store.state.riderLocation?.longitude == 12.5683)
+    }
+}
+
+private enum NearbyVehicleMapFeatureTestFactory {
+    @MainActor
+    static func makeStore() -> TestStore<NearbyVehicleMapFeature.State, NearbyVehicleMapFeature.Action> {
+        TestStore(initialState: NearbyVehicleMapFeature.State()) {
+            NearbyVehicleMapFeature()
+        } withDependencies: {
+            $0.nearbyVehicleMapFeatureClient = makeClient()
+        }
+    }
+
+    static func makeClient() -> NearbyVehicleMapFeatureClient {
+        NearbyVehicleMapFeatureClient(
+            initialState: {
+                makeSharedState(
+                    riderLocationState: RiderLocationStateResolving.shared,
+                    snapshotState: NearbyVehicleSnapshotStateInitial.shared,
+                    overlayState: NearbyVehicleMapOverlayStateNone.shared,
+                )
+            },
+            permissionGrantedState: { currentState in
+                makeSharedState(
+                    riderLocationState: RiderLocationStateAvailable(location: riderLocation()),
+                    snapshotState: currentState.snapshotState,
+                    overlayState: currentState.mapOverlayState,
+                )
+            },
+            permissionDeniedState: { _ in
+                deniedSharedState()
+            },
+            locationTemporarilyUnavailableState: { currentState in
+                makeSharedState(
+                    riderLocationState: RiderLocationStateTemporarilyUnavailable(lastResolvedLocation: riderLocation()),
+                    snapshotState: currentState.snapshotState,
+                    overlayState: currentState.mapOverlayState,
+                )
+            },
+            loadingState: { currentState in
+                let snapshot = currentSnapshot(from: currentState.snapshotState)
+                return makeSharedState(
+                    riderLocationState: currentState.riderLocationState,
+                    snapshotState: snapshot
+                        .map { NearbyVehicleSnapshotStateRefreshing(snapshot: $0) } ?? NearbyVehicleSnapshotStateLoading
+                        .shared,
+                    overlayState: snapshot == nil ? NearbyVehicleMapOverlayStateNone
+                        .shared : NearbyVehicleMapOverlayStateRefreshingIndicator.shared,
+                )
+            },
+            refresh: { currentState, _ in
+                await Task.yield()
+                let sequence = currentSnapshot(from: currentState.snapshotState).map { $0.sequence + 1 } ?? 1
+                return loadedSharedState(sequence: sequence)
+            },
+            shouldRefresh: { currentState, nowMillis in
+                guard let snapshot = currentSnapshot(from: currentState.snapshotState) else { return false }
+                return nowMillis - snapshot.loadedAtMillis >= 10000
+            },
+        )
+    }
+
+    static func initialState() -> NearbyVehicleMapFeature.State {
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(
+            sharedState: makeSharedState(
+                riderLocationState: RiderLocationStateResolving.shared,
+                snapshotState: NearbyVehicleSnapshotStateInitial.shared,
+                overlayState: NearbyVehicleMapOverlayStateNone.shared,
+            ),
+        )
+        return state
+    }
+
+    static func loadingState() -> NearbyVehicleMapFeature.State {
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(
+            sharedState: makeSharedState(
+                riderLocationState: RiderLocationStateAvailable(location: riderLocation()),
+                snapshotState: NearbyVehicleSnapshotStateLoading.shared,
+                overlayState: NearbyVehicleMapOverlayStateNone.shared,
+            ),
+        )
+        return state
+    }
+
+    static func refreshingState() -> NearbyVehicleMapFeature.State {
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(
+            sharedState: makeSharedState(
+                riderLocationState: RiderLocationStateAvailable(location: riderLocation()),
+                snapshotState: NearbyVehicleSnapshotStateRefreshing(snapshot: snapshot()),
+                overlayState: NearbyVehicleMapOverlayStateRefreshingIndicator.shared,
+            ),
+        )
+        return state
+    }
+
+    static func loadedState(sequence: Int64 = 1) -> NearbyVehicleMapFeature.State {
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(sharedState: loadedSharedState(sequence: sequence))
+        return state
+    }
+
+    static func deniedState() -> NearbyVehicleMapFeature.State {
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(sharedState: deniedSharedState())
+        return state
+    }
+
+    static func temporarilyUnavailableState() -> NearbyVehicleMapFeature.State {
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(
+            sharedState: makeSharedState(
+                riderLocationState: RiderLocationStateTemporarilyUnavailable(lastResolvedLocation: riderLocation()),
+                snapshotState: NearbyVehicleSnapshotStateLoaded(snapshot: snapshot()),
+                overlayState: NearbyVehicleMapOverlayStateNone.shared,
+            ),
+        )
+        return state
+    }
+
+    static func loadedSharedState(sequence: Int64 = 1) -> NearbyVehicleMapFeatureState {
+        makeSharedState(
+            riderLocationState: RiderLocationStateAvailable(location: riderLocation()),
+            snapshotState: NearbyVehicleSnapshotStateLoaded(snapshot: snapshot(sequence: sequence)),
+            overlayState: NearbyVehicleMapOverlayStateNone.shared,
+        )
+    }
+
+    static func deniedSharedState() -> NearbyVehicleMapFeatureState {
+        makeSharedState(
+            riderLocationState: RiderLocationStateDenied.shared,
+            snapshotState: NearbyVehicleSnapshotStateFailed(
+                previousSnapshot: nil,
+                reason: NearbyVehicleMapFailureReason.riderLocationUnavailable,
+            ),
+            overlayState: NearbyVehicleMapOverlayStateBlockingFailure.shared,
+        )
+    }
+
+    static func makeSharedState(
+        riderLocationState: RiderLocationState,
+        snapshotState: NearbyVehicleSnapshotState,
+        overlayState: NearbyVehicleMapOverlayState,
+    ) -> NearbyVehicleMapFeatureState {
+        NearbyVehicleMapFeatureState(
+            riderLocationState: riderLocationState,
+            snapshotState: snapshotState,
+            mapOverlayState: overlayState,
+        )
+    }
+
+    static func currentSnapshot(from state: NearbyVehicleSnapshotState) -> FleetSnapshot? {
+        switch onEnum(of: state) {
+        case .initial, .loading:
+            nil
+        case let .loaded(state):
+            state.snapshot
+        case let .refreshing(state):
+            state.snapshot
+        case let .failed(state):
+            state.previousSnapshot
+        }
+    }
+
+    static func snapshot(sequence: Int64 = 1) -> FleetSnapshot {
+        FleetSnapshot(
+            sequence: sequence,
+            riderLocation: riderLocation(),
+            vehicles: [
+                NearbyVehicle(
+                    id: "mobi-ios-001",
+                    location: VehicleLocation(latitude: 55.6764, longitude: 12.5687),
+                ),
+            ],
+            loadedAtMillis: 1000,
+        )
+    }
+
+    static func riderLocation() -> RiderLocation {
+        RiderLocation(latitude: 55.6761, longitude: 12.5683)
+    }
+}

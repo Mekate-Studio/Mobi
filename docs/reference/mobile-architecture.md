@@ -224,6 +224,44 @@ Concretely:
 - [`shared-ui-home/src@ios/ViewController.kt`](../../shared-ui-home/src@ios/ViewController.kt)
   exports an iOS view-controller factory for that shared Compose screen.
 
+## Current nearby vehicle map flow
+
+The nearby vehicle map feature is the first map-centric product slice. It keeps
+the map SDK decision deliberately lightweight: Android and iOS render native
+coordinate maps from shared latitude/longitude state instead of depending on a
+third-party map SDK or API key.
+
+```text
+shared-di.SharedApplicationGraph
+  -> shared-core.NearbyFleetRepository
+  -> shared-feature-nearby-vehicle-map.NearbyVehicleMapFeatureService
+  -> android Circuit presenter / iOS TCA dependency client
+  -> Android Compose Canvas / SwiftUI Canvas
+```
+
+Concretely:
+
+- [`shared-core/src/NearbyVehicleModels.kt`](../../shared-core/src/NearbyVehicleModels.kt)
+  defines rider location, vehicle identity, vehicle location, nearby vehicle,
+  and fleet snapshot domain types.
+- [`shared-core/src/NearbyFleetRepository.kt`](../../shared-core/src/NearbyFleetRepository.kt)
+  exposes a simulated rider-centered repository that can return empty,
+  changing, or failed snapshots while preserving stable vehicle identities.
+- [`shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureService.kt`](../../shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureService.kt)
+  owns rider-location transitions, snapshot refresh, stale-window, and overlay
+  rules.
+- [`android-app/src/nearbyvehiclemap/`](../../android-app/src/nearbyvehiclemap)
+  adapts the shared feature state into Circuit and renders a functional
+  rider-centered coordinate map in Compose.
+- [`ios-app/src/Features/NearbyVehicleMap/`](../../ios-app/src/Features/NearbyVehicleMap)
+  adapts the shared feature state into TCA and renders the same product state
+  with SwiftUI.
+
+This is intentionally a product-state map rather than a vendor map integration.
+It proves the shared behavior, permission handoff, refresh cadence, stale
+overlay, and marker rendering seams while keeping public setup runnable from a
+clean clone.
+
 ## Testing bootstrap
 
 The current testing foundation focuses on state transitions at the native
@@ -236,6 +274,12 @@ presentation seams and the shared async workflow.
   [`android-app/test/home/HomePresenterStateProducerTest.kt`](../../android-app/test/home/HomePresenterStateProducerTest.kt)
   verifies the shared-state-to-presenter-state mapping plus the async refresh
   transition.
+- The nearby vehicle map follows the same native-shell testing shape:
+  [`android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterStateProducerTest.kt`](../../android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterStateProducerTest.kt)
+  covers Android permission, refresh, and overlay presentation seams, while
+  [`ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift`](../../ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift)
+  verifies the iOS TCA reducer transitions for permission, refresh, stale
+  overlay, and temporary location degradation.
 - Shared repositories and feature services are tested directly in Kotlin.
   [`shared-core/test/FakeCounterRepositoryTest.kt`](../../shared-core/test/FakeCounterRepositoryTest.kt)
   verifies the fake async repository contract, and

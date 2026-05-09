@@ -13,6 +13,11 @@ struct IOSApp: App {
                         Label("Native Home", systemImage: "iphone")
                     }
 
+                NearbyVehicleMapView(store: appServices.makeNearbyVehicleMapStore())
+                    .tabItem {
+                        Label("Nearby Map", systemImage: "map")
+                    }
+
                 SharedHomeDemoView(factory: appServices.sharedHomeViewControllerFactory)
                     .tabItem {
                         Label("Shared UI", systemImage: "square.stack.3d.up")

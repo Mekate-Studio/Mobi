@@ -49,6 +49,8 @@ quality_collect_detekt_inputs() {
     shared-di/test \
     shared-feature-home/src \
     shared-feature-home/test \
+    shared-feature-nearby-vehicle-map/src \
+    shared-feature-nearby-vehicle-map/test \
     shared-ui-home/src \
     shared-ui-home/src@ios
   do

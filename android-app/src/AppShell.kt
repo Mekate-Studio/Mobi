@@ -16,6 +16,7 @@ import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.CircuitContent
 import studio.mekate.mobi.di.SharedDependencies
 import studio.mekate.mobi.home.HomeScreen
+import studio.mekate.mobi.nearbyvehiclemap.NearbyVehicleMapScreen
 import studio.mekate.mobi.ui.home.SharedHomeScreen
 
 @Composable
@@ -49,6 +50,15 @@ fun AppShell() {
                 }
             }
 
+            AppDestination.NearbyVehicleMap -> {
+                CircuitCompositionLocals(appGraph.circuit) {
+                    CircuitContent(
+                        NearbyVehicleMapScreen,
+                        modifier = Modifier.padding(paddingValues),
+                    )
+                }
+            }
+
             AppDestination.SharedComposeDemo -> {
                 SharedHomeScreen(
                     service = sharedGraph.homeFeatureService,
@@ -64,5 +74,6 @@ private enum class AppDestination(
     val shortLabel: String,
 ) {
     NativeHome(label = "Native Home", shortLabel = "N"),
+    NearbyVehicleMap(label = "Nearby Map", shortLabel = "M"),
     SharedComposeDemo(label = "Shared UI", shortLabel = "S"),
 }
