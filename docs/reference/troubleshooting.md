@@ -36,10 +36,10 @@ The shared CI layer sets `AMPER_USER_HOME`, `AMPER_TMP_DIR`, and
 `AMPER_JAVA_OPTIONS`. Android Fastlane lanes call
 [`scripts/ci/run_amper_with_logs.sh`](../../scripts/ci/run_amper_with_logs.sh),
 which retries bounded Amper failures where dependency resolution returns a
-cache path before the artifact exists on disk. The wrapper checks both direct
-command output and Amper's generated `build/logs/amper_*/` logs, and hydrates
-related KLIB sibling artifacts when Amper reports one native artifact from a
-coordinate.
+cache path before the artifact exists on disk. The wrapper checks direct command
+output and current-run `build/logs/amper_*/` logs, downloads the missing Maven
+artifact, and opportunistically downloads related KLIB sibling artifacts for the
+same coordinate.
 
 ## Android SDK is not detected
 

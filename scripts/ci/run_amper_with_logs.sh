@@ -10,6 +10,7 @@ fi
 project_root="$(cd "$(dirname "$0")/../.." && pwd)"
 max_attempts="${AMPER_MISSING_ARTIFACT_RETRIES:-20}"
 log_dir="${project_root}/build/logs"
+started_at="$(date +%s)"
 mkdir -p "${log_dir}"
 
 extract_missing_dependency_path_from_file() {
@@ -30,77 +31,67 @@ find_missing_dependency_path() {
   fi
 
   while IFS= read -r log_file; do
+    file_modified_after_start "${log_file}" || continue
+
     missing_path="$(extract_missing_dependency_path_from_file "${log_file}")"
     if [[ -n "${missing_path}" ]]; then
       printf '%s\n' "${missing_path}"
       return 0
     fi
   done < <(
-    find "${log_dir}" -type f \( -name 'info.log' -o -name 'debug.log' \) -print0 2>/dev/null \
-      | xargs -0 ls -t 2>/dev/null \
+    find "${log_dir}" -type f \( -name 'info.log' -o -name 'debug.log' \) -exec ls -t {} + 2>/dev/null \
       | head -n 40
   )
 }
 
-create_placeholder_archive() {
-  local artifact_path="${1:?artifact path required}"
-  local temp_dir=""
+file_modified_after_start() {
+  local file_path="${1:?file path required}"
+  local modified_at=""
 
-  temp_dir="$(mktemp -d "${TMPDIR:-/tmp}/mobi-missing-artifact.XXXXXX")"
-  mkdir -p "${temp_dir}/META-INF"
-  printf 'Manifest-Version: 1.0\n' >"${temp_dir}/META-INF/MANIFEST.MF"
-
-  (
-    cd "${temp_dir}"
-    jar cf "${artifact_path}" META-INF
-  )
-
-  rm -rf "${temp_dir}"
+  modified_at="$(stat -f %m "${file_path}" 2>/dev/null || stat -c %Y "${file_path}" 2>/dev/null || printf '0')"
+  [[ "${modified_at}" -ge "${started_at}" ]]
 }
 
-materialize_artifact_path() {
+download_artifact_path() {
   local artifact_path="${1:?artifact path required}"
   local maven_relative_path=""
   local artifact_url=""
   local temp_file=""
 
-  mkdir -p "$(dirname "${artifact_path}")"
-
-  if [[ "${artifact_path}" == *"/.m2.cache/"* ]]; then
-    maven_relative_path="${artifact_path#*/.m2.cache/}"
-    artifact_url="https://repo1.maven.org/maven2/${maven_relative_path}"
-    temp_file="${artifact_path}.download"
-
-    echo "Trying to download missing Amper artifact:"
-    echo "  ${artifact_url}"
-
-    if command -v curl >/dev/null 2>&1; then
-      if curl --fail --location --silent --show-error --retry 3 --output "${temp_file}" "${artifact_url}"; then
-        mv "${temp_file}" "${artifact_path}"
-        return 0
-      fi
-    elif command -v wget >/dev/null 2>&1; then
-      if wget -q -O "${temp_file}" "${artifact_url}"; then
-        mv "${temp_file}" "${artifact_path}"
-        return 0
-      fi
-    fi
-
-    rm -f "${temp_file}"
+  if [[ "${artifact_path}" != *"/.m2.cache/"* ]]; then
+    echo "Cannot recover missing non-Maven-cache artifact:"
+    echo "  ${artifact_path}"
+    return 1
   fi
 
-  case "${artifact_path}" in
-    *.jar|*.klib)
-      echo "Creating placeholder archive for missing Amper artifact:"
-      echo "  ${artifact_path}"
-      create_placeholder_archive "${artifact_path}"
-      ;;
-    *)
-      echo "Creating placeholder file for missing Amper artifact:"
-      echo "  ${artifact_path}"
-      : >"${artifact_path}"
-      ;;
-  esac
+  if [[ -f "${artifact_path}" ]]; then
+    return 0
+  fi
+
+  mkdir -p "$(dirname "${artifact_path}")"
+  maven_relative_path="${artifact_path#*/.m2.cache/}"
+  artifact_url="https://repo1.maven.org/maven2/${maven_relative_path}"
+  temp_file="${artifact_path}.download"
+
+  echo "Downloading missing Amper artifact:"
+  echo "  ${artifact_url}"
+
+  if command -v curl >/dev/null 2>&1; then
+    if ! curl --fail --location --silent --show-error --retry 3 --output "${temp_file}" "${artifact_url}"; then
+      rm -f "${temp_file}"
+      return 1
+    fi
+  elif command -v wget >/dev/null 2>&1; then
+    if ! wget -q -O "${temp_file}" "${artifact_url}"; then
+      rm -f "${temp_file}"
+      return 1
+    fi
+  else
+    echo "Either curl or wget is required to download ${artifact_url}" >&2
+    return 1
+  fi
+
+  mv "${temp_file}" "${artifact_path}"
 }
 
 materialize_missing_dependency() {
@@ -109,7 +100,7 @@ materialize_missing_dependency() {
   local artifact_file=""
   local sibling_file=""
 
-  materialize_artifact_path "${artifact_path}"
+  download_artifact_path "${artifact_path}" || return 1
 
   artifact_dir="$(dirname "${artifact_path}")"
   artifact_file="$(basename "${artifact_path}")"
@@ -129,7 +120,7 @@ materialize_missing_dependency() {
   if [[ -n "${sibling_file}" && ! -f "${artifact_dir}/${sibling_file}" ]]; then
     echo "Materializing related Amper KLIB artifact:"
     echo "  ${artifact_dir}/${sibling_file}"
-    materialize_artifact_path "${artifact_dir}/${sibling_file}"
+    download_artifact_path "${artifact_dir}/${sibling_file}" || true
   fi
 }
 
@@ -156,7 +147,10 @@ while true; do
   echo
   echo "Amper returned a missing dependency path. Materializing it and retrying..."
   echo "  ${missing_path}"
-  materialize_missing_dependency "${missing_path}"
+  if ! materialize_missing_dependency "${missing_path}"; then
+    echo "Could not materialize missing Amper dependency path."
+    break
+  fi
   attempt=$((attempt + 1))
 done
 
