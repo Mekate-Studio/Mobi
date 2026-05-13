@@ -19,6 +19,28 @@ extract_missing_dependency_path_from_file() {
   sed -n "s/.*File '\([^']*\)' was returned from dependency resolution, but is missing on disk.*/\1/p" "${log_path}" | head -n 1
 }
 
+extract_rate_limited_urls_from_file() {
+  local log_path="${1:?log path required}"
+
+  sed -n \
+    -e "s#.*\(https://repo1\.maven\.org/maven2/[^ )]*\).*actual: 429.*#\1#p" \
+    -e "s#.*\(https://repo\.maven\.apache\.org/maven2/[^ )]*\).*actual: 429.*#\1#p" \
+    "${log_path}" \
+    | sed 's/[).,:]*$//'
+}
+
+current_run_amper_logs() {
+  local log_file=""
+
+  while IFS= read -r log_file; do
+    file_modified_after_start "${log_file}" || continue
+    printf '%s\n' "${log_file}"
+  done < <(
+    find "${log_dir}" -type f \( -name 'info.log' -o -name 'debug.log' \) -exec ls -t {} + 2>/dev/null \
+      | head -n 40
+  )
+}
+
 find_missing_dependency_path() {
   local attempt_log="${1:?attempt log path required}"
   local missing_path=""
@@ -31,17 +53,24 @@ find_missing_dependency_path() {
   fi
 
   while IFS= read -r log_file; do
-    file_modified_after_start "${log_file}" || continue
-
     missing_path="$(extract_missing_dependency_path_from_file "${log_file}")"
     if [[ -n "${missing_path}" ]]; then
       printf '%s\n' "${missing_path}"
       return 0
     fi
-  done < <(
-    find "${log_dir}" -type f \( -name 'info.log' -o -name 'debug.log' \) -exec ls -t {} + 2>/dev/null \
-      | head -n 40
-  )
+  done < <(current_run_amper_logs)
+}
+
+find_rate_limited_urls() {
+  local attempt_log="${1:?attempt log path required}"
+  local log_file=""
+
+  {
+    extract_rate_limited_urls_from_file "${attempt_log}"
+    while IFS= read -r log_file; do
+      extract_rate_limited_urls_from_file "${log_file}"
+    done < <(current_run_amper_logs)
+  } | sort -u
 }
 
 file_modified_after_start() {
@@ -55,7 +84,6 @@ file_modified_after_start() {
 download_artifact_path() {
   local artifact_path="${1:?artifact path required}"
   local maven_relative_path=""
-  local artifact_url=""
   local temp_file=""
 
   if [[ "${artifact_path}" != *"/.m2.cache/"* ]]; then
@@ -70,14 +98,23 @@ download_artifact_path() {
 
   mkdir -p "$(dirname "${artifact_path}")"
   maven_relative_path="${artifact_path#*/.m2.cache/}"
-  artifact_url="https://repo1.maven.org/maven2/${maven_relative_path}"
-  temp_file="${artifact_path}.download"
+  download_maven_relative_path "${maven_relative_path}" "${artifact_path}"
+}
+
+download_maven_relative_path() {
+  local maven_relative_path="${1:?Maven relative path required}"
+  local destination_path="${2:?destination path required}"
+  local artifact_url="https://repo.maven.apache.org/maven2/${maven_relative_path}"
+  local temp_file=""
+
+  mkdir -p "$(dirname "${destination_path}")"
+  temp_file="${destination_path}.download"
 
   echo "Downloading missing Amper artifact:"
   echo "  ${artifact_url}"
 
   if command -v curl >/dev/null 2>&1; then
-    if ! curl --fail --location --silent --show-error --retry 3 --output "${temp_file}" "${artifact_url}"; then
+    if ! curl --fail --location --silent --show-error --retry 5 --retry-delay 2 --output "${temp_file}" "${artifact_url}"; then
       rm -f "${temp_file}"
       return 1
     fi
@@ -91,7 +128,36 @@ download_artifact_path() {
     return 1
   fi
 
-  mv "${temp_file}" "${artifact_path}"
+  mv "${temp_file}" "${destination_path}"
+}
+
+materialize_rate_limited_url() {
+  local artifact_url="${1:?artifact URL required}"
+  local maven_relative_path="${artifact_url#https://repo1.maven.org/maven2/}"
+  maven_relative_path="${maven_relative_path#https://repo.maven.apache.org/maven2/}"
+  local destination_path="${AMPER_USER_HOME:?}/Library/Caches/JetBrains/Amper/.m2.cache/${maven_relative_path}"
+
+  if [[ -f "${destination_path}" ]]; then
+    return 0
+  fi
+
+  echo "Hydrating rate-limited Maven artifact:"
+  echo "  ${artifact_url}"
+  download_maven_relative_path "${maven_relative_path}" "${destination_path}"
+}
+
+materialize_rate_limited_urls() {
+  local urls="${1:-}"
+  local artifact_url=""
+  local hydrated_count=0
+
+  while IFS= read -r artifact_url; do
+    [[ -n "${artifact_url}" ]] || continue
+    materialize_rate_limited_url "${artifact_url}" || return 1
+    hydrated_count=$((hydrated_count + 1))
+  done <<<"${urls}"
+
+  [[ "${hydrated_count}" -gt 0 ]]
 }
 
 materialize_missing_dependency() {
@@ -127,6 +193,7 @@ materialize_missing_dependency() {
 attempt=1
 while true; do
   attempt_log="${log_dir}/amper-command-attempt-${attempt}-$$.log"
+  rate_limited_urls=""
 
   echo "Running Amper attempt ${attempt}/${max_attempts}: ./amper $*"
 
@@ -137,6 +204,17 @@ while true; do
 
   if [[ "${status}" -eq 0 ]]; then
     exit 0
+  fi
+
+  rate_limited_urls="$(find_rate_limited_urls "${attempt_log}")"
+  if [[ -n "${rate_limited_urls}" && "${attempt}" -lt "${max_attempts}" ]]; then
+    echo
+    echo "Amper hit Maven Central rate limiting. Hydrating reported URLs sequentially and retrying..."
+    if materialize_rate_limited_urls "${rate_limited_urls}"; then
+      attempt=$((attempt + 1))
+      sleep 5
+      continue
+    fi
   fi
 
   missing_path="$(find_missing_dependency_path "${attempt_log}")"

@@ -41,6 +41,24 @@ output and current-run `build/logs/amper_*/` logs, downloads the missing Maven
 artifact, and opportunistically downloads related KLIB sibling artifacts for the
 same coordinate.
 
+## Maven Central returns 429 during Amper dependency resolution
+
+Symptom:
+
+- Android CI fails during dependency resolution or compilation
+- logs show `Unexpected response code` with `actual: 429` for Maven Central
+  checksum URLs
+
+Fix:
+
+- run Android jobs through [`scripts/ci/run_job.sh`](../../scripts/ci/run_job.sh)
+- keep Android Fastlane lanes on
+  [`scripts/ci/run_amper_with_logs.sh`](../../scripts/ci/run_amper_with_logs.sh)
+
+The wrapper detects Maven Central throttling in direct output and current-run
+Amper logs, downloads the reported artifacts sequentially through the canonical
+Maven Central host, waits briefly, and retries Amper with the hydrated cache.
+
 ## Android SDK is not detected
 
 Symptom:
