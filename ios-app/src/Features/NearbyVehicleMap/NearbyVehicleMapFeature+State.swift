@@ -11,11 +11,7 @@ extension NearbyVehicleMapFeature {
             rhs: State,
         ) -> Bool {
             lhs.message == rhs.message &&
-                lhs.riderLocation?.latitude == rhs.riderLocation?.latitude &&
-                lhs.riderLocation?.longitude == rhs.riderLocation?.longitude &&
-                lhs.vehicles.count == rhs.vehicles.count &&
-                lhs.vehicles.map(\.location.latitude) == rhs.vehicles.map(\.location.latitude) &&
-                lhs.vehicles.map(\.location.longitude) == rhs.vehicles.map(\.location.longitude) &&
+                lhs.mapContent == rhs.mapContent &&
                 lhs.overlay == rhs.overlay &&
                 lhs.canRequestRefresh == rhs.canRequestRefresh
         }
@@ -48,21 +44,14 @@ extension NearbyVehicleMapFeature {
             }
         }
 
-        var riderLocation: RiderLocation? {
-            guard let sharedState else { return nil }
-
-            switch onEnum(of: sharedState.riderLocationState) {
-            case .resolving, .denied:
-                return nil
-            case let .available(state):
-                return state.location
-            case let .temporarilyUnavailable(state):
-                return state.lastResolvedLocation
+        var mapContent: NearbyVehicleMapContent {
+            guard let riderLocation = riderLocationCoordinate else {
+                return .waitingForRider
             }
-        }
-
-        var vehicles: [NearbyVehicle] {
-            currentSnapshot?.vehicles ?? []
+            return .riderCentered(
+                riderLocation: riderLocation,
+                vehicles: currentSnapshot?.vehicles.map(NearbyVehicleMapVehicle.init) ?? [],
+            )
         }
 
         var overlay: NearbyVehicleMapOverlay {
@@ -81,7 +70,7 @@ extension NearbyVehicleMapFeature {
         }
 
         var canRequestRefresh: Bool {
-            guard riderLocation != nil, let sharedState else { return false }
+            guard riderLocationCoordinate != nil, let sharedState else { return false }
 
             switch onEnum(of: sharedState.snapshotState) {
             case .loading, .refreshing:
@@ -112,42 +101,86 @@ extension NearbyVehicleMapFeature {
             }
             return "Showing \(currentSnapshot.vehicles.count) vehicles around the rider."
         }
+
+        private var riderLocationCoordinate: NearbyVehicleMapCoordinate? {
+            guard let sharedState else { return nil }
+
+            switch onEnum(of: sharedState.riderLocationState) {
+            case .resolving, .denied:
+                return nil
+            case let .available(state):
+                return NearbyVehicleMapCoordinate(location: state.location)
+            case let .temporarilyUnavailable(state):
+                return state.lastResolvedLocation.map(NearbyVehicleMapCoordinate.init)
+            }
+        }
+    }
+}
+
+enum NearbyVehicleMapContent: Equatable {
+    case waitingForRider
+    case riderCentered(
+        riderLocation: NearbyVehicleMapCoordinate,
+        vehicles: [NearbyVehicleMapVehicle],
+    )
+}
+
+struct NearbyVehicleMapCoordinate: Equatable {
+    let latitude: Double
+    let longitude: Double
+
+    init(location: RiderLocation) {
+        latitude = location.latitude
+        longitude = location.longitude
+    }
+
+    init(location: VehicleLocation) {
+        latitude = location.latitude
+        longitude = location.longitude
+    }
+}
+
+struct NearbyVehicleMapVehicle: Equatable {
+    let location: NearbyVehicleMapCoordinate
+
+    init(vehicle: NearbyVehicle) {
+        location = NearbyVehicleMapCoordinate(location: vehicle.location)
     }
 }
 
 enum NearbyVehicleMapOverlay: Equatable {
     case none
-    case refreshing
-    case stale
-    case blockingFailure
+    case banner(
+        headline: String,
+        message: String,
+    )
+    case blocking(
+        headline: String,
+        message: String,
+    )
 
-    var headline: String? {
-        switch self {
-        case .none:
-            nil
-        case .refreshing:
-            "Refreshing"
-        case .stale:
-            "Snapshot may be stale"
-        case .blockingFailure:
-            "Map unavailable"
-        }
-    }
+    static let refreshing =
+        NearbyVehicleMapOverlay.banner(
+            headline: "Refreshing",
+            message: "Keeping the last snapshot visible while the simulated fleet updates.",
+        )
 
-    var message: String? {
-        switch self {
-        case .none:
-            nil
-        case .refreshing:
-            "Keeping the last snapshot visible while the simulated fleet updates."
-        case .stale:
-            "The last successful fleet snapshot is still visible inside the freshness window."
-        case .blockingFailure:
-            "A trustworthy rider-centered vehicle snapshot is not available right now."
-        }
-    }
+    static let stale =
+        NearbyVehicleMapOverlay.banner(
+            headline: "Snapshot may be stale",
+            message: "The last successful fleet snapshot is still visible inside the freshness window.",
+        )
+
+    static let blockingFailure =
+        NearbyVehicleMapOverlay.blocking(
+            headline: "Map unavailable",
+            message: "A trustworthy rider-centered vehicle snapshot is not available right now.",
+        )
 
     var blocksMap: Bool {
-        self == .blockingFailure
+        if case .blocking = self {
+            return true
+        }
+        return false
     }
 }

@@ -1,6 +1,5 @@
 import ComposableArchitecture
 import Foundation
-@preconcurrency import KotlinModules
 import SwiftUI
 
 struct NearbyVehicleMapView: View {
@@ -16,8 +15,7 @@ struct NearbyVehicleMapView: View {
                     .foregroundStyle(.secondary)
 
                 NearbyVehicleCoordinateMap(
-                    riderLocation: store.riderLocation,
-                    vehicles: store.vehicles,
+                    mapContent: store.mapContent,
                     overlay: store.overlay,
                 )
 
@@ -62,8 +60,7 @@ struct NearbyVehicleMapView: View {
 }
 
 private struct NearbyVehicleCoordinateMap: View {
-    let riderLocation: RiderLocation?
-    let vehicles: [NearbyVehicle]
+    let mapContent: NearbyVehicleMapContent
     let overlay: NearbyVehicleMapOverlay
 
     var body: some View {
@@ -76,23 +73,23 @@ private struct NearbyVehicleCoordinateMap: View {
                     lineWidth: 1,
                 )
 
-                guard let riderLocation else { return }
+                if case let .riderCentered(riderLocation, vehicles) = mapContent {
+                    let center = CGPoint(x: size.width / 2, y: size.height / 2)
+                    context.fill(
+                        Path(ellipseIn: CGRect(x: center.x - 16, y: center.y - 16, width: 32, height: 32)),
+                        with: .color(.green),
+                    )
+                    context.fill(
+                        Path(ellipseIn: CGRect(x: center.x - 7, y: center.y - 7, width: 14, height: 14)),
+                        with: .color(.white),
+                    )
 
-                let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                context.fill(
-                    Path(ellipseIn: CGRect(x: center.x - 16, y: center.y - 16, width: 32, height: 32)),
-                    with: .color(.green),
-                )
-                context.fill(
-                    Path(ellipseIn: CGRect(x: center.x - 7, y: center.y - 7, width: 14, height: 14)),
-                    with: .color(.white),
-                )
-
-                for vehicle in vehicles {
-                    let point = vehiclePoint(vehicle: vehicle, riderLocation: riderLocation, size: size)
-                    let marker = CGRect(x: point.x - 13, y: point.y - 13, width: 26, height: 26)
-                    context.fill(Path(ellipseIn: marker), with: .color(.orange))
-                    context.stroke(Path(ellipseIn: marker), with: .color(.brown), lineWidth: 2)
+                    for vehicle in vehicles {
+                        let point = vehiclePoint(vehicle: vehicle, riderLocation: riderLocation, size: size)
+                        let marker = CGRect(x: point.x - 13, y: point.y - 13, width: 26, height: 26)
+                        context.fill(Path(ellipseIn: marker), with: .color(.orange))
+                        context.stroke(Path(ellipseIn: marker), with: .color(.brown), lineWidth: 2)
+                    }
                 }
             }
             .background(Color(red: 0.92, green: 0.96, blue: 0.93))
@@ -108,32 +105,58 @@ private struct NearbyVehicleCoordinateMap: View {
             .padding(18)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
-            if riderLocation == nil {
+            if case .waitingForRider = mapContent {
                 Text("Waiting for rider position")
                     .font(.headline)
                     .padding(18)
                     .background(.white.opacity(0.88), in: RoundedRectangle(cornerRadius: 20))
             }
 
-            if let headline = overlay.headline, let message = overlay.message {
-                VStack(spacing: 6) {
-                    Text(headline)
-                        .font(.headline)
-                    Text(message)
-                        .font(.caption)
-                        .multilineTextAlignment(.center)
-                }
-                .foregroundStyle(overlay.blocksMap ? .white : .brown)
-                .padding(16)
-                .background(
-                    overlay.blocksMap ? .black.opacity(0.78) : .yellow.opacity(0.86),
-                    in: RoundedRectangle(cornerRadius: 18),
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: overlay.blocksMap ? .center : .bottom)
-                .padding(18)
-            }
+            coordinateMapOverlay(overlay: overlay)
         }
         .frame(maxWidth: .infinity, minHeight: 360)
+    }
+
+    @ViewBuilder
+    private func coordinateMapOverlay(overlay: NearbyVehicleMapOverlay) -> some View {
+        switch overlay {
+        case .none:
+            EmptyView()
+        case let .banner(headline, message):
+            coordinateMapOverlayCard(
+                headline: headline,
+                message: message,
+                blocksMap: false,
+            )
+        case let .blocking(headline, message):
+            coordinateMapOverlayCard(
+                headline: headline,
+                message: message,
+                blocksMap: true,
+            )
+        }
+    }
+
+    private func coordinateMapOverlayCard(
+        headline: String,
+        message: String,
+        blocksMap: Bool,
+    ) -> some View {
+        VStack(spacing: 6) {
+            Text(headline)
+                .font(.headline)
+            Text(message)
+                .font(.caption)
+                .multilineTextAlignment(.center)
+        }
+        .foregroundStyle(blocksMap ? .white : .brown)
+        .padding(16)
+        .background(
+            blocksMap ? .black.opacity(0.78) : .yellow.opacity(0.86),
+            in: RoundedRectangle(cornerRadius: 18),
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: blocksMap ? .center : .bottom)
+        .padding(18)
     }
 
     private func gridPath(size: CGSize) -> Path {
@@ -149,8 +172,8 @@ private struct NearbyVehicleCoordinateMap: View {
     }
 
     private func vehiclePoint(
-        vehicle: NearbyVehicle,
-        riderLocation: RiderLocation,
+        vehicle: NearbyVehicleMapVehicle,
+        riderLocation: NearbyVehicleMapCoordinate,
         size: CGSize,
     ) -> CGPoint {
         let center = CGPoint(x: size.width / 2, y: size.height / 2)

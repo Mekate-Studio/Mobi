@@ -111,8 +111,12 @@ struct NearbyVehicleMapFeatureTests {
         }
 
         // then
-        #expect(store.state.riderLocation?.latitude == 55.6761)
-        #expect(store.state.riderLocation?.longitude == 12.5683)
+        guard case let .riderCentered(riderLocation, _) = store.state.mapContent else {
+            #expect(Bool(false), "Expected map content to keep the last rider-centered coordinate.")
+            return
+        }
+        #expect(riderLocation.latitude == 55.6761)
+        #expect(riderLocation.longitude == 12.5683)
     }
 }
 
