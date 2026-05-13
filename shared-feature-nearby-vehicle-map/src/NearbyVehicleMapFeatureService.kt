@@ -185,38 +185,3 @@ private fun isStaleWindowExceeded(
     snapshot: FleetSnapshot,
     nowMillis: Long,
 ): Boolean = nowMillis - snapshot.loadedAtMillis > NearbyVehicleMapFeatureService.STALE_WINDOW_MILLIS
-
-private fun RiderLocationState.discoveryLocationOrNull(): RiderLocation? =
-    when (this) {
-        is RiderLocationState.Available -> location
-
-        is RiderLocationState.TemporarilyUnavailable -> lastResolvedLocation
-
-        RiderLocationState.Denied,
-        RiderLocationState.Resolving,
-        -> null
-    }
-
-private fun RiderLocationState.lastResolvedLocationOrNull(): RiderLocation? =
-    when (this) {
-        is RiderLocationState.Available -> location
-
-        is RiderLocationState.TemporarilyUnavailable -> lastResolvedLocation
-
-        RiderLocationState.Denied,
-        RiderLocationState.Resolving,
-        -> null
-    }
-
-private fun NearbyVehicleSnapshotState.currentSnapshotOrNull(): FleetSnapshot? =
-    when (this) {
-        is NearbyVehicleSnapshotState.Loaded -> snapshot
-
-        is NearbyVehicleSnapshotState.Refreshing -> snapshot
-
-        is NearbyVehicleSnapshotState.Failed -> previousSnapshot
-
-        NearbyVehicleSnapshotState.Initial,
-        NearbyVehicleSnapshotState.Loading,
-        -> null
-    }

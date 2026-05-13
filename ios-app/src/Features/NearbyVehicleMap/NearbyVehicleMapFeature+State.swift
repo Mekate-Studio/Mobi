@@ -62,7 +62,7 @@ extension NearbyVehicleMapFeature {
         }
 
         var vehicles: [NearbyVehicle] {
-            currentSnapshot?.vehicles.compactMap { $0 as? NearbyVehicle } ?? []
+            currentSnapshot?.vehicles ?? []
         }
 
         var overlay: NearbyVehicleMapOverlay {

@@ -57,3 +57,39 @@ sealed interface NearbyVehicleMapOverlayState {
 
     data object BlockingFailure : NearbyVehicleMapOverlayState
 }
+
+fun NearbyVehicleMapFeatureState.canRequestRefresh(): Boolean =
+    riderLocationState.visibleLocationOrNull() != null &&
+        !snapshotState.isRefreshInFlight()
+
+fun RiderLocationState.visibleLocationOrNull(): RiderLocation? =
+    when (this) {
+        is RiderLocationState.Available -> location
+
+        is RiderLocationState.TemporarilyUnavailable -> lastResolvedLocation
+
+        RiderLocationState.Denied,
+        RiderLocationState.Resolving,
+        -> null
+    }
+
+fun RiderLocationState.discoveryLocationOrNull(): RiderLocation? = visibleLocationOrNull()
+
+fun RiderLocationState.lastResolvedLocationOrNull(): RiderLocation? = visibleLocationOrNull()
+
+fun NearbyVehicleSnapshotState.currentSnapshotOrNull(): FleetSnapshot? =
+    when (this) {
+        is NearbyVehicleSnapshotState.Loaded -> snapshot
+
+        is NearbyVehicleSnapshotState.Refreshing -> snapshot
+
+        is NearbyVehicleSnapshotState.Failed -> previousSnapshot
+
+        NearbyVehicleSnapshotState.Initial,
+        NearbyVehicleSnapshotState.Loading,
+        -> null
+    }
+
+fun NearbyVehicleSnapshotState.isRefreshInFlight(): Boolean =
+    this is NearbyVehicleSnapshotState.Loading ||
+        this is NearbyVehicleSnapshotState.Refreshing

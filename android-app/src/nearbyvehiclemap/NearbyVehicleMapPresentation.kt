@@ -5,39 +5,62 @@ import studio.mekate.mobi.core.NearbyVehicle
 import studio.mekate.mobi.core.RiderLocation
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
-import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
+import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
+import studio.mekate.mobi.feature.nearbyvehiclemap.currentSnapshotOrNull
+import studio.mekate.mobi.feature.nearbyvehiclemap.visibleLocationOrNull
 
 data class NearbyVehicleMapPresentation(
     val title: String,
     val message: String,
-    val riderLocation: RiderLocation?,
-    val vehicles: List<NearbyVehicle>,
+    val mapContent: NearbyVehicleMapContentPresentation,
     val overlay: NearbyVehicleMapOverlayPresentation,
     val primaryActionLabel: String,
     val canRequestRefresh: Boolean,
 )
 
-data class NearbyVehicleMapOverlayPresentation(
-    val headline: String?,
-    val message: String?,
-    val blocksMap: Boolean,
-)
+sealed interface NearbyVehicleMapContentPresentation {
+    data object WaitingForRider : NearbyVehicleMapContentPresentation
+
+    data class RiderCentered(
+        val riderLocation: RiderLocation,
+        val vehicles: List<NearbyVehicle>,
+    ) : NearbyVehicleMapContentPresentation
+}
+
+sealed interface NearbyVehicleMapOverlayPresentation {
+    data object None : NearbyVehicleMapOverlayPresentation
+
+    data class Banner(
+        val headline: String,
+        val message: String,
+    ) : NearbyVehicleMapOverlayPresentation
+
+    data class Blocking(
+        val headline: String,
+        val message: String,
+    ) : NearbyVehicleMapOverlayPresentation
+}
 
 fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicleMapPresentation {
     val snapshot = snapshotState.currentSnapshotOrNull()
+    val riderLocation = riderLocationState.visibleLocationOrNull()
 
     return NearbyVehicleMapPresentation(
         title = "Nearby vehicles",
         message = riderLocationState.messageText(snapshot = snapshot),
-        riderLocation = riderLocationState.riderLocationOrNull(),
-        vehicles = snapshot?.vehicles.orEmpty(),
+        mapContent =
+            if (riderLocation == null) {
+                NearbyVehicleMapContentPresentation.WaitingForRider
+            } else {
+                NearbyVehicleMapContentPresentation.RiderCentered(
+                    riderLocation = riderLocation,
+                    vehicles = snapshot?.vehicles.orEmpty(),
+                )
+            },
         overlay = mapOverlayState.toPresentation(),
         primaryActionLabel = "Refresh nearby vehicles",
-        canRequestRefresh =
-            riderLocationState.riderLocationOrNull() != null &&
-                snapshotState !is NearbyVehicleSnapshotState.Loading &&
-                snapshotState !is NearbyVehicleSnapshotState.Refreshing,
+        canRequestRefresh = canRequestRefresh(),
     )
 }
 
@@ -68,61 +91,30 @@ private fun RiderLocationState.messageText(snapshot: FleetSnapshot?): String =
         }
     }
 
-private fun RiderLocationState.riderLocationOrNull(): RiderLocation? =
-    when (this) {
-        is RiderLocationState.Available -> location
-
-        is RiderLocationState.TemporarilyUnavailable -> lastResolvedLocation
-
-        RiderLocationState.Denied,
-        RiderLocationState.Resolving,
-        -> null
-    }
-
-private fun NearbyVehicleSnapshotState.currentSnapshotOrNull(): FleetSnapshot? =
-    when (this) {
-        is NearbyVehicleSnapshotState.Loaded -> snapshot
-
-        is NearbyVehicleSnapshotState.Refreshing -> snapshot
-
-        is NearbyVehicleSnapshotState.Failed -> previousSnapshot
-
-        NearbyVehicleSnapshotState.Initial,
-        NearbyVehicleSnapshotState.Loading,
-        -> null
-    }
-
 private fun NearbyVehicleMapOverlayState.toPresentation(): NearbyVehicleMapOverlayPresentation =
     when (this) {
         NearbyVehicleMapOverlayState.None -> {
-            NearbyVehicleMapOverlayPresentation(
-                headline = null,
-                message = null,
-                blocksMap = false,
-            )
+            NearbyVehicleMapOverlayPresentation.None
         }
 
         NearbyVehicleMapOverlayState.RefreshingIndicator -> {
-            NearbyVehicleMapOverlayPresentation(
+            NearbyVehicleMapOverlayPresentation.Banner(
                 headline = "Refreshing",
                 message = "Keeping the last snapshot visible while the simulated fleet updates.",
-                blocksMap = false,
             )
         }
 
         NearbyVehicleMapOverlayState.StaleIndicator -> {
-            NearbyVehicleMapOverlayPresentation(
+            NearbyVehicleMapOverlayPresentation.Banner(
                 headline = "Snapshot may be stale",
                 message = "The last successful fleet snapshot is still visible inside the freshness window.",
-                blocksMap = false,
             )
         }
 
         NearbyVehicleMapOverlayState.BlockingFailure -> {
-            NearbyVehicleMapOverlayPresentation(
+            NearbyVehicleMapOverlayPresentation.Blocking(
                 headline = "Map unavailable",
                 message = "A trustworthy rider-centered vehicle snapshot is not available right now.",
-                blocksMap = true,
             )
         }
     }

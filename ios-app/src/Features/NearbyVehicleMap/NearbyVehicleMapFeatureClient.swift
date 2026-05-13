@@ -2,7 +2,7 @@ import ComposableArchitecture
 import Foundation
 @preconcurrency import KotlinModules
 
-extension NearbyVehicleMapFeatureState: @unchecked Sendable {}
+extension NearbyVehicleMapFeatureState: @unchecked @retroactive Sendable {}
 
 struct NearbyVehicleMapFeatureClient {
     var initialState: @Sendable () -> NearbyVehicleMapFeatureState

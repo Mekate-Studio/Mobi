@@ -32,8 +32,6 @@ import com.slack.circuit.runtime.screen.Screen
 import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
 import dev.zacsweers.metro.Inject
-import studio.mekate.mobi.core.NearbyVehicle
-import studio.mekate.mobi.core.RiderLocation
 
 @Inject
 class NearbyVehicleMapUiFactory : Ui.Factory {
@@ -89,8 +87,7 @@ private fun NearbyVehicleMapContent(
                 style = MaterialTheme.typography.bodyLarge,
             )
             NearbyVehicleCoordinateMap(
-                riderLocation = presentation.riderLocation,
-                vehicles = presentation.vehicles,
+                mapContent = presentation.mapContent,
                 overlay = presentation.overlay,
                 modifier =
                     Modifier
@@ -144,8 +141,7 @@ private fun NearbyVehicleMapActions(
 
 @Composable
 private fun NearbyVehicleCoordinateMap(
-    riderLocation: RiderLocation?,
-    vehicles: List<NearbyVehicle>,
+    mapContent: NearbyVehicleMapContentPresentation,
     overlay: NearbyVehicleMapOverlayPresentation,
     modifier: Modifier = Modifier,
 ) {
@@ -160,31 +156,27 @@ private fun NearbyVehicleCoordinateMap(
                     .background(Color(0xFFEAF3ED)),
         ) {
             CoordinateMapCanvas(
-                riderLocation = riderLocation,
-                vehicles = vehicles,
+                mapContent = mapContent,
             )
             CoordinateMapHeader()
             CoordinateMapOverlay(overlay = overlay)
-            WaitingForRiderLocationLabel(riderLocation = riderLocation)
+            WaitingForRiderLocationLabel(mapContent = mapContent)
             CoordinateMapLegend()
         }
     }
 }
 
 @Composable
-private fun CoordinateMapCanvas(
-    riderLocation: RiderLocation?,
-    vehicles: List<NearbyVehicle>,
-) {
+private fun CoordinateMapCanvas(mapContent: NearbyVehicleMapContentPresentation) {
     Canvas(modifier = Modifier.fillMaxSize()) {
         drawCoordinateGrid()
-        if (riderLocation != null) {
-            val center = Offset(size.width / 2f, size.height / 2f)
+        if (mapContent is NearbyVehicleMapContentPresentation.RiderCentered) {
+            val center = Offset(x = size.width / 2f, y = size.height / 2f)
             drawRiderMarker(center = center)
-            vehicles.forEach { vehicle ->
+            mapContent.vehicles.forEach { vehicle ->
                 drawVehicleMarker(
                     vehicle = vehicle,
-                    riderLocation = riderLocation,
+                    riderLocation = mapContent.riderLocation,
                     center = center,
                 )
             }
@@ -213,35 +205,62 @@ private fun CoordinateMapHeader() {
 
 @Composable
 private fun BoxScope.CoordinateMapOverlay(overlay: NearbyVehicleMapOverlayPresentation) {
-    if (overlay.headline != null && overlay.message != null) {
-        Column(
-            modifier =
-                Modifier
-                    .align(if (overlay.blocksMap) Alignment.Center else Alignment.BottomCenter)
-                    .padding(18.dp)
-                    .background(
-                        color = if (overlay.blocksMap) Color(0xEE2E241C) else Color(0xEEFFF8E8),
-                        shape = RoundedCornerShape(18.dp),
-                    ).padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = overlay.headline,
-                color = if (overlay.blocksMap) Color.White else Color(0xFF5F3B00),
-                style = MaterialTheme.typography.titleMedium,
+    when (overlay) {
+        NearbyVehicleMapOverlayPresentation.None -> {
+            Unit
+        }
+
+        is NearbyVehicleMapOverlayPresentation.Banner -> {
+            CoordinateMapOverlayCard(
+                headline = overlay.headline,
+                message = overlay.message,
+                blocksMap = false,
             )
-            Text(
-                text = overlay.message,
-                color = if (overlay.blocksMap) Color.White else Color(0xFF5F3B00),
-                style = MaterialTheme.typography.bodySmall,
+        }
+
+        is NearbyVehicleMapOverlayPresentation.Blocking -> {
+            CoordinateMapOverlayCard(
+                headline = overlay.headline,
+                message = overlay.message,
+                blocksMap = true,
             )
         }
     }
 }
 
 @Composable
-private fun BoxScope.WaitingForRiderLocationLabel(riderLocation: RiderLocation?) {
-    if (riderLocation == null) {
+private fun BoxScope.CoordinateMapOverlayCard(
+    headline: String,
+    message: String,
+    blocksMap: Boolean,
+) {
+    Column(
+        modifier =
+            Modifier
+                .align(if (blocksMap) Alignment.Center else Alignment.BottomCenter)
+                .padding(18.dp)
+                .background(
+                    color = if (blocksMap) Color(0xEE2E241C) else Color(0xEEFFF8E8),
+                    shape = RoundedCornerShape(18.dp),
+                ).padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = headline,
+            color = if (blocksMap) Color.White else Color(0xFF5F3B00),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Text(
+            text = message,
+            color = if (blocksMap) Color.White else Color(0xFF5F3B00),
+            style = MaterialTheme.typography.bodySmall,
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.WaitingForRiderLocationLabel(mapContent: NearbyVehicleMapContentPresentation) {
+    if (mapContent is NearbyVehicleMapContentPresentation.WaitingForRider) {
         Text(
             text = "Waiting for rider position",
             modifier =

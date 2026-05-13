@@ -15,7 +15,9 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
-import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
+import studio.mekate.mobi.feature.nearbyvehiclemap.currentSnapshotOrNull
+import studio.mekate.mobi.feature.nearbyvehiclemap.isRefreshInFlight
+import kotlin.time.Duration.Companion.milliseconds
 
 class NearbyVehicleMapPresenter(
     private val service: NearbyVehicleMapFeatureService,
@@ -28,9 +30,9 @@ class NearbyVehicleMapPresenter(
         val scope = rememberCoroutineScope()
 
         LaunchedEffect(featureState) {
-            val loadedSnapshot = featureState.snapshotState.loadedSnapshotOrNull()
+            val loadedSnapshot = featureState.snapshotState.currentSnapshotOrNull()
             if (loadedSnapshot != null) {
-                delay(NearbyVehicleMapFeatureService.REFRESH_INTERVAL_MILLIS)
+                delay(NearbyVehicleMapFeatureService.REFRESH_INTERVAL_MILLIS.milliseconds)
                 featureState =
                     stateProducer.loadingState(
                         currentState = featureState,
@@ -64,9 +66,7 @@ class NearbyVehicleMapPresenter(
                     featureState = stateProducer.locationTemporarilyUnavailableState(currentState = featureState)
                 },
                 onRefreshRequested = { nowMillis ->
-                    if (featureState.snapshotState !is NearbyVehicleSnapshotState.Loading &&
-                        featureState.snapshotState !is NearbyVehicleSnapshotState.Refreshing
-                    ) {
+                    if (!featureState.snapshotState.isRefreshInFlight()) {
                         scope.launch {
                             featureState = stateProducer.loadingState(currentState = featureState)
                             featureState =
@@ -80,19 +80,6 @@ class NearbyVehicleMapPresenter(
             )
         }
     }
-
-    private fun NearbyVehicleSnapshotState.loadedSnapshotOrNull() =
-        when (this) {
-            is NearbyVehicleSnapshotState.Loaded -> snapshot
-
-            is NearbyVehicleSnapshotState.Failed -> previousSnapshot
-
-            is NearbyVehicleSnapshotState.Refreshing -> snapshot
-
-            NearbyVehicleSnapshotState.Initial,
-            NearbyVehicleSnapshotState.Loading,
-            -> null
-        }
 }
 
 @Inject

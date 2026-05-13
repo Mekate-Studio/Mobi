@@ -93,9 +93,10 @@ class NearbyVehicleMapPresenterStateProducerTest {
         val presentation = featureState.toNearbyVehicleMapPresentation()
 
         // then
-        assertEquals("Snapshot may be stale", presentation.overlay.headline)
-        assertEquals(false, presentation.overlay.blocksMap)
-        assertTrue(presentation.vehicles.isNotEmpty())
+        val overlay = assertIs<NearbyVehicleMapOverlayPresentation.Banner>(presentation.overlay)
+        val mapContent = assertIs<NearbyVehicleMapContentPresentation.RiderCentered>(presentation.mapContent)
+        assertEquals("Snapshot may be stale", overlay.headline)
+        assertTrue(mapContent.vehicles.isNotEmpty())
     }
 
     @Test
