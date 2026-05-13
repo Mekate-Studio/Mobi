@@ -205,15 +205,17 @@ An intended shape is:
 NearbyVehicleMapFeatureState
 ├── riderLocationState
 │   ├── Resolving
-│   ├── Available(currentOrLastResolved)
+│   ├── Available(location)
 │   ├── Denied
-│   └── TemporarilyUnavailable
+│   ├── TemporarilyUnavailable(lastResolvedLocation)
+│   └── Unavailable
 ├── snapshotState
 │   ├── Initial
 │   ├── Loading
 │   ├── Loaded(snapshot)
 │   ├── Refreshing(snapshot)
-│   └── Failed(previousSnapshot?)
+│   ├── FailedWithSnapshot(snapshot)
+│   └── FailedWithoutSnapshot
 └── mapOverlayState
     ├── None
     ├── RefreshingIndicator

@@ -126,7 +126,7 @@ class NearbyVehicleMapFeatureServiceTest {
             val failedState = service.refreshSnapshot(currentState = state, nowMillis = 31_001)
 
             // then
-            assertIs<NearbyVehicleSnapshotState.Failed>(failedState.snapshotState)
+            assertIs<NearbyVehicleSnapshotState.FailedWithSnapshot>(failedState.snapshotState)
             assertIs<NearbyVehicleMapOverlayState.BlockingFailure>(failedState.mapOverlayState)
         }
 

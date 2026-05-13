@@ -40,7 +40,7 @@ class NearbyVehicleMapFeatureService(
     fun riderLocationTemporarilyUnavailable(currentState: NearbyVehicleMapFeatureState): NearbyVehicleMapFeatureState {
         val riderLocationState =
             when (val currentLocationState = currentState.riderLocationState) {
-                is RiderLocationState.Visible -> {
+                is VisibleRiderLocationState -> {
                     RiderLocationState.TemporarilyUnavailable(
                         location = currentLocationState.location,
                     )
@@ -58,8 +58,8 @@ class NearbyVehicleMapFeatureService(
             riderLocationState = riderLocationState,
             mapOverlayState =
                 if (
-                    riderLocationState !is RiderLocationState.Visible &&
-                    currentState.snapshotState !is NearbyVehicleSnapshotState.WithSnapshot
+                    riderLocationState !is VisibleRiderLocationState &&
+                    currentState.snapshotState !is SnapshotBackedNearbyVehicleState
                 ) {
                     NearbyVehicleMapOverlayState.BlockingFailure
                 } else {
@@ -72,7 +72,7 @@ class NearbyVehicleMapFeatureService(
         currentState.copy(
             snapshotState =
                 when (val snapshotState = currentState.snapshotState) {
-                    is NearbyVehicleSnapshotState.WithSnapshot -> {
+                    is SnapshotBackedNearbyVehicleState -> {
                         NearbyVehicleSnapshotState.Refreshing(snapshot = snapshotState.snapshot)
                     }
 
@@ -85,7 +85,7 @@ class NearbyVehicleMapFeatureService(
                 },
             mapOverlayState =
                 when (currentState.snapshotState) {
-                    is NearbyVehicleSnapshotState.WithSnapshot -> NearbyVehicleMapOverlayState.RefreshingIndicator
+                    is SnapshotBackedNearbyVehicleState -> NearbyVehicleMapOverlayState.RefreshingIndicator
 
                     NearbyVehicleSnapshotState.Initial,
                     NearbyVehicleSnapshotState.Loading,
@@ -100,7 +100,7 @@ class NearbyVehicleMapFeatureService(
         nowMillis: Long,
     ): NearbyVehicleMapFeatureState {
         val riderLocation =
-            (currentState.riderLocationState as? RiderLocationState.Visible)?.location
+            (currentState.riderLocationState as? VisibleRiderLocationState)?.location
                 ?: return failedState(
                     currentState = currentState,
                     reason = NearbyVehicleMapFailureReason.RiderLocationUnavailable,
@@ -170,7 +170,7 @@ class NearbyVehicleMapFeatureService(
             snapshotState = snapshotState,
             mapOverlayState =
                 freshnessPolicy.failureOverlay(
-                    snapshotState = snapshotState,
+                    snapshotState = snapshotState as FailedNearbyVehicleSnapshotState,
                     nowMillis = nowMillis,
                 ),
         )

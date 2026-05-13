@@ -4,8 +4,9 @@ import studio.mekate.mobi.core.NearbyVehicle
 import studio.mekate.mobi.core.RiderLocation
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
-import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
+import studio.mekate.mobi.feature.nearbyvehiclemap.SnapshotBackedNearbyVehicleState
+import studio.mekate.mobi.feature.nearbyvehiclemap.VisibleRiderLocationState
 import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
 
 data class NearbyVehicleMapPresentation(
@@ -41,8 +42,8 @@ sealed interface NearbyVehicleMapOverlayPresentation {
 }
 
 fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicleMapPresentation {
-    val snapshotState = snapshotState as? NearbyVehicleSnapshotState.WithSnapshot
-    val riderLocationState = riderLocationState as? RiderLocationState.Visible
+    val snapshotState = snapshotState as? SnapshotBackedNearbyVehicleState
+    val riderLocationState = riderLocationState as? VisibleRiderLocationState
 
     return NearbyVehicleMapPresentation(
         title = "Nearby vehicles",
@@ -62,7 +63,7 @@ fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicle
     )
 }
 
-private fun RiderLocationState.messageText(snapshotState: NearbyVehicleSnapshotState.WithSnapshot?): String =
+private fun RiderLocationState.messageText(snapshotState: SnapshotBackedNearbyVehicleState?): String =
     when (this) {
         RiderLocationState.Resolving -> {
             "Grant while-in-use location access to center discovery around the rider."

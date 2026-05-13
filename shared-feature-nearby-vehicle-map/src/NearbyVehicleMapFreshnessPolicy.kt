@@ -8,7 +8,7 @@ class NearbyVehicleMapFreshnessPolicy {
         snapshotState: NearbyVehicleSnapshotState,
         nowMillis: Long,
     ): Boolean =
-        snapshotState is NearbyVehicleSnapshotState.WithSnapshot &&
+        snapshotState is SnapshotBackedNearbyVehicleState &&
             nowMillis - snapshotState.snapshot.loadedAtMillis >= REFRESH_INTERVAL_MILLIS
 
     fun overlayAfterTimePasses(
@@ -31,7 +31,7 @@ class NearbyVehicleMapFreshnessPolicy {
         }
 
     fun failureOverlay(
-        snapshotState: NearbyVehicleSnapshotState.Failed,
+        snapshotState: FailedNearbyVehicleSnapshotState,
         nowMillis: Long,
     ): NearbyVehicleMapOverlayState =
         when (snapshotState) {
@@ -48,7 +48,7 @@ class NearbyVehicleMapFreshnessPolicy {
             }
         }
 
-    private fun NearbyVehicleSnapshotState.WithSnapshot.isStaleWindowExceeded(nowMillis: Long): Boolean =
+    private fun SnapshotBackedNearbyVehicleState.isStaleWindowExceeded(nowMillis: Long): Boolean =
         nowMillis - snapshot.loadedAtMillis > STALE_WINDOW_MILLIS
 
     companion object {
