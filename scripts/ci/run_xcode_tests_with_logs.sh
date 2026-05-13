@@ -22,17 +22,6 @@ skip_macro_validation="$(ci_resolve_skip_macro_validation)"
 
 echo "Using SKIP_MACRO_VALIDATION=${skip_macro_validation}"
 
-simulator_udid="$(
-  xcrun simctl list devices available --json | ruby -rjson -e '
-    data = JSON.parse(STDIN.read)
-    device = data.fetch("devices").values.flatten.find do |entry|
-      entry["isAvailable"] && entry["name"].start_with?("iPhone")
-    end
-    abort("No available iPhone simulator found") unless device
-    puts device["udid"]
-  '
-)"
-
 cmd=(xcodebuild)
 
 if [[ -f "${workspace_contents_path}" ]]; then
@@ -47,10 +36,35 @@ if [[ "${skip_macro_validation}" == "YES" ]]; then
   cmd+=(-skipMacroValidation)
 fi
 
+resolve_simulator_destination() {
+  if [[ -n "${IOS_SIMULATOR_DESTINATION:-}" ]]; then
+    printf '%s\n' "${IOS_SIMULATOR_DESTINATION}"
+    return
+  fi
+
+  "${cmd[@]}" -scheme app -showdestinations 2>&1 | ruby -e '
+    destination = STDIN.each_line.find do |entry|
+      entry.include?("{ platform:iOS Simulator") &&
+        entry.include?("name:iPhone") &&
+        !entry.include?("placeholder")
+    end
+
+    abort("No Xcode-eligible iPhone simulator destination found") unless destination
+
+    simulator_id = destination[/id:([^, }]+)/, 1]
+    abort("No simulator id found in destination: #{destination}") unless simulator_id
+
+    puts "platform=iOS Simulator,id=#{simulator_id}"
+  '
+}
+
+simulator_destination="$(resolve_simulator_destination)"
+echo "Using iOS simulator destination=${simulator_destination}"
+
 cmd+=(
   -scheme app
   -configuration Debug
-  -destination "platform=iOS Simulator,id=${simulator_udid}"
+  -destination "${simulator_destination}"
   -derivedDataPath "${derived_data_dir}"
   "SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
   test
