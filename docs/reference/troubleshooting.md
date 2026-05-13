@@ -30,7 +30,7 @@ Fix:
 - run Android jobs through [`scripts/ci/run_job.sh`](../../scripts/ci/run_job.sh)
 - keep `AMPER_USER_HOME` on a workspace-owned path, such as
   `$PWD/.amper-user-home`
-- do not restore Amper's `.m2.cache` from GitHub Actions cache
+- cache only Amper's `.m2.cache`, not the whole Amper user home
 
 The shared CI layer sets `AMPER_USER_HOME`, `AMPER_TMP_DIR`, and
 `AMPER_JAVA_OPTIONS`. Android Fastlane lanes call
@@ -54,11 +54,14 @@ Fix:
 - run Android jobs through [`scripts/ci/run_job.sh`](../../scripts/ci/run_job.sh)
 - keep Android Fastlane lanes on
   [`scripts/ci/run_amper_with_logs.sh`](../../scripts/ci/run_amper_with_logs.sh)
+- restore `.amper-user-home/Library/Caches/JetBrains/Amper/.m2.cache` from the
+  GitHub Actions smoke cache
 
 The wrapper detects Maven Central throttling in direct output and current-run
 Amper logs, downloads the reported artifacts sequentially through the canonical
 Maven Central host, hydrates the base artifact for checksum URLs, waits
-briefly, and retries Amper with the hydrated cache.
+briefly, and retries Amper with the hydrated cache. The cache keeps that
+hydration work from becoming the normal path on every run.
 
 ## Android SDK is not detected
 
