@@ -1,7 +1,6 @@
 package studio.mekate.mobi.feature.nearbyvehiclemap
 
 import dev.zacsweers.metro.Inject
-import studio.mekate.mobi.core.FleetSnapshot
 import studio.mekate.mobi.core.NearbyFleetRepository
 import studio.mekate.mobi.core.NearbyFleetRepositoryException
 import studio.mekate.mobi.core.NearbyFleetRequest
@@ -11,6 +10,7 @@ import kotlin.coroutines.cancellation.CancellationException
 @Inject
 class NearbyVehicleMapFeatureService(
     private val nearbyFleetRepository: NearbyFleetRepository,
+    private val freshnessPolicy: NearbyVehicleMapFreshnessPolicy,
 ) {
     fun initialState(): NearbyVehicleMapFeatureState =
         NearbyVehicleMapFeatureState(
@@ -120,28 +120,23 @@ class NearbyVehicleMapFeatureService(
     fun shouldRefresh(
         currentState: NearbyVehicleMapFeatureState,
         nowMillis: Long,
-    ): Boolean {
-        val snapshot = currentState.snapshotState.currentSnapshotOrNull() ?: return false
-        return nowMillis - snapshot.loadedAtMillis >= REFRESH_INTERVAL_MILLIS
-    }
+    ): Boolean =
+        freshnessPolicy.shouldRefresh(
+            snapshotState = currentState.snapshotState,
+            nowMillis = nowMillis,
+        )
 
     fun stateAfterTimePasses(
         currentState: NearbyVehicleMapFeatureState,
         nowMillis: Long,
     ): NearbyVehicleMapFeatureState {
-        val snapshot = currentState.snapshotState.currentSnapshotOrNull()
+        val overlayState =
+            freshnessPolicy.overlayAfterTimePasses(
+                snapshotState = currentState.snapshotState,
+                nowMillis = nowMillis,
+            ) ?: return currentState
 
-        return if (snapshot == null || currentState.snapshotState !is NearbyVehicleSnapshotState.Failed) {
-            currentState
-        } else if (isStaleWindowExceeded(snapshot = snapshot, nowMillis = nowMillis)) {
-            currentState.copy(
-                mapOverlayState = NearbyVehicleMapOverlayState.BlockingFailure,
-            )
-        } else {
-            currentState.copy(
-                mapOverlayState = NearbyVehicleMapOverlayState.StaleIndicator,
-            )
-        }
+        return currentState.copy(mapOverlayState = overlayState)
     }
 
     private fun failedState(
@@ -150,20 +145,6 @@ class NearbyVehicleMapFeatureService(
         nowMillis: Long,
     ): NearbyVehicleMapFeatureState {
         val previousSnapshot = currentState.snapshotState.currentSnapshotOrNull()
-        val overlayState =
-            when {
-                previousSnapshot == null -> {
-                    NearbyVehicleMapOverlayState.BlockingFailure
-                }
-
-                isStaleWindowExceeded(snapshot = previousSnapshot, nowMillis = nowMillis) -> {
-                    NearbyVehicleMapOverlayState.BlockingFailure
-                }
-
-                else -> {
-                    NearbyVehicleMapOverlayState.StaleIndicator
-                }
-            }
 
         return currentState.copy(
             snapshotState =
@@ -171,17 +152,16 @@ class NearbyVehicleMapFeatureService(
                     previousSnapshot = previousSnapshot,
                     reason = reason,
                 ),
-            mapOverlayState = overlayState,
+            mapOverlayState =
+                freshnessPolicy.failureOverlay(
+                    previousSnapshot = previousSnapshot,
+                    nowMillis = nowMillis,
+                ),
         )
     }
 
     companion object {
-        const val REFRESH_INTERVAL_MILLIS: Long = 10_000
-        const val STALE_WINDOW_MILLIS: Long = 30_000
+        const val REFRESH_INTERVAL_MILLIS: Long = NearbyVehicleMapFreshnessPolicy.REFRESH_INTERVAL_MILLIS
+        const val STALE_WINDOW_MILLIS: Long = NearbyVehicleMapFreshnessPolicy.STALE_WINDOW_MILLIS
     }
 }
-
-private fun isStaleWindowExceeded(
-    snapshot: FleetSnapshot,
-    nowMillis: Long,
-): Boolean = nowMillis - snapshot.loadedAtMillis > NearbyVehicleMapFeatureService.STALE_WINDOW_MILLIS

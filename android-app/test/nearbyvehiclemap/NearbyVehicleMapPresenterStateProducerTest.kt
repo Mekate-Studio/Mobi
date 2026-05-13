@@ -10,6 +10,7 @@ import studio.mekate.mobi.core.VehicleId
 import studio.mekate.mobi.core.VehicleLocation
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFailureReason
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
+import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFreshnessPolicy
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
@@ -130,6 +131,7 @@ class NearbyVehicleMapPresenterStateProducerTest {
                                     loadedAtMillis = request.requestedAtMillis,
                                 )
                         },
+                    freshnessPolicy = NearbyVehicleMapFreshnessPolicy(),
                 ),
         )
 

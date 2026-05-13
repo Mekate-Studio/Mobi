@@ -183,6 +183,7 @@ class NearbyVehicleMapFeatureServiceTest {
                         )
                     }
                 },
+            freshnessPolicy = NearbyVehicleMapFreshnessPolicy(),
         )
 
     private fun loadedState(
