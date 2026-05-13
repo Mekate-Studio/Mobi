@@ -131,11 +131,42 @@ download_maven_relative_path() {
   mv "${temp_file}" "${destination_path}"
 }
 
+checksum_base_relative_path() {
+  local maven_relative_path="${1:?Maven relative path required}"
+
+  case "${maven_relative_path}" in
+    *.sha512|*.sha256|*.sha1|*.md5)
+      printf '%s\n' "${maven_relative_path%.*}"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+cache_path_for_maven_relative_path() {
+  local maven_relative_path="${1:?Maven relative path required}"
+
+  printf '%s\n' "${AMPER_USER_HOME:?}/Library/Caches/JetBrains/Amper/.m2.cache/${maven_relative_path}"
+}
+
 materialize_rate_limited_url() {
   local artifact_url="${1:?artifact URL required}"
   local maven_relative_path="${artifact_url#https://repo1.maven.org/maven2/}"
   maven_relative_path="${maven_relative_path#https://repo.maven.apache.org/maven2/}"
-  local destination_path="${AMPER_USER_HOME:?}/Library/Caches/JetBrains/Amper/.m2.cache/${maven_relative_path}"
+  local destination_path=""
+  local base_relative_path=""
+  local base_destination_path=""
+  local hydrated=0
+
+  destination_path="$(cache_path_for_maven_relative_path "${maven_relative_path}")"
+
+  if base_relative_path="$(checksum_base_relative_path "${maven_relative_path}")"; then
+    base_destination_path="$(cache_path_for_maven_relative_path "${base_relative_path}")"
+    if [[ ! -f "${base_destination_path}" ]] && download_maven_relative_path "${base_relative_path}" "${base_destination_path}"; then
+      hydrated=1
+    fi
+  fi
 
   if [[ -f "${destination_path}" ]]; then
     return 0
@@ -143,19 +174,31 @@ materialize_rate_limited_url() {
 
   echo "Hydrating rate-limited Maven artifact:"
   echo "  ${artifact_url}"
-  download_maven_relative_path "${maven_relative_path}" "${destination_path}"
+  if download_maven_relative_path "${maven_relative_path}" "${destination_path}"; then
+    return 0
+  fi
+
+  [[ "${hydrated}" -eq 1 ]]
 }
 
 materialize_rate_limited_urls() {
   local urls="${1:-}"
   local artifact_url=""
   local hydrated_count=0
+  local failed_count=0
 
   while IFS= read -r artifact_url; do
     [[ -n "${artifact_url}" ]] || continue
-    materialize_rate_limited_url "${artifact_url}" || return 1
-    hydrated_count=$((hydrated_count + 1))
+    if materialize_rate_limited_url "${artifact_url}"; then
+      hydrated_count=$((hydrated_count + 1))
+    else
+      failed_count=$((failed_count + 1))
+    fi
   done <<<"${urls}"
+
+  if [[ "${failed_count}" -gt 0 ]]; then
+    echo "Skipped ${failed_count} rate-limited Maven URL(s) that could not be hydrated."
+  fi
 
   [[ "${hydrated_count}" -gt 0 ]]
 }

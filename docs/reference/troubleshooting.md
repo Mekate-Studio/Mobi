@@ -57,7 +57,8 @@ Fix:
 
 The wrapper detects Maven Central throttling in direct output and current-run
 Amper logs, downloads the reported artifacts sequentially through the canonical
-Maven Central host, waits briefly, and retries Amper with the hydrated cache.
+Maven Central host, hydrates the base artifact for checksum URLs, waits
+briefly, and retries Amper with the hydrated cache.
 
 ## Android SDK is not detected
 
