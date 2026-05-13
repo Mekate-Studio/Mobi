@@ -10,36 +10,55 @@ data class NearbyVehicleMapFeatureState(
 )
 
 sealed interface RiderLocationState {
+    sealed interface Visible : RiderLocationState {
+        val location: RiderLocation
+    }
+
     data object Resolving : RiderLocationState
 
     data class Available(
-        val location: RiderLocation,
-    ) : RiderLocationState
+        override val location: RiderLocation,
+    ) : Visible
 
     data object Denied : RiderLocationState
 
     data class TemporarilyUnavailable(
-        val lastResolvedLocation: RiderLocation?,
-    ) : RiderLocationState
+        override val location: RiderLocation,
+    ) : Visible
+
+    data object Unavailable : RiderLocationState
 }
 
 sealed interface NearbyVehicleSnapshotState {
+    sealed interface WithSnapshot : NearbyVehicleSnapshotState {
+        val snapshot: FleetSnapshot
+    }
+
+    sealed interface Failed : NearbyVehicleSnapshotState {
+        val reason: NearbyVehicleMapFailureReason
+    }
+
     data object Initial : NearbyVehicleSnapshotState
 
     data object Loading : NearbyVehicleSnapshotState
 
     data class Loaded(
-        val snapshot: FleetSnapshot,
-    ) : NearbyVehicleSnapshotState
+        override val snapshot: FleetSnapshot,
+    ) : WithSnapshot
 
     data class Refreshing(
-        val snapshot: FleetSnapshot,
-    ) : NearbyVehicleSnapshotState
+        override val snapshot: FleetSnapshot,
+    ) : WithSnapshot
 
-    data class Failed(
-        val previousSnapshot: FleetSnapshot?,
-        val reason: NearbyVehicleMapFailureReason,
-    ) : NearbyVehicleSnapshotState
+    data class FailedWithSnapshot(
+        override val snapshot: FleetSnapshot,
+        override val reason: NearbyVehicleMapFailureReason,
+    ) : Failed,
+        WithSnapshot
+
+    data class FailedWithoutSnapshot(
+        override val reason: NearbyVehicleMapFailureReason,
+    ) : Failed
 }
 
 enum class NearbyVehicleMapFailureReason {
@@ -59,35 +78,24 @@ sealed interface NearbyVehicleMapOverlayState {
 }
 
 fun NearbyVehicleMapFeatureState.canRequestRefresh(): Boolean =
-    riderLocationState.visibleLocationOrNull() != null &&
+    riderLocationState is RiderLocationState.Visible &&
         !snapshotState.isRefreshInFlight()
 
-fun RiderLocationState.visibleLocationOrNull(): RiderLocation? =
+fun NearbyVehicleSnapshotState.failedWith(reason: NearbyVehicleMapFailureReason): NearbyVehicleSnapshotState.Failed =
     when (this) {
-        is RiderLocationState.Available -> location
+        is NearbyVehicleSnapshotState.WithSnapshot -> {
+            NearbyVehicleSnapshotState.FailedWithSnapshot(
+                snapshot = snapshot,
+                reason = reason,
+            )
+        }
 
-        is RiderLocationState.TemporarilyUnavailable -> lastResolvedLocation
-
-        RiderLocationState.Denied,
-        RiderLocationState.Resolving,
-        -> null
-    }
-
-fun RiderLocationState.discoveryLocationOrNull(): RiderLocation? = visibleLocationOrNull()
-
-fun RiderLocationState.lastResolvedLocationOrNull(): RiderLocation? = visibleLocationOrNull()
-
-fun NearbyVehicleSnapshotState.currentSnapshotOrNull(): FleetSnapshot? =
-    when (this) {
-        is NearbyVehicleSnapshotState.Loaded -> snapshot
-
-        is NearbyVehicleSnapshotState.Refreshing -> snapshot
-
-        is NearbyVehicleSnapshotState.Failed -> previousSnapshot
-
-        NearbyVehicleSnapshotState.Initial,
         NearbyVehicleSnapshotState.Loading,
-        -> null
+        NearbyVehicleSnapshotState.Initial,
+        is NearbyVehicleSnapshotState.FailedWithoutSnapshot,
+        -> {
+            NearbyVehicleSnapshotState.FailedWithoutSnapshot(reason = reason)
+        }
     }
 
 fun NearbyVehicleSnapshotState.isRefreshInFlight(): Boolean =

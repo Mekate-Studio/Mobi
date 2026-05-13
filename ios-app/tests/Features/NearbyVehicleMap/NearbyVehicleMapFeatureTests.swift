@@ -151,7 +151,7 @@ private enum NearbyVehicleMapFeatureTestFactory {
             },
             locationTemporarilyUnavailableState: { currentState in
                 makeSharedState(
-                    riderLocationState: RiderLocationStateTemporarilyUnavailable(lastResolvedLocation: riderLocation()),
+                    riderLocationState: RiderLocationStateTemporarilyUnavailable(location: riderLocation()),
                     snapshotState: currentState.snapshotState,
                     overlayState: currentState.mapOverlayState,
                 )
@@ -231,7 +231,7 @@ private enum NearbyVehicleMapFeatureTestFactory {
         var state = NearbyVehicleMapFeature.State()
         state.apply(
             sharedState: makeSharedState(
-                riderLocationState: RiderLocationStateTemporarilyUnavailable(lastResolvedLocation: riderLocation()),
+                riderLocationState: RiderLocationStateTemporarilyUnavailable(location: riderLocation()),
                 snapshotState: NearbyVehicleSnapshotStateLoaded(snapshot: snapshot()),
                 overlayState: NearbyVehicleMapOverlayStateNone.shared,
             ),
@@ -250,8 +250,7 @@ private enum NearbyVehicleMapFeatureTestFactory {
     static func deniedSharedState() -> NearbyVehicleMapFeatureState {
         makeSharedState(
             riderLocationState: RiderLocationStateDenied.shared,
-            snapshotState: NearbyVehicleSnapshotStateFailed(
-                previousSnapshot: nil,
+            snapshotState: NearbyVehicleSnapshotStateFailedWithoutSnapshot(
                 reason: NearbyVehicleMapFailureReason.riderLocationUnavailable,
             ),
             overlayState: NearbyVehicleMapOverlayStateBlockingFailure.shared,
@@ -278,8 +277,10 @@ private enum NearbyVehicleMapFeatureTestFactory {
             state.snapshot
         case let .refreshing(state):
             state.snapshot
-        case let .failed(state):
-            state.previousSnapshot
+        case let .failedWithSnapshot(state):
+            state.snapshot
+        case .failedWithoutSnapshot:
+            nil
         }
     }
 

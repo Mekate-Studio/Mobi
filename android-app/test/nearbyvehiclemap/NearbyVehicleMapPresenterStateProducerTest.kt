@@ -83,8 +83,8 @@ class NearbyVehicleMapPresenterStateProducerTest {
                             location = defaultRiderLocation(),
                         ),
                     snapshotState =
-                        NearbyVehicleSnapshotState.Failed(
-                            previousSnapshot = snapshot(loadedAtMillis = 1_000),
+                        NearbyVehicleSnapshotState.FailedWithSnapshot(
+                            snapshot = snapshot(loadedAtMillis = 1_000),
                             reason = NearbyVehicleMapFailureReason.RepositoryUnavailable,
                         ),
                     mapOverlayState = NearbyVehicleMapOverlayState.StaleIndicator,

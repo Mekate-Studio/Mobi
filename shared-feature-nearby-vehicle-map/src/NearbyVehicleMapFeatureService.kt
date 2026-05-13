@@ -31,23 +31,36 @@ class NearbyVehicleMapFeatureService(
         currentState.copy(
             riderLocationState = RiderLocationState.Denied,
             snapshotState =
-                NearbyVehicleSnapshotState.Failed(
-                    previousSnapshot = currentState.snapshotState.currentSnapshotOrNull(),
+                currentState.snapshotState.failedWith(
                     reason = NearbyVehicleMapFailureReason.RiderLocationUnavailable,
                 ),
             mapOverlayState = NearbyVehicleMapOverlayState.BlockingFailure,
         )
 
     fun riderLocationTemporarilyUnavailable(currentState: NearbyVehicleMapFeatureState): NearbyVehicleMapFeatureState {
-        val lastResolvedLocation = currentState.riderLocationState.lastResolvedLocationOrNull()
+        val riderLocationState =
+            when (val currentLocationState = currentState.riderLocationState) {
+                is RiderLocationState.Visible -> {
+                    RiderLocationState.TemporarilyUnavailable(
+                        location = currentLocationState.location,
+                    )
+                }
+
+                RiderLocationState.Denied,
+                RiderLocationState.Resolving,
+                RiderLocationState.Unavailable,
+                -> {
+                    RiderLocationState.Unavailable
+                }
+            }
 
         return currentState.copy(
-            riderLocationState =
-                RiderLocationState.TemporarilyUnavailable(
-                    lastResolvedLocation = lastResolvedLocation,
-                ),
+            riderLocationState = riderLocationState,
             mapOverlayState =
-                if (lastResolvedLocation == null && currentState.snapshotState.currentSnapshotOrNull() == null) {
+                if (
+                    riderLocationState !is RiderLocationState.Visible &&
+                    currentState.snapshotState !is NearbyVehicleSnapshotState.WithSnapshot
+                ) {
                     NearbyVehicleMapOverlayState.BlockingFailure
                 } else {
                     currentState.mapOverlayState
@@ -55,24 +68,31 @@ class NearbyVehicleMapFeatureService(
         )
     }
 
-    fun loadingState(currentState: NearbyVehicleMapFeatureState): NearbyVehicleMapFeatureState {
-        val currentSnapshot = currentState.snapshotState.currentSnapshotOrNull()
-
-        return currentState.copy(
+    fun loadingState(currentState: NearbyVehicleMapFeatureState): NearbyVehicleMapFeatureState =
+        currentState.copy(
             snapshotState =
-                if (currentSnapshot == null) {
-                    NearbyVehicleSnapshotState.Loading
-                } else {
-                    NearbyVehicleSnapshotState.Refreshing(snapshot = currentSnapshot)
+                when (val snapshotState = currentState.snapshotState) {
+                    is NearbyVehicleSnapshotState.WithSnapshot -> {
+                        NearbyVehicleSnapshotState.Refreshing(snapshot = snapshotState.snapshot)
+                    }
+
+                    NearbyVehicleSnapshotState.Initial,
+                    NearbyVehicleSnapshotState.Loading,
+                    is NearbyVehicleSnapshotState.FailedWithoutSnapshot,
+                    -> {
+                        NearbyVehicleSnapshotState.Loading
+                    }
                 },
             mapOverlayState =
-                if (currentSnapshot == null) {
-                    NearbyVehicleMapOverlayState.None
-                } else {
-                    NearbyVehicleMapOverlayState.RefreshingIndicator
+                when (currentState.snapshotState) {
+                    is NearbyVehicleSnapshotState.WithSnapshot -> NearbyVehicleMapOverlayState.RefreshingIndicator
+
+                    NearbyVehicleSnapshotState.Initial,
+                    NearbyVehicleSnapshotState.Loading,
+                    is NearbyVehicleSnapshotState.FailedWithoutSnapshot,
+                    -> NearbyVehicleMapOverlayState.None
                 },
         )
-    }
 
     @Suppress("SwallowedException", "TooGenericExceptionCaught")
     suspend fun refreshSnapshot(
@@ -80,7 +100,7 @@ class NearbyVehicleMapFeatureService(
         nowMillis: Long,
     ): NearbyVehicleMapFeatureState {
         val riderLocation =
-            currentState.riderLocationState.discoveryLocationOrNull()
+            (currentState.riderLocationState as? RiderLocationState.Visible)?.location
                 ?: return failedState(
                     currentState = currentState,
                     reason = NearbyVehicleMapFailureReason.RiderLocationUnavailable,
@@ -144,17 +164,13 @@ class NearbyVehicleMapFeatureService(
         reason: NearbyVehicleMapFailureReason,
         nowMillis: Long,
     ): NearbyVehicleMapFeatureState {
-        val previousSnapshot = currentState.snapshotState.currentSnapshotOrNull()
+        val snapshotState = currentState.snapshotState.failedWith(reason = reason)
 
         return currentState.copy(
-            snapshotState =
-                NearbyVehicleSnapshotState.Failed(
-                    previousSnapshot = previousSnapshot,
-                    reason = reason,
-                ),
+            snapshotState = snapshotState,
             mapOverlayState =
                 freshnessPolicy.failureOverlay(
-                    previousSnapshot = previousSnapshot,
+                    snapshotState = snapshotState,
                     nowMillis = nowMillis,
                 ),
         )

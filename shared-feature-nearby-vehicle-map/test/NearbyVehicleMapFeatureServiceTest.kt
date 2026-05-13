@@ -105,8 +105,8 @@ class NearbyVehicleMapFeatureServiceTest {
             val failedState = service.refreshSnapshot(currentState = state, nowMillis = 30_000)
 
             // then
-            val failed = assertIs<NearbyVehicleSnapshotState.Failed>(failedState.snapshotState)
-            assertEquals(snapshot(loadedAtMillis = 1_000), failed.previousSnapshot)
+            val failed = assertIs<NearbyVehicleSnapshotState.FailedWithSnapshot>(failedState.snapshotState)
+            assertEquals(snapshot(loadedAtMillis = 1_000), failed.snapshot)
             assertEquals(NearbyVehicleMapFailureReason.RepositoryUnavailable, failed.reason)
             assertIs<NearbyVehicleMapOverlayState.StaleIndicator>(failedState.mapOverlayState)
         }
@@ -145,8 +145,8 @@ class NearbyVehicleMapFeatureServiceTest {
             val failedState = service.refreshSnapshot(currentState = state, nowMillis = 1_000)
 
             // then
-            val failed = assertIs<NearbyVehicleSnapshotState.Failed>(failedState.snapshotState)
-            assertEquals(null, failed.previousSnapshot)
+            val failed = assertIs<NearbyVehicleSnapshotState.FailedWithoutSnapshot>(failedState.snapshotState)
+            assertEquals(NearbyVehicleMapFailureReason.RepositoryUnavailable, failed.reason)
             assertIs<NearbyVehicleMapOverlayState.BlockingFailure>(failedState.mapOverlayState)
         }
 
@@ -166,7 +166,7 @@ class NearbyVehicleMapFeatureServiceTest {
 
         // then
         val locationState = assertIs<RiderLocationState.TemporarilyUnavailable>(degradedState.riderLocationState)
-        assertEquals(riderLocation, locationState.lastResolvedLocation)
+        assertEquals(riderLocation, locationState.location)
     }
 
     private fun createService(shouldFail: Boolean = false): NearbyVehicleMapFeatureService =

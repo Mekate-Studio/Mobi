@@ -36,11 +36,10 @@ extension NearbyVehicleMapFeature {
                 return vehicleCountText
             case .denied:
                 return "Location access is required before nearby vehicles can be positioned relative to the rider."
-            case let .temporarilyUnavailable(state):
-                if state.lastResolvedLocation == nil {
-                    return "Rider location is temporarily unavailable, so discovery is blocked."
-                }
+            case .temporarilyUnavailable:
                 return "Live location is temporarily unavailable. Keeping the last resolved rider position."
+            case .unavailable:
+                return "Rider location is temporarily unavailable, so discovery is blocked."
             }
         }
 
@@ -80,7 +79,7 @@ extension NearbyVehicleMapFeature {
             switch onEnum(of: sharedState.snapshotState) {
             case .loading, .refreshing:
                 return false
-            case .initial, .loaded, .failed:
+            case .initial, .loaded, .failedWithSnapshot, .failedWithoutSnapshot:
                 return true
             }
         }
@@ -95,8 +94,10 @@ extension NearbyVehicleMapFeature {
                 return state.snapshot
             case let .refreshing(state):
                 return state.snapshot
-            case let .failed(state):
-                return state.previousSnapshot
+            case let .failedWithSnapshot(state):
+                return state.snapshot
+            case .failedWithoutSnapshot:
+                return nil
             }
         }
 
@@ -116,7 +117,9 @@ extension NearbyVehicleMapFeature {
             case let .available(state):
                 return state.location
             case let .temporarilyUnavailable(state):
-                return state.lastResolvedLocation
+                return state.location
+            case .unavailable:
+                return nil
             }
         }
     }

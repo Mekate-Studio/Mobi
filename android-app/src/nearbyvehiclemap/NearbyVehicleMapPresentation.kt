@@ -1,14 +1,12 @@
 package studio.mekate.mobi.nearbyvehiclemap
 
-import studio.mekate.mobi.core.FleetSnapshot
 import studio.mekate.mobi.core.NearbyVehicle
 import studio.mekate.mobi.core.RiderLocation
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
+import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
 import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
-import studio.mekate.mobi.feature.nearbyvehiclemap.currentSnapshotOrNull
-import studio.mekate.mobi.feature.nearbyvehiclemap.visibleLocationOrNull
 
 data class NearbyVehicleMapPresentation(
     val title: String,
@@ -43,19 +41,19 @@ sealed interface NearbyVehicleMapOverlayPresentation {
 }
 
 fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicleMapPresentation {
-    val snapshot = snapshotState.currentSnapshotOrNull()
-    val riderLocation = riderLocationState.visibleLocationOrNull()
+    val snapshotState = snapshotState as? NearbyVehicleSnapshotState.WithSnapshot
+    val riderLocationState = riderLocationState as? RiderLocationState.Visible
 
     return NearbyVehicleMapPresentation(
         title = "Nearby vehicles",
-        message = riderLocationState.messageText(snapshot = snapshot),
+        message = this.riderLocationState.messageText(snapshotState = snapshotState),
         mapContent =
-            if (riderLocation == null) {
+            if (riderLocationState == null) {
                 NearbyVehicleMapContentPresentation.WaitingForRider
             } else {
                 NearbyVehicleMapContentPresentation.RiderCentered(
-                    riderLocation = riderLocation,
-                    vehicles = snapshot?.vehicles.orEmpty(),
+                    riderLocation = riderLocationState.location,
+                    vehicles = snapshotState?.snapshot?.vehicles.orEmpty(),
                 )
             },
         overlay = mapOverlayState.toPresentation(),
@@ -64,17 +62,17 @@ fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicle
     )
 }
 
-private fun RiderLocationState.messageText(snapshot: FleetSnapshot?): String =
+private fun RiderLocationState.messageText(snapshotState: NearbyVehicleSnapshotState.WithSnapshot?): String =
     when (this) {
         RiderLocationState.Resolving -> {
             "Grant while-in-use location access to center discovery around the rider."
         }
 
         is RiderLocationState.Available -> {
-            if (snapshot == null) {
+            if (snapshotState == null) {
                 "Rider location is ready. Load the first rider-centered fleet snapshot."
             } else {
-                "Showing ${snapshot.vehicles.size} vehicles around the rider."
+                "Showing ${snapshotState.snapshot.vehicles.size} vehicles around the rider."
             }
         }
 
@@ -83,11 +81,11 @@ private fun RiderLocationState.messageText(snapshot: FleetSnapshot?): String =
         }
 
         is RiderLocationState.TemporarilyUnavailable -> {
-            if (lastResolvedLocation == null) {
-                "Rider location is temporarily unavailable, so discovery is blocked."
-            } else {
-                "Live location is temporarily unavailable. Keeping the last resolved rider position."
-            }
+            "Live location is temporarily unavailable. Keeping the last resolved rider position."
+        }
+
+        RiderLocationState.Unavailable -> {
+            "Rider location is temporarily unavailable, so discovery is blocked."
         }
     }
 

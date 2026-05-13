@@ -15,7 +15,7 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
-import studio.mekate.mobi.feature.nearbyvehiclemap.currentSnapshotOrNull
+import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
 import studio.mekate.mobi.feature.nearbyvehiclemap.isRefreshInFlight
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -30,8 +30,7 @@ class NearbyVehicleMapPresenter(
         val scope = rememberCoroutineScope()
 
         LaunchedEffect(featureState) {
-            val loadedSnapshot = featureState.snapshotState.currentSnapshotOrNull()
-            if (loadedSnapshot != null) {
+            if (featureState.snapshotState is NearbyVehicleSnapshotState.WithSnapshot) {
                 delay(NearbyVehicleMapFeatureService.REFRESH_INTERVAL_MILLIS.milliseconds)
                 featureState =
                     stateProducer.loadingState(
