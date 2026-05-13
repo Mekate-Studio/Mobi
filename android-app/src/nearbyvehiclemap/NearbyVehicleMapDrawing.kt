@@ -6,8 +6,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import studio.mekate.mobi.core.NearbyVehicle
+import studio.mekate.mobi.core.NearbyVehicleMapProjection
 import studio.mekate.mobi.core.RiderLocation
-import studio.mekate.mobi.core.VehicleLocation
 
 fun DrawScope.drawCoordinateGrid() {
     val gridColor = Color(0x55395B45)
@@ -46,11 +46,15 @@ fun DrawScope.drawVehicleMarker(
     riderLocation: RiderLocation,
     center: Offset,
 ) {
-    val offset = vehicle.location.toOffsetFrom(riderLocation)
+    val offset =
+        NearbyVehicleMapProjection.offset(
+            vehicleLocation = vehicle.location,
+            riderLocation = riderLocation,
+        )
     val markerCenter =
         Offset(
-            x = center.x + (offset.x * size.minDimension * MAP_SCALE),
-            y = center.y - (offset.y * size.minDimension * MAP_SCALE),
+            x = center.x + (offset.x.toFloat() * size.minDimension * MAP_SCALE),
+            y = center.y - (offset.y.toFloat() * size.minDimension * MAP_SCALE),
         )
     drawCircle(
         color = Color(0xFFD97A35),
@@ -65,17 +69,4 @@ fun DrawScope.drawVehicleMarker(
     )
 }
 
-private data class MapOffset(
-    val x: Float,
-    val y: Float,
-)
-
-private fun VehicleLocation.toOffsetFrom(riderLocation: RiderLocation): MapOffset =
-    MapOffset(
-        x = ((longitude - riderLocation.longitude) * LONGITUDE_SCALE).toFloat(),
-        y = ((latitude - riderLocation.latitude) * LATITUDE_SCALE).toFloat(),
-    )
-
-private const val LATITUDE_SCALE = 1_000.0
-private const val LONGITUDE_SCALE = 1_800.0
 private const val MAP_SCALE = 0.42f

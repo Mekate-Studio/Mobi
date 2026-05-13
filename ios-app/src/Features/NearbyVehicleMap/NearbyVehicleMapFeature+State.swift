@@ -45,12 +45,17 @@ extension NearbyVehicleMapFeature {
         }
 
         var mapContent: NearbyVehicleMapContent {
-            guard let riderLocation = riderLocationCoordinate else {
+            guard let riderLocation else {
                 return .waitingForRider
             }
             return .riderCentered(
-                riderLocation: riderLocation,
-                vehicles: currentSnapshot?.vehicles.map(NearbyVehicleMapVehicle.init) ?? [],
+                riderLocation: NearbyVehicleMapCoordinate(location: riderLocation),
+                vehicles: currentSnapshot?.vehicles.map { vehicle in
+                    NearbyVehicleMapVehicle(
+                        vehicle: vehicle,
+                        riderLocation: riderLocation,
+                    )
+                } ?? [],
             )
         }
 
@@ -70,7 +75,7 @@ extension NearbyVehicleMapFeature {
         }
 
         var canRequestRefresh: Bool {
-            guard riderLocationCoordinate != nil, let sharedState else { return false }
+            guard riderLocation != nil, let sharedState else { return false }
 
             switch onEnum(of: sharedState.snapshotState) {
             case .loading, .refreshing:
@@ -102,16 +107,16 @@ extension NearbyVehicleMapFeature {
             return "Showing \(currentSnapshot.vehicles.count) vehicles around the rider."
         }
 
-        private var riderLocationCoordinate: NearbyVehicleMapCoordinate? {
+        private var riderLocation: RiderLocation? {
             guard let sharedState else { return nil }
 
             switch onEnum(of: sharedState.riderLocationState) {
             case .resolving, .denied:
                 return nil
             case let .available(state):
-                return NearbyVehicleMapCoordinate(location: state.location)
+                return state.location
             case let .temporarilyUnavailable(state):
-                return state.lastResolvedLocation.map(NearbyVehicleMapCoordinate.init)
+                return state.lastResolvedLocation
             }
         }
     }
@@ -133,18 +138,31 @@ struct NearbyVehicleMapCoordinate: Equatable {
         latitude = location.latitude
         longitude = location.longitude
     }
-
-    init(location: VehicleLocation) {
-        latitude = location.latitude
-        longitude = location.longitude
-    }
 }
 
 struct NearbyVehicleMapVehicle: Equatable {
-    let location: NearbyVehicleMapCoordinate
+    let offset: NearbyVehicleMapProjectedOffset
 
-    init(vehicle: NearbyVehicle) {
-        location = NearbyVehicleMapCoordinate(location: vehicle.location)
+    init(
+        vehicle: NearbyVehicle,
+        riderLocation: RiderLocation,
+    ) {
+        let offset =
+            NearbyVehicleMapProjection.shared.offset(
+                vehicleLocation: vehicle.location,
+                riderLocation: riderLocation,
+            )
+        self.offset = NearbyVehicleMapProjectedOffset(offset: offset)
+    }
+}
+
+struct NearbyVehicleMapProjectedOffset: Equatable {
+    let horizontal: Double
+    let vertical: Double
+
+    init(offset: NearbyVehicleMapOffset) {
+        horizontal = offset.x
+        vertical = offset.y
     }
 }
 

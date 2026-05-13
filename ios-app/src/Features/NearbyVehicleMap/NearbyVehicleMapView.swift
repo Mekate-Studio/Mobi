@@ -173,17 +173,15 @@ private struct NearbyVehicleCoordinateMap: View {
 
     private func vehiclePoint(
         vehicle: NearbyVehicleMapVehicle,
-        riderLocation: NearbyVehicleMapCoordinate,
+        riderLocation _: NearbyVehicleMapCoordinate,
         size: CGSize,
     ) -> CGPoint {
         let center = CGPoint(x: size.width / 2, y: size.height / 2)
-        let xOffset = (vehicle.location.longitude - riderLocation.longitude) * 1800
-        let yOffset = (vehicle.location.latitude - riderLocation.latitude) * 1000
         let scale = min(size.width, size.height) * 0.42
 
         return CGPoint(
-            x: center.x + (xOffset * scale),
-            y: center.y - (yOffset * scale),
+            x: center.x + (vehicle.offset.horizontal * scale),
+            y: center.y - (vehicle.offset.vertical * scale),
         )
     }
 }
