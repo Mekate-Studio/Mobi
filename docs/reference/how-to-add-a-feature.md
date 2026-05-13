@@ -140,6 +140,34 @@ For a feature named `profile`, the default module shape should be:
 Not every feature needs `shared-ui-*`. Add it only when we actually want a
 shared Compose path.
 
+## Design checkpoint
+
+Before implementation starts, sketch the feature's shared state and policy
+shape. The goal is not to overdesign; it is to catch ambiguity while it is
+cheap.
+
+A good design-phase sketch should answer:
+
+- What are the mutually exclusive states, and which variants carry values?
+- Which states represent real absence, and which should be separate sealed
+  cases instead of nullable payloads?
+- Which decisions are business policy, such as freshness, retry eligibility,
+  failure interpretation, or request eligibility?
+- Which values should be shared domain models, and which should be native
+  presentation models?
+- Which Android and iOS adapters will map shared state into platform-specific
+  screen state?
+- Which tests prove the important transitions before native UI is wired?
+
+Prefer sealed state with value-bearing variants over nullable bags of data.
+For example, model `FailedWithSnapshot(snapshot)` and
+`FailedWithoutSnapshot` when those states behave differently, instead of one
+`Failed(previousSnapshot?)` variant.
+
+When multiple concrete states share behavior, use named contracts carefully.
+They can make Kotlin call sites cleaner, but they should not obscure concrete
+sealed cases needed by Swift adapters.
+
 ## Step-by-step
 
 ### 1. Start in shared core
@@ -183,6 +211,15 @@ The `home` feature is the reference shape:
 Use type-driven state for mutually exclusive async states. Prefer sealed types
 over booleans like `isLoading` when the feature has distinct states such as
 initial, loading, loaded, and error.
+
+Avoid nullable feature-state payloads unless absence itself is the domain
+concept. If callers repeatedly need `thingOrNull()` helpers, consider whether
+the shared state should expose a more precise sealed case or a small named
+contract for the value-bearing variants.
+
+Keep orchestration services focused on transitions. Extract nameable policy
+objects for reusable rules such as staleness windows, refresh cadence,
+eligibility, retries, and failure-to-overlay interpretation.
 
 ### 3. Wire shared DI
 
@@ -309,13 +346,15 @@ follows the blueprint.
 
 This is the recommended order of work:
 
-1. add repository or data seam in shared core
-2. add feature service and typed state in shared feature
-3. add shared tests for success, loading, and error
-4. add Android Circuit shell
-5. add iOS TCA shell
-6. add optional shared Compose screen if it earns its place
-7. update docs only if the architecture changed
+1. sketch shared state, value-bearing variants, nullable boundaries, and policy
+   seams
+2. add repository or data seam in shared core
+3. add feature service and typed state in shared feature
+4. add shared tests for success, loading, and error
+5. add Android Circuit shell
+6. add iOS TCA shell
+7. add optional shared Compose screen if it earns its place
+8. update docs only if the architecture changed
 
 ## Smell checks
 
@@ -324,6 +363,12 @@ Before calling a feature "done", ask these questions:
 - Can Android and iOS share the same business behavior without duplicating the
   rules?
 - Are async states modeled as types instead of booleans?
+- Are nullable payloads limited to real domain absence rather than being used
+  as shortcuts for missing state variants?
+- Are repeated `thingOrNull()` helpers avoided or intentionally contained at a
+  platform adapter boundary?
+- Are business policy rules extracted from orchestration once they become
+  independently nameable?
 - Does shared Kotlin avoid exposing Circuit or TCA types?
 - Does Android own Android presentation concerns?
 - Does iOS own iOS presentation concerns?

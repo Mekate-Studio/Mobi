@@ -23,7 +23,7 @@ The key architecture decisions are also captured in ADRs:
 - [ADR 0003: Xcode owns Swift packages while the Gradle bridge builds Kotlin for iOS](../adr/0003-xcode-owns-swift-packages-and-gradle-builds-kotlin-for-ios.md)
 - [ADR 0004: Metro owns shared Kotlin dependency injection](../adr/0004-metro-owns-shared-kotlin-dependency-injection.md)
 - [ADR 0005: iOS uses TCA dependencies with a lightweight app composition root](../adr/0005-ios-uses-tca-dependencies-with-a-lightweight-app-composition-root.md)
-- [ADR 0006: Shared async feature state uses sealed loadable and SKIE](../adr/0006-shared-async-feature-state-uses-sealed-loadable-and-skie.md)
+- [ADR 0006: Shared feature state uses sealed value types and SKIE](../adr/0006-shared-async-feature-state-uses-sealed-loadable-and-skie.md)
 
 For a practical implementation blueprint, see
 [How To Add A Feature](./how-to-add-a-feature.md).

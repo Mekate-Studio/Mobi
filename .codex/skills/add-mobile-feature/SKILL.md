@@ -38,15 +38,18 @@ existing pattern.
 2. Identify the feature's ownership split:
    shared business logic, Android presentation, iOS presentation, and whether
    shared Compose UI is actually worth adding.
-3. Start in `shared-core` for repository and data seams.
-4. Add or update `shared-feature-*` for typed feature state and orchestration.
-5. Wire shared Metro DI in `shared-di`.
-6. Add the Android Circuit shell in `android-app`.
-7. Add the iOS TCA and SwiftUI shell in `ios-app`.
-8. Add `shared-ui-*` only if the feature benefits from a reusable shared
+3. Before writing implementation code, sketch the shared state algebra:
+   sealed states, value-bearing variants, nullable boundaries, refresh/error
+   policy seams, and native presentation adapters.
+4. Start in `shared-core` for repository and data seams.
+5. Add or update `shared-feature-*` for typed feature state and orchestration.
+6. Wire shared Metro DI in `shared-di`.
+7. Add the Android Circuit shell in `android-app`.
+8. Add the iOS TCA and SwiftUI shell in `ios-app`.
+9. Add `shared-ui-*` only if the feature benefits from a reusable shared
    Compose path.
-9. Add tests at the shared seam and native presentation seams.
-10. Update docs only if the architecture changed or the blueprint needs a new
+10. Add tests at the shared seam and native presentation seams.
+11. Update docs only if the architecture changed or the blueprint needs a new
     reusable lesson.
 
 ## Guardrails
@@ -57,6 +60,15 @@ existing pattern.
 - iOS owns TCA reducers, Swift-native mapping, navigation, and SwiftUI views.
 - Shared Compose UI is optional, not the mandatory app shell.
 - Prefer typed async state over loose booleans like `isLoading`.
+- Prefer value-bearing state variants over nullable payloads. If a nullable
+  appears in feature state, decide whether it is a real domain absence or a
+  missing sealed case.
+- Extract business policy seams, such as freshness, retry, eligibility, and
+  failure interpretation, out of orchestration services when they become
+  independently nameable.
+- Keep shared sealed hierarchies friendly to Swift interop. Use concrete
+  sealed cases for platform adapters, and marker contracts only when they do
+  not hide useful cases from Swift.
 - Tests should reflect state transitions with clear `given`, `when`, `then`
   structure.
 
@@ -65,6 +77,8 @@ existing pattern.
 - Use the diagrams and ownership map in
   [`docs/reference/how-to-add-a-feature.md`](/Users/pragmatickeoz/StudioProjects/Mobi/docs/reference/how-to-add-a-feature.md)
   as the first placement check before creating files.
+- During OpenSpec/design work, include a short "state and policy design"
+  section before task implementation starts.
 - Reuse the `home` feature as the concrete reference implementation unless the
   user asks for a deliberate architectural departure.
 - If the task adds a new pattern rather than following the current one, update
