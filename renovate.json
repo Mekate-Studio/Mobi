@@ -1,0 +1,89 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard"
+  ],
+  "timezone": "Europe/Copenhagen",
+  "schedule": [
+    "before 7am on monday"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "prConcurrentLimit": 5,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Maven coordinates declared in Amper module dependency lists.",
+      "managerFilePatterns": [
+        "/(^|/)module\\.yaml$/"
+      ],
+      "matchStrings": [
+        "(?:^|\\n)(?<indentation>\\s*)-\\s+(?<packageName>[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+):(?<currentValue>[^\\s#]+)"
+      ],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "gradle"
+    },
+    {
+      "customType": "regex",
+      "description": "Update Maven coordinates declared in Amper annotation processors.",
+      "managerFilePatterns": [
+        "/(^|/)module\\.yaml$/"
+      ],
+      "matchStrings": [
+        "(?:^|\\n)(?<indentation>\\s*)dependency:\\s+(?<packageName>[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+):(?<currentValue>[^\\s#]+)"
+      ],
+      "datasourceTemplate": "maven",
+      "versioningTemplate": "gradle"
+    },
+    {
+      "customType": "regex",
+      "description": "Update the repo-owned generated Android Gradle distribution version.",
+      "managerFilePatterns": [
+        "/^scripts/ci/lib/android_generated_gradle\\.sh$/"
+      ],
+      "matchStrings": [
+        "android_generated_gradle_version=\"\\$\\{ANDROID_GENERATED_GRADLE_VERSION:-(?<currentValue>[^}]+)\\}\""
+      ],
+      "depNameTemplate": "gradle",
+      "datasourceTemplate": "gradle-version",
+      "versioningTemplate": "gradle"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github actions"
+    },
+    {
+      "matchManagers": [
+        "bundler"
+      ],
+      "groupName": "ruby tooling"
+    },
+    {
+      "matchManagers": [
+        "gradle"
+      ],
+      "groupName": "gradle and kotlin catalog"
+    },
+    {
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchFileNames": [
+        "**/module.yaml"
+      ],
+      "groupName": "amper maven dependencies"
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": true
+    }
+  ]
+}

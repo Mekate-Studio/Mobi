@@ -12,6 +12,9 @@ lint:
 check:
   ./scripts/dev/check.sh
 
+deps:
+  ./scripts/dev/dependency_updates.sh
+
 doctor:
   ./scripts/dev/doctor.sh
 

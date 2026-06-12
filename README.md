@@ -111,6 +111,7 @@ pushing tool orchestration into CI or the Gradle bridge.
 - `just format` applies Kotlin and Swift formatting
 - `just lint` verifies Kotlin, Swift, and shell quality checks
 - `just check` runs the current quality gate
+- `just deps` runs the local dependency update lookup
 
 The current tool split is:
 
@@ -119,6 +120,28 @@ The current tool split is:
 - `SwiftFormat` for Swift formatting checks and autofix
 - `SwiftLint` for Swift linting
 - `ShellCheck` for repo-owned shell scripts
+
+## Dependency Maintenance
+
+Renovate is the repository's dependency update orchestrator. The checked-in
+[`renovate.json`](renovate.json) covers GitHub Actions, Bundler, the Gradle
+version catalog used by the iOS bridge, and custom Amper `module.yaml` Maven
+coordinates that generic Gradle tooling does not see.
+Enable the Renovate GitHub App for hosted pull requests, or point a
+self-hosted Renovate runner at this repository.
+
+Use the local lookup before or during dependency maintenance:
+
+```bash
+just deps
+```
+
+That command runs Renovate in local dry-run lookup mode. It reports available
+updates from the current checkout, but branch and pull-request creation still
+belong to the hosted Renovate flow. When the command falls back to `npx`, it
+expects Node.js 24 or newer because current Renovate releases require that
+runtime. If `osv-scanner` is installed, the same command also runs a local
+vulnerability scan; set `SKIP_OSV_SCAN=1` to skip that optional step.
 
 ## Current Example Surface
 
