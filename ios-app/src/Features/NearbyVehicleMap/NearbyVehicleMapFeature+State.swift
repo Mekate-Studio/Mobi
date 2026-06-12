@@ -48,13 +48,10 @@ extension NearbyVehicleMapFeature {
                 return .waitingForRider
             }
             return .riderCentered(
-                riderLocation: NearbyVehicleMapCoordinate(location: riderLocation),
-                vehicles: currentSnapshot?.vehicles.map { vehicle in
-                    NearbyVehicleMapVehicle(
-                        vehicle: vehicle,
-                        riderLocation: riderLocation,
-                    )
-                } ?? [],
+                scene: NearbyVehicleMapScene(
+                    riderLocation: riderLocation,
+                    vehicles: currentSnapshot?.vehicles ?? [],
+                ),
             )
         }
 
@@ -127,45 +124,67 @@ extension NearbyVehicleMapFeature {
 
 enum NearbyVehicleMapContent: Equatable {
     case waitingForRider
-    case riderCentered(
-        riderLocation: NearbyVehicleMapCoordinate,
-        vehicles: [NearbyVehicleMapVehicle],
-    )
+    case riderCentered(scene: NearbyVehicleMapScene)
+}
+
+struct NearbyVehicleMapScene: Equatable {
+    let camera: NearbyVehicleMapCamera
+    let riderMarker: NearbyVehicleMapRiderMarker
+    let vehicleMarkers: [NearbyVehicleMapVehicleMarker]
+
+    init(
+        riderLocation: RiderLocation,
+        vehicles: [NearbyVehicle],
+    ) {
+        let riderCoordinate = NearbyVehicleMapCoordinate(location: riderLocation)
+        camera = NearbyVehicleMapCamera(
+            target: riderCoordinate,
+            zoom: 15,
+        )
+        riderMarker = NearbyVehicleMapRiderMarker(coordinate: riderCoordinate)
+        vehicleMarkers = vehicles.map(NearbyVehicleMapVehicleMarker.init(vehicle:))
+    }
+}
+
+struct NearbyVehicleMapCamera: Equatable {
+    let target: NearbyVehicleMapCoordinate
+    let zoom: Double
 }
 
 struct NearbyVehicleMapCoordinate: Equatable {
     let latitude: Double
     let longitude: Double
 
+    init(
+        latitude: Double,
+        longitude: Double,
+    ) {
+        self.latitude = latitude
+        self.longitude = longitude
+    }
+
     init(location: RiderLocation) {
+        latitude = location.latitude
+        longitude = location.longitude
+    }
+
+    init(location: VehicleLocation) {
         latitude = location.latitude
         longitude = location.longitude
     }
 }
 
-struct NearbyVehicleMapVehicle: Equatable {
-    let offset: NearbyVehicleMapProjectedOffset
-
-    init(
-        vehicle: NearbyVehicle,
-        riderLocation: RiderLocation,
-    ) {
-        let offset =
-            NearbyVehicleMapProjection.shared.offset(
-                vehicleLocation: vehicle.location,
-                riderLocation: riderLocation,
-            )
-        self.offset = NearbyVehicleMapProjectedOffset(offset: offset)
-    }
+struct NearbyVehicleMapRiderMarker: Equatable {
+    let coordinate: NearbyVehicleMapCoordinate
 }
 
-struct NearbyVehicleMapProjectedOffset: Equatable {
-    let horizontal: Double
-    let vertical: Double
+struct NearbyVehicleMapVehicleMarker: Equatable {
+    let id: String
+    let coordinate: NearbyVehicleMapCoordinate
 
-    init(offset: NearbyVehicleMapOffset) {
-        horizontal = offset.x
-        vertical = offset.y
+    init(vehicle: NearbyVehicle) {
+        id = String(describing: vehicle.id)
+        coordinate = NearbyVehicleMapCoordinate(location: vehicle.location)
     }
 }
 

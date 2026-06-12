@@ -2,7 +2,6 @@ package studio.mekate.mobi.nearbyvehiclemap
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.slack.circuit.runtime.CircuitContext
@@ -155,63 +153,61 @@ private fun NearbyVehicleCoordinateMap(
                     .fillMaxSize()
                     .background(Color(0xFFEAF3ED)),
         ) {
-            CoordinateMapCanvas(
+            NativeMapCanvas(
                 mapContent = mapContent,
+                modifier = Modifier.fillMaxSize(),
             )
-            CoordinateMapHeader()
-            CoordinateMapOverlay(overlay = overlay)
+            NativeMapHeader()
+            NativeMapOverlay(overlay = overlay)
             WaitingForRiderLocationLabel(mapContent = mapContent)
-            CoordinateMapLegend()
+            NativeMapLegend()
         }
     }
 }
 
 @Composable
-private fun CoordinateMapCanvas(mapContent: NearbyVehicleMapContentPresentation) {
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        drawCoordinateGrid()
-        if (mapContent is NearbyVehicleMapContentPresentation.RiderCentered) {
-            val center = Offset(x = size.width / 2f, y = size.height / 2f)
-            drawRiderMarker(center = center)
-            mapContent.vehicles.forEach { vehicle ->
-                drawVehicleMarker(
-                    vehicle = vehicle,
-                    riderLocation = mapContent.riderLocation,
-                    center = center,
-                )
-            }
-        }
-    }
+private fun NativeMapCanvas(
+    mapContent: NearbyVehicleMapContentPresentation,
+    modifier: Modifier = Modifier,
+) {
+    NearbyVehicleMapRenderer(
+        scene =
+            when (mapContent) {
+                is NearbyVehicleMapContentPresentation.RiderCentered -> mapContent.scene
+                NearbyVehicleMapContentPresentation.WaitingForRider -> null
+            },
+        modifier = modifier,
+    )
 }
 
 @Composable
-private fun CoordinateMapHeader() {
+private fun NativeMapHeader() {
     Column(
         modifier =
             Modifier
                 .padding(18.dp),
     ) {
         Text(
-            text = "Rider-centered coordinate map",
+            text = "Rider-centered native map",
             style = MaterialTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "No SDK key required; markers are projected from shared lat/lon state.",
+            text = "OpenFreeMap basemap with MapLibre product markers.",
             style = MaterialTheme.typography.bodySmall,
         )
     }
 }
 
 @Composable
-private fun BoxScope.CoordinateMapOverlay(overlay: NearbyVehicleMapOverlayPresentation) {
+private fun BoxScope.NativeMapOverlay(overlay: NearbyVehicleMapOverlayPresentation) {
     when (overlay) {
         NearbyVehicleMapOverlayPresentation.None -> {
             Unit
         }
 
         is NearbyVehicleMapOverlayPresentation.Banner -> {
-            CoordinateMapOverlayCard(
+            NativeMapOverlayCard(
                 headline = overlay.headline,
                 message = overlay.message,
                 blocksMap = false,
@@ -219,7 +215,7 @@ private fun BoxScope.CoordinateMapOverlay(overlay: NearbyVehicleMapOverlayPresen
         }
 
         is NearbyVehicleMapOverlayPresentation.Blocking -> {
-            CoordinateMapOverlayCard(
+            NativeMapOverlayCard(
                 headline = overlay.headline,
                 message = overlay.message,
                 blocksMap = true,
@@ -229,7 +225,7 @@ private fun BoxScope.CoordinateMapOverlay(overlay: NearbyVehicleMapOverlayPresen
 }
 
 @Composable
-private fun BoxScope.CoordinateMapOverlayCard(
+private fun BoxScope.NativeMapOverlayCard(
     headline: String,
     message: String,
     blocksMap: Boolean,
@@ -274,7 +270,7 @@ private fun BoxScope.WaitingForRiderLocationLabel(mapContent: NearbyVehicleMapCo
 }
 
 @Composable
-private fun BoxScope.CoordinateMapLegend() {
+private fun BoxScope.NativeMapLegend() {
     Row(
         modifier =
             Modifier

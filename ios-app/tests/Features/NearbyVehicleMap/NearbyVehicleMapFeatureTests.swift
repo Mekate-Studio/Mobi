@@ -111,12 +111,64 @@ struct NearbyVehicleMapFeatureTests {
         }
 
         // then
-        guard case let .riderCentered(riderLocation, _) = store.state.mapContent else {
+        guard case let .riderCentered(scene) = store.state.mapContent else {
             #expect(Bool(false), "Expected map content to keep the last rider-centered coordinate.")
             return
         }
+        let riderLocation = scene.riderMarker.coordinate
         #expect(riderLocation.latitude == 55.6761)
         #expect(riderLocation.longitude == 12.5683)
+    }
+
+    @MainActor
+    @Test("should map loaded shared state into provider neutral map scene")
+    func shouldMapLoadedSharedStateIntoProviderNeutralMapScene() {
+        // given
+        let state = NearbyVehicleMapFeatureTestFactory.loadedState()
+
+        // when / then
+        guard case let .riderCentered(scene) = state.mapContent else {
+            #expect(Bool(false), "Expected loaded shared state to produce a rider-centered map scene.")
+            return
+        }
+        #expect(scene.camera.target.latitude == 55.6761)
+        #expect(scene.camera.target.longitude == 12.5683)
+        #expect(scene.camera.zoom == 15)
+        #expect(scene.riderMarker.coordinate == scene.camera.target)
+        #expect(scene.vehicleMarkers.map(\.id) == ["mobi-ios-001"])
+        #expect(scene.vehicleMarkers.single?.coordinate.latitude == 55.6764)
+        #expect(scene.vehicleMarkers.single?.coordinate.longitude == 12.5687)
+    }
+
+    @MainActor
+    @Test("should emit empty vehicle markers while rider is visible before snapshot loads")
+    func shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads() {
+        // given
+        let state = NearbyVehicleMapFeatureTestFactory.loadingState()
+
+        // when / then
+        guard case let .riderCentered(scene) = state.mapContent else {
+            #expect(Bool(false), "Expected visible rider state to produce a rider-centered map scene.")
+            return
+        }
+        #expect(scene.vehicleMarkers.isEmpty)
+    }
+
+    @MainActor
+    @Test("should preserve blocking overlay separately from map content")
+    func shouldPreserveBlockingOverlaySeparatelyFromMapContent() {
+        // given
+        let state = NearbyVehicleMapFeatureTestFactory.deniedState()
+
+        // when / then
+        #expect(state.mapContent == .waitingForRider)
+        #expect(state.overlay == .blockingFailure)
+    }
+}
+
+private extension Collection {
+    var single: Element? {
+        count == 1 ? first : nil
     }
 }
 

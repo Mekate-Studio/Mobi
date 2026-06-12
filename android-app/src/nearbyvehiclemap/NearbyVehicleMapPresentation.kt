@@ -2,6 +2,7 @@ package studio.mekate.mobi.nearbyvehiclemap
 
 import studio.mekate.mobi.core.NearbyVehicle
 import studio.mekate.mobi.core.RiderLocation
+import studio.mekate.mobi.core.VehicleLocation
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
@@ -22,10 +23,34 @@ sealed interface NearbyVehicleMapContentPresentation {
     data object WaitingForRider : NearbyVehicleMapContentPresentation
 
     data class RiderCentered(
-        val riderLocation: RiderLocation,
-        val vehicles: List<NearbyVehicle>,
+        val scene: NearbyVehicleMapScenePresentation,
     ) : NearbyVehicleMapContentPresentation
 }
+
+data class NearbyVehicleMapScenePresentation(
+    val camera: NearbyVehicleMapCameraPresentation,
+    val riderMarker: NearbyVehicleMapRiderMarkerPresentation,
+    val vehicleMarkers: List<NearbyVehicleMapVehicleMarkerPresentation>,
+)
+
+data class NearbyVehicleMapCameraPresentation(
+    val target: NearbyVehicleMapCoordinatePresentation,
+    val zoom: Double,
+)
+
+data class NearbyVehicleMapCoordinatePresentation(
+    val latitude: Double,
+    val longitude: Double,
+)
+
+data class NearbyVehicleMapRiderMarkerPresentation(
+    val coordinate: NearbyVehicleMapCoordinatePresentation,
+)
+
+data class NearbyVehicleMapVehicleMarkerPresentation(
+    val id: String,
+    val coordinate: NearbyVehicleMapCoordinatePresentation,
+)
 
 sealed interface NearbyVehicleMapOverlayPresentation {
     data object None : NearbyVehicleMapOverlayPresentation
@@ -53,8 +78,10 @@ fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicle
                 NearbyVehicleMapContentPresentation.WaitingForRider
             } else {
                 NearbyVehicleMapContentPresentation.RiderCentered(
-                    riderLocation = riderLocationState.location,
-                    vehicles = snapshotState?.snapshot?.vehicles.orEmpty(),
+                    scene =
+                        riderLocationState.location.toMapScenePresentation(
+                            vehicles = snapshotState?.snapshot?.vehicles.orEmpty(),
+                        ),
                 )
             },
         overlay = mapOverlayState.toPresentation(),
@@ -62,6 +89,37 @@ fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicle
         canRequestRefresh = canRequestRefresh(),
     )
 }
+
+private fun RiderLocation.toMapScenePresentation(vehicles: List<NearbyVehicle>): NearbyVehicleMapScenePresentation {
+    val riderCoordinate = toMapCoordinatePresentation()
+    return NearbyVehicleMapScenePresentation(
+        camera =
+            NearbyVehicleMapCameraPresentation(
+                target = riderCoordinate,
+                zoom = RIDER_CENTERED_CAMERA_ZOOM,
+            ),
+        riderMarker = NearbyVehicleMapRiderMarkerPresentation(coordinate = riderCoordinate),
+        vehicleMarkers =
+            vehicles.map { vehicle ->
+                NearbyVehicleMapVehicleMarkerPresentation(
+                    id = vehicle.id.value,
+                    coordinate = vehicle.location.toMapCoordinatePresentation(),
+                )
+            },
+    )
+}
+
+private fun RiderLocation.toMapCoordinatePresentation(): NearbyVehicleMapCoordinatePresentation =
+    NearbyVehicleMapCoordinatePresentation(
+        latitude = latitude,
+        longitude = longitude,
+    )
+
+private fun VehicleLocation.toMapCoordinatePresentation(): NearbyVehicleMapCoordinatePresentation =
+    NearbyVehicleMapCoordinatePresentation(
+        latitude = latitude,
+        longitude = longitude,
+    )
 
 private fun RiderLocationState.messageText(snapshotState: SnapshotBackedNearbyVehicleState?): String =
     when (this) {
@@ -89,6 +147,8 @@ private fun RiderLocationState.messageText(snapshotState: SnapshotBackedNearbyVe
             "Rider location is temporarily unavailable, so discovery is blocked."
         }
     }
+
+private const val RIDER_CENTERED_CAMERA_ZOOM = 15.0
 
 private fun NearbyVehicleMapOverlayState.toPresentation(): NearbyVehicleMapOverlayPresentation =
     when (this) {

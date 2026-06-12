@@ -97,7 +97,91 @@ class NearbyVehicleMapPresenterStateProducerTest {
         val overlay = assertIs<NearbyVehicleMapOverlayPresentation.Banner>(presentation.overlay)
         val mapContent = assertIs<NearbyVehicleMapContentPresentation.RiderCentered>(presentation.mapContent)
         assertEquals("Snapshot may be stale", overlay.headline)
-        assertTrue(mapContent.vehicles.isNotEmpty())
+        assertTrue(mapContent.scene.vehicleMarkers.isNotEmpty())
+    }
+
+    @Test
+    fun `should present a rider centered map scene with camera rider marker and vehicle markers`() {
+        // given
+        val featureState =
+            createStateProducer()
+                .initialState()
+                .copy(
+                    riderLocationState =
+                        RiderLocationState.Available(
+                            location = defaultRiderLocation(),
+                        ),
+                    snapshotState = NearbyVehicleSnapshotState.Loaded(snapshot = snapshot(loadedAtMillis = 1_000)),
+                )
+
+        // when
+        val presentation = featureState.toNearbyVehicleMapPresentation()
+
+        // then
+        val mapContent = assertIs<NearbyVehicleMapContentPresentation.RiderCentered>(presentation.mapContent)
+        val scene = mapContent.scene
+        assertEquals(55.6761, scene.camera.target.latitude)
+        assertEquals(12.5683, scene.camera.target.longitude)
+        assertEquals(15.0, scene.camera.zoom)
+        assertEquals(scene.camera.target, scene.riderMarker.coordinate)
+        assertEquals("mobi-android-001", scene.vehicleMarkers.single().id)
+        assertEquals(
+            55.6764,
+            scene.vehicleMarkers
+                .single()
+                .coordinate.latitude,
+        )
+        assertEquals(
+            12.5687,
+            scene.vehicleMarkers
+                .single()
+                .coordinate.longitude,
+        )
+    }
+
+    @Test
+    fun `should present empty vehicle markers when rider exists without a snapshot`() {
+        // given
+        val featureState =
+            createStateProducer()
+                .initialState()
+                .copy(
+                    riderLocationState =
+                        RiderLocationState.Available(
+                            location = defaultRiderLocation(),
+                        ),
+                    snapshotState = NearbyVehicleSnapshotState.Initial,
+                )
+
+        // when
+        val presentation = featureState.toNearbyVehicleMapPresentation()
+
+        // then
+        val mapContent = assertIs<NearbyVehicleMapContentPresentation.RiderCentered>(presentation.mapContent)
+        assertEquals(emptyList(), mapContent.scene.vehicleMarkers)
+    }
+
+    @Test
+    fun `should keep map scene provider neutral when blocking overlay is visible`() {
+        // given
+        val featureState =
+            createStateProducer()
+                .initialState()
+                .copy(
+                    riderLocationState = RiderLocationState.Denied,
+                    snapshotState =
+                        NearbyVehicleSnapshotState.FailedWithoutSnapshot(
+                            reason = NearbyVehicleMapFailureReason.RiderLocationUnavailable,
+                        ),
+                    mapOverlayState = NearbyVehicleMapOverlayState.BlockingFailure,
+                )
+
+        // when
+        val presentation = featureState.toNearbyVehicleMapPresentation()
+
+        // then
+        assertIs<NearbyVehicleMapContentPresentation.WaitingForRider>(presentation.mapContent)
+        assertIs<NearbyVehicleMapOverlayPresentation.Blocking>(presentation.overlay)
     }
 
     @Test

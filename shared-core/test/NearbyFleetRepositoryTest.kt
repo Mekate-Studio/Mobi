@@ -68,24 +68,6 @@ class NearbyFleetRepositoryTest {
     }
 
     @Test
-    fun `should project vehicle location into rider centered map offset`() {
-        // given
-        val riderLocation = RiderLocation(latitude = 55.6761, longitude = 12.5683)
-        val vehicleLocation = VehicleLocation(latitude = 55.6764, longitude = 12.5687)
-
-        // when
-        val offset =
-            NearbyVehicleMapProjection.offset(
-                vehicleLocation = vehicleLocation,
-                riderLocation = riderLocation,
-            )
-
-        // then
-        assertEquals(0.72, offset.x, absoluteTolerance = 0.0001)
-        assertEquals(0.3, offset.y, absoluteTolerance = 0.0001)
-    }
-
-    @Test
     fun `should produce changing successive snapshots with stable identities`() =
         runTest {
             // given

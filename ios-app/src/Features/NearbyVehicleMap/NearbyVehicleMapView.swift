@@ -65,40 +65,13 @@ private struct NearbyVehicleCoordinateMap: View {
 
     var body: some View {
         ZStack {
-            Canvas { context, size in
-                let gridPath = gridPath(size: size)
-                context.stroke(
-                    gridPath,
-                    with: .color(Color(red: 0.22, green: 0.36, blue: 0.27).opacity(0.32)),
-                    lineWidth: 1,
-                )
-
-                if case let .riderCentered(riderLocation, vehicles) = mapContent {
-                    let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                    context.fill(
-                        Path(ellipseIn: CGRect(x: center.x - 16, y: center.y - 16, width: 32, height: 32)),
-                        with: .color(.green),
-                    )
-                    context.fill(
-                        Path(ellipseIn: CGRect(x: center.x - 7, y: center.y - 7, width: 14, height: 14)),
-                        with: .color(.white),
-                    )
-
-                    for vehicle in vehicles {
-                        let point = vehiclePoint(vehicle: vehicle, riderLocation: riderLocation, size: size)
-                        let marker = CGRect(x: point.x - 13, y: point.y - 13, width: 26, height: 26)
-                        context.fill(Path(ellipseIn: marker), with: .color(.orange))
-                        context.stroke(Path(ellipseIn: marker), with: .color(.brown), lineWidth: 2)
-                    }
-                }
-            }
-            .background(Color(red: 0.92, green: 0.96, blue: 0.93))
-            .clipShape(RoundedRectangle(cornerRadius: 28))
+            NearbyVehicleMapRenderer(scene: scene)
+                .clipShape(RoundedRectangle(cornerRadius: 28))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Rider-centered coordinate map")
+                Text("Rider-centered native map")
                     .font(.headline)
-                Text("No SDK key required; markers are projected from shared lat/lon state.")
+                Text("OpenFreeMap basemap with MapLibre product markers.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -115,6 +88,11 @@ private struct NearbyVehicleCoordinateMap: View {
             coordinateMapOverlay(overlay: overlay)
         }
         .frame(maxWidth: .infinity, minHeight: 360)
+    }
+
+    private var scene: NearbyVehicleMapScene? {
+        guard case let .riderCentered(scene) = mapContent else { return nil }
+        return scene
     }
 
     @ViewBuilder
@@ -157,31 +135,5 @@ private struct NearbyVehicleCoordinateMap: View {
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: blocksMap ? .center : .bottom)
         .padding(18)
-    }
-
-    private func gridPath(size: CGSize) -> Path {
-        var path = Path()
-        for index in 1 ... 6 {
-            let fraction = CGFloat(index) / 7
-            path.move(to: CGPoint(x: size.width * fraction, y: 0))
-            path.addLine(to: CGPoint(x: size.width * fraction, y: size.height))
-            path.move(to: CGPoint(x: 0, y: size.height * fraction))
-            path.addLine(to: CGPoint(x: size.width, y: size.height * fraction))
-        }
-        return path
-    }
-
-    private func vehiclePoint(
-        vehicle: NearbyVehicleMapVehicle,
-        riderLocation _: NearbyVehicleMapCoordinate,
-        size: CGSize,
-    ) -> CGPoint {
-        let center = CGPoint(x: size.width / 2, y: size.height / 2)
-        let scale = min(size.width, size.height) * 0.42
-
-        return CGPoint(
-            x: center.x + (vehicle.offset.horizontal * scale),
-            y: center.y - (vehicle.offset.vertical * scale),
-        )
     }
 }
