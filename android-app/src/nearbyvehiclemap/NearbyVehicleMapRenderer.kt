@@ -180,11 +180,9 @@ private val DEFAULT_CAMERA =
         zoom = 12.0,
     )
 
-private fun NearbyVehicleMapRiderMarkerPresentation.toFeature(): Feature =
-    coordinate.toFeature()
+private fun NearbyVehicleMapRiderMarkerPresentation.toFeature(): Feature = coordinate.toFeature()
 
-private fun NearbyVehicleMapVehicleMarkerPresentation.toFeature(): Feature =
-    coordinate.toFeature()
+private fun NearbyVehicleMapVehicleMarkerPresentation.toFeature(): Feature = coordinate.toFeature()
 
 private fun NearbyVehicleMapCoordinatePresentation.toFeature(): Feature =
     Feature.fromGeometry(
@@ -194,8 +192,7 @@ private fun NearbyVehicleMapCoordinatePresentation.toFeature(): Feature =
         ),
     )
 
-private fun emptyFeatureCollection(): FeatureCollection =
-    FeatureCollection.fromFeatures(emptyList())
+private fun emptyFeatureCollection(): FeatureCollection = FeatureCollection.fromFeatures(emptyList())
 
 private const val RIDER_SOURCE_ID = "mobi-rider-source"
 private const val VEHICLE_SOURCE_ID = "mobi-vehicle-source"

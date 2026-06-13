@@ -8,9 +8,9 @@ dependencies:
   - ../shared-ui-home
   - androidx.activity:activity-compose:1.13.0
   - androidx.lifecycle:lifecycle-runtime-compose:2.9.4
-  - com.slack.circuit:circuit-foundation:0.33.1
+  - com.slack.circuit:circuit-foundation:0.34.0
   - dev.zacsweers.metro:runtime:1.1.1
-  - org.maplibre.gl:android-sdk:11.13.5
+  - org.maplibre.gl:android-sdk:13.3.0
 
 test-dependencies:
   - org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2

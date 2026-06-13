@@ -21,6 +21,8 @@ if [[ -z "${target_skie_version}" ]]; then
     exit 127
   fi
 
+  # Ruby owns the interpolation in this one-liner; keep the shell out of it.
+  # shellcheck disable=SC2016
   target_skie_version="$(
     curl -fsSL "${skie_metadata_url}" |
       ruby -rrexml/document -e '
