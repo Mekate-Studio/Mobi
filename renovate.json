@@ -100,6 +100,27 @@
       "minimumGroupSize": 2
     },
     {
+      "description": "Hold Metro below the Kotlin 2.4 Native ABI line while the Gradle bridge still uses SKIE with Kotlin 2.3.x.",
+      "matchDatasources": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "/^dev\\.zacsweers\\.metro:/"
+      ],
+      "allowedVersions": "<1.2.0"
+    },
+    {
+      "description": "Hold the Gradle bridge Kotlin compiler below 2.4 until SKIE supports Kotlin 2.4.",
+      "matchDatasources": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "/^org\\.jetbrains\\.kotlin\\./",
+        "/^org\\.jetbrains\\.kotlin:/"
+      ],
+      "allowedVersions": "<2.4.0"
+    },
+    {
       "description": "Keep Kotlin coroutines versions synchronized between Amper modules and the Gradle bridge catalog.",
       "matchDatasources": [
         "maven"

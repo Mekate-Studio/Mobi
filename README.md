@@ -132,6 +132,10 @@ self-hosted Renovate runner at this repository.
 Metro and Kotlin coroutines updates are grouped across Amper modules and the
 Gradle bridge catalog because the bridge must stay aligned with the shared
 Kotlin dependency surface used by the app modules.
+Metro is currently held below `1.2.0`, and the bridge Kotlin compiler below
+`2.4.0`, because Metro `1.2.x` publishes Kotlin/Native artifacts with Kotlin
+`2.4.0` ABI while the current SKIE release used by the bridge supports Kotlin
+`2.3.x`.
 
 Use the local lookup before or during dependency maintenance:
 

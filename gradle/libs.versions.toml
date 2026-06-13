@@ -5,9 +5,9 @@
 [versions]
 kotlin = "2.3.20"
 compose = "1.9.0"
-metro = "0.12.1"
+metro = "1.1.1"
 coroutines = "1.10.2"
-skie = "0.10.11"
+skie = "0.10.12"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
