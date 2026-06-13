@@ -129,6 +129,9 @@ version catalog used by the iOS bridge, and custom Amper `module.yaml` Maven
 coordinates that generic Gradle tooling does not see.
 Enable the Renovate GitHub App for hosted pull requests, or point a
 self-hosted Renovate runner at this repository.
+Metro and Kotlin coroutines updates are grouped across Amper modules and the
+Gradle bridge catalog because the bridge must stay aligned with the shared
+Kotlin dependency surface used by the app modules.
 
 Use the local lookup before or during dependency maintenance:
 

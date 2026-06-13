@@ -88,6 +88,30 @@
       ]
     },
     {
+      "description": "Keep Metro runtime, compiler, and Gradle bridge plugin versions synchronized.",
+      "matchDatasources": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "/^dev\\.zacsweers\\.metro:/"
+      ],
+      "groupName": "metro shared kotlin toolchain",
+      "groupSlug": "metro-shared-kotlin-toolchain",
+      "minimumGroupSize": 2
+    },
+    {
+      "description": "Keep Kotlin coroutines versions synchronized between Amper modules and the Gradle bridge catalog.",
+      "matchDatasources": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "/^org\\.jetbrains\\.kotlinx:kotlinx-coroutines-/"
+      ],
+      "groupName": "kotlin coroutines shared toolchain",
+      "groupSlug": "kotlin-coroutines-shared-toolchain",
+      "minimumGroupSize": 2
+    },
+    {
       "matchUpdateTypes": [
         "major"
       ],
