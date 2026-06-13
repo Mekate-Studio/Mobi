@@ -189,6 +189,53 @@ At minimum, the catalog should capture:
 This does not remove all duplication, but it gives the repository a single
 version reference point for the temporary bridge period.
 
+The bridge currently treats SKIE as the common denominator for Kotlin and Metro
+updates. Metro `1.2.x` publishes Kotlin/Native artifacts on the Kotlin `2.4.0`
+ABI line, while the currently verified SKIE release supports the Kotlin `2.3.x`
+line. Renovate therefore holds Metro below `1.2.0` and Kotlin below `2.4.0`
+until the scheduled `Dependency Compatibility` workflow proves that the latest
+SKIE release can compile the bridge with Kotlin `2.4.x`.
+
+The workflow runs [`scripts/ci/check_skie_kotlin_compatibility.sh`](../../scripts/ci/check_skie_kotlin_compatibility.sh),
+which temporarily edits the local version catalog, runs the narrow
+`:shared-kit:compileKotlinIosSimulatorArm64` bridge task, then restores the
+catalog. When that probe passes, remove the Renovate ceilings and let Renovate
+open one coordinated Metro, Kotlin, and SKIE update.
+
+## Swift export watch
+
+Kotlin's Swift export is the likely long-term replacement path for some of the
+interop work currently covered by SKIE, but it is not ready to replace this
+bridge wholesale yet.
+
+As of the Kotlin documentation dated 2026-05-29, Swift export is Alpha. It can
+export Kotlin sources directly as Swift modules, preserve packages, support
+type aliases and overloads, map suspend functions to Swift `async`, and expose
+Kotlin Flows as Swift `AsyncSequence`. Those are useful signals for this
+repository because the iOS shell already prefers native SwiftUI and TCA over a
+large generated Objective-C-facing surface.
+
+The current blockers for replacing SKIE are also material:
+
+- Swift export currently requires Kotlin Multiplatform direct integration with
+  Xcode.
+- Generic type parameters are type-erased to their upper bounds.
+- Cross-language inheritance is not supported.
+- Only final Kotlin classes that directly inherit from `Any` are supported in
+  the documented class mapping.
+- The documentation does not yet describe a stable sealed hierarchy replacement
+  equivalent to the SKIE ergonomics this repository uses for shared feature
+  state.
+
+For now, the practical migration shape is gradual:
+
+1. Keep SKIE for sealed state exported to the native TCA adapters.
+2. Keep SKIE coroutine and Flow interop disabled, as the bridge already does.
+3. Pilot Swift export only for small final-class or top-level facade APIs that
+   do not carry sealed feature state.
+4. Revisit the bridge once Swift export documents stable sealed hierarchy
+   behavior or the iOS adapters no longer need SKIE-generated sealed ergonomics.
+
 ## Stage 3: Keep the Xcode project switchable
 
 Do not replace the Amper Xcode build phase with a one-way Gradle change

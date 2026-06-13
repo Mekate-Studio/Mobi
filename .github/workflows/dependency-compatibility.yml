@@ -1,0 +1,37 @@
+name: Dependency Compatibility
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 5 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-compatibility-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
+
+jobs:
+  skie_kotlin_bridge:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/cache@v5
+        with:
+          path: .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-skie-compat-${{ hashFiles('gradle/libs.versions.toml', 'gradle-bridge/**', 'shared-*/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-skie-compat-
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Check whether SKIE unlocks the Kotlin 2.4 bridge line
+        env:
+          SKIE_COMPAT_ALERT_ON_COMPATIBLE: "1"
+        run: ./scripts/ci/check_skie_kotlin_compatibility.sh

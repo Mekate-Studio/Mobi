@@ -136,6 +136,11 @@ Metro is currently held below `1.2.0`, and the bridge Kotlin compiler below
 `2.4.0`, because Metro `1.2.x` publishes Kotlin/Native artifacts with Kotlin
 `2.4.0` ABI while the current SKIE release used by the bridge supports Kotlin
 `2.3.x`.
+The scheduled `Dependency Compatibility` workflow runs the repo-owned
+`scripts/ci/check_skie_kotlin_compatibility.sh` probe to detect when the latest
+SKIE release can compile the bridge on the Kotlin `2.4.x` line. Until Swift
+export is stable enough for this repository's sealed-state bridge, SKIE remains
+the common denominator for coordinated Metro and Kotlin updates.
 
 Use the local lookup before or during dependency maintenance:
 
@@ -143,12 +148,18 @@ Use the local lookup before or during dependency maintenance:
 just deps
 ```
 
-That command runs Renovate in local dry-run lookup mode. It reports available
-updates from the current checkout, but branch and pull-request creation still
-belong to the hosted Renovate flow. When the command falls back to `npx`, it
-expects Node.js 24 or newer because current Renovate releases require that
-runtime. If `osv-scanner` is installed, the same command also runs a local
-vulnerability scan; set `SKIP_OSV_SCAN=1` to skip that optional step.
+To run the SKIE compatibility probe locally:
+
+```bash
+./scripts/ci/check_skie_kotlin_compatibility.sh
+```
+
+The `just deps` command runs Renovate in local dry-run lookup mode. It reports
+available updates from the current checkout, but branch and pull-request
+creation still belong to the hosted Renovate flow. When the command falls back
+to `npx`, it expects Node.js 24 or newer because current Renovate releases
+require that runtime. If `osv-scanner` is installed, the same command also runs
+a local vulnerability scan; set `SKIP_OSV_SCAN=1` to skip that optional step.
 
 ## Current Example Surface
 
