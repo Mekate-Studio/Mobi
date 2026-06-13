@@ -6,16 +6,25 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import org.maplibre.android.MapLibre
-import org.maplibre.android.annotations.MarkerOptions
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
+import org.maplibre.android.maps.Style
+import org.maplibre.android.style.layers.CircleLayer
+import org.maplibre.android.style.layers.PropertyFactory.circleColor
+import org.maplibre.android.style.layers.PropertyFactory.circleRadius
+import org.maplibre.android.style.layers.PropertyFactory.circleStrokeColor
+import org.maplibre.android.style.layers.PropertyFactory.circleStrokeWidth
+import org.maplibre.android.style.sources.GeoJsonSource
+import org.maplibre.geojson.Feature
+import org.maplibre.geojson.FeatureCollection
+import org.maplibre.geojson.Point
 
 @Composable
 fun NearbyVehicleMapRenderer(
@@ -64,8 +73,12 @@ fun NearbyVehicleMapRenderer(
         modifier = modifier,
         update = { view ->
             view.getMapAsync { map ->
-                map.setStyle(styleUrl)
-                map.render(scene = scene)
+                map.setStyle(styleUrl) { style ->
+                    map.render(
+                        style = style,
+                        scene = scene,
+                    )
+                }
             }
         },
     )
@@ -86,7 +99,10 @@ private fun createNearbyVehicleMapView(
     }
 }
 
-private fun MapLibreMap.render(scene: NearbyVehicleMapScenePresentation?) {
+private fun MapLibreMap.render(
+    style: Style,
+    scene: NearbyVehicleMapScenePresentation?,
+) {
     val camera = scene?.camera ?: DEFAULT_CAMERA
     cameraPosition =
         CameraPosition
@@ -95,21 +111,57 @@ private fun MapLibreMap.render(scene: NearbyVehicleMapScenePresentation?) {
             .zoom(camera.zoom)
             .build()
 
-    clear()
-    if (scene == null) return
-
-    addMarker(
-        MarkerOptions()
-            .position(scene.riderMarker.coordinate.toLatLng())
-            .title("Rider"),
+    style.ensureNearbyVehicleMapLayers()
+    style.setNearbyVehicleMapSource(
+        sourceId = RIDER_SOURCE_ID,
+        features =
+            if (scene == null) {
+                emptyList()
+            } else {
+                listOf(scene.riderMarker.toFeature())
+            },
     )
-    scene.vehicleMarkers.forEach { marker ->
-        addMarker(
-            MarkerOptions()
-                .position(marker.coordinate.toLatLng())
-                .title(marker.id),
+    style.setNearbyVehicleMapSource(
+        sourceId = VEHICLE_SOURCE_ID,
+        features = scene?.vehicleMarkers?.map { it.toFeature() }.orEmpty(),
+    )
+}
+
+private fun Style.ensureNearbyVehicleMapLayers() {
+    if (getSource(RIDER_SOURCE_ID) == null) {
+        addSource(GeoJsonSource(RIDER_SOURCE_ID, emptyFeatureCollection()))
+    }
+    if (getSource(VEHICLE_SOURCE_ID) == null) {
+        addSource(GeoJsonSource(VEHICLE_SOURCE_ID, emptyFeatureCollection()))
+    }
+    if (getLayer(VEHICLE_LAYER_ID) == null) {
+        addLayer(
+            CircleLayer(VEHICLE_LAYER_ID, VEHICLE_SOURCE_ID).withProperties(
+                circleRadius(5f),
+                circleColor("#2563EB"),
+                circleStrokeColor("#FFFFFF"),
+                circleStrokeWidth(1.5f),
+            ),
         )
     }
+    if (getLayer(RIDER_LAYER_ID) == null) {
+        addLayer(
+            CircleLayer(RIDER_LAYER_ID, RIDER_SOURCE_ID).withProperties(
+                circleRadius(7f),
+                circleColor("#DC2626"),
+                circleStrokeColor("#FFFFFF"),
+                circleStrokeWidth(2f),
+            ),
+        )
+    }
+}
+
+private fun Style.setNearbyVehicleMapSource(
+    sourceId: String,
+    features: List<Feature>,
+) {
+    getSourceAs<GeoJsonSource>(sourceId)
+        ?.setGeoJson(FeatureCollection.fromFeatures(features))
 }
 
 private fun NearbyVehicleMapCoordinatePresentation.toLatLng(): LatLng =
@@ -127,3 +179,25 @@ private val DEFAULT_CAMERA =
             ),
         zoom = 12.0,
     )
+
+private fun NearbyVehicleMapRiderMarkerPresentation.toFeature(): Feature =
+    coordinate.toFeature()
+
+private fun NearbyVehicleMapVehicleMarkerPresentation.toFeature(): Feature =
+    coordinate.toFeature()
+
+private fun NearbyVehicleMapCoordinatePresentation.toFeature(): Feature =
+    Feature.fromGeometry(
+        Point.fromLngLat(
+            longitude,
+            latitude,
+        ),
+    )
+
+private fun emptyFeatureCollection(): FeatureCollection =
+    FeatureCollection.fromFeatures(emptyList())
+
+private const val RIDER_SOURCE_ID = "mobi-rider-source"
+private const val VEHICLE_SOURCE_ID = "mobi-vehicle-source"
+private const val RIDER_LAYER_ID = "mobi-rider-layer"
+private const val VEHICLE_LAYER_ID = "mobi-vehicle-layer"
