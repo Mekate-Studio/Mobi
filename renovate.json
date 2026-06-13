@@ -74,10 +74,18 @@
       "matchManagers": [
         "custom.regex"
       ],
+      "matchDatasources": [
+        "maven"
+      ],
       "matchFileNames": [
         "**/module.yaml"
       ],
-      "groupName": "amper maven dependencies"
+      "groupName": "amper maven dependencies",
+      "registryUrls": [
+        "https://dl.google.com/android/maven2/",
+        "https://repo.maven.apache.org/maven2",
+        "https://plugins.gradle.org/m2/"
+      ]
     },
     {
       "matchUpdateTypes": [
