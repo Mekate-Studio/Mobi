@@ -6,10 +6,10 @@ dependencies:
   - ../shared-core
   - ../shared-feature-home
   - ../shared-feature-nearby-vehicle-map
-  - dev.zacsweers.metro:runtime:0.12.1
+  - dev.zacsweers.metro:runtime:0.13.2
 
 settings:
   kotlin:
     compilerPlugins:
       - id: dev.zacsweers.metro.compiler
-        dependency: dev.zacsweers.metro:compiler:0.12.1
+        dependency: dev.zacsweers.metro:compiler:0.13.2

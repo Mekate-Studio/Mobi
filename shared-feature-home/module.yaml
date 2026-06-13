@@ -4,7 +4,7 @@ product:
 
 dependencies:
   - ../shared-core
-  - dev.zacsweers.metro:runtime:0.12.1
+  - dev.zacsweers.metro:runtime:0.13.2
   - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2
 
 test-dependencies:
@@ -14,4 +14,4 @@ settings:
   kotlin:
     compilerPlugins:
       - id: dev.zacsweers.metro.compiler
-        dependency: dev.zacsweers.metro:compiler:0.12.1
+        dependency: dev.zacsweers.metro:compiler:0.13.2

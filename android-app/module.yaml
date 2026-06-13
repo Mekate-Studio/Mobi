@@ -8,7 +8,7 @@ dependencies:
   - ../shared-ui-home
   - androidx.activity:activity-compose:1.13.0
   - com.slack.circuit:circuit-foundation:0.33.1
-  - dev.zacsweers.metro:runtime:0.12.1
+  - dev.zacsweers.metro:runtime:0.13.2
   - org.maplibre.gl:android-sdk:11.13.5
 
 test-dependencies:
@@ -20,7 +20,7 @@ settings:
   kotlin:
     compilerPlugins:
       - id: dev.zacsweers.metro.compiler
-        dependency: dev.zacsweers.metro:compiler:0.12.1
+        dependency: dev.zacsweers.metro:compiler:0.13.2
   android:
     namespace: studio.mekate.mobi
     applicationId: studio.mekate.mobi
