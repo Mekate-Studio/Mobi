@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-android_generated_gradle_version="${ANDROID_GENERATED_GRADLE_VERSION:-8.14.3}"
+android_generated_gradle_version="${ANDROID_GENERATED_GRADLE_VERSION:-9.5.1}"
 android_generated_gradle_distribution_type="${ANDROID_GENERATED_GRADLE_DISTRIBUTION_TYPE:-bin}"
 android_generated_gradle_distribution_file="gradle-${android_generated_gradle_version}-${android_generated_gradle_distribution_type}.zip"
 android_generated_gradle_distribution_url="https://services.gradle.org/distributions/${android_generated_gradle_distribution_file}"
