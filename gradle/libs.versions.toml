@@ -6,7 +6,7 @@
 kotlin = "2.3.20"
 compose = "1.9.0"
 metro = "1.1.1"
-coroutines = "1.10.2"
+coroutines = "1.11.0"
 skie = "0.10.12"
 
 [plugins]
