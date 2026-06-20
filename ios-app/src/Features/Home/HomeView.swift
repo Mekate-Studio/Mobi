@@ -1,4 +1,4 @@
-import ComposableArchitecture
+import MobiIOSDependencies
 import SwiftUI
 
 struct HomeView: View {

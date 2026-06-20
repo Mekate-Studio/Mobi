@@ -1,4 +1,4 @@
-import ComposableArchitecture
+import MobiIOSDependencies
 
 extension HomeFeature {
     enum Action: Equatable {

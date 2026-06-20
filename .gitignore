@@ -29,4 +29,6 @@ ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/*
 !ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 ios-app/module.xcodeproj/project.xcworkspace/xcuserdata/
 ios-app/module.xcodeproj/xcuserdata/
+/ios-app/Dependencies/.build/
+/ios-app/Dependencies/Package.resolved
 /.gradle-user-home/

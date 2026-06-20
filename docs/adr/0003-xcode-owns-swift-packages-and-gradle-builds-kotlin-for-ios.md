@@ -16,7 +16,10 @@ Swift Package Manager and the native Xcode app build.
 
 The iOS toolchain is split this way:
 
-- Xcode owns Swift Package Manager dependencies such as TCA
+- `ios-app/Dependencies/Package.swift` owns direct Swift Package Manager
+  declarations such as TCA, Point-Free Dependencies, and MapLibre
+- Xcode consumes those dependencies through the local `MobiIOSDependencies`
+  package product
 - the Gradle bridge builds the `KotlinModules` framework for iOS
 - Fastlane and CI default to `KOTLIN_IOS_BUILDER=gradle`
 - the repo tracks the shared Swift package lockfile at
@@ -27,6 +30,10 @@ The iOS toolchain is split this way:
 
 - iOS can adopt native Swift ecosystem tools without waiting on Amper to own
   that full path
+- Renovate can extract native iOS dependencies from a standard `Package.swift`
+  instead of attempting to parse Xcode project internals
+- the local package target only re-exports vendor modules; it does not own app
+  behavior, dependency composition, or platform architecture
 - archive and TestFlight flows follow the same Kotlin framework path used in CI
 - the Gradle bridge stays intentionally temporary and narrowly scoped
 - when Amper can own the iOS Swift package path cleanly, this decision can be

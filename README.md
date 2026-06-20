@@ -126,7 +126,10 @@ The current tool split is:
 Renovate is the repository's dependency update orchestrator. The checked-in
 [`renovate.json`](renovate.json) covers GitHub Actions, Bundler, the Gradle
 version catalog used by the iOS bridge, and custom Amper `module.yaml` Maven
-coordinates that generic Gradle tooling does not see.
+coordinates that generic Gradle tooling does not see. Native iOS dependencies
+such as TCA, Point-Free Dependencies, and MapLibre are declared in
+[`ios-app/Dependencies/Package.swift`](ios-app/Dependencies/Package.swift), so
+Renovate can manage them through its native Swift Package Manager support.
 Enable the Renovate GitHub App for hosted pull requests, or point a
 self-hosted Renovate runner at this repository.
 Metro and Kotlin coroutines updates are grouped across Amper modules and the

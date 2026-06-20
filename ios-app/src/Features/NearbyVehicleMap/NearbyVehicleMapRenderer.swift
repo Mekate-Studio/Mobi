@@ -1,5 +1,5 @@
 import CoreLocation
-import MapLibre
+import MobiIOSDependencies
 import SwiftUI
 
 struct NearbyVehicleMapRenderer: UIViewRepresentable {

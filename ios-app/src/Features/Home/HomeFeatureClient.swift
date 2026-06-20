@@ -1,4 +1,4 @@
-import ComposableArchitecture
+import MobiIOSDependencies
 import Foundation
 @preconcurrency import KotlinModules
 

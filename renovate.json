@@ -71,6 +71,17 @@
       "groupName": "gradle and kotlin catalog"
     },
     {
+      "description": "Keep TCA and its direct Dependencies package aligned.",
+      "matchManagers": [
+        "swift"
+      ],
+      "matchPackageNames": [
+        "/^https:\/\/github\.com\/pointfreeco\/(swift-composable-architecture|swift-dependencies)$/"
+      ],
+      "groupName": "ios point-free stack",
+      "groupSlug": "ios-point-free-stack"
+    },
+    {
       "matchManagers": [
         "custom.regex"
       ],
