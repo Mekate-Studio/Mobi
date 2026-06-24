@@ -1,5 +1,5 @@
-import MobiIOSDependencies
 import Foundation
+import MobiIOSDependencies
 import SwiftUI
 
 struct NearbyVehicleMapView: View {

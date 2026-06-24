@@ -76,7 +76,7 @@
         "swift"
       ],
       "matchPackageNames": [
-        "/^https:\/\/github\.com\/pointfreeco\/(swift-composable-architecture|swift-dependencies)$/"
+        "/^pointfreeco\/(swift-composable-architecture|swift-dependencies)$/"
       ],
       "groupName": "ios point-free stack",
       "groupSlug": "ios-point-free-stack"

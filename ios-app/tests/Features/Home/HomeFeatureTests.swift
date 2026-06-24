@@ -1,7 +1,7 @@
 @testable import app
-import MobiIOSDependencies
 import Foundation
 @preconcurrency import KotlinModules
+import MobiIOSDependencies
 import Testing
 
 @Suite("HomeFeature")

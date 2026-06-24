@@ -1,6 +1,6 @@
-import MobiIOSDependencies
 import Foundation
 @preconcurrency import KotlinModules
+import MobiIOSDependencies
 
 extension NearbyVehicleMapFeatureState: @unchecked @retroactive Sendable {}
 

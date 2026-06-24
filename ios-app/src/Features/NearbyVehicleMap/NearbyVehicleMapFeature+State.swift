@@ -1,5 +1,5 @@
-import MobiIOSDependencies
 @preconcurrency import KotlinModules
+import MobiIOSDependencies
 
 extension NearbyVehicleMapFeature {
     @ObservableState
