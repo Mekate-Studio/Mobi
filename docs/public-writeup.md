@@ -17,7 +17,7 @@ the pipeline contract inside the repository itself:
 - CI providers stay thin
 - repository scripts own the job logic
 - Fastlane is the command layer
-- Amper remains the build system
+- Kotlin Toolchain remains the build entrypoint
 
 The result is a setup that is easier to explain, easier to debug, and much
 easier to share with other teams.
@@ -52,7 +52,7 @@ The core design is simple:
 2. A shared dispatcher decides what each job means.
 3. Helper scripts prepare the environment consistently.
 4. Fastlane runs the build and release commands.
-5. Amper builds the project.
+5. Kotlin Toolchain builds the project.
 
 In this repository, that maps to:
 
@@ -85,19 +85,18 @@ names, and local development can call them too.
 One thing I would do if I were sharing this more broadly is keep a separate
 minimal repository whose only job is to demonstrate the CI pattern.
 
-Amper makes that easier because the current CLI can scaffold a suitable starting
-point for you.
+Kotlin Toolchain makes that easier because the wrapper can be checked in and
+updated with the same CLI family used by the build.
 
-If you already have the Amper CLI available locally, you can start with:
+If you are migrating an older Amper project, start by creating Kotlin Toolchain
+wrappers:
 
 ```bash
-mkdir my-kmp-ci-app
-cd my-kmp-ci-app
-amper init compose-multiplatform
+kotlin update --create
 ```
 
-I verified locally on March 27, 2026 that `amper init compose-multiplatform`
-works non-interactively and produces a fresh project.
+That writes `kotlin` and `kotlin.bat` to the project root. Future wrapper
+updates can use `./kotlin update`.
 
 That is a strong public starting point because it gives readers a generated
 baseline first, and then your article only has to explain what CI-specific files
@@ -117,11 +116,9 @@ repo and hope your paths match."
 I also recommend publishing a concrete companion sample repository alongside the
 article. In this case, that published sample now lives at
 [Portable KMP CI Sample](https://github.com/Mekate-Studio/Portable-KMP-CI)
-as a mobile-only scaffold derived from the Amper template.
+as a mobile-only Kotlin Toolchain scaffold.
 
-That sample includes its own self-contained
-`./scripts/regenerate_from_amper.sh`, so it can delete and rebuild the
-Amper-generated app layer when the template changes.
+That sample keeps its app layer small so the CI pattern stays visible.
 
 ## What the GitHub Actions layer looks like
 
@@ -163,7 +160,7 @@ It maps portable job names to the correct implementation path:
 case "${job_name}" in
   android-build-debug)
     ci_prepare_android_job
-    ./scripts/ci/run_fastlane_with_amper_logs.sh buildDebug
+    ./scripts/ci/run_fastlane_with_kotlin_logs.sh buildDebug
     ;;
   ios-testflight)
     ci_prepare_ios_testflight_job
@@ -184,7 +181,7 @@ The helper modules under [`scripts/ci/lib/`](../scripts/ci/lib) are doing the
 quiet but important work:
 
 - normalizing GitHub and GitLab environment variables into shared values
-- preparing a writable Amper cache
+- preparing writable Kotlin Toolchain caches
 - resolving `JAVA_HOME`
 - detecting the Android SDK
 - setting up PATH
@@ -256,9 +253,9 @@ Fastlane is useful in this setup because it sits at a clean boundary:
 - below the CI provider
 - close to store delivery workflows
 
-Android lanes call Amper and Play Store actions. iOS lanes call archive/export
-and TestFlight upload actions. That makes Fastlane the command layer instead of
-the place where CI orchestration gets mixed together.
+Android lanes call Kotlin Toolchain and Play Store actions. iOS lanes call
+archive/export and TestFlight upload actions. That makes Fastlane the command
+layer instead of the place where CI orchestration gets mixed together.
 
 It also makes the release flows easier to test locally.
 
@@ -271,7 +268,8 @@ You can run the same shared jobs locally:
 
 ```bash
 bundle install
-export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
+export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
+export KOTLIN_CLI_USER_HOME="$PWD/.kotlin-user-home"
 ./scripts/ci/run_job.sh android-build-debug
 ./scripts/ci/run_job.sh android-test
 ./scripts/ci/run_job.sh ios-build-debug
@@ -282,9 +280,9 @@ locally, most later failures are usually about runner provisioning, secrets, or
 artifact handoff, not about hidden YAML behavior.
 
 For the iOS build-only jobs, this setup now uses a generic iOS Simulator
-destination and forces a single simulator architecture matching the host. That
-avoids depending on a precreated simulator device while still working around
-Amper's current limitation around multi-architecture simulator builds.
+destination. The default path uses the Gradle bridge because the direct Kotlin
+Toolchain iOS path does not yet cover this repository's full Xcode target and
+SKIE interop shape.
 
 ## What I would recommend to teams copying this setup
 

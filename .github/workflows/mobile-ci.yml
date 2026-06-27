@@ -28,7 +28,7 @@ concurrency:
 
 env:
   DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-  AMPER_BOOTSTRAP_CACHE_DIR: ${{ github.workspace }}/.amper-cache
+  KOTLIN_CLI_BOOTSTRAP_CACHE_DIR: ${{ github.workspace }}/.kotlin-cache
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
 
 jobs:
@@ -40,10 +40,10 @@ jobs:
       - uses: actions/cache@v5
         with:
           path: |
-            .amper-cache
-            .amper-user-home/Library/Caches/JetBrains/Amper/.m2.cache
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-smoke-
       - uses: actions/setup-java@v5
@@ -98,10 +98,10 @@ jobs:
       - uses: actions/cache@v5
         with:
           path: |
-            .amper-cache
-            .amper-user-home/Library/Caches/JetBrains/Amper/.m2.cache
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-smoke-
       - uses: actions/setup-java@v5
@@ -134,10 +134,10 @@ jobs:
       - uses: actions/cache@v5
         with:
           path: |
-            .amper-cache
-            .amper-user-home/Library/Caches/JetBrains/Amper/.m2.cache
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-smoke-
       - uses: actions/setup-java@v5
@@ -171,10 +171,10 @@ jobs:
       - uses: actions/cache@v5
         with:
           path: |
-            .amper-cache
-            .amper-user-home/Library/Caches/JetBrains/Amper/.m2.cache
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'amper', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-smoke-
       - uses: actions/setup-java@v5

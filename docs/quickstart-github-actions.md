@@ -8,44 +8,39 @@ It assumes you want the same overall model as this repository:
 - GitHub Actions for orchestration
 - repository-owned shell scripts for shared logic
 - Fastlane for build and release commands
-- Amper for Kotlin Multiplatform builds
+- Kotlin Toolchain for Kotlin Multiplatform builds
 - macOS runners so Android and iOS can live in one pipeline
 
-## 0. Start from a fresh Amper project
+## 0. Start from a Kotlin Toolchain project
 
-If you already have the Amper CLI available locally, the cleanest starting point
-is to scaffold a new project first and then layer the CI files on top.
+If you are migrating an older Amper project, create the Kotlin Toolchain wrapper
+first and then layer the CI files on top.
 
-In a new directory, run:
+From the project root, run:
 
 ```bash
-mkdir my-kmp-ci-app
-cd my-kmp-ci-app
-amper init compose-multiplatform
+kotlin update --create
 ```
 
-I verified locally on March 27, 2026 that the current Amper CLI exposes an
-`init` command and that `amper init compose-multiplatform` generates a fresh
-project non-interactively.
+That creates the checked-in `kotlin` and `kotlin.bat` wrappers used by this
+repository. Future wrapper updates can use `./kotlin update`.
 
-That template gives you a very good baseline for this CI setup because it
-already creates:
+A good baseline for this CI setup has:
 
 - `android-app/`
 - `ios-app/`
 - `shared/`
 - `project.yaml`
-- checked-in `amper` wrappers
+- checked-in `kotlin` wrappers
 
-It also creates a `jvm-app/` module. You can keep that if you want an extra
-desktop target, or remove it later if you want the smallest possible mobile-only
-repo.
+Additional desktop or JVM modules can stay in the repository if you want them,
+but the smoke path documented here focuses on Android, iOS, and shared Kotlin
+code.
 
 If you want to see what that trimmed mobile-only result looks like, the
 published sample repository is:
 [Portable KMP CI Sample](https://github.com/Mekate-Studio/Portable-KMP-CI).
-That sample includes `./scripts/regenerate_from_amper.sh` so it can rebuild its
-app layer in place when the Amper template changes.
+That sample has also moved to Kotlin Toolchain wrappers.
 
 ## 1. Copy the core files
 
@@ -64,9 +59,9 @@ The minimum reusable pieces are:
 - [`scripts/ci/write_android_signing_files.sh`](../scripts/ci/write_android_signing_files.sh)
 - [`scripts/ci/write_google_play_key.sh`](../scripts/ci/write_google_play_key.sh)
 - [`scripts/ci/write_app_store_connect_api_key.sh`](../scripts/ci/write_app_store_connect_api_key.sh)
-- [`scripts/ci/run_fastlane_with_amper_logs.sh`](../scripts/ci/run_fastlane_with_amper_logs.sh)
+- [`scripts/ci/run_fastlane_with_kotlin_logs.sh`](../scripts/ci/run_fastlane_with_kotlin_logs.sh)
 - [`scripts/ci/run_xcodebuild_with_logs.sh`](../scripts/ci/run_xcodebuild_with_logs.sh)
-- [`scripts/ci/run_amper_with_logs.sh`](../scripts/ci/run_amper_with_logs.sh)
+- [`scripts/ci/run_kotlin_with_logs.sh`](../scripts/ci/run_kotlin_with_logs.sh)
 - [`scripts/ci/print_recent_logs.sh`](../scripts/ci/print_recent_logs.sh)
 - [`fastlane/Fastfile`](../fastlane/Fastfile)
 - [`fastlane/Appfile`](../fastlane/Appfile)
@@ -75,8 +70,8 @@ The minimum reusable pieces are:
 If your project structure differs, update paths in those files before wiring up
 the workflow.
 
-If you started from `amper init compose-multiplatform`, the generated structure
-is already close enough that the path adjustments should be small.
+If your generated structure is close to the Android, iOS, and shared-module
+shape above, the path adjustments should be small.
 
 ## 2. Understand the job contract
 
@@ -113,10 +108,11 @@ Install gems:
 bundle install
 ```
 
-Set a writable Amper cache:
+Set writable Kotlin Toolchain caches:
 
 ```bash
-export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
+export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
+export KOTLIN_CLI_USER_HOME="$PWD/.kotlin-user-home"
 ```
 
 Run the lowest-risk jobs first:

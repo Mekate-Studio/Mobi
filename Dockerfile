@@ -8,7 +8,7 @@ ENV ANDROID_COMPILE_SDK="36"
 ENV ANDROID_BUILD_TOOLS="36.0.0"
 
 ENV ANDROID_HOME=/android-sdk-linux
-ENV AMPER_BOOTSTRAP_CACHE_DIR=/opt/amper-cache
+ENV KOTLIN_CLI_BOOTSTRAP_CACHE_DIR=/opt/kotlin-cache
 ENV PATH="${PATH}:/android-sdk-linux/platform-tools/"
 
 # install OS packages
@@ -33,7 +33,7 @@ RUN echo y | android-sdk-linux/cmdline-tools/latest/bin/sdkmanager "build-tools;
 RUN echo y | android-sdk-linux/cmdline-tools/latest/bin/sdkmanager "extras;android;m2repository"
 RUN echo y | android-sdk-linux/cmdline-tools/latest/bin/sdkmanager "extras;google;google_play_services"
 RUN echo y | android-sdk-linux/cmdline-tools/latest/bin/sdkmanager "extras;google;m2repository"
-RUN mkdir -p "${AMPER_BOOTSTRAP_CACHE_DIR}"
+RUN mkdir -p "${KOTLIN_CLI_BOOTSTRAP_CACHE_DIR}"
 # install FastLane
 COPY Gemfile.lock .
 COPY Gemfile .

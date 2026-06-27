@@ -11,17 +11,17 @@ One of the goals of this CI design is that the same job contract works locally.
 - `ktlint`, `detekt`, `SwiftFormat`, `SwiftLint`, and `ShellCheck` for the
   quality commands
 
-Set a writable Amper cache before running build commands:
+Set a writable Kotlin Toolchain cache before running build commands:
 
 ```bash
-export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
+export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
 ```
 
 ## IDE flow without Gradle sync
 
-Because this repository uses Amper instead of Gradle as the project model,
-Android Studio will not generate the normal Android run configurations for the
-app module. The supported low-friction workflow is:
+Because this repository uses Kotlin Toolchain instead of Gradle as the project
+model, Android Studio will not generate the normal Android run configurations
+for the app module. The supported low-friction workflow is:
 
 - use the checked-in shell run configurations under `.run/`
 - use repo-owned scripts under `scripts/dev/`
@@ -89,8 +89,10 @@ bundle exec fastlane ios buildRelease
 That keeps the local flow aligned with the CI and TestFlight path while the
 bridge is in use.
 
-If you need to switch back temporarily for debugging, set
-`KOTLIN_IOS_BUILDER=amper` before launching the same commands.
+`KOTLIN_IOS_BUILDER=kotlin` is kept as an experimental direct integration path,
+but it is not the default while Kotlin Toolchain 0.11.1 still requires an
+iOS app Xcode project with a single target and the app still needs SKIE on the
+Gradle bridge for sealed-state ergonomics.
 
 `just doctor` checks the expected local toolchain and shows whether an Android
 device or emulator is already available for `just android-run`.

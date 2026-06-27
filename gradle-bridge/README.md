@@ -4,7 +4,7 @@ This folder contains the temporary Gradle bridge used to build the Kotlin
 framework consumed by the iOS app.
 
 It exists to support a traditional Xcode plus Swift Package Manager iOS flow
-without moving Android off Amper.
+without moving Android off Kotlin Toolchain.
 
 ## Ownership
 
@@ -50,7 +50,7 @@ For GitLab shell runners, keep `GRADLE_USER_HOME` outside the repo checkout for
 iOS jobs only, ideally under `$CI_BUILDS_DIR/.gradle-user-home`. That prevents
 Git cleanup from failing before the job starts when the previous bridge run
 left Gradle daemon or lock files under the workspace, without changing
-Android's existing Amper behavior.
+Android's existing Kotlin Toolchain behavior.
 
 ## Source ownership
 

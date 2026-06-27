@@ -1,8 +1,8 @@
 modules:
-  - shared-core
-  - shared-feature-home
-  - shared-feature-nearby-vehicle-map
-  - shared-di
-  - shared-ui-home
   - android-app
   - ios-app
+  - shared-core
+  - shared-di
+  - shared-feature-home
+  - shared-feature-nearby-vehicle-map
+  - shared-ui-home

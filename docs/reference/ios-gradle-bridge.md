@@ -2,19 +2,20 @@
 
 This document describes a temporary migration path for this repository when the
 native iOS application needs a more traditional Xcode plus Gradle integration,
-while the Android application continues to build through Amper.
+while the Android application continues to build through Kotlin Toolchain.
 
-The goal is not to replace Amper across the whole repository. The goal is to
-introduce the smallest possible Gradle bridge that can:
+The goal is not to replace Kotlin Toolchain across the whole repository. The
+goal is to keep the smallest possible Gradle bridge that can:
 
 - build a Kotlin framework for iOS from the existing shared sources
 - let Xcode own iOS app assembly and Swift Package Manager dependencies
-- keep Android development and CI on the current Amper path
-- remain easy to remove once the Amper iOS path is ready for the same use case
+- keep Android development and CI on the current Kotlin Toolchain path
+- remain easy to remove once the Kotlin Toolchain iOS path is ready for the
+  same use case
 
 ## Current repo shape
 
-Today the repository is organized around Amper modules:
+Today the repository is organized around Kotlin Toolchain modules:
 
 - [`project.yaml`](../../project.yaml)
 - [`shared-core/`](../../shared-core)
@@ -23,16 +24,49 @@ Today the repository is organized around Amper modules:
 - [`android-app/`](../../android-app)
 - [`ios-app/`](../../ios-app)
 
-That shape works well for Android and for the current Amper-managed iOS build,
-but it makes a Gradle-backed iOS path impossible until Gradle can see the same
-shared Kotlin code.
+That shape works well for Android and for Kotlin Toolchain-managed shared
+module development, but the bridge remains useful while direct Kotlin Toolchain
+iOS app integration does not yet fit this repository's complete Xcode target
+and SKIE interop needs.
 
 The key decision in this plan is to avoid creating a second full build of the
 repository. Instead, Gradle will own only an iOS-facing framework bridge.
 
+## Why the bridge still exists
+
+The bridge is no longer best explained as "needed for Swift Package Manager."
+Kotlin Toolchain 0.11.x gets further through the checked-in Xcode project and
+SPM setup than the older Amper path did. The remaining blockers are more
+specific:
+
+1. Kotlin Toolchain's documented `ios/app` migration shape expects an existing
+   `module.xcodeproj` with a single iOS app target. This repository keeps both
+   the app target and the app test target checked in, because the public smoke
+   path should exercise the native iOS shell as a normal Xcode project.
+2. The direct Kotlin Toolchain path is still experimental for this repo's iOS
+   shape. It should remain selectable with `KOTLIN_IOS_BUILDER=kotlin`, but it
+   should not be the default until it can build the same app and test target
+   layout reliably.
+3. The Swift-facing shared feature state still relies on SKIE ergonomics. SKIE
+   is configured through the Gradle bridge today, so removing the bridge would
+   also require either a supported Kotlin Toolchain SKIE integration path or a
+   replacement interop design for the native TCA adapters.
+
+That means the bridge is currently serving two jobs:
+
+- it gives Xcode a Kotlin framework path that works with the app's existing
+  Swift package and test target setup
+- it keeps SKIE attached to the iOS framework while Kotlin Toolchain and Swift
+  export mature
+
+The desired end state is still no bridge. The bridge should disappear once the
+direct Kotlin Toolchain path can cover this repository's checked-in Xcode
+project shape and Swift interop requirements without losing test coverage or
+state-adapter ergonomics.
+
 ## Why use a bridge instead of a full Gradle migration
 
-A full migration would make both Amper and Gradle responsible for:
+A full migration would make both Kotlin Toolchain and Gradle responsible for:
 
 - shared Kotlin targets
 - dependency declarations
@@ -46,19 +80,20 @@ expensive to maintain and difficult to unwind later.
 
 A bridge keeps the temporary ownership narrow:
 
-- Amper owns Android builds and Amper-native shared module development
+- Kotlin Toolchain owns Android builds and Kotlin Toolchain-native shared
+  module development
 - Gradle owns only the Kotlin framework consumed by Xcode
 - Xcode owns the iOS application, signing, and Swift packages
 
 This is the smallest compromise that still lets the iOS app follow the standard
-Kotlin Multiplatform direct integration path.
+Gradle-backed Kotlin Multiplatform Xcode integration path.
 
 ## Target temporary architecture
 
 The temporary structure should look like this:
 
 ```text
-android-app -> Amper -> shared Kotlin source folders
+android-app -> Kotlin Toolchain -> shared Kotlin source folders
 
 ios-app -> Xcode -> Swift Package Manager
                  -> Gradle bridge -> shared Kotlin source folders
@@ -96,12 +131,12 @@ infrastructure in one step.
 
 To keep the bridge manageable, ownership must stay explicit.
 
-### Amper owns
+### Kotlin Toolchain owns
 
 - Android application packaging and execution
 - Android build and test jobs
 - Android module wiring
-- Amper-native module boundaries for day-to-day Kotlin development
+- Kotlin Toolchain-native module boundaries for day-to-day Kotlin development
 
 ### Gradle bridge owns
 
@@ -139,8 +174,9 @@ will create noise instead of reducing risk.
 Create the `gradle-bridge/` folder and add a single Gradle project named
 `shared-kit`.
 
-The bridge should start as one umbrella KMP module, not a mirror of every Amper
-module. That single module should compile from the existing source directories:
+The bridge should start as one umbrella KMP module, not a mirror of every
+Kotlin Toolchain module. That single module should compile from the existing
+source directories:
 
 - `../shared-core/src`
 - `../shared-core/src@ios`
@@ -177,8 +213,8 @@ Introduce a shared version catalog at:
 
 - [`gradle/libs.versions.toml`](../../gradle/libs.versions.toml)
 
-The purpose of this file is to reduce version drift between the Amper and
-Gradle worlds.
+The purpose of this file is to reduce version drift between the Kotlin
+Toolchain and Gradle bridge worlds.
 
 At minimum, the catalog should capture:
 
@@ -238,35 +274,43 @@ For now, the practical migration shape is gradual:
 
 ## Stage 3: Keep the Xcode project switchable
 
-Do not replace the Amper Xcode build phase with a one-way Gradle change
-immediately. Instead, make the build phase switchable through an environment
-variable.
+Do not remove the direct Kotlin Toolchain Xcode integration path entirely.
+Instead, keep the build phase switchable through an environment variable so the
+bridge can remain the default while the direct path is evaluated.
 
 Recommended shape:
 
 ```sh
 set -eu
 
-if [ "${KOTLIN_IOS_BUILDER:-amper}" = "gradle" ]; then
-  "${SRCROOT}/../gradle-bridge/gradlew" :shared-kit:embedAndSignAppleFrameworkForXcode
-else
-  "${AMPER_WRAPPER_PATH}" tool xcode-integration
-fi
+case "${KOTLIN_IOS_BUILDER:-gradle}" in
+  kotlin)
+    "${KOTLIN_CLI_WRAPPER_PATH}" tool xcode-integration
+    ;;
+  gradle)
+    "${SRCROOT}/../gradle-bridge/gradlew" :shared-kit:embedAndSignAppleFrameworkForXcode
+    ;;
+  *)
+    echo "Unsupported KOTLIN_IOS_BUILDER: ${KOTLIN_IOS_BUILDER}" >&2
+    exit 1
+    ;;
+esac
 ```
 
 This gives the team three useful modes:
 
-- Amper remains the default while the bridge is new
-- individual developers can opt into the Gradle path locally
-- CI can exercise the Gradle path before it becomes the normal iOS route
+- the Gradle bridge remains the default while Kotlin Toolchain's direct iOS
+  path catches up to this repo's needs
+- individual developers can test the direct Kotlin Toolchain path locally
+- CI can keep exercising the bridge-backed route used by the public smoke path
 
 This switch is also the simplest rollback mechanism during the rollout.
 
 In this repository, the Xcode project now supports exactly that switch through
 the `KOTLIN_IOS_BUILDER` environment variable:
 
-- `amper`: current default path
-- `gradle`: temporary direct-integration bridge for iOS
+- `gradle`: current default bridge path for iOS
+- `kotlin`: experimental direct Kotlin Toolchain Xcode integration path
 
 When using the Gradle path, set `GRADLE_USER_HOME` to a writable cache such as
 `$PWD/.gradle-user-home` in local development and CI.
@@ -307,7 +351,7 @@ That command produced:
 The remaining unverified step is `ios-testflight`, which still requires App
 Store Connect API credentials to be available in the active shell or CI job.
 
-The repository now defaults the Gradle bridge in two places:
+The repository defaults the Gradle bridge in two places:
 
 - iOS jobs in GitHub Actions
 - the Fastlane `ios buildRelease` lane
@@ -322,7 +366,8 @@ The first local success criteria should be narrow:
 1. Gradle can build the iOS Kotlin framework.
 2. Xcode can launch the iOS app with `KOTLIN_IOS_BUILDER=gradle`.
 3. Swift code can still consume the same Kotlin APIs it consumed before.
-4. The app can still fall back to the Amper path if the bridge fails.
+4. The direct Kotlin Toolchain path has clear documented blockers before it
+   replaces the bridge.
 
 Only after those four checks pass should the repository CI be updated.
 
@@ -336,16 +381,16 @@ When the local bridge works, update CI to reflect the new temporary ownership.
 
 Recommended job split:
 
-### 1. Android Amper job
+### 1. Android Kotlin Toolchain job
 
 This job remains unchanged in spirit. It should continue to run the Android app
-and Android-facing shared code through Amper.
+and Android-facing shared code through Kotlin Toolchain.
 
 Typical commands:
 
 ```bash
-./amper build -m android-app
-./amper test -m shared-feature-home -p android
+./kotlin build -m android-app
+./kotlin test -m shared-feature-home -p android
 ```
 
 ### 2. iOS Kotlin framework job
@@ -374,7 +419,7 @@ Typical expectations:
 
 This separation makes failures easier to reason about:
 
-- if Android fails, the Amper path broke
+- if Android fails, the Kotlin Toolchain path broke
 - if the bridge fails, the Gradle KMP framework path broke
 - if Xcode fails but the bridge passes, the native iOS app path broke
 
@@ -391,7 +436,7 @@ That would immediately create drift and confusion.
 
 If a new shared dependency is introduced, the author must update:
 
-- the Amper module declarations
+- the Kotlin Toolchain module declarations
 - the Gradle bridge module dependencies
 - the version catalog when applicable
 
@@ -402,7 +447,7 @@ This is the main maintenance tax of the bridge.
 TCA and other Swift packages should be managed by the Xcode project. The Gradle
 bridge is not the place to solve Swift package concerns.
 
-### Rule 4: Android remains Amper-first
+### Rule 4: Android remains Kotlin Toolchain-first
 
 Do not let the bridge become a second Android path. The moment the bridge grows
 Android responsibilities, the temporary design loses its value.
@@ -413,14 +458,14 @@ If the bridge proves too brittle, rollback should be fast.
 
 ### Rollback steps
 
-1. Set `KOTLIN_IOS_BUILDER=amper` everywhere.
+1. Keep `KOTLIN_IOS_BUILDER=gradle` everywhere.
 2. Remove the Gradle bridge job from CI.
 3. Keep the documentation for historical context.
 4. Leave the SwiftUI native shell in place.
 
 If a full rollback is needed later:
 
-1. restore the Xcode build phase to Amper-only
+1. restore the Xcode build phase to the direct Kotlin Toolchain path
 2. delete `gradle-bridge/`
 3. delete any bridge-only CI steps
 4. keep the shared Kotlin sources unchanged
@@ -430,12 +475,17 @@ require code movement.
 
 ## Sunset criteria
 
-The bridge should be removed when the Amper-driven iOS path is good enough for
-the same workflow.
+The bridge should be removed when the Kotlin Toolchain-driven iOS path is good
+enough for the same workflow.
 
 Suggested removal criteria:
 
-- Xcode plus Amper can handle the needed Swift package setup reliably
+- Xcode plus Kotlin Toolchain can handle the needed Swift package setup
+  reliably
+- Kotlin Toolchain can work with this repository's checked-in app and test
+  targets, or the repo no longer needs that target shape
+- the native Swift adapters no longer need SKIE-generated sealed hierarchy
+  ergonomics, or Kotlin Toolchain can provide an equivalent sealed-state path
 - the iOS app can build in local development without the Gradle bridge
 - the iOS CI path is green without the bridge
 - the team no longer needs the Gradle direct integration workaround
@@ -452,7 +502,8 @@ Expected costs:
 - duplicate dependency declarations for shared Kotlin code
 - duplicate Kotlin and Compose version alignment work
 - extra CI job time and cache usage
-- occasional debugging of environment-specific Gradle versus Amper differences
+- occasional debugging of environment-specific Gradle bridge versus Kotlin
+  Toolchain differences
 - manual care when adding new shared modules or moving source folders
 
 This is acceptable if:
@@ -463,7 +514,7 @@ This is acceptable if:
 
 It becomes expensive if:
 
-- more Gradle modules are added to mirror the Amper graph
+- more Gradle modules are added to mirror the Kotlin Toolchain graph
 - the bridge starts owning Android concerns
 - version drift is allowed to accumulate
 
@@ -473,11 +524,11 @@ For this repository, the safest order is:
 
 1. add the bridge skeleton and version catalog
 2. get the framework building locally
-3. make Xcode switchable between Amper and Gradle
+3. make Xcode switchable between Kotlin Toolchain and Gradle
 4. verify the iOS app locally with the Gradle path
 5. add dedicated CI jobs
 6. flip the default builder only after repeated green runs
-7. remove the bridge as soon as Amper can replace it cleanly
+7. remove the bridge as soon as Kotlin Toolchain can replace it cleanly
 
 That sequence keeps every step reversible and keeps the highest-risk change,
 the Xcode app path, late in the rollout.

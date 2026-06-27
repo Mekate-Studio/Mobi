@@ -2,46 +2,46 @@
 
 These are the most common failure modes when reproducing this setup.
 
-## Amper cannot write its bootstrap cache
+## Kotlin Toolchain cannot write its bootstrap cache
 
 Symptom:
 
-- Amper fails early in CI or a sandboxed environment
+- Kotlin Toolchain fails early in CI or a sandboxed environment
 
 Fix:
 
 ```bash
-export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
+export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
 ```
 
 The shared CI layer already defaults this to a writable project-local path in
 [`scripts/ci/lib.sh`](../../scripts/ci/lib.sh).
 
-## Amper dependency resolution returns a missing file
+## Kotlin Toolchain dependency resolution returns a missing file
 
 Symptom:
 
 - Android CI fails during `resolveDependenciesAndroid`
-- the error says a file under `Library/Caches/JetBrains/Amper/.m2.cache` was
+- the error says a file under `Library/Caches/JetBrains/Kotlin/.m2.cache` was
   returned from dependency resolution but is missing on disk
 
 Fix:
 
 - run Android jobs through [`scripts/ci/run_job.sh`](../../scripts/ci/run_job.sh)
-- keep `AMPER_USER_HOME` on a workspace-owned path, such as
-  `$PWD/.amper-user-home`
-- cache only Amper's `.m2.cache`, not the whole Amper user home
+- keep `KOTLIN_CLI_USER_HOME` on a workspace-owned path, such as
+  `$PWD/.kotlin-user-home`
+- cache only Kotlin Toolchain's `.m2.cache`, not the whole Kotlin user home
 
-The shared CI layer sets `AMPER_USER_HOME`, `AMPER_TMP_DIR`, and
-`AMPER_JAVA_OPTIONS`. Android Fastlane lanes call
-[`scripts/ci/run_amper_with_logs.sh`](../../scripts/ci/run_amper_with_logs.sh),
-which retries bounded Amper failures where dependency resolution returns a
-cache path before the artifact exists on disk. The wrapper checks direct command
-output and current-run `build/logs/amper_*/` logs, downloads the missing Maven
+The shared CI layer sets `KOTLIN_CLI_USER_HOME`, `KOTLIN_CLI_TMP_DIR`, and
+`KOTLIN_CLI_JAVA_OPTIONS`. Android Fastlane lanes call
+[`scripts/ci/run_kotlin_with_logs.sh`](../../scripts/ci/run_kotlin_with_logs.sh),
+which retries bounded Kotlin Toolchain failures where dependency resolution
+returns a cache path before the artifact exists on disk. The wrapper checks
+direct command output and current-run build logs, downloads the missing Maven
 artifact, and opportunistically downloads related KLIB sibling artifacts for the
 same coordinate.
 
-## Maven Central returns 429 during Amper dependency resolution
+## Maven Central returns 429 during Kotlin dependency resolution
 
 Symptom:
 
@@ -53,15 +53,15 @@ Fix:
 
 - run Android jobs through [`scripts/ci/run_job.sh`](../../scripts/ci/run_job.sh)
 - keep Android Fastlane lanes on
-  [`scripts/ci/run_amper_with_logs.sh`](../../scripts/ci/run_amper_with_logs.sh)
-- restore `.amper-user-home/Library/Caches/JetBrains/Amper/.m2.cache` from the
-  GitHub Actions smoke cache
+  [`scripts/ci/run_kotlin_with_logs.sh`](../../scripts/ci/run_kotlin_with_logs.sh)
+- restore `.kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache` from
+  the GitHub Actions smoke cache
 
 The wrapper detects Maven Central throttling in direct output and current-run
-Amper logs, downloads the reported artifacts sequentially through the canonical
-Maven Central host, hydrates the base artifact for checksum URLs, waits
-briefly, and retries Amper with the hydrated cache. The cache keeps that
-hydration work from becoming the normal path on every run.
+Kotlin Toolchain logs, downloads the reported artifacts sequentially through the
+canonical Maven Central host, hydrates the base artifact for checksum URLs,
+waits briefly, and retries Kotlin Toolchain with the hydrated cache. The cache
+keeps that hydration work from becoming the normal path on every run.
 
 ## Android SDK is not detected
 
@@ -105,7 +105,8 @@ Fix:
   [`scripts/ci/build_android_aab.sh`](../../scripts/ci/build_android_aab.sh)
   for the expected Gradle distribution and artifact path
 
-This script is specific to the current Amper-generated Android release flow.
+This script is specific to the current Kotlin Toolchain-generated Android
+release flow.
 
 ## Google Play upload fails on a draft app
 

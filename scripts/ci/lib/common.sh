@@ -18,15 +18,16 @@ ci_require_cmd() {
 }
 
 ci_prepare_workspace() {
-  export AMPER_USER_HOME="${AMPER_USER_HOME:-${CI_PROJECT_DIR}/.amper-user-home}"
-  export AMPER_TMP_DIR="${AMPER_TMP_DIR:-${CI_PROJECT_DIR}/build/tmp/amper}"
-  export AMPER_JAVA_OPTIONS="${AMPER_JAVA_OPTIONS:+${AMPER_JAVA_OPTIONS} }-Duser.home=${AMPER_USER_HOME} -Djava.io.tmpdir=${AMPER_TMP_DIR}"
+  export KOTLIN_CLI_USER_HOME="${KOTLIN_CLI_USER_HOME:-${CI_PROJECT_DIR}/.kotlin-user-home}"
+  export KOTLIN_CLI_TMP_DIR="${KOTLIN_CLI_TMP_DIR:-${CI_PROJECT_DIR}/build/tmp/kotlin}"
+  export KOTLIN_CLI_JAVA_OPTIONS="${KOTLIN_CLI_JAVA_OPTIONS:+${KOTLIN_CLI_JAVA_OPTIONS} }-Duser.home=${KOTLIN_CLI_USER_HOME} -Djava.io.tmpdir=${KOTLIN_CLI_TMP_DIR}"
+  export KOTLIN_CLI_NO_WELCOME_BANNER="${KOTLIN_CLI_NO_WELCOME_BANNER:-1}"
 
   mkdir -p \
-    "${AMPER_BOOTSTRAP_CACHE_DIR}" \
-    "${AMPER_USER_HOME}/Library/Caches/JetBrains/Amper/telemetry" \
-    "${AMPER_TMP_DIR}"
-  chmod +x "${CI_PROJECT_DIR}/amper" "${CI_PROJECT_DIR}"/scripts/ci/*.sh
+    "${KOTLIN_CLI_BOOTSTRAP_CACHE_DIR}" \
+    "${KOTLIN_CLI_USER_HOME}/Library/Caches/JetBrains/Kotlin/telemetry" \
+    "${KOTLIN_CLI_TMP_DIR}"
+  chmod +x "${CI_PROJECT_DIR}/kotlin" "${CI_PROJECT_DIR}"/scripts/ci/*.sh
 }
 
 ci_set_java_home() {

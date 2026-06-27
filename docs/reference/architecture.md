@@ -58,7 +58,8 @@ The iOS helpers also normalize the temporary Kotlin builder selection used by
 the Xcode project:
 
 - `KOTLIN_IOS_BUILDER=gradle` is the current default and uses the Gradle bridge
-- `KOTLIN_IOS_BUILDER=amper` switches back to the legacy Amper path
+- `KOTLIN_IOS_BUILDER=kotlin` selects the experimental direct Kotlin Toolchain
+  Xcode integration path
 - `GRADLE_USER_HOME` points the bridge at a repo-local Gradle cache
 
 In the current bridge phase, the iOS CI jobs and Fastlane release lane default
@@ -68,11 +69,11 @@ same Kotlin framework path that was validated locally.
 ### 4. Platform command layer
 
 [`fastlane/Fastfile`](../../fastlane/Fastfile)
-is the command layer above Amper and store delivery APIs.
+is the command layer above Kotlin Toolchain and store delivery APIs.
 
 Examples:
 
-- Android `buildDebug` and `buildRelease` call `./amper build`
+- Android `buildDebug` and `buildRelease` call `./kotlin build`
 - Android release also runs
   [`scripts/ci/build_android_aab.sh`](../../scripts/ci/build_android_aab.sh)
   to produce an `.aab`
@@ -82,7 +83,7 @@ Examples:
 
 ### 5. Build system layer
 
-Amper is the actual project build system.
+Kotlin Toolchain is the actual project build system.
 
 Relevant files:
 
@@ -104,8 +105,8 @@ is the reusable pattern.
 5. The helpers normalize CI context, configure PATH, apply Android versioning,
    and materialize signing files when secrets exist.
 6. The dispatcher runs Fastlane `buildRelease`.
-7. Fastlane calls Amper for the app build and then builds the Android App
-   Bundle.
+7. Fastlane calls Kotlin Toolchain for the app build and then builds the
+   Android App Bundle.
 
 ### iOS TestFlight upload
 

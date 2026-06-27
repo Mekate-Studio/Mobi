@@ -92,7 +92,7 @@
 				A93CF19A71E94FF8EAB2A48D /* Sources */,
 				A93CFB18D8F0162B8642836E /* Frameworks */,
 				A93CF1127A893585707018F1 /* Resources */,
-				A93CF0D4D71D4D59A2C85A01 /* Embed Amper Frameworks */,
+				A93CF0D4D71D4D59A2C85A01 /* Embed Kotlin Frameworks */,
 			);
 			buildRules = (
 			);
@@ -174,20 +174,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A93CF0D4D71D4D59A2C85A01 /* Embed Amper Frameworks */ = {
+		A93CF0D4D71D4D59A2C85A01 /* Embed Kotlin Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Amper Frameworks";
+			name = "Embed Kotlin Frameworks";
 			outputPaths = (
-				"$(TARGET_TEMP_DIR)/.amper-embed-stamp",
+				"$(TARGET_TEMP_DIR)/.kotlin-embed-stamp",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -eu\nAmperFrameworksDir=\"${TARGET_BUILD_DIR}/AmperFrameworks\"\nAppFrameworksDir=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nStampFile=\"${TARGET_TEMP_DIR}/.amper-embed-stamp\"\nLegacyStampFile=\"${AppFrameworksDir}/.amper-embed-stamp\"\n\nmkdir -p \"${AppFrameworksDir}\"\nmkdir -p \"$(dirname \"${StampFile}\")\"\n/bin/rm -f \"${LegacyStampFile}\"\n\nif [ -d \"${AmperFrameworksDir}\" ]; then\n  for framework in \"${AmperFrameworksDir}\"/*.framework; do\n    [ -e \"${framework}\" ] || continue\n\n    framework_name=\"$(basename \"${framework}\")\"\n    executable_name=\"$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' \"${framework}/Info.plist\" 2>/dev/null || basename \"${framework}\" .framework)\"\n    binary_path=\"${framework}/${executable_name}\"\n    file_output=\"$(/usr/bin/file \"${binary_path}\" 2>/dev/null || true)\"\n\n    case \"${file_output}\" in\n      *\"dynamically linked shared library\"*)\n        /usr/bin/rsync -aL \"${framework}/\" \"${AppFrameworksDir}/${framework_name}/\"\n        if [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n          /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --generate-entitlement-der \"${AppFrameworksDir}/${framework_name}\"\n        fi\n        ;;\n      *)\n        echo \"Skipping static framework ${framework_name}\"\n        ;;\n    esac\n  done\n\n  /bin/rm -rf \"${AmperFrameworksDir}\"\nfi\n\n/usr/bin/touch \"${StampFile}\"\n";
+			shellScript = "set -eu\nKotlinFrameworksDir=\"${TARGET_BUILD_DIR}/AmperFrameworks\"\nAppFrameworksDir=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nStampFile=\"${TARGET_TEMP_DIR}/.kotlin-embed-stamp\"\nLegacyStampFile=\"${AppFrameworksDir}/.amper-embed-stamp\"\n\nmkdir -p \"${AppFrameworksDir}\"\nmkdir -p \"$(dirname \"${StampFile}\")\"\n/bin/rm -f \"${LegacyStampFile}\"\n\nif [ -d \"${KotlinFrameworksDir}\" ]; then\n  for framework in \"${KotlinFrameworksDir}\"/*.framework; do\n    [ -e \"${framework}\" ] || continue\n\n    framework_name=\"$(basename \"${framework}\")\"\n    executable_name=\"$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' \"${framework}/Info.plist\" 2>/dev/null || basename \"${framework}\" .framework)\"\n    binary_path=\"${framework}/${executable_name}\"\n    file_output=\"$(/usr/bin/file \"${binary_path}\" 2>/dev/null || true)\"\n\n    case \"${file_output}\" in\n      *\"dynamically linked shared library\"*)\n        /usr/bin/rsync -aL \"${framework}/\" \"${AppFrameworksDir}/${framework_name}/\"\n        if [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n          /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --generate-entitlement-der \"${AppFrameworksDir}/${framework_name}\"\n        fi\n        ;;\n      *)\n        echo \"Skipping static framework ${framework_name}\"\n        ;;\n    esac\n  done\n\n  /bin/rm -rf \"${KotlinFrameworksDir}\"\nfi\n\n/usr/bin/touch \"${StampFile}\"\n";
 		};
 		A93CF46588F1B180AC5404FB /* Build Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -202,7 +202,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -eu\n\nBuilder=\"${KOTLIN_IOS_BUILDER:-gradle}\"\n\nif [ \"YES\" = \"${OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED:-}\" ]; then\n  echo \"Skipping Kotlin framework build because OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES\"\n  exit 0\nfi\n\ncase \"${Builder}\" in\n  amper)\n    echo \"Building Kotlin framework with Amper\"\n    \"${AMPER_WRAPPER_PATH}\" tool xcode-integration\n    ;;\n  gradle)\n    export JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n    export PATH=\"${JAVA_HOME}/bin:${PATH}\"\n    export GRADLE_USER_HOME=\"${GRADLE_USER_HOME:-${SRCROOT}/../.gradle-user-home}\"\n    echo \"Building Kotlin framework with Gradle bridge\"\n    echo \"Using JAVA_HOME=${JAVA_HOME}\"\n    echo \"Using GRADLE_USER_HOME=${GRADLE_USER_HOME}\"\n    mkdir -p \"${TARGET_BUILD_DIR}/AmperFrameworks\"\n    \"${SRCROOT}/../gradle-bridge/gradlew\" -p \"${SRCROOT}/../gradle-bridge\" :shared-kit:embedAndSignAppleFrameworkForXcode\n    ;;\n  *)\n    echo \"Unsupported KOTLIN_IOS_BUILDER=${Builder}. Expected 'amper' or 'gradle'.\" >&2\n    exit 1\n    ;;\n esac\n";
+			shellScript = "set -eu\n\nBuilder=\"${KOTLIN_IOS_BUILDER:-gradle}\"\n\nif [ \"YES\" = \"${OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED:-}\" ]; then\n  echo \"Skipping Kotlin framework build because OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES\"\n  exit 0\nfi\n\ncase \"${Builder}\" in\n  kotlin)\n    echo \"Building Kotlin framework with Kotlin Toolchain\"\n    \"${KOTLIN_CLI_WRAPPER_PATH}\" tool xcode-integration\n    ;;\n  gradle)\n    export JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n    export PATH=\"${JAVA_HOME}/bin:${PATH}\"\n    export GRADLE_USER_HOME=\"${GRADLE_USER_HOME:-${SRCROOT}/../.gradle-user-home}\"\n    echo \"Building Kotlin framework with Gradle bridge\"\n    echo \"Using JAVA_HOME=${JAVA_HOME}\"\n    echo \"Using GRADLE_USER_HOME=${GRADLE_USER_HOME}\"\n    mkdir -p \"${TARGET_BUILD_DIR}/AmperFrameworks\"\n    \"${SRCROOT}/../gradle-bridge/gradlew\" -p \"${SRCROOT}/../gradle-bridge\" :shared-kit:embedAndSignAppleFrameworkForXcode\n    ;;\n  *)\n    echo \"Unsupported KOTLIN_IOS_BUILDER=${Builder}. Expected 'kotlin' or 'gradle'.\" >&2\n    exit 1\n    ;;\n esac\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -236,7 +236,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				AMPER_WRAPPER_PATH = ../amper;
+				KOTLIN_CLI_WRAPPER_PATH = ../kotlin;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -279,7 +279,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				AMPER_WRAPPER_PATH = ../amper;
+				KOTLIN_CLI_WRAPPER_PATH = ../kotlin;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;

@@ -9,9 +9,9 @@ modules=(
   "shared-feature-home"
   "android-app"
 )
-amper_home="${AMPER_USER_HOME:-${project_root}/build/amper-user-home}"
+kotlin_cli_user_home="${KOTLIN_CLI_USER_HOME:-${project_root}/build/kotlin-user-home}"
 default_gradle_user_home="${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
-amper_tmp_dir="${project_root}/build/tmp/amper"
+kotlin_cli_tmp_dir="${project_root}/build/tmp/kotlin"
 command_log_path="${project_root}/build/logs/android-test-command.log"
 
 print_test_summary() {
@@ -120,11 +120,11 @@ else:
 PY
 }
 
-find_latest_amper_log_dir() {
-  find "${project_root}/build/logs" -maxdepth 1 -type d -name 'amper_*_test' -print 2>/dev/null | sort | tail -n 1
+find_latest_kotlin_log_dir() {
+  find "${project_root}/build/logs" -maxdepth 1 -type d -name 'kotlin_*_test' -print 2>/dev/null | sort | tail -n 1
 }
 
-run_amper_test() {
+run_kotlin_test() {
   local gradle_home="${1:?gradle home required}"
   shift
   local module_name="${1:?module name required}"
@@ -134,14 +134,17 @@ run_amper_test() {
 
   (
     export GRADLE_USER_HOME="${gradle_home}"
-    export HOME="${amper_home}"
-    export TMPDIR="${amper_tmp_dir}"
-    export AMPER_JAVA_OPTIONS="${AMPER_JAVA_OPTIONS:+${AMPER_JAVA_OPTIONS} }-Duser.home=${amper_home} -Djava.io.tmpdir=${amper_tmp_dir}"
+    export HOME="${kotlin_cli_user_home}"
+    export TMPDIR="${kotlin_cli_tmp_dir}"
+    export KOTLIN_CLI_USER_HOME="${kotlin_cli_user_home}"
+    export KOTLIN_CLI_TMP_DIR="${kotlin_cli_tmp_dir}"
+    export KOTLIN_CLI_JAVA_OPTIONS="${KOTLIN_CLI_JAVA_OPTIONS:+${KOTLIN_CLI_JAVA_OPTIONS} }-Duser.home=${kotlin_cli_user_home} -Djava.io.tmpdir=${kotlin_cli_tmp_dir}"
+    export KOTLIN_CLI_NO_WELCOME_BANNER="${KOTLIN_CLI_NO_WELCOME_BANNER:-1}"
 
-    mkdir -p "${HOME}/Library/Caches/JetBrains/Amper/telemetry"
+    mkdir -p "${HOME}/Library/Caches/JetBrains/Kotlin/telemetry"
 
     cd "${project_root}"
-    ./amper test -m "${module_name}" -p android "$@"
+    ./kotlin test -m "${module_name}" -p android "$@"
   ) >"${attempt_log_path}" 2>&1
 }
 
@@ -151,15 +154,15 @@ command_log_mentions_missing_gradle_metadata() {
   rg -q 'Could not read workspace metadata from .*/metadata\.bin|metadata\.bin \(No such file or directory\)' "${log_path}"
 }
 
-latest_amper_logs_mention_missing_gradle_metadata() {
-  local latest_amper_log_dir=""
+latest_kotlin_logs_mention_missing_gradle_metadata() {
+  local latest_kotlin_log_dir=""
 
-  latest_amper_log_dir="$(find_latest_amper_log_dir || true)"
-  [[ -n "${latest_amper_log_dir}" ]] || return 1
+  latest_kotlin_log_dir="$(find_latest_kotlin_log_dir || true)"
+  [[ -n "${latest_kotlin_log_dir}" ]] || return 1
 
   rg -q 'Could not read workspace metadata from .*/metadata\.bin|metadata\.bin \(No such file or directory\)' \
-    "${latest_amper_log_dir}/info.log" \
-    "${latest_amper_log_dir}/debug.log"
+    "${latest_kotlin_log_dir}/info.log" \
+    "${latest_kotlin_log_dir}/debug.log"
 }
 
 prepare_clean_gradle_user_home() {
@@ -182,7 +185,7 @@ prepare_clean_gradle_user_home() {
   printf '%s\n' "${clean_gradle_home}"
 }
 
-mkdir -p "${AMPER_BOOTSTRAP_CACHE_DIR}" "${amper_home}" "${default_gradle_user_home}" "${amper_tmp_dir}" "${project_root}/build/logs"
+mkdir -p "${KOTLIN_CLI_BOOTSTRAP_CACHE_DIR}" "${kotlin_cli_user_home}" "${default_gradle_user_home}" "${kotlin_cli_tmp_dir}" "${project_root}/build/logs"
 for module_name in "${modules[@]}"; do
   report_dir="${project_root}/build/reports/${module_name}/android"
   mkdir -p "${report_dir}"
@@ -195,14 +198,14 @@ ci_resolve_android_sdk_root || true
 ci_configure_path
 ci_log_android_sdk_env
 
-echo "Running Android tests through Amper"
+echo "Running Android tests through Kotlin Toolchain"
 echo "Project root: ${project_root}"
-echo "Amper cache:  ${AMPER_BOOTSTRAP_CACHE_DIR}"
-echo "Amper home:   ${amper_home}"
+echo "Kotlin cache: ${KOTLIN_CLI_BOOTSTRAP_CACHE_DIR}"
+echo "Kotlin home:  ${kotlin_cli_user_home}"
 echo "Gradle home:  ${default_gradle_user_home}"
 echo "Modules:      ${modules[*]}"
 echo "Command log:  ${command_log_path}"
-echo "Verbose log:  set ANDROID_TEST_VERBOSE=1 to stream Amper output"
+echo "Verbose log:  set ANDROID_TEST_VERBOSE=1 to stream Kotlin Toolchain output"
 
 overall_status=0
 
@@ -211,17 +214,17 @@ for module_name in "${modules[@]}"; do
 
   set +e
   attempt1_log_path="${project_root}/build/logs/android-test-command-${module_name}.attempt1.log"
-  run_amper_test "${default_gradle_user_home}" "${module_name}" "${attempt1_log_path}" "$@"
+  run_kotlin_test "${default_gradle_user_home}" "${module_name}" "${attempt1_log_path}" "$@"
   command_status=$?
 
   if [[ "${command_status}" -ne 0 ]] && {
-    command_log_mentions_missing_gradle_metadata "${attempt1_log_path}" || latest_amper_logs_mention_missing_gradle_metadata
+    command_log_mentions_missing_gradle_metadata "${attempt1_log_path}" || latest_kotlin_logs_mention_missing_gradle_metadata
   }; then
     clean_gradle_user_home="$(prepare_clean_gradle_user_home)"
     echo "Detected stale Gradle transform metadata while testing ${module_name}. Retrying once with a clean Gradle home..."
     echo "Clean Gradle: ${clean_gradle_user_home}"
     retry_log_path="${project_root}/build/logs/android-test-command-${module_name}.attempt2.log"
-    run_amper_test "${clean_gradle_user_home}" "${module_name}" "${retry_log_path}" "$@"
+    run_kotlin_test "${clean_gradle_user_home}" "${module_name}" "${retry_log_path}" "$@"
     retry_status=$?
 
     {
@@ -245,12 +248,12 @@ for module_name in "${modules[@]}"; do
   report_dir="${project_root}/build/reports/${module_name}/android"
   print_test_summary "${report_dir}"
 
-  latest_amper_log_dir="$(find_latest_amper_log_dir || true)"
-  if [[ -n "${latest_amper_log_dir}" ]]; then
+  latest_kotlin_log_dir="$(find_latest_kotlin_log_dir || true)"
+  if [[ -n "${latest_kotlin_log_dir}" ]]; then
     echo
-    echo "Amper logs for ${module_name}"
-    echo "  - ${latest_amper_log_dir}/info.log"
-    echo "  - ${latest_amper_log_dir}/debug.log"
+    echo "Kotlin Toolchain logs for ${module_name}"
+    echo "  - ${latest_kotlin_log_dir}/info.log"
+    echo "  - ${latest_kotlin_log_dir}/debug.log"
   fi
 
   if [[ "${command_status}" -ne 0 ]]; then

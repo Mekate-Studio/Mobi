@@ -1,6 +1,6 @@
 # Temporary shared version catalog for the iOS Gradle bridge.
-# Keep this intentionally small so it is easy to remove once Amper can own the
-# full iOS path again.
+# Keep this intentionally small so it is easy to remove once Kotlin Toolchain
+# can own the full iOS path for this repo.
 
 [versions]
 kotlin = "2.3.20"

@@ -24,11 +24,11 @@ ci_configure_ios_kotlin_builder() {
   fi
 
   case "${KOTLIN_IOS_BUILDER}" in
-    amper|gradle)
+    kotlin|gradle)
       ;;
     *)
       printf 'Unsupported KOTLIN_IOS_BUILDER: %s\n' "${KOTLIN_IOS_BUILDER}" >&2
-      printf 'Supported values: amper, gradle\n' >&2
+      printf 'Supported values: kotlin, gradle\n' >&2
       exit 1
       ;;
   esac

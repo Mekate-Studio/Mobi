@@ -126,7 +126,7 @@ print_android_devices() {
 
 echo "Developer environment doctor"
 echo "Project root: ${project_root}"
-echo "AMPER_BOOTSTRAP_CACHE_DIR: ${AMPER_BOOTSTRAP_CACHE_DIR}"
+echo "KOTLIN_CLI_BOOTSTRAP_CACHE_DIR: ${KOTLIN_CLI_BOOTSTRAP_CACHE_DIR}"
 
 check_cmd java "Java"
 check_cmd ruby "Ruby"

@@ -4,6 +4,8 @@
 /.amper/
 /.amper-cache/
 /.amper-user-home/
+/.kotlin-cache/
+/.kotlin-user-home/
 /build/
 /gradle-bridge/build/
 /gradle-bridge/shared-kit/build/

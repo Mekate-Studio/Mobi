@@ -144,8 +144,8 @@ shared Kotlin `HomeFeatureService` and its sealed async state into SwiftUI
 state.
 
 One implementation detail matters for automation: Xcode GUI builds work with
-the current TCA package setup, and the CLI path is stable when two conditions
-are met:
+the current TCA package setup, and the Gradle bridge CLI path is stable when two
+conditions are met:
 
 - `SWIFT_ENABLE_EXPLICIT_MODULES=NO` is passed to `xcodebuild`
 - the CLI build does not force `-sdk iphonesimulator`, `ONLY_ACTIVE_ARCH`, or
@@ -156,6 +156,11 @@ under `Debug-iphonesimulator` instead of the macOS host products directory,
 which broke `@Reducer` and `@ObservableState` expansion from the CLI. The
 repo's iOS CI and Fastlane entrypoints therefore disable explicit Swift modules
 by default while also letting Xcode choose the simulator architectures itself.
+The experimental direct Kotlin Toolchain iOS path is not the default yet. With
+Kotlin Toolchain 0.11.1, the generic simulator CLI build must be narrowed to one
+architecture, and the direct iOS app integration still expects a checked-in
+Xcode project with a single app target. Mobi currently keeps an app test target
+and still relies on SKIE in the Gradle bridge for sealed-state Swift ergonomics.
 There is one tooling split to keep in mind: the low-level CI wrapper uses the
 workspace path for raw `xcodebuild`, while Fastlane archives against the plain
 `.xcodeproj` because Fastlane's Xcodeproj-based scheme discovery does not
@@ -502,7 +507,8 @@ The recommended implementation order is:
 5. Keep shared Compose UI only where the reuse remains clearly worth it.
 
 For the temporary case where iOS needs a traditional Xcode plus Gradle bridge
-before the Amper iOS path is ready, use the dedicated rollout guide:
+before the Kotlin Toolchain iOS path is ready for this repo, use the dedicated
+rollout guide:
 
 - [iOS Gradle Bridge Migration](ios-gradle-bridge.md)
 

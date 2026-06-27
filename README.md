@@ -35,10 +35,10 @@ Install Ruby dependencies:
 bundle install
 ```
 
-Set a writable Amper cache:
+Set a writable Kotlin Toolchain cache:
 
 ```bash
-export AMPER_BOOTSTRAP_CACHE_DIR="$PWD/.amper-cache"
+export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
 ```
 
 Run the main local smoke path:
@@ -76,7 +76,7 @@ constraint in the current repository shape, not as the long-term ideal.
 
 ## Repository Shape
 
-- [`project.yaml`](project.yaml): Amper workspace entry point
+- [`project.yaml`](project.yaml): Kotlin Toolchain workspace entry point
 - [`shared-core/`](shared-core): platform-agnostic shared domain logic
 - [`shared-feature-home/`](shared-feature-home): shared feature contract and
   state
@@ -98,7 +98,7 @@ The main pattern is:
 - GitHub Actions stays thin
 - repository scripts own the job contract
 - Fastlane wraps build and release commands
-- Amper remains the multiplatform build entry point
+- Kotlin Toolchain remains the multiplatform build entry point
 
 That keeps the runtime and release mechanics close to the architecture instead
 of hiding them inside CI configuration alone.
@@ -125,16 +125,17 @@ The current tool split is:
 
 Renovate is the repository's dependency update orchestrator. The checked-in
 [`renovate.json`](renovate.json) covers GitHub Actions, Bundler, the Gradle
-version catalog used by the iOS bridge, and custom Amper `module.yaml` Maven
-coordinates that generic Gradle tooling does not see. Native iOS dependencies
+version catalog used by the iOS bridge, and custom Kotlin Toolchain
+`module.yaml` Maven coordinates that generic Gradle tooling does not see.
+Native iOS dependencies
 such as TCA, Point-Free Dependencies, and MapLibre are declared in
 [`ios-app/Dependencies/Package.swift`](ios-app/Dependencies/Package.swift), so
 Renovate can manage them through its native Swift Package Manager support.
 Enable the Renovate GitHub App for hosted pull requests, or point a
 self-hosted Renovate runner at this repository.
-Metro and Kotlin coroutines updates are grouped across Amper modules and the
-Gradle bridge catalog because the bridge must stay aligned with the shared
-Kotlin dependency surface used by the app modules.
+Metro and Kotlin coroutines updates are grouped across Kotlin Toolchain modules
+and the Gradle bridge catalog because the bridge must stay aligned with the
+shared Kotlin dependency surface used by the app modules.
 Metro is currently held below `1.2.0`, and the bridge Kotlin compiler below
 `2.4.0`, because Metro `1.2.x` publishes Kotlin/Native artifacts with Kotlin
 `2.4.0` ABI while the current SKIE release used by the bridge supports Kotlin

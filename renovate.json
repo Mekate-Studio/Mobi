@@ -15,7 +15,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update Maven coordinates declared in Amper module dependency lists.",
+      "description": "Update Maven coordinates declared in Kotlin Toolchain module dependency lists.",
       "managerFilePatterns": [
         "/(^|/)module\\.yaml$/"
       ],
@@ -27,7 +27,7 @@
     },
     {
       "customType": "regex",
-      "description": "Update Maven coordinates declared in Amper annotation processors.",
+      "description": "Update Maven coordinates declared in Kotlin Toolchain annotation processors.",
       "managerFilePatterns": [
         "/(^|/)module\\.yaml$/"
       ],
@@ -91,7 +91,7 @@
       "matchFileNames": [
         "**/module.yaml"
       ],
-      "groupName": "amper maven dependencies",
+      "groupName": "kotlin toolchain maven dependencies",
       "registryUrls": [
         "https://dl.google.com/android/maven2/",
         "https://repo.maven.apache.org/maven2",
@@ -132,7 +132,7 @@
       "allowedVersions": "<2.4.0"
     },
     {
-      "description": "Keep Kotlin coroutines versions synchronized between Amper modules and the Gradle bridge catalog.",
+      "description": "Keep Kotlin coroutines versions synchronized between Kotlin Toolchain modules and the Gradle bridge catalog.",
       "matchDatasources": [
         "maven"
       ],
