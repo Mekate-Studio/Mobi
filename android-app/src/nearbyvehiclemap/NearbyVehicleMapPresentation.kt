@@ -5,9 +5,11 @@ import studio.mekate.mobi.core.RiderLocation
 import studio.mekate.mobi.core.VehicleLocation
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
+import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
 import studio.mekate.mobi.feature.nearbyvehiclemap.SnapshotBackedNearbyVehicleState
 import studio.mekate.mobi.feature.nearbyvehiclemap.VisibleRiderLocationState
+import studio.mekate.mobi.feature.nearbyvehiclemap.canInteractWithVehicles
 import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
 
 data class NearbyVehicleMapPresentation(
@@ -17,6 +19,7 @@ data class NearbyVehicleMapPresentation(
     val overlay: NearbyVehicleMapOverlayPresentation,
     val primaryActionLabel: String,
     val canRequestRefresh: Boolean,
+    val canInteractWithVehicles: Boolean,
 )
 
 sealed interface NearbyVehicleMapContentPresentation {
@@ -87,6 +90,7 @@ fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicle
         overlay = mapOverlayState.toPresentation(),
         primaryActionLabel = "Refresh nearby vehicles",
         canRequestRefresh = canRequestRefresh(),
+        canInteractWithVehicles = canInteractWithVehicles(),
     )
 }
 
@@ -136,7 +140,11 @@ private fun RiderLocationState.messageText(snapshotState: SnapshotBackedNearbyVe
         }
 
         RiderLocationState.Denied -> {
-            "Location access is required before nearby vehicles can be positioned relative to the rider."
+            blockedLocationMessage(RiderLocationBlockedReason.AccessDenied)
+        }
+
+        is RiderLocationState.Blocked -> {
+            blockedLocationMessage(reason)
         }
 
         is RiderLocationState.TemporarilyUnavailable -> {
@@ -144,6 +152,29 @@ private fun RiderLocationState.messageText(snapshotState: SnapshotBackedNearbyVe
         }
 
         RiderLocationState.Unavailable -> {
+            "Rider location is temporarily unavailable, so discovery is blocked."
+        }
+    }
+
+private fun blockedLocationMessage(reason: RiderLocationBlockedReason): String =
+    when (reason) {
+        RiderLocationBlockedReason.AccessDenied -> {
+            "Precise location access is required before nearby vehicles can be positioned relative to the rider."
+        }
+
+        RiderLocationBlockedReason.AccessRestricted -> {
+            "Precise location is restricted on this device, so nearby vehicle discovery is blocked."
+        }
+
+        RiderLocationBlockedReason.ServicesDisabled -> {
+            "Location services are unavailable, so nearby vehicle discovery is blocked."
+        }
+
+        RiderLocationBlockedReason.ApproximateOnly -> {
+            "Precise location is required for nearby vehicle discovery."
+        }
+
+        RiderLocationBlockedReason.TemporarilyUnavailable -> {
             "Rider location is temporarily unavailable, so discovery is blocked."
         }
     }
@@ -173,7 +204,7 @@ private fun NearbyVehicleMapOverlayState.toPresentation(): NearbyVehicleMapOverl
         NearbyVehicleMapOverlayState.BlockingFailure -> {
             NearbyVehicleMapOverlayPresentation.Blocking(
                 headline = "Map unavailable",
-                message = "A trustworthy rider-centered vehicle snapshot is not available right now.",
+                message = "Precise rider location is required before nearby vehicle actions are available.",
             )
         }
     }

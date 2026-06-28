@@ -13,7 +13,8 @@ extension NearbyVehicleMapFeature {
             lhs.message == rhs.message &&
                 lhs.mapContent == rhs.mapContent &&
                 lhs.overlay == rhs.overlay &&
-                lhs.canRequestRefresh == rhs.canRequestRefresh
+                lhs.canRequestRefresh == rhs.canRequestRefresh &&
+                lhs.canInteractWithVehicles == rhs.canInteractWithVehicles
         }
 
         mutating func apply(sharedState: NearbyVehicleMapFeatureState) {
@@ -35,12 +36,22 @@ extension NearbyVehicleMapFeature {
             case .available:
                 return vehicleCountText
             case .denied:
-                return "Location access is required before nearby vehicles can be positioned relative to the rider."
+                return blockedLocationMessage(.accessDenied)
+            case let .blocked(state):
+                return blockedLocationMessage(state.reason)
             case .temporarilyUnavailable:
                 return "Live location is temporarily unavailable. Keeping the last resolved rider position."
             case .unavailable:
                 return "Rider location is temporarily unavailable, so discovery is blocked."
             }
+        }
+
+        var canInteractWithVehicles: Bool {
+            guard riderLocation != nil, let sharedState else { return false }
+            guard case .blockingFailure = onEnum(of: sharedState.mapOverlayState) else {
+                return true
+            }
+            return false
         }
 
         var mapContent: NearbyVehicleMapContent {
@@ -109,7 +120,7 @@ extension NearbyVehicleMapFeature {
             guard let sharedState else { return nil }
 
             switch onEnum(of: sharedState.riderLocationState) {
-            case .resolving, .denied:
+            case .resolving, .denied, .blocked:
                 return nil
             case let .available(state):
                 return state.location
@@ -117,6 +128,21 @@ extension NearbyVehicleMapFeature {
                 return state.location
             case .unavailable:
                 return nil
+            }
+        }
+
+        private func blockedLocationMessage(_ reason: RiderLocationBlockedReason) -> String {
+            switch reason {
+            case .accessDenied:
+                return "Precise location access is required before nearby vehicles can be positioned relative to the rider."
+            case .accessRestricted:
+                return "Precise location is restricted on this device, so nearby vehicle discovery is blocked."
+            case .servicesDisabled:
+                return "Location services are unavailable, so nearby vehicle discovery is blocked."
+            case .approximateOnly:
+                return "Precise location is required for nearby vehicle discovery."
+            case .temporarilyUnavailable:
+                return "Rider location is temporarily unavailable, so discovery is blocked."
             }
         }
     }
@@ -214,7 +240,7 @@ enum NearbyVehicleMapOverlay: Equatable {
     static let blockingFailure =
         NearbyVehicleMapOverlay.blocking(
             headline: "Map unavailable",
-            message: "A trustworthy rider-centered vehicle snapshot is not available right now.",
+            message: "Precise rider location is required before nearby vehicle actions are available.",
         )
 
     var blocksMap: Bool {

@@ -166,7 +166,43 @@ class NearbyVehicleMapFeatureServiceTest {
 
         // then
         val locationState = assertIs<RiderLocationState.TemporarilyUnavailable>(degradedState.riderLocationState)
-        assertEquals(riderLocation, locationState.location)
+            assertEquals(riderLocation, locationState.location)
+    }
+
+    @Test
+    fun `should block vehicle interaction when only approximate location is available`() {
+        // given
+        val service = createService()
+
+        // when
+        val blockedState =
+            service.riderLocationBlocked(
+                currentState = service.initialState(),
+                reason = RiderLocationBlockedReason.ApproximateOnly,
+            )
+
+        // then
+        val locationState = assertIs<RiderLocationState.Blocked>(blockedState.riderLocationState)
+        assertEquals(RiderLocationBlockedReason.ApproximateOnly, locationState.reason)
+        assertFalse(blockedState.canInteractWithVehicles())
+        assertIs<NearbyVehicleMapOverlayState.BlockingFailure>(blockedState.mapOverlayState)
+    }
+
+    @Test
+    fun `should keep vehicle interaction eligible after live location degrades with last precise fix`() {
+        // given
+        val service = createService()
+        val loadedState =
+            loadedState(
+                service = service,
+                snapshot = snapshot(loadedAtMillis = 1_000),
+            )
+
+        // when
+        val degradedState = service.riderLocationTemporarilyUnavailable(loadedState)
+
+        // then
+        assertTrue(degradedState.canInteractWithVehicles())
     }
 
     private fun createService(shouldFail: Boolean = false): NearbyVehicleMapFeatureService =

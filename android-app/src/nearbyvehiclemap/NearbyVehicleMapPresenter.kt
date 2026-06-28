@@ -47,9 +47,13 @@ class NearbyVehicleMapPresenter(
         return remember(featureState, stateProducer, scope) {
             stateProducer.create(
                 featureState = featureState,
-                onLocationPermissionGranted = {
+                onPreciseLocationResolved = { location ->
                     scope.launch {
-                        featureState = stateProducer.permissionGrantedState(currentState = featureState)
+                        featureState =
+                            stateProducer.preciseLocationResolvedState(
+                                currentState = featureState,
+                                location = location,
+                            )
                         featureState = stateProducer.loadingState(currentState = featureState)
                         featureState =
                             stateProducer.refreshedState(
@@ -58,8 +62,12 @@ class NearbyVehicleMapPresenter(
                             )
                     }
                 },
-                onLocationPermissionDenied = {
-                    featureState = stateProducer.permissionDeniedState(currentState = featureState)
+                onLocationAccessBlocked = { reason ->
+                    featureState =
+                        stateProducer.locationAccessBlockedState(
+                            currentState = featureState,
+                            reason = reason,
+                        )
                 },
                 onLocationTemporarilyUnavailable = {
                     featureState = stateProducer.locationTemporarilyUnavailableState(currentState = featureState)

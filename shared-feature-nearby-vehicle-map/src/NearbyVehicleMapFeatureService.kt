@@ -28,8 +28,22 @@ class NearbyVehicleMapFeatureService(
         )
 
     fun riderLocationDenied(currentState: NearbyVehicleMapFeatureState): NearbyVehicleMapFeatureState =
+        riderLocationBlocked(
+            currentState = currentState,
+            reason = RiderLocationBlockedReason.AccessDenied,
+        )
+
+    fun riderLocationBlocked(
+        currentState: NearbyVehicleMapFeatureState,
+        reason: RiderLocationBlockedReason,
+    ): NearbyVehicleMapFeatureState =
         currentState.copy(
-            riderLocationState = RiderLocationState.Denied,
+            riderLocationState =
+                if (reason == RiderLocationBlockedReason.AccessDenied) {
+                    RiderLocationState.Denied
+                } else {
+                    RiderLocationState.Blocked(reason = reason)
+                },
             snapshotState =
                 currentState.snapshotState.failedWith(
                     reason = NearbyVehicleMapFailureReason.RiderLocationUnavailable,
@@ -47,15 +61,24 @@ class NearbyVehicleMapFeatureService(
                 }
 
                 RiderLocationState.Denied,
+                is RiderLocationState.Blocked,
                 RiderLocationState.Resolving,
                 RiderLocationState.Unavailable,
                 -> {
-                    RiderLocationState.Unavailable
+                    RiderLocationState.Blocked(reason = RiderLocationBlockedReason.TemporarilyUnavailable)
                 }
             }
 
         return currentState.copy(
             riderLocationState = riderLocationState,
+            snapshotState =
+                if (riderLocationState is VisibleRiderLocationState) {
+                    currentState.snapshotState
+                } else {
+                    currentState.snapshotState.failedWith(
+                        reason = NearbyVehicleMapFailureReason.RiderLocationUnavailable,
+                    )
+                },
             mapOverlayState =
                 if (
                     riderLocationState !is VisibleRiderLocationState &&

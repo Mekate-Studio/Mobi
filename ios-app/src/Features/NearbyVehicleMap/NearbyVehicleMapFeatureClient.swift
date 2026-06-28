@@ -6,8 +6,15 @@ extension NearbyVehicleMapFeatureState: @unchecked @retroactive Sendable {}
 
 struct NearbyVehicleMapFeatureClient {
     var initialState: @Sendable () -> NearbyVehicleMapFeatureState
-    var permissionGrantedState: @Sendable (_ currentState: NearbyVehicleMapFeatureState) -> NearbyVehicleMapFeatureState
-    var permissionDeniedState: @Sendable (_ currentState: NearbyVehicleMapFeatureState) -> NearbyVehicleMapFeatureState
+    var preciseLocationResolvedState: @Sendable (
+        _ currentState: NearbyVehicleMapFeatureState,
+        _ latitude: Double,
+        _ longitude: Double
+    ) -> NearbyVehicleMapFeatureState
+    var locationBlockedState: @Sendable (
+        _ currentState: NearbyVehicleMapFeatureState,
+        _ reason: NearbyVehicleMapFeature.LocationBlockedReason
+    ) -> NearbyVehicleMapFeatureState
     var locationTemporarilyUnavailableState: @Sendable (_ currentState: NearbyVehicleMapFeatureState)
         -> NearbyVehicleMapFeatureState
     var loadingState: @Sendable (_ currentState: NearbyVehicleMapFeatureState) -> NearbyVehicleMapFeatureState
@@ -22,14 +29,17 @@ extension NearbyVehicleMapFeatureClient {
             initialState: {
                 service.initialState()
             },
-            permissionGrantedState: { currentState in
+            preciseLocationResolvedState: { currentState, latitude, longitude in
                 service.riderLocationAvailable(
                     currentState: currentState,
-                    location: RiderLocation(latitude: 55.6761, longitude: 12.5683),
+                    location: RiderLocation(latitude: latitude, longitude: longitude),
                 )
             },
-            permissionDeniedState: { currentState in
-                service.riderLocationDenied(currentState: currentState)
+            locationBlockedState: { currentState, reason in
+                service.riderLocationBlocked(
+                    currentState: currentState,
+                    reason: reason.sharedReason,
+                )
             },
             locationTemporarilyUnavailableState: { currentState in
                 service.riderLocationTemporarilyUnavailable(currentState: currentState)
@@ -64,12 +74,12 @@ extension NearbyVehicleMapFeatureClient: DependencyKey {
                 "NearbyVehicleMapFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root.",
             )
         },
-        permissionGrantedState: { _ in
+        preciseLocationResolvedState: { _, _, _ in
             fatalError(
                 "NearbyVehicleMapFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root.",
             )
         },
-        permissionDeniedState: { _ in
+        locationBlockedState: { _, _ in
             fatalError(
                 "NearbyVehicleMapFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root.",
             )
@@ -101,5 +111,22 @@ extension DependencyValues {
     var nearbyVehicleMapFeatureClient: NearbyVehicleMapFeatureClient {
         get { self[NearbyVehicleMapFeatureClient.self] }
         set { self[NearbyVehicleMapFeatureClient.self] = newValue }
+    }
+}
+
+private extension NearbyVehicleMapFeature.LocationBlockedReason {
+    var sharedReason: RiderLocationBlockedReason {
+        switch self {
+        case .accessDenied:
+            .accessDenied
+        case .accessRestricted:
+            .accessRestricted
+        case .servicesDisabled:
+            .servicesDisabled
+        case .approximateOnly:
+            .approximateOnly
+        case .temporarilyUnavailable:
+            .temporarilyUnavailable
+        }
     }
 }

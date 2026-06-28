@@ -4,6 +4,7 @@ import SwiftUI
 
 struct NearbyVehicleMapView: View {
     let store: StoreOf<NearbyVehicleMapFeature>
+    @StateObject private var locationClient = NearbyVehicleMapLocationClient()
 
     var body: some View {
         NavigationStack {
@@ -20,11 +21,6 @@ struct NearbyVehicleMapView: View {
                 )
 
                 HStack {
-                    Button("Use rider location") {
-                        store.send(.locationPermissionResponse(.granted))
-                    }
-                    .buttonStyle(.borderedProminent)
-
                     Button("Refresh nearby vehicles") {
                         store.send(.refreshTapped)
                     }
@@ -33,7 +29,7 @@ struct NearbyVehicleMapView: View {
                 }
 
                 Button("Simulate temporary location loss") {
-                    store.send(.locationPermissionResponse(.temporarilyUnavailable))
+                    store.send(.locationResolutionResponse(.temporarilyUnavailable))
                 }
                 .buttonStyle(.bordered)
             }
@@ -42,6 +38,9 @@ struct NearbyVehicleMapView: View {
         }
         .task {
             store.send(.task)
+            locationClient.requestPreciseLocation { result in
+                store.send(.locationResolutionResponse(result))
+            }
             await runVisibleRefreshLoop()
         }
     }

@@ -48,7 +48,7 @@ class SimulatedNearbyFleetRepository(
         return FleetSnapshot(
             sequence = nextSnapshotIndex.toLong(),
             riderLocation = request.riderLocation,
-            vehicles = snapshotTemplate,
+            vehicles = snapshotTemplate.near(request.riderLocation),
             loadedAtMillis = request.requestedAtMillis,
         )
     }
@@ -82,3 +82,19 @@ class SimulatedNearbyFleetRepository(
             )
     }
 }
+
+private fun List<NearbyVehicle>.near(riderLocation: RiderLocation): List<NearbyVehicle> =
+    map { vehicle ->
+        vehicle.copy(
+            location =
+                VehicleLocation(
+                    latitude = riderLocation.latitude + (vehicle.location.latitude - SIMULATED_RIDER_LATITUDE),
+                    longitude =
+                        riderLocation.longitude +
+                            (vehicle.location.longitude - SIMULATED_RIDER_LONGITUDE),
+                ),
+        )
+    }
+
+private const val SIMULATED_RIDER_LATITUDE = 55.6761
+private const val SIMULATED_RIDER_LONGITUDE = 12.5683

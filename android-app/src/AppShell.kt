@@ -21,7 +21,7 @@ import studio.mekate.mobi.ui.home.SharedHomeScreen
 
 @Composable
 fun AppShell() {
-    var destination by rememberSaveable { mutableIntStateOf(AppDestination.NativeHome.ordinal) }
+    var destination by rememberSaveable { mutableIntStateOf(AppDestination.NearbyVehicleMap.ordinal) }
     val selectedDestination = AppDestination.entries[destination]
     val sharedGraph = remember { SharedDependencies.createDefaultGraph() }
     val appGraph = remember(sharedGraph) { AndroidDependencies.createGraph(sharedGraph) }

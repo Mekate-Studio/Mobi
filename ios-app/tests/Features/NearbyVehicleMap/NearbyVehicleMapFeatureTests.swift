@@ -33,18 +33,19 @@ struct NearbyVehicleMapFeatureTests {
         }
 
         // when
-        await store.send(.locationPermissionResponse(.denied)) {
+        await store.send(.locationResolutionResponse(.blocked(.accessDenied))) {
             $0 = NearbyVehicleMapFeatureTestFactory.deniedState()
         }
 
         // then
         #expect(store.state.overlay == .blockingFailure)
         #expect(store.state.canRequestRefresh == false)
+        #expect(store.state.canInteractWithVehicles == false)
     }
 
     @MainActor
-    @Test("should load rider centered snapshot after permission is granted")
-    func shouldLoadRiderCenteredSnapshotAfterPermissionIsGranted() async {
+    @Test("should load rider centered snapshot after precise location is resolved")
+    func shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved() async {
         // given
         let store = NearbyVehicleMapFeatureTestFactory.makeStore()
 
@@ -52,7 +53,7 @@ struct NearbyVehicleMapFeatureTests {
             $0 = NearbyVehicleMapFeatureTestFactory.initialState()
         }
 
-        await store.send(.locationPermissionResponse(.granted)) {
+        await store.send(.locationResolutionResponse(.precise(latitude: 55.6761, longitude: 12.5683))) {
             $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
         }
 
@@ -71,7 +72,7 @@ struct NearbyVehicleMapFeatureTests {
         await store.send(.task) {
             $0 = NearbyVehicleMapFeatureTestFactory.initialState()
         }
-        await store.send(.locationPermissionResponse(.granted)) {
+        await store.send(.locationResolutionResponse(.precise(latitude: 55.6761, longitude: 12.5683))) {
             $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
         }
         await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState())) {
@@ -98,7 +99,7 @@ struct NearbyVehicleMapFeatureTests {
         await store.send(.task) {
             $0 = NearbyVehicleMapFeatureTestFactory.initialState()
         }
-        await store.send(.locationPermissionResponse(.granted)) {
+        await store.send(.locationResolutionResponse(.precise(latitude: 55.6761, longitude: 12.5683))) {
             $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
         }
         await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState())) {
@@ -106,7 +107,7 @@ struct NearbyVehicleMapFeatureTests {
         }
 
         // when
-        await store.send(.locationPermissionResponse(.temporarilyUnavailable)) {
+        await store.send(.locationResolutionResponse(.temporarilyUnavailable)) {
             $0 = NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState()
         }
 
@@ -163,12 +164,51 @@ struct NearbyVehicleMapFeatureTests {
         // when / then
         #expect(state.mapContent == .waitingForRider)
         #expect(state.overlay == .blockingFailure)
+        #expect(state.canInteractWithVehicles == false)
+    }
+
+    @MainActor
+    @Test("should block reduced accuracy location")
+    func shouldBlockReducedAccuracyLocation() async {
+        // given
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore()
+
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+
+        // when
+        await store.send(.locationResolutionResponse(.blocked(.approximateOnly))) {
+            $0 = NearbyVehicleMapFeatureTestFactory.approximateOnlyState()
+        }
+
+        // then
+        #expect(store.state.message == "Precise location is required for nearby vehicle discovery.")
+        #expect(store.state.overlay == .blockingFailure)
+        #expect(store.state.canInteractWithVehicles == false)
     }
 }
 
 private extension Collection {
     var single: Element? {
         count == 1 ? first : nil
+    }
+}
+
+private extension NearbyVehicleMapFeature.LocationBlockedReason {
+    var sharedReason: RiderLocationBlockedReason {
+        switch self {
+        case .accessDenied:
+            .accessDenied
+        case .accessRestricted:
+            .accessRestricted
+        case .servicesDisabled:
+            .servicesDisabled
+        case .approximateOnly:
+            .approximateOnly
+        case .temporarilyUnavailable:
+            .temporarilyUnavailable
+        }
     }
 }
 
@@ -191,15 +231,17 @@ private enum NearbyVehicleMapFeatureTestFactory {
                     overlayState: NearbyVehicleMapOverlayStateNone.shared,
                 )
             },
-            permissionGrantedState: { currentState in
+            preciseLocationResolvedState: { currentState, latitude, longitude in
                 makeSharedState(
-                    riderLocationState: RiderLocationStateAvailable(location: riderLocation()),
+                    riderLocationState: RiderLocationStateAvailable(
+                        location: RiderLocation(latitude: latitude, longitude: longitude),
+                    ),
                     snapshotState: currentState.snapshotState,
                     overlayState: currentState.mapOverlayState,
                 )
             },
-            permissionDeniedState: { _ in
-                deniedSharedState()
+            locationBlockedState: { _, reason in
+                blockedSharedState(reason: reason)
             },
             locationTemporarilyUnavailableState: { currentState in
                 makeSharedState(
@@ -279,6 +321,12 @@ private enum NearbyVehicleMapFeatureTestFactory {
         return state
     }
 
+    static func approximateOnlyState() -> NearbyVehicleMapFeature.State {
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(sharedState: blockedSharedState(reason: .approximateOnly))
+        return state
+    }
+
     static func temporarilyUnavailableState() -> NearbyVehicleMapFeature.State {
         var state = NearbyVehicleMapFeature.State()
         state.apply(
@@ -300,8 +348,15 @@ private enum NearbyVehicleMapFeatureTestFactory {
     }
 
     static func deniedSharedState() -> NearbyVehicleMapFeatureState {
+        blockedSharedState(reason: .accessDenied)
+    }
+
+    static func blockedSharedState(reason: NearbyVehicleMapFeature.LocationBlockedReason) -> NearbyVehicleMapFeatureState {
         makeSharedState(
-            riderLocationState: RiderLocationStateDenied.shared,
+            riderLocationState:
+                reason == .accessDenied
+                    ? RiderLocationStateDenied.shared
+                    : RiderLocationStateBlocked(reason: reason.sharedReason),
             snapshotState: NearbyVehicleSnapshotStateFailedWithoutSnapshot(
                 reason: NearbyVehicleMapFailureReason.riderLocationUnavailable,
             ),

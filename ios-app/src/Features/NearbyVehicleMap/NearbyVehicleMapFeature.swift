@@ -12,16 +12,22 @@ struct NearbyVehicleMapFeature {
                 state.apply(sharedState: client.initialState())
                 return .none
 
-            case let .locationPermissionResponse(result):
+            case let .locationResolutionResponse(result):
                 guard let sharedState = state.sharedState else { return .none }
 
                 switch result {
-                case .granted:
-                    state.apply(sharedState: client.permissionGrantedState(sharedState))
+                case let .precise(latitude, longitude):
+                    state.apply(
+                        sharedState: client.preciseLocationResolvedState(
+                            sharedState,
+                            latitude,
+                            longitude,
+                        ),
+                    )
                     return refreshEffect(state: &state, nowMillis: currentTimeMillis())
 
-                case .denied:
-                    state.apply(sharedState: client.permissionDeniedState(sharedState))
+                case let .blocked(reason):
+                    state.apply(sharedState: client.locationBlockedState(sharedState, reason))
                     return .none
 
                 case .temporarilyUnavailable:

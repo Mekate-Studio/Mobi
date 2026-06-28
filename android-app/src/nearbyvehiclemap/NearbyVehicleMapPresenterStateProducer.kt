@@ -3,23 +3,30 @@ package studio.mekate.mobi.nearbyvehiclemap
 import studio.mekate.mobi.core.RiderLocation
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
+import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
 
 class NearbyVehicleMapPresenterStateProducer(
     private val service: NearbyVehicleMapFeatureService,
 ) {
     fun initialState(): NearbyVehicleMapFeatureState = service.initialState()
 
-    fun permissionGrantedState(
+    fun preciseLocationResolvedState(
         currentState: NearbyVehicleMapFeatureState,
-        location: RiderLocation = COPENHAGEN_RIDER_LOCATION,
+        location: RiderLocation,
     ): NearbyVehicleMapFeatureState =
         service.riderLocationAvailable(
             currentState = currentState,
             location = location,
         )
 
-    fun permissionDeniedState(currentState: NearbyVehicleMapFeatureState): NearbyVehicleMapFeatureState =
-        service.riderLocationDenied(currentState = currentState)
+    fun locationAccessBlockedState(
+        currentState: NearbyVehicleMapFeatureState,
+        reason: RiderLocationBlockedReason,
+    ): NearbyVehicleMapFeatureState =
+        service.riderLocationBlocked(
+            currentState = currentState,
+            reason = reason,
+        )
 
     fun locationTemporarilyUnavailableState(currentState: NearbyVehicleMapFeatureState): NearbyVehicleMapFeatureState =
         service.riderLocationTemporarilyUnavailable(currentState = currentState)
@@ -47,8 +54,8 @@ class NearbyVehicleMapPresenterStateProducer(
 
     fun create(
         featureState: NearbyVehicleMapFeatureState,
-        onLocationPermissionGranted: () -> Unit,
-        onLocationPermissionDenied: () -> Unit,
+        onPreciseLocationResolved: (RiderLocation) -> Unit,
+        onLocationAccessBlocked: (RiderLocationBlockedReason) -> Unit,
         onLocationTemporarilyUnavailable: () -> Unit,
         onRefreshRequested: (Long) -> Unit,
     ): NearbyVehicleMapScreenState =
@@ -56,16 +63,18 @@ class NearbyVehicleMapPresenterStateProducer(
             featureState = featureState,
             eventSink = { event ->
                 when (event) {
-                    NearbyVehicleMapScreenEvent.LocationPermissionGranted -> onLocationPermissionGranted()
-                    NearbyVehicleMapScreenEvent.LocationPermissionDenied -> onLocationPermissionDenied()
+                    is NearbyVehicleMapScreenEvent.PreciseLocationResolved -> {
+                        onPreciseLocationResolved(event.location)
+                    }
+
+                    is NearbyVehicleMapScreenEvent.LocationAccessBlocked -> {
+                        onLocationAccessBlocked(event.reason)
+                    }
+
                     NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable -> onLocationTemporarilyUnavailable()
                     is NearbyVehicleMapScreenEvent.VisibleRefreshDue -> onRefreshRequested(event.nowMillis)
                     is NearbyVehicleMapScreenEvent.ManualRefreshRequested -> onRefreshRequested(event.nowMillis)
                 }
             },
         )
-
-    companion object {
-        val COPENHAGEN_RIDER_LOCATION = RiderLocation(latitude = 55.6761, longitude = 12.5683)
-    }
 }

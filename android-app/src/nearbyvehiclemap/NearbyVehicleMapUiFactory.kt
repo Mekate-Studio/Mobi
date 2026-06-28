@@ -15,21 +15,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.screen.Screen
 import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
 import dev.zacsweers.metro.Inject
+import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
 
 @Inject
 class NearbyVehicleMapUiFactory : Ui.Factory {
@@ -59,14 +61,27 @@ private fun NearbyVehicleMapContent(
     modifier: Modifier = Modifier,
 ) {
     val presentation = state.featureState.toNearbyVehicleMapPresentation()
+    val context = LocalContext.current
     val permissionLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                state.eventSink(NearbyVehicleMapScreenEvent.LocationPermissionGranted)
-            } else {
-                state.eventSink(NearbyVehicleMapScreenEvent.LocationPermissionDenied)
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
+            state.eventSink(
+                AndroidNearbyVehicleLocationResolver
+                    .resolvePermissionResult(context = context, grants = grants)
+                    .toScreenEvent(),
+            )
+        }
+
+    LaunchedEffect(context) {
+        when (val result = AndroidNearbyVehicleLocationResolver.resolveCurrentLocation(context)) {
+            AndroidNearbyVehicleLocationResult.PermissionRequired -> {
+                permissionLauncher.launch(AndroidNearbyVehicleLocationResolver.locationPermissions)
+            }
+
+            else -> {
+                state.eventSink(result.toScreenEvent())
             }
         }
+    }
 
     MaterialTheme {
         Column(
@@ -94,9 +109,6 @@ private fun NearbyVehicleMapContent(
             )
             NearbyVehicleMapActions(
                 presentation = presentation,
-                onPermissionRequested = {
-                    permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-                },
                 onRefreshRequested = {
                     state.eventSink(
                         NearbyVehicleMapScreenEvent.ManualRefreshRequested(
@@ -115,16 +127,12 @@ private fun NearbyVehicleMapContent(
 @Composable
 private fun NearbyVehicleMapActions(
     presentation: NearbyVehicleMapPresentation,
-    onPermissionRequested: () -> Unit,
     onRefreshRequested: () -> Unit,
     onLocationLossRequested: () -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Button(onClick = onPermissionRequested) {
-            Text("Use rider location")
-        }
         OutlinedButton(
             enabled = presentation.canRequestRefresh,
             onClick = onRefreshRequested,
@@ -136,6 +144,27 @@ private fun NearbyVehicleMapActions(
         Text("Simulate temporary location loss")
     }
 }
+
+private fun AndroidNearbyVehicleLocationResult.toScreenEvent(): NearbyVehicleMapScreenEvent =
+    when (this) {
+        AndroidNearbyVehicleLocationResult.PermissionRequired -> {
+            NearbyVehicleMapScreenEvent.LocationAccessBlocked(
+                reason = RiderLocationBlockedReason.AccessDenied,
+            )
+        }
+
+        is AndroidNearbyVehicleLocationResult.Resolved -> {
+            NearbyVehicleMapScreenEvent.PreciseLocationResolved(location = location)
+        }
+
+        is AndroidNearbyVehicleLocationResult.Blocked -> {
+            NearbyVehicleMapScreenEvent.LocationAccessBlocked(reason = reason)
+        }
+
+        AndroidNearbyVehicleLocationResult.TemporarilyUnavailable -> {
+            NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable
+        }
+    }
 
 @Composable
 private fun NearbyVehicleCoordinateMap(

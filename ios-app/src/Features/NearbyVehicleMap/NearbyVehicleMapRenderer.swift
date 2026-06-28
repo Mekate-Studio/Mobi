@@ -1,6 +1,7 @@
 import CoreLocation
 import MobiIOSDependencies
 import SwiftUI
+import UIKit
 
 struct NearbyVehicleMapRenderer: UIViewRepresentable {
     let scene: NearbyVehicleMapScene?
@@ -14,8 +15,9 @@ struct NearbyVehicleMapRenderer: UIViewRepresentable {
         self.styleURL = styleURL
     }
 
-    func makeUIView(context _: Context) -> MLNMapView {
+    func makeUIView(context: Context) -> MLNMapView {
         let mapView = MLNMapView(frame: .zero, styleURL: styleURL)
+        mapView.delegate = context.coordinator
         mapView.logoView.isHidden = false
         mapView.attributionButton.isHidden = false
         mapView.compassView.isHidden = false
@@ -25,12 +27,17 @@ struct NearbyVehicleMapRenderer: UIViewRepresentable {
 
     func updateUIView(
         _ mapView: MLNMapView,
-        context _: Context,
+        context: Context,
     ) {
+        mapView.delegate = context.coordinator
         if mapView.styleURL != styleURL {
             mapView.styleURL = styleURL
         }
         render(scene: scene, in: mapView)
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
     }
 
     private func render(
@@ -75,6 +82,63 @@ struct NearbyVehicleMapRenderer: UIViewRepresentable {
             ),
             zoom: 12,
         )
+}
+
+extension NearbyVehicleMapRenderer {
+    final class Coordinator: NSObject, MLNMapViewDelegate {
+        func mapView(
+            _ mapView: MLNMapView,
+            viewFor annotation: MLNAnnotation,
+        ) -> MLNAnnotationView? {
+            guard annotation is MLNPointAnnotation else { return nil }
+
+            let isRider = annotation.title == "Rider"
+            let reuseIdentifier = isRider ? "nearby-rider-marker" : "nearby-vehicle-marker"
+
+            return MainActor.assumeIsolated {
+                NearbyVehicleMapAnnotationView(
+                    reuseIdentifier: reuseIdentifier,
+                    isRider: isRider,
+                )
+            }
+        }
+    }
+}
+
+private final class NearbyVehicleMapAnnotationView: MLNAnnotationView {
+    init(
+        reuseIdentifier: String,
+        isRider: Bool,
+    ) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        configure(isRider: isRider)
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        nil
+    }
+
+    func configure(isRider: Bool) {
+        let diameter: CGFloat = isRider ? 18 : 16
+        frame = CGRect(
+            x: 0,
+            y: 0,
+            width: diameter,
+            height: diameter,
+        )
+        backgroundColor =
+            isRider
+                ? UIColor(red: 0.05, green: 0.37, blue: 0.25, alpha: 1)
+                : UIColor(red: 0.85, green: 0.48, blue: 0.21, alpha: 1)
+        layer.cornerRadius = diameter / 2
+        layer.borderColor = UIColor.white.cgColor
+        layer.borderWidth = isRider ? 3 : 2
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.22
+        layer.shadowRadius = 3
+        layer.shadowOffset = CGSize(width: 0, height: 1)
+    }
 }
 
 private extension NearbyVehicleMapCoordinate {

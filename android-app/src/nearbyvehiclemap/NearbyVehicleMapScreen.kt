@@ -4,7 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.slack.circuit.runtime.CircuitUiState
 import com.slack.circuit.runtime.screen.Screen
+import studio.mekate.mobi.core.RiderLocation
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
+import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
 
 data object NearbyVehicleMapScreen : Screen {
     override fun describeContents(): Int = 0
@@ -29,9 +31,13 @@ data class NearbyVehicleMapScreenState(
 ) : CircuitUiState
 
 sealed interface NearbyVehicleMapScreenEvent {
-    data object LocationPermissionGranted : NearbyVehicleMapScreenEvent
+    data class PreciseLocationResolved(
+        val location: RiderLocation,
+    ) : NearbyVehicleMapScreenEvent
 
-    data object LocationPermissionDenied : NearbyVehicleMapScreenEvent
+    data class LocationAccessBlocked(
+        val reason: RiderLocationBlockedReason,
+    ) : NearbyVehicleMapScreenEvent
 
     data object LocationTemporarilyUnavailable : NearbyVehicleMapScreenEvent
 

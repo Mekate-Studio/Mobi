@@ -72,7 +72,7 @@ class NearbyFleetRepositoryTest {
         runTest {
             // given
             val repository = createRepository(shouldFail = false)
-            val riderLocation = RiderLocation(latitude = 55.6761, longitude = 12.5683)
+            val riderLocation = RiderLocation(latitude = 37.7858, longitude = -122.4064)
 
             // when
             val firstSnapshot =
@@ -88,6 +88,16 @@ class NearbyFleetRepositoryTest {
             assertEquals(VehicleId("mobi-001"), firstSnapshot.vehicles.first().id)
             assertEquals(VehicleId("mobi-001"), secondSnapshot.vehicles.first().id)
             assertNotEquals(firstSnapshot.vehicles, secondSnapshot.vehicles)
+            assertEquals(
+                37.7860,
+                firstSnapshot.vehicles.first().location.latitude,
+                absoluteTolerance = 0.000001,
+            )
+            assertEquals(
+                -122.4066,
+                firstSnapshot.vehicles.first().location.longitude,
+                absoluteTolerance = 0.000001,
+            )
             assertEquals(SimulatedNearbyFleetRepository.API_DELAY_MILLIS * 2, currentTime)
         }
 

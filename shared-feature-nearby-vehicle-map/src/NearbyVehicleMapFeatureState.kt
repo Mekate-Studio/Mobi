@@ -19,12 +19,24 @@ sealed interface RiderLocationState {
 
     data object Denied : RiderLocationState
 
+    data class Blocked(
+        val reason: RiderLocationBlockedReason,
+    ) : RiderLocationState
+
     data class TemporarilyUnavailable(
         override val location: RiderLocation,
     ) : RiderLocationState,
         VisibleRiderLocationState
 
     data object Unavailable : RiderLocationState
+}
+
+enum class RiderLocationBlockedReason {
+    AccessDenied,
+    AccessRestricted,
+    ServicesDisabled,
+    ApproximateOnly,
+    TemporarilyUnavailable,
 }
 
 interface VisibleRiderLocationState {
@@ -86,6 +98,10 @@ sealed interface NearbyVehicleMapOverlayState {
 fun NearbyVehicleMapFeatureState.canRequestRefresh(): Boolean =
     riderLocationState is VisibleRiderLocationState &&
         !snapshotState.isRefreshInFlight()
+
+fun NearbyVehicleMapFeatureState.canInteractWithVehicles(): Boolean =
+    riderLocationState is VisibleRiderLocationState &&
+        mapOverlayState != NearbyVehicleMapOverlayState.BlockingFailure
 
 fun NearbyVehicleSnapshotState.failedWith(reason: NearbyVehicleMapFailureReason): NearbyVehicleSnapshotState =
     when (this) {

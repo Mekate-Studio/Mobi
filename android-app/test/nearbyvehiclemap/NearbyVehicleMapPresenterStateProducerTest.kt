@@ -13,39 +13,50 @@ import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureServic
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFreshnessPolicy
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
+import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 class NearbyVehicleMapPresenterStateProducerTest {
     @Test
-    fun `should wire granted location permission into shared rider location state`() {
+    fun `should wire precise location into shared rider location state`() {
         // given
         val producer = createStateProducer()
         val initialState = producer.initialState()
 
         // when
-        val permissionGrantedState = producer.permissionGrantedState(currentState = initialState)
+        val resolvedState =
+            producer.preciseLocationResolvedState(
+                currentState = initialState,
+                location = defaultRiderLocation(),
+            )
 
         // then
-        val riderLocation = assertIs<RiderLocationState.Available>(permissionGrantedState.riderLocationState)
-        assertEquals(NearbyVehicleMapPresenterStateProducer.COPENHAGEN_RIDER_LOCATION, riderLocation.location)
+        val riderLocation = assertIs<RiderLocationState.Available>(resolvedState.riderLocationState)
+        assertEquals(defaultRiderLocation(), riderLocation.location)
     }
 
     @Test
-    fun `should wire denied location permission into blocking overlay state`() {
+    fun `should wire blocked location access into blocking overlay state`() {
         // given
         val producer = createStateProducer()
         val initialState = producer.initialState()
 
         // when
-        val permissionDeniedState = producer.permissionDeniedState(currentState = initialState)
+        val blockedState =
+            producer.locationAccessBlockedState(
+                currentState = initialState,
+                reason = RiderLocationBlockedReason.ApproximateOnly,
+            )
 
         // then
-        assertIs<RiderLocationState.Denied>(permissionDeniedState.riderLocationState)
-        assertIs<NearbyVehicleMapOverlayState.BlockingFailure>(permissionDeniedState.mapOverlayState)
+        val locationState = assertIs<RiderLocationState.Blocked>(blockedState.riderLocationState)
+        assertEquals(RiderLocationBlockedReason.ApproximateOnly, locationState.reason)
+        assertIs<NearbyVehicleMapOverlayState.BlockingFailure>(blockedState.mapOverlayState)
     }
 
     @Test
@@ -56,8 +67,8 @@ class NearbyVehicleMapPresenterStateProducerTest {
         val screenState =
             producer.create(
                 featureState = producer.initialState(),
-                onLocationPermissionGranted = {},
-                onLocationPermissionDenied = {},
+                onPreciseLocationResolved = {},
+                onLocationAccessBlocked = {},
                 onLocationTemporarilyUnavailable = {},
                 onRefreshRequested = { nowMillis ->
                     requestedAtMillis = nowMillis
@@ -98,6 +109,7 @@ class NearbyVehicleMapPresenterStateProducerTest {
         val mapContent = assertIs<NearbyVehicleMapContentPresentation.RiderCentered>(presentation.mapContent)
         assertEquals("Snapshot may be stale", overlay.headline)
         assertTrue(mapContent.scene.vehicleMarkers.isNotEmpty())
+        assertTrue(presentation.canInteractWithVehicles)
     }
 
     @Test
@@ -182,6 +194,7 @@ class NearbyVehicleMapPresenterStateProducerTest {
         // then
         assertIs<NearbyVehicleMapContentPresentation.WaitingForRider>(presentation.mapContent)
         assertIs<NearbyVehicleMapOverlayPresentation.Blocking>(presentation.overlay)
+        assertFalse(presentation.canInteractWithVehicles)
     }
 
     @Test
@@ -190,7 +203,7 @@ class NearbyVehicleMapPresenterStateProducerTest {
             // given
             val producer = createStateProducer()
             val locationState =
-                producer.permissionGrantedState(
+                producer.preciseLocationResolvedState(
                     currentState = producer.initialState(),
                     location = defaultRiderLocation(),
                 )
