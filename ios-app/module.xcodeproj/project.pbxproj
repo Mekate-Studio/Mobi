@@ -9,6 +9,16 @@
 /* Begin PBXBuildFile section */
 		D3A100012FA10001001664A3 /* MobiIOSDependencies in Frameworks */ = {isa = PBXBuildFile; productRef = D3A100042FA10001001664A3 /* MobiIOSDependencies */; };
 		D3A100022FA10001001664A3 /* MobiIOSDependencies in Frameworks */ = {isa = PBXBuildFile; productRef = D3A100042FA10001001664A3 /* MobiIOSDependencies */; };
+		D3A100052FA10001001664A3 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = D3A1000B2FA10001001664A3 /* ComposableArchitecture */; };
+		D3A100062FA10001001664A3 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = D3A1000C2FA10001001664A3 /* Dependencies */; };
+		D3A100072FA10001001664A3 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = D3A1000D2FA10001001664A3 /* MapLibre */; };
+		D3A100082FA10001001664A3 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = D3A1000B2FA10001001664A3 /* ComposableArchitecture */; };
+		D3A100092FA10001001664A3 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = D3A1000C2FA10001001664A3 /* Dependencies */; };
+		D3A1000A2FA10001001664A3 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = D3A1000D2FA10001001664A3 /* MapLibre */; };
+		D3A100112FA10001001664A3 /* Perception in Frameworks */ = {isa = PBXBuildFile; productRef = D3A100132FA10001001664A3 /* Perception */; };
+		D3A100122FA10001001664A3 /* Perception in Frameworks */ = {isa = PBXBuildFile; productRef = D3A100132FA10001001664A3 /* Perception */; };
+		D3A100152FA10001001664A3 /* PerceptionCore in Frameworks */ = {isa = PBXBuildFile; productRef = D3A100172FA10001001664A3 /* PerceptionCore */; };
+		D3A100162FA10001001664A3 /* PerceptionCore in Frameworks */ = {isa = PBXBuildFile; productRef = D3A100172FA10001001664A3 /* PerceptionCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +58,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3A100012FA10001001664A3 /* MobiIOSDependencies in Frameworks */,
+				D3A100052FA10001001664A3 /* ComposableArchitecture in Frameworks */,
+				D3A100062FA10001001664A3 /* Dependencies in Frameworks */,
+				D3A100072FA10001001664A3 /* MapLibre in Frameworks */,
+				D3A100112FA10001001664A3 /* Perception in Frameworks */,
+				D3A100152FA10001001664A3 /* PerceptionCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +71,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3A100022FA10001001664A3 /* MobiIOSDependencies in Frameworks */,
+				D3A100082FA10001001664A3 /* ComposableArchitecture in Frameworks */,
+				D3A100092FA10001001664A3 /* Dependencies in Frameworks */,
+				D3A1000A2FA10001001664A3 /* MapLibre in Frameworks */,
+				D3A100122FA10001001664A3 /* Perception in Frameworks */,
+				D3A100162FA10001001664A3 /* PerceptionCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +165,10 @@
 			mainGroup = A93CF543B170CB3686B506B6;
 			packageReferences = (
 				D3A100032FA10001001664A3 /* XCLocalSwiftPackageReference "Dependencies" */,
+				D3A1000E2FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				D3A1000F2FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+				D3A100102FA10001001664A3 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
+				D3A100142FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-perception" */,
 			);
 			productRefGroup = A93CF8C0235B58CE074AA5B5 /* Products */;
 			projectDirPath = "";
@@ -416,11 +440,71 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		D3A1000E2FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = exactVersion;
+				version = 1.25.4;
+			};
+		};
+		D3A1000F2FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
+			requirement = {
+				kind = exactVersion;
+				version = 1.12.0;
+			};
+		};
+		D3A100102FA10001001664A3 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution";
+			requirement = {
+				kind = exactVersion;
+				version = 6.27.0;
+			};
+		};
+		D3A100142FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-perception" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-perception";
+			requirement = {
+				kind = exactVersion;
+				version = 1.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		D3A100042FA10001001664A3 /* MobiIOSDependencies */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D3A100032FA10001001664A3 /* XCLocalSwiftPackageReference "Dependencies" */;
 			productName = MobiIOSDependencies;
+		};
+		D3A1000B2FA10001001664A3 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3A1000E2FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		D3A1000C2FA10001001664A3 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3A1000F2FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
+		D3A1000D2FA10001001664A3 /* MapLibre */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3A100102FA10001001664A3 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			productName = MapLibre;
+		};
+		D3A100132FA10001001664A3 /* Perception */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3A100142FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-perception" */;
+			productName = Perception;
+		};
+		D3A100172FA10001001664A3 /* PerceptionCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3A100142FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-perception" */;
+			productName = PerceptionCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
