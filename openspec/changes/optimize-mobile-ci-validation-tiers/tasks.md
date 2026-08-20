@@ -22,5 +22,5 @@
 ## 5. Validation and Activation
 
 - [x] 5.1 Run classifier fixtures, shell checks, Xcode test-plan discovery, representative host tests, workflow parsing, and strict OpenSpec validation
-- [ ] 5.2 Configure repository branch protection to require only the aggregate pull-request gate
+- [x] 5.2 Configure repository branch protection to require only the aggregate pull-request gate
 - [ ] 5.3 Configure protected scheduled signing environments and store retention before labeling nightly outputs as releasable binaries
