@@ -75,6 +75,10 @@ Run that contract locally with:
 This compiles the production code needed by the tests but does not explicitly
 assemble an APK or AAB. App builds remain separate and run only when selected.
 
+The macOS quality job bootstraps only missing lint tools through the repo-owned
+`scripts/ci/install_quality_tools.sh` helper. Homebrew download caching avoids
+assuming developer-machine tools exist on a clean hosted runner.
+
 ## Apple test plans
 
 Apple recommends using [test plans](https://developer.apple.com/documentation/xcode/organizing-tests-to-improve-feedback)
@@ -96,6 +100,9 @@ IOS_TEST_PLAN=Nightly ./scripts/ci/run_job.sh ios-test
 Each run writes an Xcode result bundle under `build/test-results/`. Xcode app
 tests still compile their test host and dependencies; "test-only" in this
 policy means that CI does not run an additional standalone app-build job first.
+If a hosted macOS image has an iOS runtime but no pre-created iPhone device, the
+repo-owned Xcode helper creates one with `simctl` before selecting its stable
+identifier as the test destination.
 
 When UI tests are introduced, start with one stable critical-flow smoke test in
 the Nightly plan. Add focused UI checks to PullRequest only for UI-affecting

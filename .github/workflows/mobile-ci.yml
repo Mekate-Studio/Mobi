@@ -85,11 +85,18 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: ~/Library/Caches/Homebrew/downloads
+          key: ${{ runner.os }}-${{ runner.arch }}-quality-tools-${{ hashFiles('scripts/ci/install_quality_tools.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-quality-tools-
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v4
+      - name: Install missing quality tools
+        run: ./scripts/ci/install_quality_tools.sh
       - name: Run quality checks
         run: ./scripts/ci/run_job.sh quality-check
 
