@@ -90,12 +90,16 @@ class NearbyFleetRepositoryTest {
             assertNotEquals(firstSnapshot.vehicles, secondSnapshot.vehicles)
             assertEquals(
                 37.7860,
-                firstSnapshot.vehicles.first().location.latitude,
+                firstSnapshot.vehicles
+                    .first()
+                    .location.latitude,
                 absoluteTolerance = 0.000001,
             )
             assertEquals(
                 -122.4066,
-                firstSnapshot.vehicles.first().location.longitude,
+                firstSnapshot.vehicles
+                    .first()
+                    .location.longitude,
                 absoluteTolerance = 0.000001,
             )
             assertEquals(SimulatedNearbyFleetRepository.API_DELAY_MILLIS * 2, currentTime)

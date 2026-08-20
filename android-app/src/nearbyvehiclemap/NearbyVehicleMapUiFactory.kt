@@ -31,7 +31,6 @@ import com.slack.circuit.runtime.screen.Screen
 import com.slack.circuit.runtime.ui.Ui
 import com.slack.circuit.runtime.ui.ui
 import dev.zacsweers.metro.Inject
-import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
 
 @Inject
 class NearbyVehicleMapUiFactory : Ui.Factory {
@@ -56,6 +55,7 @@ class NearbyVehicleMapUiFactory : Ui.Factory {
 }
 
 @Composable
+@Suppress("LongMethod") // Keeping the screen scaffold together makes its visual hierarchy explicit.
 private fun NearbyVehicleMapContent(
     state: NearbyVehicleMapScreenState,
     modifier: Modifier = Modifier,
@@ -144,27 +144,6 @@ private fun NearbyVehicleMapActions(
         Text("Simulate temporary location loss")
     }
 }
-
-private fun AndroidNearbyVehicleLocationResult.toScreenEvent(): NearbyVehicleMapScreenEvent =
-    when (this) {
-        AndroidNearbyVehicleLocationResult.PermissionRequired -> {
-            NearbyVehicleMapScreenEvent.LocationAccessBlocked(
-                reason = RiderLocationBlockedReason.AccessDenied,
-            )
-        }
-
-        is AndroidNearbyVehicleLocationResult.Resolved -> {
-            NearbyVehicleMapScreenEvent.PreciseLocationResolved(location = location)
-        }
-
-        is AndroidNearbyVehicleLocationResult.Blocked -> {
-            NearbyVehicleMapScreenEvent.LocationAccessBlocked(reason = reason)
-        }
-
-        AndroidNearbyVehicleLocationResult.TemporarilyUnavailable -> {
-            NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable
-        }
-    }
 
 @Composable
 private fun NearbyVehicleCoordinateMap(

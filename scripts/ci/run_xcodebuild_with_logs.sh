@@ -23,9 +23,7 @@ mkdir -p "${log_dir}" "${derived_data_dir}"
 echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-gradle}"
 echo "Using GRADLE_USER_HOME=${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
 echo "Using SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
-if [[ "${KOTLIN_IOS_BUILDER:-gradle}" == "kotlin" ]]; then
-  echo "Using IOS_SIMULATOR_ARCHS=${IOS_SIMULATOR_ARCHS:-$(uname -m)}"
-fi
+echo "Using IOS_SIMULATOR_ARCHS=${IOS_SIMULATOR_ARCHS:-$(uname -m)}"
 
 # shellcheck source=./lib/xcode.sh
 source "${project_root}/scripts/ci/lib/xcode.sh"
@@ -55,11 +53,8 @@ cmd+=(
   CODE_SIGNING_ALLOWED=NO
   CODE_SIGNING_REQUIRED=NO
   "SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
+  "ARCHS=${IOS_SIMULATOR_ARCHS:-$(uname -m)}"
 )
-
-if [[ "${KOTLIN_IOS_BUILDER:-gradle}" == "kotlin" ]]; then
-  cmd+=("ARCHS=${IOS_SIMULATOR_ARCHS:-$(uname -m)}")
-fi
 
 cmd+=(build)
 

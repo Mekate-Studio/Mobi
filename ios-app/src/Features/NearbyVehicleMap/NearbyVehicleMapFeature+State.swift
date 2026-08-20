@@ -134,15 +134,15 @@ extension NearbyVehicleMapFeature {
         private func blockedLocationMessage(_ reason: RiderLocationBlockedReason) -> String {
             switch reason {
             case .accessDenied:
-                return "Precise location access is required before nearby vehicles can be positioned relative to the rider."
+                "Precise location access is required before nearby vehicles can be positioned relative to the rider."
             case .accessRestricted:
-                return "Precise location is restricted on this device, so nearby vehicle discovery is blocked."
+                "Precise location is restricted on this device, so nearby vehicle discovery is blocked."
             case .servicesDisabled:
-                return "Location services are unavailable, so nearby vehicle discovery is blocked."
+                "Location services are unavailable, so nearby vehicle discovery is blocked."
             case .approximateOnly:
-                return "Precise location is required for nearby vehicle discovery."
+                "Precise location is required for nearby vehicle discovery."
             case .temporarilyUnavailable:
-                return "Rider location is temporarily unavailable, so discovery is blocked."
+                "Rider location is temporarily unavailable, so discovery is blocked."
             }
         }
     }

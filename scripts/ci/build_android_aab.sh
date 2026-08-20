@@ -3,33 +3,54 @@
 set -euo pipefail
 
 project_root="$(cd "$(dirname "$0")/../.." && pwd)"
-# shellcheck source=./lib/android_generated_gradle.sh
-source "${project_root}/scripts/ci/lib/android_generated_gradle.sh"
 generated_gradle_project="${project_root}/build/tasks/_android-app_buildAndroidRelease/gradle-project"
-release_bundle_pattern='*/outputs/bundle/release/*.aab'
+generated_release_bundle_dir="${generated_gradle_project}/build/_android-app/outputs/bundle/release"
+release_output_dir="${project_root}/build/releases/android"
+release_output_path="${release_output_dir}/android-app-release.aab"
+
+resolve_generated_gradle_version() {
+  local candidate=""
+  local newest_execution_history=""
+
+  for candidate in "${generated_gradle_project}"/.gradle/*/executionHistory; do
+    [[ -d "${candidate}" ]] || continue
+
+    if [[ -z "${newest_execution_history}" || "${candidate}" -nt "${newest_execution_history}" ]]; then
+      newest_execution_history="${candidate}"
+    fi
+  done
+
+  if [[ -n "${newest_execution_history}" ]]; then
+    basename "$(dirname "${newest_execution_history}")"
+  fi
+}
 
 resolve_gradle_bin() {
   local gradle_bin="${GRADLE_BIN:-}"
+  local generated_gradle_version=""
+  local wrapper_root=""
 
   if [[ -n "${gradle_bin}" ]]; then
     printf '%s\n' "${gradle_bin}"
     return 0
   fi
 
-  local wrapper_root="${GRADLE_USER_HOME:-${HOME}/.gradle}/wrapper/dists/gradle-${android_generated_gradle_version}-${android_generated_gradle_distribution_type}"
+  generated_gradle_version="$(resolve_generated_gradle_version)"
+  if [[ -z "${generated_gradle_version}" ]]; then
+    return 0
+  fi
 
-  gradle_bin="$(find "${wrapper_root}" -path "*/gradle-${android_generated_gradle_version}/bin/gradle" -type f 2>/dev/null | head -n 1 || true)"
+  wrapper_root="${GRADLE_USER_HOME}/wrapper/dists/gradle-${generated_gradle_version}-bin"
+
+  gradle_bin="$(find "${wrapper_root}" -path "*/gradle-${generated_gradle_version}/bin/gradle" -type f 2>/dev/null | head -n 1 || true)"
   if [[ -n "${gradle_bin}" ]]; then
     printf '%s\n' "${gradle_bin}"
     return 0
   fi
-
-  gradle_bin="$(command -v gradle || true)"
-  printf '%s\n' "${gradle_bin}"
 }
 
 find_release_aab() {
-  find "${generated_gradle_project}/build" -type f -path "${release_bundle_pattern}" | head -n 1 || true
+  find "${generated_release_bundle_dir}" -maxdepth 1 -type f -name '*.aab' | head -n 1 || true
 }
 
 if [[ ! -d "${generated_gradle_project}" ]]; then
@@ -52,16 +73,24 @@ fi
 gradle_bin="$(resolve_gradle_bin)"
 
 if [[ -z "${gradle_bin}" ]]; then
-  echo "No Gradle binary found for building the Android App Bundle" >&2
+  echo "No matching Gradle binary found for the generated Android project" >&2
   exit 1
 fi
 
+echo "Using generated-project Gradle: ${gradle_bin}"
+
 cd "${generated_gradle_project}"
 
+android_aab_gradle_jvm_args="${ANDROID_AAB_GRADLE_JVM_ARGS:--Xmx4g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8}"
+android_aab_max_workers="${ANDROID_AAB_MAX_WORKERS:-2}"
+rm -f "${release_output_path}"
+
 "${gradle_bin}" \
+  -Dorg.gradle.jvmargs="${android_aab_gradle_jvm_args}" \
   --no-daemon \
+  --max-workers="${android_aab_max_workers}" \
   -p "${generated_gradle_project}" \
-  bundleRelease
+  :android-app:bundleRelease
 
 aab_path="$(find_release_aab)"
 
@@ -70,4 +99,6 @@ if [[ -z "${aab_path}" ]]; then
   exit 1
 fi
 
-echo "Built Android App Bundle: ${aab_path}"
+mkdir -p "${release_output_dir}"
+cp "${aab_path}" "${release_output_path}"
+echo "Built Android App Bundle: ${release_output_path}"

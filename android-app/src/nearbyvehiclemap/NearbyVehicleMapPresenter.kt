@@ -25,6 +25,7 @@ class NearbyVehicleMapPresenter(
     private val stateProducer = NearbyVehicleMapPresenterStateProducer(service)
 
     @Composable
+    @Suppress("LongMethod") // State transitions stay together at the Circuit presentation boundary.
     override fun present(): NearbyVehicleMapScreenState {
         var featureState by remember(stateProducer) { mutableStateOf(stateProducer.initialState()) }
         val scope = rememberCoroutineScope()

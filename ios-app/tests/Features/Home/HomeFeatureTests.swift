@@ -173,7 +173,9 @@ private enum HomeFeatureTestFactory {
     }
 
     static func nextCounterValue(after counterValue: Int) -> Int {
-        if counterValue < 1 { return 1 }
+        if counterValue < 1 {
+            return 1
+        }
 
         var previous = 0
         var current = 1

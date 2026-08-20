@@ -6,7 +6,10 @@ script_dir="$(cd "$(dirname "$0")" && pwd)"
 source "${script_dir}/common.sh"
 
 modules=(
+  "shared-core"
   "shared-feature-home"
+  "shared-feature-nearby-vehicle-map"
+  "shared-di"
   "android-app"
 )
 kotlin_cli_user_home="${KOTLIN_CLI_USER_HOME:-${project_root}/build/kotlin-user-home}"

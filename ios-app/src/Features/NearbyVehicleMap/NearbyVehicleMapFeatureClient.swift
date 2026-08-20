@@ -9,11 +9,11 @@ struct NearbyVehicleMapFeatureClient {
     var preciseLocationResolvedState: @Sendable (
         _ currentState: NearbyVehicleMapFeatureState,
         _ latitude: Double,
-        _ longitude: Double
+        _ longitude: Double,
     ) -> NearbyVehicleMapFeatureState
     var locationBlockedState: @Sendable (
         _ currentState: NearbyVehicleMapFeatureState,
-        _ reason: NearbyVehicleMapFeature.LocationBlockedReason
+        _ reason: NearbyVehicleMapFeature.LocationBlockedReason,
     ) -> NearbyVehicleMapFeatureState
     var locationTemporarilyUnavailableState: @Sendable (_ currentState: NearbyVehicleMapFeatureState)
         -> NearbyVehicleMapFeatureState

@@ -82,6 +82,17 @@ Recommended environments:
 
 This keeps release secrets scoped to the jobs that actually need them.
 
+Pull-request and unsigned nightly validation workflows do not reference these
+environments or secrets. The manual `Mobile Release` workflow maps secrets from
+the relevant environment into the existing repo-owned materialization scripts.
+
+The nightly candidate currently uses non-production Android signing and a
+code-signing-disabled iOS simulator build. Those artifacts validate release
+configuration but are not releasable binaries. Build-once/promote-later nightly
+delivery requires protected scheduled signing access, unique build numbers,
+explicit retention, Play Internal upload, and TestFlight upload before the
+candidate manifest can truthfully mark an artifact as releasable.
+
 ## Local development equivalents
 
 You can also provide the same values locally through your shell.

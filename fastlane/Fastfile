@@ -207,9 +207,18 @@ platform :android do
     sh("cd '#{project_root}' && ./scripts/ci/build_android_aab.sh")
   end
 
+  desc "Builds a release-configuration candidate with non-production signing"
+  lane :buildReleaseCandidate do
+    kotlin!("build -m android-app -p android -v release")
+    sh("cd '#{project_root}' && ./scripts/ci/build_android_aab.sh")
+  end
+
   desc "Runs all the tests"
   lane :test do
+    kotlin!("test -m shared-core -p android")
     kotlin!("test -m shared-feature-home -p android")
+    kotlin!("test -m shared-feature-nearby-vehicle-map -p android")
+    kotlin!("test -m shared-di -p android")
     kotlin!("test -m android-app -p android")
   end
 

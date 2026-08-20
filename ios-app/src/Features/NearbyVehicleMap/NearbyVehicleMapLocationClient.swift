@@ -68,7 +68,7 @@ extension NearbyVehicleMapLocationClient: CLLocationManagerDelegate {
     }
 
     nonisolated func locationManager(
-        _ manager: CLLocationManager,
+        _: CLLocationManager,
         didUpdateLocations locations: [CLLocation],
     ) {
         guard let location = locations.last else {
@@ -90,7 +90,7 @@ extension NearbyVehicleMapLocationClient: CLLocationManagerDelegate {
     }
 
     nonisolated func locationManager(
-        _ manager: CLLocationManager,
+        _: CLLocationManager,
         didFailWithError error: Error,
     ) {
         let result: NearbyVehicleMapFeature.LocationResolutionResult =
