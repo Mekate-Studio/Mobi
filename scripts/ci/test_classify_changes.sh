@@ -13,7 +13,7 @@ assert_output() {
   local expected_value="$3"
   local output_file="${fixture_dir}/${fixture_name}.output"
 
-  if ! rg -q "^${expected_key}=${expected_value}$" "${output_file}"; then
+  if ! grep -Fqx "${expected_key}=${expected_value}" "${output_file}"; then
     printf 'Fixture %s expected %s=%s\n' "${fixture_name}" "${expected_key}" "${expected_value}" >&2
     sed -n '1,80p' "${output_file}" >&2
     exit 1
