@@ -50,24 +50,31 @@ object AndroidNearbyVehicleLocationResolver {
 
     private fun Context.preciseLocationResult(): AndroidNearbyVehicleLocationResult {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-            ?: return AndroidNearbyVehicleLocationResult.Blocked(RiderLocationBlockedReason.ServicesDisabled)
+        val provider = locationManager?.enabledProvider()
 
-        val provider =
-            when {
-                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) -> LocationManager.GPS_PROVIDER
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) -> LocationManager.NETWORK_PROVIDER
-                else -> null
-            } ?: return AndroidNearbyVehicleLocationResult.Blocked(RiderLocationBlockedReason.ServicesDisabled)
+        return if (locationManager == null || provider == null) {
+            AndroidNearbyVehicleLocationResult.Blocked(RiderLocationBlockedReason.ServicesDisabled)
+        } else {
+            locationManager.lastKnownLocationResult(provider)
+        }
+    }
 
-        return try {
-            locationManager
-                .getLastKnownLocation(provider)
-                ?.toResult()
+    private fun LocationManager.enabledProvider(): String? =
+        when {
+            isProviderEnabled(LocationManager.GPS_PROVIDER) -> LocationManager.GPS_PROVIDER
+            isProviderEnabled(LocationManager.NETWORK_PROVIDER) -> LocationManager.NETWORK_PROVIDER
+            else -> null
+        }
+
+    // Permission can be revoked between the explicit check and the platform API call.
+    @Suppress("SwallowedException")
+    private fun LocationManager.lastKnownLocationResult(provider: String): AndroidNearbyVehicleLocationResult =
+        try {
+            getLastKnownLocation(provider)?.toResult()
                 ?: AndroidNearbyVehicleLocationResult.TemporarilyUnavailable
         } catch (error: SecurityException) {
             AndroidNearbyVehicleLocationResult.Blocked(RiderLocationBlockedReason.AccessDenied)
         }
-    }
 
     private fun Location.toResult(): AndroidNearbyVehicleLocationResult =
         AndroidNearbyVehicleLocationResult.Resolved(
@@ -80,6 +87,27 @@ object AndroidNearbyVehicleLocationResolver {
     private fun Context.hasPermission(permission: String): Boolean =
         checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
 }
+
+internal fun AndroidNearbyVehicleLocationResult.toScreenEvent(): NearbyVehicleMapScreenEvent =
+    when (this) {
+        AndroidNearbyVehicleLocationResult.PermissionRequired -> {
+            NearbyVehicleMapScreenEvent.LocationAccessBlocked(
+                reason = RiderLocationBlockedReason.AccessDenied,
+            )
+        }
+
+        is AndroidNearbyVehicleLocationResult.Resolved -> {
+            NearbyVehicleMapScreenEvent.PreciseLocationResolved(location = location)
+        }
+
+        is AndroidNearbyVehicleLocationResult.Blocked -> {
+            NearbyVehicleMapScreenEvent.LocationAccessBlocked(reason = reason)
+        }
+
+        AndroidNearbyVehicleLocationResult.TemporarilyUnavailable -> {
+            NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable
+        }
+    }
 
 sealed interface AndroidNearbyVehicleLocationResult {
     data object PermissionRequired : AndroidNearbyVehicleLocationResult

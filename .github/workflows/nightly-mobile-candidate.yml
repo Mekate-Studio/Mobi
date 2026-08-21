@@ -1,0 +1,186 @@
+name: Nightly Mobile Candidate
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-mobile-candidate
+  cancel-in-progress: true
+
+env:
+  DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+  KOTLIN_CLI_BOOTSTRAP_CACHE_DIR: ${{ github.workspace }}/.kotlin-cache
+  GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
+
+jobs:
+  android_test:
+    name: Android and shared host tests
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: |
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-nightly-host-tests-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'scripts/ci/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-nightly-host-tests-
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: android-actions/setup-android@v4
+      - name: Run all Android and shared tests
+        run: ./scripts/ci/run_job.sh android-test
+      - name: Upload Android test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-android-test-results-${{ github.sha }}
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            build/logs
+            build/tasks
+
+  ios_test:
+    name: iOS Nightly plan
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      IOS_TEST_PLAN: Nightly
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: |
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-nightly-ios-tests-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'ios-app/**', 'shared-*/**', 'scripts/ci/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-nightly-ios-tests-
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Run the complete iOS nightly plan
+        run: ./scripts/ci/run_job.sh ios-test
+      - name: Upload iOS test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-ios-test-results-${{ github.sha }}
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            build/logs
+            build/test-results
+
+  android_candidate:
+    name: Android release-configuration candidate
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: |
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-nightly-android-build-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'android-app/**', 'shared-*/**', 'scripts/ci/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-nightly-android-build-
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: android-actions/setup-android@v4
+      - name: Build Android release configuration with non-production signing
+        run: ./scripts/ci/run_job.sh android-build-release-candidate
+      - name: Upload Android candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-candidate-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: build/releases/android/android-app-release.aab
+
+  ios_candidate:
+    name: iOS release-configuration candidate
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: |
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-nightly-ios-build-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'ios-app/**', 'shared-*/**', 'scripts/ci/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-nightly-ios-build-
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Build iOS release configuration without code signing
+        run: ./scripts/ci/run_job.sh ios-build-release
+      - name: Upload iOS candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-candidate-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: build/xcode-derived-data-cli-release/Build/Products/Release-iphonesimulator/*.app
+
+  manifest:
+    name: Certify exact source SHA
+    needs:
+      - android_test
+      - ios_test
+      - android_candidate
+      - ios_candidate
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v7
+      - name: Write candidate manifest
+        env:
+          CANDIDATE_SHA: ${{ github.sha }}
+          CANDIDATE_RUN_ID: ${{ github.run_id }}
+          CANDIDATE_RUN_NUMBER: ${{ github.run_number }}
+          CANDIDATE_REPOSITORY: ${{ github.repository }}
+          CANDIDATE_SERVER_URL: ${{ github.server_url }}
+        run: ./scripts/ci/write_candidate_manifest.sh build/candidate/manifest.json
+      - name: Upload candidate manifest
+        uses: actions/upload-artifact@v7
+        with:
+          name: candidate-manifest-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: build/candidate/manifest.json

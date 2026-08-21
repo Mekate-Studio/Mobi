@@ -87,7 +87,7 @@ struct NearbyVehicleMapRenderer: UIViewRepresentable {
 extension NearbyVehicleMapRenderer {
     final class Coordinator: NSObject, MLNMapViewDelegate {
         func mapView(
-            _ mapView: MLNMapView,
+            _: MLNMapView,
             viewFor annotation: MLNAnnotation,
         ) -> MLNAnnotationView? {
             guard annotation is MLNPointAnnotation else { return nil }

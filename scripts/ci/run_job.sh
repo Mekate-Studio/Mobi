@@ -36,6 +36,12 @@ case "${job_name}" in
     cd "${CI_PROJECT_DIR}"
     ./scripts/ci/run_fastlane_with_kotlin_logs.sh buildRelease "$@"
     ;;
+  android-build-release-candidate)
+    export CI_ANDROID_SIGNING_MODE="debug-smoke"
+    ci_prepare_android_job
+    cd "${CI_PROJECT_DIR}"
+    ./scripts/ci/run_fastlane_with_kotlin_logs.sh buildReleaseCandidate "$@"
+    ;;
   android-test)
     export CI_ANDROID_SIGNING_MODE="${CI_ANDROID_SIGNING_MODE:-debug-smoke}"
     ci_prepare_android_job
@@ -100,6 +106,7 @@ case "${job_name}" in
       quality-check \
       android-build-debug \
       android-build-release \
+      android-build-release-candidate \
       android-test \
       ios-build-debug \
       ios-test \

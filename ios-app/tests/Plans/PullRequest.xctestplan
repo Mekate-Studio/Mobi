@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "17D2DFE4-6F15-49D8-99BA-442486C10734",
+      "name" : "Pull Request",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:module.xcodeproj",
+        "identifier" : "B13D10062F800001001664A3",
+        "name" : "appTests"
+      }
+    }
+  ],
+  "version" : 1
+}

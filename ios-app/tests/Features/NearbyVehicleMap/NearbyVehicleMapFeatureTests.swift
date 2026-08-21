@@ -1,3 +1,5 @@
+// The scenarios intentionally share one explicit factory so native/shared state mappings remain visible together.
+// swiftlint:disable file_length
 @testable import app
 import Foundation
 @preconcurrency import KotlinModules
@@ -213,6 +215,8 @@ private extension NearbyVehicleMapFeature.LocationBlockedReason {
 }
 
 private enum NearbyVehicleMapFeatureTestFactory {
+    typealias LocationBlockedReason = NearbyVehicleMapFeature.LocationBlockedReason
+
     @MainActor
     static func makeStore() -> TestStore<NearbyVehicleMapFeature.State, NearbyVehicleMapFeature.Action> {
         TestStore(initialState: NearbyVehicleMapFeature.State()) {
@@ -351,12 +355,12 @@ private enum NearbyVehicleMapFeatureTestFactory {
         blockedSharedState(reason: .accessDenied)
     }
 
-    static func blockedSharedState(reason: NearbyVehicleMapFeature.LocationBlockedReason) -> NearbyVehicleMapFeatureState {
+    static func blockedSharedState(reason: LocationBlockedReason) -> NearbyVehicleMapFeatureState {
         makeSharedState(
             riderLocationState:
-                reason == .accessDenied
-                    ? RiderLocationStateDenied.shared
-                    : RiderLocationStateBlocked(reason: reason.sharedReason),
+            reason == .accessDenied
+                ? RiderLocationStateDenied.shared
+                : RiderLocationStateBlocked(reason: reason.sharedReason),
             snapshotState: NearbyVehicleSnapshotStateFailedWithoutSnapshot(
                 reason: NearbyVehicleMapFailureReason.riderLocationUnavailable,
             ),

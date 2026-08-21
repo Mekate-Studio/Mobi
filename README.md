@@ -68,6 +68,7 @@ entry points:
 - [Architecture Decisions](docs/adr/README.md)
 - [How To Add A Feature](docs/reference/how-to-add-a-feature.md)
 - [Local Development](docs/reference/local-development.md)
+- [CI Validation And Release Candidates](docs/reference/ci-validation.md)
 - [Secrets Reference](docs/reference/secrets.md)
 - [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
 
@@ -102,6 +103,13 @@ The main pattern is:
 
 That keeps the runtime and release mechanics close to the architecture instead
 of hiding them inside CI configuration alone.
+
+Pull requests use conservative changed-path classification to avoid standalone
+native app builds for behavior-only changes. Scheduled validation runs the full
+test and release-configuration build surface for an exact `main` SHA. See
+[CI Validation And Release Candidates](docs/reference/ci-validation.md) for the
+selection rules, Apple test plans, and the distinction between an unsigned
+nightly validation candidate and a credentialed release artifact.
 
 ## Linting and Static Analysis
 

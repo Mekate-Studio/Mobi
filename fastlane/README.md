@@ -31,6 +31,14 @@ Builds the debug code
 
 Builds the release code
 
+### android buildReleaseCandidate
+
+```sh
+[bundle exec] fastlane android buildReleaseCandidate
+```
+
+Builds a release-configuration candidate with non-production signing
+
 ### android test
 
 ```sh

@@ -166,7 +166,7 @@ class NearbyVehicleMapFeatureServiceTest {
 
         // then
         val locationState = assertIs<RiderLocationState.TemporarilyUnavailable>(degradedState.riderLocationState)
-            assertEquals(riderLocation, locationState.location)
+        assertEquals(riderLocation, locationState.location)
     }
 
     @Test

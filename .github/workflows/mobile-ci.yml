@@ -1,29 +1,17 @@
 name: Mobile CI
 
 on:
-  push:
   pull_request:
+  push:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      release_target:
-        description: "Manual release flow to run"
-        required: true
-        default: none
-        type: choice
-        options:
-          - none
-          - publishInternal
-          - promoteAlpha
-          - promoteBeta
-          - promoteProduction
-          - iosArchiveRelease
-          - iosTestFlight
 
 permissions:
   contents: read
 
 concurrency:
-  group: mobile-ci-${{ github.workflow }}-${{ github.ref }}
+  group: mobile-ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -32,7 +20,90 @@ env:
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
 
 jobs:
-  android_build_debug:
+  classify:
+    name: Classify changes
+    runs-on: ubuntu-latest
+    outputs:
+      docs_only: ${{ steps.changes.outputs.docs_only }}
+      shared_tests: ${{ steps.changes.outputs.shared_tests }}
+      android_tests: ${{ steps.changes.outputs.android_tests }}
+      ios_tests: ${{ steps.changes.outputs.ios_tests }}
+      android_build: ${{ steps.changes.outputs.android_build }}
+      ios_build: ${{ steps.changes.outputs.ios_build }}
+      full_validation: ${{ steps.changes.outputs.full_validation }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Verify changed-path policy
+        run: ./scripts/ci/test_classify_changes.sh
+      - name: Select validation jobs
+        id: changes
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          base_sha="${PR_BASE_SHA:-${PUSH_BEFORE_SHA:-}}"
+          head_sha="${PR_HEAD_SHA:-${CURRENT_SHA}}"
+
+          if [[ -z "${base_sha}" || "${base_sha}" =~ ^0+$ ]]; then
+            base_sha="$(git rev-parse "${head_sha}^")"
+          fi
+
+          ./scripts/ci/classify_changes.sh "${base_sha}" "${head_sha}"
+      - name: Summarize selection
+        env:
+          DOCS_ONLY: ${{ steps.changes.outputs.docs_only }}
+          SHARED_TESTS: ${{ steps.changes.outputs.shared_tests }}
+          ANDROID_TESTS: ${{ steps.changes.outputs.android_tests }}
+          IOS_TESTS: ${{ steps.changes.outputs.ios_tests }}
+          ANDROID_BUILD: ${{ steps.changes.outputs.android_build }}
+          IOS_BUILD: ${{ steps.changes.outputs.ios_build }}
+          FULL_VALIDATION: ${{ steps.changes.outputs.full_validation }}
+        run: |
+          {
+            echo "## Validation selection"
+            echo
+            echo "| Surface | Selected |"
+            echo "| --- | --- |"
+            echo "| Documentation only | ${DOCS_ONLY} |"
+            echo "| Shared tests | ${SHARED_TESTS} |"
+            echo "| Android tests | ${ANDROID_TESTS} |"
+            echo "| iOS tests | ${IOS_TESTS} |"
+            echo "| Android build | ${ANDROID_BUILD} |"
+            echo "| iOS build | ${IOS_BUILD} |"
+            echo "| Full fallback | ${FULL_VALIDATION} |"
+          } >>"${GITHUB_STEP_SUMMARY}"
+
+  quality:
+    name: Quality checks
+    if: needs.classify.outputs.docs_only != 'true'
+    needs: classify
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: ~/Library/Caches/Homebrew/downloads
+          key: ${{ runner.os }}-${{ runner.arch }}-quality-tools-${{ hashFiles('scripts/ci/install_quality_tools.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-quality-tools-
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install missing quality tools
+        run: ./scripts/ci/install_quality_tools.sh
+      - name: Run quality checks
+        run: ./scripts/ci/run_job.sh quality-check
+
+  android_test:
+    name: Android and shared host tests
+    if: needs.classify.outputs.android_tests == 'true'
+    needs: classify
     runs-on: macos-26
     timeout-minutes: 45
     steps:
@@ -43,9 +114,86 @@ jobs:
             .kotlin-cache
             .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-host-tests-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'scripts/ci/**') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-smoke-
+            ${{ runner.os }}-${{ runner.arch }}-host-tests-
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: android-actions/setup-android@v4
+      - name: Run Android and shared tests
+        run: ./scripts/ci/run_job.sh android-test
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-logs-${{ github.job }}-${{ github.sha }}
+          if-no-files-found: ignore
+          path: |
+            build/logs
+            build/tasks
+
+  ios_test:
+    name: iOS PullRequest plan
+    if: needs.classify.outputs.ios_tests == 'true'
+    needs: classify
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      IOS_TEST_PLAN: PullRequest
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: |
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-ios-tests-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'ios-app/**', 'shared-*/**', 'scripts/ci/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-ios-tests-
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Run iOS pull-request tests
+        run: ./scripts/ci/run_job.sh ios-test
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-logs-${{ github.job }}-${{ github.sha }}
+          if-no-files-found: ignore
+          path: |
+            build/logs
+            build/tasks
+            build/test-results
+
+  android_build:
+    name: Android debug build
+    if: needs.classify.outputs.android_build == 'true'
+    needs: classify
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        with:
+          path: |
+            .kotlin-cache
+            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
+            .gradle-user-home
+          key: ${{ runner.os }}-${{ runner.arch }}-android-build-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'android-app/**', 'shared-*/**', 'scripts/ci/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-android-build-
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -56,75 +204,11 @@ jobs:
       - uses: android-actions/setup-android@v4
       - name: Build Android debug
         run: ./scripts/ci/run_job.sh android-build-debug
-      - name: Upload CI logs
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: ci-logs-${{ github.job }}
-          if-no-files-found: ignore
-          path: |
-            build/logs
-            build/tasks
 
-  android_build_release:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_target == 'publishInternal'
-    runs-on: macos-26
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: android-actions/setup-android@v4
-      - name: Build Android release
-        run: ./scripts/ci/run_job.sh android-build-release
-      - name: Upload Android artifacts
-        if: success()
-        uses: actions/upload-artifact@v7
-        with:
-          name: android-release-build
-          path: build
-
-  android_test:
-    runs-on: macos-26
-    timeout-minutes: 45
-    needs:
-      - android_build_debug
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/cache@v6
-        with:
-          path: |
-            .kotlin-cache
-            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
-            .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-smoke-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: android-actions/setup-android@v4
-      - name: Run Android tests
-        run: ./scripts/ci/run_job.sh android-test
-      - name: Upload CI logs
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: ci-logs-${{ github.job }}
-          if-no-files-found: ignore
-          path: |
-            build/logs
-            build/tasks
-
-  ios_build_debug:
+  ios_build:
+    name: iOS debug build
+    if: needs.classify.outputs.ios_build == 'true'
+    needs: classify
     runs-on: macos-26
     timeout-minutes: 45
     env:
@@ -137,9 +221,9 @@ jobs:
             .kotlin-cache
             .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-ios-build-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'ios-app/**', 'shared-*/**', 'scripts/ci/**') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-smoke-
+            ${{ runner.os }}-${{ runner.arch }}-ios-build-
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -149,192 +233,42 @@ jobs:
           bundler-cache: true
       - name: Build iOS debug
         run: ./scripts/ci/run_job.sh ios-build-debug
-      - name: Upload CI logs
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: ci-logs-${{ github.job }}
-          if-no-files-found: ignore
-          path: |
-            build/logs
-            build/tasks
 
-  ios_test:
-    runs-on: macos-26
-    timeout-minutes: 45
+  pr_gate:
+    name: Pull request gate
+    if: always()
     needs:
-      - ios_build_debug
-    env:
-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+      - classify
+      - quality
+      - android_test
+      - ios_test
+      - android_build
+      - ios_build
+    runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/cache@v6
-        with:
-          path: |
-            .kotlin-cache
-            .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
-            .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-smoke-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '.github/workflows/mobile-ci.yml', 'scripts/ci/**', 'android-app/module.yaml', 'ios-app/module.xcodeproj/project.pbxproj') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-smoke-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - name: Run iOS tests
-        run: ./scripts/ci/run_job.sh ios-test
-      - name: Upload CI logs
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: ci-logs-${{ github.job }}
-          if-no-files-found: ignore
-          path: |
-            build/logs
-            build/tasks
+      - name: Require selected jobs to pass
+        env:
+          CLASSIFY_RESULT: ${{ needs.classify.result }}
+          QUALITY_RESULT: ${{ needs.quality.result }}
+          ANDROID_TEST_RESULT: ${{ needs.android_test.result }}
+          IOS_TEST_RESULT: ${{ needs.ios_test.result }}
+          ANDROID_BUILD_RESULT: ${{ needs.android_build.result }}
+          IOS_BUILD_RESULT: ${{ needs.ios_build.result }}
+        run: |
+          results=(
+            "${CLASSIFY_RESULT}"
+            "${QUALITY_RESULT}"
+            "${ANDROID_TEST_RESULT}"
+            "${IOS_TEST_RESULT}"
+            "${ANDROID_BUILD_RESULT}"
+            "${IOS_BUILD_RESULT}"
+          )
 
-  ios_build_release:
-    if: github.event_name == 'workflow_dispatch' && contains(fromJson('["iosArchiveRelease","iosTestFlight"]'), github.event.inputs.release_target) && github.ref_name == github.event.repository.default_branch
-    runs-on: macos-26
-    env:
-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - name: Build iOS release
-        run: ./scripts/ci/run_job.sh ios-build-release
+          for result in "${results[@]}"; do
+            if [[ "${result}" == "failure" || "${result}" == "cancelled" ]]; then
+              printf 'Selected validation did not pass: %s\n' "${results[*]}" >&2
+              exit 1
+            fi
+          done
 
-  ios_archive_release:
-    if: github.event_name == 'workflow_dispatch' && contains(fromJson('["iosArchiveRelease","iosTestFlight"]'), github.event.inputs.release_target) && github.ref_name == github.event.repository.default_branch
-    needs:
-      - ios_build_release
-    runs-on: macos-26
-    environment: ios-release
-    env:
-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - name: Archive iOS release
-        run: ./scripts/ci/run_job.sh ios-archive-release
-      - name: Upload iOS archive
-        if: success()
-        uses: actions/upload-artifact@v7
-        with:
-          name: ios-archive
-          path: build/ios
-
-  ios_testflight:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_target == 'iosTestFlight' && github.ref_name == github.event.repository.default_branch
-    needs:
-      - ios_archive_release
-    runs-on: macos-26
-    environment: testflight
-    env:
-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - name: Download iOS archive
-        uses: actions/download-artifact@v8
-        with:
-          name: ios-archive
-          path: build/ios
-      - name: Upload to TestFlight
-        run: ./scripts/ci/run_job.sh ios-testflight
-
-  publish_internal:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_target == 'publishInternal'
-    needs:
-      - android_build_release
-    runs-on: macos-26
-    environment: play-internal
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: android-actions/setup-android@v4
-      - name: Download Android release build
-        uses: actions/download-artifact@v8
-        with:
-          name: android-release-build
-          path: build
-      - name: Publish internal track
-        run: ./scripts/ci/run_job.sh publish-internal
-
-  promote_alpha:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_target == 'promoteAlpha'
-    runs-on: macos-26
-    environment: play-alpha
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: android-actions/setup-android@v4
-      - name: Promote internal to alpha
-        run: ./scripts/ci/run_job.sh promote-alpha
-
-  promote_beta:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_target == 'promoteBeta'
-    runs-on: macos-26
-    environment: play-beta
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: android-actions/setup-android@v4
-      - name: Promote alpha to beta
-        run: ./scripts/ci/run_job.sh promote-beta
-
-  promote_production:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_target == 'promoteProduction' && github.ref_name == github.event.repository.default_branch
-    runs-on: macos-26
-    environment: play-production
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: android-actions/setup-android@v4
-      - name: Promote beta to production
-        run: ./scripts/ci/run_job.sh promote-production
+          printf 'Selected validation passed: %s\n' "${results[*]}"

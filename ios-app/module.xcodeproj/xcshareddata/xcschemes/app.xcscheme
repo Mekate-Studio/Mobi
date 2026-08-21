@@ -42,19 +42,16 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B13D10062F800001001664A3"
-               BuildableName = "appTests.xctest"
-               BlueprintName = "appTests"
-               ReferencedContainer = "container:module.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
+      shouldAutocreateTestPlan = "NO">
+      <TestPlans>
+         <TestPlanReference
+            reference = "container:tests/Plans/PullRequest.xctestplan"
+            default = "YES">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:tests/Plans/Nightly.xctestplan">
+         </TestPlanReference>
+      </TestPlans>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "FF177B31-56D5-455B-BC17-0A9908B2CCB1",
+      "name" : "Nightly",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:module.xcodeproj",
+        "identifier" : "B13D10062F800001001664A3",
+        "name" : "appTests"
+      }
+    }
+  ],
+  "version" : 1
+}

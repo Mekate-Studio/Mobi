@@ -1,0 +1,194 @@
+name: Mobile Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_target:
+        description: "Manual release flow to run"
+        required: true
+        type: choice
+        options:
+          - publishInternal
+          - promoteAlpha
+          - promoteBeta
+          - promoteProduction
+          - iosArchiveRelease
+          - iosTestFlight
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-release-${{ github.event.inputs.release_target }}
+  cancel-in-progress: false
+
+env:
+  DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+  KOTLIN_CLI_BOOTSTRAP_CACHE_DIR: ${{ github.workspace }}/.kotlin-cache
+  GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
+
+jobs:
+  android_build_release:
+    if: github.event.inputs.release_target == 'publishInternal' && github.ref_name == github.event.repository.default_branch
+    runs-on: macos-26
+    environment: play-internal
+    env:
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: android-actions/setup-android@v4
+      - name: Build signed Android release
+        run: ./scripts/ci/run_job.sh android-build-release
+      - name: Upload Android release artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-release-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: build/releases/android/android-app-release.aab
+
+  publish_internal:
+    if: github.event.inputs.release_target == 'publishInternal' && github.ref_name == github.event.repository.default_branch
+    needs: android_build_release
+    runs-on: macos-26
+    environment: play-internal
+    env:
+      GOOGLE_PLAY_JSON_KEY: ${{ secrets.GOOGLE_PLAY_JSON_KEY }}
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: android-actions/setup-android@v4
+      - uses: actions/download-artifact@v8
+        with:
+          name: android-release-${{ github.sha }}
+          path: build/releases/android
+      - name: Publish the built artifact to Play internal
+        run: ./scripts/ci/run_job.sh publish-internal
+
+  ios_archive_release:
+    if: contains(fromJson('["iosArchiveRelease","iosTestFlight"]'), github.event.inputs.release_target) && github.ref_name == github.event.repository.default_branch
+    runs-on: macos-26
+    environment: ios-release
+    env:
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+      IOS_BUNDLE_IDENTIFIER: ${{ secrets.IOS_BUNDLE_IDENTIFIER }}
+      IOS_DEVELOPMENT_TEAM: ${{ secrets.IOS_DEVELOPMENT_TEAM }}
+      IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Build signed iOS archive
+        run: ./scripts/ci/run_job.sh ios-archive-release
+      - name: Upload iOS archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-archive-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: build/ios
+
+  ios_testflight:
+    if: github.event.inputs.release_target == 'iosTestFlight' && github.ref_name == github.event.repository.default_branch
+    needs: ios_archive_release
+    runs-on: macos-26
+    environment: testflight
+    env:
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+      APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: actions/download-artifact@v8
+        with:
+          name: ios-archive-${{ github.sha }}
+          path: build/ios
+      - name: Upload the built IPA to TestFlight
+        run: ./scripts/ci/run_job.sh ios-testflight
+
+  promote_alpha:
+    if: github.event.inputs.release_target == 'promoteAlpha' && github.ref_name == github.event.repository.default_branch
+    runs-on: macos-26
+    environment: play-alpha
+    env:
+      GOOGLE_PLAY_JSON_KEY: ${{ secrets.GOOGLE_PLAY_JSON_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: android-actions/setup-android@v4
+      - run: ./scripts/ci/run_job.sh promote-alpha
+
+  promote_beta:
+    if: github.event.inputs.release_target == 'promoteBeta' && github.ref_name == github.event.repository.default_branch
+    runs-on: macos-26
+    environment: play-beta
+    env:
+      GOOGLE_PLAY_JSON_KEY: ${{ secrets.GOOGLE_PLAY_JSON_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: android-actions/setup-android@v4
+      - run: ./scripts/ci/run_job.sh promote-beta
+
+  promote_production:
+    if: github.event.inputs.release_target == 'promoteProduction' && github.ref_name == github.event.repository.default_branch
+    runs-on: macos-26
+    environment: play-production
+    env:
+      GOOGLE_PLAY_JSON_KEY: ${{ secrets.GOOGLE_PLAY_JSON_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: android-actions/setup-android@v4
+      - run: ./scripts/ci/run_job.sh promote-production

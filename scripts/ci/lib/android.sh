@@ -4,15 +4,11 @@ set -euo pipefail
 
 ci_prepare_android_job() {
   ci_detect_context
+  export GRADLE_USER_HOME="${GRADLE_USER_HOME:-${CI_PROJECT_DIR}/.gradle-user-home}"
   ci_prepare_workspace
   ci_set_java_home
   ci_resolve_android_sdk_root || true
   ci_bundle_install
-
-  (
-    cd "${CI_PROJECT_DIR}"
-    ./scripts/ci/ensure_android_gradle_distribution.sh
-  )
 
   ci_log_android_sdk_env
 
