@@ -16,11 +16,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
-            exact: "1.25.4",
+            exact: "1.26.2",
         ),
         .package(
             url: "https://github.com/pointfreeco/swift-dependencies",
-            exact: "1.12.0",
+            exact: "1.17.1",
         ),
         .package(
             url: "https://github.com/maplibre/maplibre-gl-native-distribution",
