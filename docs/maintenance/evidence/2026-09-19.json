@@ -1,0 +1,468 @@
+{
+  "record_type": "audit_evidence",
+  "schema_version": 1,
+  "audit_date": "2026-09-19",
+  "source": {
+    "commit": "7810841cf58196b4564ce78ce30d6ebb1f0db2f4",
+    "tree": "fab34d36a0d01777120ef01d52119ba2447d122f",
+    "initial_worktree": "clean",
+    "file_sha256": {
+      "kotlin": "6dbcdde0bcae41705c187aefb6c91c6c29ef9079c8072a473c2149151f8d7962",
+      "project.yaml": "2b616ca70f5a9a76124bb1e333e586f7ca7ad5d4bcbbe890a8b4b3b2eff8acc7",
+      "gradle/libs.versions.toml": "8d41c920b8e350a136295cc27781aff5b6f1fac12a844ad27c54e65c2d152e44",
+      "gradle-bridge/shared-kit/build.gradle.kts": "83f57137266a3aed4a7610fbd1157dee9dbf876bf3a52b6a1b9233539020c3c4",
+      "gradle-bridge/gradle/wrapper/gradle-wrapper.properties": "c94d41b634a5e0ff8a2f812023697b1337eebac18e9962610356a1793f72896d",
+      "ios-app/module.xcodeproj/project.pbxproj": "651bbdb0def2d569e73c076d575682c5ccb6184400a73d20bf075e3a2dcf0507",
+      "ios-app/Dependencies/Package.swift": "edc1bdf293bee9cd24b1a2e861068d71fb6119ca22a409345a5531101321bcf3",
+      "ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved": "d3bb994bdeb3c225a17038c8da1a7d3c0a02bfaaf8de6aa10e6fe6c5e3a17a03",
+      "scripts/dev/lint.sh": "667b44c530446d8469794cf84f9d8ec155e2099a9367a2cf4d978172a501643c",
+      "scripts/dev/check.sh": "77b2ca901105733214fe28c942a9d80c930f3c2f1b647210435e529e2863d36f",
+      "scripts/dev/dependency_updates.sh": "76eedd22710479a01cc3d8cb7f03772dd8f972646d060705fbf834b6042d9911",
+      "scripts/ci/check_skie_kotlin_compatibility.sh": "da941206ec3b51793f4c41c87ef842017e57f5dfda75776056cc2bd2bf8cdc8e",
+      "scripts/ci/classify_changes.sh": "ffd68a92bd0caee31dce53166eaf61d792246148f8d79697c8a1d56600ae302b",
+      "scripts/ci/run_job.sh": "34fc90b15009157bbc19f885f2d248941718cf0a29a177a23ebcc415da2c553a",
+      "scripts/ci/install_quality_tools.sh": "1b43a22a975c5ce92affed4f1aa7f3958cb2250fd65ab6ece7a71d5c82585fb3",
+      ".githooks/pre-commit": "d4c4de1959eeefd80fb2d6a6a62bf5371d3bc33159b3a1f4e5e27a96edf6ab0c",
+      "renovate.json": "43fdb773f997285d48c1a24068f0a50d431c284440ace89c7622804ae973bf3e",
+      "Dockerfile": "f2480356d182a3b710191c1c123a2dec337d35af44a1354be9c244804c53de39",
+      "Gemfile.lock": "7bfd01395acddf0aaefd36bfc2065ae117100f2cd3e2aa68165576b43f13569c",
+      ".ruby-version": "c8b6d7eee0f9b7cb68c21aaed40c90476b72c8f4b843d0686591cdbb13724034",
+      ".swift-version": "ca2db1b3caf41aa81d66569d675b36097be7eea8d56be7237482aa23ea3ca280",
+      ".swiftformat": "4c5fbaacda7da375455abfb7b2ae523a6b4f1a95b4e872a8f9c13cdc361d150d",
+      ".swiftlint.yml": "b03ef1e7cb7a2bb6b50f7baa6564e3f9573d4bb8333ddb80152470ee3bdf51fa",
+      "detekt.yml": "0c13835a8aa640c717f7bea8ed9228a6c509196cab068913224c25505fb922b2",
+      ".editorconfig": "467be540024f70ce324128a100f7b7f63af67f2bb5bfc887a1a4fdc5f30aacea",
+      "android-app/module.yaml": "3199ebfc29461a160e81da5acdb7705c397511418b9a8a1d3d064ddb4babdf19",
+      "ios-app/module.yaml": "e3bdc1817d391916cc99af70cb4e67a1e6a2d2b4e93f126f0bc27959127b7996",
+      "shared-core/module.yaml": "3978f56dc0a9d44112dbb8d11ce0b1935c47af0c987bb5ee464b3b53a6183294",
+      "shared-di/module.yaml": "3a81dc6c86fe2ae48be594fcafff3abcd84892f251f65f10a6d3b321a6f4166f",
+      "shared-feature-home/module.yaml": "631f1d3b7179cb3ec43091d5dcad293790d8515b38b95d19786063cdb62f15d2",
+      "shared-feature-nearby-vehicle-map/module.yaml": "631f1d3b7179cb3ec43091d5dcad293790d8515b38b95d19786063cdb62f15d2",
+      "shared-ui-home/module.yaml": "e936d92d207ec2bab74af1ad2a2acb562aa5e2159db0ba202e18f9cd50d60a16"
+    }
+  },
+  "scope": "documentation audit with isolated static and script-contract probes; not an adoption or native compatibility receipt",
+  "environment": {
+    "os": "macOS 26.6.2",
+    "architecture": "arm64",
+    "xcode": "27.0 (27A266a)",
+    "swift": "6.4",
+    "python": "3.9.6",
+    "login_java": "26.0.1",
+    "quality_job_java": "21.0.11",
+    "system_ruby": "2.6.10",
+    "declared_ruby": "4.0.6",
+    "node": "26.5.1",
+    "analyzers": {
+      "ktlint": "1.8.0",
+      "detekt": "1.23.8",
+      "swiftformat": "0.62.1",
+      "swiftlint": "0.65.0",
+      "shellcheck": "0.11.0"
+    },
+    "not_found_on_audit_path": [
+      "renovate",
+      "osv-scanner",
+      "actionlint",
+      "gitleaks"
+    ]
+  },
+  "checks": [
+    {
+      "command": [
+        "./scripts/ci/test_classify_changes.sh"
+      ],
+      "exit": 0,
+      "seconds": 0.78,
+      "id": "classifier"
+    },
+    {
+      "command": [
+        "./scripts/ci/run_job.sh",
+        "quality-check"
+      ],
+      "exit": 0,
+      "seconds": 7.05,
+      "id": "quality"
+    }
+  ],
+  "timed_analyzers": [
+    {
+      "tool": "ktlint",
+      "exit": 0,
+      "seconds": 1.35
+    },
+    {
+      "tool": "detekt",
+      "exit": 0,
+      "seconds": 1.42
+    },
+    {
+      "tool": "swiftformat",
+      "exit": 0,
+      "seconds": 0.09
+    },
+    {
+      "tool": "swiftlint",
+      "exit": 0,
+      "seconds": 0.26
+    },
+    {
+      "tool": "shellcheck",
+      "exit": 0,
+      "seconds": 1.55
+    }
+  ],
+  "compatibility_script_contract": {
+    "method": "disposable clone; replace gradle-bridge/gradlew with a shell stub; explicit SKIE version avoids lookup; no real compilation",
+    "cases": [
+      {
+        "gradle_stub_exit": 1,
+        "alert": false,
+        "actual_script_exit": 0,
+        "catalog_restored": true
+      },
+      {
+        "gradle_stub_exit": 0,
+        "alert": false,
+        "actual_script_exit": 0,
+        "catalog_restored": true
+      },
+      {
+        "gradle_stub_exit": 0,
+        "alert": true,
+        "actual_script_exit": 2,
+        "catalog_restored": true
+      }
+    ]
+  },
+  "logs": {
+    "android-manifest": {
+      "redacted_output": "docs_only=false\nshared_tests=false\nandroid_tests=true\nios_tests=false\nandroid_build=true\nios_build=false\nfull_validation=false\npath_count=1\n",
+      "redacted_output_sha256": "99060c7209f2f2f72bb8346a79bc1efe5efb3601250389ff54d6a8506b8bf677"
+    },
+    "classifier": {
+      "redacted_output": "Changed-path classifier fixtures passed.\nUnrecognized changed path; selecting full validation: unexpected/new-surface.txt\n",
+      "redacted_output_sha256": "9ed6862ff08885a12f66b852aa2084121e5dbf6da08a26dd00423c41a1f72082"
+    },
+    "ios-manifest": {
+      "redacted_output": "docs_only=false\nshared_tests=false\nandroid_tests=false\nios_tests=true\nandroid_build=false\nios_build=true\nfull_validation=false\npath_count=1\n",
+      "redacted_output_sha256": "fae348d88641ca2a0b7745a2a6f1b9c103cb9bfa7a558599815da0594b301209"
+    },
+    "probe-stub-0-0": {
+      "redacted_output": "Checking Gradle bridge compatibility with:\n  Kotlin: 2.4.0\n  Metro:  1.2.1\n  SKIE:   0.10.12\n  Task:   :shared-kit:compileKotlinIosSimulatorArm64\nSKIE compatibility check passed.\n\nThe bridge can compile with Kotlin 2.4.0, Metro 1.2.1,\nand SKIE 0.10.12. Remove the Renovate ceilings that hold Kotlin\nbelow 2.4 and Metro below 1.2, then let Renovate open the coordinated update.\n",
+      "redacted_output_sha256": "2247cbcb508114601f711001d45734dc6f26a0c14b50ad0ddf32d75247369297"
+    },
+    "probe-stub-0-1": {
+      "redacted_output": "Checking Gradle bridge compatibility with:\n  Kotlin: 2.4.0\n  Metro:  1.2.1\n  SKIE:   0.10.12\n  Task:   :shared-kit:compileKotlinIosSimulatorArm64\nSKIE compatibility check passed.\n\nThe bridge can compile with Kotlin 2.4.0, Metro 1.2.1,\nand SKIE 0.10.12. Remove the Renovate ceilings that hold Kotlin\nbelow 2.4 and Metro below 1.2, then let Renovate open the coordinated update.\n",
+      "redacted_output_sha256": "2247cbcb508114601f711001d45734dc6f26a0c14b50ad0ddf32d75247369297"
+    },
+    "probe-stub-1-0": {
+      "redacted_output": "Checking Gradle bridge compatibility with:\n  Kotlin: 2.4.0\n  Metro:  1.2.1\n  SKIE:   0.10.12\n  Task:   :shared-kit:compileKotlinIosSimulatorArm64\nSKIE compatibility check did not pass yet.\n\nKeep the Renovate ceilings in place until this task compiles successfully with\nthe latest SKIE release.\n",
+      "redacted_output_sha256": "bf7d895d5d0189c45b15424455ccd02951ef0766a722b91c463b531e18f6e2be"
+    },
+    "quality": {
+      "redacted_output": "[ci] JAVA_HOME=<JDK_21_HOME>\n[ci] Using Android SDK at <ANDROID_SDK>\n[ci] PATH configured\n[ci] JAVA_HOME=<JDK_21_HOME>\n[ci] PATH configured\nRunning SwiftFormat...\n(lint mode - no files will be changed.)\nReading swift-version file at <AUDIT_ROOT>/baseline/.swift-version (version 6.3)\nSwiftFormat completed in 0.08s.\n0/22 files require formatting.\nLinting Swift files in current working directory\nLinting 'HomePrimaryActionButton.swift' (1/22)\nLinting 'HomeCounterLoadable.swift' (2/22)\nLinting 'HomeFeature+State.swift' (3/22)\nLinting 'SharedHomeDemoView.swift' (4/22)\nLinting 'HomeHeroCard.swift' (5/22)\nLinting 'HomeFeature+Action.swift' (6/22)\nLinting 'HomeScreenContent.swift' (8/22)\nLinting 'HomeFeature.swift' (7/22)\nLinting 'NearbyVehicleMapFeature+Action.swift' (9/22)\nLinting 'NearbyVehicleMapFeature+State.swift' (11/22)\nLinting 'NearbyVehicleMapLocationClient.swift' (10/22)\nLinting 'NearbyVehicleMapRenderer.swift' (13/22)\nLinting 'NearbyVehicleMapFeatureClient.swift' (14/22)\nLinting 'NearbyVehicleMapView.swift' (15/22)\nLinting 'NearbyVehicleMapBasemapConfig.swift' (16/22)\nLinting 'NearbyVehicleMapFeature.swift' (12/22)\nLinting 'HomeFeatureTests.swift' (17/22)\nLinting 'NearbyVehicleMapFeatureTests.swift' (18/22)\nLinting 'iosApp.swift' (19/22)\nLinting 'AppServices.swift' (20/22)\nLinting 'HomeFeatureClient.swift' (21/22)\nLinting 'HomeView.swift' (22/22)\nDone linting! Found 0 violations, 0 serious in 22 files.\n",
+      "redacted_output_sha256": "05170de3c3415898baf1727e95a6b3be6a82ac08087d688b669272e64dbe40a1"
+    },
+    "timed-lint": {
+      "redacted_output": "[ci] JAVA_HOME=<JDK_21_HOME>\n[ci] PATH configured\nRunning SwiftFormat...\n(lint mode - no files will be changed.)\nReading swift-version file at <AUDIT_ROOT>/baseline/.swift-version (version 6.3)\nSwiftFormat completed in 0.07s.\n0/22 files require formatting.\nLinting Swift files in current working directory\nLinting 'HomeFeatureClient.swift' (3/22)\nLinting 'HomeFeature+State.swift' (1/22)\nLinting 'HomePrimaryActionButton.swift' (2/22)\nLinting 'HomeCounterLoadable.swift' (4/22)\nLinting 'HomeView.swift' (5/22)\nLinting 'AppServices.swift' (6/22)\nLinting 'iosApp.swift' (7/22)\nLinting 'HomeScreenContent.swift' (8/22)\nLinting 'SharedHomeDemoView.swift' (9/22)\nLinting 'HomeHeroCard.swift' (10/22)\nLinting 'HomeFeature+Action.swift' (11/22)\nLinting 'HomeFeature.swift' (12/22)\nLinting 'NearbyVehicleMapFeature+Action.swift' (13/22)\nLinting 'NearbyVehicleMapLocationClient.swift' (14/22)\nLinting 'NearbyVehicleMapFeature+State.swift' (15/22)\nLinting 'NearbyVehicleMapFeature.swift' (16/22)\nLinting 'NearbyVehicleMapRenderer.swift' (17/22)\nLinting 'NearbyVehicleMapFeatureClient.swift' (18/22)\nLinting 'NearbyVehicleMapView.swift' (19/22)\nLinting 'NearbyVehicleMapBasemapConfig.swift' (20/22)\nLinting 'HomeFeatureTests.swift' (21/22)\nLinting 'NearbyVehicleMapFeatureTests.swift' (22/22)\nDone linting! Found 0 violations, 0 serious in 22 files.\n",
+      "redacted_output_sha256": "5b37c8a56490788312c2d5c078ecd64e147729cddbbb824465fbbab320d4b2f1"
+    }
+  },
+  "release_discovery": [
+    {
+      "repository": "JetBrains/kotlin-toolchain",
+      "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases?per_page=10",
+      "retrieved_date": "2026-09-19",
+      "response_sha256": "90969c63ec85b1631a20a1c3590a0d086131ed8bb3af0946609e941c701a0d63",
+      "coverage": "bounded first page, not complete ecosystem discovery",
+      "releases": [
+        {
+          "tag": "v0.12.2",
+          "published_at": "2026-09-15T13:41:20Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.12.2"
+        },
+        {
+          "tag": "v0.12.1",
+          "published_at": "2026-09-08T22:43:14Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.12.1"
+        },
+        {
+          "tag": "v0.12.0",
+          "published_at": "2026-08-25T00:01:47Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.12.0"
+        },
+        {
+          "tag": "v0.11.1",
+          "published_at": "2026-06-05T18:14:02Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.11.1"
+        },
+        {
+          "tag": "v0.11.0",
+          "published_at": "2026-06-04T20:52:18Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.11.0"
+        },
+        {
+          "tag": "v0.10.0",
+          "published_at": "2026-06-04T13:30:20Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.10.0"
+        },
+        {
+          "tag": "v0.9.2",
+          "published_at": "2026-06-04T13:30:01Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.9.2"
+        },
+        {
+          "tag": "v0.9.1",
+          "published_at": "2026-06-04T13:29:53Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.9.1"
+        },
+        {
+          "tag": "v0.9.0",
+          "published_at": "2026-06-04T13:29:43Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.9.0"
+        },
+        {
+          "tag": "v0.8.2",
+          "published_at": "2026-06-04T13:29:34Z",
+          "prerelease": false,
+          "url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.8.2"
+        }
+      ]
+    },
+    {
+      "repository": "touchlab/SKIE",
+      "url": "https://api.github.com/repos/touchlab/SKIE/releases?per_page=10",
+      "retrieved_date": "2026-09-19",
+      "response_sha256": "1d63d34f33350183edd0ad475e515cdaf828baa5e47169188e8e6e303ddc7a56",
+      "coverage": "bounded first page, not complete ecosystem discovery",
+      "releases": [
+        {
+          "tag": "0.10.14",
+          "published_at": "2026-07-27T15:09:23Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.14"
+        },
+        {
+          "tag": "0.10.13",
+          "published_at": "2026-06-24T05:44:50Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.13"
+        },
+        {
+          "tag": "0.10.12",
+          "published_at": "2026-05-18T20:15:26Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.12"
+        },
+        {
+          "tag": "0.10.11",
+          "published_at": "2026-04-02T15:23:22Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.11"
+        },
+        {
+          "tag": "0.10.10",
+          "published_at": "2026-02-09T10:55:36Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.10"
+        },
+        {
+          "tag": "0.10.9",
+          "published_at": "2026-01-06T15:19:58Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.9"
+        },
+        {
+          "tag": "0.10.8",
+          "published_at": "2025-11-13T17:26:26Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.8"
+        },
+        {
+          "tag": "0.10.7",
+          "published_at": "2025-11-12T09:10:05Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.7"
+        },
+        {
+          "tag": "0.10.6",
+          "published_at": "2025-08-21T09:06:12Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.6"
+        },
+        {
+          "tag": "0.10.5",
+          "published_at": "2025-07-31T17:42:22Z",
+          "prerelease": false,
+          "url": "https://github.com/touchlab/SKIE/releases/tag/0.10.5"
+        }
+      ]
+    },
+    {
+      "repository": "ZacSweers/metro",
+      "url": "https://api.github.com/repos/ZacSweers/metro/releases?per_page=10",
+      "retrieved_date": "2026-09-19",
+      "response_sha256": "8679bb2351b140e0f773a24785f06da749da1ce0df528f092b7f70455b66f1cb",
+      "coverage": "bounded first page, not complete ecosystem discovery",
+      "releases": [
+        {
+          "tag": "1.4.4",
+          "published_at": "2026-09-16T21:45:45Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.4.4"
+        },
+        {
+          "tag": "1.4.3",
+          "published_at": "2026-09-08T04:27:30Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.4.3"
+        },
+        {
+          "tag": "1.4.2",
+          "published_at": "2026-08-14T00:46:40Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.4.2"
+        },
+        {
+          "tag": "1.4.1",
+          "published_at": "2026-08-06T18:46:02Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.4.1"
+        },
+        {
+          "tag": "1.4.0",
+          "published_at": "2026-07-30T23:29:22Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.4.0"
+        },
+        {
+          "tag": "1.3.2",
+          "published_at": "2026-07-14T03:26:03Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.3.2"
+        },
+        {
+          "tag": "1.3.1",
+          "published_at": "2026-07-11T11:13:11Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.3.1"
+        },
+        {
+          "tag": "1.3.0",
+          "published_at": "2026-07-01T05:18:43Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.3.0"
+        },
+        {
+          "tag": "1.2.1",
+          "published_at": "2026-06-12T02:45:15Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.2.1"
+        },
+        {
+          "tag": "1.2.0",
+          "published_at": "2026-06-10T15:53:48Z",
+          "prerelease": false,
+          "url": "https://github.com/ZacSweers/metro/releases/tag/1.2.0"
+        }
+      ]
+    }
+  ],
+  "upstream_source_files": [
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.11.1/sources/frontend-api/src/org/jetbrains/amper/frontend/schema/DefaultVersions.kt",
+      "tag": "v0.11.1",
+      "retrieved_date": "2026-09-19",
+      "sha256": "a2a26d0d26e02ca605b496106d354c57e6e4c2ccc3cb8c5fe8bb65bbae5314eb"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.11.1/sources/amper-cli/src/org/jetbrains/amper/tasks/ios/ManageXCodeProjectTask.kt",
+      "tag": "v0.11.1",
+      "retrieved_date": "2026-09-19",
+      "sha256": "f243ea6ba0990ec2b9bae6e0c6fde163b865c23ae83fe155509b34f86e08edcb"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.11.1/libs.versions.toml",
+      "tag": "v0.11.1",
+      "retrieved_date": "2026-09-19",
+      "sha256": "6eb37a2c50a908ac0e83892c23c0be4974611115ab137a92c49c1bfa9ce2ffee"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.11.1/kotlin",
+      "tag": "v0.11.1",
+      "retrieved_date": "2026-09-19",
+      "sha256": "f53d26ee0bb6ef3078c33bda3c180d19fbca665408c27b62b7dfce335551c3d7"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/frontend-api/src/org/jetbrains/amper/frontend/schema/DefaultVersions.kt",
+      "tag": "v0.12.2",
+      "retrieved_date": "2026-09-19",
+      "sha256": "54ced162caf2299b1a24a606760273e62e8dc2dd151470fd29aa2899ba99e2c1"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/tasks/ios/ManageXCodeProjectTask.kt",
+      "tag": "v0.12.2",
+      "retrieved_date": "2026-09-19",
+      "sha256": "773e03535f765badefde0871be788272d584126b7707b4cb2ba06bf656e70031"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/libs.versions.toml",
+      "tag": "v0.12.2",
+      "retrieved_date": "2026-09-19",
+      "sha256": "d3e0c06fa3cd3c9be4352b44f4f94fef452b59cadc205659a24558ea52072322"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/kotlin",
+      "tag": "v0.12.2",
+      "retrieved_date": "2026-09-19",
+      "sha256": "e14094f247b83dd99c6ee4025eef8b80cc8c9417116e9fca5b21ed19e47b5841"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/tasks/ios/IosConventions.kt",
+      "tag": "v0.12.2",
+      "retrieved_date": "2026-09-19",
+      "sha256": "26ec299ec1a21643e3d8b298073c480a7a11837724f0651edbc54260241a7070"
+    }
+  ],
+  "not_run": [
+    "native builds/tests",
+    "signed archive/export",
+    "Toolchain effective resolution/bootstrap",
+    "candidate dependency builds",
+    "Renovate lookup",
+    "vulnerability scan",
+    "hosted CI",
+    "full release-interval semantic assessment"
+  ],
+  "resource_disposition": {
+    "created": [
+      "baseline copy",
+      "probe-contract copy",
+      "timing proxies",
+      "temporary upstream responses/logs"
+    ],
+    "user_checkout_mutations": "documentation only",
+    "cleanup": "completed; owned audit copies, timing proxies and temporary upstream responses/logs removed after verification",
+    "retained": "sanitized results and source hashes in this record; upstream URLs allow refetch"
+  },
+  "document_validation": {
+    "relative_links": "passed",
+    "fenced_blocks": "balanced",
+    "new_file_whitespace": "passed",
+    "source_hashes": "matched",
+    "public_path_scan": "passed",
+    "baseline_tracked_inputs_after_probes": "unchanged",
+    "change_classification": "docs_only=true"
+  }
+}

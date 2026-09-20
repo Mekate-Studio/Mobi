@@ -1,10 +1,4 @@
-included:
-  - ios-app/src
-  - ios-app/tests
-
-excluded:
-  - ios-app/src/Assets.xcassets
-  - ios-app/module.xcodeproj
+# scripts/dev/quality.rb supplies exact inputs, including Swift package source.
 
 disabled_rules:
   - line_length

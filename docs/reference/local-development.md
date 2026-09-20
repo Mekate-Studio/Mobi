@@ -5,7 +5,7 @@ One of the goals of this CI design is that the same job contract works locally.
 ## Prerequisites
 
 - JDK 21+
-- Ruby and Bundler
+- Ruby (the repository's `.ruby-version` is the validated runtime) and Bundler
 - Android SDK for Android jobs
 - Xcode with an installed iOS Simulator runtime for iOS jobs
 - `ktlint`, `detekt`, `SwiftFormat`, `SwiftLint`, and `ShellCheck` for the
@@ -101,10 +101,93 @@ device or emulator is already available for `just android-run`.
 
 `just lint` runs Kotlin formatting checks, Kotlin static analysis, Swift
 formatting checks, Swift linting, and `ShellCheck` for the repo-owned shell
-scripts.
+scripts and Git hook. It includes nonignored new source files and Swift package
+code. `just format` uses the same source inventory and only runs the two formatters.
 
-`just check` currently runs the same quality gate as `just lint`, which makes
-it the easiest single command to use locally and in CI.
+`just check` runs static analysis with an additional commit guard: all tracked
+checkout contents and executable/symlink modes must equal the index before and
+after analysis. Stage complete intended changes first. Nonignored untracked
+files also block this mode. Use `just lint` during unstaged development.
+
+`./scripts/ci/run_job.sh quality-check` and `./scripts/dev/check.sh --static`
+use the same static inputs without local commit orchestration or build bootstrap.
+The gate does not install tools, format files, stage, stash, restore, or run
+dependency discovery. Native tests and builds remain separate commands.
+
+### Static gate inputs and recovery
+
+[`quality.rb`](../../scripts/dev/quality.rb) uses Ruby's standard library and
+NUL-delimited Git filenames. It reads the explicit module list in `project.yaml`
+without invoking Kotlin Toolchain. Current supported inputs are:
+
+- Kotlin `.kt` files under declared modules' `src`, `test`, `src@platform` and
+  `test@platform` roots, and repository `.kts` files. All receive ktlint; `.kt`
+  sources also receive detekt. Modules are discovered, not named in the script.
+- All repository Swift source, including `Package.swift` and package sources.
+- `scripts/**/*.sh` and files in `.githooks/`.
+
+Tracked source is accounted for even when matched by Git ignores. Untracked
+ignored files are excluded. Untracked outputs under `build/`, each declared
+module's `build/`, the bridge's build/cache directories, root Kotlin/Gradle/Amper
+caches and `ios-app/Dependencies/.build/` are also excluded from manual analysis.
+These paths are generated build or downloaded package output, not authored
+source. **Nonignored** output still blocks commit mode: add a reviewed ignore
+entry for an intended generated directory. There is no blanket `vendor/`
+exclusion for authored source. A tracked `.kt` outside supported roots fails
+explicitly instead of disappearing.
+
+Templates, custom source roots, overlapping/glob module declarations, duplicate
+YAML keys, multiple YAML documents, source symlinks and directory symlinks are
+unsupported and fail with the offending input.
+Module paths use letters, digits, `_`, `-` and directory separators. Kotlin and
+Swift paths with glob metacharacters, backslashes or commas fail explicitly
+because analyzer argument parsers differ. Spaces, tabs, newlines and leading
+dashes remain exact arguments; normal filename/style rules still apply.
+
+Commit mode rejects partial staging, unstaged deletion/rename/mode changes,
+intent-to-add, unmerged entries, skip-worktree/assume-unchanged flags, sparse
+entries, submodules and symlinks resolving outside the repository. It reads
+actual file bytes, so restored size/mtime cannot bypass the check. Checkout
+transforms such as CRLF conversion or clean filters that produce different
+index bytes are not supported. Resolve the reported state and stage only the
+intended complete files; the gate never repairs Git state for you. After a
+concurrent edit, rerun the check. Use a full checkout for sparse-index failures.
+
+Every run reports versions, input counts, a JSON manifest with source SHA-256
+hashes, and per-tool/total elapsed seconds. Commit mode also reports an index
+identity digest. To inspect the inventory without running analyzers:
+
+```bash
+./scripts/dev/lint.sh --manifest
+# Pure JSON, without shell environment setup messages:
+ruby scripts/dev/quality.rb static --manifest
+```
+
+The five existing analyzer versions are reported, not enforced. Missing tools
+fail before analysis; install them explicitly with
+`./scripts/ci/install_quality_tools.sh` on macOS. Ruby and Git must be executable
+for the current architecture. If an old Intel-only Git shadows the system Git
+on Apple Silicon, select a compatible PATH for the command, for example:
+
+```bash
+PATH=/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin ./scripts/dev/lint.sh
+```
+
+This command changes only its own environment. The gate does not repair shell
+configuration. Tool/runtime pin enforcement is the next maintenance slice.
+Before/after checks detect persistent drift; they do not provide an atomic
+snapshot or detect edits that are changed and restored entirely during a run.
+Static mode has no commit-content guarantee. Installed tools, inherited
+environment and analyzer configuration remain trusted inputs.
+
+Run the gate's contract suite with Ruby, Git and Bash, then optionally exercise
+installed analyzers. Both commands use disposable repositories and clean them
+up automatically. They do not install dependencies or change the caller's index.
+
+```bash
+ruby scripts/dev/test_quality.rb
+ruby scripts/dev/test_quality_real.rb
+```
 
 ## IntelliJ commit checks
 
@@ -124,8 +207,8 @@ Then in IntelliJ IDEA:
 - disable the `Analyze code` commit check
 - enable `Run Git hooks`
 
-That makes IDE commits run the same repo-owned lint gate used elsewhere in the
-repository instead of a separate IDE-only inspection profile.
+That makes IDE commits run the repo-owned commit guard and static checks.
+The guard requires all intended working-tree content to be staged in full.
 
 ## Shared job dispatcher
 
@@ -159,7 +242,7 @@ simulator device.
 
 ## Just recipes
 
-The repo also exposes common jobs through [`Justfile`](../../Justfile):
+The repo also exposes common jobs through [`justfile`](../../justfile):
 
 ```bash
 just android-build-debug

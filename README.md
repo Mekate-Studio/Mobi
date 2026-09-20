@@ -71,6 +71,7 @@ entry points:
 - [CI Validation And Release Candidates](docs/reference/ci-validation.md)
 - [Secrets Reference](docs/reference/secrets.md)
 - [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
+- [Quality And Dependency Maintenance Audit](docs/maintenance/README.md)
 
 The Gradle bridge material is intentionally documented as a transitional
 constraint in the current repository shape, not as the long-term ideal.
@@ -117,9 +118,14 @@ The repository keeps quality checks behind repo-owned scripts instead of
 pushing tool orchestration into CI or the Gradle bridge.
 
 - `just format` applies Kotlin and Swift formatting
-- `just lint` verifies Kotlin, Swift, and shell quality checks
-- `just check` runs the current quality gate
+- `just lint` checks Kotlin, Swift (including package source), and repository shell files, including new nonignored files
+- `just check` runs those checks with index/checkout identity checks before and after analysis; stage the full intended content first
 - `just deps` runs the local dependency update lookup
+
+The pre-commit hook uses `just check`'s script. CI's `quality-check` job uses
+explicit static mode without local staging requirements. See
+[static gate inputs and recovery](docs/reference/local-development.md#static-gate-inputs-and-recovery)
+and the [first slice validation](docs/maintenance/first-slice-validation.md).
 
 The current tool split is:
 
@@ -145,14 +151,17 @@ Metro and Kotlin coroutines updates are grouped across Kotlin Toolchain modules
 and the Gradle bridge catalog because the bridge must stay aligned with the
 shared Kotlin dependency surface used by the app modules.
 Metro is currently held below `1.2.0`, and the bridge Kotlin compiler below
-`2.4.0`, because Metro `1.2.x` publishes Kotlin/Native artifacts with Kotlin
-`2.4.0` ABI while the current SKIE release used by the bridge supports Kotlin
-`2.3.x`.
+`2.4.0`. Those constraints protect the checked-in bridge stack; newer upstream
+SKIE releases now support Kotlin `2.4.x`. The dated
+[compatibility assessment](docs/maintenance/kotlin-compatibility.md) separates
+upgrading that stack from proving an equivalent direct Kotlin Toolchain path.
 The scheduled `Dependency Compatibility` workflow runs the repo-owned
 `scripts/ci/check_skie_kotlin_compatibility.sh` probe to detect when the latest
-SKIE release can compile the bridge on the Kotlin `2.4.x` line. Until Swift
-export is stable enough for this repository's sealed-state bridge, SKIE remains
-the common denominator for coordinated Metro and Kotlin updates.
+SKIE release can compile the bridge on the Kotlin `2.4.x` line. Its current
+result handling and isolation have known gaps documented in the
+[audit](docs/maintenance/audit.md). A successful framework compile is only
+narrow evidence; native tests, interop, onboarding and release packaging are
+required before considering bridge retirement.
 
 Use the local lookup before or during dependency maintenance:
 

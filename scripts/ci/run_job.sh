@@ -17,12 +17,8 @@ shift || true
 
 case "${job_name}" in
   quality-check)
-    ci_prepare_workspace
-    ci_set_java_home
-    ci_resolve_android_sdk_root || true
-    ci_configure_path
     cd "${CI_PROJECT_DIR}"
-    ./scripts/dev/check.sh "$@"
+    ./scripts/dev/check.sh --static "$@"
     ;;
   android-build-debug)
     export CI_ANDROID_SIGNING_MODE="${CI_ANDROID_SIGNING_MODE:-debug-smoke}"
