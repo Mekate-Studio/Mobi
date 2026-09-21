@@ -8,8 +8,10 @@ One of the goals of this CI design is that the same job contract works locally.
 - Ruby (the repository's `.ruby-version` is the validated runtime) and Bundler
 - Android SDK for Android jobs
 - Xcode with an installed iOS Simulator runtime for iOS jobs
-- `ktlint`, `detekt`, `SwiftFormat`, `SwiftLint`, and `ShellCheck` for the
-  quality commands
+- macOS with Xcode command-line tools, system Ruby, Git, Bash, curl, tar and
+  unzip for static-quality setup. The explicit installer below provides the
+  private Ruby/Java runtimes and five analyzers; global analyzer installs are
+  not required. Native jobs still use their own prerequisites above.
 
 Set a writable Kotlin Toolchain cache before running build commands:
 
@@ -163,30 +165,66 @@ identity digest. To inspect the inventory without running analyzers:
 ruby scripts/dev/quality.rb static --manifest
 ```
 
-The five existing analyzer versions are reported, not enforced. Missing tools
-fail before analysis; install them explicitly with
-`./scripts/ci/install_quality_tools.sh` on macOS. Ruby and Git must be executable
-for the current architecture. If an old Intel-only Git shadows the system Git
-on Apple Silicon, select a compatible PATH for the command, for example:
+[`quality-tools.json`](../../quality-tools.json) enforces exact analyzer and
+private Ruby/Java versions, artifact checksums and existing rule-file hashes.
+Install explicitly once per clone, then check the installation offline:
 
 ```bash
-PATH=/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin ./scripts/dev/lint.sh
+./scripts/ci/install_quality_tools.sh
+/usr/bin/ruby scripts/quality_tools.rb verify
+```
+
+Setup uses public primary sources and builds the pinned Ruby with a static
+libyaml. It needs network access and an Apple C compiler on the first run.
+It installs only under ignored `.quality/`; Bundler/Fastlane and mobile Java
+settings remain independent. Later setup runs reuse a valid installation
+without network access. Quality commands use absolute managed executables,
+verify every installed file and exact reported version, and clear Ruby/Java
+injection variables. Missing or corrupt tools fail before analysis. They never
+fall back to Homebrew or install inside a hook.
+
+Rule changes require an explicit reviewed SHA-256 update in the lock, together
+with regression probes. Nested analyzer configurations, even ignored ones,
+must be declared in its rules map. ShellCheck runs with `--norc`, so personal
+configuration cannot silently change its results. Recipe changes require an
+explicit recipe revision in both the installer and lock. See the
+[selection evidence and limits](../maintenance/second-slice-validation.md).
+
+After interruption or checksum/version failure, inspect the diagnostic and
+`.quality/setup-<platform>.log`. Retry explicit setup; use
+`./scripts/ci/install_quality_tools.sh --repair` for an incomplete or corrupt
+selected slot. Repair removes only that marked, owned installation before
+rebuilding; it can leave the gate unavailable if the new setup fails. A concurrent
+installer fails without modifying the active one. Temporary downloads/builds
+are removed on ordinary failure or interruption. After a forced kill, first
+ensure no installer remains, then remove only its abandoned `.quality/build-*`
+directory. Older version slots remain available for rollback; remove reviewed
+unused slots manually when no quality process is running. Removing the whole
+owned `.quality/` directory is also safe at that point and requires fresh setup.
+Keep local setup logs private: compiler diagnostics can include absolute paths.
+
+Git must be executable for the current architecture. If an old Intel-only Git
+shadows the system Git on Apple Silicon, select a compatible PATH for the command:
+
+```bash
+PATH=/usr/bin:/bin:/usr/sbin:/sbin ./scripts/dev/lint.sh
 ```
 
 This command changes only its own environment. The gate does not repair shell
-configuration. Tool/runtime pin enforcement is the next maintenance slice.
+configuration.
 Before/after checks detect persistent drift; they do not provide an atomic
 snapshot or detect edits that are changed and restored entirely during a run.
-Static mode has no commit-content guarantee. Installed tools, inherited
-environment and analyzer configuration remain trusted inputs.
+Static mode has no commit-content guarantee. The OS, Xcode/SourceKit, compiler,
+system bootstrap utilities and local receipt storage remain trust boundaries;
+this is not a hermetic machine or a malicious-local-user defense.
 
 Run the gate's contract suite with Ruby, Git and Bash, then optionally exercise
 installed analyzers. Both commands use disposable repositories and clean them
 up automatically. They do not install dependencies or change the caller's index.
 
 ```bash
-ruby scripts/dev/test_quality.rb
-ruby scripts/dev/test_quality_real.rb
+/usr/bin/ruby scripts/dev/test_quality.rb
+/usr/bin/ruby scripts/dev/test_quality_real.rb
 ```
 
 ## IntelliJ commit checks

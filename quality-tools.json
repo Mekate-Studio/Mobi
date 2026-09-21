@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "recipe": 2,
+  "reviewed_at": "2026-09-20",
+  "ruby": {
+    "version": "4.0.6",
+    "entry": "ruby/bin/ruby",
+    "source": {
+      "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.6.tar.gz",
+      "sha256": "837d299e8f7ddf2be31a229a7a7e019d354979825117989acb3b32b1a9be262a",
+      "release": "https://www.ruby-lang.org/en/news/2026/07/14/ruby-4-0-6-released/",
+      "root": "ruby-4.0.6"
+    },
+    "libyaml": {
+      "version": "0.2.5",
+      "url": "https://pyyaml.org/download/libyaml/yaml-0.2.5.tar.gz",
+      "sha256": "c642ae9b75fee120b2d96c712538bd2cf283228d2337df2cf2988e3c02678ef4",
+      "release": "https://github.com/yaml/libyaml/releases/tag/0.2.5",
+      "root": "yaml-0.2.5"
+    }
+  },
+  "platforms": {
+    "darwin-arm64": {
+      "java": {
+        "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.11%2B10/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.11_10.tar.gz",
+        "sha256": "6ebcf221c9b41507b14c098e93c6ead6440b8d9bd154f8ec666c4c73abbdb201",
+        "release": "https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.11%2B10",
+        "published_at": "2026-04-23T06:32:33Z",
+        "version": "21.0.11+10-LTS",
+        "vendor": "Eclipse Adoptium",
+        "entry": "java/jdk-21.0.11+10/Contents/Home/bin/java"
+      },
+      "tools": {
+        "ktlint": {
+          "url": "https://github.com/ktlint/ktlint/releases/download/1.8.0/ktlint",
+          "sha256": "a3fd620207d5c40da6ca789b95e7f823c54e854b7fade7f613e91096a3706d75",
+          "release": "https://github.com/ktlint/ktlint/releases/tag/1.8.0",
+          "published_at": "2025-11-14T19:48:21Z",
+          "version": "1.8.0",
+          "kind": "jar",
+          "entry": "tools/ktlint.jar"
+        },
+        "detekt": {
+          "version": "1.23.8",
+          "kind": "jar",
+          "entry": "tools/detekt.jar",
+          "url": "https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-cli/1.23.8/detekt-cli-1.23.8-all.jar",
+          "sha256": "3afe89a11120303c73c9bdda3d8fe558dd9070a6937d27819ddc04b275381245",
+          "checksum_source": "https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-cli/1.23.8/detekt-cli-1.23.8-all.jar.sha256",
+          "release": "https://github.com/detekt/detekt/releases/tag/v1.23.8",
+          "published_at": "2025-02-21T14:59:00Z"
+        },
+        "swiftformat": {
+          "url": "https://github.com/nicklockwood/SwiftFormat/releases/download/0.62.1/swiftformat.zip",
+          "sha256": "7cb1cb1fae04932047c7015441c543848e8e60e1572d808d080e0a1f1661114a",
+          "release": "https://github.com/nicklockwood/SwiftFormat/releases/tag/0.62.1",
+          "published_at": "2026-07-07T14:57:24Z",
+          "version": "0.62.1",
+          "kind": "zip",
+          "member": "swiftformat",
+          "entry": "tools/swiftformat"
+        },
+        "swiftlint": {
+          "url": "https://github.com/realm/SwiftLint/releases/download/0.65.0/portable_swiftlint.zip",
+          "sha256": "d6cb0aa7a2f5f1ef306fc9e37bcb54dc9a26facc8f7784ac0c3dd3eccf5c6ba6",
+          "release": "https://github.com/realm/SwiftLint/releases/tag/0.65.0",
+          "published_at": "2026-06-27T07:43:17Z",
+          "version": "0.65.0",
+          "kind": "zip",
+          "member": "swiftlint",
+          "entry": "tools/swiftlint"
+        },
+        "shellcheck": {
+          "url": "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.darwin.aarch64.tar.gz",
+          "sha256": "339b930feb1ea764467013cc1f72d09cd6b869ebf1013296ba9055ab2ffbd26f",
+          "release": "https://github.com/koalaman/shellcheck/releases/tag/v0.11.0",
+          "published_at": "2025-08-04T00:27:19Z",
+          "version": "0.11.0",
+          "kind": "tar",
+          "member": "shellcheck-v0.11.0/shellcheck",
+          "entry": "tools/shellcheck"
+        }
+      }
+    },
+    "darwin-x86_64": {
+      "java": {
+        "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.11%2B10/OpenJDK21U-jdk_x64_mac_hotspot_21.0.11_10.tar.gz",
+        "sha256": "34180eb03e6d207c388cce3da668f6cc7cd7508c185c24782fadac2c9c0e66f9",
+        "release": "https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.11%2B10",
+        "published_at": "2026-04-23T06:32:33Z",
+        "version": "21.0.11+10-LTS",
+        "vendor": "Eclipse Adoptium",
+        "entry": "java/jdk-21.0.11+10/Contents/Home/bin/java"
+      },
+      "tools": {
+        "ktlint": {
+          "url": "https://github.com/ktlint/ktlint/releases/download/1.8.0/ktlint",
+          "sha256": "a3fd620207d5c40da6ca789b95e7f823c54e854b7fade7f613e91096a3706d75",
+          "release": "https://github.com/ktlint/ktlint/releases/tag/1.8.0",
+          "published_at": "2025-11-14T19:48:21Z",
+          "version": "1.8.0",
+          "kind": "jar",
+          "entry": "tools/ktlint.jar"
+        },
+        "detekt": {
+          "version": "1.23.8",
+          "kind": "jar",
+          "entry": "tools/detekt.jar",
+          "url": "https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-cli/1.23.8/detekt-cli-1.23.8-all.jar",
+          "sha256": "3afe89a11120303c73c9bdda3d8fe558dd9070a6937d27819ddc04b275381245",
+          "checksum_source": "https://repo.maven.apache.org/maven2/io/gitlab/arturbosch/detekt/detekt-cli/1.23.8/detekt-cli-1.23.8-all.jar.sha256",
+          "release": "https://github.com/detekt/detekt/releases/tag/v1.23.8",
+          "published_at": "2025-02-21T14:59:00Z"
+        },
+        "swiftformat": {
+          "url": "https://github.com/nicklockwood/SwiftFormat/releases/download/0.62.1/swiftformat.zip",
+          "sha256": "7cb1cb1fae04932047c7015441c543848e8e60e1572d808d080e0a1f1661114a",
+          "release": "https://github.com/nicklockwood/SwiftFormat/releases/tag/0.62.1",
+          "published_at": "2026-07-07T14:57:24Z",
+          "version": "0.62.1",
+          "kind": "zip",
+          "member": "swiftformat",
+          "entry": "tools/swiftformat"
+        },
+        "swiftlint": {
+          "url": "https://github.com/realm/SwiftLint/releases/download/0.65.0/portable_swiftlint.zip",
+          "sha256": "d6cb0aa7a2f5f1ef306fc9e37bcb54dc9a26facc8f7784ac0c3dd3eccf5c6ba6",
+          "release": "https://github.com/realm/SwiftLint/releases/tag/0.65.0",
+          "published_at": "2026-06-27T07:43:17Z",
+          "version": "0.65.0",
+          "kind": "zip",
+          "member": "swiftlint",
+          "entry": "tools/swiftlint"
+        },
+        "shellcheck": {
+          "url": "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.darwin.x86_64.tar.gz",
+          "sha256": "c2c15e08df0e8fbc374c335b230a7ee958c313fa5714817a59aa59f1aa594f51",
+          "release": "https://github.com/koalaman/shellcheck/releases/tag/v0.11.0",
+          "published_at": "2025-08-04T00:27:19Z",
+          "version": "0.11.0",
+          "kind": "tar",
+          "member": "shellcheck-v0.11.0/shellcheck",
+          "entry": "tools/shellcheck"
+        }
+      }
+    }
+  },
+  "rules": {
+    ".ruby-version": "c8b6d7eee0f9b7cb68c21aaed40c90476b72c8f4b843d0686591cdbb13724034",
+    ".editorconfig": "467be540024f70ce324128a100f7b7f63af67f2bb5bfc887a1a4fdc5f30aacea",
+    "detekt.yml": "0c13835a8aa640c717f7bea8ed9228a6c509196cab068913224c25505fb922b2",
+    ".swiftformat": "4c5fbaacda7da375455abfb7b2ae523a6b4f1a95b4e872a8f9c13cdc361d150d",
+    ".swiftlint.yml": "efa67c9d9c4483f08bd7f12d63b75684139e066eff3efb92a23d2033a4d4096a",
+    ".swift-version": "ca2db1b3caf41aa81d66569d675b36097be7eea8d56be7237482aa23ea3ca280"
+  }
+}

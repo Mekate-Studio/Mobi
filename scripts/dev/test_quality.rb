@@ -30,6 +30,9 @@ module QualityTest
       @env['GIT_CONFIG_GLOBAL'] = File::NULL
       @env['GIT_CONFIG_NOSYSTEM'] = '1'
       copy('scripts/dev/quality.rb')
+      copy('scripts/quality_tools.rb')
+      copy('.ruby-version')
+      copy('.swift-version')
       %w[lint format check common].each { |name| copy("scripts/dev/#{name}.sh") }
       copy('scripts/ci/run_job.sh')
       copy('scripts/ci/lib.sh')
@@ -40,14 +43,14 @@ module QualityTest
       write('feature/module.yaml', "product: jvm/lib\n")
       write('feature/src/Example.kt', "class Example\n")
       write('ios-app/Dependencies/Package.swift', "// swift-tools-version: 6.0\n")
-      write('.gitignore', "ignored/\n")
+      write('.gitignore', "ignored/\n.quality/\n")
       TOOL_NAMES.each do |tool|
         path = File.join(bin, tool)
         File.write(path, "#!#{RUBY}\n" + <<~'SCRIPT')
           require 'json'
           name = File.basename($PROGRAM_NAME)
           if ARGV == ['--version']
-            puts "#{name} fixture-version"
+            puts(name == 'ktlint' ? 'ktlint version fixture-version' : name == 'shellcheck' ? 'version: fixture-version' : 'fixture-version')
             exit 0
           end
           entry = { 'tool' => name, 'args' => ARGV }
@@ -74,15 +77,59 @@ module QualityTest
         SCRIPT
         File.chmod(0o755, path)
       end
+      setup_fake_toolchain(bin)
       git('init', '--quiet')
       git('config', 'core.filemode', 'true')
       stage
+    end
+
+    def setup_fake_toolchain(bin)
+      lock = JSON.parse(File.read(File.join(ROOT, 'quality-tools.json')))
+      lock['ruby']['version'] = RUBY_VERSION
+      lock['ruby']['entry'] = 'tools/ruby'
+      lock['platforms'].each_value do |platform|
+        platform['java']['entry'] = 'tools/java'
+        platform['tools'].each do |name, item|
+          item['kind'] = 'executable'
+          item['entry'] = "tools/#{name}"
+          item['version'] = 'fixture-version'
+        end
+      end
+      lock['rules'].each_key { |path| lock['rules'][path] = Digest::SHA256.file(File.join(@root, path)).hexdigest }
+      write('quality-tools.json', JSON.pretty_generate(lock) + "\n")
+      toolchain = PinnedQuality::Toolchain.new(@root)
+      FileUtils.mkdir_p(File.join(toolchain.slot, 'tools'))
+      TOOL_NAMES.each { |name| FileUtils.cp(File.join(bin, name), File.join(toolchain.slot, 'tools', name)) }
+      ruby = File.join(toolchain.slot, 'tools/ruby')
+      File.write(ruby, "#!#{RUBY}\nexec #{RUBY.inspect}, *ARGV\n")
+      File.chmod(0o755, ruby)
+      java = File.join(toolchain.slot, 'tools/java')
+      File.write(java, "#!#{RUBY}\nputs 'java.runtime.version = 21.0.11+10-LTS'\nputs 'java.vendor = Eclipse Adoptium'\n")
+      File.chmod(0o755, java)
+      File.write(File.join(toolchain.slot, '.mobi-quality-owned'), toolchain.install_id)
+      receipt = { 'schema' => 1, 'install_id' => toolchain.install_id, 'files' => toolchain.tree }
+      File.write(File.join(toolchain.slot, 'receipt.json'), JSON.pretty_generate(receipt))
     end
 
     def copy(path)
       target = File.join(@root, path)
       FileUtils.mkdir_p(File.dirname(target))
       FileUtils.cp(File.join(ROOT, path), target)
+    end
+
+    def use_installed_toolchain
+      original = PinnedQuality::Toolchain.new(ROOT)
+      original.verify!
+      copy('quality-tools.json')
+      relocated = PinnedQuality::Toolchain.new(@root)
+      FileUtils.mkdir_p(File.dirname(relocated.slot))
+      FileUtils.cp_r(original.slot, relocated.slot)
+      relocated.verify!
+      @quality_ruby = relocated.command('ruby').first
+      program = "require 'yaml'; require 'json'; require 'digest'; require 'open3'; require 'tmpdir'; " \
+                "abort 'Ruby still uses the original prefix' if ($LOAD_PATH + $LOADED_FEATURES).any? { |path| path.start_with?(ARGV.fetch(0)) }"
+      ok, output = run(@quality_ruby, '-e', program, original.slot)
+      QualityTest.assert(ok, "Relocated Ruby standard library failed: #{output}")
     end
 
     def write(path, content)
@@ -111,13 +158,19 @@ module QualityTest
       FileUtils.rm_f(@env.fetch('QUALITY_TEST_LOG'))
     end
 
+    def refresh_receipt
+      toolchain = PinnedQuality::Toolchain.new(@root)
+      receipt = { 'schema' => 1, 'install_id' => toolchain.install_id, 'files' => toolchain.tree }
+      File.write(File.join(toolchain.slot, 'receipt.json'), JSON.pretty_generate(receipt))
+    end
+
     def run(*argv, extra_env: {})
       out, err, status = Open3.capture3(@env.merge(extra_env), *argv, chdir: @root)
       [status.success?, out + err]
     end
 
     def quality(mode = 'commit', *options, **kwargs)
-      run(RUBY, 'scripts/dev/quality.rb', mode, *options, **kwargs)
+      run(@quality_ruby || RUBY, 'scripts/dev/quality.rb', mode, *options, **kwargs)
     end
 
     def pass(*args, **kwargs)
@@ -370,17 +423,157 @@ module QualityTest
     assert(f.calls.map { |call| call['tool'] } == %w[ktlint detekt], f.calls.inspect)
   end
 
-  test('missing tools fail before any analyzer with installation guidance') do |f|
-    # Direct runner isolates PATH; the shell front door intentionally adds installed tools.
-    empty = File.join(File.dirname(f.root), 'runtime-only')
-    FileUtils.mkdir_p(empty)
-    # Apple's system Ruby invokes uname during startup; keep runtime prerequisites.
-    %w[git uname].each do |command|
-      path = ENV.fetch('PATH').split(':').map { |dir| File.join(dir, command) }.find { |candidate| File.executable?(candidate) && File.file?(candidate) }
-      File.symlink(path, File.join(empty, command)) if path
-    end
-    f.reject(/Missing quality tools:.*install_quality_tools/, extra_env: { 'PATH' => empty })
+  test('missing managed tools fail before analysis despite tools on PATH') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    FileUtils.rm(File.join(toolchain.slot, 'tools/detekt'))
+    f.reject(/checksum\/identity mismatch.*install_quality_tools/)
     assert(f.calls.empty?, 'analyzer started despite missing tool')
+  end
+
+  test('wrong managed version fails even with a consistent local receipt') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    target = File.join(toolchain.slot, 'tools/swiftlint')
+    File.write(target, "#!#{RUBY}\nputs 'unexpected-version'\n")
+    f.refresh_receipt
+    f.reject(/swiftlint version mismatch/)
+    assert(f.calls.empty?, 'analysis ran with wrong version')
+  end
+
+  test('wrong core runtime fails before tool analysis') do |f|
+    lock = JSON.parse(File.read(File.join(f.root, 'quality-tools.json')))
+    lock['ruby']['version'] = '0.0.0'
+    f.write('quality-tools.json', JSON.pretty_generate(lock))
+    f.stage
+    f.reject(/Ruby version mismatch/)
+    assert(f.calls.empty?, 'analysis ran with wrong Ruby')
+  end
+
+  test('rule drift and ignored nested configuration fail before analysis') do |f|
+    f.write('.swiftlint.yml', "disabled_rules: []\n")
+    f.stage
+    f.reject(/Rule profile mismatch/)
+    f.copy('.swiftlint.yml')
+    f.write('.gitignore', "ignored/\n.quality/\nfeature/src/.editorconfig\n")
+    f.write('feature/src/.editorconfig', "[*]\nktlint = disabled\n")
+    f.stage
+    f.reject(/Unpinned analyzer configuration/)
+    assert(f.calls.empty?, 'analysis ran with rule drift')
+  end
+
+  test('global PATH tools cannot shadow the locked tools') do |f|
+    path = File.join(f.env.fetch('PATH').split(':').first, 'ktlint')
+    File.write(path, "#!#{RUBY}\nabort 'shadow was used'\n")
+    f.pass
+    assert(f.calls.size == 5, 'managed analyzer count differs')
+  end
+
+  test('verified offline setup reuse does not call download or build') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    toolchain.define_singleton_method(:build_install!) { raise 'unexpected build/network' }
+    toolchain.install!
+    assert(f.calls.empty?, 'reuse ran source analysis')
+  end
+
+  test('concurrent setup fails without touching the active store') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    File.open(File.join(f.root, '.quality/install.lock'), File::RDWR | File::CREAT, 0o600) do |lock|
+      lock.flock(File::LOCK_EX)
+      begin
+        toolchain.install!
+        raise 'concurrent installer unexpectedly succeeded'
+      rescue PinnedQuality::Failure => error
+        assert(error.message.include?('Another quality installer'), error.message)
+      end
+    end
+    f.pass
+  end
+
+  test('incomplete receipt blocks use and explicit repair recovers the selected slot') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    FileUtils.rm(File.join(toolchain.slot, 'receipt.json'))
+    f.reject(/Missing complete quality installation/)
+    begin
+      toolchain.install!
+      raise 'incomplete installation reused'
+    rescue PinnedQuality::Failure => error
+      assert(error.message.include?('Missing complete'), error.message)
+    end
+    # Exercise the actual repair/ownership/locking path, with a local fixture builder.
+    toolchain.define_singleton_method(:build_install!) do
+      f.setup_fake_toolchain(f.env.fetch('PATH').split(':').first)
+    end
+    toolchain.install!(repair: true)
+    f.pass
+  end
+
+  test('corrupt downloads fail checksum verification before extraction') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    # Replace transport only; exercise the production checksum boundary.
+    toolchain.define_singleton_method(:run!) do |*args, **_options|
+      File.write(args[args.index('--output') + 1], 'corrupt artifact')
+    end
+    Dir.mktmpdir('mobi-quality-checksum-') do |temp|
+      begin
+        toolchain.send(:download, { 'url' => 'https://example.invalid/pinned', 'sha256' => '0' * 64 }, temp)
+        raise 'corrupt download accepted'
+      rescue PinnedQuality::Failure => error
+        assert(error.message.include?('checksum mismatch'), error.message)
+      end
+    end
+  end
+
+  test('failed installation removes temporary state and publishes no receipt') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    FileUtils.rm_rf(toolchain.slot)
+    toolchain.define_singleton_method(:download) { |_item, _directory| raise PinnedQuality::Failure, 'simulated network failure' }
+    begin
+      toolchain.install!
+      raise 'failed setup accepted'
+    rescue PinnedQuality::Failure => error
+      assert(error.message.include?('simulated network failure'), error.message)
+    end
+    assert(!Dir.exist?(toolchain.slot), 'failed setup published a slot')
+    assert(Dir.glob(File.join(f.root, '.quality/build-*')).empty?, 'temporary build directory leaked')
+  end
+
+  test('interrupted installation removes temporary state and publishes no receipt') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    FileUtils.rm_rf(toolchain.slot)
+    toolchain.define_singleton_method(:download) { |_item, _directory| raise Interrupt }
+    begin
+      toolchain.install!
+      raise 'interrupted setup accepted'
+    rescue Interrupt
+      assert(!Dir.exist?(toolchain.slot), 'interrupted setup published a slot')
+      assert(Dir.glob(File.join(f.root, '.quality/build-*')).empty?, 'temporary build directory leaked')
+    end
+  end
+
+  test('repair refuses unowned state and symlinked stores') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    FileUtils.rm(File.join(toolchain.slot, '.mobi-quality-owned'))
+    begin
+      toolchain.install!(repair: true)
+      raise 'unowned state removed'
+    rescue PinnedQuality::Failure => error
+      assert(error.message.include?('unowned'), error.message)
+    end
+    assert(Dir.exist?(toolchain.slot), 'unowned state was deleted')
+    FileUtils.mv(File.join(f.root, '.quality'), File.join(f.root, '.quality-saved'))
+    File.symlink('.quality-saved', File.join(f.root, '.quality'))
+    begin
+      PinnedQuality::Toolchain.new(f.root)
+      raise 'symlinked store accepted'
+    rescue PinnedQuality::Failure => error
+      assert(error.message.include?('Symlinked quality store'), error.message)
+    end
+  end
+
+  test('manifest inspection works without installing quality tools') do |f|
+    toolchain = PinnedQuality::Toolchain.new(f.root)
+    FileUtils.rm_rf(File.join(f.root, '.quality'))
+    ok, output = f.run('./scripts/dev/lint.sh', '--manifest')
+    assert(ok && JSON.parse(output)['inputs']['kotlin'] == ['feature/src/Example.kt'], output)
   end
 
   def self.run

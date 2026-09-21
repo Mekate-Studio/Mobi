@@ -5,7 +5,7 @@ require_relative 'test_quality'
 
 Dir.mktmpdir('mobi-quality-real-') do |temp|
   fixture = QualityTest::Fixture.new(temp)
-  fixture.env['PATH'] = ENV.fetch('PATH') # Select installed tools, not fixture tools.
+  fixture.use_installed_toolchain # Copy and verify the real pinned store at a new path.
   fixture.new_module
   swift = 'ios-app/Dependencies/Sources/PackageValue.swift'
   fixture.write(swift, "public enum PackageValue {\n    public static let answer = 42\n}\n")

@@ -35,6 +35,13 @@ Install Ruby dependencies:
 bundle install
 ```
 
+Install the pinned static-quality tools explicitly on macOS (Xcode command-line
+tools are required; the first run downloads artifacts and builds a private Ruby):
+
+```bash
+./scripts/ci/install_quality_tools.sh
+```
+
 Set a writable Kotlin Toolchain cache:
 
 ```bash
@@ -125,7 +132,10 @@ pushing tool orchestration into CI or the Gradle bridge.
 The pre-commit hook uses `just check`'s script. CI's `quality-check` job uses
 explicit static mode without local staging requirements. See
 [static gate inputs and recovery](docs/reference/local-development.md#static-gate-inputs-and-recovery)
-and the [first slice validation](docs/maintenance/first-slice-validation.md).
+and the [pinned-tool setup and validation](docs/maintenance/second-slice-validation.md).
+[`quality-tools.json`](quality-tools.json) locks the analyzers, their private
+Ruby/Java runtimes, artifact checksums and rule profiles. Quality commands verify
+the installation offline; they never install or select tools from PATH.
 
 The current tool split is:
 

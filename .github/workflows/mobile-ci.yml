@@ -87,16 +87,12 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/cache@v6
         with:
-          path: ~/Library/Caches/Homebrew/downloads
-          key: ${{ runner.os }}-${{ runner.arch }}-quality-tools-${{ hashFiles('scripts/ci/install_quality_tools.sh') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-quality-tools-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
-      - name: Install missing quality tools
+          path: .quality
+          key: ${{ runner.os }}-${{ runner.arch }}-macos26-quality-${{ hashFiles('quality-tools.json', 'scripts/quality_tools.rb') }}
+      - name: Install or verify pinned quality tools
         run: ./scripts/ci/install_quality_tools.sh
+      - name: Test quality contracts
+        run: /usr/bin/ruby scripts/dev/test_quality.rb
       - name: Run quality checks
         run: ./scripts/ci/run_job.sh quality-check
 

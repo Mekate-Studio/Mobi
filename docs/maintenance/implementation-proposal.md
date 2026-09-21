@@ -1,7 +1,9 @@
 # Staged implementation proposal
 
-Status: slice 1 implemented and locally validated; slices 2–12 remain proposed.
-See [first slice validation](first-slice-validation.md). The
+Status: slices 1–2 implemented and locally validated; slices 3–12 remain proposed.
+See [first slice validation](first-slice-validation.md) and
+[second slice validation](second-slice-validation.md), including the outstanding
+hosted/Intel validation limits. The
 [audit](audit.md), [compatibility matrix](kotlin-compatibility.md) and
 [workflow design](workflow-design.md) define the evidence behind this backlog.
 Each slice should be a small reviewed integration into `main` under existing

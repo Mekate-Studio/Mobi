@@ -5,6 +5,7 @@ require 'digest'
 require 'json'
 require 'open3'
 require 'yaml'
+require_relative '../quality_tools'
 
 module Quality
   class Failure < StandardError; end
@@ -220,11 +221,8 @@ module Quality
   end
 
   class Runner
-    TOOLS = %w[ktlint detekt swiftformat swiftlint shellcheck].freeze
-
     def initialize(mode)
       @mode = mode
-      @tools = mode == 'format' ? %w[ktlint swiftformat] : TOOLS
       @timings = {}
       @versions = {}
     end
@@ -239,18 +237,13 @@ module Quality
         puts JSON.pretty_generate(manifest)
         return
       end
-      require_tools!
+      require_tools!(inventory)
       puts "[quality] runtime=#{JSON.generate('ruby' => RUBY_VERSION, 'platform' => RUBY_PLATFORM, 'git' => Quality.git('--version').strip)}"
       puts "[quality] mode=#{@mode} inputs=#{inventory.groups.transform_values(&:length).to_json}"
       puts "[quality] index_sha256=#{initial}" if guard
       puts "[quality] manifest=#{JSON.generate(manifest)}"
-      @tools.each do |tool|
-        output, status = Open3.capture2e(tool, '--version')
-        raise Failure, "Cannot read #{tool} version: #{output.strip}" unless status.success?
-
-        @versions[tool] = output.strip
-      end
       puts "[quality] versions=#{@versions.to_json}"
+      puts "[quality] lock_sha256=#{@toolchain.lock_sha}"
       begin
         analyze(inventory.groups)
       ensure
@@ -267,16 +260,12 @@ module Quality
 
     private
 
-    def require_tools!
-      missing = @tools.reject do |tool|
-        ENV.fetch('PATH', '').split(File::PATH_SEPARATOR).any? do |dir|
-          path = File.join(dir, tool)
-          File.file?(path) && File.executable?(path)
-        end
-      end
-      return if missing.empty?
+    def require_tools!(inventory)
+      @toolchain = PinnedQuality::Toolchain.new(Dir.pwd)
+      expected = @toolchain.lock.fetch('ruby').fetch('version')
+      raise Failure, "Quality Ruby version mismatch: expected #{expected}, got #{RUBY_VERSION}; use the repository shell entry point" unless RUBY_VERSION == expected
 
-      raise Failure, "Missing quality tools: #{missing.join(', ')}. See docs/reference/local-development.md and run ./scripts/ci/install_quality_tools.sh explicitly on macOS; this gate never installs tools."
+      @versions = @toolchain.verify!(inventory.groups.values.flatten.uniq)
     end
 
     def clock
@@ -285,7 +274,7 @@ module Quality
 
     def invoke(tool, args, env = {})
       start = clock
-      success = system(env, tool, *args)
+      success = system(PinnedQuality::Toolchain::CLEAN_ENV.merge(env), *@toolchain.command(tool), *args)
       @timings[tool] = (clock - start).round(3)
       raise Failure, "#{tool} failed; fix the reported issues and rerun" unless success
     end
@@ -310,7 +299,7 @@ module Quality
         end
       end
       if @mode != 'format' && !paths['shell'].empty?
-        invoke('shellcheck', ['--external-sources', '--source-path=SCRIPTDIR', '--'] + paths['shell'])
+        invoke('shellcheck', ['--norc', '--external-sources', '--source-path=SCRIPTDIR', '--'] + paths['shell'])
       end
     end
   end
@@ -324,7 +313,7 @@ if $PROGRAM_NAME == __FILE__
     end
     Dir.chdir(File.expand_path('../..', __dir__))
     Quality::Runner.new(mode).run(manifest_only: ARGV == ['--manifest'])
-  rescue Quality::Failure, SystemCallError => error
+  rescue Quality::Failure, PinnedQuality::Failure, SystemCallError => error
     warn "[quality] FAIL: #{error.message}"
     exit 1
   end

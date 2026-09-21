@@ -1,4 +1,5 @@
 .DS_Store
+/.quality/
 /.gradle/
 /gradle-bridge/.gradle/
 /.amper/
