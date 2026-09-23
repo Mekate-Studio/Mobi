@@ -30,6 +30,10 @@ ci_resolve_ios_simulator_destination() {
   ')"
 
   if [[ -z "${simulator_id}" ]]; then
+    if [[ "${MOBI_VALIDATION:-0}" == 1 ]]; then
+      printf 'Validation needs an existing available iPhone simulator; prepare one outside the commit gate.\n' >&2
+      return 1
+    fi
     local runtime_id=""
     local device_type_id=""
 

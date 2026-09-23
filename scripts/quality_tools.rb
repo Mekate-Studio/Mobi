@@ -306,15 +306,22 @@ if $PROGRAM_NAME == __FILE__
       trap('TERM') { raise Interrupt }
       toolchain.install!(repair: ARGV == ['--repair'])
     when 'run'
+      if ARGV.first == 'precommit' && ARGV.last == '--manifest'
+        ARGV[0] = 'commit'
+      end
       if ARGV.length == 2 && %w[static commit format].include?(ARGV.first) && ARGV.last == '--manifest'
         exec(PinnedQuality::Toolchain::CLEAN_ENV, RbConfig.ruby, File.join(root, 'scripts/dev/quality.rb'), *ARGV)
       end
       toolchain.verify_files!
+      if ARGV.first == 'precommit'
+        ARGV.shift
+        exec(PinnedQuality::Toolchain::CLEAN_ENV, *toolchain.command('ruby'), File.join(root, 'scripts/dev/validate.rb'), *ARGV)
+      end
       exec(PinnedQuality::Toolchain::CLEAN_ENV, *toolchain.command('ruby'), File.join(root, 'scripts/dev/quality.rb'), *ARGV)
     when 'verify'
       puts JSON.pretty_generate('lock_sha256' => toolchain.lock_sha, 'platform' => toolchain.platform, 'versions' => toolchain.verify!)
     else
-      raise PinnedQuality::Failure, 'Usage: quality_tools.rb <install [--repair]|verify|run <static|commit|format>>'
+      raise PinnedQuality::Failure, 'Usage: quality_tools.rb <install [--repair]|verify|run <static|commit|format|precommit>>'
     end
   rescue PinnedQuality::Failure, SystemCallError, KeyError, Interrupt => error
     warn "[quality-tools] FAIL: #{error.message}"

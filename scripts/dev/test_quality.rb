@@ -30,11 +30,19 @@ module QualityTest
       @env['GIT_CONFIG_GLOBAL'] = File::NULL
       @env['GIT_CONFIG_NOSYSTEM'] = '1'
       copy('scripts/dev/quality.rb')
+      copy('scripts/dev/validate.rb')
+      copy('scripts/ci/test_modules.rb')
+      copy('scripts/ci/classify_changes.sh')
       copy('scripts/quality_tools.rb')
       copy('.ruby-version')
       copy('.swift-version')
       %w[lint format check common].each { |name| copy("scripts/dev/#{name}.sh") }
       copy('scripts/ci/run_job.sh')
+      # Native jobs are separately exercised by test_validate.rb. Keep this
+      # static-core suite independent of Android/Xcode/Toolchain installation.
+      File.rename(File.join(@root, 'scripts/ci/run_job.sh'), File.join(@root, 'scripts/ci/run_job_real.sh'))
+      write('scripts/ci/run_job.sh', "#!/bin/sh\nif [ \"$1\" = quality-check ]; then exec ./scripts/ci/run_job_real.sh \"$@\"; fi\nexit 0\n")
+      File.chmod(0o755, File.join(@root, 'scripts/ci/run_job.sh'))
       copy('scripts/ci/lib.sh')
       Dir.glob(File.join(ROOT, 'scripts/ci/lib/*.sh')).each { |path| copy(path.delete_prefix(ROOT + '/')) }
       copy('.githooks/pre-commit')

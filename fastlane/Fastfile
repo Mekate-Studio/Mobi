@@ -215,11 +215,7 @@ platform :android do
 
   desc "Runs all the tests"
   lane :test do
-    kotlin!("test -m shared-core -p android")
-    kotlin!("test -m shared-feature-home -p android")
-    kotlin!("test -m shared-feature-nearby-vehicle-map -p android")
-    kotlin!("test -m shared-di -p android")
-    kotlin!("test -m android-app -p android")
+    sh("cd '#{project_root}' && ./scripts/ci/run_android_tests.sh")
   end
 
   desc "Submit a new Internal Build to Play Store"

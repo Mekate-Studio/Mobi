@@ -3,12 +3,14 @@
 set -euo pipefail
 
 usage() {
-  printf 'Usage: %s [--paths-file <path> | <base-revision> <head-revision>]\n' "$0" >&2
+  printf 'Usage: %s [--paths-file <path> | --paths0-file <path> | <base-revision> <head-revision>]\n' "$0" >&2
 }
 
 paths_file=""
+read_options=(-d $'\n')
 
-if [[ "${1:-}" == "--paths-file" ]]; then
+if [[ "${1:-}" == "--paths-file" || "${1:-}" == "--paths0-file" ]]; then
+  [[ "$1" != --paths0-file ]] || read_options=(-d '')
   paths_file="${2:-}"
   if [[ -z "${paths_file}" || $# -ne 2 ]]; then
     usage
@@ -19,7 +21,8 @@ elif [[ $# -eq 2 ]]; then
   head_revision="$2"
   paths_file="$(mktemp "${TMPDIR:-/tmp}/mobi-changed-paths.XXXXXX")"
   trap 'rm -f "${paths_file}"' EXIT
-  git diff --name-only "${base_revision}" "${head_revision}" >"${paths_file}"
+  git diff --name-only --no-renames --no-ext-diff --no-textconv -z "${base_revision}" "${head_revision}" -- >"${paths_file}"
+  read_options=(-d '')
 else
   usage
   exit 2
@@ -49,15 +52,19 @@ select_full_validation() {
   full_validation=true
 }
 
-while IFS= read -r changed_path || [[ -n "${changed_path}" ]]; do
+while IFS= read -r "${read_options[@]}" changed_path || [[ -n "${changed_path}" ]]; do
   [[ -n "${changed_path}" ]] || continue
   path_count=$((path_count + 1))
 
   case "${changed_path}" in
+    project.yaml|kotlin|kotlin.bat|justfile|Justfile|Gemfile|Gemfile.lock|.ruby-version|quality-tools.json|gradle/*|gradle-bridge/*|fastlane/*|scripts/*|.github/workflows/*|*/module.yaml|android-app/AndroidManifest.xml|ios-app/Info.plist|ios-app/Dependencies/*|ios-app/module.xcodeproj/*)
+      select_full_validation
+      ;;
+
     README.md|CONTRIBUTING.md|SECURITY.md|CODE_OF_CONDUCT.md|LICENSE*|NOTICE*|docs/*|openspec/*|.github/ISSUE_TEMPLATE/*|.github/PULL_REQUEST_TEMPLATE*)
       ;;
 
-    shared-core/src/*|shared-core/test/*|shared-feature-*/src/*|shared-feature-*/test/*)
+    shared-core/src/*|shared-core/test/*|shared-core/src@*/*|shared-core/test@*/*|shared-feature-*/src/*|shared-feature-*/test/*|shared-feature-*/src@*/*|shared-feature-*/test@*/*)
       docs_only=false
       shared_tests=true
       android_tests=true
@@ -74,7 +81,7 @@ while IFS= read -r changed_path || [[ -n "${changed_path}" ]]; do
       android_tests=true
       ;;
 
-    android-app/src/*|android-app/resources/*|android-app/AndroidManifest.xml|android-app/module.yaml)
+    android-app/src/*|android-app/resources/*)
       docs_only=false
       android_tests=true
       android_build=true
@@ -90,7 +97,7 @@ while IFS= read -r changed_path || [[ -n "${changed_path}" ]]; do
       ios_tests=true
       ;;
 
-    ios-app/src/*|ios-app/resources/*|ios-app/Info.plist|ios-app/module.yaml|ios-app/module.xcodeproj/*)
+    ios-app/src/*|ios-app/resources/*)
       docs_only=false
       ios_tests=true
       ios_build=true
@@ -103,10 +110,6 @@ while IFS= read -r changed_path || [[ -n "${changed_path}" ]]; do
       ios_tests=true
       android_build=true
       ios_build=true
-      ;;
-
-    project.yaml|kotlin|Justfile|Gemfile|Gemfile.lock|.ruby-version|gradle/*|gradle-bridge/*|fastlane/*|scripts/ci/*|scripts/dev/*|.github/workflows/*|*/module.yaml)
-      select_full_validation
       ;;
 
     *)

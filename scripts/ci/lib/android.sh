@@ -2,6 +2,22 @@
 
 set -euo pipefail
 
+ci_prepare_android_validation_job() {
+  export MOBI_VALIDATION=1
+  ci_detect_context
+  export GRADLE_USER_HOME="${GRADLE_USER_HOME:-${CI_PROJECT_DIR}/.gradle-user-home}"
+  ci_prepare_workspace
+  ci_set_java_home
+  ci_resolve_android_sdk_root || true
+  ci_configure_path
+  ci_log_android_sdk_env
+  # Synthetic local signing only; never read release credentials or rewrite versions.
+  (
+    cd "${CI_PROJECT_DIR}"
+    ./scripts/ci/ensure_android_debug_signing_files.sh
+  )
+}
+
 ci_prepare_android_job() {
   ci_detect_context
   export GRADLE_USER_HOME="${GRADLE_USER_HOME:-${CI_PROJECT_DIR}/.gradle-user-home}"

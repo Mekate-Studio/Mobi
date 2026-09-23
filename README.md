@@ -126,13 +126,14 @@ pushing tool orchestration into CI or the Gradle bridge.
 
 - `just format` applies Kotlin and Swift formatting
 - `just lint` checks Kotlin, Swift (including package source), and repository shell files, including new nonignored files
-- `just check` runs those checks with index/checkout identity checks before and after analysis; stage the full intended content first
+- `just check` runs those checks once, then selected native jobs in an owned source copy; stage the full intended content first
 - `just deps` runs the local dependency update lookup
 
 The pre-commit hook uses `just check`'s script. CI's `quality-check` job uses
 explicit static mode without local staging requirements. See
 [static gate inputs and recovery](docs/reference/local-development.md#static-gate-inputs-and-recovery)
-and the [pinned-tool setup and validation](docs/maintenance/second-slice-validation.md).
+and [staged validation and recovery](docs/maintenance/third-slice-validation.md).
+Use `./scripts/dev/check.sh --plan` to inspect the staged job selection.
 [`quality-tools.json`](quality-tools.json) locks the analyzers, their private
 Ruby/Java runtimes, artifact checksums and rule profiles. Quality commands verify
 the installation offline; they never install or select tools from PATH.

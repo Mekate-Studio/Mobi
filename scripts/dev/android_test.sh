@@ -5,13 +5,10 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 source "${script_dir}/common.sh"
 
-modules=(
-  "shared-core"
-  "shared-feature-home"
-  "shared-feature-nearby-vehicle-map"
-  "shared-di"
-  "android-app"
-)
+module_list="$(ruby "${project_root}/scripts/ci/test_modules.rb")"
+[[ -n "${module_list}" ]] || { printf 'No supported host-test modules were discovered.\n' >&2; exit 1; }
+modules=()
+while IFS= read -r module_name; do modules+=("${module_name}"); done <<<"${module_list}"
 kotlin_cli_user_home="${KOTLIN_CLI_USER_HOME:-${project_root}/build/kotlin-user-home}"
 default_gradle_user_home="${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
 kotlin_cli_tmp_dir="${project_root}/build/tmp/kotlin"

@@ -1,0 +1,1483 @@
+{
+  "schema": 1,
+  "recorded_on": "2026-09-23",
+  "state": "adopted_locally_checks_passed",
+  "base_commit": "10319cd21c83b0762ec1ec42f927a85e2589c52c",
+  "scope": "Explicitly approved Swift compatibility update and bounded slice 3 cleanup-race fix; no commit, push, release-default change or bridge retirement",
+  "reviewed_rehearsal": "2026-09-22-ios-xcode27.json",
+  "patch_sha256": "9afe5db8c849dd173557fc01c7bfb61b48f17cefd26e04a277ba69f16db6e45b",
+  "adopted_files": {
+    "ios-app/Dependencies/Package.swift": {
+      "sha256": "660932e2bf06d0a1a4450b1fee3cdc2b7f843ad03fe75dccbfb4e1065265be78",
+      "executable": false
+    },
+    "ios-app/module.xcodeproj/project.pbxproj": {
+      "sha256": "49fc2bf9f939c92733bc7db779873f0578c81fda049a60941de4ec745b9428e7",
+      "executable": false
+    },
+    "ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved": {
+      "sha256": "ff2dac137208211bbd825f9218f3b125b5668eb366e91745c27541594eb139b7",
+      "executable": false
+    }
+  },
+  "adopted_versions": {
+    "swift-composable-architecture": "1.26.0",
+    "swift-sharing": "2.8.1",
+    "xctest-dynamic-overlay": "1.10.0"
+  },
+  "all_15_resolved_pins_match_rehearsal": true,
+  "unchanged_other_pins": 12,
+  "host": {
+    "os": "macOS 27.0 (26A428)",
+    "architecture": "arm64",
+    "xcode": "27.0 (27A266a)",
+    "swift": "6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)",
+    "simulator": "iPhone Air, iOS 27.0 (24A434)",
+    "test_plan": "PullRequest",
+    "builder": "gradle",
+    "system_ruby": "2.6.10"
+  },
+  "validation": {
+    "started_at": "2026-09-23T14:19:56.719509+00:00",
+    "command": "./scripts/dev/check.sh",
+    "status": "checks_passed",
+    "exit_code": 0,
+    "seconds": 572.108,
+    "finished_at": "2026-09-23T14:29:28.824192+00:00",
+    "execution": "Real repository check.sh in disposable staged checkout containing the working source and pending slice 3 implementation",
+    "source_and_index_guards": {
+      "index_sha256": "798509c68bed42d7d2f28a86a0f07d8051ee39d526c5ea4d542ccd698f46818b",
+      "inputs_sha256": "04e9c5310da2352cf932a68811b178e5169d8e615beef175a500a26044f85096",
+      "completed": [
+        {
+          "job": "android-test",
+          "seconds": 232.007
+        },
+        {
+          "job": "ios-test",
+          "seconds": 224.334
+        },
+        {
+          "job": "android-build-debug",
+          "seconds": 35.642
+        },
+        {
+          "job": "ios-build-debug",
+          "seconds": 59.981
+        }
+      ]
+    },
+    "selection": {
+      "docs_only": "false",
+      "shared_tests": "true",
+      "android_tests": "true",
+      "ios_tests": "true",
+      "android_build": "true",
+      "ios_build": "true",
+      "full_validation": "true",
+      "path_count": "36"
+    },
+    "host_test_modules": [
+      "android-app",
+      "shared-core",
+      "shared-di",
+      "shared-feature-home",
+      "shared-feature-nearby-vehicle-map"
+    ],
+    "static_timings": {
+      "ktlint": 1.035,
+      "detekt": 1.07,
+      "swiftformat": 0.106,
+      "swiftlint": 0.259,
+      "shellcheck": 1.313,
+      "total_seconds": 5.288
+    },
+    "static_versions": {
+      "ruby": "4.0.6",
+      "java": "21.0.11+10-LTS",
+      "ktlint": "1.8.0",
+      "detekt": "1.23.8",
+      "swiftformat": "0.62.1",
+      "swiftlint": "0.65.0",
+      "shellcheck": "0.11.0"
+    },
+    "android_shared_tests_passed": 38,
+    "ios_tests_passed": 12,
+    "ios_test_identities": [
+      "HomeFeatureTests/shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent()",
+      "HomeFeatureTests/shouldHaveInitialSharedStateWhenTaskIsSent()",
+      "HomeFeatureTests/shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent()",
+      "NearbyVehicleMapFeatureTests/shouldBlockReducedAccuracyLocation()",
+      "NearbyVehicleMapFeatureTests/shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads()",
+      "NearbyVehicleMapFeatureTests/shouldHaveResolvingRiderLocationWhenTaskIsSent()",
+      "NearbyVehicleMapFeatureTests/shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable()",
+      "NearbyVehicleMapFeatureTests/shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved()",
+      "NearbyVehicleMapFeatureTests/shouldMapLoadedSharedStateIntoProviderNeutralMapScene()",
+      "NearbyVehicleMapFeatureTests/shouldPreserveBlockingOverlaySeparatelyFromMapContent()",
+      "NearbyVehicleMapFeatureTests/shouldRequestVisibleRefreshWhenRefreshIsDue()",
+      "NearbyVehicleMapFeatureTests/shouldWireDeniedPermissionIntoBlockingOverlay()"
+    ],
+    "ios_summary": {
+      "result": "Passed",
+      "passedTests": 12,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "totalTestCount": 12
+    },
+    "ios_summary_sha256": "217705b76dbce982dfe4c375fb451e709f75c4ac2b7f88bc5b72ed09c1e1416a",
+    "log_sha256": "8f0bfd29817336d7e552ca1d0c80d21f634c2786d0e08c373fc16e6ede285792",
+    "raw_receipt_sha256": "560652e66b46c975e8d7faa2dadb8c387f29816a93953ce241c2566bfec11f64",
+    "caller_index_unchanged": true,
+    "application_and_dependency_inputs_match_previous_native_rehearsal": true
+  },
+  "cleanup_followup": {
+    "problem": "Two gates passed all native jobs but failed cleanup: detached Tooling API Gradle daemons kept writing registry metadata; a five-second removal retry alone was insufficient",
+    "first_attempt": {
+      "started_at": "2026-09-23T05:34:47.134567+00:00",
+      "command": "./scripts/dev/check.sh",
+      "status": "failed",
+      "exit_code": 1,
+      "seconds": 573.555,
+      "finished_at": "2026-09-23T05:44:20.687509+00:00"
+    },
+    "first_attempt_log_sha256": "99d3e8f7455caebf931bcddbc8af1ef1a652df375fd7a2d17dafffdbda0c0a9b",
+    "first_attempt_manifest_sha256": "40d636834f438d79eb96fab53445f6cff714e0ec8274c2d79591a418bf533048",
+    "first_attempt_counted_as_gate_pass": false,
+    "first_attempt_recovery": "Confirmed all five recorded Gradle processes exited, then removed the exact owned directory",
+    "second_attempt": {
+      "started_at": "2026-09-23T05:50:50.692919+00:00",
+      "command": "./scripts/dev/check.sh",
+      "status": "failed",
+      "exit_code": 1,
+      "seconds": 523.657,
+      "finished_at": "2026-09-23T05:59:34.348867+00:00"
+    },
+    "second_attempt_log_sha256": "39c03603357b9faf216e78a2740ea462c5e7397722ba7bfea8f8b435768bb78f",
+    "second_attempt_manifest_sha256": "65c0fed1815a574817dba8417d3824756792e15eb0146a272c4f730ef40301b1",
+    "second_attempt_counted_as_gate_pass": false,
+    "second_attempt_recovery": "No live Gradle daemons or open files under the retained Gradle home at inspection; removed only the owned workspace",
+    "primary_sources": [
+      "https://docs.gradle.org/current/userguide/tooling_api.html",
+      "https://docs.gradle.org/current/userguide/gradle_daemon.html"
+    ],
+    "change": "Stop each registered Gradle version through its installed owned distribution, offline and with an explicit private Gradle user home and pinned Java. Bound shutdown at 30 seconds per version; missing or escaping launchers/registries, nonzero exit or timeout retain the owned recovery path and prevent a pass. Retry only ENOTEMPTY removal errors for five seconds.",
+    "implementation_sha256": "9559c7f6aa40e7e953307bd90ae59f9cec5121029823bc3aa63a05b9967006db",
+    "regression_tests_sha256": "a6eeb195c16653818203a9290b4aefebe2c279955deb09097b99c319c7a7832d",
+    "contract_tests": {
+      "system_ruby": {
+        "version": "2.6.10",
+        "tests": 27,
+        "failures": 0,
+        "log_sha256": "9357959399ddcc9c721e427f8efc32847687b20dd08063a23efdabb2c662db12"
+      },
+      "pinned_ruby": {
+        "version": "4.0.6",
+        "tests": 27,
+        "failures": 0,
+        "log_sha256": "9357959399ddcc9c721e427f8efc32847687b20dd08063a23efdabb2c662db12"
+      }
+    }
+  },
+  "source_snapshot": {
+    "raw_manifest_sha256": "54a1e20ccbed0415fc99237633cb34b065fb64b0e8e0e8f783de71f9c90b1730",
+    "file_count": 316,
+    "omitted_personal_metadata_paths": 1,
+    "public_inputs": {
+      ".codex/skills/add-mobile-feature/SKILL.md": {
+        "sha256": "65741b6965c68a37d8f3a59911dfa8cfc09b8656622f997dedaa9db653819428",
+        "executable": false
+      },
+      ".codex/skills/openspec-apply-change/SKILL.md": {
+        "sha256": "1b6762eceee684c59f1c8ca514f3ea0e385b9e20ba27f5524e0d930ed947622b",
+        "executable": false
+      },
+      ".codex/skills/openspec-archive-change/SKILL.md": {
+        "sha256": "c76d32e1c2d9b8aed666c9a5285cb95a18cabfab00d7ac2f2cedab220618642e",
+        "executable": false
+      },
+      ".codex/skills/openspec-explore/SKILL.md": {
+        "sha256": "fc758110421ebfceb25bfc14ee1950017ccf5d05db7820383916a3d420c63c62",
+        "executable": false
+      },
+      ".codex/skills/openspec-propose/SKILL.md": {
+        "sha256": "271af996c5694c72068667c57992e494468f7e4557f9ece6eb41b5e8a656e847",
+        "executable": false
+      },
+      ".codex/skills/tdd/SKILL.md": {
+        "sha256": "1d0a1439aefa3ebe6a8fe83b5bb4559610d75268edd0bd4ef7d391d841742fc5",
+        "executable": false
+      },
+      ".codex/skills/tdd/deep-modules.md": {
+        "sha256": "f2123700bf953db1740625686c75bdd145efd486357c47c6818c869fee657a32",
+        "executable": false
+      },
+      ".codex/skills/tdd/interface-design.md": {
+        "sha256": "764c5ff0e3fa6b4ab7095eb65ccc7201e090baf19fa16051dfdb72c06d27417d",
+        "executable": false
+      },
+      ".codex/skills/tdd/mocking.md": {
+        "sha256": "3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef",
+        "executable": false
+      },
+      ".codex/skills/tdd/refactoring.md": {
+        "sha256": "54fced22dd1911b7094c3fe7979b7c1a40d40be307482c4adf7dc0588f27d6cc",
+        "executable": false
+      },
+      ".codex/skills/tdd/tests.md": {
+        "sha256": "e12182f5c4c6a844b7c6ab4b8d2623b642aaaae5460fe58ed087efd4f3d5fb8a",
+        "executable": false
+      },
+      ".editorconfig": {
+        "sha256": "467be540024f70ce324128a100f7b7f63af67f2bb5bfc887a1a4fdc5f30aacea",
+        "executable": false
+      },
+      ".githooks/pre-commit": {
+        "sha256": "bb4c6ae61def89d83cb857cf29479d57f62485071bb27535f9edba025d3224f8",
+        "executable": true
+      },
+      ".github/ISSUE_TEMPLATE/architecture_proposal.md": {
+        "sha256": "7252cdeaa3e31e5113b38e615d4a3304c8f894147b2028dab48610cd8f89d167",
+        "executable": false
+      },
+      ".github/ISSUE_TEMPLATE/bug_report.md": {
+        "sha256": "f961ca568afd2318f260ae13b1b089080d7c80f378c29b21f7fe5f923bf04cbd",
+        "executable": false
+      },
+      ".github/ISSUE_TEMPLATE/documentation_issue.md": {
+        "sha256": "68b642f5943255405dace8f9b30f2cf72e514491e97d11480ac8e57c530a7209",
+        "executable": false
+      },
+      ".github/pull_request_template.md": {
+        "sha256": "10bd6f04a3deb3fb0bcfa14f65345219219298df01931d0d625f472cb300f0fb",
+        "executable": false
+      },
+      ".github/workflows/dependency-compatibility.yml": {
+        "sha256": "e9b19d42fc517017d53cba6b213d338d620244a0ff2f4d1cf3a772b961510f89",
+        "executable": false
+      },
+      ".github/workflows/mobile-ci.yml": {
+        "sha256": "ca024b571871d0f99b403fb5850de8145de9717d8613ec15a57e0379e119ae50",
+        "executable": false
+      },
+      ".github/workflows/mobile-release.yml": {
+        "sha256": "91d2c89d579a9eae576a220616b1b984a54cd9d8c8d632eca9e3ab9fb27c5d05",
+        "executable": false
+      },
+      ".github/workflows/nightly-mobile-candidate.yml": {
+        "sha256": "a0d357198b278cd53cbf4df94e64c18c47ba1a4aad256bc0e00ae43c9cab6b62",
+        "executable": false
+      },
+      ".gitignore": {
+        "sha256": "badf6e5a0c77a1c17d32303153c49cd20b1b336e0f4f12cf6936163312607b54",
+        "executable": false
+      },
+      ".ruby-version": {
+        "sha256": "c8b6d7eee0f9b7cb68c21aaed40c90476b72c8f4b843d0686591cdbb13724034",
+        "executable": false
+      },
+      ".run/Android Build Debug.run.xml": {
+        "sha256": "6541ce6c3e5304b88e56aa9d973ee42c89c5dba6cda5e580642b154759d85cf9",
+        "executable": false
+      },
+      ".run/Android Emulators.run.xml": {
+        "sha256": "eeff8a8f58707c834a003f5bc95c98cb6e5c7e2735be6d47a3d555fc73bf8a63",
+        "executable": false
+      },
+      ".run/Android Run (Wait for Debugger).run.xml": {
+        "sha256": "f559ee39b3b96d5cbfcad7d781b62d2f72e27cfc8745d53fde7e4899fa4674ec",
+        "executable": false
+      },
+      ".run/Android Run.run.xml": {
+        "sha256": "fdcad8e800bb681b90ed23e987231ebf317bcec4fa7a78f6245bfb4847b27b96",
+        "executable": false
+      },
+      ".run/Android Test.run.xml": {
+        "sha256": "fea0d12ed0b49001ebda4fe6aa54cb6f7aac8c5adbd6b86d471e86433bb77694",
+        "executable": false
+      },
+      ".run/Doctor.run.xml": {
+        "sha256": "dbb34e9ff8b79707eb1dd4eaa6c9bb0938843b138b9cd07aecf696d0269b8dad",
+        "executable": false
+      },
+      ".run/iOS Build Debug.run.xml": {
+        "sha256": "176a07f4af3e1d3c8ba06fa06a4cffe192d8e8bceb0670e8ffac0d27c67fce78",
+        "executable": false
+      },
+      ".run/iOS Open in Xcode.run.xml": {
+        "sha256": "7d1b64d43c5ce6c571193e34ba0a496df1b71b6f5566033c24456fba350cabfa",
+        "executable": false
+      },
+      ".swift-version": {
+        "sha256": "ca2db1b3caf41aa81d66569d675b36097be7eea8d56be7237482aa23ea3ca280",
+        "executable": false
+      },
+      ".swiftformat": {
+        "sha256": "4c5fbaacda7da375455abfb7b2ae523a6b4f1a95b4e872a8f9c13cdc361d150d",
+        "executable": false
+      },
+      ".swiftlint.yml": {
+        "sha256": "efa67c9d9c4483f08bd7f12d63b75684139e066eff3efb92a23d2033a4d4096a",
+        "executable": false
+      },
+      "AGENTS.md": {
+        "sha256": "f333b20c74ce43f514dd6c9e0fc6b672a4121de740636353b24c28e078f5376b",
+        "executable": false
+      },
+      "CODEOWNERS": {
+        "sha256": "747d5c6f3c637b29dc23645a0e42c52b48e24df3cce2e4558fe0c94a8218fc0c",
+        "executable": false
+      },
+      "CODE_OF_CONDUCT.md": {
+        "sha256": "c1c88aa58c675506adc9d1a7d66980f59a18685b286416c8cf652086d3ce4e90",
+        "executable": false
+      },
+      "CONTRIBUTING.md": {
+        "sha256": "6bc81a7b4948c9892a60b14f0bcb9fffd973ed0486c3110b6ca7cae956ae756c",
+        "executable": false
+      },
+      "Dockerfile": {
+        "sha256": "f2480356d182a3b710191c1c123a2dec337d35af44a1354be9c244804c53de39",
+        "executable": false
+      },
+      "Gemfile": {
+        "sha256": "429fda4bb90a2e2b94bc81e8944e1dfb8db5f4b2ecbdb2bd816a32b96073c21e",
+        "executable": false
+      },
+      "Gemfile.lock": {
+        "sha256": "7bfd01395acddf0aaefd36bfc2065ae117100f2cd3e2aa68165576b43f13569c",
+        "executable": false
+      },
+      "Justfile": {
+        "sha256": "6e2967472ee9a8bf05a6b3813ff8428c9751981918c3f84c5d132c889ff868db",
+        "executable": false
+      },
+      "LICENSE": {
+        "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+        "executable": false
+      },
+      "README.md": {
+        "sha256": "89f1d6bc560fd2c2b9cf138b9ca175190974c8cce69dc48307736cfc0ad69cfc",
+        "executable": false
+      },
+      "SECURITY.md": {
+        "sha256": "ce59c06b8b52ef40450168ff0030222b1240fba34181c87ec1c81411f56f6c6b",
+        "executable": false
+      },
+      "android-app/.gitignore": {
+        "sha256": "5b46eb48d96e8571e8c93e4ef4f6ffbe6807b6d7350664a36a064e1167a32718",
+        "executable": false
+      },
+      "android-app/keystore.properties.example": {
+        "sha256": "06530b32edb7173eee115a5fc8bb9833c00453033027e8eb5427e77ac20e75b0",
+        "executable": false
+      },
+      "android-app/module.yaml": {
+        "sha256": "3199ebfc29461a160e81da5acdb7705c397511418b9a8a1d3d064ddb4babdf19",
+        "executable": false
+      },
+      "android-app/proguard-rules.pro": {
+        "sha256": "4f7271d40584f1c48ef5f9c12076333dbb8b1f1ac463efa230db47f7968a8fed",
+        "executable": false
+      },
+      "android-app/src/AndroidAppGraph.kt": {
+        "sha256": "39f6837d78da2f943d5d1c40a445c985b2e49b203736313336a88186db17e5ab",
+        "executable": false
+      },
+      "android-app/src/AndroidManifest.xml": {
+        "sha256": "46d0f2a6e189af72ae648a7fb710ba9f4e13112d485a63644a4a6f7c5327fafb",
+        "executable": false
+      },
+      "android-app/src/AppShell.kt": {
+        "sha256": "07472f193f613cc55bcee6d8bf90e292dc6d9eec64fd78b22bb6f18c1ab3dbf2",
+        "executable": false
+      },
+      "android-app/src/MainActivity.kt": {
+        "sha256": "bc4276156ad35ee7e7ac56f6145d75335b30a2bc0292cabef8b1495bfc62bed5",
+        "executable": false
+      },
+      "android-app/src/home/HomePresenter.kt": {
+        "sha256": "66aa04a52b910014a3ec588804b7df882dc07cc751732a91b6e109c61b6ffe86",
+        "executable": false
+      },
+      "android-app/src/home/HomePresenterStateProducer.kt": {
+        "sha256": "366679228f855e1bb117e22b0464ce3077e0c6bbb7f3faee95fe089c43ddf2e7",
+        "executable": false
+      },
+      "android-app/src/home/HomeScreen.kt": {
+        "sha256": "964629ff4631c3bcdd2b72160f47d88ba88e739d823499c75b5431a692e411b1",
+        "executable": false
+      },
+      "android-app/src/home/HomeUiFactory.kt": {
+        "sha256": "822c201eccdc2969cbc919ec9f38c45526ddd8993e33d07f71c4c4e571743528",
+        "executable": false
+      },
+      "android-app/src/nearbyvehiclemap/AndroidNearbyVehicleLocationResolver.kt": {
+        "sha256": "2ca0ff387eb2f0da15dbc027f7ad0713f859f42c381de9d81a12d73002b4bcf3",
+        "executable": false
+      },
+      "android-app/src/nearbyvehiclemap/NearbyVehicleMapBasemapConfig.kt": {
+        "sha256": "48b00e409a7c8d3ec176fb4028e261c3e72dc77000d6e039170a482565128aad",
+        "executable": false
+      },
+      "android-app/src/nearbyvehiclemap/NearbyVehicleMapPresentation.kt": {
+        "sha256": "97b381e94d122e191d5378f6194ae2a053300398d400130ef53e12b3a8c10ffd",
+        "executable": false
+      },
+      "android-app/src/nearbyvehiclemap/NearbyVehicleMapPresenter.kt": {
+        "sha256": "ac39e7afafcf4ee103cb4881dbc056a9d61b7be3222882d01efbd5132d043f4a",
+        "executable": false
+      },
+      "android-app/src/nearbyvehiclemap/NearbyVehicleMapPresenterStateProducer.kt": {
+        "sha256": "d1fbb2c6f13423929182b08c8eb65f3ec87ded5b8e4437ab87727e2139789eaa",
+        "executable": false
+      },
+      "android-app/src/nearbyvehiclemap/NearbyVehicleMapRenderer.kt": {
+        "sha256": "701427e0ecd0ffb19f179792b0944cedbac3bd662cf747dfde2e8a1dc09e746c",
+        "executable": false
+      },
+      "android-app/src/nearbyvehiclemap/NearbyVehicleMapScreen.kt": {
+        "sha256": "f176f897511d9bb4860bfe89a001ac978a104992b4ffbe4f3f886727afec6057",
+        "executable": false
+      },
+      "android-app/src/nearbyvehiclemap/NearbyVehicleMapUiFactory.kt": {
+        "sha256": "75874b894facc86b4847b3ed25482e13c3e4c6ebd82c44e0ef4310274ad830bf",
+        "executable": false
+      },
+      "android-app/src/res/drawable/ic_launcher_background.xml": {
+        "sha256": "2e865816056809989b22b192d49ed0cfbcccc20994b44231d0f1d0ec3e712e65",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-anydpi-v26/ic_launcher.xml": {
+        "sha256": "bf9bea0548472a623eff58a42bba318b23cfdba6fd587f10e5ee06e035ebc330",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-anydpi-v26/ic_launcher_round.xml": {
+        "sha256": "bf9bea0548472a623eff58a42bba318b23cfdba6fd587f10e5ee06e035ebc330",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-hdpi/ic_launcher.png": {
+        "sha256": "b383dc9cb647b41bf1b8b032ec5a665d17c8f61f01f947dae452c66c15a47f59",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-hdpi/ic_launcher_foreground.png": {
+        "sha256": "2a463df8be70c802ad9d9e2e9f9113c090584a150c4770d1d0d99e7ab3e01f42",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-hdpi/ic_launcher_round.png": {
+        "sha256": "b383dc9cb647b41bf1b8b032ec5a665d17c8f61f01f947dae452c66c15a47f59",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-mdpi/ic_launcher.png": {
+        "sha256": "b5cf0285a25aeddd89c38ea1c23278a5935ae084657f86ac1d18f40dae4c9af9",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-mdpi/ic_launcher_foreground.png": {
+        "sha256": "569d108c7ba47592136f71c1c70e1557a7f33dbf345773f8673cdc2558e23b0d",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-mdpi/ic_launcher_round.png": {
+        "sha256": "b5cf0285a25aeddd89c38ea1c23278a5935ae084657f86ac1d18f40dae4c9af9",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xhdpi/ic_launcher.png": {
+        "sha256": "275c2d88d839dfec1b40f2a30527c74c10ea0a0a2ae372b8be2b9112f08c613f",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xhdpi/ic_launcher_foreground.png": {
+        "sha256": "d1db0ff50fc9f140dd28c35fec8c5782c197c8fff46649ee7bb300df7fa8eaec",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xhdpi/ic_launcher_round.png": {
+        "sha256": "275c2d88d839dfec1b40f2a30527c74c10ea0a0a2ae372b8be2b9112f08c613f",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xxhdpi/ic_launcher.png": {
+        "sha256": "dbb188d443553b2adb249eac8437ffb96677f1c7cd792bc7318455ad91c18f5a",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xxhdpi/ic_launcher_foreground.png": {
+        "sha256": "12b4a65610c50a389151e98f686d5d435940b7ec23aec0d9eedb7c7162826d4f",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xxhdpi/ic_launcher_round.png": {
+        "sha256": "dbb188d443553b2adb249eac8437ffb96677f1c7cd792bc7318455ad91c18f5a",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xxxhdpi/ic_launcher.png": {
+        "sha256": "c2909ab69d3131ee92f994fa4d0900e06bf6b759a6c5f7e0f49a73c573f13962",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xxxhdpi/ic_launcher_foreground.png": {
+        "sha256": "664c447f80000fdcc46e6f2e330681c50c683730e2113d2919721894376911e6",
+        "executable": false
+      },
+      "android-app/src/res/mipmap-xxxhdpi/ic_launcher_round.png": {
+        "sha256": "c2909ab69d3131ee92f994fa4d0900e06bf6b759a6c5f7e0f49a73c573f13962",
+        "executable": false
+      },
+      "android-app/src/res/values/strings.xml": {
+        "sha256": "97626ebbcbc3fdb267d8a823d2efee8bf95c3b0247fe7d8559d1f752437a3a3b",
+        "executable": false
+      },
+      "android-app/test/home/HomePresenterStateProducerTest.kt": {
+        "sha256": "c387c55c29133aed977bb1c0ace46e127076e79a1cad809314513cd0c7757e93",
+        "executable": false
+      },
+      "android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterStateProducerTest.kt": {
+        "sha256": "68d3ff5d99f7a27d38440469fb8f6544360c3cc9b2ac88850a73d42a01474840",
+        "executable": false
+      },
+      "detekt.yml": {
+        "sha256": "0c13835a8aa640c717f7bea8ed9228a6c509196cab068913224c25505fb922b2",
+        "executable": false
+      },
+      "docs/adr/0001-native-shells-with-shared-feature-state.md": {
+        "sha256": "8d8e1d8b301243cd70e27b807101d7aaa3d34765327e9c81fdb0d7818da6f716",
+        "executable": false
+      },
+      "docs/adr/0002-shared-compose-entry-points-live-in-feature-ui-modules.md": {
+        "sha256": "c12e2ab4a832a1fdd60747c3bb39c7e14c6d30ab7416f451b0b9be57382161f7",
+        "executable": false
+      },
+      "docs/adr/0003-xcode-owns-swift-packages-and-gradle-builds-kotlin-for-ios.md": {
+        "sha256": "e1a71ee6f3213a6e4bdb3ea4a6d91835a2e988ca0865cbeb79c3670133da2f57",
+        "executable": false
+      },
+      "docs/adr/0004-metro-owns-shared-kotlin-dependency-injection.md": {
+        "sha256": "c459dde5a3db052cf498a208511a5d32d08b03df55573ca5bed17068fa94b794",
+        "executable": false
+      },
+      "docs/adr/0005-ios-uses-tca-dependencies-with-a-lightweight-app-composition-root.md": {
+        "sha256": "a8ed2ed2def114ab314976c0a6a6365c1f89e303483d65ae4aa25a0c6d4749ad",
+        "executable": false
+      },
+      "docs/adr/0006-shared-async-feature-state-uses-sealed-loadable-and-skie.md": {
+        "sha256": "825ae8acc9ac3d1202e4cbd187b979a0d47176aaaa1f6e1da406412e910b7cb4",
+        "executable": false
+      },
+      "docs/adr/README.md": {
+        "sha256": "52dc1f0fe6c1b21d9c3fec70f88d3aeb55770a48757ddcaba5b0dcbb6a339fc4",
+        "executable": false
+      },
+      "docs/maintenance/README.md": {
+        "sha256": "99c87754fc3eff23732970c3c25fd0fc94af8cf35c2ca1d98bafdd765f7c0335",
+        "executable": false
+      },
+      "docs/maintenance/audit.md": {
+        "sha256": "b3f4ca9dd7e86cfadfa6f3d71ae84dbcae28767c2af8cb432a992bc61c82d2f3",
+        "executable": false
+      },
+      "docs/maintenance/dependency-review-playbook.md": {
+        "sha256": "965fc257c15982895d0d70a0a0f1fa3064cebebf071af31eddf71c963bbf5c24",
+        "executable": false
+      },
+      "docs/maintenance/elixir-profile.md": {
+        "sha256": "d1c8adaf6519c6a25013cffa6b1a1e8a25016276d31a3563f32121625fba8c9d",
+        "executable": false
+      },
+      "docs/maintenance/evidence/2026-09-19.json": {
+        "sha256": "5e3be8426d574d91255c54f10d2355ee0b512397802419e43e041e9fd3d5194e",
+        "executable": false
+      },
+      "docs/maintenance/evidence/2026-09-20-slice-2.json": {
+        "sha256": "0ed600651d5fda2b9dc95884b7f681bb9d739f3df8a5bc698d528c556fb28ed0",
+        "executable": false
+      },
+      "docs/maintenance/evidence/2026-09-20-static-gate.json": {
+        "sha256": "bfc07194a61140493e86ab7134ffa8848ebda96ca9bfec4ce7fc3045f2eb5626",
+        "executable": false
+      },
+      "docs/maintenance/evidence/2026-09-22-ios-xcode27.json": {
+        "sha256": "984423e8c56e90092b59eb778b8be35966d3c9793c5753da2d7c6cbf2434923c",
+        "executable": false
+      },
+      "docs/maintenance/evidence/2026-09-22-slice-3.json": {
+        "sha256": "f57cdbc81947950d3a47b805894d20e5d494727fe24969a16df41d511d713848",
+        "executable": false
+      },
+      "docs/maintenance/first-slice-validation.md": {
+        "sha256": "0098ba775f4678b713bbcdc82ee5ecc7963e00efe4c821b6a65e756b62aa7911",
+        "executable": false
+      },
+      "docs/maintenance/implementation-proposal.md": {
+        "sha256": "8f2921c7f4fd794cfc520f04b8e5dd5530e7296007a923d0d946c036c923f822",
+        "executable": false
+      },
+      "docs/maintenance/ios-xcode27-investigation.md": {
+        "sha256": "d6b0525a5ca6c87b90a7c44972752d8acc01c13e96a10aae4271d5a366add13d",
+        "executable": false
+      },
+      "docs/maintenance/kotlin-compatibility.md": {
+        "sha256": "f7a13eb5d903de98b14401b9bc76130942774f6b17352f536ba631263a83080e",
+        "executable": false
+      },
+      "docs/maintenance/rehearsals/ios-xcode27-compatibility.patch": {
+        "sha256": "9afe5db8c849dd173557fc01c7bfb61b48f17cefd26e04a277ba69f16db6e45b",
+        "executable": false
+      },
+      "docs/maintenance/second-slice-validation.md": {
+        "sha256": "a31a027d297c03a5cbcbbe435c5fb60ac8e1fcdfa5e5c8eea4077d6e042d5798",
+        "executable": false
+      },
+      "docs/maintenance/third-slice-validation.md": {
+        "sha256": "4fb71313005f1204ef16a70008b8207ba8134b3dc81c16fd58cf8afaf32b0dbe",
+        "executable": false
+      },
+      "docs/maintenance/workflow-design.md": {
+        "sha256": "df8f199f26d83f7619e17534233d7ecd917f40d38f6beb5b2f84df7b9d752f34",
+        "executable": false
+      },
+      "docs/minimal-public-sample-repo.md": {
+        "sha256": "c7bfec0da7646ef61c84e44e489b187186513a2ffb9f49aae4acf9ab1d3acb3f",
+        "executable": false
+      },
+      "docs/public-writeup.md": {
+        "sha256": "9a25b789a0c26286f896c9378976b12085ba4e45b9b5bba4277eff3af39b3055",
+        "executable": false
+      },
+      "docs/quickstart-github-actions.md": {
+        "sha256": "8274a3b19fc1011ebf29b8c29fa29f4fb824030bd03bff4d4a8607db9884f4de",
+        "executable": false
+      },
+      "docs/reference/architecture.md": {
+        "sha256": "1412941ecda8b8a1132dd6e38dceaa26d2bf24e95e4a5da04c5107dd564d2a6c",
+        "executable": false
+      },
+      "docs/reference/ci-validation.md": {
+        "sha256": "2041c89ea1ff61cea531d4113216b9703a3d72752dfe3d5187901e95c88d3a91",
+        "executable": false
+      },
+      "docs/reference/how-to-add-a-feature.md": {
+        "sha256": "c0ef5bf550cc82f731eaee8f73e23b82746c63b6064679f5b871e835f322014b",
+        "executable": false
+      },
+      "docs/reference/ios-gradle-bridge.md": {
+        "sha256": "dd160f84dbcdf89dd136e37b072aa1bf2c9023b87f2f711abc18691c6574a4dd",
+        "executable": false
+      },
+      "docs/reference/local-development.md": {
+        "sha256": "01076751c8a9435ed06ba73cde3cc8fedd1991c8095fb14b2f9843fd883cbb69",
+        "executable": false
+      },
+      "docs/reference/mobile-architecture.md": {
+        "sha256": "5e63fc9d90175973c0fe5aae2c6368bc07fde4dc052f603c980f353361ee03dd",
+        "executable": false
+      },
+      "docs/reference/platform-direction.md": {
+        "sha256": "41a3f205a8e733e4fecdce9e4fa21cd797639a3918b41cb2e4559d31d382ccc7",
+        "executable": false
+      },
+      "docs/reference/secrets.md": {
+        "sha256": "1b5adf1d82620d0faed2043a9c316f742727140aedb855038b78ba26ee3174d7",
+        "executable": false
+      },
+      "docs/reference/troubleshooting.md": {
+        "sha256": "d338ede0a83ed9fb5cab20c1500c8d8a73f0d36ee6d66809e270d40dff45a162",
+        "executable": false
+      },
+      "fastlane/Appfile": {
+        "sha256": "af141f7f2a5cfa0319d850f2ae5e06bf726218e5526af2d869572ee50da6bfb4",
+        "executable": false
+      },
+      "fastlane/Fastfile": {
+        "sha256": "064f27e228b466d09f51647cff30122ba9718127c863abd8eb5b9f63f743e7e0",
+        "executable": false
+      },
+      "fastlane/README.md": {
+        "sha256": "b1e1cbc7db9e07ba0e2ca8cca496bfd4fbf63c0cfa6f8c3b758cf86684b635ac",
+        "executable": false
+      },
+      "gradle-bridge/README.md": {
+        "sha256": "2b453f8f48aa046146915e7d47142fd2a1b7c046c96f84db73057459cbf5834d",
+        "executable": false
+      },
+      "gradle-bridge/build.gradle.kts": {
+        "sha256": "a487463586a47cb2f87113dd4be00e1a97df08e51513f542212261741539f760",
+        "executable": false
+      },
+      "gradle-bridge/gradle.properties": {
+        "sha256": "4157e306352410ced68886268fa088797314a43ec46111aa4bf9b46d42377454",
+        "executable": false
+      },
+      "gradle-bridge/gradle/wrapper/gradle-wrapper.jar": {
+        "sha256": "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7",
+        "executable": false
+      },
+      "gradle-bridge/gradle/wrapper/gradle-wrapper.properties": {
+        "sha256": "c94d41b634a5e0ff8a2f812023697b1337eebac18e9962610356a1793f72896d",
+        "executable": false
+      },
+      "gradle-bridge/gradlew": {
+        "sha256": "a5a5c199ba02189ae8c46a334223371a20599d9c298ef65e7540ede4a3f72d59",
+        "executable": true
+      },
+      "gradle-bridge/gradlew.bat": {
+        "sha256": "d539676c48b596afda64c963ec8f7ee56c7b3fe7e3b81d1dbe2d1a1e3dd9e9f8",
+        "executable": false
+      },
+      "gradle-bridge/settings.gradle.kts": {
+        "sha256": "5178e9f28068c20b61dad0b748e5af535009206f85f6f2280ef2432985c75e49",
+        "executable": false
+      },
+      "gradle-bridge/shared-kit/build.gradle.kts": {
+        "sha256": "83f57137266a3aed4a7610fbd1157dee9dbf876bf3a52b6a1b9233539020c3c4",
+        "executable": false
+      },
+      "gradle/libs.versions.toml": {
+        "sha256": "8d41c920b8e350a136295cc27781aff5b6f1fac12a844ad27c54e65c2d152e44",
+        "executable": false
+      },
+      "gradle/wrapper/gradle-wrapper.jar": {
+        "sha256": "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd",
+        "executable": false
+      },
+      "ios-app/Dependencies/Package.swift": {
+        "sha256": "660932e2bf06d0a1a4450b1fee3cdc2b7f843ad03fe75dccbfb4e1065265be78",
+        "executable": false
+      },
+      "ios-app/Dependencies/Sources/MobiIOSDependencies/MobiIOSDependencies.swift": {
+        "sha256": "f8fae7635cb7f11d04576027ec76dba870b20723848f6087b1c3c2a72a4b9f50",
+        "executable": false
+      },
+      "ios-app/module.xcodeproj/project.pbxproj": {
+        "sha256": "49fc2bf9f939c92733bc7db779873f0578c81fda049a60941de4ec745b9428e7",
+        "executable": false
+      },
+      "ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved": {
+        "sha256": "ff2dac137208211bbd825f9218f3b125b5668eb366e91745c27541594eb139b7",
+        "executable": false
+      },
+      "ios-app/module.xcodeproj/xcshareddata/xcschemes/app.xcscheme": {
+        "sha256": "ae9bbdf0b9ada4a5b8c6aa921b62c487debbb1c80d4a539bd059fa6e80b45503",
+        "executable": false
+      },
+      "ios-app/module.yaml": {
+        "sha256": "e3bdc1817d391916cc99af70cb4e67a1e6a2d2b4e93f126f0bc27959127b7996",
+        "executable": false
+      },
+      "ios-app/src/AppServices.swift": {
+        "sha256": "e2847e3ebc3f7b1f1ba24d4de7a4973da3c65e8495984b30fd4f18b34ab8e26c",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/Contents.json": {
+        "sha256": "c56cd95b869aa808ba822213cbaa82ec99ec44474ed9170363661b9f2d9aa5a5",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-1024.png": {
+        "sha256": "ec8b6e231402a7add29bd5c3caee334a900c48500e30ee268a34b282d68f5aaa",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-20.png": {
+        "sha256": "0f4e914bea4569719f043054e056d00661c7552d702895632f0eecff5130ce8d",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-20@2x-ipad.png": {
+        "sha256": "28be824d91dd552e0be40af414b63738cd77568350f04fc464acb188a493b9a2",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-20@2x.png": {
+        "sha256": "28be824d91dd552e0be40af414b63738cd77568350f04fc464acb188a493b9a2",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-20@3x.png": {
+        "sha256": "df4ff4718af82a96cea3517e44f8595d967c6e07d2fc91bb55b8f2ac9602b526",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-29.png": {
+        "sha256": "625a7ed84a4576a02f43cbbb00cbb54c61327e9bbb359f52377b7d56ca4c4280",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-29@2x-ipad.png": {
+        "sha256": "5be6ee9702c251ae8e2cc42e6ed213d75f1ee4fc19f1408421d6cfe7ea217008",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-29@2x.png": {
+        "sha256": "5be6ee9702c251ae8e2cc42e6ed213d75f1ee4fc19f1408421d6cfe7ea217008",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-29@3x.png": {
+        "sha256": "e99fe9bf90ba74b73bc416c473b603e9003c8bb844961d9e001135054daafe37",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-40.png": {
+        "sha256": "28be824d91dd552e0be40af414b63738cd77568350f04fc464acb188a493b9a2",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-40@2x-ipad.png": {
+        "sha256": "2da5c897cc336659d962c6fb92ff1e05ae21018d52df03d6e094888e3fd9f582",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-40@2x.png": {
+        "sha256": "2da5c897cc336659d962c6fb92ff1e05ae21018d52df03d6e094888e3fd9f582",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-40@3x.png": {
+        "sha256": "a37a090dbedc9c888841cab9c8f9e7f96e79c519e00a4fde2666a0216080f4c4",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-60@2x.png": {
+        "sha256": "a37a090dbedc9c888841cab9c8f9e7f96e79c519e00a4fde2666a0216080f4c4",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-60@3x.png": {
+        "sha256": "6ec0df5bd4876fe38e0aea33b26bd338df5bc2703a3ebbaf4a2d9962c58654e0",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-76.png": {
+        "sha256": "108ddbc039a0b8007d4b3df259b0cd36925aea93b5c8ea11f10d7350f2185181",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-76@2x.png": {
+        "sha256": "1cb99e431181e4d815e7333ede15eef3e4789a212429c18bdd53e26cdd422477",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-83.5@2x.png": {
+        "sha256": "0b3dc136ca0ce7adc199e9dd3b6280ccae6194adbc953afc0cde8cf68bcc6280",
+        "executable": false
+      },
+      "ios-app/src/Assets.xcassets/Contents.json": {
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomeCounterLoadable.swift": {
+        "sha256": "18360582a842a3e62d27fecff730108c1dd43a0aa7343dcf529ee62c09e05d05",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomeFeature+Action.swift": {
+        "sha256": "a214bb7eb9729078075131b29ab6376bbdb2a6863be89957916d0933052bf43b",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomeFeature+State.swift": {
+        "sha256": "7ba930ab40c2877eac34be371db00839cfbc05cb053c227cd4bf23196e736071",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomeFeature.swift": {
+        "sha256": "54ae267bf81a27ad6922901aee0948c209f0a6391a25c474debea7b6017f3d2b",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomeFeatureClient.swift": {
+        "sha256": "a1ac23560b871aba0e5541e138cedfd72d566b7fc9b935fdda627a22cee7315b",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomeHeroCard.swift": {
+        "sha256": "423399ffcf00b2c5642926066cf7d1d065094bad5093b96d1973b98fe66fe2d1",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomePrimaryActionButton.swift": {
+        "sha256": "e0e9523c2fcfb5abcb6ba2356f59f6e2bc0f1275a0f4c24ec5634bb87f967827",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomeScreenContent.swift": {
+        "sha256": "27e36201519845b2b0acdca6625afdce91ec6578d43856cd315815f09eeb21a2",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/HomeView.swift": {
+        "sha256": "e0895d763cf4b555a8836e79fd65cfe00b800e8662add33c6ab2ac4a0c0dd174",
+        "executable": false
+      },
+      "ios-app/src/Features/Home/SharedHomeDemoView.swift": {
+        "sha256": "434ee6d2ba2833214b86f171cb655b1a9a17706b3f6a01214c91f71f7ce240d4",
+        "executable": false
+      },
+      "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapBasemapConfig.swift": {
+        "sha256": "1e9af2add58363e7d969928f141542a099a7124da32eb3c8edab703590ef25f4",
+        "executable": false
+      },
+      "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+Action.swift": {
+        "sha256": "4aa3320f9b65ec3a3e35be90d8c0a2e105928deb55ce3356fbbf2331ba436f77",
+        "executable": false
+      },
+      "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift": {
+        "sha256": "6c2d850247cf86b0060cac19d736b90ef5ebf7e58b3d28d549d9e5ffc42ec1c2",
+        "executable": false
+      },
+      "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature.swift": {
+        "sha256": "de4c3df5b29afeb239bccd786a297bfaca7bc29b73b7db77e8eb4995700144b3",
+        "executable": false
+      },
+      "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeatureClient.swift": {
+        "sha256": "20b379e7840bbd46839b7a70b3fc2ae27dc69ca9219c0380a7ded61b3fad1430",
+        "executable": false
+      },
+      "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapLocationClient.swift": {
+        "sha256": "79ed764a7368126163c5683026d3376a3004a14b060c35a5e485b653a38ae68b",
+        "executable": false
+      },
+      "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapRenderer.swift": {
+        "sha256": "3ec610816b2dff232583ada91ce7467916609bf483999fc7ef5c26b04ac4e020",
+        "executable": false
+      },
+      "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapView.swift": {
+        "sha256": "7c923397aa66c65617a4fd1246724efdabab0f4ad17f9ad06550c23b539dfdfa",
+        "executable": false
+      },
+      "ios-app/src/Info.plist": {
+        "sha256": "730d507f19294c2b93d7144294499a32f2bef2035a7fba67f51851cd7ab25f64",
+        "executable": false
+      },
+      "ios-app/src/iosApp.swift": {
+        "sha256": "d6e95a8ef356ed79ac0f273d04b75bcf2555f4a059c41bd4e9ca74b103fa8f3b",
+        "executable": false
+      },
+      "ios-app/tests/Features/Home/HomeFeatureTests.swift": {
+        "sha256": "4c1d495af71783132f83127ed3316341fbde83b4896b74f3c5388d1d4a9b53f9",
+        "executable": false
+      },
+      "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift": {
+        "sha256": "382c9458a4d62c418710d6dfea12c77cb65336a1daf9cb50fb1ea158ea2da755",
+        "executable": false
+      },
+      "ios-app/tests/Plans/Nightly.xctestplan": {
+        "sha256": "d6a77541d4c81c22d4ddd328c5333016f32f339713a970e35800bdad77d8cc27",
+        "executable": false
+      },
+      "ios-app/tests/Plans/PullRequest.xctestplan": {
+        "sha256": "d4ccdb7bac8988079c4e25ed585b4a30d8bcb509dfd663a34ac393c3ce5cba85",
+        "executable": false
+      },
+      "kotlin": {
+        "sha256": "6dbcdde0bcae41705c187aefb6c91c6c29ef9079c8072a473c2149151f8d7962",
+        "executable": true
+      },
+      "kotlin.bat": {
+        "sha256": "6c314335243d896dc977db615ab3b88cc13a15c38aa00525a54af537558c0f31",
+        "executable": true
+      },
+      "openspec/changes/archive/2026-06-20-add-nearby-vehicle-map/.openspec.yaml": {
+        "sha256": "e02922cc0857f3e21cc363b396de3d8f5ad8a285cbd7ea3fbbfe088049e19372",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-add-nearby-vehicle-map/design.md": {
+        "sha256": "6d9e4f0f82ff0277001242e8f75cd591428a51232dfb2f3cc17655caa56dc1d5",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-add-nearby-vehicle-map/proposal.md": {
+        "sha256": "8fc74a99cc0a0664d5d143ed653702265aa7e0520e6411a92859e77017efa42c",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-add-nearby-vehicle-map/specs/nearby-vehicle-map/spec.md": {
+        "sha256": "c71f7fe7ecfc9c5edb3294eacc4bfe40257a3f4c4b799fc26bdb4571467950b3",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-add-nearby-vehicle-map/tasks.md": {
+        "sha256": "76a836cdb684e76a6ddcd46d5d693b55578af9f42f9ff1ded5989a4f8ad45ee2",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-adopt-maplibre-native-map-renderer/.openspec.yaml": {
+        "sha256": "d8685d464068cd9aa1ef387dfcdb6d0fb51636cbd43d2b15af040b6ef5b4d359",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-adopt-maplibre-native-map-renderer/design.md": {
+        "sha256": "d767db8d40927687265e91cd03fe9e577afe653866a30fc03dc99eb437015667",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-adopt-maplibre-native-map-renderer/proposal.md": {
+        "sha256": "f868c125914ff886ab05b02c7e735f7c85b7127142931aff6185f24982db549f",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-adopt-maplibre-native-map-renderer/specs/native-map-rendering/spec.md": {
+        "sha256": "15100a930eec08b39536e343611f7a14634fbd336d18282b76403d9e71ec44fe",
+        "executable": false
+      },
+      "openspec/changes/archive/2026-06-20-adopt-maplibre-native-map-renderer/tasks.md": {
+        "sha256": "41839718fc4a2406b6a1b6d2f53e5da09beb2439d2f325bd399a6f0d9859ead8",
+        "executable": false
+      },
+      "openspec/changes/conservative-precommit-validation/.openspec.yaml": {
+        "sha256": "af129b9ee15d74d62153581b8fddf3076a708f08915261aabfb9e78ea334de0f",
+        "executable": false
+      },
+      "openspec/changes/conservative-precommit-validation/design.md": {
+        "sha256": "c5c3395cf426b087cd7c5eb9a82bd8bfd86393a68d46ab91fed7722831bb83be",
+        "executable": false
+      },
+      "openspec/changes/conservative-precommit-validation/proposal.md": {
+        "sha256": "5c64f2d6b0f910d0792f5304dbc0135a23671259ca4a96c3fa10cfdcb3d05152",
+        "executable": false
+      },
+      "openspec/changes/conservative-precommit-validation/specs/conservative-precommit-validation/spec.md": {
+        "sha256": "0188149e728141555ef93c4e0531bf5cacc71f584a6c704c2604d6c6292c15f2",
+        "executable": false
+      },
+      "openspec/changes/conservative-precommit-validation/tasks.md": {
+        "sha256": "c36b26347e6d652b1eac0be4f6c50365470156977e09d897d512f10f10e557e9",
+        "executable": false
+      },
+      "openspec/changes/optimize-mobile-ci-validation-tiers/.openspec.yaml": {
+        "sha256": "ec0accf47d569b8f60d01e96573f6813f1f2b7d5f135a60e3fc07159f84e74c8",
+        "executable": false
+      },
+      "openspec/changes/optimize-mobile-ci-validation-tiers/design.md": {
+        "sha256": "69b0a5b5ceac2dca15f440a8cffc0eb77de81360fff49c06a3e1e4e2ccce2357",
+        "executable": false
+      },
+      "openspec/changes/optimize-mobile-ci-validation-tiers/proposal.md": {
+        "sha256": "436b114725338147394b8af37919d7a9bccc2bdf09e807481a7b44fda84cb846",
+        "executable": false
+      },
+      "openspec/changes/optimize-mobile-ci-validation-tiers/specs/mobile-ci-validation/spec.md": {
+        "sha256": "8109f601dba6295375cce0fd22cb44d6cf3394480cebf1aefbd2c025d32c3150",
+        "executable": false
+      },
+      "openspec/changes/optimize-mobile-ci-validation-tiers/tasks.md": {
+        "sha256": "2cc8b551746a0f84d72cfd66b0e1c22a87b86a0fdf83ed0afae14589c5b8bbce",
+        "executable": false
+      },
+      "openspec/changes/pin-static-quality-tools/.openspec.yaml": {
+        "sha256": "dc10040214104474c4e34e5b38359540c882aa7cfb6e7221e5d0614f1dba8fd7",
+        "executable": false
+      },
+      "openspec/changes/pin-static-quality-tools/design.md": {
+        "sha256": "8d2e37e92851592e03b927a516e5f0de901423d03564e2c85a93f1aedd89d37a",
+        "executable": false
+      },
+      "openspec/changes/pin-static-quality-tools/proposal.md": {
+        "sha256": "4e87f83d3cdcc838a0d30914f9b0086dbf24be2ee20a3a423a18673719a375c0",
+        "executable": false
+      },
+      "openspec/changes/pin-static-quality-tools/specs/pinned-quality-tools/spec.md": {
+        "sha256": "10130381989c41889dc74796de9130fb9bf6efb11f53f1b69098b8afa86f24c6",
+        "executable": false
+      },
+      "openspec/changes/pin-static-quality-tools/tasks.md": {
+        "sha256": "df97297a73b4caa97ff8c432cd43926f13cc76fa075f7589a2cc15a9f9619b82",
+        "executable": false
+      },
+      "openspec/changes/precommit-static-input-integrity/.openspec.yaml": {
+        "sha256": "e461a5cd9c263851dbb46471f9e3afd45a09338ec7b15a042283644a5ef6972b",
+        "executable": false
+      },
+      "openspec/changes/precommit-static-input-integrity/design.md": {
+        "sha256": "125e62b0f19372e7ae73c7ba765fe29183f36876fd57245e72391b59df01d64f",
+        "executable": false
+      },
+      "openspec/changes/precommit-static-input-integrity/proposal.md": {
+        "sha256": "d8b6a29c770cb8cd524689546545ae4a69c852833ade49888b4a2120e2e8f78f",
+        "executable": false
+      },
+      "openspec/changes/precommit-static-input-integrity/specs/static-quality-gate/spec.md": {
+        "sha256": "8ac24245441ef0c160b018e5d5b2c669c500347cb0520fac19ccc3ed87620d2b",
+        "executable": false
+      },
+      "openspec/changes/precommit-static-input-integrity/tasks.md": {
+        "sha256": "b418ba398c0271173f062a7c5f2a45e0dac75780276181c0b10b988dc944ad8a",
+        "executable": false
+      },
+      "openspec/changes/refine-nearby-map-location-ergonomics/.openspec.yaml": {
+        "sha256": "350d8989b278d97097f1c39296aeeb20980d0e1545ceb24a68c51976991273fa",
+        "executable": false
+      },
+      "openspec/changes/refine-nearby-map-location-ergonomics/design.md": {
+        "sha256": "dc005dbda335f16a7aae8d1cb4f3e6d37cdca45171bc825e52eb699800c7533a",
+        "executable": false
+      },
+      "openspec/changes/refine-nearby-map-location-ergonomics/proposal.md": {
+        "sha256": "d014c8afcef10fbb0dd57bd013c9af2cc2e48c21863891c5c549c54c7f062bf6",
+        "executable": false
+      },
+      "openspec/changes/refine-nearby-map-location-ergonomics/specs/app-entry-navigation/spec.md": {
+        "sha256": "725154b639a1dd7b381f32efd500e9921bc3198e8a1b8fc8768d11d7edf49d89",
+        "executable": false
+      },
+      "openspec/changes/refine-nearby-map-location-ergonomics/specs/nearby-vehicle-map/spec.md": {
+        "sha256": "a87d9302eef18e6475033e816bf3c5d7568d7ed108790e359dfb99985e2054ba",
+        "executable": false
+      },
+      "openspec/changes/refine-nearby-map-location-ergonomics/tasks.md": {
+        "sha256": "56c4d8c5951f73f3e45debc9d88923cf750634c2f2c92d4ad94aff2f0f0ff820",
+        "executable": false
+      },
+      "openspec/config.yaml": {
+        "sha256": "7f64d2448e1c83ffa6f2f3398b742fb5f2d4d3ea47b2c540a9076484977026b4",
+        "executable": false
+      },
+      "openspec/specs/native-map-rendering/spec.md": {
+        "sha256": "85041a0a12de47cb7483320c2a5b7cf31228ebe6ee67625ac8163f8fcda2fc04",
+        "executable": false
+      },
+      "openspec/specs/nearby-vehicle-map/spec.md": {
+        "sha256": "3f7f31baf3f18e8cb41d52f9283c7d1b8d32df85406c394efc89b4788e575760",
+        "executable": false
+      },
+      "project.yaml": {
+        "sha256": "2b616ca70f5a9a76124bb1e333e586f7ca7ad5d4bcbbe890a8b4b3b2eff8acc7",
+        "executable": false
+      },
+      "quality-tools.json": {
+        "sha256": "78b824822c7187b876d029a8de177f602963ecf250e33b2a632285ddb487e679",
+        "executable": false
+      },
+      "renovate.json": {
+        "sha256": "43fdb773f997285d48c1a24068f0a50d431c284440ace89c7622804ae973bf3e",
+        "executable": false
+      },
+      "scripts/ci/apply_android_version.sh": {
+        "sha256": "ada3ea05b82bca99a40f9b27ee022edbd19bb7a9102d9c9f09c172bc12121506",
+        "executable": true
+      },
+      "scripts/ci/build_android_aab.sh": {
+        "sha256": "78c63d5c3533e2fdc0c493ebcde83c1d1e5475743100adba2de2aa17facede71",
+        "executable": true
+      },
+      "scripts/ci/check_skie_kotlin_compatibility.sh": {
+        "sha256": "da941206ec3b51793f4c41c87ef842017e57f5dfda75776056cc2bd2bf8cdc8e",
+        "executable": true
+      },
+      "scripts/ci/classify_changes.sh": {
+        "sha256": "a20864f6c289178399a34f156b1f4236eeba736d523189ea1c7e97e6deac9e98",
+        "executable": true
+      },
+      "scripts/ci/ensure_android_debug_signing_files.sh": {
+        "sha256": "85a6cc6b4e0117ddf3aaae7909ba2f7a4efafebb526fd80ae60202b759c2eebe",
+        "executable": true
+      },
+      "scripts/ci/ensure_android_gradle_distribution.sh": {
+        "sha256": "315e003ca4af118c8c2337f3946a80ddc6412a9f3e267c6bf836862c1ead2512",
+        "executable": true
+      },
+      "scripts/ci/install_quality_tools.sh": {
+        "sha256": "fa42535a80cd4e4d2532ea7e1a242caa38bf0d98ad94668be51c2ea6b8805d1b",
+        "executable": true
+      },
+      "scripts/ci/lib.sh": {
+        "sha256": "50ad9c789ae8c7a46169a984fcb76ec4d21c36cad1aef4eaf0ba8fb0f3796c63",
+        "executable": true
+      },
+      "scripts/ci/lib/android.sh": {
+        "sha256": "e727282fe561a3dc9b9ed74d98718fcdcd300ba078d0bc6ffa74d1328369cf56",
+        "executable": false
+      },
+      "scripts/ci/lib/android_generated_gradle.sh": {
+        "sha256": "e3f60de2a09cf584fa734f564c91bf5853aaae054baf878159434f2dba6625de",
+        "executable": false
+      },
+      "scripts/ci/lib/common.sh": {
+        "sha256": "70c2242aabb8c664fa61f707cea980a54ca019aa90b6e6a211b35e3429a5e7ae",
+        "executable": false
+      },
+      "scripts/ci/lib/context.sh": {
+        "sha256": "e4e49ee9e8874b29bf08d7a9ea0d3f079c9ee7d02f473cc39019e52e286c00f8",
+        "executable": false
+      },
+      "scripts/ci/lib/env.sh": {
+        "sha256": "807dfc79a1bdb025764364df310272bdad309d27b6ad48ea281ef84fc296948c",
+        "executable": false
+      },
+      "scripts/ci/lib/ios.sh": {
+        "sha256": "8c861219bd731e5d55bc480b62adad0ec14d2d7ec2c2050d17c2664a8a253f54",
+        "executable": false
+      },
+      "scripts/ci/lib/xcode.sh": {
+        "sha256": "05270a0c83613cca28118ed969483da5ffe742d65da74745f432861fc58b7a28",
+        "executable": false
+      },
+      "scripts/ci/print_recent_logs.sh": {
+        "sha256": "a5202e6ebb5ffd7846677fcb802194ed4224edeeaed42309a4f2fea3cc06bef3",
+        "executable": true
+      },
+      "scripts/ci/run_android_tests.sh": {
+        "sha256": "c3cdf0247fd4152c30718a6c25e56991255be9d5be1c9bd2d2398143858d9c68",
+        "executable": true
+      },
+      "scripts/ci/run_fastlane_with_kotlin_logs.sh": {
+        "sha256": "f54881cec01dc18305e0f7a51c0cb059e94bd9d8ea21d81ebb6b84a4beb8949d",
+        "executable": true
+      },
+      "scripts/ci/run_job.sh": {
+        "sha256": "3582bd15b071f1c2519f17b33e41990c570e797e93f53de92fdfa436c9ceec21",
+        "executable": true
+      },
+      "scripts/ci/run_kotlin_with_logs.sh": {
+        "sha256": "4468f03926df47c0e174d1b64881e953ed3ec9eaa06a73c5fdf5a824315fa2a8",
+        "executable": true
+      },
+      "scripts/ci/run_xcode_tests_with_logs.sh": {
+        "sha256": "ae441206250391db736a7d172a58b48b2b0b35d9484e4fe6e326976ca9d01d47",
+        "executable": true
+      },
+      "scripts/ci/run_xcodebuild_with_logs.sh": {
+        "sha256": "f75dad019b46743f75f43af637a24a74f48da5cf4221681092df2b8c7b57e456",
+        "executable": true
+      },
+      "scripts/ci/test_classify_changes.sh": {
+        "sha256": "9caaecc6f4472ba8b69aa629cd7a574e1ffaba9c2a1a73008cbf3c1a96b5ec50",
+        "executable": true
+      },
+      "scripts/ci/test_modules.rb": {
+        "sha256": "f508b9e6cca2c7c258d9ebc88fb55a9203da3c9d2f8652f44ebd1189bf0a87aa",
+        "executable": false
+      },
+      "scripts/ci/write_android_signing_files.sh": {
+        "sha256": "f8da8ba2c74303420e71e9350f07892510066286ac7826de8eea82b9cf34b8d1",
+        "executable": true
+      },
+      "scripts/ci/write_app_store_connect_api_key.sh": {
+        "sha256": "8bc0bb1cbd283111c7395d629119ad6780dd84746a3e353670a966c483c77a22",
+        "executable": true
+      },
+      "scripts/ci/write_candidate_manifest.sh": {
+        "sha256": "b44c19bd9ebdca8bd97ed507a433f79442331e8ce32225d7b93db3b43ba899c5",
+        "executable": true
+      },
+      "scripts/ci/write_google_play_key.sh": {
+        "sha256": "9d0350a825f83302992fd95606b083849c87ec8447700e008f7151e4f8c9006b",
+        "executable": true
+      },
+      "scripts/codex/install_add_mobile_feature_skill.sh": {
+        "sha256": "fa8c6d9c2e676c7e25e25814f58a14775974a093a358fc16a5de51b2d872b658",
+        "executable": true
+      },
+      "scripts/dev/android_build_debug.sh": {
+        "sha256": "2f5c314bcbdcc8af79a35a048ad485e78b7a73d8b9f891acf701a5181a108231",
+        "executable": true
+      },
+      "scripts/dev/android_common.sh": {
+        "sha256": "66e0aaeff66d48fe394a93e41128bf55c8a94f50e976edefb60c9bc129ef918d",
+        "executable": true
+      },
+      "scripts/dev/android_emulators.sh": {
+        "sha256": "62544f1b76df329155c047fc97ed75c631ce1fb1cf7f20e992f16ef1dda2a866",
+        "executable": true
+      },
+      "scripts/dev/android_run.sh": {
+        "sha256": "458c702d09ff00c4b68545c01d658a43a53335f676a3951118327c3d34d02cc1",
+        "executable": true
+      },
+      "scripts/dev/android_run_wait_for_debugger.sh": {
+        "sha256": "d4a9c516b5c4e4857555005f782cae4b6aadb6610c5a890c23abde90f9787ba6",
+        "executable": true
+      },
+      "scripts/dev/android_start_emulator.sh": {
+        "sha256": "d27c42ca16cadf042b405572eee8bf583f3afcb3b3e05af4d03820809b93fe1b",
+        "executable": true
+      },
+      "scripts/dev/android_test.sh": {
+        "sha256": "ec5331b65ce062b22f152301efd6cbb0e50d017b5ba62fce083c3dbda48a19cc",
+        "executable": true
+      },
+      "scripts/dev/check.sh": {
+        "sha256": "aa65a5d8d75f36d9d641b9d3a3a440ad7c46c244afad5107f177db550b5fffe3",
+        "executable": true
+      },
+      "scripts/dev/common.sh": {
+        "sha256": "f60e3f0dbcb360af93b9d26727cc75d5fcfddabe7b5836de51e5c7674b4b9bed",
+        "executable": true
+      },
+      "scripts/dev/dependency_updates.sh": {
+        "sha256": "76eedd22710479a01cc3d8cb7f03772dd8f972646d060705fbf834b6042d9911",
+        "executable": true
+      },
+      "scripts/dev/doctor.sh": {
+        "sha256": "423083ffcf5c3bd5ab8b947f48dbfeacf7ef08753c766f3c3ff38797cbc5b9c9",
+        "executable": true
+      },
+      "scripts/dev/format.sh": {
+        "sha256": "1eade3ee1b433c7e57bc6856ea2f6f21a0b3d0faa7b890da7e1926d783ebd606",
+        "executable": true
+      },
+      "scripts/dev/ios_build_debug.sh": {
+        "sha256": "8f8ab07220c24e0e6a96efa82c88e78b268bc308ce92926ec7b2f6477e23d77c",
+        "executable": true
+      },
+      "scripts/dev/ios_open.sh": {
+        "sha256": "9e51d68e399436333126ddb7707ac7fdc4ec80c0ce6cf1ce08d3393461cb5571",
+        "executable": true
+      },
+      "scripts/dev/lint.sh": {
+        "sha256": "e043dd1d7971def94dcca69cf5648110fb06c30512164efb9bf0a8e88e4da37d",
+        "executable": true
+      },
+      "scripts/dev/quality.rb": {
+        "sha256": "7952dceb6719917dfb8c018b1f47bd520e8c263bf7987f56acc5a057ac0c3baa",
+        "executable": false
+      },
+      "scripts/dev/test_quality.rb": {
+        "sha256": "6324e3fb219e8bd264a4a70784f45802bd4f9154ffd4275be86595f0040c18ef",
+        "executable": false
+      },
+      "scripts/dev/test_quality_real.rb": {
+        "sha256": "a121815ae8dc4db24819583738de25d905f9c195f44e856bc581ad11421ed86e",
+        "executable": false
+      },
+      "scripts/dev/test_validate.rb": {
+        "sha256": "a6eeb195c16653818203a9290b4aefebe2c279955deb09097b99c319c7a7832d",
+        "executable": false
+      },
+      "scripts/dev/validate.rb": {
+        "sha256": "9559c7f6aa40e7e953307bd90ae59f9cec5121029823bc3aa63a05b9967006db",
+        "executable": false
+      },
+      "scripts/maintenance/lib/maintenance.rb": {
+        "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3",
+        "executable": false
+      },
+      "scripts/maintenance/update_bundler_lockfile.rb": {
+        "sha256": "aab72909a3720494ed16accce5d33ce83bfc91102d74227cf89496642dfbb43b",
+        "executable": true
+      },
+      "scripts/maintenance/update_kotlin_toolchain_dependencies.rb": {
+        "sha256": "09756d40fd7039171220314cc97057762179438dca76b6aa4584968cd68f92b2",
+        "executable": true
+      },
+      "scripts/quality_tools.rb": {
+        "sha256": "b7b24400a2a3a20730f36435c4c3c4ce7e53081b1ce8c1ac4df3160362e83aad",
+        "executable": false
+      },
+      "shared-core/module.yaml": {
+        "sha256": "3978f56dc0a9d44112dbb8d11ce0b1935c47af0c987bb5ee464b3b53a6183294",
+        "executable": false
+      },
+      "shared-core/src/CounterRepository.kt": {
+        "sha256": "b03338fbc314995e7a5d60569496f9d575dd5b576e60a52bb7ff18d122b5050b",
+        "executable": false
+      },
+      "shared-core/src/NearbyFleetRepository.kt": {
+        "sha256": "b114d8eecdced8561c7b9449e125a94b2ef6b95ade5ed635bfd0cc117189e47a",
+        "executable": false
+      },
+      "shared-core/src/NearbyVehicleModels.kt": {
+        "sha256": "1c521928f5036e25036d6b4bceeed518ecf1d6b1826eb48f7b4fea52af96f4f6",
+        "executable": false
+      },
+      "shared-core/src@android/AndroidManifest.xml": {
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      "shared-core/test/FakeCounterRepositoryTest.kt": {
+        "sha256": "e63ee1b0a83862a3f219d3795cbaeb3e2ca35a7f46e3df2a3d1be99b25ef10cf",
+        "executable": false
+      },
+      "shared-core/test/NearbyFleetRepositoryTest.kt": {
+        "sha256": "33bb553efb01a689a64d36f731e11b70d90e4c7be662a05dd43d99d5cb1c762d",
+        "executable": false
+      },
+      "shared-di/module.yaml": {
+        "sha256": "3a81dc6c86fe2ae48be594fcafff3abcd84892f251f65f10a6d3b321a6f4166f",
+        "executable": false
+      },
+      "shared-di/src/SharedDependencies.kt": {
+        "sha256": "400281b210650472e7eed3b667636a6f7f6033329714e0580ea13dd9bf00d376",
+        "executable": false
+      },
+      "shared-di/src@android/AndroidManifest.xml": {
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      "shared-di/test/SharedDependenciesTest.kt": {
+        "sha256": "459db01b1df35a7a28e40f4ef09d56ce609946ee918a66e5573d48637a4986f2",
+        "executable": false
+      },
+      "shared-feature-home/module.yaml": {
+        "sha256": "631f1d3b7179cb3ec43091d5dcad293790d8515b38b95d19786063cdb62f15d2",
+        "executable": false
+      },
+      "shared-feature-home/src/CounterLoadFailureReason.kt": {
+        "sha256": "3a772a8ceb4d9efd1875f14f2b4267eb728d4ca09516d842512173acfb44492b",
+        "executable": false
+      },
+      "shared-feature-home/src/CounterLoadable.kt": {
+        "sha256": "e35a34da9b52d8fd964f16c491d4060c31ed9dc303a273d6a3faba574f9793c6",
+        "executable": false
+      },
+      "shared-feature-home/src/HomeFeatureEvent.kt": {
+        "sha256": "0ea8682ef722025b04d31fdec6f9a6409485e2591230773177de220fab1f85f7",
+        "executable": false
+      },
+      "shared-feature-home/src/HomeFeatureService.kt": {
+        "sha256": "4acc15de222dbf3c9e5183b36341baa2ebfcffc0f6e46830faf47bfe35c10349",
+        "executable": false
+      },
+      "shared-feature-home/src/HomeFeatureState.kt": {
+        "sha256": "4e60fbcdbee1b6234a2e0ab11f3e7b0fde16e5de39e198cacb8217d4001d0bd6",
+        "executable": false
+      },
+      "shared-feature-home/src@android/AndroidManifest.xml": {
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      "shared-feature-home/test/HomeFeatureServiceTest.kt": {
+        "sha256": "0d0098ef60f328c162fef59b752abd92d91fd729bf2d0c8d468b764460dc2831",
+        "executable": false
+      },
+      "shared-feature-nearby-vehicle-map/module.yaml": {
+        "sha256": "631f1d3b7179cb3ec43091d5dcad293790d8515b38b95d19786063cdb62f15d2",
+        "executable": false
+      },
+      "shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureService.kt": {
+        "sha256": "3ca38753dee2c9e0eb21e570dc1df3801764a6441f569a9f970af24e8f114b1b",
+        "executable": false
+      },
+      "shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureState.kt": {
+        "sha256": "2a2476b2be236596b877ff323a8791b9d60642e8cc94bb759300b3d91bb40040",
+        "executable": false
+      },
+      "shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFreshnessPolicy.kt": {
+        "sha256": "7f171c74d9739ef238ec5d609b513136055e820d17801fae21d8f6712f220237",
+        "executable": false
+      },
+      "shared-feature-nearby-vehicle-map/src@android/AndroidManifest.xml": {
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      "shared-feature-nearby-vehicle-map/test/NearbyVehicleMapFeatureServiceTest.kt": {
+        "sha256": "e0a37eb92c7755e23ffb1bb31ce8994539a6c60511aa70b2deb37e5188f20cf7",
+        "executable": false
+      },
+      "shared-ui-home/module.yaml": {
+        "sha256": "e936d92d207ec2bab74af1ad2a2acb562aa5e2159db0ba202e18f9cd50d60a16",
+        "executable": false
+      },
+      "shared-ui-home/src/HomeContent.kt": {
+        "sha256": "d2e975c3256f508a289444b2bc55f41347701687cdec23abea7a8b90b0ae1d4f",
+        "executable": false
+      },
+      "shared-ui-home/src@android/AndroidManifest.xml": {
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      "shared-ui-home/src@ios/SharedHomeViewControllerFactory.kt": {
+        "sha256": "2001ba6268e37aeb25b314a6ff57b30357d6bdb2c0091d024d93b60a8e668bbd",
+        "executable": false
+      },
+      "skills-lock.json": {
+        "sha256": "511cb2c984c1f660720a9b417de2f9b5820b5207e6ebf05c7cc095ead9a81b92",
+        "executable": false
+      }
+    },
+    "documentation_updated_after_run": [
+      "docs/maintenance/README.md",
+      "docs/maintenance/implementation-proposal.md",
+      "docs/maintenance/ios-xcode27-investigation.md",
+      "docs/maintenance/third-slice-validation.md",
+      "docs/reference/local-development.md",
+      "openspec/changes/conservative-precommit-validation/tasks.md"
+    ]
+  },
+  "other_checks": {
+    "openspec_strict": "passed",
+    "git_diff_check": "passed",
+    "classifier_fixtures": {
+      "status": "passed",
+      "log_sha256": "44024edb7ef38dc8929324bcc04fa3adcb7de92a2ab07ce98033f54da47449f7"
+    },
+    "static_contracts": {
+      "tests": 35,
+      "failures": 0,
+      "log_sha256": "bb122103ce203a90e60d783665d07a1060580ec864c26abe6f35fab5cb68b6c1"
+    }
+  },
+  "cleanup": {
+    "inner_native_workspace_removed_by_gate": true,
+    "disposable_staged_checkout": "removed after source and evidence verification",
+    "detached_native_processes": "all five recorded Gradle process identities exited; no process referenced the owned native workspace at final inspection",
+    "raw_logs": "retained locally in temporary storage",
+    "late_native_metadata": "workspace remained absent at post-run inspection"
+  },
+  "limits": [
+    "Not committed or pushed; exact hosted candidate unverified",
+    "Native Intel, physical devices, signing and release packaging unverified",
+    "Pinned analyzers copied from verified local installation; native host caches and installed SDKs available",
+    "No direct Kotlin Toolchain parity or bridge-retirement claim",
+    "Final documentation/evidence summaries were written after this source-bound run"
+  ]
+}

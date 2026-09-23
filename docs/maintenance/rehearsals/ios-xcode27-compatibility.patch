@@ -1,0 +1,57 @@
+--- a/ios-app/Dependencies/Package.swift
++++ b/ios-app/Dependencies/Package.swift
+@@ -16,7 +16,7 @@
+     dependencies: [
+         .package(
+             url: "https://github.com/pointfreeco/swift-composable-architecture",
+-            exact: "1.25.4",
++            exact: "1.26.0",
+         ),
+         .package(
+             url: "https://github.com/pointfreeco/swift-dependencies",
+--- a/ios-app/module.xcodeproj/project.pbxproj
++++ b/ios-app/module.xcodeproj/project.pbxproj
+@@ -446,7 +446,7 @@
+ 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+ 			requirement = {
+ 				kind = exactVersion;
+-				version = 1.25.4;
++				version = 1.26.0;
+ 			};
+ 		};
+ 		D3A1000F2FA10001001664A3 /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+--- a/ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
++++ b/ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+@@ -51,8 +51,8 @@
+       "kind" : "remoteSourceControl",
+       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
+       "state" : {
+-        "revision" : "ce8ee57840b2b46cd6b5cf06ed0526dd1d690126",
+-        "version" : "1.25.4"
++        "revision" : "e2fa1df6cd9eec6fa6314aa20513e47da576f24e",
++        "version" : "1.26.0"
+       }
+     },
+     {
+@@ -114,8 +114,8 @@
+       "kind" : "remoteSourceControl",
+       "location" : "https://github.com/pointfreeco/swift-sharing",
+       "state" : {
+-        "revision" : "bc27f8322bc30f6ce7d864d137dc77a6de8b57eb",
+-        "version" : "2.8.0"
++        "revision" : "c525e53936c878c102421eee241d82711eb38104",
++        "version" : "2.8.1"
+       }
+     },
+     {
+@@ -132,8 +132,8 @@
+       "kind" : "remoteSourceControl",
+       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
+       "state" : {
+-        "revision" : "dfd70507def84cb5fb821278448a262c6ff2bbad",
+-        "version" : "1.9.0"
++        "revision" : "cb281f343fd953280336dcbd3822cdf47c182f5b",
++        "version" : "1.10.0"
+       }
+     }
+   ],

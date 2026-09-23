@@ -27,7 +27,17 @@ ci_prepare_workspace() {
     "${KOTLIN_CLI_BOOTSTRAP_CACHE_DIR}" \
     "${KOTLIN_CLI_USER_HOME}/Library/Caches/JetBrains/Kotlin/telemetry" \
     "${KOTLIN_CLI_TMP_DIR}"
-  chmod +x "${CI_PROJECT_DIR}/kotlin" "${CI_PROJECT_DIR}"/scripts/ci/*.sh
+  if [[ "${MOBI_VALIDATION:-0}" == 1 ]]; then
+    local executable
+    for executable in "${CI_PROJECT_DIR}/kotlin" "${CI_PROJECT_DIR}"/scripts/ci/*.sh; do
+      if [[ ! -x "${executable}" ]]; then
+        printf 'Validation requires a staged executable bit: %s\n' "${executable}" >&2
+        return 1
+      fi
+    done
+  else
+    chmod +x "${CI_PROJECT_DIR}/kotlin" "${CI_PROJECT_DIR}"/scripts/ci/*.sh
+  fi
 }
 
 ci_set_java_home() {

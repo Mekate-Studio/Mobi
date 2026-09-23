@@ -29,8 +29,10 @@ reject it until the complete intended inputs are staged.
    unsupported sparse/submodule cases until deliberately handled.
 4. Capture index tree, source content/mode manifest, policy, scripts, analyzer
    versions/checksums and selected checks. These define the receipt identity.
-   Check analyzers are installed and match approved pins; never download,
-   upgrade, format, stage, stash or commit during the hook.
+   Check analyzers are installed and match approved pins; never download
+   analyzer tools, upgrade dependencies, format, stage, stash or commit during
+   the hook. Selected native jobs may populate owned caches with the existing
+   Toolchain and declared dependencies; cold native setup requires network access.
 5. Run static checks once, then impact-appropriate tests from the existing
    repository job contract. Test workspaces and generated artifacts are owned
    snapshots. Preserve current Android version fields for test mode; reject

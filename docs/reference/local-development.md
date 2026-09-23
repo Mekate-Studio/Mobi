@@ -106,15 +106,58 @@ formatting checks, Swift linting, and `ShellCheck` for the repo-owned shell
 scripts and Git hook. It includes nonignored new source files and Swift package
 code. `just format` uses the same source inventory and only runs the two formatters.
 
-`just check` runs static analysis with an additional commit guard: all tracked
-checkout contents and executable/symlink modes must equal the index before and
-after analysis. Stage complete intended changes first. Nonignored untracked
-files also block this mode. Use `just lint` during unstaged development.
+`just check` runs static analysis once, then selected Android/iOS tests and debug
+builds in an owned temporary source copy. All tracked checkout contents and
+executable modes must equal the index before and after execution; the captured
+copy must match staged Git objects too. Stage complete intended changes first.
+Nonignored untracked files block this mode. Use `just lint` during unstaged
+development, and `./scripts/dev/check.sh --plan` to inspect the staged plan.
+
+Behavior changes select affected tests without an extra standalone app build.
+App manifests, dependency/toolchain inputs and unknown paths select both tests
+and debug builds. Git paths are NUL-delimited; deletes and both names of renames
+are classified. The base commit, index and copied inputs must remain unchanged.
+Native job failure, input drift or interruption invalidates the whole run.
+The orchestrator currently requires regular tracked files and rejects snapshot
+symlinks explicitly.
+
+Host tests are discovered from the declared module graph, including `test` and
+`test@android` roots. Other Kotlin test targets fail with an explicit coverage
+error until a runner is provided. The iOS job retains the `PullRequest` Xcode
+plan and Gradle bridge. Native tests require Java/SDK/Xcode and an existing
+available simulator. The gate never provisions one. Set
+`IOS_SIMULATOR_DESTINATION` to choose an existing simulator if needed.
+
+Native jobs start with owned empty caches and may download the existing
+Toolchain and declared project dependencies. They do not upgrade dependency
+declarations, install analyzers/Bundler, rewrite Android versions, or copy ignored
+credentials from the caller. Android validation uses synthetic debug signing.
+Only declared host-tool environment settings reach jobs; native tools and the
+simulator remain host resources. This is source isolation, not a machine sandbox.
+Native jobs can take minutes on a cold cache; each has a 45-minute timeout.
+
+Success reports source/index identities and completed jobs. Failure diagnostics
+stream to the terminal; temporary native logs/results disappear with the owned
+copy. Capture the command output when diagnostics are needed. Normal completion,
+failure, timeout and interruption stop owned child process groups and clean the
+copy. Gradle daemons are stopped per version against only the owned cache,
+using its installed distributions offline. Shutdown failure or timeout retains
+the copy and reports recovery guidance; directory-not-empty cleanup failures
+receive a five-second retry before failing. After a hard kill, ensure no process
+still uses the specifically reported
+`mobi-validation-*` temporary directory before removing it. No caller file or
+index is stashed, restored or repaired. Fix the reported prerequisite or source
+problem, stage complete intended changes, and rerun.
+Detached native daemons can escape process-group cleanup; inspect residual
+processes and owned metadata before manual recovery. Native tools may use host
+caches even though project outputs and designated caches live in the copy.
 
 `./scripts/ci/run_job.sh quality-check` and `./scripts/dev/check.sh --static`
 use the same static inputs without local commit orchestration or build bootstrap.
-The gate does not install tools, format files, stage, stash, restore, or run
-dependency discovery. Native tests and builds remain separate commands.
+Static mode does not install tools, format files, stage, stash, restore, run
+dependency discovery, or invoke native jobs. CI continues running selected native
+jobs separately. [Slice 3 evidence](../maintenance/third-slice-validation.md)
+distinguishes fixture checks, native probes and remaining limits.
 
 ### Static gate inputs and recovery
 
@@ -224,6 +267,7 @@ up automatically. They do not install dependencies or change the caller's index.
 
 ```bash
 /usr/bin/ruby scripts/dev/test_quality.rb
+/usr/bin/ruby scripts/dev/test_validate.rb
 /usr/bin/ruby scripts/dev/test_quality_real.rb
 ```
 
@@ -245,7 +289,8 @@ Then in IntelliJ IDEA:
 - disable the `Analyze code` commit check
 - enable `Run Git hooks`
 
-That makes IDE commits run the repo-owned commit guard and static checks.
+That makes IDE commits run the repo-owned commit guard, static checks and selected
+native validation.
 The guard requires all intended working-tree content to be staged in full.
 
 ## Shared job dispatcher

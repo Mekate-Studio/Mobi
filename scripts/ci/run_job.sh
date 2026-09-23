@@ -21,6 +21,12 @@ case "${job_name}" in
     ./scripts/dev/check.sh --static "$@"
     ;;
   android-build-debug)
+    if [[ "${MOBI_VALIDATION:-0}" == 1 ]]; then
+      ci_prepare_android_validation_job
+      cd "${CI_PROJECT_DIR}"
+      ./scripts/ci/run_kotlin_with_logs.sh build -m android-app -p android -v debug "$@"
+      exit
+    fi
     export CI_ANDROID_SIGNING_MODE="${CI_ANDROID_SIGNING_MODE:-debug-smoke}"
     ci_prepare_android_job
     cd "${CI_PROJECT_DIR}"
@@ -39,10 +45,9 @@ case "${job_name}" in
     ./scripts/ci/run_fastlane_with_kotlin_logs.sh buildReleaseCandidate "$@"
     ;;
   android-test)
-    export CI_ANDROID_SIGNING_MODE="${CI_ANDROID_SIGNING_MODE:-debug-smoke}"
-    ci_prepare_android_job
+    ci_prepare_android_validation_job
     cd "${CI_PROJECT_DIR}"
-    ./scripts/ci/run_fastlane_with_kotlin_logs.sh test "$@"
+    ./scripts/ci/run_android_tests.sh "$@"
     ;;
   ios-build-debug)
     ci_prepare_ios_job

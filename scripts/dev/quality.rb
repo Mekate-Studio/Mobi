@@ -41,13 +41,89 @@ module Quality
     end
   end
 
+  class ModuleGraph
+    attr_reader :modules, :configs
+
+    def initialize
+      @configs = {}
+      @modules = read_modules
+    end
+
+    private
+
+    def yaml(path)
+      Quality.source_path!(path)
+      source = File.read(path)
+      stream = Psych.parse_stream(source)
+      raise Failure, "Expected a single YAML document in #{path}" unless stream.children.length == 1
+      reject_duplicate_keys(stream, path)
+      data = YAML.safe_load(source, permitted_classes: [], permitted_symbols: [], aliases: false)
+      raise Failure, "Expected YAML mapping: #{path.inspect}" unless data.is_a?(Hash)
+
+      data
+    rescue Psych::Exception => error
+      raise Failure, "Unsupported YAML in #{path.inspect}: #{error.message}"
+    end
+
+    def reject_duplicate_keys(node, path)
+      if node.is_a?(Psych::Nodes::Mapping)
+        keys = node.children.each_slice(2).map do |key, _value|
+          raise Failure, "Unsupported complex YAML key in #{path}" unless key.is_a?(Psych::Nodes::Scalar)
+
+          key.value
+        end
+        raise Failure, "Duplicate YAML keys in #{path}" unless keys.uniq == keys
+      end
+      Array(node.children).each { |child| reject_duplicate_keys(child, path) }
+    end
+
+    def read_modules
+      project = yaml('project.yaml')
+      unless project.keys == ['modules'] && project['modules'].is_a?(Array) && !project['modules'].empty?
+        raise Failure, 'Unsupported project.yaml layout; expected only an explicit nonempty modules list'
+      end
+      names = project['modules']
+      names.each do |name|
+        unless name.is_a?(String) && name.match?(/\A[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*\z/)
+          raise Failure, "Unsupported module path/template: #{name.inspect}"
+        end
+        config = yaml("#{name}/module.yaml")
+        @configs[name] = config
+        config.each_key do |key|
+          unless key.is_a?(String) && key.match?(/\A(?:product|dependencies|test-dependencies|settings|test-settings)(?:@[A-Za-z0-9_-]+)?\z/)
+            raise Failure, "Unsupported module layout/configuration #{key.inspect} in #{name}/module.yaml"
+          end
+        end
+        reject_layout_keys(config, "#{name}/module.yaml")
+      end
+      if names.uniq.length != names.length || names.any? { |a| names.any? { |b| a != b && a.start_with?(b + '/') } }
+        raise Failure, 'Unsupported duplicate or overlapping module paths'
+      end
+      names.sort
+    end
+
+    def reject_layout_keys(value, path)
+      case value
+      when Hash
+        value.each do |key, child|
+          if key.to_s.match?(/\A(?:apply|templates?|layout|sources?|source[-_]?roots?|source[-_]?sets?)\z/i)
+            raise Failure, "Unsupported source configuration #{key.inspect} in #{path}"
+          end
+          reject_layout_keys(child, path)
+        end
+      when Array
+        value.each { |child| reject_layout_keys(child, path) }
+      end
+    end
+  end
+
   class Inventory
     attr_reader :groups, :modules, :excluded
 
     def initialize
       @groups = { 'kotlin' => [], 'detekt' => [], 'swift' => [], 'shell' => [] }
       @excluded = []
-      @modules = read_modules
+      @modules = ModuleGraph.new.modules
       tracked = Quality.git('ls-files', '--cached', '-z').split("\0")
       fresh = Quality.git('ls-files', '--others', '--exclude-standard', '-z').split("\0")
       (tracked + fresh).uniq.sort.each do |path|
@@ -90,70 +166,6 @@ module Quality
     end
 
     private
-
-    def yaml(path)
-      Quality.source_path!(path)
-      source = File.read(path)
-      stream = Psych.parse_stream(source)
-      raise Failure, "Expected a single YAML document in #{path}" unless stream.children.length == 1
-      reject_duplicate_keys(stream, path)
-      data = YAML.safe_load(source, permitted_classes: [], permitted_symbols: [], aliases: false)
-      raise Failure, "Expected YAML mapping: #{path.inspect}" unless data.is_a?(Hash)
-
-      data
-    rescue Psych::Exception => error
-      raise Failure, "Unsupported YAML in #{path.inspect}: #{error.message}"
-    end
-
-    def reject_duplicate_keys(node, path)
-      if node.is_a?(Psych::Nodes::Mapping)
-        keys = node.children.each_slice(2).map do |key, _value|
-          raise Failure, "Unsupported complex YAML key in #{path}" unless key.is_a?(Psych::Nodes::Scalar)
-
-          key.value
-        end
-        raise Failure, "Duplicate YAML keys in #{path}" unless keys.uniq == keys
-      end
-      Array(node.children).each { |child| reject_duplicate_keys(child, path) }
-    end
-
-    def read_modules
-      project = yaml('project.yaml')
-      unless project.keys == ['modules'] && project['modules'].is_a?(Array) && !project['modules'].empty?
-        raise Failure, 'Unsupported project.yaml layout; expected only an explicit nonempty modules list'
-      end
-      names = project['modules']
-      names.each do |name|
-        unless name.is_a?(String) && name.match?(/\A[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*\z/)
-          raise Failure, "Unsupported module path/template: #{name.inspect}"
-        end
-        config = yaml("#{name}/module.yaml")
-        config.each_key do |key|
-          unless key.is_a?(String) && key.match?(/\A(?:product|dependencies|test-dependencies|settings|test-settings)(?:@[A-Za-z0-9_-]+)?\z/)
-            raise Failure, "Unsupported module layout/configuration #{key.inspect} in #{name}/module.yaml"
-          end
-        end
-        reject_layout_keys(config, "#{name}/module.yaml")
-      end
-      if names.uniq.length != names.length || names.any? { |a| names.any? { |b| a != b && a.start_with?(b + '/') } }
-        raise Failure, 'Unsupported duplicate or overlapping module paths'
-      end
-      names.sort
-    end
-
-    def reject_layout_keys(value, path)
-      case value
-      when Hash
-        value.each do |key, child|
-          if key.to_s.match?(/\A(?:apply|templates?|layout|sources?|source[-_]?roots?|source[-_]?sets?)\z/i)
-            raise Failure, "Unsupported source configuration #{key.inspect} in #{path}"
-          end
-          reject_layout_keys(child, path)
-        end
-      when Array
-        value.each { |child| reject_layout_keys(child, path) }
-      end
-    end
 
     def generated?(path)
       roots = ['build', '.gradle', '.kotlin-cache', '.kotlin-user-home',

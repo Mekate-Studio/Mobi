@@ -94,9 +94,12 @@ copies are removed; the verified ignored installation remains for normal use.
 
 ## Untested assumptions and blockers
 
-- The local host is Apple Silicon, macOS 27.0 / Xcode 27.0. A fresh hosted
-  `macos-26` run remains unexecuted; it must validate source compilation, cache
-  reuse and SourceKit behavior before hosted compatibility is claimed.
+- Follow-up on 2026-09-21: [Mobile CI at `10319cd`](https://github.com/Mekate-Studio/Mobi/actions/runs/35645400892)
+  passed all jobs. Its `macos-26-arm64` quality job ran on macOS 26.6.2, missed
+  the cache, completed the pinned source build, passed all 35 contracts and
+  static checks, and saved its cache. The runner reported 10.663 seconds for
+  static checks. A hosted cache-hit run is still untested. The earlier local
+  host evidence remains Apple Silicon, macOS 27.0 / Xcode 27.0.
 - Intel artifact URLs and upstream digests are locked, but no native Intel Mac
   execution was available. Linux/Windows quality setup is unsupported and fails
   explicitly; mobile support policy is unchanged.
@@ -110,6 +113,6 @@ copies are removed; the verified ignored installation remains for normal use.
   release-package or direct Toolchain bridge-retirement evidence. All prior
   compatibility blockers remain open.
 
-Next integration: review this lock/setup change and run its existing hosted
-quality job. Slice 3 remains the separate conservative validation-selector and
-non-mutating test-preparation change.
+Integration completed at `10319cd` with the hosted result above. The separate
+[slice 3](third-slice-validation.md) adds conservative validation selection and
+non-mutating test preparation; it does not inherit this slice's hosted result.
