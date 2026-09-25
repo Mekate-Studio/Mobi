@@ -92,9 +92,7 @@ jobs:
       - name: Install or verify pinned quality tools
         run: ./scripts/ci/install_quality_tools.sh
       - name: Test quality contracts
-        run: |
-          /usr/bin/ruby scripts/dev/test_quality.rb
-          /usr/bin/ruby scripts/dev/test_validate.rb
+        run: ./scripts/ci/run_job.sh quality-contracts
       - name: Run quality checks
         run: ./scripts/ci/run_job.sh quality-check
 

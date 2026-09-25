@@ -35,3 +35,5 @@ ios-app/module.xcodeproj/xcuserdata/
 /ios-app/Dependencies/.build/
 /ios-app/Dependencies/Package.resolved
 /.gradle-user-home/
+
+/.maintenance/

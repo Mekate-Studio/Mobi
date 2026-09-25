@@ -16,6 +16,10 @@ fi
 shift || true
 
 case "${job_name}" in
+  quality-contracts)
+    cd "${CI_PROJECT_DIR}"
+    exec /usr/bin/ruby scripts/quality_tools.rb run contracts
+    ;;
   quality-check)
     cd "${CI_PROJECT_DIR}"
     ./scripts/dev/check.sh --static "$@"
@@ -104,6 +108,7 @@ case "${job_name}" in
     printf 'Unknown CI job: %s\n' "${job_name}" >&2
     printf 'Supported jobs:\n' >&2
     printf '  %s\n' \
+      quality-contracts \
       quality-check \
       android-build-debug \
       android-build-release \

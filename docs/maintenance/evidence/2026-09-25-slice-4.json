@@ -1,0 +1,571 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-25T20:12:17.859185+00:00",
+  "slice": 4,
+  "status": "locally_verified_uncommitted",
+  "base_commit": "2a2577db135cb992a4599b78ae161715d05159d6",
+  "source": {
+    "sha256": "1b48484170b5d352a38c759628c075e6bd8f2d60ef97033398bee97144095558",
+    "public_file_count": 338,
+    "omitted_personal_metadata_paths": 1,
+    "implementation_files": {
+      ".github/workflows/mobile-ci.yml": {
+        "sha256": "5b27286c47169f477e064e962a06fc9b1f37b33a2940d23848040821bfc22ee4",
+        "executable": false
+      },
+      "maintenance-policy.json": {
+        "sha256": "173344eecf6edcde8373853e27c86065b4f8bf09ef8c9c29733f0c326e4bd4a5",
+        "executable": false
+      },
+      "maintenance-tools.json": {
+        "sha256": "74984b5e526a34d4a55479c0b1a256cfccc085aeb02b8409e135c7a2ca694249",
+        "executable": false
+      },
+      "scripts/ci/run_job.sh": {
+        "sha256": "8e18c61dc1ee7f879752ae53c888a89c434ada70ceb49249605edbc285756ef6",
+        "executable": true
+      },
+      "scripts/dev/dependency_updates.sh": {
+        "sha256": "5e70129c4cb68b4f9ec389996b8bdce97f496e7dfc6b3fda4eadc038fd4a16ab",
+        "executable": true
+      },
+      "scripts/dev/test_contracts.rb": {
+        "sha256": "fc1aa29f5762efa6fba41ab5423b60253e9e65834104bc3fec7ea462a4adc2ff",
+        "executable": false
+      },
+      "scripts/maintenance/adapters/elixir.rb": {
+        "sha256": "1adbc0c83b3ccc95c7cf4e5bb0d91e92492c5f670eebcb45c5331b0f5ba84d56",
+        "executable": false
+      },
+      "scripts/maintenance/adapters/kotlin.rb": {
+        "sha256": "087ec8c26eb601cc39baf973b6dbbe24bae9340cd918d509c68d823f82fec1cd",
+        "executable": false
+      },
+      "scripts/maintenance/dependencies.rb": {
+        "sha256": "74bc40009b6f36cbd21f0d9f9edf49500481606bb09340583b3d64377988c1fc",
+        "executable": false
+      },
+      "scripts/maintenance/fixtures/renovate-44.93.5.jsonl": {
+        "sha256": "cdc8d42cdf76ed9b3ad7bf4ef455bfc182c17aae6cfc6d82308ca6189829d721",
+        "executable": false
+      },
+      "scripts/maintenance/install_tools.sh": {
+        "sha256": "1e1df8e9a345316a0c9791c1102bf3b21efc6f2b4258f0618ac585405abf9518",
+        "executable": true
+      },
+      "scripts/maintenance/lib/core.rb": {
+        "sha256": "cf835f1da601d5bf5a78caec8b4ac43707c28a0af7e6337bfacab717f7c6b167",
+        "executable": false
+      },
+      "scripts/maintenance/lib/maintenance.rb": {
+        "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3",
+        "executable": false
+      },
+      "scripts/maintenance/lib/policy.rb": {
+        "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965",
+        "executable": false
+      },
+      "scripts/maintenance/lib/tools.rb": {
+        "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8",
+        "executable": false
+      },
+      "scripts/maintenance/resolve_presets.mjs": {
+        "sha256": "706f1fe139717f3445e96b9759a096b2efe3c21c04c7d24910ae3e6db874afdc",
+        "executable": false
+      },
+      "scripts/maintenance/test_inventory.rb": {
+        "sha256": "d778b064aeda597e84704e69cb1aa751a41390611cb4be6abc9e422135e47c59",
+        "executable": false
+      },
+      "scripts/maintenance/tools/package-lock.json": {
+        "sha256": "23eaf18fa5a14af84337fe91b86adaa0ad10c1457ab66119aaf03a5fff5596a1",
+        "executable": false
+      },
+      "scripts/maintenance/tools/package.json": {
+        "sha256": "add8b714de77c903488947b1f00d5df4f9b42aec02a491eb7c9135e0038a560c",
+        "executable": false
+      },
+      "scripts/maintenance/update_bundler_lockfile.rb": {
+        "sha256": "aab72909a3720494ed16accce5d33ce83bfc91102d74227cf89496642dfbb43b",
+        "executable": true
+      },
+      "scripts/maintenance/update_kotlin_toolchain_dependencies.rb": {
+        "sha256": "09756d40fd7039171220314cc97057762179438dca76b6aa4584968cd68f92b2",
+        "executable": true
+      },
+      "scripts/quality_tools.rb": {
+        "sha256": "e641942e308bde26964454b3da8e134aeebd117e5f3e63a3e565986bc3c16123",
+        "executable": false
+      }
+    }
+  },
+  "tools": {
+    "identity": "d57f2d3bc8187e1f13ce5adcd0b63c825cb05afc0dbbc7dfde0ef77ee9e7f6b4",
+    "pins": {
+      "schema": 1,
+      "recipe": 1,
+      "reviewed_on": "2026-09-25",
+      "node_version": "24.21.0",
+      "npm_version": "11.19.0",
+      "renovate_version": "44.93.5",
+      "node_release": "https://nodejs.org/en/blog/release/v24.21.0",
+      "renovate_release": "https://github.com/renovatebot/renovate/releases/tag/44.93.5",
+      "renovate_published_at": "2026-09-15T20:51:56.855Z",
+      "platforms": {
+        "darwin-arm64": {
+          "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-darwin-arm64.tar.gz",
+          "sha256": "bed7eea5325e1108f32ce5228ddd6a5f0f08a499ee42aa7442aea583702f6057",
+          "root": "node-v24.21.0-darwin-arm64"
+        },
+        "darwin-x64": {
+          "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-darwin-x64.tar.gz",
+          "sha256": "1462cb3b3046b815cf8ea436d3da450ec1a9f11dac7e5a46b0ada5305d7e8097",
+          "root": "node-v24.21.0-darwin-x64"
+        },
+        "linux-arm64": {
+          "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-linux-arm64.tar.gz",
+          "sha256": "724282c3b43aec998aa9527380465b45d229e021b58035f5f4f63095eabfe5d5",
+          "root": "node-v24.21.0-linux-arm64"
+        },
+        "linux-x64": {
+          "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-linux-x64.tar.gz",
+          "sha256": "6e1db87ef58b8819e5d5402eff1536491b18edd8eb7bee5ef7897876e88dc5ff",
+          "root": "node-v24.21.0-linux-x64"
+        }
+      },
+      "package_sha256": "add8b714de77c903488947b1f00d5df4f9b42aec02a491eb7c9135e0038a560c",
+      "lock_sha256": "23eaf18fa5a14af84337fe91b86adaa0ad10c1457ab66119aaf03a5fff5596a1"
+    }
+  },
+  "policy": {
+    "schema": 1,
+    "minimum_release_age_days": 7,
+    "release_evidence_max_age_hours": 24,
+    "advisory_max_age_hours": 24,
+    "blocking_severities": [
+      "high",
+      "critical"
+    ],
+    "unknown_severity": "requires_triage",
+    "automatic_adoption": false
+  },
+  "policy_sha256": "e176f7aae532d95ddbe4e3d3f0e189e83cb8ec966832da61659b6893e79185b7",
+  "clean_bootstrap": {
+    "state": "passed",
+    "identity": "d57f2d3bc8187e1f13ce5adcd0b63c825cb05afc0dbbc7dfde0ef77ee9e7f6b4",
+    "installed_files": 45111,
+    "platform": "darwin-arm64",
+    "versions": [
+      "24.21.0",
+      "11.19.0",
+      "44.93.5"
+    ],
+    "owned_directory_removed": true,
+    "seconds": 22.181
+  },
+  "probes": {
+    "runs": [
+      {
+        "label": "a",
+        "seconds": 11.612,
+        "exit": 0
+      },
+      {
+        "label": "b",
+        "seconds": 5.501,
+        "exit": 0
+      }
+    ],
+    "matching_source_inventory_config": true,
+    "ambient_tools_unused": true,
+    "empty_evidence_exit": 2,
+    "caller_index_status_unchanged": true,
+    "index_sha256": "ba5cf705ea96eea4fbfe6b3edeb7bf4665e55c8f88a4486f378ad319a4aee851",
+    "owned_directory_set_unchanged": true
+  },
+  "discovery_runs": [
+    {
+      "label": "a",
+      "id": "e040d4449c2aede4b61d04b0c971bd1dbc15a94e365476f403a35412f623672f",
+      "created_at": "2026-09-25T20:09:42Z",
+      "output_sha256": "ea365787175f5787f643623711223d0cd91fec6c54920702f755afe018ffa25f",
+      "native_log_sha256": "ba2eecce82ed6ae1be89ad13cff6f0f8a73c994ec372bf7a503a2eee6e029e81"
+    },
+    {
+      "label": "b",
+      "id": "86290aae0966c899299eda5ce12a3525db00a39f456761199701b25c95af48c9",
+      "created_at": "2026-09-25T20:09:47Z",
+      "output_sha256": "bc101c84a0c94fa7d25370ba65b0cf9f562b92445c7bff32ed1b337f0d731353",
+      "native_log_sha256": "c40014e67283193da563cf1f09fc2fb97979ec7da31ef266742695c932d9b5fa"
+    }
+  ],
+  "native": {
+    "manager_file_counts": {
+      "bundler": 1,
+      "dockerfile": 1,
+      "github-actions": 4,
+      "gradle": 5,
+      "gradle-wrapper": 1,
+      "npm": 1,
+      "ruby-version": 1,
+      "swift": 1,
+      "regex": 11
+    },
+    "warnings": [
+      "RE2 not usable, falling back to RegExp",
+      "GitHub token is required for some dependencies"
+    ],
+    "resolved_repository_config_sha256": "dfad0024ad59981ea9636c805e18fcd0e8510b7a3012a6ba943b6e592bdb8ef7",
+    "shallow_repository_config_sha256": "9391c944b2c73dc8cf015db052af09fabb275887ad75f0085bf677b5d20d59a9",
+    "enforced_execution_config": {
+      "platform": "local",
+      "dryRun": "extract",
+      "onboarding": false,
+      "requireConfig": "required",
+      "allowScripts": false,
+      "allowPlugins": false,
+      "allowedUnsafeExecutions": [],
+      "exposeAllEnv": false,
+      "baseDir": "<owned>/base",
+      "cacheDir": "<owned>/cache"
+    },
+    "enforced_execution_config_sha256": "c81a8d077c578553afe25fc789b8633544daf782275a41af8cc0a340242804de"
+  },
+  "inventory": {
+    "component_records": 866,
+    "modules": [
+      "android-app",
+      "ios-app",
+      "shared-core",
+      "shared-di",
+      "shared-feature-home",
+      "shared-feature-nearby-vehicle-map",
+      "shared-ui-home"
+    ],
+    "resolved_inputs": [
+      {
+        "id": "swift:ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+        "sha256": "a7516a08b9e4dec25b6c7d6600458efd62ecbfa8b00fe553f1b7c41a3fe9e27f",
+        "package_records": 15
+      },
+      {
+        "id": "rubygems:Gemfile.lock",
+        "sha256": "dc12c0218b5b34e9822255115120215b12269d2eb7383b66e9a6a28facfd699e",
+        "package_records": 99
+      },
+      {
+        "id": "npm:scripts/maintenance/tools/package-lock.json",
+        "sha256": "edcdafb92066f0d416bc1dee2df750ea866f9608ba171d12299407ad675c30ac",
+        "package_records": 614
+      }
+    ],
+    "coverage": [
+      {
+        "id": "native:bundler",
+        "state": "complete",
+        "reason": "1 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "native:dockerfile",
+        "state": "complete",
+        "reason": "1 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "native:github-actions",
+        "state": "complete",
+        "reason": "4 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "native:gradle",
+        "state": "complete",
+        "reason": "5 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "native:gradle-wrapper",
+        "state": "complete",
+        "reason": "1 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "native:npm",
+        "state": "complete",
+        "reason": "1 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "native:ruby-version",
+        "state": "complete",
+        "reason": "1 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "native:swift",
+        "state": "complete",
+        "reason": "1 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "native:regex",
+        "state": "complete",
+        "reason": "11 files extracted; declarations are not resolved graphs",
+        "required": false
+      },
+      {
+        "id": "policy:resolved-preset-rules",
+        "state": "incomplete",
+        "reason": "Bundled preset constraints are captured but not evaluated by the limited local policy; native candidate-policy integration remains required",
+        "required": true
+      },
+      {
+        "id": "module:android-app",
+        "state": "complete",
+        "reason": "Declared module, dependency lists and compiler-plugin settings inspected",
+        "required": false
+      },
+      {
+        "id": "module:ios-app",
+        "state": "complete",
+        "reason": "Declared module, dependency lists and compiler-plugin settings inspected",
+        "required": false
+      },
+      {
+        "id": "module:shared-core",
+        "state": "complete",
+        "reason": "Declared module, dependency lists and compiler-plugin settings inspected",
+        "required": false
+      },
+      {
+        "id": "module:shared-di",
+        "state": "complete",
+        "reason": "Declared module, dependency lists and compiler-plugin settings inspected",
+        "required": false
+      },
+      {
+        "id": "module:shared-feature-home",
+        "state": "complete",
+        "reason": "Declared module, dependency lists and compiler-plugin settings inspected",
+        "required": false
+      },
+      {
+        "id": "module:shared-feature-nearby-vehicle-map",
+        "state": "complete",
+        "reason": "Declared module, dependency lists and compiler-plugin settings inspected",
+        "required": false
+      },
+      {
+        "id": "module:shared-ui-home",
+        "state": "complete",
+        "reason": "Declared module, dependency lists and compiler-plugin settings inspected",
+        "required": false
+      },
+      {
+        "id": "xcode-packages:ios-app/module.xcodeproj/project.pbxproj",
+        "state": "complete",
+        "reason": "4 Xcode package declarations inspected separately from Package.swift",
+        "required": false
+      },
+      {
+        "id": "swift-lock:ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+        "state": "complete",
+        "reason": "15 locked versions/revisions; dependency edges absent",
+        "required": false
+      },
+      {
+        "id": "swift-graph-edges:ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+        "state": "incomplete",
+        "reason": "Package.resolved has pins but no target/variant dependency edges",
+        "required": true
+      },
+      {
+        "id": "gem-lock:Gemfile.lock",
+        "state": "complete",
+        "reason": "99 locked gem versions; effective installed platforms unverified",
+        "required": false
+      },
+      {
+        "id": "gem-platforms:Gemfile.lock",
+        "state": "incomplete",
+        "reason": "Lock constraints are captured; effective installed platform and artifact identities require rehearsal",
+        "required": true
+      },
+      {
+        "id": "npm-lock:scripts/maintenance/tools/package-lock.json",
+        "state": "complete",
+        "reason": "614 package entries with integrity and dependency constraints; installation subset is platform-specific",
+        "required": false
+      },
+      {
+        "id": "image-os-packages",
+        "state": "incomplete",
+        "reason": "Base image tag, apt packages and SDK platform-tools are not digest/version locked",
+        "required": true
+      },
+      {
+        "id": "host-toolchains",
+        "state": "incomplete",
+        "reason": "Declared Java/SDK/Swift/runner settings are not effective installed Xcode, Kotlin compiler or SDK identities",
+        "required": true
+      },
+      {
+        "id": "resolved:kotlin-toolchain-targets",
+        "state": "incomplete",
+        "reason": "Effective Android/Native/Compose/stdlib/plugin variants, edges and artifacts require versioned Toolchain introspection; declarations are insufficient",
+        "required": true
+      },
+      {
+        "id": "resolved:gradle-bridge-targets",
+        "state": "incomplete",
+        "reason": "Bridge compiler/plugin/native resolved variants and artifact digests have not been captured",
+        "required": true
+      },
+      {
+        "id": "advisories:all-resolved-inputs",
+        "state": "incomplete",
+        "reason": "No advisory lookup is performed by extraction; use fresh exact-input evidence",
+        "required": false
+      }
+    ],
+    "elixir": {
+      "adapter": "elixir",
+      "state": "not_applicable",
+      "reason": "Dormant profile; no backend configured",
+      "manifests": [],
+      "required_on_activation": [
+        "format",
+        "compile_warnings_as_errors",
+        "credo",
+        "sobelow",
+        "boundary",
+        "vulnerability_audit",
+        "exunit",
+        "isolated_postgresql",
+        "dependency_rehearsal"
+      ]
+    },
+    "release_discovery": "not_requested",
+    "vulnerability_status": "incomplete"
+  },
+  "checks": {
+    "pinned_inventory_contracts": {
+      "sha256": "2bdeb177bee20a1891c88d24b9f46f68a9b44606b0737617958688f3eb83406b",
+      "tests": 23,
+      "failures": 0
+    },
+    "system_inventory_contracts": {
+      "sha256": "2bdeb177bee20a1891c88d24b9f46f68a9b44606b0737617958688f3eb83406b",
+      "tests": 23,
+      "failures": 0
+    },
+    "quality_and_validation_contracts": {
+      "sha256": "6856a6eafdf6457b091eadbe5728719e2b444a1d6019872235379e2f4531949b",
+      "quality_tests": 35,
+      "validation_tests": 27,
+      "failures": 0,
+      "note": "Earlier combined runner also passed 22 inventory tests; final inventory suite is separately recorded above."
+    },
+    "static_gate": {
+      "sha256": "fa79e04da21ed2b21b908aa6b9645d6dbc08552027903ef46505f948865e3848"
+    }
+  },
+  "empty_evidence_assessment": {
+    "schema": 1,
+    "inventory_id": "86290aae0966c899299eda5ce12a3525db00a39f456761199701b25c95af48c9",
+    "evidence_sha256": "950cc7a8257ebf5a968de468c575dcae165345a0ba467a3e6f68616855d2bc2b",
+    "evaluated_at": "2026-09-25T20:09:48Z",
+    "state": "incomplete",
+    "missing_coverage": [
+      "policy:resolved-preset-rules",
+      "swift-graph-edges:ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+      "gem-platforms:Gemfile.lock",
+      "image-os-packages",
+      "host-toolchains",
+      "resolved:kotlin-toolchain-targets",
+      "resolved:gradle-bridge-targets"
+    ],
+    "release_scope": "not_provided",
+    "releases": [],
+    "advisories": [
+      {
+        "input_id": "swift:ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+        "reasons": [
+          "missing_provider",
+          "missing_or_duplicate_advisory_receipt"
+        ],
+        "findings": []
+      },
+      {
+        "input_id": "rubygems:Gemfile.lock",
+        "reasons": [
+          "missing_provider",
+          "missing_or_duplicate_advisory_receipt"
+        ],
+        "findings": []
+      },
+      {
+        "input_id": "npm:scripts/maintenance/tools/package-lock.json",
+        "reasons": [
+          "missing_provider",
+          "missing_or_duplicate_advisory_receipt"
+        ],
+        "findings": []
+      }
+    ],
+    "adoption_authorized": false
+  },
+  "slice_3_hosted": {
+    "commit": "2a2577db135cb992a4599b78ae161715d05159d6",
+    "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/36127364544",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "Classify changes",
+        "conclusion": "success"
+      },
+      {
+        "name": "iOS PullRequest plan",
+        "conclusion": "success"
+      },
+      {
+        "name": "iOS debug build",
+        "conclusion": "success"
+      },
+      {
+        "name": "Quality checks",
+        "conclusion": "success"
+      },
+      {
+        "name": "Android and shared host tests",
+        "conclusion": "success"
+      },
+      {
+        "name": "Android debug build",
+        "conclusion": "success"
+      },
+      {
+        "name": "Pull request gate",
+        "conclusion": "success"
+      }
+    ],
+    "direct_push_used_existing_branch_rule_bypass": true
+  },
+  "untested": [
+    "Slice 4 hosted execution",
+    "Intel/Linux maintenance runtime execution",
+    "Effective mobile target graphs and artifact identities",
+    "Live release and advisory acquisition/authentication",
+    "Complete inherited Renovate candidate policy",
+    "Physical device and release packaging parity",
+    "Direct Toolchain path with bridge unavailable"
+  ],
+  "post_capture_changes": [
+    "docs/maintenance/evidence/2026-09-25-slice-4.json (this summary)",
+    "docs/maintenance/fourth-slice-validation.md (bootstrap result)",
+    "docs/maintenance/README.md (formatting)",
+    "openspec/changes/pinned-dependency-inventory/tasks.md (completion checkboxes)"
+  ],
+  "adoption_authorized": false
+}

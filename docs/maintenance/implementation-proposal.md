@@ -73,6 +73,13 @@ because a false-green hook is the failure being corrected.
 
 ## Ordered follow-up slices
 
+Slices 1–3 are integrated through `2a2577d` with passing hosted CI. Slice 4's
+[pinned inventory and evidence contracts](fourth-slice-validation.md) are implemented
+locally for review. Its completeness ledger explicitly leaves effective mobile
+graphs and live provider acquisition open; those are not solved by extraction.
+The next small implementation is slice 5's shared owned-execution protocol,
+using fake independent adapters before native candidate rehearsal.
+
 | Slice | Deliverable | Acceptance evidence / dependency |
 | --- | --- | --- |
 | 2. Reproducible existing tools | Pin five analyzers plus core runtime, install URLs/checksums and rule profiles; update existing bootstrap separately from gate | Fresh supported macOS bootstrap, exact-version verification, wrong version/missing binary/checksum mismatch fail; current gate passes with reviewed pins. Do not blindly copy observed PATH versions |

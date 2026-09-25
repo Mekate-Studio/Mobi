@@ -1,11 +1,9 @@
 # Quality and dependency maintenance
 
-Status: audit and proposed design, 2026-09-19; slices 1–2 integrated with passing
-hosted CI at `10319cd`. Slice 3 is implemented locally for review on 2026-09-22,
-with the rehearsed iOS compatibility update adopted locally on 2026-09-23.
-The full local staged gate passed, including 50 native tests, both debug builds
-and owned-workspace cleanup. The broader dependency workflow remains a proposal. Audit baseline:
-`7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
+Status: slices 1–3 integrated. Slice 3 and the approved iOS compatibility update
+were committed and pushed at `2a2577d`; all existing hosted checks passed on
+2026-09-25. Slice 4 adds locally verified pinned inventory and evidence contracts. The broader assessment/rehearsal workflow remains a proposal. Audit
+baseline: `7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
 
 Mobi's next maintenance investment should make the existing pre-commit checks
 reproducible and complete, then use isolated evidence to assess Kotlin Toolchain
@@ -35,6 +33,10 @@ Read the documents in this order:
 10. [Xcode 27 iOS investigation](ios-xcode27-investigation.md): three diagnosed
     Swift dependency failures, the adopted compatibility update, isolated
     rehearsals and the full local staged-gate adoption receipt.
+11. [Pinned inventory guide](dependency-inventory.md): explicit setup, inventory,
+    evidence format, failure states and recovery.
+12. [Fourth slice validation](fourth-slice-validation.md): measured extraction,
+    tests and remaining graph/provider/platform gaps.
 
 [Audit evidence](evidence/2026-09-19.json) preserves sanitized probe results,
 input identities and upstream source hashes. It is an audit record, not a
@@ -50,7 +52,8 @@ typed interop needs a new ADR revisiting ADRs 0003 and 0006.
 The original audit changed documentation only. The implementation slices add
 static coverage, pinned quality tools and selected native commit checks. The
 separately approved Swift compatibility update changes three dependency pins.
-The bridge, release defaults and schedules remain unchanged. The existing hosted workflow passed for slices 1–2; slice 3's exact
-commit and native Intel execution remain unverified.
+The bridge, release defaults and schedules remain unchanged. The existing
+hosted workflow passed for slice 3's exact commit. Slice 4's hosted execution
+and native Intel execution remain unverified.
 The proposal requires no private service, account, Codex installation or Go
 application profile.

@@ -1,0 +1,8 @@
+{
+  "name": "mobi-maintenance-tools",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "renovate": "44.93.5"
+  }
+}

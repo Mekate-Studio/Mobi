@@ -94,7 +94,9 @@ Elixir-only consumers of the adapter need no Android SDK/Xcode/Toolchain.
 Evolve [dependency_updates.sh](../../scripts/dev/dependency_updates.sh) as the
 public front door; preserve `just deps` as safe discovery. The proposed verbs
 are `discover`, `assess`, `rehearse`, `review`, `adopt`, `recover`, `cleanup`.
-They are interface proposals, not commands that work today. `integrate` is the
+Slice 4 implements `discover`, `verify` and a limited `evaluate` evidence-contract
+check, documented in the [inventory guide](dependency-inventory.md). The full
+assessment/rehearsal/adoption verbs remain interface proposals. `integrate` is the
 separately authorized normal repository workflow, not an automatic push lane.
 Consolidate the existing compatibility script behind `rehearse` rather than
 creating a competing execution system.

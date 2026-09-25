@@ -127,7 +127,7 @@ pushing tool orchestration into CI or the Gradle bridge.
 - `just format` applies Kotlin and Swift formatting
 - `just lint` checks Kotlin, Swift (including package source), and repository shell files, including new nonignored files
 - `just check` runs those checks once, then selected native jobs in an owned source copy; stage the full intended content first
-- `just deps` runs the local dependency update lookup
+- `just deps` records a pinned dependency inventory and explicit coverage gaps
 
 The pre-commit hook uses `just check`'s script. CI's `quality-check` job uses
 explicit static mode without local staging requirements. See
@@ -174,10 +174,11 @@ result handling and isolation have known gaps documented in the
 narrow evidence; native tests, interop, onboarding and release packaging are
 required before considering bridge retirement.
 
-Use the local lookup before or during dependency maintenance:
+Install the pinned discovery tools once, then record a local inventory:
 
 ```bash
-just deps
+./scripts/maintenance/install_tools.sh
+just deps > /tmp/mobi-inventory.json
 ```
 
 To run the SKIE compatibility probe locally:
@@ -186,12 +187,11 @@ To run the SKIE compatibility probe locally:
 ./scripts/ci/check_skie_kotlin_compatibility.sh
 ```
 
-The `just deps` command runs Renovate in local dry-run lookup mode. It reports
-available updates from the current checkout, but branch and pull-request
-creation still belong to the hosted Renovate flow. When the command falls back
-to `npx`, it expects Node.js 24 or newer because current Renovate releases
-require that runtime. If `osv-scanner` is installed, the same command also runs
-a local vulnerability scan; set `SKIP_OSV_SCAN=1` to skip that optional step.
+The `just deps` command uses verified Node/Renovate pins for isolated native
+extraction. It records declarations, locked packages and missing resolved graphs;
+it does not fetch update catalogs or claim a clean vulnerability scan. Missing
+tools fail with explicit setup guidance. The [inventory guide](docs/maintenance/dependency-inventory.md)
+covers source-bound release/advisory evidence, failure states and recovery.
 
 ## Current Example Surface
 

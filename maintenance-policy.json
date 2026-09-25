@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "minimum_release_age_days": 7,
+  "release_evidence_max_age_hours": 24,
+  "advisory_max_age_hours": 24,
+  "blocking_severities": ["high", "critical"],
+  "unknown_severity": "requires_triage",
+  "automatic_adoption": false
+}

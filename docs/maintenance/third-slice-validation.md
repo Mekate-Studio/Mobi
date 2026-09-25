@@ -1,8 +1,8 @@
 # Third slice: conservative pre-commit validation
 
 Status: implemented; full local staged gate passed on 2026-09-23. Base: `10319cd`.
-OpenSpec change: `conservative-precommit-validation`. This slice remains local
-for review. The preceding two slices were committed and pushed separately.
+OpenSpec change: `conservative-precommit-validation`. Integrated at `2a2577d` on 2026-09-25; all existing hosted checks passed.
+The preceding two slices were committed and pushed separately.
 
 ## Implemented behavior
 
@@ -144,13 +144,13 @@ was explicitly approved and adopted locally on 2026-09-23. The subsequent full
 staged gate passed after fixing owned Gradle shutdown. No local iOS blocker
 remains for this tested configuration. The historical baseline failures and
 rehearsals remain separate from the adoption receipt. No Xcode or release
-default was changed. Hosted validation of the exact integrated source remains
-an outstanding integration gate.
+default was changed. Hosted validation of the exact integrated source passed in
+[run 36127364544](https://github.com/Mekate-Studio/Mobi/actions/runs/36127364544).
 
 ## Untested assumptions and limits
 
-- This slice has not run on hosted CI or native Intel. Slice 2's green run cannot
-  substitute for the new orchestration and discovery behavior.
+- Hosted CI passed for this exact slice 3 commit. Native Intel remains unverified;
+  hosted success does not establish execution on every hardware architecture.
 - Warm hosted cache restore has not been measured. The full local four-job
   staged path passed with empty owned caches and existing host prerequisites;
   it is not fully cold clean-clone or hosted evidence. Earlier standalone native
@@ -165,10 +165,16 @@ an outstanding integration gate.
   hostile local processes or transient edits entirely restored between checks.
 - Effective dependency versions can differ from declared versions. The Android
   probe reported existing transitive overrides; that Android probe did not
-  change declared dependencies. Complete resolved inventory/advisory policy
-  remains slice 4.
+  change declared dependencies. Slice 4 records locked inputs and missing effective graphs; full graph capture
+  and live advisory acquisition remain later maintenance work.
 
-Next: review this slice and the separately approved Swift update, then validate
-the exact integrated commit through the existing hosted workflow. The next
-implementation slice is the pinned dependency inventory; discovery/rehearsal and bridge retirement
-remain separate work.
+## Integration receipt, 2026-09-25
+
+The authorized commit `2a2577db135cb992a4599b78ae161715d05159d6` ran the normal
+hook again: 38 Android/shared tests, 12 iOS tests, both debug builds, static
+gates and source/index/cleanup checks passed. It was pushed to `origin/main`.
+GitHub accepted the direct push using the account's existing branch-rule bypass;
+no repository rule changed. The existing hosted workflow then passed quality,
+Android/shared tests, iOS PullRequest tests, both debug builds and its aggregate
+gate. These results close the exact-commit hosted integration gap. Slice 4
+inventory remains separate from dependency adoption and bridge retirement.

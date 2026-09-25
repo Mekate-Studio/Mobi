@@ -1,7 +1,8 @@
 # iOS Xcode 27 compatibility investigation
 
-Status: reviewed dependency update adopted locally and the full staged gate
-passed on 2026-09-23. Investigation baseline: `10319cd`, with the uncommitted
+Status: reviewed dependency update adopted locally; the full staged gate
+passed on 2026-09-23. Integrated at `2a2577d` on 2026-09-25, with every existing
+hosted check passing in [run 36127364544](https://github.com/Mekate-Studio/Mobi/actions/runs/36127364544). Investigation baseline: `10319cd`, with the uncommitted
 slice 3 job implementation. The 2026-09-22 rehearsal evidence remains historical;
 the three reviewed dependency files now match its passing candidate exactly.
 
@@ -227,8 +228,7 @@ resolved pins and local log hashes. Documentation summaries written after the
 run are identified separately. Earlier failed gates remain failed historical
 evidence; the successful rehearsal alone was not treated as a full-gate pass.
 
-Validate the exact resulting commit through the existing hosted workflow when
-it is integrated. Keep the dependency update separately reviewable from the
+The existing hosted workflow passed for the exact integrated commit. Keep the dependency update separately reviewable from the
 quality-gate implementation. Recovery is to revert the three dependency files as a unit;
 do not downgrade or rewrite unrelated pins. The old set remains incompatible
 with Xcode 27 and is only known to pass the recorded hosted Xcode 26.6 baseline.
@@ -236,10 +236,10 @@ with Xcode 27 and is only known to pass the recorded hosted Xcode 26.6 baseline.
 ## Untested assumptions and limits
 
 - Xcode 26.6 compatibility of this candidate has not been executed locally;
-  only Xcode 27 is installed. The old hosted pass does not validate these pins.
+  only Xcode 27 is installed. The new exact-commit hosted pass validates its configured runner; it does not
+  change the historical local Xcode 27 evidence.
 - Native Intel, physical devices, signing, release packaging, fully cold
-  clean-clone caches and hosted validation of the exact adopted source remain
-  unverified. The local four-job staged gate is verified above.
+  clean-clone caches remain unverified. The local four-job staged gate is verified above.
 - Public advisory lookup is incomplete vulnerability evidence; the broader
   direct/transitive inventory and policy remain separate maintenance work.
 - The successful Gradle-backed run provides no direct Kotlin Toolchain parity
