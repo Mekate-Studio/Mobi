@@ -1,9 +1,10 @@
 # Quality and dependency maintenance
 
-Status: slices 1–3 integrated. Slice 3 and the approved iOS compatibility update
-were committed and pushed at `2a2577d`; all existing hosted checks passed on
-2026-09-25. Slice 4 adds locally verified pinned inventory and evidence contracts. The broader assessment/rehearsal workflow remains a proposal. Audit
-baseline: `7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
+Status: slices 1–4 integrated. Slice 4 was committed and pushed at `313c714`;
+all seven existing hosted jobs passed in [run 36185666930](https://github.com/Mekate-Studio/Mobi/actions/runs/36185666930).
+Slice 5 adds the common executor and independent fixtures locally for review.
+Real native rehearsal remains later work. Audit baseline:
+`7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
 
 Mobi's next maintenance investment should make the existing pre-commit checks
 reproducible and complete, then use isolated evidence to assess Kotlin Toolchain
@@ -38,6 +39,11 @@ Read the documents in this order:
 12. [Fourth slice validation](fourth-slice-validation.md): measured extraction,
     tests and remaining graph/provider/platform gaps.
 
+13. [Executor guide](executor-guide.md): fixture execution, ownership, recovery
+    and cleanup commands.
+14. [Fifth slice validation](fifth-slice-validation.md): executor contracts,
+    public entry-point evidence and native/platform limits.
+
 [Audit evidence](evidence/2026-09-19.json) preserves sanitized probe results,
 input identities and upstream source hashes. It is an audit record, not a
 dependency adoption receipt or a complete resolved dependency inventory.
@@ -53,7 +59,7 @@ The original audit changed documentation only. The implementation slices add
 static coverage, pinned quality tools and selected native commit checks. The
 separately approved Swift compatibility update changes three dependency pins.
 The bridge, release defaults and schedules remain unchanged. The existing
-hosted workflow passed for slice 3's exact commit. Slice 4's hosted execution
-and native Intel execution remain unverified.
+hosted workflow passed for slice 4's exact commit. Slice 5's hosted execution
+and native Intel/Linux execution remain unverified.
 The proposal requires no private service, account, Codex installation or Go
 application profile.

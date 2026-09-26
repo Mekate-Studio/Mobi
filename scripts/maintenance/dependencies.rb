@@ -47,6 +47,11 @@ if $PROGRAM_NAME == __FILE__
     when 'discover'
       raise Maintenance::Failure, 'Usage: discover (JSON goes to stdout; redirect outside source inputs)' unless ARGV.empty?
       puts JSON.pretty_generate(Maintenance.discover(root))
+    when 'rehearse-fixture', 'recover', 'cleanup'
+      require_relative 'execution_cli'
+      result, code = Maintenance::ExecutionCLI.call(root, command, ARGV)
+      puts JSON.pretty_generate(result)
+      exit code
     when 'evaluate'
       raise Maintenance::Failure, 'Usage: evaluate <inventory.json> <evidence.json>' unless ARGV.size == 2
       inventory, evidence = ARGV.map { |path| JSON.parse(File.read(path)) }
@@ -56,7 +61,7 @@ if $PROGRAM_NAME == __FILE__
       puts JSON.pretty_generate(result)
       exit(result['state'] == 'checks_passed' ? 0 : 2)
     else
-      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|verify|evaluate <inventory.json> <evidence.json>]'
+      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|verify|evaluate <inventory.json> <evidence.json>|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]]'
     end
   rescue StandardError, Interrupt => error
     warn JSON.generate('schema' => 1, 'state' => 'failed', 'message' => error.message)

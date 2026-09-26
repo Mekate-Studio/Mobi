@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "outer_timeout_seconds": 2700,
+  "startup_timeout_seconds": 10,
+  "termination_grace_seconds": 1,
+  "success_retention_days": 7,
+  "failure_retention_days": 14,
+  "evidence_retention_days": 90,
+  "automatic_adoption": false
+}

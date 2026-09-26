@@ -95,8 +95,10 @@ Evolve [dependency_updates.sh](../../scripts/dev/dependency_updates.sh) as the
 public front door; preserve `just deps` as safe discovery. The proposed verbs
 are `discover`, `assess`, `rehearse`, `review`, `adopt`, `recover`, `cleanup`.
 Slice 4 implements `discover`, `verify` and a limited `evaluate` evidence-contract
-check, documented in the [inventory guide](dependency-inventory.md). The full
-assessment/rehearsal/adoption verbs remain interface proposals. `integrate` is the
+check, documented in the [inventory guide](dependency-inventory.md). Slice 5 adds
+`rehearse-fixture`, `recover` and `cleanup`, described in the
+[executor guide](executor-guide.md). Real native rehearsal, full assessment and
+adoption remain interface proposals. `integrate` is the
 separately authorized normal repository workflow, not an automatic push lane.
 Consolidate the existing compatibility script behind `rehearse` rather than
 creating a competing execution system.

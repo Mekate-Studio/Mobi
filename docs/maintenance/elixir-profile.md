@@ -1,6 +1,7 @@
 # Dormant Elixir/Phoenix maintenance profile
 
-Status: design only. No Elixir application, dependency, database, container or
+Status: backend activation remains design only. Slice 5 exercises an independent
+[executor fixture](executor-guide.md) without backend tools or services. No Elixir application, dependency, database, container or
 schedule is added. Activation waits for a real backend capability under the
 [platform direction](../reference/platform-direction.md). Mobile-only commands
 must not check for or install Erlang, Elixir or PostgreSQL.

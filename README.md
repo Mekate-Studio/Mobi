@@ -192,6 +192,8 @@ extraction. It records declarations, locked packages and missing resolved graphs
 it does not fetch update catalogs or claim a clean vulnerability scan. Missing
 tools fail with explicit setup guidance. The [inventory guide](docs/maintenance/dependency-inventory.md)
 covers source-bound release/advisory evidence, failure states and recovery.
+The [executor guide](docs/maintenance/executor-guide.md) demonstrates independent
+Kotlin/Elixir rehearsal fixtures and safe cleanup before real native rehearsal.
 
 ## Current Example Surface
 

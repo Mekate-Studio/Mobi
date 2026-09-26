@@ -58,8 +58,8 @@ module Maintenance
     end
 
     def refresh
-      git_env = %w[GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR].to_h { |key| [key, nil] }.merge('GIT_OPTIONAL_LOCKS' => '0')
-      output, status = Open3.capture2e(git_env, 'git', '-C', @root, 'ls-files', '--cached', '--others', '--exclude-standard', '-z')
+      git_env = { 'PATH' => '/usr/bin:/bin', 'LC_ALL' => 'C', 'GIT_CONFIG_GLOBAL' => File::NULL, 'GIT_CONFIG_NOSYSTEM' => '1', 'GIT_OPTIONAL_LOCKS' => '0' }
+      output, status = Open3.capture2e(git_env, '/usr/bin/git', '-C', @root, 'ls-files', '--cached', '--others', '--exclude-standard', '-z', unsetenv_others: true)
       raise Failure, 'Cannot enumerate repository inputs' unless status.success?
 
       @paths = output.split("\0").uniq.sort
@@ -92,10 +92,10 @@ module Maintenance
       end
     end
 
-    def verify_copy!(destination)
+    def verify_copy!(destination, expected: @files)
       paths = Dir.glob(File.join(destination, '**', '*'), File::FNM_DOTMATCH).reject { |path| %w[. ..].include?(File.basename(path)) || File.directory?(path) && !File.symlink?(path) }.map { |path| path.delete_prefix(destination + '/') }.sort
-      raise Failure, 'Copied source changed: file set differs' unless paths == @files.keys.sort
-      @files.each do |path, identity|
+      raise Failure, 'Copied source changed: file set differs' unless paths == expected.keys.sort
+      expected.each do |path, identity|
         target = File.join(destination, path)
         unless File.file?(target) && !File.symlink?(target) && Maintenance.file_sha(target) == identity['sha256'] && ((File.stat(target).mode & 0o111) != 0) == identity['executable']
           raise Failure, "Copied source changed: #{path.inspect}"

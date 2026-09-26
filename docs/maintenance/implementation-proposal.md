@@ -1,13 +1,10 @@
 # Staged implementation proposal
 
-Status: slices 1–2 integrated with passing hosted CI; slice 3 implemented locally
-for review; slices 4–12 remain proposed.
-See [first slice validation](first-slice-validation.md) and
-[second slice validation](second-slice-validation.md), then
-[third slice validation](third-slice-validation.md) for local evidence, the
-separately approved Swift compatibility fix and outstanding hosted/Intel
-validation. The
-[audit](audit.md), [compatibility matrix](kotlin-compatibility.md) and
+Status: slices 1–4 integrated with passing hosted CI through `313c714`.
+Slice 5's [common executor](fifth-slice-validation.md) is implemented locally
+for review. Slices 6–12 remain proposed. Earlier validation records preserve
+their original source identities and limits. The [audit](audit.md),
+[compatibility matrix](kotlin-compatibility.md) and
 [workflow design](workflow-design.md) define the evidence behind this backlog.
 Each slice should be a small reviewed integration into `main` under existing
 protections. No automatic upgrades or AI PR-review dependency is proposed.
@@ -73,12 +70,12 @@ because a false-green hook is the failure being corrected.
 
 ## Ordered follow-up slices
 
-Slices 1–3 are integrated through `2a2577d` with passing hosted CI. Slice 4's
-[pinned inventory and evidence contracts](fourth-slice-validation.md) are implemented
-locally for review. Its completeness ledger explicitly leaves effective mobile
-graphs and live provider acquisition open; those are not solved by extraction.
-The next small implementation is slice 5's shared owned-execution protocol,
-using fake independent adapters before native candidate rehearsal.
+Slices 1–4 are integrated through `313c714` with passing hosted CI. The
+[pinned inventory and evidence contracts](fourth-slice-validation.md) leave
+effective mobile graphs and live provider acquisition open; those are not solved
+by extraction.
+Slice 5's [owned-execution protocol](executor-guide.md) uses independent fixtures.
+The next real adapter work is slice 6's baseline-first Kotlin Toolchain rehearsal.
 
 | Slice | Deliverable | Acceptance evidence / dependency |
 | --- | --- | --- |

@@ -1,6 +1,7 @@
 # Fourth slice: pinned dependency inventory
 
-Status: implementation and local verification completed on 2026-09-25. Base commit:
+Status: integrated at `313c714` on 2026-09-25. Every hosted job passed in
+[run 36185666930](https://github.com/Mekate-Studio/Mobi/actions/runs/36185666930). Base commit:
 `2a2577db135cb992a4599b78ae161715d05159d6`. OpenSpec change:
 `pinned-dependency-inventory`. See the [inventory guide](dependency-inventory.md)
 for commands and the [source-bound receipt](evidence/2026-09-25-slice-4.json)
@@ -84,9 +85,10 @@ in ordinary quality checks.
   Node archives for Intel and Linux have reviewed official checksums but have not
   run here. Mobi's current front door reuses its macOS quality runtime; standalone
   portability is a common-core contract, not a verified Linux onboarding claim.
-- Slice 4 hosted validation is not recorded here. The passing hosted run below
-  validates slice 3, not these new files. The evidence receipt preserves the
-  pre-integration source snapshot and does not claim an exact-commit hosted pass.
+- Slice 4's exact-commit hosted quality/contracts, Android/shared tests, iOS
+  tests and both debug builds passed. Hosted native Renovate extraction itself
+  was not run; local fixture/extraction evidence remains separately scoped.
+  The original evidence receipt preserves its pre-integration snapshot.
 - Source guards and owned copies are not protection against hostile local code,
   restored transient writes or abrupt host failure. Cleanup after SIGKILL/crash
   needs the inspection procedure in the guide.

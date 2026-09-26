@@ -54,6 +54,10 @@ their digest and warning summaries, not credentials or machine-specific log path
 An inventory result is `inventory_recorded`, with `release_discovery=not_requested`
 and `vulnerability_status=incomplete`. Exit zero means inventory creation worked.
 
+The same entry point also exposes slice 5's [executor fixtures, recovery and
+cleanup](executor-guide.md). Those commands do not use Renovate or acquire
+release/advisory evidence.
+
 ## Evidence evaluation
 
 ```bash

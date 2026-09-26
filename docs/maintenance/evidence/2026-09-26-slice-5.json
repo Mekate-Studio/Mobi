@@ -1,0 +1,660 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-26T13:47:58.291827+00:00",
+  "slice": 5,
+  "status": "locally_verified_uncommitted",
+  "base_commit": "313c714f8f1629dd6b9bf2ca49b144a005fcc7ef",
+  "source": {
+    "sha256": "3dc4221c675bbfbb85e7280207a566faeb2f07cfcf7e76b4e5b1cf492dee8898",
+    "digest_recipe": "SHA-256 of sorted compact JSON working-file manifest; selected public file identities below",
+    "capture": "After final-code tests and before public fixture probes; final evidence/docs/checklist edits listed separately",
+    "manifest_entries": 358,
+    "index_sha256": "9dde8f1e6363aeeb06202f32ed8b25f3c14acc52f0d8898b57bfe240ee3f5882",
+    "full_manifest_not_published": "Includes local metadata paths; hashes and public implementation selection only",
+    "implementation_files": {
+      "maintenance-execution-policy.json": {
+        "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b",
+        "executable": false
+      },
+      "scripts/ci/run_job.sh": {
+        "sha256": "8e18c61dc1ee7f879752ae53c888a89c434ada70ceb49249605edbc285756ef6",
+        "executable": true
+      },
+      "scripts/dev/dependency_updates.sh": {
+        "sha256": "5e70129c4cb68b4f9ec389996b8bdce97f496e7dfc6b3fda4eadc038fd4a16ab",
+        "executable": true
+      },
+      "scripts/dev/test_contracts.rb": {
+        "sha256": "6cd975eae63870aa1e750d2c4dd95c53908be68daf836f54810a4ef6d563e180",
+        "executable": false
+      },
+      "scripts/maintenance/dependencies.rb": {
+        "sha256": "00c77e1a4d4d450c5a532dea837dc57ea15ec5b49a454ec944f0aaa625f6b2f8",
+        "executable": false
+      },
+      "scripts/maintenance/execution_cli.rb": {
+        "sha256": "165a93e899d040d278adc7ce2575569548108061152aac57f422566e4d37c118",
+        "executable": false
+      },
+      "scripts/maintenance/fixtures/executor/check.rb": {
+        "sha256": "09bc492af90cd826e947d79476ae2c626bb9a68c5a4fee3026580738c969353e",
+        "executable": false
+      },
+      "scripts/maintenance/fixtures/executor/common.rb": {
+        "sha256": "dafd92b9732df5379859673344583fa0575d4624be2d2e00abe12f0db7468973",
+        "executable": false
+      },
+      "scripts/maintenance/fixtures/executor/elixir.rb": {
+        "sha256": "d16975675469cbcd62331cfdd3b4897f4ad82e7294ee6270f5707926a77fbf91",
+        "executable": false
+      },
+      "scripts/maintenance/fixtures/executor/kotlin.rb": {
+        "sha256": "00946540de7f8ad45e864325999a7d083b76e278ba7019dcab76ec9295dcb981",
+        "executable": false
+      },
+      "scripts/maintenance/lib/core.rb": {
+        "sha256": "f92974bc45fa3c571b5acb0a29524100b1384935c2b6208d480d38189e5179ad",
+        "executable": false
+      },
+      "scripts/maintenance/lib/executor.rb": {
+        "sha256": "90b6592067b629cae063ddf7de3f0689cc6f596ba9495245f92b7b0c345c1d9d",
+        "executable": false
+      },
+      "scripts/maintenance/lib/maintenance.rb": {
+        "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3",
+        "executable": false
+      },
+      "scripts/maintenance/lib/policy.rb": {
+        "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965",
+        "executable": false
+      },
+      "scripts/maintenance/lib/process_group.rb": {
+        "sha256": "4c08c07e3f48744453bcf0d1f8d3293f7e4c56f5a0ac54ef21452166630f796b",
+        "executable": false
+      },
+      "scripts/maintenance/lib/recovery.rb": {
+        "sha256": "fd3441721cb7fc62bdd6a8ecb10927222243c8c469ee934ab5b62b6060ff26cc",
+        "executable": false
+      },
+      "scripts/maintenance/lib/run_store.rb": {
+        "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc",
+        "executable": false
+      },
+      "scripts/maintenance/lib/tools.rb": {
+        "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8",
+        "executable": false
+      },
+      "scripts/maintenance/test_executor.rb": {
+        "sha256": "bd6c8b86a0de6e74d029a17b10106dd95a946bb726ba3f7e6a72719c54215c29",
+        "executable": false
+      },
+      "scripts/maintenance/worker.rb": {
+        "sha256": "2734e661a89ffa167ca4108c094c7cf5c7bb4ad57008f976b2a1d996da992fd6",
+        "executable": false
+      }
+    },
+    "implementation_unchanged_after_capture": true
+  },
+  "host": {
+    "architecture": "arm64",
+    "macos": "27.0",
+    "build": "26A428",
+    "primary_ruby": "4.0.6",
+    "system_ruby": "2.6.10"
+  },
+  "policy": {
+    "schema": 1,
+    "outer_timeout_seconds": 2700,
+    "startup_timeout_seconds": 10,
+    "termination_grace_seconds": 1,
+    "success_retention_days": 7,
+    "failure_retention_days": 14,
+    "evidence_retention_days": 90,
+    "automatic_adoption": false
+  },
+  "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a",
+  "execution_file_identities": [
+    {
+      "name": "executor.rb",
+      "sha256": "90b6592067b629cae063ddf7de3f0689cc6f596ba9495245f92b7b0c345c1d9d"
+    },
+    {
+      "name": "worker.rb",
+      "sha256": "2734e661a89ffa167ca4108c094c7cf5c7bb4ad57008f976b2a1d996da992fd6"
+    },
+    {
+      "name": "core.rb",
+      "sha256": "f92974bc45fa3c571b5acb0a29524100b1384935c2b6208d480d38189e5179ad"
+    },
+    {
+      "name": "run_store.rb",
+      "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc"
+    },
+    {
+      "name": "process_group.rb",
+      "sha256": "4c08c07e3f48744453bcf0d1f8d3293f7e4c56f5a0ac54ef21452166630f796b"
+    },
+    {
+      "name": "ruby",
+      "sha256": "80e70b56c0332ab44deffc20c2b816f85bb1239b7e8ce6a12942373deadf072e"
+    },
+    {
+      "name": "ps",
+      "sha256": "a06fe087161557f1f8c030672eaedcd90bc6a8e92b8f2d44e07cffedc3349205"
+    },
+    {
+      "name": "git",
+      "sha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2"
+    },
+    {
+      "name": "kotlin.rb",
+      "sha256": "00946540de7f8ad45e864325999a7d083b76e278ba7019dcab76ec9295dcb981"
+    },
+    {
+      "name": "common.rb",
+      "sha256": "dafd92b9732df5379859673344583fa0575d4624be2d2e00abe12f0db7468973"
+    },
+    {
+      "name": "check.rb",
+      "sha256": "09bc492af90cd826e947d79476ae2c626bb9a68c5a4fee3026580738c969353e"
+    },
+    {
+      "name": "maintenance-execution-policy.json",
+      "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b"
+    },
+    {
+      "name": "execution_cli.rb",
+      "sha256": "165a93e899d040d278adc7ce2575569548108061152aac57f422566e4d37c118"
+    },
+    {
+      "name": "dependencies.rb",
+      "sha256": "00c77e1a4d4d450c5a532dea837dc57ea15ec5b49a454ec944f0aaa625f6b2f8"
+    }
+  ],
+  "checks": {
+    "repo_contracts": {
+      "command": "./scripts/ci/run_job.sh quality-contracts",
+      "passed": 112,
+      "failures": 0,
+      "ruby": "4.0.6",
+      "suites": {
+        "static_quality": 35,
+        "precommit_validation": 27,
+        "inventory": 23,
+        "executor": 27
+      },
+      "log_sha256": "44a1e1102ffeb7a42ab60c109c0e7b7bb200d87a9662849888a57e862379bbba"
+    },
+    "system_ruby_executor": {
+      "command": "/usr/bin/ruby scripts/maintenance/test_executor.rb",
+      "passed": 27,
+      "failures": 0,
+      "ruby": "2.6.10",
+      "log_sha256": "07a7cfd2c29aad5c5b6040c2847581396ffe403de51ada97f53884c873d47836"
+    },
+    "static_quality": {
+      "command": "./scripts/ci/run_job.sh quality-check",
+      "state": "passed",
+      "timings_seconds": {
+        "ktlint": 1.009,
+        "detekt": 1.033,
+        "swiftformat": 0.104,
+        "swiftlint": 0.264,
+        "shellcheck": 1.326,
+        "total_seconds": 5.573
+      },
+      "log_sha256": "b68fb800983033e6ddbc5796879b333087d99a36e6cce0ebfa1d49be9e53c4f8"
+    },
+    "ruby_syntax": {
+      "files": 22,
+      "state": "passed"
+    },
+    "strict_openspec": "passed",
+    "git_diff_check": "passed",
+    "caller_source_index_unchanged_during_probes": true
+  },
+  "fixture_scope": "synthetic_adapter_contract",
+  "fixture_missing_capabilities": [
+    "native_builds",
+    "resolved_graphs",
+    "provider_evidence",
+    "release_packaging"
+  ],
+  "probes": [
+    {
+      "adapter": "kotlin",
+      "scenario": "pass",
+      "run_id": "2ce84ebfe75a7b7c22383fc2eb42b8a0",
+      "exit": 0,
+      "seconds": 1.499,
+      "state": "checks_passed",
+      "reason": "named_checks_passed",
+      "started_at": "2026-09-26T13:40:25Z",
+      "ended_at": "2026-09-26T13:40:26Z",
+      "binding": {
+        "source_sha256": "272194ec12b849bffe6e95f00a7668317297e5b3051f7697c508d4845cae2d9e",
+        "capture_mode": "working_snapshot",
+        "git": {
+          "head": null,
+          "index_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "adapter": "fixture-kotlin",
+        "adapter_schema": 1,
+        "plan_sha256": "d8456d4ec8aecae83f66a4ae693499d07acffb2112f8fcc3dca36ce8b96bc5ed",
+        "patch_sha256": "93ffcb7baa726fb9c756a7aba9babbeccb6fb21e6b4d6650b67ff522dae3dd58",
+        "tools_sha256": "15bb138ba72cb1e1defcf3815b96657ecd44666a481c23ec9b659d84f80237ec",
+        "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+      },
+      "steps": [
+        {
+          "check": "behavior",
+          "phase": "baseline",
+          "status": "passed",
+          "exit": 0,
+          "seconds": 0.256,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "3ab42d34c8e2ca8b4db1f312a6eb6a144b2475f9b1156424e7a47d09329df89c"
+          }
+        },
+        {
+          "check": "behavior",
+          "phase": "candidate",
+          "status": "passed",
+          "exit": 0,
+          "seconds": 0.236,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "c155d36ca401f53a778f0b227db0488370ef2c8d3857768e4f6a8fe5c0e5db95"
+          }
+        }
+      ],
+      "attempts": [
+        {
+          "id": "baseline-behavior",
+          "state": "stopped",
+          "process_exit": 0,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "3ab42d34c8e2ca8b4db1f312a6eb6a144b2475f9b1156424e7a47d09329df89c",
+            "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "id": "candidate-behavior",
+          "state": "stopped",
+          "process_exit": 0,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "c155d36ca401f53a778f0b227db0488370ef2c8d3857768e4f6a8fe5c0e5db95",
+            "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "public_output_sha256": "f4ed56e2a814e3c86bb182bc57709f43bd4c5761a8b072efced9972afd4658f6",
+      "stored_result_sha256": "f4ed56e2a814e3c86bb182bc57709f43bd4c5761a8b072efced9972afd4658f6",
+      "history_sha256": "a61ab7e9cbb3afc801799a0c1968e3951fde63143ae91c5f7dc1b51e83f424e6",
+      "history_bytes": 1204,
+      "recovery_state": "quiescent",
+      "dry_run_eligible": false,
+      "cleanup_state": "cleaned",
+      "disposable_workspaces_absent": true,
+      "original_result_preserved": true,
+      "evidence_retained": true
+    },
+    {
+      "adapter": "kotlin",
+      "scenario": "candidate-failure",
+      "run_id": "b1f293ac3e1a8f995607512007da5a37",
+      "exit": 22,
+      "seconds": 1.478,
+      "state": "incompatible",
+      "reason": "candidate_regression",
+      "started_at": "2026-09-26T13:40:29Z",
+      "ended_at": "2026-09-26T13:40:29Z",
+      "binding": {
+        "source_sha256": "272194ec12b849bffe6e95f00a7668317297e5b3051f7697c508d4845cae2d9e",
+        "capture_mode": "working_snapshot",
+        "git": {
+          "head": null,
+          "index_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "adapter": "fixture-kotlin",
+        "adapter_schema": 1,
+        "plan_sha256": "0d9fbc63df2c1c752381244f1d3d61ea88961ae5a59c99bd3793405b985b1695",
+        "patch_sha256": "3ac2ad5be79bfdcfbc73a1f0826383455dbbe71b0a19d41657731ad3fb42f0e8",
+        "tools_sha256": "15bb138ba72cb1e1defcf3815b96657ecd44666a481c23ec9b659d84f80237ec",
+        "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+      },
+      "steps": [
+        {
+          "check": "behavior",
+          "phase": "baseline",
+          "status": "passed",
+          "exit": 0,
+          "seconds": 0.23,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "3ab42d34c8e2ca8b4db1f312a6eb6a144b2475f9b1156424e7a47d09329df89c"
+          }
+        },
+        {
+          "check": "behavior",
+          "phase": "candidate",
+          "status": "failed",
+          "exit": 1,
+          "seconds": 0.236,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "f51c75d1c809f5e3e99ae00e83694e25d9f9fddbcd671e75fe833921cddb3d60"
+          }
+        }
+      ],
+      "attempts": [
+        {
+          "id": "baseline-behavior",
+          "state": "stopped",
+          "process_exit": 0,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "3ab42d34c8e2ca8b4db1f312a6eb6a144b2475f9b1156424e7a47d09329df89c",
+            "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "id": "candidate-behavior",
+          "state": "stopped",
+          "process_exit": 1,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "f51c75d1c809f5e3e99ae00e83694e25d9f9fddbcd671e75fe833921cddb3d60",
+            "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "public_output_sha256": "3cde22a59e3bcb2c936121552f30b6df4fd9f553554d471385011b2e487952d0",
+      "stored_result_sha256": "3cde22a59e3bcb2c936121552f30b6df4fd9f553554d471385011b2e487952d0",
+      "history_sha256": "93b9dab76fdde24ef64e864d097b8f5e6c71f28eb2b3b7a2c7e1438139492edf",
+      "history_bytes": 1120,
+      "recovery_state": "quiescent",
+      "dry_run_eligible": false,
+      "cleanup_state": "cleaned",
+      "disposable_workspaces_absent": true,
+      "original_result_preserved": true,
+      "evidence_retained": true
+    },
+    {
+      "adapter": "kotlin",
+      "scenario": "baseline-failure",
+      "run_id": "c74c20baed1fa8be90992ef4c8b9b28a",
+      "exit": 21,
+      "seconds": 1.212,
+      "state": "inconclusive",
+      "reason": "baseline_failed",
+      "started_at": "2026-09-26T13:40:32Z",
+      "ended_at": "2026-09-26T13:40:33Z",
+      "binding": {
+        "source_sha256": "194a2376bc5f6036bd2da24e465a643d8775f3db65514ee5596f80657fd036f8",
+        "capture_mode": "working_snapshot",
+        "git": {
+          "head": null,
+          "index_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "adapter": "fixture-kotlin",
+        "adapter_schema": 1,
+        "plan_sha256": "3cd8eccf7a8af6ed38e3a4882945fb5bca369f135e622ce1b89b035eec956a9e",
+        "patch_sha256": "fea9b498af9c70596250a504a53db74c1aa16ae44d647e6711f078dbc857c4d7",
+        "tools_sha256": "15bb138ba72cb1e1defcf3815b96657ecd44666a481c23ec9b659d84f80237ec",
+        "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+      },
+      "steps": [
+        {
+          "check": "behavior",
+          "phase": "baseline",
+          "status": "failed",
+          "exit": 1,
+          "seconds": 0.229,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "367858185d61659e18e6603a57848506cc3893da34949f49537ee7cacd846821"
+          }
+        }
+      ],
+      "attempts": [
+        {
+          "id": "baseline-behavior",
+          "state": "stopped",
+          "process_exit": 1,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "367858185d61659e18e6603a57848506cc3893da34949f49537ee7cacd846821",
+            "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "public_output_sha256": "effb6d9ca24d71e6c45bda88ed2d0aa2253cd73902bfcb33c96bf1268610122a",
+      "stored_result_sha256": "effb6d9ca24d71e6c45bda88ed2d0aa2253cd73902bfcb33c96bf1268610122a",
+      "history_sha256": "4fbf28cfd9a709445d67ef596e068b664efd20a79de7eff6c085bb94c2481601",
+      "history_bytes": 551,
+      "recovery_state": "quiescent",
+      "dry_run_eligible": false,
+      "cleanup_state": "cleaned",
+      "disposable_workspaces_absent": true,
+      "original_result_preserved": true,
+      "evidence_retained": true
+    },
+    {
+      "adapter": "elixir",
+      "scenario": "pass",
+      "run_id": "af07f25ef01df0d357e9ff594900f683",
+      "exit": 0,
+      "seconds": 1.594,
+      "state": "checks_passed",
+      "reason": "named_checks_passed",
+      "started_at": "2026-09-26T13:40:36Z",
+      "ended_at": "2026-09-26T13:40:37Z",
+      "binding": {
+        "source_sha256": "b5265df738e40d6ce673211ce3f8313bc7517f538c407be83456b5ea63705881",
+        "capture_mode": "working_snapshot",
+        "git": {
+          "head": null,
+          "index_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "adapter": "fixture-elixir",
+        "adapter_schema": 1,
+        "plan_sha256": "86f7cc80d76f9a6a1c1c0c154df804afbe6a94642c80911f34daa23f855d56b2",
+        "patch_sha256": "1628da9fcbe0b8ecaa60a872a695796eefb70f455f67b514464567c0941d3ba6",
+        "tools_sha256": "b80faabb586a9edeabf4da6987244d9fda956c0da62b9eaba3f87f7fde96de36",
+        "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+      },
+      "steps": [
+        {
+          "check": "behavior",
+          "phase": "baseline",
+          "status": "passed",
+          "exit": 0,
+          "seconds": 0.266,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "3ab42d34c8e2ca8b4db1f312a6eb6a144b2475f9b1156424e7a47d09329df89c"
+          }
+        },
+        {
+          "check": "behavior",
+          "phase": "candidate",
+          "status": "passed",
+          "exit": 0,
+          "seconds": 0.233,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "c155d36ca401f53a778f0b227db0488370ef2c8d3857768e4f6a8fe5c0e5db95"
+          }
+        }
+      ],
+      "attempts": [
+        {
+          "id": "baseline-behavior",
+          "state": "stopped",
+          "process_exit": 0,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "3ab42d34c8e2ca8b4db1f312a6eb6a144b2475f9b1156424e7a47d09329df89c",
+            "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "id": "candidate-behavior",
+          "state": "stopped",
+          "process_exit": 0,
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "check.json": "c155d36ca401f53a778f0b227db0488370ef2c8d3857768e4f6a8fe5c0e5db95",
+            "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "public_output_sha256": "6db3631d41fc4a3cc0bc6aeab238e8710906d63e32de8174dd8820a851ef241d",
+      "stored_result_sha256": "6db3631d41fc4a3cc0bc6aeab238e8710906d63e32de8174dd8820a851ef241d",
+      "history_sha256": "4fd0ab57eaa4bc7bb9b7d4355891a2d799056706df6aae3d04c24d92a4e92274",
+      "history_bytes": 1204,
+      "recovery_state": "quiescent",
+      "dry_run_eligible": false,
+      "cleanup_state": "cleaned",
+      "disposable_workspaces_absent": true,
+      "original_result_preserved": true,
+      "evidence_retained": true
+    },
+    {
+      "adapter": "elixir",
+      "scenario": "timeout",
+      "run_id": "97318d3480ef3633309d1f6c7ec3608c",
+      "exit": 21,
+      "seconds": 3.135,
+      "state": "inconclusive",
+      "reason": "check_timeout",
+      "started_at": "2026-09-26T13:40:40Z",
+      "ended_at": "2026-09-26T13:40:42Z",
+      "binding": {
+        "source_sha256": "b5265df738e40d6ce673211ce3f8313bc7517f538c407be83456b5ea63705881",
+        "capture_mode": "working_snapshot",
+        "git": {
+          "head": null,
+          "index_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "adapter": "fixture-elixir",
+        "adapter_schema": 1,
+        "plan_sha256": "a066cd539d06a13dd922b105b67c77037c22ac36b0f0190c342fcd2619168bf8",
+        "patch_sha256": "1628da9fcbe0b8ecaa60a872a695796eefb70f455f67b514464567c0941d3ba6",
+        "tools_sha256": "b80faabb586a9edeabf4da6987244d9fda956c0da62b9eaba3f87f7fde96de36",
+        "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+      },
+      "steps": [],
+      "attempts": [
+        {
+          "id": "baseline-behavior",
+          "state": "stopped",
+          "output_sha256": {
+            "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "public_output_sha256": "a63ac48b6611e515c474afd8217db5086700c77a4c03429097d90ece34900fca",
+      "stored_result_sha256": "a63ac48b6611e515c474afd8217db5086700c77a4c03429097d90ece34900fca",
+      "history_sha256": "50a9653d23acd2e29575b6b6963dde1ef95bdb51706957e78791cdf0fc74fb32",
+      "history_bytes": 439,
+      "recovery_state": "quiescent",
+      "dry_run_eligible": false,
+      "cleanup_state": "cleaned",
+      "disposable_workspaces_absent": true,
+      "original_result_preserved": true,
+      "evidence_retained": true
+    }
+  ],
+  "inventory_regression": {
+    "command": "./scripts/dev/dependency_updates.sh",
+    "state": "inventory_recorded",
+    "id": "eedb50d5eacb813b087647c91dd5fff9e53e71a0d75457931ae4e52e0cd2887f",
+    "created_at": "2026-09-26T13:40:44Z",
+    "source_sha256": "3c911df8eb17bc2281748c81c7a12de938c85ae2fa814158ecc50b3dbafba0fb",
+    "tools_identity": "d57f2d3bc8187e1f13ce5adcd0b63c825cb05afc0dbbc7dfde0ef77ee9e7f6b4",
+    "component_occurrences": 866,
+    "manager_file_counts": {
+      "bundler": 1,
+      "dockerfile": 1,
+      "github-actions": 4,
+      "gradle": 5,
+      "gradle-wrapper": 1,
+      "npm": 1,
+      "ruby-version": 1,
+      "swift": 1,
+      "regex": 11
+    },
+    "elixir_state": "not_applicable",
+    "vulnerability_status": "incomplete",
+    "release_discovery": "not_requested",
+    "output_sha256": "7eb4f847a1a201fe4eef1453281b0eca190c2f082c003b356b71e59891de2357",
+    "native_log_sha256": "29e3667b15f6bf33a5919df7714c60f39830965e7ef306ab22dc0b7c2de1a26d",
+    "stderr_empty": true
+  },
+  "earlier_integration": {
+    "slice": 4,
+    "head_sha": "313c714f8f1629dd6b9bf2ca49b144a005fcc7ef",
+    "run_url": "https://github.com/Mekate-Studio/Mobi/actions/runs/36185666930",
+    "state": "success",
+    "verified_on": "2026-09-26",
+    "jobs": {
+      "Classify changes": "success",
+      "Quality checks": "success",
+      "Android and shared host tests": "success",
+      "iOS PullRequest plan": "success",
+      "Android debug build": "success",
+      "iOS debug build": "success",
+      "Pull request gate": "success"
+    },
+    "scope_limit": "Earlier exact commit; no hosted native Renovate extraction and no slice 5 hosted execution"
+  },
+  "unverified": [
+    "Slice 5 hosted execution",
+    "Intel macOS and Linux execution",
+    "Native Toolchain candidate rehearsal",
+    "Real PostgreSQL/native daemon/simulator isolation",
+    "Direct Toolchain path with bridge unavailable",
+    "Release packaging"
+  ],
+  "blockers_to_native_assessment": [
+    "Native resource handlers and negative ownership probes",
+    "Effective Toolchain/compiler/plugin and target graph identities",
+    "Fresh complete upstream release and advisory evidence"
+  ],
+  "limitations": [
+    "Not an OS sandbox against hostile code or malicious same-user processes",
+    "Detached process groups unsupported",
+    "Candidate edit format only replaces existing files",
+    "Interrupted allocation or uncertain ownership needs manual inspection",
+    "No automatic evidence purge"
+  ],
+  "post_capture_changes": [
+    "docs/maintenance/fifth-slice-validation.md",
+    "docs/maintenance/evidence/2026-09-26-slice-5.json",
+    "docs/maintenance/implementation-proposal.md",
+    "docs/maintenance/workflow-design.md",
+    "openspec/changes/isolated-maintenance-executor/tasks.md"
+  ],
+  "adoption_authorized": false
+}
