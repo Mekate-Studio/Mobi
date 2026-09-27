@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "platforms": {
+    "ios": [
+      {
+        "major": "26",
+        "channel": "stable",
+        "released_on": "2025-09-15",
+        "minimum": "26.0",
+        "source": {
+          "url": "https://developer.apple.com/help/app-store-connect/release-notes/",
+          "retrieved_at": "2026-09-27T11:06:23Z",
+          "sha256": "aed5d7fef8aafb580431b601fceed129d05a2648444e185c53c82c0bcafecb26"
+        }
+      },
+      {
+        "major": "27",
+        "channel": "stable",
+        "released_on": "2026-09-14",
+        "minimum": "27.0",
+        "source": {
+          "url": "https://developer.apple.com/news/releases/?id=09142026a",
+          "retrieved_at": "2026-09-27T11:06:23Z",
+          "sha256": "ae50cac72ed3d40e16f32c23bb0d6a290e055dd6a56f6fec89a246b0dac565b0"
+        }
+      }
+    ],
+    "android": [
+      {
+        "major": "16",
+        "channel": "stable",
+        "released_on": "2025-06-10",
+        "minimum": 36,
+        "source": {
+          "url": "https://developer.android.com/blog/posts/product-manager-guide-to-adapting-android-apps-across-devices",
+          "retrieved_at": "2026-09-27T11:06:24Z",
+          "sha256": "719cd36cecf4667351b610109b46f9e1b36e56fd61d46e7eb26dd9b0ca85d6ba"
+        }
+      },
+      {
+        "major": "17",
+        "channel": "stable",
+        "released_on": "2026-06-16",
+        "minimum": 37,
+        "source": {
+          "url": "https://developer.android.com/blog/posts/android-17-is-here",
+          "retrieved_at": "2026-09-27T11:06:25Z",
+          "sha256": "b70ba39b2e5502cb67b5df9ce017e9c0a56e70b093d4ae8b283b4e727845159d"
+        }
+      }
+    ]
+  }
+}

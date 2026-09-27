@@ -1,9 +1,10 @@
 # Isolated maintenance executor
 
-Slice 5 adds a reusable execution and recovery protocol. Its public command runs
-**synthetic Kotlin or Elixir fixtures**. It does not run native builds, change
-Mobi dependencies or activate a backend. See [validation](fifth-slice-validation.md)
-for measured results; real Toolchain rehearsal is the next adapter slice.
+Slice 5 adds a reusable execution and recovery protocol with **synthetic Kotlin
+or Elixir fixtures**. Slice 6 adds independent [Kotlin input/mobile profiles](kotlin-rehearsal.md)
+and native resource ownership. Neither command adopts dependencies or activates
+a backend. See [fixture validation](fifth-slice-validation.md) and
+[real rehearsal evidence](sixth-slice-validation.md) for their distinct scopes.
 
 ## Run a contract fixture
 
@@ -93,8 +94,10 @@ are passed as arguments. The first edit format only replaces existing source
 files and requires matching before/content/after hashes. Creation/deletion,
 version resolution and native dependency patch generation remain later work.
 
-Only `filesystem` and `process-group` resources are supported. A required
-PostgreSQL/simulator/container handler returns `incomplete` before checks start.
+The common dispatch supports `filesystem`, `process-group` and the optional
+`kotlin-native` handler. Kotlin's handler owns its verified Gradle JVMs and one
+simulator; required PostgreSQL/container resources still return `incomplete`
+before checks start.
 Independent fixture adapters live under `scripts/maintenance/fixtures/executor`;
 the dormant production [Elixir profile](elixir-profile.md) remains unchanged.
 
@@ -108,7 +111,9 @@ apart from the declared candidate edit; generated output belongs outside it.
 Only declared environment names are passed to checks. Git/process inspection
 also clears inherited environment and user Git configuration. Mobi's front door
 uses the existing pinned Ruby; the independent core additionally runs under
-system Ruby in contracts. No SDK/runtime installation happens during rehearsal.
+system Ruby in contracts. Fixture rehearsal installs no SDK/runtime. Real Kotlin rehearsal explicitly
+bootstraps reviewed Toolchains and dependencies into its owned caches and may
+install required SDK packages into its private SDK copy.
 
 `maintenance-execution-policy.json` sets a 45-minute outer ceiling, bounded
 startup/termination grace and retention. Checks declare their own smaller limits;
@@ -126,10 +131,10 @@ These mechanisms use Ruby's documented [process-group, environment and argv
 options](https://docs.ruby-lang.org/en/4.0/Process.html) and
 [file leases](https://docs.ruby-lang.org/en/4.0/File.html#method-i-flock).
 They are an ownership protocol, not an OS sandbox against hostile code or a
-malicious same-user process. A child that detaches into a different process
-group is outside this first adapter contract. Real native daemons, simulators,
-databases and shared caches need explicit handlers and negative probes before
-using this executor; existing pre-commit and compatibility jobs are not migrated.
+malicious same-user process. A detached child is supported only by an explicit
+ownership handler. Kotlin's native handler verifies its private Gradle daemons
+and simulator; databases, arbitrary detached processes and shared caches remain
+outside that contract. Existing pre-commit and compatibility jobs are not migrated.
 
 ## Outcomes and evidence
 

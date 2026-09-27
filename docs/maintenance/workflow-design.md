@@ -1,7 +1,11 @@
 # Quality gate and dependency workflow design
 
-Status: proposed, not implemented. See the [audit](audit.md) for current behavior
-and the [implementation proposal](implementation-proposal.md) for ordering.
+Status: the full lifecycle is a design; slices 1–6 implement the documented
+static, inventory and isolated rehearsal subsets. The
+[mobile support workflow](mobile-support-policy.md) now adds configurable OS-floor
+assessment and explicit architecture-impact review. General automatic semantic
+analysis and an adoption command are not implemented. See the [audit](audit.md)
+and [implementation proposal](implementation-proposal.md) for scope and ordering.
 
 ## Pre-commit contract
 
@@ -66,6 +70,16 @@ still perform current drift and required advisory-freshness checks.
 
 ## Common core and independent adapters
 
+When an upstream release removes a target, assess a supported-target migration
+before proposing an older dependency pin solely to preserve it. Verify host,
+simulator, device and OS requirements separately; a simulator architecture is
+not an OS deployment floor. Record affected contributors/users and retained
+capabilities, rehearse the revised target policy explicitly, then ask the
+maintainer whether to adopt it. The original failing combination remains evidence;
+it does not permanently reject the newer version under a reviewed target policy.
+An exclusion must be intentional and visible, never a missing check relabeled as
+success. See the [Apple Silicon assessment](apple-silicon-assessment.md).
+
 Keep a small repository tool rather than a new general-purpose framework.
 Use the existing shell entry points and maintenance area. A reasonable first
 implementation is a Ruby standard-library executor because Ruby is already
@@ -97,8 +111,9 @@ are `discover`, `assess`, `rehearse`, `review`, `adopt`, `recover`, `cleanup`.
 Slice 4 implements `discover`, `verify` and a limited `evaluate` evidence-contract
 check, documented in the [inventory guide](dependency-inventory.md). Slice 5 adds
 `rehearse-fixture`, `recover` and `cleanup`, described in the
-[executor guide](executor-guide.md). Real native rehearsal, full assessment and
-adoption remain interface proposals. `integrate` is the
+[executor guide](executor-guide.md). Slice 6 adds `prepare-kotlin`, `rehearse-kotlin`,
+`assess-support` and `rehearse-support`. General semantic assessment and an adoption
+command remain proposals; maintainers review and apply exact validated patches. `integrate` is the
 separately authorized normal repository workflow, not an automatic push lane.
 Consolidate the existing compatibility script behind `rehearse` rather than
 creating a competing execution system.

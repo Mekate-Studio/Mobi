@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "automatic_adoption": false,
+  "evidence_max_age_hours": 24,
+  "platforms": {
+    "ios": {"stable_major_lag": 1, "primary_hosts": ["developer.apple.com", "www.apple.com"]},
+    "android": {"stable_major_lag": 1, "primary_hosts": ["developer.android.com", "android-developers.googleblog.com"]}
+  },
+  "decisions_required_for": ["architecture_change", "minimum_os_change", "api_or_behavior_change", "toolchain_default_change", "bridge_retirement"]
+}

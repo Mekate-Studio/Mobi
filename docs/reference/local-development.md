@@ -92,9 +92,12 @@ That keeps the local flow aligned with the CI and TestFlight path while the
 bridge is in use.
 
 `KOTLIN_IOS_BUILDER=kotlin` is kept as an experimental direct integration path,
-but it is not the default while Kotlin Toolchain 0.11.1 still requires an
-iOS app Xcode project with a single target and the app still needs SKIE on the
-Gradle bridge for sealed-state ergonomics.
+but it is not the default: equivalent native app/test, SKIE-backed sealed-state,
+clean-clone and packaging behavior has not been proven with the bridge unavailable.
+The reviewed Toolchain 0.12.2 targets Apple Silicon iOS simulators and ARM devices.
+A separate native test target is not itself a demonstrated direct-path blocker.
+See the [compatibility matrix](../maintenance/kotlin-compatibility.md) and
+[minimum-OS policy](../maintenance/mobile-support-policy.md).
 
 `just doctor` checks the expected local toolchain and shows whether an Android
 device or emulator is already available for `just android-run`.

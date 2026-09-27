@@ -156,11 +156,14 @@ under `Debug-iphonesimulator` instead of the macOS host products directory,
 which broke `@Reducer` and `@ObservableState` expansion from the CLI. The
 repo's iOS CI and Fastlane entrypoints therefore disable explicit Swift modules
 by default while also letting Xcode choose the simulator architectures itself.
-The experimental direct Kotlin Toolchain iOS path is not the default yet. With
-Kotlin Toolchain 0.11.1, the generic simulator CLI build must be narrowed to one
-architecture, and the direct iOS app integration still expects a checked-in
-Xcode project with a single app target. Mobi currently keeps an app test target
-and still relies on SKIE in the Gradle bridge for sealed-state Swift ergonomics.
+The experimental direct Kotlin Toolchain iOS path is not the default yet.
+Mobi uses Toolchain 0.12.2 with ARM device/simulator targets and keeps its Xcode
+app and native test targets. The versioned integration selects one marked app
+target; that does not establish a prohibition on a separate test target.
+Mobi still relies on SKIE in the Gradle bridge for sealed-state Swift ergonomics.
+Equivalent direct-path native tests, interop, clean-clone and release packaging
+remain unproven. See the [compatibility matrix](../maintenance/kotlin-compatibility.md)
+and [minimum-OS policy](../maintenance/mobile-support-policy.md).
 There is one tooling split to keep in mind: the low-level CI wrapper uses the
 workspace path for raw `xcodebuild`, while Fastlane archives against the plain
 `.xcodeproj` because Fastlane's Xcodeproj-based scheme discovery does not

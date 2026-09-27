@@ -1,8 +1,40 @@
 # Kotlin Toolchain compatibility and iOS bridge retirement
 
 Audit date: 2026-09-19. Decision: **assess a coordinated upgrade; defer bridge
-retirement**. No candidate dependency set has been built or adopted. Kotlin
-Toolchain means the CLI/workspace behind `./kotlin`, not Gradle's JVM toolchain.
+retirement**. This matrix preserves the original audit snapshot; subsequent
+[Swift/Xcode compatibility work](ios-xcode27-investigation.md) and
+[slice 6 Toolchain rehearsal](sixth-slice-validation.md) have separate receipts.
+Kotlin Toolchain means the CLI/workspace behind `./kotlin`, not Gradle's JVM toolchain.
+
+## Measured follow-up on 2026-09-27
+
+The [Apple Silicon assessment](apple-silicon-assessment.md) established passing
+input/mobile comparisons for Toolchain 0.12.2 with ARM iOS targets. The maintainer
+subsequently approved that exact candidate: it is now adopted in the working tree.
+Intel iOS simulators are explicitly excluded; ARM devices/simulators, native
+app/test targets and the Gradle bridge remain. The
+[support-policy record](support-policy-validation.md) separately validates explicit
+iOS 26.0 and Android 16/API 36 app minimums. Its configurable assessment is part of
+the manual update workflow; direct-path parity and device/release/hosted gaps remain.
+
+The following paragraphs and tables preserve the original comparison inputs and
+outcomes rather than relabeling historical receipts as current declarations.
+
+The [Kotlin adapter](kotlin-rehearsal.md) captures effective inputs for 0.11.1 and
+0.12.2 across all seven modules: Kotlin 2.3.21 → 2.4.10, Compose setting 1.10.3 →
+1.11.1 and compile JDK setting 21 → 25. Explicit Android min/compile/target remain
+23/36/36; the candidate reports build tools 37.0.0. Printed graph roots change
+104 → 102 because the app's implicit x64 compile roots disappear; explicitly
+configured shared-library x64 roots remain. Selected coordinates can differ from
+these defaults and declarations. The validation report records the native result
+and evidence limits. Bridge pins were unchanged in that comparison; direct-path parity remains
+unproven after the later ARM migration adoption.
+
+The real baseline passed all four native jobs. The Toolchain-only candidate's
+Android test command failed dependency resolution because its selected Compose
+foundation/Material3 artifacts lack the declared shared-library `iosX64` target.
+The original conservative result and a separate final-classifier diagnostic
+reassessment are retained; later candidate jobs were not attempted.
 
 ## Version and ownership matrix
 
@@ -133,7 +165,8 @@ Source-bound risk map for the first Toolchain candidate:
 | Metro provider/codegen changes in [1.2.0](https://github.com/ZacSweers/metro/releases/tag/1.2.0) and [1.2.1](https://github.com/ZacSweers/metro/releases/tag/1.2.1) | `@Provides`, `@DependencyGraph.Factory`, `createGraphFactory` in shared DI and Android graph | Real factory construction, missing-binding negative fixture, common/native tests; do not enable newer IR-only flags indiscriminately |
 
 Confirmed upstream changes are separate from plausible Mobi breakage. No
-candidate failure or candidate success has been observed here.
+candidate failure or success had been observed at the original audit; use the
+[slice 6 receipt](sixth-slice-validation.md) for subsequent measured outcomes.
 
 ### Release-age decisions as of this audit
 

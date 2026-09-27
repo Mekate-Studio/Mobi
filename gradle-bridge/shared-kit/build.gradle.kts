@@ -18,7 +18,6 @@ skie {
 }
 
 kotlin {
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -58,13 +57,6 @@ kotlin {
                 "../../shared-feature-home/test",
                 "../../shared-feature-nearby-vehicle-map/test",
                 "../../shared-di/test",
-            )
-        }
-
-        val iosX64Main by getting {
-            kotlin.srcDirs(
-                "../../shared-core/src@ios",
-                "../../shared-ui-home/src@ios",
             )
         }
 

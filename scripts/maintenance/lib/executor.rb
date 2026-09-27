@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'run_store'
+require_relative 'resource_handlers'
 require 'rbconfig'
 
 module Maintenance
@@ -28,7 +29,7 @@ module Maintenance
       validate_plan!
       @ruby = File.realpath(RbConfig.ruby)
       @worker = File.expand_path('../worker.rb', __dir__)
-      paths = [__FILE__, @worker, File.join(__dir__, 'core.rb'), File.join(__dir__, 'run_store.rb'), File.join(__dir__, 'process_group.rb'), @ruby, '/bin/ps', '/usr/bin/git'] + adapter.code_files + input_files
+      paths = [__FILE__, @worker, File.join(__dir__, 'core.rb'), File.join(__dir__, 'run_store.rb'), File.join(__dir__, 'process_group.rb'), File.join(__dir__, 'resource_handlers.rb'), @ruby, '/bin/ps', '/usr/bin/git'] + adapter.code_files + input_files
       @plan['checks'].each { |check| paths += check['argv'].select { |arg| Pathname.new(arg).absolute? && File.file?(arg) } }
       @tools = paths.uniq.to_h { |path| [File.realpath(path), Maintenance.file_sha(path)] }
       @git = git_identity
@@ -91,7 +92,7 @@ module Maintenance
         state, reason = 'checks_passed', 'named_checks_passed'
         begin
           verify_inputs!
-          unless (@plan['resource_types'] - %w[filesystem process-group]).empty?
+          unless (@plan['resource_types'] - ResourceHandlers::TYPES).empty?
             raise ExecutionStop.new('incomplete', 'unsupported_resource_handler')
           end
           %w[baseline candidate].each { |phase| run_phase(phase) }
@@ -149,6 +150,7 @@ module Maintenance
         when 'passed' then next
         when 'missing' then raise ExecutionStop.new('incomplete', 'check_prerequisite_missing')
         when 'infrastructure' then raise ExecutionStop.new('inconclusive', 'check_infrastructure_failure')
+        when 'refused' then raise ExecutionStop.new('refused', 'check_input_or_evidence_drift')
         when 'failed' then raise ExecutionStop.new(phase == 'baseline' ? 'inconclusive' : 'incompatible', phase == 'baseline' ? 'baseline_failed' : 'candidate_regression')
         end
       end
@@ -165,17 +167,19 @@ module Maintenance
       nonce = SecureRandom.hex(16)
       record = { 'id' => key, 'path' => 'steps/' + key, 'nonce' => nonce, 'state' => 'planned' }
       @journal['steps'] << record; @store.save(@journal)
+      record['managed_resources'] = ResourceHandlers.prepare(@plan['resource_types'], control: control, workspace: workspace, nonce: nonce)
+      @store.save(@journal)
       replacements = { '{source}' => File.join(workspace, 'source'), '{output}' => File.join(workspace, 'output'),
                        '{cache}' => File.join(workspace, 'cache'), '{phase}' => phase }
       argv = check['argv'].map { |arg| replacements.reduce(arg) { |text, (from, to)| text.gsub(from, to) } }
       environment = { 'PATH' => File.dirname(@ruby) + ':/usr/bin:/bin', 'HOME' => File.join(workspace, 'home'), 'TMPDIR' => File.join(workspace, 'tmp'),
                       'LANG' => 'C', 'LC_ALL' => 'C', 'GIT_CONFIG_GLOBAL' => File::NULL, 'GIT_CONFIG_NOSYSTEM' => '1',
-                      'MOBI_RESULT_PATH' => File.join(control, 'check.json'), 'MOBI_PHASE' => phase }
+                      'MOBI_RESULT_PATH' => File.join(control, 'check.json'), 'MOBI_PHASE' => phase, 'MOBI_RESOURCE_NONCE' => nonce }
       timeout = [check['timeout_seconds'], @deadline - clock].min
       raise ExecutionStop.new('inconclusive', 'outer_deadline') unless timeout > 0
       config = { 'argv' => argv, 'cwd' => replacements['{source}'], 'env' => environment,
                  'lifetime_seconds' => timeout + @policy['startup_timeout_seconds'] + 2, 'grace_seconds' => @policy['termination_grace_seconds'],
-                 'coordinator' => ProcessGroup.identity(Process.pid) }
+                 'coordinator' => ProcessGroup.identity(Process.pid), 'managed_resources' => record['managed_resources'] }
       RunStore.atomic(File.join(control, 'command.json'), config)
       started = clock; pid = nil; stopped = false
       begin
@@ -225,6 +229,7 @@ module Maintenance
               raise Failure, 'Supervisor ownership unavailable; retained for recovery'
             end
           end
+          ResourceHandlers.stop(record['managed_resources'])
           record['state'] = 'stopped'
           record['output_sha256'] = %w[stdout.log stderr.log check.json supervisor.log].each_with_object({}) do |name, hashes|
             file = File.join(control, name)
@@ -242,7 +247,7 @@ module Maintenance
       raise ExecutionStop.new('executor_failure', 'missing_or_invalid_check_result') unless File.file?(result_file) && !File.symlink?(result_file) && File.size(result_file) <= 1_048_576
       result = JSON.parse(File.read(result_file))
       valid = result['schema'] == 1 && result['check'] == check['id'] && result['phase'] == phase &&
-              %w[passed failed missing infrastructure].include?(result['status']) &&
+              %w[passed failed missing infrastructure refused].include?(result['status']) &&
               (result['status'] == 'passed' ? record['process_exit'] == 0 : record['process_exit'].is_a?(Integer) && record['process_exit'] != 0)
       raise ExecutionStop.new('executor_failure', 'check_result_exit_mismatch') unless valid
       hashes = %w[stdout.log stderr.log check.json].to_h do |name|

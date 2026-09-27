@@ -41,14 +41,14 @@ repository. Instead, Gradle will own only an iOS-facing framework bridge.
 ## Why the bridge still exists
 
 The bridge is no longer best explained as "needed for Swift Package Manager."
-Kotlin Toolchain 0.11.x gets further through the checked-in Xcode project and
-SPM setup than the older Amper path did. The remaining blockers are more
+Mobi now uses Toolchain 0.12.2 with ARM iOS targets, while the bridge remains
+the validated native app/test path. The remaining evidence gaps are more
 specific:
 
-1. Kotlin Toolchain's documented `ios/app` migration shape expects an existing
-   `module.xcodeproj` with a single iOS app target. This repository keeps both
-   the app target and the app test target checked in, because the public smoke
-   path should exercise the native iOS shell as a normal Xcode project.
+1. Kotlin Toolchain's versioned integration selects one marked iOS app target
+   in `module.xcodeproj`. This does not prohibit a separate test target. Mobi
+   preserves both targets; equivalent direct-path native build/test evidence
+   is still required rather than inferring a blocker from target count.
 2. The direct Kotlin Toolchain path is still experimental for this repo's iOS
    shape. It should remain selectable with `KOTLIN_IOS_BUILDER=kotlin`, but it
    should not be the default until it can build the same app and test target

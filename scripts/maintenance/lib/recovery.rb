@@ -36,6 +36,9 @@ module Maintenance
               else
                 ProcessGroup.members(owner.fetch('pgid')).empty? ? 'absent' : 'uncertain'
               end
+      if state == 'absent' && !ResourceHandlers.quiescent?(step['managed_resources'])
+        state = 'owned_resources_active'
+      end
       { 'check' => step['id'], 'state' => state, 'owner' => owner }
     end
 
@@ -54,6 +57,7 @@ module Maintenance
             @store.event(journal, 'recovery_stop_planned', 'check' => state['check'])
             ProcessGroup.stop(state['owner'], grace: journal['policy']['termination_grace_seconds'])
           end
+          journal['steps'].each { |step| ResourceHandlers.stop(step['managed_resources']) }
           states = journal['steps'].map { |step| process_state(journal, step) }
           blocked = states.any? { |state| state['state'] != 'absent' }
           unless blocked
@@ -66,7 +70,7 @@ module Maintenance
             @store.event(journal, 'recovery_quiescent')
           end
         end
-        { 'schema' => 1, 'operation' => 'recover', 'run_id' => id, 'state' => blocked ? 'ownership_uncertain' : states.any? { |s| s['state'] == 'owned_active' } ? 'owned_processes_active' : 'quiescent',
+        { 'schema' => 1, 'operation' => 'recover', 'run_id' => id, 'state' => blocked ? 'ownership_uncertain' : states.any? { |s| %w[owned_active owned_resources_active].include?(s['state']) } ? 'owned_processes_active' : 'quiescent',
           'hold' => journal['hold'], 'processes' => states.map { |state| state.reject { |key, _| key == 'owner' } },
           'recorded_outcome' => journal['state'], 'resume_allowed' => false, 'adoption_authorized' => false }
       end

@@ -1,6 +1,9 @@
 # Fifth slice: isolated maintenance executor
 
-Status: implemented and locally verified on 2026-09-26; uncommitted for review.
+Status: integrated as `7e9e8f83c035c88b71fa0feaafd9f334657b3f84` and pushed.
+All seven hosted jobs passed in [run 36257552549](https://github.com/Mekate-Studio/Mobi/actions/runs/36257552549).
+The original local receipt below remains unchanged; it records the pre-integration
+snapshot, rather than retroactively claiming hosted evidence.
 Base commit: `313c714f8f1629dd6b9bf2ca49b144a005fcc7ef`. OpenSpec change:
 `isolated-maintenance-executor`. See the [executor guide](executor-guide.md)
 for commands and the [source-bound receipt](evidence/2026-09-26-slice-5.json)
@@ -80,12 +83,15 @@ proves the classification contract, not a real dependency compatibility result.
 
 ## Untested assumptions and limits
 
-- Slice 5 has run locally on Apple Silicon only. Hosted execution, Intel macOS
-  and Linux are unverified. Ruby standard-library use alone does not establish
-  portable process inspection or onboarding behavior.
+- The original focused checks ran on Apple Silicon. Subsequent integration ran
+  the normal pre-commit static, Android/shared test, iOS test and both debug-build
+  gates successfully, followed by all seven hosted jobs for the exact commit.
+  Intel macOS and Linux remain unverified; Ruby standard-library use alone does
+  not establish portable process inspection or onboarding behavior.
 - Native builds, effective dependency graphs, upstream provider evidence and
   release packaging are explicitly missing from fixture results. No native app
-  build/test was repeated for this Ruby executor slice. A passing SKIE/Gradle
+  build/test was repeated during the focused fixture checks; the subsequent
+  normal pre-commit and hosted gates ran them before/after integration. A passing SKIE/Gradle
   framework build or Swift export announcement would not fill these gaps.
 - The ownership protocol is not an OS sandbox against hostile code or a
   malicious process running as the same user. Detached process groups, native
@@ -104,12 +110,14 @@ proves the classification contract, not a real dependency compatibility result.
 
 ## Blockers and next acceptance boundary
 
-There is no known blocker to reviewing and integrating this fixture executor.
-It cannot yet authorize a real dependency assessment: required native resource
-handlers, effective Toolchain/compiler/plugin and target graph identities, and
-fresh complete provider evidence are missing.
+The integrated fixture executor does not by itself authorize a real dependency
+assessment. At the slice 5 boundary, native resource handlers, effective
+Toolchain/compiler/plugin and target graph identities, and fresh complete provider
+evidence were missing. Slice 6 records which of those gaps it addresses.
 
-Slice 6 should implement the Kotlin Toolchain adapter first. Begin with a
+[Slice 6](sixth-slice-validation.md) implements the Kotlin Toolchain adapter locally.
+Its separate receipt reports actual outcomes and remaining gaps. The original
+acceptance boundary was to begin with a
 passing baseline in owned resources, record effective tool and graph identities,
 and prove timeout/interruption/cleanup for the actual processes involved before
 rehearsing one explicit candidate. Failed baseline, missing graph evidence or
@@ -129,5 +137,6 @@ The integrated base commit `313c714` passed all seven jobs in
 [hosted run 36185666930](https://github.com/Mekate-Studio/Mobi/actions/runs/36185666930):
 classification, quality/contracts, Android/shared tests, iOS tests, both debug
 builds and the aggregate gate. This is evidence for that exact earlier commit.
-Hosted native Renovate extraction was not part of the run. Slice 5 still needs
-its own normal integration checks after review.
+Hosted native Renovate extraction was not part of that run. Slice 5 subsequently
+passed its normal local pre-commit and hosted integration checks at `7e9e8f8`, as
+recorded at the start of this document and in the slice 6 receipt.

@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "reviewed_on": "2026-09-27",
+  "baseline": "0.12.2",
+  "candidates": [],
+  "versions": {
+    "0.11.1": {
+      "release_url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.11.1",
+      "published_at": "2026-06-05T18:14:02Z",
+      "release_api": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/tags/v0.11.1",
+      "release_response_sha256": "fef956ca6383730cad660926d1c28c12909e9e6e4c61e4d309ebf9d2fcb2705b",
+      "distribution_sha256": "0ded2a434f6bf193b24e2a6d56c3ba443f4232721155a65aaa8372789412112f",
+      "wrappers": {
+        "kotlin": {
+          "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.11.1/kotlin-cli-0.11.1-wrapper",
+          "sha256": "6dbcdde0bcae41705c187aefb6c91c6c29ef9079c8072a473c2149151f8d7962"
+        },
+        "kotlin.bat": {
+          "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.11.1/kotlin-cli-0.11.1-wrapper.bat",
+          "sha256": "669ecc38f0ea46829a0f82d585243b6f2a08f0c9640d270d090372dd277dd47d"
+        }
+      }
+    },
+    "0.12.2": {
+      "release_url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.12.2",
+      "published_at": "2026-09-15T13:41:20Z",
+      "release_api": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/tags/v0.12.2",
+      "release_response_sha256": "2c21f322afa1d280f9814791b9d64637180d652c5687800360a709464ba3e7d0",
+      "distribution_sha256": "9fec42de4f378a27240b78c1b66ffef0c2aca66a4a6390ca67fe51aacb75677e",
+      "wrappers": {
+        "kotlin": {
+          "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.12.2/kotlin-cli-0.12.2-wrapper",
+          "sha256": "d8b5b852e54d4af5d92c6e1d3535ba60ec6485590e6d0dbc3666171e6136e040"
+        },
+        "kotlin.bat": {
+          "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.12.2/kotlin-cli-0.12.2-wrapper.bat",
+          "sha256": "ebf24e51151f24a452b7cf8b1cf79df6db96134a6c06f833c79b0f481dee3124"
+        }
+      }
+    }
+  },
+  "automatic_adoption": false,
+  "target_policy": "apple-silicon"
+}

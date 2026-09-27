@@ -4,11 +4,42 @@ require_relative 'lib/recovery'
 
 module Maintenance
   module ExecutionCLI
+    def self.store_path(root, args)
+      name = nil
+      if args.include?('--store')
+        raise Failure, 'Use a trailing --store NAME with lowercase letters, digits and hyphens' unless args.size >= 2 && args[-2] == '--store' && args.count('--store') == 1 && args[-1].match?(/\A[a-z][a-z0-9-]{0,39}\z/)
+        name = args.pop; args.pop
+      end
+      File.join(root, '.maintenance', name ? 'runs-' + name : 'runs')
+    end
+
     def self.call(root, command, args)
-      store_path = File.join(root, '.maintenance', 'runs')
-      raise Failure, 'No execution store; run a fixture first' if command != 'rehearse-fixture' && !Dir.exist?(store_path)
+      args = args.dup
+      if command == 'prepare-kotlin'
+        raise Failure, 'Usage: prepare-kotlin (downloads only reviewed wrappers)' unless args.empty?
+        require_relative 'lib/kotlin_wrappers'
+        identity = KotlinWrappers.new(root).prepare!
+        return [{ 'schema' => 1, 'operation' => command, 'state' => 'prepared', 'identity' => identity, 'adoption_authorized' => false }, 0]
+      end
+      store_path = self.store_path(root, args)
+      raise Failure, 'No execution store; run a rehearsal first' if !%w[rehearse-fixture rehearse-kotlin rehearse-support].include?(command) && !Dir.exist?(store_path)
       store = RunStore.new(store_path)
       case command
+      when 'rehearse-kotlin', 'rehearse-support'
+        require_relative 'adapters/kotlin_rehearsal'
+        support = command == 'rehearse-support'
+        if support
+          raise Failure, 'Usage: rehearse-support <inputs|mobile> [--store NAME]' unless args.size == 1
+          args.unshift(KotlinWrappers.new(root).pins.fetch('baseline'))
+        else
+          raise Failure, 'Usage: rehearse-kotlin <reviewed-version> <inputs|mobile> [current|apple-silicon] [--store NAME]' unless (2..3).cover?(args.size)
+        end
+        source = Source.new(root)
+        adapter = KotlinRehearsal.new(root, source: source, candidate: args[0], profile: args[1], target_policy: args[2], support_policy: support)
+        policy_path = File.join(root, 'maintenance-execution-policy.json')
+        result = Executor.new(source: source, adapter: adapter, store: store, policy: JSON.parse(File.read(policy_path)),
+                              input_files: [policy_path, __FILE__, File.join(root, 'scripts/maintenance/dependencies.rb')]).run
+        [result, Executor::EXIT_CODES.fetch(result['state'])]
       when 'rehearse-fixture'
         raise Failure, 'Usage: rehearse-fixture <kotlin|elixir> [pass|candidate-failure|baseline-failure|missing|infrastructure|malformed|forged-success|timeout|source-drift|child-survivor]' unless (1..2).cover?(args.size) && %w[kotlin elixir].include?(args[0])
         language, scenario = args

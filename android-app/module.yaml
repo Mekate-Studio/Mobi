@@ -25,7 +25,7 @@ settings:
   android:
     namespace: studio.mekate.mobi
     applicationId: studio.mekate.mobi
-    minSdk: 23
+    minSdk: 36
     compileSdk: 36
     targetSdk: 36
     signing:

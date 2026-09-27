@@ -4,8 +4,10 @@ Status: proposed English procedure for maintainers and an optional future skill.
 This is documentation, not an installed Codex skill or executable automation.
 The proposed lifecycle verbs in [workflow-design.md](workflow-design.md) must
 exist and have contract tests before an assistant presents them as commands.
-Today the existing lookup and compatibility scripts have the limits in the
-[audit](audit.md); do not run their mutating behavior in the main checkout.
+The [inventory](dependency-inventory.md), [Kotlin rehearsal](kotlin-rehearsal.md)
+and [mobile support](mobile-support-policy.md) guides name implemented commands.
+The legacy compatibility probe still has the [audit](audit.md)'s limitations;
+do not run its mutating behavior in the main checkout.
 
 ## Purpose
 
@@ -32,7 +34,12 @@ is not approval to adopt, remove architecture, commit, push or publish.
 4. Read official release notes and migration guides across the whole interval.
    Inspect relevant source changes and link each claim to its version/commit,
    URL and retrieval date. Map the impact to repository files, symbols,
-   settings and tests. Distinguish confirmed changes, plausible breakage,
+   settings and tests. Refresh and run the configured stable-major OS support
+   assessment. Separate host, simulator, device, deployment and compile/target SDK
+   requirements. If an old target loses upstream artifacts, assess a supported
+   architecture candidate and its lost/retained capabilities before recommending
+   a legacy pin. Record alternatives, rollback and the required maintainer decision.
+   Distinguish confirmed changes, plausible breakage,
    unknowns and useful features. Avoid summarizing only the latest release.
 5. Review the proposed probe plan before expensive execution. Use repository
    jobs and actual consumers. Include deliberate failures where necessary to

@@ -29,6 +29,15 @@ architecture itself and the documentation around it.
 
 ## Clean-Clone Quickstart
 
+The reviewed baseline is Kotlin Toolchain 0.12.2. iOS development requires an
+Apple Silicon Mac; shared Kotlin and the bridge target `iosArm64` devices and
+`iosSimulatorArm64` simulators. Intel iOS simulators are outside Mobi's support
+policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile/target SDK
+remain API 36. These floors follow a configurable policy of one stable major
+behind the latest reviewed stable release. See the
+[mobile support workflow](docs/maintenance/mobile-support-policy.md) and
+[adoption evidence](docs/maintenance/support-policy-validation.md).
+
 Install Ruby dependencies:
 
 ```bash
@@ -192,6 +201,12 @@ extraction. It records declarations, locked packages and missing resolved graphs
 it does not fetch update catalogs or claim a clean vulnerability scan. Missing
 tools fail with explicit setup guidance. The [inventory guide](docs/maintenance/dependency-inventory.md)
 covers source-bound release/advisory evidence, failure states and recovery.
+The inventory also includes the configured minimum-OS assessment. Use
+`./scripts/dev/dependency_updates.sh assess-support` for the lightweight check.
+Architecture, API, support-window and Toolchain-default changes require an impact
+review and explicit adoption decision; the workflow does not automatically update
+source or retire the bridge. The [support guide](docs/maintenance/mobile-support-policy.md)
+explains source freshness, candidate rehearsal and per-project configuration.
 The [executor guide](docs/maintenance/executor-guide.md) demonstrates independent
 Kotlin/Elixir rehearsal fixtures and safe cleanup before real native rehearsal.
 
