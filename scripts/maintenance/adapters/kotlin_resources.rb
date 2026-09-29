@@ -92,7 +92,13 @@ module Maintenance
         next unless current
         # A known completed identity does not authorize a newly reused PID.
         proof = ownership_proof(current)
-        raise Failure, 'Unowned live process in private Gradle registry' unless proof
+        unless proof
+          RunStore.atomic(File.join(@control, 'unowned-jvm.json'), {
+            'identity' => current, 'from_process_scan' => tagged_ids.include?(pid),
+            'from_registry' => registry_ids.include?(pid), 'recorded_at' => Time.now.utc.iso8601
+          })
+          raise Failure, 'Unowned live process in private Gradle registry'
+        end
         current.merge('ownership_proof' => proof)
       end.compact
     end

@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "reviewed_at": "2026-09-28T05:59:01.073563+00:00",
+  "toolchain": "0.12.2",
+  "baseline": {
+    "kotlin": "2.3.20",
+    "metro": "1.1.1",
+    "skie": "0.10.12",
+    "compose": "1.9.0"
+  },
+  "candidate": {
+    "id": "kotlin-2-4-10",
+    "releases": {
+      "kotlin": {
+        "version": "2.4.10",
+        "published_at": "2026-07-14T10:47:27Z",
+        "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.4.10",
+        "source_id": "kotlin-release"
+      },
+      "metro": {
+        "version": "1.4.4",
+        "published_at": "2026-09-16T21:45:45Z",
+        "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.4",
+        "source_id": "metro-releases"
+      },
+      "skie": {
+        "version": "0.10.14",
+        "published_at": "2026-07-27T15:09:23Z",
+        "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.14",
+        "source_id": "skie-releases"
+      }
+    },
+    "compose": "1.9.0"
+  },
+  "minimum_release_age_days": 7,
+  "automatic_adoption": false,
+  "sources": [
+    {
+      "id": "skie-releases",
+      "url": "https://api.github.com/repos/touchlab/SKIE/releases?per_page=10",
+      "retrieved_at": "2026-09-27T20:25:58.278468+00:00",
+      "sha256": "476e6a5643ba9535b77853019140fc71529630fa12e61f037d13c53070d462ae"
+    },
+    {
+      "id": "metro-releases",
+      "url": "https://api.github.com/repos/ZacSweers/metro/releases?per_page=30",
+      "retrieved_at": "2026-09-27T20:25:58.475355+00:00",
+      "sha256": "bdf16461c69ae04b64107f3b8d4e416ab104e0d9dffeabe5e2b40793dde3dfeb"
+    },
+    {
+      "id": "toolchain-tree",
+      "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/git/trees/v0.12.2?recursive=1",
+      "retrieved_at": "2026-09-27T20:25:58.911367+00:00",
+      "sha256": "327a822070fad3a63639074a2c80dbc8ef75cb673b1ae447de447eca011f1aa4"
+    },
+    {
+      "id": "skie-tree",
+      "url": "https://api.github.com/repos/touchlab/SKIE/git/trees/0.10.14?recursive=1",
+      "retrieved_at": "2026-09-27T20:25:58.576274+00:00",
+      "sha256": "ab5548a221463ff0455735c54875b8d4ff7efd2f423dd2bf6c910ca8735e1d72"
+    },
+    {
+      "id": "swift-export",
+      "url": "https://kotlinlang.org/docs/native-swift-export.html",
+      "retrieved_at": "2026-09-27T20:25:58.708633+00:00",
+      "sha256": "8de0cd950fdf42d579ca1e73ceab4c396383eed0e1b6a8df588bdee1db916793"
+    },
+    {
+      "id": "skie-installation",
+      "url": "https://skie.touchlab.co/Installation",
+      "retrieved_at": "2026-09-27T20:25:58.834718+00:00",
+      "sha256": "3039e3384fe1bab21b1bfbefb19969723b2fe78f5680941fe23c4fcafb133f80"
+    },
+    {
+      "id": "skie-0.10.15",
+      "url": "https://skie.touchlab.co/changelog/0.10.15",
+      "retrieved_at": "2026-09-27T20:25:58.927189+00:00",
+      "sha256": "21b42c5755b24d5885c0e0b714c15ce08f30a0ace286ddf555641cd32b5172c7"
+    },
+    {
+      "id": "metro-compat",
+      "url": "https://zacsweers.github.io/metro/latest/compatibility/",
+      "retrieved_at": "2026-09-27T20:25:59.105728+00:00",
+      "sha256": "e8472eb492f4aa0465770b3228b826ee45687bfa7c6bf61e6dc2996e93db96f8"
+    },
+    {
+      "id": "toolchain-ManageXCodeProjectTask.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/tasks/ios/ManageXCodeProjectTask.kt",
+      "retrieved_at": "2026-09-27T20:26:46.122823+00:00",
+      "sha256": "773e03535f765badefde0871be788272d584126b7707b4cb2ba06bf656e70031"
+    },
+    {
+      "id": "toolchain-NativeLinkTask.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/tasks/native/NativeLinkTask.kt",
+      "retrieved_at": "2026-09-27T20:26:46.141376+00:00",
+      "sha256": "f4a37d715a5cb8ac9408ca4441bfa61890c15d4ccd8e9f374c2e7587558a5a78"
+    },
+    {
+      "id": "toolchain-NativeCompileKlibTask.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/tasks/native/NativeCompileKlibTask.kt",
+      "retrieved_at": "2026-09-27T20:26:46.119359+00:00",
+      "sha256": "61f050a59f8442c2dafab31149567183788a8fc5040829c514a0378faa00c0cc"
+    },
+    {
+      "id": "toolchain-taskBuilderNative.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/tasks/native/taskBuilderNative.kt",
+      "retrieved_at": "2026-09-27T20:26:46.151483+00:00",
+      "sha256": "fcfb0907969314bd81715d172a77a093a18012a8bccf0299018f5b8e234998dc"
+    },
+    {
+      "id": "skie-SkieGradlePluginApplier.kt",
+      "url": "https://raw.githubusercontent.com/touchlab/SKIE/0.10.14/SKIE/skie-gradle/plugin-impl/src/main/kotlin/co/touchlab/skie/plugin/SkieGradlePluginApplier.kt",
+      "retrieved_at": "2026-09-27T20:26:46.608725+00:00",
+      "sha256": "02e1914c4aa90efd969e6b9342daadf3077a3f33d92ebbea6b2218adf5585058"
+    },
+    {
+      "id": "skie-CreateSkieConfigurationTask.kt",
+      "url": "https://raw.githubusercontent.com/touchlab/SKIE/0.10.14/SKIE/skie-gradle/plugin-impl/src/main/kotlin/co/touchlab/skie/plugin/configuration/CreateSkieConfigurationTask.kt",
+      "retrieved_at": "2026-09-27T20:26:46.610343+00:00",
+      "sha256": "37f9644c658956c6cc1d0213d9d71baa47b481bbf98ba3dae32712054a5a47c8"
+    },
+    {
+      "id": "kotlin-release",
+      "url": "https://api.github.com/repos/JetBrains/kotlin/releases/tags/v2.4.10",
+      "retrieved_at": "2026-09-27T20:32:13.779310+00:00",
+      "sha256": "a8b139bbacd73ac45307cbd353e0eb65cd9dd56ee965de7c2e9904ae0dff46e0"
+    },
+    {
+      "id": "skie-0.10.13",
+      "url": "https://skie.touchlab.co/changelog/0.10.13",
+      "retrieved_at": "2026-09-27T20:32:13.842169+00:00",
+      "sha256": "94532f4c289e53274437ca98bf3d731a64689be73a86520642e007ea71ec186d"
+    },
+    {
+      "id": "skie-0.10.14",
+      "url": "https://skie.touchlab.co/changelog/0.10.14",
+      "retrieved_at": "2026-09-27T20:32:13.698734+00:00",
+      "sha256": "e428a2c094030a097007905be41e02aedd5fd61df64a7b956c7d0d16dfc7a229"
+    },
+    {
+      "id": "toolchain-ios-guide",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/docs/src/user-guide/product-types/ios-app.md",
+      "retrieved_at": "2026-09-27T20:32:13.728643+00:00",
+      "sha256": "3fe4c63a671e14376f5d486100bb2cd1972286585dc45395c6bb221643136c37"
+    }
+  ],
+  "direct_paths": {
+    "skie": {
+      "status": "missing",
+      "reason": "No reviewed supported standalone Toolchain SKIE configuration and Swift processing pipeline",
+      "sources": [
+        "skie-installation",
+        "skie-SkieGradlePluginApplier.kt",
+        "toolchain-NativeLinkTask.kt"
+      ]
+    },
+    "swift-export": {
+      "status": "missing",
+      "reason": "Alpha Swift export documentation demonstrates Gradle integration; reviewed Toolchain framework path does not establish Swift export emission and embedding",
+      "sources": [
+        "swift-export",
+        "toolchain-NativeLinkTask.kt",
+        "toolchain-ios-guide"
+      ]
+    }
+  },
+  "newer_releases": [
+    {
+      "component": "skie",
+      "version": "0.10.15",
+      "published_at": "2026-09-25T17:59:28Z",
+      "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.15",
+      "source_id": "skie-releases",
+      "selection": "not_nominated"
+    },
+    {
+      "component": "metro",
+      "version": "1.4.5",
+      "published_at": "2026-09-24T15:15:00Z",
+      "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.5",
+      "source_id": "metro-releases",
+      "selection": "not_nominated"
+    }
+  ]
+}

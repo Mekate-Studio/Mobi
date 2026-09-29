@@ -1,7 +1,8 @@
 # Quality gate and dependency workflow design
 
 Status: the full lifecycle is a design; slices 1–6 implement the documented
-static, inventory and isolated rehearsal subsets. The
+static, inventory and isolated rehearsal subsets. Slice 7 adds the manual
+[compatibility runner](compatibility-runner.md), with bridge and direct-path receipts. The
 [mobile support workflow](mobile-support-policy.md) now adds configurable OS-floor
 assessment and explicit architecture-impact review. General automatic semantic
 analysis and an adoption command are not implemented. See the [audit](audit.md)
@@ -112,7 +113,8 @@ Slice 4 implements `discover`, `verify` and a limited `evaluate` evidence-contra
 check, documented in the [inventory guide](dependency-inventory.md). Slice 5 adds
 `rehearse-fixture`, `recover` and `cleanup`, described in the
 [executor guide](executor-guide.md). Slice 6 adds `prepare-kotlin`, `rehearse-kotlin`,
-`assess-support` and `rehearse-support`. General semantic assessment and an adoption
+`assess-support` and `rehearse-support`. Slice 7 adds `assess-compatibility`,
+`rehearse-compatibility` and `compatibility-report`. General semantic assessment and an adoption
 command remain proposals; maintainers review and apply exact validated patches. `integrate` is the
 separately authorized normal repository workflow, not an automatic push lane.
 Consolidate the existing compatibility script behind `rehearse` rather than

@@ -1,20 +1,19 @@
 # Quality and dependency maintenance
 
-Status: slices 1–5 integrated. Slice 5 was committed and pushed at `7e9e8f8`;
-all seven existing hosted jobs passed in [run 36257552549](https://github.com/Mekate-Studio/Mobi/actions/runs/36257552549).
-Slice 6 adds the Kotlin Toolchain rehearsal adapter and local evidence, uncommitted
-for review. Audit baseline:
-`7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
+Status: slices 1–6 integrated. Slice 6 was committed and pushed at `ff7146e`;
+[all seven hosted jobs passed](evidence/2026-09-28-slice-6-integration.json).
+Slice 7's [compatibility runner](compatibility-runner.md) is locally validated and
+uncommitted, ready for review; [measured results](seventh-slice-validation.md) keep
+bridge upgrades separate from direct-path parity. Audit baseline: `7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
 
-Mobi's next maintenance investment should make the existing pre-commit checks
-reproducible and complete, then use isolated evidence to assess Kotlin Toolchain
-upgrades. Upgrading the current iOS bridge and retiring it are separate decisions.
+Mobi's maintenance workflow starts with reproducible pre-commit checks and uses
+isolated evidence to assess Kotlin Toolchain upgrades. Upgrading the current iOS bridge and retiring it are separate decisions.
 Bridge retirement is **deferred** pending native, clean-clone and release evidence.
 
 The [Apple Silicon target assessment](apple-silicon-assessment.md) evaluates
 Toolchain 0.12.2 with upstream-supported iOS architectures. It keeps the bridge
 and has passing isolated input and mobile comparisons. The approved eight-file
-migration is now adopted in the working tree. The separate
+migration is integrated in `ff7146e`. The separate
 [minimum-OS workflow](mobile-support-policy.md) assesses configurable stable-major
 support windows and architecture implications; its
 [validation/adoption record](support-policy-validation.md) reports exact runtime
@@ -61,6 +60,10 @@ Read the documents in this order:
     architecture impact review, OS-only rehearsal and configuration for other projects.
 18. [Support-policy validation](support-policy-validation.md): approved Toolchain
     adoption, paired mobile evidence, explicit OS minimums and cleanup.
+19. [Compatibility runner](compatibility-runner.md): separate bridge compile/link,
+    full mobile and direct-path assessments, with conservative capability receipts.
+20. [Seventh slice validation](seventh-slice-validation.md): passing paired bridge
+    and direct-facade jobs, retained failures, native tests, cleanup and evidence gaps.
 
 [Audit evidence](evidence/2026-09-19.json) preserves sanitized probe results,
 input identities and upstream source hashes. It is an audit record, not a
@@ -77,7 +80,7 @@ The original audit changed documentation only. The implementation slices add
 static coverage, pinned quality tools and selected native commit checks. The
 separately approved Swift compatibility update changes three dependency pins.
 The bridge, release defaults and schedules remain unchanged. The existing
-hosted workflow passed for slice 5's exact commit. Slice 6's hosted and Linux execution remain unverified. Intel iOS simulators
+hosted workflow passed for slice 6's exact commit. Linux execution remains unverified. Intel iOS simulators
 are excluded by the adopted support policy.
 The proposal requires no private service, account, Codex installation or Go
 application profile.

@@ -10,12 +10,12 @@ Kotlin Toolchain means the CLI/workspace behind `./kotlin`, not Gradle's JVM too
 
 The [Apple Silicon assessment](apple-silicon-assessment.md) established passing
 input/mobile comparisons for Toolchain 0.12.2 with ARM iOS targets. The maintainer
-subsequently approved that exact candidate: it is now adopted in the working tree.
+subsequently approved that exact candidate: it is integrated in `ff7146e`.
 Intel iOS simulators are explicitly excluded; ARM devices/simulators, native
 app/test targets and the Gradle bridge remain. The
 [support-policy record](support-policy-validation.md) separately validates explicit
 iOS 26.0 and Android 16/API 36 app minimums. Its configurable assessment is part of
-the manual update workflow; direct-path parity and device/release/hosted gaps remain.
+the manual update workflow. [Hosted integration passed](evidence/2026-09-28-slice-6-integration.json); direct-path parity and device/release gaps remain.
 
 The following paragraphs and tables preserve the original comparison inputs and
 outcomes rather than relabeling historical receipts as current declarations.
@@ -35,6 +35,30 @@ Android test command failed dependency resolution because its selected Compose
 foundation/Material3 artifacts lack the declared shared-library `iosX64` target.
 The original conservative result and a separate final-classifier diagnostic
 reassessment are retained; later candidate jobs were not attempted.
+
+## Compatibility runner follow-up on 2026-09-29
+
+The manual [slice 7 runner](compatibility-runner.md) separates KLIB compilation,
+actual framework linking, full mobile validation and direct-path prerequisites.
+Its [measured report](seventh-slice-validation.md) and
+[source-bound receipt](evidence/2026-09-29-slice-7.json) establish the following
+local Apple Silicon/Xcode 27/iOS 27 simulator results:
+
+| Track | Exact candidate | Measured result | Remaining decision |
+| --- | --- | --- | --- |
+| Retained bridge upgrade | Kotlin 2.4.10 / Metro 1.4.4 / SKIE 0.10.14; bridge Compose held at 1.9.0 | Baseline and candidate pass KLIB compilation, framework linking, Android tests/debug build and iOS tests/debug build; 12 native Swift cases each | Complete interval, advisory and bridge-graph review before adoption proposal. |
+| Direct typed facade | Toolchain 0.12.2 / Kotlin 2.4.10; Metro held at 1.1.1; no SKIE; bridge unavailable | Baseline and candidate pass all four mobile jobs and 12 native Swift cases; native targets/tests preserved, shared DI reachable | Architecture review plus device/release, onboarding, lifecycle, cold CI, incremental and rollback evidence before any default switch. |
+| Direct SKIE | Reviewed supported standalone integration prerequisite | Missing; no standalone compiler/Swift-processing pipeline established | Source gap, not a reproduced compiler failure. |
+| Direct Swift export | Reviewed standalone Toolchain emission/embedding prerequisite | Missing; Alpha Gradle examples are insufficient | Source gap, not a reproduced compiler failure. |
+
+The direct result does not prove compatibility with Metro 1.4.4. Two earlier
+facade runs exposed Swift selector/enum naming mismatches and remain recorded as
+failed experiments. A separate baseline ownership refusal is retained with an
+unconfirmed precise cause; recovery completed and future refusals retain the
+offending private process identity. All new runs were recovered and their owned
+workspaces cleaned. Production pins and ADRs are unchanged; no candidate is
+adopted and bridge retirement remains deferred. The following tables preserve
+the September 19 audit snapshot, not these later runtime results.
 
 ## Version and ownership matrix
 

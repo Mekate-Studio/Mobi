@@ -388,6 +388,30 @@ module ExecutorTest
     end
   end
 
+  test('concurrent supervisor exit during TERM is quiescent without an unowned KILL') do
+    group = Maintenance::ProcessGroup.singleton_class
+    process = Process.singleton_class
+    original_identity = Maintenance::ProcessGroup.method(:identity)
+    original_members = Maintenance::ProcessGroup.method(:members)
+    original_kill = Process.method(:kill)
+    nonce = 'c' * 32
+    record = { 'host' => Maintenance::ProcessGroup.host, 'nonce' => nonce, 'pid' => 999_999_999,
+               'pgid' => 999_999_999, 'uid' => Process.uid, 'start' => 'fixture', 'command' => 'supervisor ' + nonce }
+    signals = []; identity_reads = 0; group_reads = 0
+    begin
+      group.define_method(:identity) { |_pid| identity_reads += 1; identity_reads == 1 ? record : nil }
+      group.define_method(:members) { |_pgid| group_reads += 1; group_reads == 1 ? [record['pid']] : [] }
+      process.define_method(:kill) { |signal, pid| signals << [signal, pid]; 1 }
+      # Simulates the leader finishing after a stale nonempty group snapshot.
+      assert(Maintenance::ProcessGroup.stop(record, grace: 0) == 'stopped')
+      assert(signals == [['TERM', -record['pgid']]])
+    ensure
+      group.define_method(:identity, original_identity)
+      group.define_method(:members, original_members)
+      process.define_method(:kill, original_kill)
+    end
+  end
+
   def self.run
     failures = []
     @tests.each do |name, block|

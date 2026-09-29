@@ -190,11 +190,17 @@ Install the pinned discovery tools once, then record a local inventory:
 just deps > /tmp/mobi-inventory.json
 ```
 
-To run the SKIE compatibility probe locally:
+For manual compatibility assessment and isolated bridge rehearsal:
 
 ```bash
-./scripts/ci/check_skie_kotlin_compatibility.sh
+./scripts/dev/dependency_updates.sh assess-compatibility
+./scripts/dev/dependency_updates.sh prepare-kotlin
+./scripts/dev/dependency_updates.sh rehearse-compatibility bridge-compile --store compatibility
 ```
+
+The [compatibility runner guide](docs/maintenance/compatibility-runner.md) separates
+compile/link, full mobile and direct-path evidence, with review and cleanup steps.
+The existing scheduled caller remains unchanged pending its dedicated integration.
 
 The `just deps` command uses verified Node/Renovate pins for isolated native
 extraction. It records declarations, locked packages and missing resolved graphs;

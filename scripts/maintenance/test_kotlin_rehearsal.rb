@@ -274,6 +274,8 @@ module KotlinRehearsalTest
       registry = File.join(handler.state['gradle_home'], 'daemon', 'fixture'); FileUtils.mkdir_p(registry)
       File.write(File.join(registry, "daemon-#{Process.pid}.out.log"), 'unowned')
       reject(/Unowned live process/) { handler.stop! }
+      diagnostic = JSON.parse(File.read(File.join(handler.control, 'unowned-jvm.json')))
+      assert(diagnostic.dig('identity', 'pid') == Process.pid && diagnostic['from_registry'] && !diagnostic['from_process_scan'])
       assert(Maintenance::ProcessGroup.identity(Process.pid))
     end
   end

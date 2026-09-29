@@ -22,9 +22,23 @@ module Maintenance
         return [{ 'schema' => 1, 'operation' => command, 'state' => 'prepared', 'identity' => identity, 'adoption_authorized' => false }, 0]
       end
       store_path = self.store_path(root, args)
-      raise Failure, 'No execution store; run a rehearsal first' if !%w[rehearse-fixture rehearse-kotlin rehearse-support].include?(command) && !Dir.exist?(store_path)
+      raise Failure, 'No execution store; run a rehearsal first' if !%w[rehearse-fixture rehearse-kotlin rehearse-support rehearse-compatibility].include?(command) && !Dir.exist?(store_path)
       store = RunStore.new(store_path)
       case command
+      when 'rehearse-compatibility'
+        require_relative 'adapters/compatibility'
+        raise Failure, 'Usage: rehearse-compatibility <bridge-compile|bridge-mobile|direct-facade> [--store NAME]' unless args.size == 1
+        source = Source.new(root)
+        adapter = CompatibilityRehearsal.new(root, source: source, profile: args.first)
+        policy_path = File.join(root, 'maintenance-execution-policy.json')
+        result = Executor.new(source: source, adapter: adapter, store: store, policy: JSON.parse(File.read(policy_path)),
+                              input_files: [policy_path, __FILE__, File.join(root, 'scripts/maintenance/dependencies.rb')]).run
+        [result, Executor::EXIT_CODES.fetch(result['state'])]
+      when 'compatibility-report'
+        require_relative 'lib/compatibility_report'
+        raise Failure, 'Usage: compatibility-report RUN_ID [--store NAME]' unless args.size == 1
+        result = CompatibilityReport.read(store, args.first)
+        [result, Executor::EXIT_CODES.fetch(result['state'])]
       when 'rehearse-kotlin', 'rehearse-support'
         require_relative 'adapters/kotlin_rehearsal'
         support = command == 'rehearse-support'

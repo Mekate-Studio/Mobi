@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "commit": "ff7146e9cad15a26ae3824a2eca192f0ec6b3684",
+  "ci_url": "https://github.com/Mekate-Studio/Mobi/actions/runs/36348324700",
+  "conclusion": "success",
+  "updated_at": "2026-09-27T20:47:53Z",
+  "jobs": [
+    {
+      "name": "Classify changes",
+      "conclusion": "success",
+      "started_at": "2026-09-27T20:31:08Z",
+      "completed_at": "2026-09-27T20:31:12Z"
+    },
+    {
+      "name": "Android debug build",
+      "conclusion": "success",
+      "started_at": "2026-09-27T20:31:20Z",
+      "completed_at": "2026-09-27T20:38:18Z"
+    },
+    {
+      "name": "iOS debug build",
+      "conclusion": "success",
+      "started_at": "2026-09-27T20:31:19Z",
+      "completed_at": "2026-09-27T20:41:27Z"
+    },
+    {
+      "name": "Android and shared host tests",
+      "conclusion": "success",
+      "started_at": "2026-09-27T20:31:19Z",
+      "completed_at": "2026-09-27T20:37:36Z"
+    },
+    {
+      "name": "iOS PullRequest plan",
+      "conclusion": "success",
+      "started_at": "2026-09-27T20:31:23Z",
+      "completed_at": "2026-09-27T20:47:46Z"
+    },
+    {
+      "name": "Quality checks",
+      "conclusion": "success",
+      "started_at": "2026-09-27T20:31:21Z",
+      "completed_at": "2026-09-27T20:34:21Z"
+    },
+    {
+      "name": "Pull request gate",
+      "conclusion": "success",
+      "started_at": "2026-09-27T20:47:49Z",
+      "completed_at": "2026-09-27T20:47:52Z"
+    }
+  ],
+  "raw_metadata_sha256": "5f74d9df0517a755a73a7e8aaf441363f903ff7afa9533e90eb827fd5f5d913c",
+  "limits": [
+    "Hosted CI success does not prove device or release packaging parity",
+    "This receipt covers slice 6, not uncommitted slice 7 code"
+  ]
+}

@@ -44,7 +44,11 @@ module Maintenance
       sleep 0.02 while Process.clock_gettime(Process::CLOCK_MONOTONIC) < deadline && !members(record['pgid']).empty?
       unless members(record['pgid']).empty?
         # The supervisor deliberately stays alive on TERM, so ownership can be rechecked.
-        raise Failure, 'Process identity changed during termination' unless owned?(record, identity(record['pid']))
+        current = identity(record['pid'])
+        # A concurrent supervisor shutdown can finish between the two ps snapshots.
+        # Accept only a now-empty group; never signal after losing leader ownership.
+        return 'stopped' if current.nil? && members(record['pgid']).empty?
+        raise Failure, 'Process identity changed during termination' unless owned?(record, current)
         Process.kill('KILL', -record['pgid'])
       end
       deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 3
