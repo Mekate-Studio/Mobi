@@ -13,5 +13,4 @@
 - [x] 3.1 Run local end-to-end evidence, recovery/cleanup and notification fixtures; verify public artifacts contain no private host data.
 - [x] 3.2 Pass contracts, static/workflow/OpenSpec checks; document coverage, limits and recovery.
 - [x] 3.3 Commit and push the authorized slice with the normal staged gate; record hosted results separately without conflating Mobile CI with a watch execution.
-
-- [ ] 3.4 Validate and integrate the hosted follow-up for optional read-only provider authentication and path-free setup diagnostics; retain initial failures separately.
+- [x] 3.4 Validate and integrate the hosted follow-up for optional read-only provider authentication and path-free setup diagnostics; retain initial failures separately.

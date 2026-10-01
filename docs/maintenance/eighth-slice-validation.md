@@ -4,9 +4,11 @@ Slice 8 consolidates the existing compatibility watch around the common isolated
 evaluator. Production dependencies, iOS bridge/default, release paths, support
 policy and the existing schedule remain unchanged. Bridge retirement is deferred.
 
-Status: locally validated on 2026-09-30; committed and pushed on 2026-10-01 as
-`815b16d7590ce5aae7c2c38f85da50a0b3bd3c87`. Hosted execution is recorded separately below. See the
-[watch guide](compatibility-watch.md) for behavior and limits.
+Status: implemented and validated locally and on hosted macOS. The local run
+passed on 2026-09-30; committed and pushed on 2026-10-01 as
+`815b16d7590ce5aae7c2c38f85da50a0b3bd3c87`, with hosted follow-up
+`8c0dd1a29e5e38c0a2138565b8fb5e132c4b723b`. Hosted execution is recorded
+separately below. See the [watch guide](compatibility-watch.md) for behavior and limits.
 
 ## Verified facts
 
@@ -43,9 +45,10 @@ identity; later documentation is not attributed to the frozen native snapshot.
 ## Untested assumptions and remaining limits
 
 Hosted snapshot restoration, paired compile/link execution and cleanup are now
-verified. Authenticated release discovery still needs the follow-up hosted run.
-The first hosted setup exception remains unconfirmed. Mobile CI is a separate gate. Compile/link evidence does not establish
-native app/test or direct-path retirement coverage. Release discovery is a bounded
+verified. Authenticated release discovery is verified for all four providers.
+The first hosted setup exception and later infrastructure command failure have
+no confirmed root cause. Mobile CI is a separate gate. Compile/link evidence
+does not establish native app/test or direct-path retirement coverage. Release discovery is a bounded
 page, not full interval/advisory/graph review. Linux and Elixir execution are not
 added by this slice. The earlier historical store ownership blocker is unchanged.
 
@@ -100,8 +103,8 @@ public artifact, so the precise initial provider rejection and native setup caus
 remain unconfirmed. The follow-up uses the existing read-only workflow token for
 public release lookup and adds source-bound exception class, setup stage and
 repository-relative code location to the native report. Raw messages, stack traces
-and host paths remain excluded. Those corrections require their own checks and
-hosted execution; the passing local probe is not attributed to the cold runner.
+and host paths remain excluded. The follow-up checks and hosted execution are
+recorded below; the passing local probe is not attributed to the cold runner.
 
 The [second hosted watch](https://github.com/Mekate-Studio/Mobi/actions/runs/36828228795)
 restored the first snapshot, passed baseline and candidate effective settings,
@@ -113,4 +116,43 @@ keeps these outcomes separate from Mobile CI and the local passing discovery.
 
 The authenticated-discovery/public-diagnostic follow-up passed 182 contracts,
 all five static analyzers and workflow validation. Its normal staged gate and
-hosted authenticated discovery are pending; no historical result is relabeled.
+hosted authenticated discovery also passed, as recorded below; no historical
+result is relabeled.
+
+## Hosted follow-up integration
+
+Committed and pushed as `8c0dd1a29e5e38c0a2138565b8fb5e132c4b723b` after the
+normal gate passed Android/shared tests (243.723 seconds), iOS tests
+(207.193 seconds), Android debug build (26.095 seconds) and iOS debug build
+(57.932 seconds). Source/index preservation and owned cleanup passed.
+Index: `8e0ef9ae4729b11f6b422a992e2081521a4de8af136a8db2f218f7e7256951a1`;
+inputs: `004a8308de3d2579b85fcf83c032f79b5ec7c7967f8b6c8d535fc61f43e1da27`.
+
+[Follow-up Mobile CI](https://github.com/Mekate-Studio/Mobi/actions/runs/36865117464)
+and [authenticated watch](https://github.com/Mekate-Studio/Mobi/actions/runs/36865152096)
+ran for the exact follow-up commit. All seven Mobile CI jobs passed. Authenticated
+discovery observed all four providers, including newly published Toolchain 0.13.0
+with its seven-day adoption age gate still blocking it. The native baseline
+reported an infrastructure failure during KLIB compilation after setup and
+effective settings passed, so this watch assessment remained `inconclusive`.
+Its workspaces were cleaned. The public artifact does not establish the exact
+command failure cause; this is distinct from the first run’s setup exception.
+
+The [single bounded repeat](https://github.com/Mekate-Studio/Mobi/actions/runs/36909526576)
+on the same commit recorded `observation_recorded` / `checks_passed`. Native run
+`682ef3ec64daeef1b32eb6071b7630b5` passed baseline and candidate effective settings,
+KLIB compilation and framework linking. Both phases verified source preservation;
+recovery was quiescent and both owned workspaces were cleaned. All four release
+providers were observed, and the prior snapshot was restored with the same scope.
+The semantic comparison reported the improved compile/link evidence and Metro
+1.4.5 crossing the seven-day threshold. Kotlin 2.4.20 and Metro 1.4.5 were review
+leads; SKIE 0.10.15 and Toolchain 0.13.0 remained age-blocked at retrieval.
+The reviewed candidate did not change.
+
+The integration receipt retains both follow-up runs and their public artifact
+hashes. This passing repeat completes slice 8's hosted observation acceptance;
+it does not establish the root causes of the earlier failures or qualify bridge
+retirement. No additional retry was started. The follow-up remains at 182 passing
+contracts, with all seven Mobile CI jobs passed on its implementation commit.
+The final receipt/task update is documentation-only and uses the normal staged
+gate; native results above remain bound to their original implementation commits.
