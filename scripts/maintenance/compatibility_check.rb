@@ -113,6 +113,9 @@ module Maintenance
       'refused'
     rescue StandardError => error
       @report['failure'] = 'Adapter exception: ' + error.class.name
+      @report['exception_class'] = error.class.name
+      origin = error.backtrace_locations&.find { |entry| entry.absolute_path&.start_with?(File.expand_path(__dir__) + '/') }
+      @report['failure_origin'] = File.basename(origin.absolute_path) + ':' + origin.lineno.to_s if origin
       File.write(File.join(@control, 'adapter-error.log'), error.full_message)
       'infrastructure'
     ensure

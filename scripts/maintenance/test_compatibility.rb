@@ -143,6 +143,18 @@ module CompatibilityTest
     end
   end
 
+  test('public diagnostics preserve setup exception identity without raw messages or host paths') do
+    input = { 'exception_class' => 'Errno::ENOSPC', 'setup_stage' => 'android_sdk_copy', 'failure_origin' => 'kotlin_check.rb:107',
+              'failure' => 'private path and secret', 'workspace' => '/Users/private' }
+    result = Maintenance::CompatibilityReport.diagnostic(input)
+    assert(result.keys.sort == %w[exception_class failure_origin setup_stage])
+    assert(!JSON.generate(result).include?('private'))
+    reject(/Unsafe/) { Maintenance::CompatibilityReport.diagnostic(input.merge('failure_origin' => '/Users/private/check.rb:1')) }
+    reject(/Unsafe/) { Maintenance::CompatibilityReport.diagnostic(input.merge('exception_class' => 'Error secret')) }
+    reject(/Unsafe/) { Maintenance::CompatibilityReport.diagnostic(input.merge('setup_stage' => 'unreviewed')) }
+    assert(Maintenance::CompatibilityReport.diagnostic({}).empty?)
+  end
+
   test('declared input receipt preserves UTF-8 bytes under the executor C locale') do
     program = 'require "json"; require "yaml"; require ARGV.shift; root = ARGV.shift; modules = YAML.safe_load(File.read(File.join(root, "project.yaml"))).fetch("modules"); print JSON.generate(Maintenance::CompatibilityCheck.declared_inputs(root, modules))'
     output, status = Open3.capture2e({ 'LANG' => 'C', 'LC_ALL' => 'C' }, RbConfig.ruby, '-EUS-ASCII', '-e', program,

@@ -88,6 +88,7 @@ module Maintenance
     end
 
     def native_setup
+      @report['setup_stage'] = 'android_sdk_copy'
       sdk = @host.fetch('android_sdk'); target = File.join(@output, 'android-sdk')
       # APFS clone keeps the phase writable and independent without duplicating
       # every SDK block. A different filesystem falls back to an ordinary copy.
@@ -100,16 +101,20 @@ module Maintenance
                   'DEVELOPER_DIR' => @host.fetch('developer_dir'), 'CI_PROJECT_DIR' => @work,
                   'MOBI_VALIDATION' => '1', 'KOTLIN_IOS_BUILDER' => 'gradle', 'IOS_TEST_PLAN' => 'PullRequest',
                   'SKIP_MACRO_VALIDATION' => 'YES', 'SWIFT_ENABLE_EXPLICIT_MODULES' => 'NO')
+      @report['setup_stage'] = 'gradle_configuration'
       FileUtils.mkdir_p(@env['GRADLE_USER_HOME'])
       File.write(File.join(@env['GRADLE_USER_HOME'], 'gradle.properties'), "org.gradle.daemon=false\norg.gradle.daemon.idletimeout=1000\nkotlin.compiler.execution.strategy=in-process\norg.gradle.jvmargs=-Xmx4g #{@native.tag}\n")
+      @report['setup_stage'] = 'android_sdk_inventory'
       sdk_files = Dir.glob(File.join(target, '**', '{package.xml,source.properties}')).sort.to_h { |file| [file.delete_prefix(target + '/'), Maintenance.file_sha(file)] }
       write_evidence('sdk-inputs', sdk_files)
       major = @host['candidate_ios_minimum_major'] if @report['phase'] == 'candidate'
+      @report['setup_stage'] = 'simulator_creation'
       id = @native.create_simulator!(@host.fetch('developer_dir'), major: major)
       @env['IOS_SIMULATOR_DESTINATION'] = 'platform=iOS Simulator,id=' + id
       @report['environment'] = { 'bridge' => 'gradle', 'test_plan' => 'PullRequest', 'macro_validation' => 'skipped_explicitly', 'sdk' => 'private_copy', 'simulator' => 'owned_device', 'java_sha256' => Maintenance.file_sha(File.join(@host['java_home'], 'bin/java')) }
       @report['environment']['simulator_runtime'] = @native.state.fetch('runtime')
       @report['environment']['required_minimum_major'] = major
+      @report['setup_stage'] = 'complete'
     end
 
     def run

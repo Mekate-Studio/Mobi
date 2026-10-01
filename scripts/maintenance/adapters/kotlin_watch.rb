@@ -8,8 +8,8 @@ module Maintenance
   class KotlinReleaseWatch
     REPOSITORIES = { 'toolchain' => 'JetBrains/kotlin-toolchain', 'kotlin' => 'JetBrains/kotlin', 'metro' => 'ZacSweers/metro', 'skie' => 'touchlab/SKIE' }.freeze
 
-    def initialize(fetcher: WatchHTTP.new, now: Time.now.utc)
-      @fetcher, @now = fetcher, now
+    def initialize(fetcher: WatchHTTP.new, now: Time.now.utc, token: nil)
+      @fetcher, @now, @token = fetcher, now, token
     end
 
     def discover(config)
@@ -18,7 +18,7 @@ module Maintenance
         url = 'https://api.github.com/repos/' + repository + '/releases?per_page=30'
         source = { 'url' => url, 'retrieved_at' => @now.iso8601 }
         begin
-          response = @fetcher.get(url)
+          response = @fetcher.get(url, token: @token)
           raise Failure, 'provider_evidence_mismatch' unless response['url'] == url && response['sha256'] == Digest::SHA256.hexdigest(response.fetch('body')) && Time.iso8601(response.fetch('retrieved_at')) <= Time.now.utc
           source = response.slice('url', 'retrieved_at', 'sha256', 'transport_sha256')
           data = JSON.parse(response.fetch('body'))
@@ -53,8 +53,9 @@ module Maintenance
   class CompatibilityWatch
     attr_reader :output
 
-    def initialize(root, previous: nil, output: nil, fetcher: WatchHTTP.new, probe: nil, history: 'local', scope: 'local', now: Time.now.utc)
+    def initialize(root, previous: nil, output: nil, fetcher: WatchHTTP.new, probe: nil, history: 'local', scope: 'local', now: Time.now.utc, token: nil)
       @root, @previous, @fetcher, @probe, @history, @scope, @now = root, previous, fetcher, probe, history, scope, now
+      @token = token
       base = File.join(root, '.maintenance', 'watch-reports')
       @output = output ? File.expand_path(output, root) : File.join(base, SecureRandom.hex(16))
       unless @output.start_with?(base + '/') && !File.exist?(@output)
@@ -94,7 +95,7 @@ module Maintenance
     def run
       source = Source.new(@root); adapter = Compatibility.new(@root, now: @now)
       assessment = adapter.assessment(source)
-      releases = KotlinReleaseWatch.new(fetcher: @fetcher, now: @now).discover(adapter.config)
+      releases = KotlinReleaseWatch.new(fetcher: @fetcher, now: @now, token: @token).discover(adapter.config)
       RunStore.atomic(File.join(@output, 'discovery.json'), releases)
       begin
         native_report, injected_cleanup = @probe ? @probe.call(source) : native(source)

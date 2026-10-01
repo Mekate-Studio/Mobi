@@ -59,6 +59,7 @@ module Maintenance
             end
           end
           { 'phase' => step['phase'], 'outcome' => step['status'], 'evidence_sha256' => check['evidence_sha256'],
+            'diagnostic' => diagnostic(evidence),
             'cells' => evidence.fetch('cells'), 'di_reachable' => evidence['di_reachable'], 'bridge_unavailable' => evidence.fetch('bridge_unavailable', false),
             'source_preservation' => evidence['source_preservation'], 'missing_capabilities' => evidence['missing_capabilities'] }
         end
@@ -68,6 +69,15 @@ module Maintenance
       end
     rescue KeyError, TypeError, NoMethodError, JSON::ParserError
       raise Failure, 'Malformed compatibility evidence'
+    end
+
+    def self.diagnostic(evidence)
+      detail = evidence.slice('exception_class', 'setup_stage', 'failure_origin')
+      valid = (!detail['exception_class'] || detail['exception_class'].is_a?(String) && detail['exception_class'].match?(/\A[A-Za-z]\w*(?:::[A-Za-z]\w*)*\z/)) &&
+              (!detail['setup_stage'] || %w[android_sdk_copy gradle_configuration android_sdk_inventory simulator_creation complete].include?(detail['setup_stage'])) &&
+              (!detail['failure_origin'] || detail['failure_origin'].is_a?(String) && detail['failure_origin'].match?(/\A[a-z_]+\.rb:[1-9]\d*\z/))
+      raise Failure, 'Unsafe compatibility diagnostic' unless valid
+      detail
     end
 
     def self.verify_file!(path, sha)

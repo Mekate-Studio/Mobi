@@ -1,0 +1,1474 @@
+{
+  "schema": 1,
+  "commit": "815b16d7590ce5aae7c2c38f85da50a0b3bd3c87",
+  "recorded_on": "2026-10-01",
+  "adoption_authorized": false,
+  "bridge_retirement": "defer",
+  "mobile_ci": {
+    "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/36827556808",
+    "commit": "815b16d7590ce5aae7c2c38f85da50a0b3bd3c87",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "Classify changes",
+        "conclusion": "success",
+        "startedAt": "2026-10-01T06:57:17Z",
+        "completedAt": "2026-10-01T06:57:23Z"
+      },
+      {
+        "name": "iOS debug build",
+        "conclusion": "success",
+        "startedAt": "2026-10-01T06:57:31Z",
+        "completedAt": "2026-10-01T07:05:13Z"
+      },
+      {
+        "name": "Android and shared host tests",
+        "conclusion": "success",
+        "startedAt": "2026-10-01T06:57:31Z",
+        "completedAt": "2026-10-01T07:00:53Z"
+      },
+      {
+        "name": "Android debug build",
+        "conclusion": "success",
+        "startedAt": "2026-10-01T06:57:31Z",
+        "completedAt": "2026-10-01T07:00:05Z"
+      },
+      {
+        "name": "iOS PullRequest plan",
+        "conclusion": "success",
+        "startedAt": "2026-10-01T06:57:32Z",
+        "completedAt": "2026-10-01T07:13:58Z"
+      },
+      {
+        "name": "Quality checks",
+        "conclusion": "success",
+        "startedAt": "2026-10-01T06:57:33Z",
+        "completedAt": "2026-10-01T07:04:05Z"
+      },
+      {
+        "name": "Pull request gate",
+        "conclusion": "success",
+        "startedAt": "2026-10-01T07:14:02Z",
+        "completedAt": "2026-10-01T07:14:05Z"
+      }
+    ]
+  },
+  "watch_runs": [
+    {
+      "github": {
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/36827592597",
+        "commit": "815b16d7590ce5aae7c2c38f85da50a0b3bd3c87",
+        "status": "completed",
+        "conclusion": "success",
+        "jobs": [
+          {
+            "name": "compatibility_watch",
+            "conclusion": "success",
+            "startedAt": "2026-10-01T07:00:13Z",
+            "completedAt": "2026-10-01T07:06:26Z"
+          }
+        ]
+      },
+      "outputs": {
+        "report.json": {
+          "schema": 1,
+          "operation_state": "observation_recorded",
+          "source_sha256": "7c24b2f3019a9a06305cf0ad6dc024ad38eddd1f11498ade98069c2c72c1a4ad",
+          "config_sha256": "64252e11ca5f01e2cd45110e34aeb8c3a9803dbf8d6f44e82553673e26976483",
+          "snapshot": {
+            "schema": 1,
+            "kind": "watch_observation",
+            "scope": {
+              "adapter": "kotlin-bridge-compile-v1",
+              "baseline": {
+                "compose": "1.9.0",
+                "kotlin": "2.3.20",
+                "metro": "1.1.1",
+                "skie": "0.10.12"
+              },
+              "candidate": {
+                "compose": "1.9.0",
+                "id": "kotlin-2-4-10",
+                "releases": {
+                  "kotlin": {
+                    "published_at": "2026-07-14T10:47:27Z",
+                    "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.4.10",
+                    "source_id": "kotlin-release",
+                    "version": "2.4.10"
+                  },
+                  "metro": {
+                    "published_at": "2026-09-16T21:45:45Z",
+                    "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.4",
+                    "source_id": "metro-releases",
+                    "version": "1.4.4"
+                  },
+                  "skie": {
+                    "published_at": "2026-07-27T15:09:23Z",
+                    "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.14",
+                    "source_id": "skie-releases",
+                    "version": "0.10.14"
+                  }
+                }
+              },
+              "channel": "Mekate-Studio/Mobi:main",
+              "minimum_release_age_days": 7,
+              "probe_inputs_sha256": "58e0827092fb6e75bbfc8c38a694cdbfcc40ef361e79f74284b50cda47808c93",
+              "toolchain": "0.12.2"
+            },
+            "observation": {
+              "assessment_state": "incomplete",
+              "cleanup": "cleaned",
+              "direct_paths": {
+                "skie": {
+                  "reason": "No reviewed supported standalone Toolchain SKIE configuration and Swift processing pipeline",
+                  "sources": [
+                    "skie-installation",
+                    "skie-SkieGradlePluginApplier.kt",
+                    "toolchain-NativeLinkTask.kt"
+                  ],
+                  "status": "missing"
+                },
+                "swift-export": {
+                  "reason": "Alpha Swift export documentation demonstrates Gradle integration; reviewed Toolchain framework path does not establish Swift export emission and embedding",
+                  "sources": [
+                    "swift-export",
+                    "toolchain-NativeLinkTask.kt",
+                    "toolchain-ios-guide"
+                  ],
+                  "status": "missing"
+                }
+              },
+              "history_provider": "incomplete",
+              "matrix": {
+                "baseline/android-build-debug": "not_attempted",
+                "baseline/android-test": "not_attempted",
+                "baseline/framework_link": "not_attempted",
+                "baseline/ios-build-debug": "not_attempted",
+                "baseline/ios-test": "not_attempted",
+                "baseline/native_library_compile": "not_attempted"
+              },
+              "missing_capabilities": [
+                "advisory_review",
+                "application_builds",
+                "cancellation_parity",
+                "cold_direct_ci",
+                "complete_bridge_target_graph",
+                "complete_release_interval_review",
+                "device_execution",
+                "generic_export",
+                "incremental_direct_build",
+                "native_tests",
+                "release_archive",
+                "release_provider_coverage",
+                "retirement_approval",
+                "signed_packaging",
+                "watch_history_provider"
+              ],
+              "native_reason": "check_infrastructure_failure",
+              "native_state": "inconclusive",
+              "releases": {
+                "kotlin": {
+                  "newer": [],
+                  "reason": "provider_http_403",
+                  "reviewed_version": "2.4.10",
+                  "state": "incomplete"
+                },
+                "metro": {
+                  "newer": [],
+                  "reason": "provider_http_403",
+                  "reviewed_version": "1.4.4",
+                  "state": "incomplete"
+                },
+                "skie": {
+                  "newer": [],
+                  "reason": "provider_http_403",
+                  "reviewed_version": "0.10.14",
+                  "state": "incomplete"
+                },
+                "toolchain": {
+                  "newer": [],
+                  "reason": "provider_http_403",
+                  "reviewed_version": "0.12.2",
+                  "state": "incomplete"
+                }
+              }
+            },
+            "recorded_at": "2026-10-01T07:04:03Z",
+            "adoption_authorized": false,
+            "sha256": "9260392169a5f4b881abf35e7e51e25e317dd0fe95938e811c52bc44032c63cc"
+          },
+          "notification": {
+            "notify": true,
+            "continuity": "history_provider_unavailable",
+            "changes": [
+              {
+                "kind": "comparison_unavailable",
+                "field": "history"
+              }
+            ]
+          },
+          "native_run_id": "fc90e3693f0b55d13bace1f87c864be7",
+          "native_result_sha256": "7990d770cb44fd683cb22a0872bcf2627b82771dcbb2876da71aba9b34e0fc23",
+          "adoption_authorized": false,
+          "bridge_retirement": "defer"
+        },
+        "discovery.json": {
+          "toolchain": {
+            "state": "incomplete",
+            "reviewed_version": "0.12.2",
+            "reason": "provider_http_403",
+            "newer": [],
+            "source": {
+              "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases?per_page=30",
+              "retrieved_at": "2026-10-01T07:04:03Z"
+            }
+          },
+          "kotlin": {
+            "state": "incomplete",
+            "reviewed_version": "2.4.10",
+            "reason": "provider_http_403",
+            "newer": [],
+            "source": {
+              "url": "https://api.github.com/repos/JetBrains/kotlin/releases?per_page=30",
+              "retrieved_at": "2026-10-01T07:04:03Z"
+            }
+          },
+          "metro": {
+            "state": "incomplete",
+            "reviewed_version": "1.4.4",
+            "reason": "provider_http_403",
+            "newer": [],
+            "source": {
+              "url": "https://api.github.com/repos/ZacSweers/metro/releases?per_page=30",
+              "retrieved_at": "2026-10-01T07:04:03Z"
+            }
+          },
+          "skie": {
+            "state": "incomplete",
+            "reviewed_version": "0.10.14",
+            "reason": "provider_http_403",
+            "newer": [],
+            "source": {
+              "url": "https://api.github.com/repos/touchlab/SKIE/releases?per_page=30",
+              "retrieved_at": "2026-10-01T07:04:03Z"
+            }
+          }
+        },
+        "snapshot.json": {
+          "schema": 1,
+          "kind": "watch_observation",
+          "scope": {
+            "adapter": "kotlin-bridge-compile-v1",
+            "baseline": {
+              "compose": "1.9.0",
+              "kotlin": "2.3.20",
+              "metro": "1.1.1",
+              "skie": "0.10.12"
+            },
+            "candidate": {
+              "compose": "1.9.0",
+              "id": "kotlin-2-4-10",
+              "releases": {
+                "kotlin": {
+                  "published_at": "2026-07-14T10:47:27Z",
+                  "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.4.10",
+                  "source_id": "kotlin-release",
+                  "version": "2.4.10"
+                },
+                "metro": {
+                  "published_at": "2026-09-16T21:45:45Z",
+                  "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.4",
+                  "source_id": "metro-releases",
+                  "version": "1.4.4"
+                },
+                "skie": {
+                  "published_at": "2026-07-27T15:09:23Z",
+                  "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.14",
+                  "source_id": "skie-releases",
+                  "version": "0.10.14"
+                }
+              }
+            },
+            "channel": "Mekate-Studio/Mobi:main",
+            "minimum_release_age_days": 7,
+            "probe_inputs_sha256": "58e0827092fb6e75bbfc8c38a694cdbfcc40ef361e79f74284b50cda47808c93",
+            "toolchain": "0.12.2"
+          },
+          "observation": {
+            "assessment_state": "incomplete",
+            "cleanup": "cleaned",
+            "direct_paths": {
+              "skie": {
+                "reason": "No reviewed supported standalone Toolchain SKIE configuration and Swift processing pipeline",
+                "sources": [
+                  "skie-installation",
+                  "skie-SkieGradlePluginApplier.kt",
+                  "toolchain-NativeLinkTask.kt"
+                ],
+                "status": "missing"
+              },
+              "swift-export": {
+                "reason": "Alpha Swift export documentation demonstrates Gradle integration; reviewed Toolchain framework path does not establish Swift export emission and embedding",
+                "sources": [
+                  "swift-export",
+                  "toolchain-NativeLinkTask.kt",
+                  "toolchain-ios-guide"
+                ],
+                "status": "missing"
+              }
+            },
+            "history_provider": "incomplete",
+            "matrix": {
+              "baseline/android-build-debug": "not_attempted",
+              "baseline/android-test": "not_attempted",
+              "baseline/framework_link": "not_attempted",
+              "baseline/ios-build-debug": "not_attempted",
+              "baseline/ios-test": "not_attempted",
+              "baseline/native_library_compile": "not_attempted"
+            },
+            "missing_capabilities": [
+              "advisory_review",
+              "application_builds",
+              "cancellation_parity",
+              "cold_direct_ci",
+              "complete_bridge_target_graph",
+              "complete_release_interval_review",
+              "device_execution",
+              "generic_export",
+              "incremental_direct_build",
+              "native_tests",
+              "release_archive",
+              "release_provider_coverage",
+              "retirement_approval",
+              "signed_packaging",
+              "watch_history_provider"
+            ],
+            "native_reason": "check_infrastructure_failure",
+            "native_state": "inconclusive",
+            "releases": {
+              "kotlin": {
+                "newer": [],
+                "reason": "provider_http_403",
+                "reviewed_version": "2.4.10",
+                "state": "incomplete"
+              },
+              "metro": {
+                "newer": [],
+                "reason": "provider_http_403",
+                "reviewed_version": "1.4.4",
+                "state": "incomplete"
+              },
+              "skie": {
+                "newer": [],
+                "reason": "provider_http_403",
+                "reviewed_version": "0.10.14",
+                "state": "incomplete"
+              },
+              "toolchain": {
+                "newer": [],
+                "reason": "provider_http_403",
+                "reviewed_version": "0.12.2",
+                "state": "incomplete"
+              }
+            }
+          },
+          "recorded_at": "2026-10-01T07:04:03Z",
+          "adoption_authorized": false,
+          "sha256": "9260392169a5f4b881abf35e7e51e25e317dd0fe95938e811c52bc44032c63cc"
+        },
+        "cleanup.json": {
+          "schema": 1,
+          "operation": "cleanup",
+          "run_id": "fc90e3693f0b55d13bace1f87c864be7",
+          "state": "cleaned",
+          "eligible": true,
+          "retention_due_at": "2026-10-15T07:05:26Z",
+          "paths": [
+            "work/baseline"
+          ],
+          "evidence_retained": true,
+          "recorded_outcome": "inconclusive",
+          "adoption_authorized": false
+        },
+        "native-report.json": {
+          "schema": 1,
+          "run_id": "fc90e3693f0b55d13bace1f87c864be7",
+          "state": "inconclusive",
+          "reason": "check_infrastructure_failure",
+          "binding": {
+            "source_sha256": "7c24b2f3019a9a06305cf0ad6dc024ad38eddd1f11498ade98069c2c72c1a4ad",
+            "capture_mode": "working_snapshot",
+            "git": {
+              "head": "815b16d7590ce5aae7c2c38f85da50a0b3bd3c87",
+              "index_sha256": "e5154e5306dc1a27cd6bf23ef9f4444910315bc1d1251de1f2b79e52edee4d94"
+            },
+            "adapter": "compatibility-bridge-compile",
+            "adapter_schema": 1,
+            "plan_sha256": "f402cdc25369ce780ef71086a9d02f14be7a417b5b9423367ef5fd292d781156",
+            "patch_sha256": "eee1dc6625c2c5dab53ac5c3b6c36684b8eabe7e619220e751989d7b61455151",
+            "tools_sha256": "bc0b8d6addd8c2e094ed573517cee5a88367a8fbc197d685e3998e06c6a2d440",
+            "execution_files": [
+              {
+                "name": "executor.rb",
+                "sha256": "6e7b988602caa2b1a27b227f98ea0fbff84dfe31f40b7f47a70d1bb24d8edbcd"
+              },
+              {
+                "name": "worker.rb",
+                "sha256": "790b8720eb98b2dee0d46078e4154953e51345a558be17000aeb324df94fb3a2"
+              },
+              {
+                "name": "core.rb",
+                "sha256": "f92974bc45fa3c571b5acb0a29524100b1384935c2b6208d480d38189e5179ad"
+              },
+              {
+                "name": "run_store.rb",
+                "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc"
+              },
+              {
+                "name": "process_group.rb",
+                "sha256": "378133febaf2bd9432119ada0947be8119dcea7b9e9b552c2358eadad8b51c90"
+              },
+              {
+                "name": "resource_handlers.rb",
+                "sha256": "8d30b88bd1a0c1e8f25972dff989dd0f4bdab8e37c6d7fe363b7a3ae55a21e93"
+              },
+              {
+                "name": "ruby",
+                "sha256": "4c43cf8488eb0dc8280228403294c315428ea4db4f5ee9582fd1991efdf2e64a"
+              },
+              {
+                "name": "ps",
+                "sha256": "3bbba882e30d91fc4ff6e6844ca7c59fef4351b9a3fea35dca55708d6d487d1c"
+              },
+              {
+                "name": "git",
+                "sha256": "b8763cf250e607a778bb4603cecb5b90338814d0a3dfcba0d57b1de242f610e9"
+              },
+              {
+                "name": "compatibility.rb",
+                "sha256": "d14fa031b1614f7272987b209b345dc91d2428ea00cfe01d0db1d9150a04036a"
+              },
+              {
+                "name": "bdfaa18359bd140b2aeed74fd3f2174b6cd04eabb9e3c1c713950e05ae1b7f4e.json",
+                "sha256": "65f4d8d884a159e5110490ffb10249a5dceead09a67a1098c70177d8ad75febf"
+              },
+              {
+                "name": "maintenance-compatibility.json",
+                "sha256": "64252e11ca5f01e2cd45110e34aeb8c3a9803dbf8d6f44e82553673e26976483"
+              },
+              {
+                "name": "maintenance-kotlin-toolchains.json",
+                "sha256": "0ff446be520eecdf815bcbb280b59f484f9e1403eb82f71c1ea0ad55935f1da3"
+              },
+              {
+                "name": "java",
+                "sha256": "9be1d0a740ff6502df1a762145e62860f5de4b7e17658d9cb9498da3acf9d16c"
+              },
+              {
+                "name": "compatibility_report.rb",
+                "sha256": "d3dfde12781c2b276ee44d7351301b45282681affcbf7dd0cbaa65d052579037"
+              },
+              {
+                "name": "kotlin_evidence.rb",
+                "sha256": "29f9b7aab47650f276f2179fa11b265348e6b4fd8e67c15dcc60584e5bfedc56"
+              },
+              {
+                "name": "kotlin_wrappers.rb",
+                "sha256": "fce20dc01ef44441cccdb53c75c94b7f70d4542f9725c006d31b7119d9faa666"
+              },
+              {
+                "name": "maintenance.rb",
+                "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3"
+              },
+              {
+                "name": "policy.rb",
+                "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965"
+              },
+              {
+                "name": "recovery.rb",
+                "sha256": "bf81138efc57878ae98759bf25252aa6df97847786f7b84bd8999a254b520ae9"
+              },
+              {
+                "name": "support_policy.rb",
+                "sha256": "9a64240fba1af2f6a0724e8b8f5babfad5aa80fcf1b9b23e60a1467a52744c3e"
+              },
+              {
+                "name": "tools.rb",
+                "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8"
+              },
+              {
+                "name": "watch.rb",
+                "sha256": "4614f11415bd8005ac67538b5bc258d7a82b84ea3280ab54026727a1062e1d85"
+              },
+              {
+                "name": "watch_history.rb",
+                "sha256": "26e07b4ef76698e486e9e4eb4ea0b8d460ce7812b5c6ce71046d1109140fc005"
+              },
+              {
+                "name": "elixir.rb",
+                "sha256": "1adbc0c83b3ccc95c7cf4e5bb0d91e92492c5f670eebcb45c5331b0f5ba84d56"
+              },
+              {
+                "name": "interop_experiment.rb",
+                "sha256": "d5cff4d4d13be4f6a8a5381de5e2a3e455e8fcf10f71e98fa23f533f679af55c"
+              },
+              {
+                "name": "kotlin.rb",
+                "sha256": "087ec8c26eb601cc39baf973b6dbbe24bae9340cd918d509c68d823f82fec1cd"
+              },
+              {
+                "name": "kotlin_rehearsal.rb",
+                "sha256": "57c92f98ba544006896b3fcc7d4118dae711be3cdc075a976e963ecb14e1f507"
+              },
+              {
+                "name": "kotlin_resources.rb",
+                "sha256": "aff6499274071f49a0d8f58a15dd3af678f09f1478e53230854c0b030a748f3b"
+              },
+              {
+                "name": "kotlin_targets.rb",
+                "sha256": "9c9fb2fcefae650787d8e81689c43a9c2a17d54dd1483e3e42ec336b9063857f"
+              },
+              {
+                "name": "kotlin_watch.rb",
+                "sha256": "2d9fe186fae48e20f19b6c73006d5687d2f981ed5b9f0ef7d0110780b4478fe5"
+              },
+              {
+                "name": "mobile_support.rb",
+                "sha256": "d14482749ddec84c4cb67da5617811497fadb62c1599b7c0a37e008599cc8947"
+              },
+              {
+                "name": "MobiInteropProjection.kt.template",
+                "sha256": "e83d0f5d69f95479203058546d023b34d04cf9f37d103c2fda1b98de38c9ef64"
+              },
+              {
+                "name": "MobiInteropProjection.swift.template",
+                "sha256": "aa1a45dbdf6f24b4c0b77f01572b11b707ec9896c94d42118fd57e924dc321a8"
+              },
+              {
+                "name": "compatibility_check.rb",
+                "sha256": "8b3127a702a4d3ce2fcf0b2ea6faca3c472d570727565f335709e897edf1668c"
+              },
+              {
+                "name": "kotlin_check.rb",
+                "sha256": "e22643ca081d5d6b8fbbc26c92a2cf22efa1c3daca4278f6056e302a6c8ca65b"
+              },
+              {
+                "name": "maintenance-execution-policy.json",
+                "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b"
+              }
+            ],
+            "runtime": {
+              "ruby": "4.0.6",
+              "platform": "arm64-darwin25"
+            },
+            "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+          },
+          "result_sha256": "7990d770cb44fd683cb22a0872bcf2627b82771dcbb2876da71aba9b34e0fc23",
+          "phases": [
+            {
+              "phase": "baseline",
+              "outcome": "infrastructure",
+              "evidence_sha256": "8f9f625a0b39d2946e928567aa8667ff1242cab6f1595ec86a7761c9ffef2e5f",
+              "cells": {
+                "native_library_compile": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "framework_link": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "android-test": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "android-build-debug": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "ios-test": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "ios-build-debug": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                }
+              },
+              "di_reachable": false,
+              "bridge_unavailable": false,
+              "source_preservation": "verified",
+              "missing_capabilities": [
+                "device_execution",
+                "release_archive",
+                "signed_packaging",
+                "cancellation_parity",
+                "generic_export",
+                "cold_direct_ci",
+                "incremental_direct_build",
+                "complete_release_interval_review",
+                "complete_bridge_target_graph",
+                "advisory_review"
+              ]
+            }
+          ],
+          "missing_capabilities": [
+            "device_execution",
+            "release_archive",
+            "signed_packaging",
+            "cancellation_parity",
+            "generic_export",
+            "cold_direct_ci",
+            "incremental_direct_build",
+            "complete_release_interval_review",
+            "complete_bridge_target_graph",
+            "advisory_review",
+            "native_tests",
+            "application_builds",
+            "retirement_approval"
+          ],
+          "bridge_retirement": "defer",
+          "adoption_authorized": false
+        },
+        "recovery.json": {
+          "schema": 1,
+          "operation": "recover",
+          "run_id": "fc90e3693f0b55d13bace1f87c864be7",
+          "state": "quiescent",
+          "hold": false,
+          "processes": [
+            {
+              "check": "baseline-bridge-compile",
+              "state": "absent"
+            }
+          ],
+          "recorded_outcome": "inconclusive",
+          "resume_allowed": false,
+          "adoption_authorized": false
+        }
+      },
+      "files_sha256": {
+        "report.json": "6e877ed353baf400c859ad57576ef09806df196e91371c91732c9e6f2c5971ea",
+        "summary.md": "9e35e1f4e935b4fb38c32db814e3c99a651be50dbae38b3ccf858caa0e8f2ff9",
+        "discovery.json": "5407d04f9470d4a03fa11e8f6400aacbd1357f18cf144b69542c093088e243fb",
+        "snapshot.json": "c4b2b1831829f6866e9f5e1d0396856f4bd6a32749ba881ab679f3e473250e1d",
+        "cleanup.json": "f9cc4b8c940317b0566b40e6099b88ae4bdddbb91e88f1a0bbab98b4a6419f00",
+        "native-report.json": "2dd89f73a92e48662eb2896bd23b605d9499eb7c391ef1053a252ab082a11fe9",
+        "recovery.json": "f108550006d6a349ebb23c2b6f60edde304f25f9c055582ac721b8bef2ab7023"
+      }
+    },
+    {
+      "github": {
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/36828228795",
+        "commit": "815b16d7590ce5aae7c2c38f85da50a0b3bd3c87",
+        "status": "completed",
+        "conclusion": "success",
+        "jobs": [
+          {
+            "name": "compatibility_watch",
+            "conclusion": "success",
+            "startedAt": "2026-10-01T07:09:15Z",
+            "completedAt": "2026-10-01T07:29:12Z"
+          }
+        ]
+      },
+      "outputs": {
+        "report.json": {
+          "schema": 1,
+          "operation_state": "observation_recorded",
+          "source_sha256": "7c24b2f3019a9a06305cf0ad6dc024ad38eddd1f11498ade98069c2c72c1a4ad",
+          "config_sha256": "64252e11ca5f01e2cd45110e34aeb8c3a9803dbf8d6f44e82553673e26976483",
+          "snapshot": {
+            "schema": 1,
+            "kind": "watch_observation",
+            "scope": {
+              "adapter": "kotlin-bridge-compile-v1",
+              "baseline": {
+                "compose": "1.9.0",
+                "kotlin": "2.3.20",
+                "metro": "1.1.1",
+                "skie": "0.10.12"
+              },
+              "candidate": {
+                "compose": "1.9.0",
+                "id": "kotlin-2-4-10",
+                "releases": {
+                  "kotlin": {
+                    "published_at": "2026-07-14T10:47:27Z",
+                    "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.4.10",
+                    "source_id": "kotlin-release",
+                    "version": "2.4.10"
+                  },
+                  "metro": {
+                    "published_at": "2026-09-16T21:45:45Z",
+                    "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.4",
+                    "source_id": "metro-releases",
+                    "version": "1.4.4"
+                  },
+                  "skie": {
+                    "published_at": "2026-07-27T15:09:23Z",
+                    "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.14",
+                    "source_id": "skie-releases",
+                    "version": "0.10.14"
+                  }
+                }
+              },
+              "channel": "Mekate-Studio/Mobi:main",
+              "minimum_release_age_days": 7,
+              "probe_inputs_sha256": "58e0827092fb6e75bbfc8c38a694cdbfcc40ef361e79f74284b50cda47808c93",
+              "toolchain": "0.12.2"
+            },
+            "observation": {
+              "assessment_state": "incomplete",
+              "cleanup": "cleaned",
+              "direct_paths": {
+                "skie": {
+                  "reason": "No reviewed supported standalone Toolchain SKIE configuration and Swift processing pipeline",
+                  "sources": [
+                    "skie-installation",
+                    "skie-SkieGradlePluginApplier.kt",
+                    "toolchain-NativeLinkTask.kt"
+                  ],
+                  "status": "missing"
+                },
+                "swift-export": {
+                  "reason": "Alpha Swift export documentation demonstrates Gradle integration; reviewed Toolchain framework path does not establish Swift export emission and embedding",
+                  "sources": [
+                    "swift-export",
+                    "toolchain-NativeLinkTask.kt",
+                    "toolchain-ios-guide"
+                  ],
+                  "status": "missing"
+                }
+              },
+              "history_provider": "available",
+              "matrix": {
+                "baseline/android-build-debug": "not_attempted",
+                "baseline/android-test": "not_attempted",
+                "baseline/effective_toolchain": "passed",
+                "baseline/framework_link": "passed",
+                "baseline/ios-build-debug": "not_attempted",
+                "baseline/ios-test": "not_attempted",
+                "baseline/native_library_compile": "passed",
+                "candidate/android-build-debug": "not_attempted",
+                "candidate/android-test": "not_attempted",
+                "candidate/effective_toolchain": "passed",
+                "candidate/framework_link": "passed",
+                "candidate/ios-build-debug": "not_attempted",
+                "candidate/ios-test": "not_attempted",
+                "candidate/native_library_compile": "passed"
+              },
+              "missing_capabilities": [
+                "advisory_review",
+                "application_builds",
+                "cancellation_parity",
+                "cold_direct_ci",
+                "complete_bridge_target_graph",
+                "complete_release_interval_review",
+                "device_execution",
+                "generic_export",
+                "incremental_direct_build",
+                "native_tests",
+                "release_archive",
+                "release_provider_coverage",
+                "retirement_approval",
+                "signed_packaging"
+              ],
+              "native_reason": "named_checks_passed",
+              "native_state": "checks_passed",
+              "releases": {
+                "kotlin": {
+                  "newer": [],
+                  "reason": "provider_http_403",
+                  "reviewed_version": "2.4.10",
+                  "state": "incomplete"
+                },
+                "metro": {
+                  "newer": [],
+                  "reason": "provider_http_403",
+                  "reviewed_version": "1.4.4",
+                  "state": "incomplete"
+                },
+                "skie": {
+                  "newer": [],
+                  "reason": "provider_http_403",
+                  "reviewed_version": "0.10.14",
+                  "state": "incomplete"
+                },
+                "toolchain": {
+                  "newer": [],
+                  "reason": "provider_http_403",
+                  "reviewed_version": "0.12.2",
+                  "state": "incomplete"
+                }
+              }
+            },
+            "recorded_at": "2026-10-01T07:09:54Z",
+            "adoption_authorized": false,
+            "sha256": "eba852815a51a1abaa9937b645f5984ad7fd1be96ff58220849634fc6e009ece"
+          },
+          "notification": {
+            "notify": true,
+            "continuity": "restored",
+            "changes": [
+              {
+                "kind": "blocker_or_assessment_changed",
+                "field": "history_provider",
+                "before": "incomplete",
+                "after": "available"
+              },
+              {
+                "kind": "capability_improved",
+                "field": "matrix.baseline/effective_toolchain",
+                "before": null,
+                "after": "passed"
+              },
+              {
+                "kind": "capability_improved",
+                "field": "matrix.baseline/framework_link",
+                "before": "not_attempted",
+                "after": "passed"
+              },
+              {
+                "kind": "capability_improved",
+                "field": "matrix.baseline/native_library_compile",
+                "before": "not_attempted",
+                "after": "passed"
+              },
+              {
+                "kind": "capability_evidence_changed",
+                "field": "matrix.candidate/android-build-debug",
+                "before": null,
+                "after": "not_attempted"
+              },
+              {
+                "kind": "capability_evidence_changed",
+                "field": "matrix.candidate/android-test",
+                "before": null,
+                "after": "not_attempted"
+              },
+              {
+                "kind": "capability_improved",
+                "field": "matrix.candidate/effective_toolchain",
+                "before": null,
+                "after": "passed"
+              },
+              {
+                "kind": "capability_improved",
+                "field": "matrix.candidate/framework_link",
+                "before": null,
+                "after": "passed"
+              },
+              {
+                "kind": "capability_evidence_changed",
+                "field": "matrix.candidate/ios-build-debug",
+                "before": null,
+                "after": "not_attempted"
+              },
+              {
+                "kind": "capability_evidence_changed",
+                "field": "matrix.candidate/ios-test",
+                "before": null,
+                "after": "not_attempted"
+              },
+              {
+                "kind": "capability_improved",
+                "field": "matrix.candidate/native_library_compile",
+                "before": null,
+                "after": "passed"
+              },
+              {
+                "kind": "blocker_or_assessment_changed",
+                "field": "missing_capabilities",
+                "before": [
+                  "advisory_review",
+                  "application_builds",
+                  "cancellation_parity",
+                  "cold_direct_ci",
+                  "complete_bridge_target_graph",
+                  "complete_release_interval_review",
+                  "device_execution",
+                  "generic_export",
+                  "incremental_direct_build",
+                  "native_tests",
+                  "release_archive",
+                  "release_provider_coverage",
+                  "retirement_approval",
+                  "signed_packaging",
+                  "watch_history_provider"
+                ],
+                "after": [
+                  "advisory_review",
+                  "application_builds",
+                  "cancellation_parity",
+                  "cold_direct_ci",
+                  "complete_bridge_target_graph",
+                  "complete_release_interval_review",
+                  "device_execution",
+                  "generic_export",
+                  "incremental_direct_build",
+                  "native_tests",
+                  "release_archive",
+                  "release_provider_coverage",
+                  "retirement_approval",
+                  "signed_packaging"
+                ]
+              },
+              {
+                "kind": "blocker_or_assessment_changed",
+                "field": "native_reason",
+                "before": "check_infrastructure_failure",
+                "after": "named_checks_passed"
+              },
+              {
+                "kind": "blocker_or_assessment_changed",
+                "field": "native_state",
+                "before": "inconclusive",
+                "after": "checks_passed"
+              }
+            ]
+          },
+          "native_run_id": "f5cece24c512abfecb055f87ae5868e6",
+          "native_result_sha256": "684428ed0ab74d23a147013657ad490f6a1d14dae0e4cbd0b07d4feb21323c86",
+          "adoption_authorized": false,
+          "bridge_retirement": "defer"
+        },
+        "discovery.json": {
+          "toolchain": {
+            "state": "incomplete",
+            "reviewed_version": "0.12.2",
+            "reason": "provider_http_403",
+            "newer": [],
+            "source": {
+              "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases?per_page=30",
+              "retrieved_at": "2026-10-01T07:09:54Z"
+            }
+          },
+          "kotlin": {
+            "state": "incomplete",
+            "reviewed_version": "2.4.10",
+            "reason": "provider_http_403",
+            "newer": [],
+            "source": {
+              "url": "https://api.github.com/repos/JetBrains/kotlin/releases?per_page=30",
+              "retrieved_at": "2026-10-01T07:09:54Z"
+            }
+          },
+          "metro": {
+            "state": "incomplete",
+            "reviewed_version": "1.4.4",
+            "reason": "provider_http_403",
+            "newer": [],
+            "source": {
+              "url": "https://api.github.com/repos/ZacSweers/metro/releases?per_page=30",
+              "retrieved_at": "2026-10-01T07:09:54Z"
+            }
+          },
+          "skie": {
+            "state": "incomplete",
+            "reviewed_version": "0.10.14",
+            "reason": "provider_http_403",
+            "newer": [],
+            "source": {
+              "url": "https://api.github.com/repos/touchlab/SKIE/releases?per_page=30",
+              "retrieved_at": "2026-10-01T07:09:54Z"
+            }
+          }
+        },
+        "snapshot.json": {
+          "schema": 1,
+          "kind": "watch_observation",
+          "scope": {
+            "adapter": "kotlin-bridge-compile-v1",
+            "baseline": {
+              "compose": "1.9.0",
+              "kotlin": "2.3.20",
+              "metro": "1.1.1",
+              "skie": "0.10.12"
+            },
+            "candidate": {
+              "compose": "1.9.0",
+              "id": "kotlin-2-4-10",
+              "releases": {
+                "kotlin": {
+                  "published_at": "2026-07-14T10:47:27Z",
+                  "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.4.10",
+                  "source_id": "kotlin-release",
+                  "version": "2.4.10"
+                },
+                "metro": {
+                  "published_at": "2026-09-16T21:45:45Z",
+                  "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.4",
+                  "source_id": "metro-releases",
+                  "version": "1.4.4"
+                },
+                "skie": {
+                  "published_at": "2026-07-27T15:09:23Z",
+                  "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.14",
+                  "source_id": "skie-releases",
+                  "version": "0.10.14"
+                }
+              }
+            },
+            "channel": "Mekate-Studio/Mobi:main",
+            "minimum_release_age_days": 7,
+            "probe_inputs_sha256": "58e0827092fb6e75bbfc8c38a694cdbfcc40ef361e79f74284b50cda47808c93",
+            "toolchain": "0.12.2"
+          },
+          "observation": {
+            "assessment_state": "incomplete",
+            "cleanup": "cleaned",
+            "direct_paths": {
+              "skie": {
+                "reason": "No reviewed supported standalone Toolchain SKIE configuration and Swift processing pipeline",
+                "sources": [
+                  "skie-installation",
+                  "skie-SkieGradlePluginApplier.kt",
+                  "toolchain-NativeLinkTask.kt"
+                ],
+                "status": "missing"
+              },
+              "swift-export": {
+                "reason": "Alpha Swift export documentation demonstrates Gradle integration; reviewed Toolchain framework path does not establish Swift export emission and embedding",
+                "sources": [
+                  "swift-export",
+                  "toolchain-NativeLinkTask.kt",
+                  "toolchain-ios-guide"
+                ],
+                "status": "missing"
+              }
+            },
+            "history_provider": "available",
+            "matrix": {
+              "baseline/android-build-debug": "not_attempted",
+              "baseline/android-test": "not_attempted",
+              "baseline/effective_toolchain": "passed",
+              "baseline/framework_link": "passed",
+              "baseline/ios-build-debug": "not_attempted",
+              "baseline/ios-test": "not_attempted",
+              "baseline/native_library_compile": "passed",
+              "candidate/android-build-debug": "not_attempted",
+              "candidate/android-test": "not_attempted",
+              "candidate/effective_toolchain": "passed",
+              "candidate/framework_link": "passed",
+              "candidate/ios-build-debug": "not_attempted",
+              "candidate/ios-test": "not_attempted",
+              "candidate/native_library_compile": "passed"
+            },
+            "missing_capabilities": [
+              "advisory_review",
+              "application_builds",
+              "cancellation_parity",
+              "cold_direct_ci",
+              "complete_bridge_target_graph",
+              "complete_release_interval_review",
+              "device_execution",
+              "generic_export",
+              "incremental_direct_build",
+              "native_tests",
+              "release_archive",
+              "release_provider_coverage",
+              "retirement_approval",
+              "signed_packaging"
+            ],
+            "native_reason": "named_checks_passed",
+            "native_state": "checks_passed",
+            "releases": {
+              "kotlin": {
+                "newer": [],
+                "reason": "provider_http_403",
+                "reviewed_version": "2.4.10",
+                "state": "incomplete"
+              },
+              "metro": {
+                "newer": [],
+                "reason": "provider_http_403",
+                "reviewed_version": "1.4.4",
+                "state": "incomplete"
+              },
+              "skie": {
+                "newer": [],
+                "reason": "provider_http_403",
+                "reviewed_version": "0.10.14",
+                "state": "incomplete"
+              },
+              "toolchain": {
+                "newer": [],
+                "reason": "provider_http_403",
+                "reviewed_version": "0.12.2",
+                "state": "incomplete"
+              }
+            }
+          },
+          "recorded_at": "2026-10-01T07:09:54Z",
+          "adoption_authorized": false,
+          "sha256": "eba852815a51a1abaa9937b645f5984ad7fd1be96ff58220849634fc6e009ece"
+        },
+        "cleanup.json": {
+          "schema": 1,
+          "operation": "cleanup",
+          "run_id": "f5cece24c512abfecb055f87ae5868e6",
+          "state": "cleaned",
+          "eligible": true,
+          "retention_due_at": "2026-10-08T07:27:28Z",
+          "paths": [
+            "work/baseline",
+            "work/candidate"
+          ],
+          "evidence_retained": true,
+          "recorded_outcome": "checks_passed",
+          "adoption_authorized": false
+        },
+        "native-report.json": {
+          "schema": 1,
+          "run_id": "f5cece24c512abfecb055f87ae5868e6",
+          "state": "checks_passed",
+          "reason": "named_checks_passed",
+          "binding": {
+            "source_sha256": "7c24b2f3019a9a06305cf0ad6dc024ad38eddd1f11498ade98069c2c72c1a4ad",
+            "capture_mode": "working_snapshot",
+            "git": {
+              "head": "815b16d7590ce5aae7c2c38f85da50a0b3bd3c87",
+              "index_sha256": "e5154e5306dc1a27cd6bf23ef9f4444910315bc1d1251de1f2b79e52edee4d94"
+            },
+            "adapter": "compatibility-bridge-compile",
+            "adapter_schema": 1,
+            "plan_sha256": "f402cdc25369ce780ef71086a9d02f14be7a417b5b9423367ef5fd292d781156",
+            "patch_sha256": "eee1dc6625c2c5dab53ac5c3b6c36684b8eabe7e619220e751989d7b61455151",
+            "tools_sha256": "a3fbb3d5c9276efc660e357718b465aa6ccb6805b6fd3a0c05f7be2bd5c3f735",
+            "execution_files": [
+              {
+                "name": "executor.rb",
+                "sha256": "6e7b988602caa2b1a27b227f98ea0fbff84dfe31f40b7f47a70d1bb24d8edbcd"
+              },
+              {
+                "name": "worker.rb",
+                "sha256": "790b8720eb98b2dee0d46078e4154953e51345a558be17000aeb324df94fb3a2"
+              },
+              {
+                "name": "core.rb",
+                "sha256": "f92974bc45fa3c571b5acb0a29524100b1384935c2b6208d480d38189e5179ad"
+              },
+              {
+                "name": "run_store.rb",
+                "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc"
+              },
+              {
+                "name": "process_group.rb",
+                "sha256": "378133febaf2bd9432119ada0947be8119dcea7b9e9b552c2358eadad8b51c90"
+              },
+              {
+                "name": "resource_handlers.rb",
+                "sha256": "8d30b88bd1a0c1e8f25972dff989dd0f4bdab8e37c6d7fe363b7a3ae55a21e93"
+              },
+              {
+                "name": "ruby",
+                "sha256": "ac368e02133a4ee1ba0a2f48c0f858c7aece622ce854f89f9d8b0139a309085d"
+              },
+              {
+                "name": "ps",
+                "sha256": "3bbba882e30d91fc4ff6e6844ca7c59fef4351b9a3fea35dca55708d6d487d1c"
+              },
+              {
+                "name": "git",
+                "sha256": "b8763cf250e607a778bb4603cecb5b90338814d0a3dfcba0d57b1de242f610e9"
+              },
+              {
+                "name": "compatibility.rb",
+                "sha256": "d14fa031b1614f7272987b209b345dc91d2428ea00cfe01d0db1d9150a04036a"
+              },
+              {
+                "name": "bdfaa18359bd140b2aeed74fd3f2174b6cd04eabb9e3c1c713950e05ae1b7f4e.json",
+                "sha256": "65f4d8d884a159e5110490ffb10249a5dceead09a67a1098c70177d8ad75febf"
+              },
+              {
+                "name": "maintenance-compatibility.json",
+                "sha256": "64252e11ca5f01e2cd45110e34aeb8c3a9803dbf8d6f44e82553673e26976483"
+              },
+              {
+                "name": "maintenance-kotlin-toolchains.json",
+                "sha256": "0ff446be520eecdf815bcbb280b59f484f9e1403eb82f71c1ea0ad55935f1da3"
+              },
+              {
+                "name": "java",
+                "sha256": "9be1d0a740ff6502df1a762145e62860f5de4b7e17658d9cb9498da3acf9d16c"
+              },
+              {
+                "name": "compatibility_report.rb",
+                "sha256": "d3dfde12781c2b276ee44d7351301b45282681affcbf7dd0cbaa65d052579037"
+              },
+              {
+                "name": "kotlin_evidence.rb",
+                "sha256": "29f9b7aab47650f276f2179fa11b265348e6b4fd8e67c15dcc60584e5bfedc56"
+              },
+              {
+                "name": "kotlin_wrappers.rb",
+                "sha256": "fce20dc01ef44441cccdb53c75c94b7f70d4542f9725c006d31b7119d9faa666"
+              },
+              {
+                "name": "maintenance.rb",
+                "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3"
+              },
+              {
+                "name": "policy.rb",
+                "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965"
+              },
+              {
+                "name": "recovery.rb",
+                "sha256": "bf81138efc57878ae98759bf25252aa6df97847786f7b84bd8999a254b520ae9"
+              },
+              {
+                "name": "support_policy.rb",
+                "sha256": "9a64240fba1af2f6a0724e8b8f5babfad5aa80fcf1b9b23e60a1467a52744c3e"
+              },
+              {
+                "name": "tools.rb",
+                "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8"
+              },
+              {
+                "name": "watch.rb",
+                "sha256": "4614f11415bd8005ac67538b5bc258d7a82b84ea3280ab54026727a1062e1d85"
+              },
+              {
+                "name": "watch_history.rb",
+                "sha256": "26e07b4ef76698e486e9e4eb4ea0b8d460ce7812b5c6ce71046d1109140fc005"
+              },
+              {
+                "name": "elixir.rb",
+                "sha256": "1adbc0c83b3ccc95c7cf4e5bb0d91e92492c5f670eebcb45c5331b0f5ba84d56"
+              },
+              {
+                "name": "interop_experiment.rb",
+                "sha256": "d5cff4d4d13be4f6a8a5381de5e2a3e455e8fcf10f71e98fa23f533f679af55c"
+              },
+              {
+                "name": "kotlin.rb",
+                "sha256": "087ec8c26eb601cc39baf973b6dbbe24bae9340cd918d509c68d823f82fec1cd"
+              },
+              {
+                "name": "kotlin_rehearsal.rb",
+                "sha256": "57c92f98ba544006896b3fcc7d4118dae711be3cdc075a976e963ecb14e1f507"
+              },
+              {
+                "name": "kotlin_resources.rb",
+                "sha256": "aff6499274071f49a0d8f58a15dd3af678f09f1478e53230854c0b030a748f3b"
+              },
+              {
+                "name": "kotlin_targets.rb",
+                "sha256": "9c9fb2fcefae650787d8e81689c43a9c2a17d54dd1483e3e42ec336b9063857f"
+              },
+              {
+                "name": "kotlin_watch.rb",
+                "sha256": "2d9fe186fae48e20f19b6c73006d5687d2f981ed5b9f0ef7d0110780b4478fe5"
+              },
+              {
+                "name": "mobile_support.rb",
+                "sha256": "d14482749ddec84c4cb67da5617811497fadb62c1599b7c0a37e008599cc8947"
+              },
+              {
+                "name": "MobiInteropProjection.kt.template",
+                "sha256": "e83d0f5d69f95479203058546d023b34d04cf9f37d103c2fda1b98de38c9ef64"
+              },
+              {
+                "name": "MobiInteropProjection.swift.template",
+                "sha256": "aa1a45dbdf6f24b4c0b77f01572b11b707ec9896c94d42118fd57e924dc321a8"
+              },
+              {
+                "name": "compatibility_check.rb",
+                "sha256": "8b3127a702a4d3ce2fcf0b2ea6faca3c472d570727565f335709e897edf1668c"
+              },
+              {
+                "name": "kotlin_check.rb",
+                "sha256": "e22643ca081d5d6b8fbbc26c92a2cf22efa1c3daca4278f6056e302a6c8ca65b"
+              },
+              {
+                "name": "maintenance-execution-policy.json",
+                "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b"
+              }
+            ],
+            "runtime": {
+              "ruby": "4.0.6",
+              "platform": "arm64-darwin25"
+            },
+            "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+          },
+          "result_sha256": "684428ed0ab74d23a147013657ad490f6a1d14dae0e4cbd0b07d4feb21323c86",
+          "phases": [
+            {
+              "phase": "baseline",
+              "outcome": "passed",
+              "evidence_sha256": "d0c58d6ce483284e79d2694092538b176139ec30dd6a1e5c1adf6f51f8826877",
+              "cells": {
+                "effective_toolchain": {
+                  "status": "passed",
+                  "evidence_kind": "local_execution",
+                  "commands": [
+                    "version",
+                    "settings"
+                  ]
+                },
+                "native_library_compile": {
+                  "status": "passed",
+                  "evidence_kind": "local_execution",
+                  "commands": [
+                    "native_library_compile"
+                  ]
+                },
+                "framework_link": {
+                  "status": "passed",
+                  "evidence_kind": "local_execution",
+                  "commands": [
+                    "framework_link"
+                  ]
+                },
+                "android-test": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "android-build-debug": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "ios-test": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "ios-build-debug": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                }
+              },
+              "di_reachable": false,
+              "bridge_unavailable": false,
+              "source_preservation": "verified",
+              "missing_capabilities": [
+                "device_execution",
+                "release_archive",
+                "signed_packaging",
+                "cancellation_parity",
+                "generic_export",
+                "cold_direct_ci",
+                "incremental_direct_build",
+                "complete_release_interval_review",
+                "complete_bridge_target_graph",
+                "advisory_review"
+              ]
+            },
+            {
+              "phase": "candidate",
+              "outcome": "passed",
+              "evidence_sha256": "60485c2334c7d0c40c87ff0deede9e743c3b55d20e02822c1a77055d99337e82",
+              "cells": {
+                "effective_toolchain": {
+                  "status": "passed",
+                  "evidence_kind": "local_execution",
+                  "commands": [
+                    "version",
+                    "settings"
+                  ]
+                },
+                "native_library_compile": {
+                  "status": "passed",
+                  "evidence_kind": "local_execution",
+                  "commands": [
+                    "native_library_compile"
+                  ]
+                },
+                "framework_link": {
+                  "status": "passed",
+                  "evidence_kind": "local_execution",
+                  "commands": [
+                    "framework_link"
+                  ]
+                },
+                "android-test": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "android-build-debug": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "ios-test": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                },
+                "ios-build-debug": {
+                  "status": "not_attempted",
+                  "evidence_kind": "none"
+                }
+              },
+              "di_reachable": false,
+              "bridge_unavailable": false,
+              "source_preservation": "verified",
+              "missing_capabilities": [
+                "device_execution",
+                "release_archive",
+                "signed_packaging",
+                "cancellation_parity",
+                "generic_export",
+                "cold_direct_ci",
+                "incremental_direct_build",
+                "complete_release_interval_review",
+                "complete_bridge_target_graph",
+                "advisory_review"
+              ]
+            }
+          ],
+          "missing_capabilities": [
+            "device_execution",
+            "release_archive",
+            "signed_packaging",
+            "cancellation_parity",
+            "generic_export",
+            "cold_direct_ci",
+            "incremental_direct_build",
+            "complete_release_interval_review",
+            "complete_bridge_target_graph",
+            "advisory_review",
+            "native_tests",
+            "application_builds",
+            "retirement_approval"
+          ],
+          "bridge_retirement": "defer",
+          "adoption_authorized": false
+        },
+        "recovery.json": {
+          "schema": 1,
+          "operation": "recover",
+          "run_id": "f5cece24c512abfecb055f87ae5868e6",
+          "state": "quiescent",
+          "hold": false,
+          "processes": [
+            {
+              "check": "baseline-bridge-compile",
+              "state": "absent"
+            },
+            {
+              "check": "candidate-bridge-compile",
+              "state": "absent"
+            }
+          ],
+          "recorded_outcome": "checks_passed",
+          "resume_allowed": false,
+          "adoption_authorized": false
+        }
+      },
+      "files_sha256": {
+        "report.json": "aeb61e6db9d5e7b259a0b1895c31bc4976ae60bf3d2ced53c2ab90eadf159110",
+        "summary.md": "9ac8e8e54d37606a2b54957ca2cdecfcaf40c4d9d8492d9baa84d58e0cdef1a4",
+        "discovery.json": "0ee9ef76bada41c2b58bd4f1da0727a453953b81de3a5a51fb187613d5a5478a",
+        "snapshot.json": "ef1fcfbe23552c58c679ce0ecf9c8250df52dbc3df2b02c4cce439bf5d2f4396",
+        "cleanup.json": "630a95c332bc42c01e807ca8cbf381b189ddb577182a24cb40553cbdd5168e5b",
+        "native-report.json": "c33fb51966da2a5f7ff0c38cd2997d7924fd12916a06366a0acd651a9daae09b",
+        "recovery.json": "87ad1d2417bc7cfa81b9727af9b3bded59e699686695710f15d428107ba7f6f7"
+      }
+    }
+  ],
+  "limits": [
+    "Both hosted observations remained incomplete due to HTTP 403 from anonymous release providers.",
+    "First native setup exception lacks public detail; second native compile/link comparison passed.",
+    "Snapshot restore, semantic deltas, public uploads and owned cleanup verified; no native app/test or retirement qualification from this narrow watch."
+  ]
+}

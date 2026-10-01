@@ -18,7 +18,7 @@ module Maintenance
       history = ENV.fetch('MOBI_WATCH_HISTORY', 'local')
       raise Failure, 'Invalid watch history state' unless %w[local initial found incomplete].include?(history)
       watcher = CompatibilityWatch.new(root, previous: options['--previous'], output: options['--output'], history: history,
-                                      scope: ENV.fetch('MOBI_WATCH_SCOPE', 'local'))
+                                      scope: ENV.fetch('MOBI_WATCH_SCOPE', 'local'), token: ENV['MOBI_WATCH_GITHUB_TOKEN'])
       report = watcher.run
       Watch.announce(report, summary_path: ENV['GITHUB_STEP_SUMMARY']) if ENV['GITHUB_ACTIONS'] == 'true'
       puts JSON.pretty_generate(report.merge('report_directory' => watcher.output.delete_prefix(root + '/')))

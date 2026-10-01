@@ -11,7 +11,10 @@ See the [validation record](eighth-slice-validation.md) for actual execution.
 Use an Apple Silicon Mac with Xcode, Android SDK and Java 21, following the
 [README](../../README.md) setup and [Kotlin preparation](kotlin-rehearsal.md).
 The watch needs the pinned quality runtime and reviewed Kotlin distributions;
-it does not require Renovate, GitHub authentication or an AI service.
+it does not require Renovate, GitHub authentication or an AI service. Hosted runs
+use the existing read-only workflow token for public release queries to avoid
+unauthenticated access failures. Local callers may optionally set
+`MOBI_WATCH_GITHUB_TOKEN`; the token is neither retained nor passed to native jobs.
 
 ```bash
 ./scripts/dev/dependency_updates.sh prepare-kotlin
@@ -37,7 +40,7 @@ prerelease tags, including RC tags incorrectly marked stable upstream. Unknown
 tag formats, absent timestamps, future dates, rate limits, malformed responses
 and network failures yield explicit incomplete provider evidence. Each available
 response has its URL, UTC retrieval time, content digest and HTTPS client digest.
-The system HTTPS client verifies certificates; credentials used for hosted history
+The system HTTPS client verifies certificates; credentials used for hosted history and releases
 are supplied through standard input, never command arguments. The pinned Ruby
 runtime does not have an OpenSSL extension.
 
@@ -58,7 +61,7 @@ missing capabilities in this narrow observation.
 | Output | Meaning |
 | --- | --- |
 | `discovery.json` | Normalized release leads, provider failures and available source identities |
-| `native-report.json` | Verified evaluator result, baseline/candidate cells and source bindings |
+| `native-report.json` | Verified evaluator result, baseline/candidate cells, source bindings and path-free setup exception diagnostics |
 | `recovery.json`, `cleanup.json` | Owned-resource recovery and disposable-workspace cleanup outcomes |
 | `snapshot.json` | Versioned, digest-bound semantic observation and comparison scope |
 | `report.json`, `summary.md` | Operation state, assessment state, changes and explicit gaps |

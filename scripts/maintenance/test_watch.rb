@@ -119,6 +119,13 @@ module WatchTest
     assert(Maintenance::KotlinReleaseWatch.new(fetcher: fetcher).discover(config).values.all? { |r| r['reason'] == 'provider_evidence_mismatch' })
   end
 
+  test('optional public-provider authentication stays out of reports') do
+    fetcher = Fetcher.new([release])
+    result = Maintenance::KotlinReleaseWatch.new(fetcher: fetcher, token: 'fixture-secret').discover(config)
+    assert(fetcher.calls.size == 4 && fetcher.calls.all? { |_url, token| token == 'fixture-secret' })
+    assert(!JSON.generate(result).include?('fixture-secret'))
+  end
+
   test('provider failure remains incomplete with a passing probe and unchanged failure is quiet') do
     fixture do |root|
       fetcher = Fetcher.new([]); fetcher.error = 'provider_http_429'

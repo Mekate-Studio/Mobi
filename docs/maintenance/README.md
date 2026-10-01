@@ -1,8 +1,8 @@
 # Quality and dependency maintenance
 
-Status: slices 1–7 integrated. Slice 7 was committed and pushed as `9d25553`;
+Status: slices 1–8 integrated. Slice 7 was committed and pushed as `9d25553`;
 its [measured results](seventh-slice-validation.md) keep bridge upgrades separate
-from direct-path parity. Slice 8 consolidates the [existing watch](compatibility-watch.md);
+from direct-path parity. Slice 8 was committed and pushed as `815b16d` and consolidates the [existing watch](compatibility-watch.md);
 [validation and hosted status](eighth-slice-validation.md) remain explicit.
 Audit baseline: `7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
 

@@ -49,6 +49,7 @@ jobs:
           run-id: ${{ steps.history.outputs.run_id }}
       - name: Observe reviewed compatibility and meaningful changes
         env:
+          MOBI_WATCH_GITHUB_TOKEN: ${{ github.token }}
           MOBI_WATCH_HISTORY: ${{ steps.history.outputs.state == 'found' && steps.restore.outcome != 'success' && 'incomplete' || steps.history.outputs.state }}
           MOBI_WATCH_SCOPE: ${{ github.repository }}:${{ github.ref_name }}
         run: ./scripts/ci/check_skie_kotlin_compatibility.sh --previous .maintenance/watch-previous/snapshot.json --output .maintenance/watch-reports/current
