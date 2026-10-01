@@ -1,7 +1,7 @@
 # Quality gate and dependency workflow design
 
 Status: the full lifecycle is a design; slices 1–6 implement the documented
-static, inventory and isolated rehearsal subsets. Slice 7 adds the manual
+static, inventory and isolated rehearsal subsets. Slice 8 adds the [existing watch integration](compatibility-watch.md). Slice 7 adds the manual
 [compatibility runner](compatibility-runner.md), with bridge and direct-path receipts. The
 [mobile support workflow](mobile-support-policy.md) now adds configurable OS-floor
 assessment and explicit architecture-impact review. General automatic semantic

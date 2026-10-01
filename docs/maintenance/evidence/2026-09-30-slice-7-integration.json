@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "commit": "9d2555373a268c964e2df780e3a74240a5a2850b",
+  "ci_url": "https://github.com/Mekate-Studio/Mobi/actions/runs/36602751932",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Classify changes",
+      "conclusion": "success",
+      "startedAt": "2026-09-29T17:07:56Z",
+      "completedAt": "2026-09-29T17:08:01Z"
+    },
+    {
+      "name": "Android debug build",
+      "conclusion": "success",
+      "startedAt": "2026-09-29T17:08:08Z",
+      "completedAt": "2026-09-29T17:11:03Z"
+    },
+    {
+      "name": "iOS PullRequest plan",
+      "conclusion": "success",
+      "startedAt": "2026-09-29T17:08:08Z",
+      "completedAt": "2026-09-29T17:24:30Z"
+    },
+    {
+      "name": "Android and shared host tests",
+      "conclusion": "success",
+      "startedAt": "2026-09-29T17:08:10Z",
+      "completedAt": "2026-09-29T17:11:46Z"
+    },
+    {
+      "name": "iOS debug build",
+      "conclusion": "success",
+      "startedAt": "2026-09-29T17:08:11Z",
+      "completedAt": "2026-09-29T17:20:40Z"
+    },
+    {
+      "name": "Quality checks",
+      "conclusion": "success",
+      "startedAt": "2026-09-29T17:08:10Z",
+      "completedAt": "2026-09-29T17:15:19Z"
+    },
+    {
+      "name": "Pull request gate",
+      "conclusion": "success",
+      "startedAt": "2026-09-29T17:24:33Z",
+      "completedAt": "2026-09-29T17:24:36Z"
+    }
+  ],
+  "raw_metadata_sha256": "b9dcf836831962de071348d4cad3dd84332884e3dcf093bc84b2d591a1e5016d",
+  "limits": [
+    "Mobile CI uses the retained production bridge; this is not hosted direct-path or release qualification."
+  ]
+}

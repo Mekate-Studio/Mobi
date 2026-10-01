@@ -250,8 +250,9 @@ a passing result.
 
 Use one assessment engine for manual runs and the existing
 [Dependency Compatibility workflow](../../.github/workflows/dependency-compatibility.yml).
-Do not create another schedule. After implementation authorization, retain that
-workflow as a thin caller of isolated probes; preserve any current protections.
+Slice 8 implements this [existing caller](compatibility-watch.md) for reviewed
+bridge compile/link observations and bounded release leads. It adds no schedule.
+Broader interval, advisory, direct-path and retirement assessment remains manual.
 
 Discovery compares exact upstream versions, artifact identities, relevant
 release-note/source changes and changed blocker references. Assessment selects

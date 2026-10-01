@@ -1,11 +1,10 @@
 # Staged implementation proposal
 
-Status: slices 1–6 integrated with passing hosted CI through `ff7146e`.
-Slice 6's [Kotlin rehearsal](sixth-slice-validation.md) and approved
-[Toolchain/OS policy adoption](support-policy-validation.md) are integrated with [all seven hosted jobs passing](evidence/2026-09-28-slice-6-integration.json).
-Slice 7's [compatibility runner](compatibility-runner.md) is locally validated and
-uncommitted, ready for review; [its receipt](seventh-slice-validation.md) includes
-passing bridge and direct-facade mobile comparisons. Slices 8–12 remain proposed. Earlier validation records preserve
+Status: slices 1–7 integrated, through `9d25553`. Slice 7's
+[compatibility runner](compatibility-runner.md) has passing bridge and direct-facade
+mobile comparisons. Slice 8 consolidates the [existing watch](compatibility-watch.md);
+[its validation](eighth-slice-validation.md) records execution and remaining limits.
+Slices 9–12 remain proposed. Earlier validation records preserve
 their original source identities and limits. The [audit](audit.md),
 [compatibility matrix](kotlin-compatibility.md) and
 [workflow design](workflow-design.md) define the evidence behind this backlog.
@@ -96,7 +95,7 @@ local measured evidence; it does not authorize dependency adoption.
 | 4. Pinned complete inventory | Pin Renovate/runtime and capture native-manager extraction; add missing Toolchain/analyzer/SDK/image/tool coverage; explicit vulnerability policy | Extraction fixtures include all modules/plugins/locks; direct/transitive coverage ledger, blocked releases and missing timestamps visible; unavailable/stale advisory/provider data cannot be clean |
 | 5. Small common executor | Isolated copies, schema, base-first rehearsal, process/resource ownership, recovery and cleanup | Negative-path contract suite for failures, timeout, interruption, drift and ownership; no caller mutation, no credentials or uploads; fake Kotlin/Elixir adapters independently exercise protocol |
 | 6. Kotlin Toolchain rehearsal | Source-bound current/candidate effective settings and graphs; actual repo-owned build/test commands | Reproduce baseline; candidate 0.12.2 bootstrap/hash, plugin/factory/UI/native/package checks; current bridge remains selected. Any candidate younger than seven days is experimental only |
-| 7. Compatibility matrix runner | Implemented: separate bridge compile/link and mobile profiles; direct prerequisite assessments and typed-facade experiment | [Locally validated](seventh-slice-validation.md), awaiting integration review: both full comparisons pass, native tests/targets retained, DI reachability and bridge absence checked, transformations recorded; adoption/retirement gaps remain |
+| 7. Compatibility matrix runner | Implemented: separate bridge compile/link and mobile profiles; direct prerequisite assessments and typed-facade experiment | [Integrated](seventh-slice-validation.md) in `9d25553`: both full comparisons pass, native tests/targets retained, DI reachability and bridge absence checked, transformations recorded; adoption/retirement gaps remain |
 | 8. Consolidate existing watch | Existing compatibility workflow calls common evaluator and reports meaningful matrix deltas | Simulated no-change quiet run, improved compatibility/regression/blocker notification, provider failure explicit, technical success never adopts; no duplicate schedule |
 | 9. Reviewed upgrade | Exact source/patch-bound adoption and final checks | Maintainer approves named coupled set, full interval assessment/graph diff complete, final receipt current; existing defaults retained unless separately authorized |
 | 10. Optional direct default and retirement | ADR update plus reversible switch, then bridge removal only when matrix proves parity | Local/cold CI native tests, architectures, required release evidence and physically absent bridge; rollback tested. May remain deferred indefinitely if gaps persist |

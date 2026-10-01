@@ -7,31 +7,68 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: dependency-compatibility-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
+  cancel-in-progress: false
 
 jobs:
-  skie_kotlin_bridge:
+  compatibility_watch:
     runs-on: macos-26
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
       - uses: actions/cache@v6
         with:
-          path: .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-skie-compat-${{ hashFiles('gradle/libs.versions.toml', 'gradle-bridge/**', 'shared-*/**') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-skie-compat-
+          path: .quality
+          key: ${{ runner.os }}-${{ runner.arch }}-macos26-quality-${{ hashFiles('quality-tools.json', 'scripts/quality_tools.rb') }}
+      - name: Install or verify pinned quality tools
+        run: ./scripts/ci/install_quality_tools.sh
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "17"
-      - name: Check whether SKIE unlocks the Kotlin 2.4 bridge line
+          java-version: "21"
+      - uses: android-actions/setup-android@v4
+      - name: Prepare reviewed Kotlin distributions
+        run: ./scripts/dev/dependency_updates.sh prepare-kotlin
+      - name: Locate previous same-branch observation
+        id: history
         env:
-          SKIE_COMPAT_ALERT_ON_COMPATIBLE: "1"
-        run: ./scripts/ci/check_skie_kotlin_compatibility.sh
+          GITHUB_TOKEN: ${{ github.token }}
+        run: ./scripts/dev/dependency_updates.sh compatibility-watch-history
+      - name: Restore previous observation
+        id: restore
+        if: steps.history.outputs.state == 'found'
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          name: compatibility-watch-state
+          path: .maintenance/watch-previous
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.history.outputs.run_id }}
+      - name: Observe reviewed compatibility and meaningful changes
+        env:
+          MOBI_WATCH_HISTORY: ${{ steps.history.outputs.state == 'found' && steps.restore.outcome != 'success' && 'incomplete' || steps.history.outputs.state }}
+          MOBI_WATCH_SCOPE: ${{ github.repository }}:${{ github.ref_name }}
+        run: ./scripts/ci/check_skie_kotlin_compatibility.sh --previous .maintenance/watch-previous/snapshot.json --output .maintenance/watch-reports/current
+      - name: Retain observation for the next run
+        if: always() && hashFiles('.maintenance/watch-reports/current/snapshot.json') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: compatibility-watch-state
+          path: .maintenance/watch-reports/current/snapshot.json
+          retention-days: 90
+          overwrite: true
+          if-no-files-found: error
+          include-hidden-files: true
+      - name: Retain public compatibility evidence
+        if: always() && hashFiles('.maintenance/watch-reports/current/report.json') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: compatibility-watch-evidence
+          path: .maintenance/watch-reports/current
+          retention-days: 90
+          overwrite: true
+          if-no-files-found: error
+          include-hidden-files: true

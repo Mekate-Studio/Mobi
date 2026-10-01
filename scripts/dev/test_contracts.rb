@@ -3,7 +3,7 @@
 require 'rbconfig'
 
 root = File.expand_path('../..', __dir__)
-%w[scripts/dev/test_quality.rb scripts/dev/test_validate.rb scripts/maintenance/test_inventory.rb scripts/maintenance/test_executor.rb scripts/maintenance/test_kotlin_rehearsal.rb scripts/maintenance/test_support_policy.rb scripts/maintenance/test_compatibility.rb].each do |suite|
+%w[scripts/dev/test_quality.rb scripts/dev/test_validate.rb scripts/maintenance/test_inventory.rb scripts/maintenance/test_executor.rb scripts/maintenance/test_kotlin_rehearsal.rb scripts/maintenance/test_support_policy.rb scripts/maintenance/test_compatibility.rb scripts/maintenance/test_watch.rb].each do |suite|
   puts "[contracts] #{suite} (Ruby #{RUBY_VERSION})"
   exit 1 unless system(RbConfig.ruby, File.join(root, suite), chdir: root)
 end

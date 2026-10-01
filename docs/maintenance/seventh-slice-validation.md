@@ -74,3 +74,18 @@ Direct SKIE lacks a reviewed supported standalone Toolchain configuration/Swift 
 The historical execution store's host-ownership mismatch remains protected; this work only recovers the newly owned slice 7 stores. The single Gradle ownership refusal has a retained outcome and successful recovery, but its root cause remains unconfirmed. No ownership rule was relaxed to get a passing build.
 
 Slice 7 can be reviewed as a manual evaluator while adoption and retirement remain separate future decisions. Slice 8 can consolidate the existing compatibility caller around this evidence without adding a schedule. Before a bridge upgrade is proposed for adoption, complete its release-interval, dependency-graph and advisory review; before a direct-default proposal, close the additional native/package/clean-clone/rollback gates.
+
+## Integration update — 2026-09-29
+
+Committed and pushed as `9d2555373a268c964e2df780e3a74240a5a2850b`. The normal
+pre-commit gate passed shared/Android tests (253.772 seconds), iOS tests
+(218.945 seconds, 12 native cases), Android debug build (26.667 seconds) and iOS
+debug build (61.980 seconds), with unchanged source/index and owned cleanup.
+Index identity: `b58054e8dafd3cd76bbdfc826e90f589184b5eeb8a6d1e9f44b3e73024b69634`;
+input identity: `c9b211a1c2429ff097cf3b3d049494a95dee7153bf76b25c2b91cc9e706157d0`.
+[Hosted Mobile CI](https://github.com/Mekate-Studio/Mobi/actions/runs/36602751932)
+is tracked separately from the historical local receipts above. Its result does
+not qualify the experimental direct path or release packaging.
+
+All seven hosted Mobile CI jobs subsequently passed for the exact commit; see the
+[integration receipt](evidence/2026-09-30-slice-7-integration.json).

@@ -1,10 +1,10 @@
 # Quality and dependency maintenance
 
-Status: slices 1–6 integrated. Slice 6 was committed and pushed at `ff7146e`;
-[all seven hosted jobs passed](evidence/2026-09-28-slice-6-integration.json).
-Slice 7's [compatibility runner](compatibility-runner.md) is locally validated and
-uncommitted, ready for review; [measured results](seventh-slice-validation.md) keep
-bridge upgrades separate from direct-path parity. Audit baseline: `7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
+Status: slices 1–7 integrated. Slice 7 was committed and pushed as `9d25553`;
+its [measured results](seventh-slice-validation.md) keep bridge upgrades separate
+from direct-path parity. Slice 8 consolidates the [existing watch](compatibility-watch.md);
+[validation and hosted status](eighth-slice-validation.md) remain explicit.
+Audit baseline: `7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
 
 Mobi's maintenance workflow starts with reproducible pre-commit checks and uses
 isolated evidence to assess Kotlin Toolchain upgrades. Upgrading the current iOS bridge and retiring it are separate decisions.
@@ -64,6 +64,9 @@ Read the documents in this order:
     full mobile and direct-path assessments, with conservative capability receipts.
 20. [Seventh slice validation](seventh-slice-validation.md): passing paired bridge
     and direct-facade jobs, retained failures, native tests, cleanup and evidence gaps.
+
+21. [Compatibility watch](compatibility-watch.md): bounded release discovery, semantic deltas, existing hosted caller and recovery.
+22. [Eighth slice validation](eighth-slice-validation.md): local watch evidence and separate integration/hosted results.
 
 [Audit evidence](evidence/2026-09-19.json) preserves sanitized probe results,
 input identities and upstream source hashes. It is an audit record, not a

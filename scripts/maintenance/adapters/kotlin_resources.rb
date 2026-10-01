@@ -88,10 +88,18 @@ module Maintenance
         Integer(File.basename(path)[/\Adaemon-(\d+)\.out\.log\z/, 1])
       end
       (tagged_ids + registry_ids).uniq.map do |pid|
-        current = ProcessGroup.identity(pid)
+        current = nil; proof = nil
+        # A terminating JVM can briefly lose argv before ps reports it absent.
+        # Re-observe without signaling; a persistent or reused unowned PID still
+        # fails below. A registry entry alone never grants ownership.
+        6.times do |attempt|
+          current = ProcessGroup.identity(pid)
+          proof = ownership_proof(current)
+          break if current.nil? || proof
+          sleep 0.05 if attempt < 5
+        end
         next unless current
         # A known completed identity does not authorize a newly reused PID.
-        proof = ownership_proof(current)
         unless proof
           RunStore.atomic(File.join(@control, 'unowned-jvm.json'), {
             'identity' => current, 'from_process_scan' => tagged_ids.include?(pid),

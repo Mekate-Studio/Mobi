@@ -2,7 +2,7 @@
 
 This is the manual slice 7 runner. It reuses the common executor and Kotlin resource handler. Production pins, the builder default, native targets/tests, Renovate ceilings and existing schedules are unchanged. Toolchain updates, retained-bridge updates and direct-path parity remain distinct decisions.
 
-Status: implemented and locally validated; uncommitted and ready for review. The bridge compile/link and full mobile comparisons passed. The direct typed-facade candidate also passed all four mobile jobs and all 12 native Swift cases with its bridge absent. The [validation report](seventh-slice-validation.md) and [seven-run receipt](evidence/2026-09-29-slice-7.json) retain earlier failures, corrections, ownership refusal, recovery and limits. No candidate is adopted. Slice 6 was committed and pushed as `ff7146e`; [all seven hosted jobs passed](evidence/2026-09-28-slice-6-integration.json), independently of this slice.
+Status: implemented, locally validated, committed and pushed as `9d25553`. The bridge compile/link and full mobile comparisons passed. The direct typed-facade candidate also passed all four mobile jobs and all 12 native Swift cases with its bridge absent. The [validation report](seventh-slice-validation.md) and [seven-run receipt](evidence/2026-09-29-slice-7.json) retain earlier failures, corrections, ownership refusal, recovery and limits. No candidate is adopted. Slice 6 was committed and pushed as `ff7146e`; [all seven hosted jobs passed](evidence/2026-09-28-slice-6-integration.json), independently of this slice.
 
 ## Commands
 
@@ -47,4 +47,4 @@ Expected authored inputs remain guarded before and after each command. Unexpecte
 
 Device execution, archive/export, cancellation/lifecycle equivalence, generic export, full release-interval and advisory review, complete bridge target graphs, cold direct CI and incremental direct builds are separate gaps. Bridge retirement remains deferred and adoption authorization remains false. Local framework or simulator success cannot remove these gates.
 
-The old compatibility workflow is intentionally unchanged until slice 8 consolidates its caller. Its KLIB-only task, caller-catalog mutation and success/failure messaging remain documented limitations; do not use its success message as adoption authorization.
+Slice 8 consolidates the existing compatibility workflow around this evaluator’s reviewed compile/link profile. See the [watch guide](compatibility-watch.md) for bounded release discovery, semantic comparison, history and recovery. A watch observation never authorizes adoption.

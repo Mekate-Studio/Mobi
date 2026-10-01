@@ -65,6 +65,13 @@ if $PROGRAM_NAME == __FILE__
       raise Maintenance::Failure, 'Usage: assess-compatibility' unless ARGV.empty?
       require_relative 'adapters/compatibility'
       puts JSON.pretty_generate(Maintenance::Compatibility.new(root).assessment)
+    when 'watch-compatibility'
+      require_relative 'watch_cli'
+      exit Maintenance::WatchCLI.call(root, ARGV)
+    when 'compatibility-watch-history'
+      raise Maintenance::Failure, 'Usage: compatibility-watch-history (Actions environment required)' unless ARGV.empty?
+      require_relative 'lib/watch_history'
+      Maintenance::WatchHistory.from_environment!
     when 'rehearse-fixture', 'rehearse-kotlin', 'rehearse-support', 'rehearse-compatibility', 'compatibility-report', 'prepare-kotlin', 'recover', 'cleanup'
       require_relative 'execution_cli'
       result, code = Maintenance::ExecutionCLI.call(root, command, ARGV)
@@ -79,7 +86,7 @@ if $PROGRAM_NAME == __FILE__
       puts JSON.pretty_generate(result)
       exit(result['state'] == 'checks_passed' ? 0 : 2)
     else
-      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|assess-support|assess-compatibility|verify|evaluate <inventory.json> <evidence.json>|prepare-kotlin|rehearse-kotlin <version> <inputs|mobile> [current|apple-silicon]|rehearse-support <inputs|mobile>|rehearse-compatibility <bridge-compile|bridge-mobile|direct-facade>|compatibility-report RUN_ID|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]] (execution commands accept trailing --store NAME)'
+      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|assess-support|assess-compatibility|watch-compatibility [--previous FILE] [--output DIR]|compatibility-watch-history|verify|evaluate <inventory.json> <evidence.json>|prepare-kotlin|rehearse-kotlin <version> <inputs|mobile> [current|apple-silicon]|rehearse-support <inputs|mobile>|rehearse-compatibility <bridge-compile|bridge-mobile|direct-facade>|compatibility-report RUN_ID|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]] (execution commands accept trailing --store NAME)'
     end
   rescue StandardError, Interrupt => error
     warn JSON.generate('schema' => 1, 'state' => 'failed', 'message' => error.message)

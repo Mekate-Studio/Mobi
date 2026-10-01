@@ -280,6 +280,48 @@ module KotlinRehearsalTest
     end
   end
 
+  test('argv loss during JVM exit is rechecked without granting registry ownership') do
+    resource_fixture do |handler, _workspace|
+      registry = File.join(handler.state['gradle_home'], 'daemon', 'fixture'); FileUtils.mkdir_p(registry)
+      File.write(File.join(registry, "daemon-#{Process.pid}.out.log"), 'exit fixture')
+      original = Maintenance::ProcessGroup.method(:identity)
+      exiting = original.call(Process.pid).merge('command' => '(java)'); observations = 0
+      begin
+        Maintenance::ProcessGroup.define_singleton_method(:identity) do |pid|
+          next original.call(pid) unless pid == Process.pid
+          observations += 1
+          observations <= 2 ? exiting : nil
+        end
+        assert(handler.jvms.empty?)
+        assert(observations == 3)
+      ensure
+        Maintenance::ProcessGroup.define_singleton_method(:identity, original)
+      end
+      assert(original.call(Process.pid), 'fixture process was signaled')
+    end
+  end
+
+  test('reused unowned identity after argv loss still refuses cleanup') do
+    resource_fixture do |handler, _workspace|
+      registry = File.join(handler.state['gradle_home'], 'daemon', 'fixture'); FileUtils.mkdir_p(registry)
+      File.write(File.join(registry, "daemon-#{Process.pid}.out.log"), 'reuse fixture')
+      original = Maintenance::ProcessGroup.method(:identity)
+      exiting = original.call(Process.pid).merge('command' => '(java)'); observations = 0
+      begin
+        Maintenance::ProcessGroup.define_singleton_method(:identity) do |pid|
+          next original.call(pid) unless pid == Process.pid
+          observations += 1
+          observations == 1 ? exiting : original.call(pid)
+        end
+        reject(/Unowned live process/) { handler.stop! }
+        assert(observations == 6)
+      ensure
+        Maintenance::ProcessGroup.define_singleton_method(:identity, original)
+      end
+      assert(original.call(Process.pid), 'unowned process was signaled')
+    end
+  end
+
   test('Tooling API daemon ownership uses an exact private classpath when JVM options are replaced') do
     resource_fixture do |handler, workspace|
       jar = File.join(handler.state['gradle_home'], 'wrapper/dists/gradle-8-bin/fixture/gradle-8/lib/gradle-daemon-main-8.jar')
