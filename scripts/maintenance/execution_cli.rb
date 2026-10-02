@@ -27,9 +27,11 @@ module Maintenance
       case command
       when 'rehearse-compatibility'
         require_relative 'adapters/compatibility'
-        raise Failure, 'Usage: rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade> [--store NAME]' unless args.size == 1
+        raise Failure, 'Experimental flag must appear once' if args.count('--experimental') > 1
+        experimental = args.delete('--experimental')
+        raise Failure, 'Usage: rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade|direct-roundtrip> [--experimental] [--store NAME]' unless args.size == 1
         source = Source.new(root)
-        adapter = CompatibilityRehearsal.new(root, source: source, profile: args.first)
+        adapter = CompatibilityRehearsal.new(root, source: source, profile: args.first, experimental: !experimental.nil?)
         policy_path = File.join(root, 'maintenance-execution-policy.json')
         result = Executor.new(source: source, adapter: adapter, store: store, policy: JSON.parse(File.read(policy_path)),
                               input_files: [policy_path, __FILE__, File.join(root, 'scripts/maintenance/dependencies.rb')]).run

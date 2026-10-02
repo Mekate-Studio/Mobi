@@ -231,13 +231,13 @@ At minimum, the catalog should capture:
 This does not remove all duplication, but it gives the repository a single
 version reference point for the temporary bridge period.
 
-Renovate still holds Metro below `1.2.0` and bridge Kotlin below `2.4.0` under
-the earlier compatibility policy. Those configured bounds are not evidence
-that newer SKIE releases lack Kotlin 2.4 support. The
-[slice-9 review](../maintenance/ninth-slice-review.md) validates the nominated
-Kotlin 2.4.10 / Metro 1.4.4 / SKIE 0.10.14 tuple through paired graphs and native
-jobs, but defers adoption after finding moderate build-tooling advisories.
-Bridge Compose stays 1.9.0; Toolchain-managed defaults are assessed separately.
+The reviewed retained-bridge tuple is Kotlin 2.4.20 / Metro 1.4.5 /
+SKIE 0.10.15, with bounded Renovate ceilings of <=1.4.5 for Metro and <=2.4.20
+for bridge Kotlin. The [adoption review](../maintenance/bridge-adoption-review.md)
+records the paired graphs/native checks, maintainer decision and residual
+OpenTelemetry tooling finding. Bridge Compose stays 1.9.0; Toolchain 0.12.2
+supplies Kotlin 2.4.10 independently. This upgrade does not qualify the direct
+path or remove the bridge.
 
 [`scripts/ci/check_skie_kotlin_compatibility.sh`](../../scripts/ci/check_skie_kotlin_compatibility.sh)
 now forwards to the [isolated compatibility watch](../maintenance/compatibility-watch.md).

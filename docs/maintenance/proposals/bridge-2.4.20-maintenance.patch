@@ -1,0 +1,165 @@
+--- a/maintenance-compatibility.json
++++ b/maintenance-compatibility.json
+@@ -1,33 +1,33 @@
+ {
+   "schema": 1,
+-  "reviewed_at": "2026-09-28T05:59:01.073563+00:00",
++  "reviewed_at": "2026-10-02T15:09:31.038902+00:00",
+   "toolchain": "0.12.2",
+   "baseline": {
+-    "kotlin": "2.3.20",
+-    "metro": "1.1.1",
+-    "skie": "0.10.12",
++    "kotlin": "2.4.20",
++    "metro": "1.4.5",
++    "skie": "0.10.15",
+     "compose": "1.9.0"
+   },
+   "candidate": {
+-    "id": "kotlin-2-4-10",
++    "id": "kotlin-2-4-20-metro-1-4-5-skie-0-10-15",
+     "releases": {
+       "kotlin": {
+-        "version": "2.4.10",
+-        "published_at": "2026-07-14T10:47:27Z",
+-        "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.4.10",
+-        "source_id": "kotlin-release"
++        "version": "2.4.20",
++        "published_at": "2026-09-07T10:31:56Z",
++        "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.4.20",
++        "source_id": "kotlin-2.4.20-release"
+       },
+       "metro": {
+-        "version": "1.4.4",
+-        "published_at": "2026-09-16T21:45:45Z",
+-        "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.4",
+-        "source_id": "metro-releases"
++        "version": "1.4.5",
++        "published_at": "2026-09-24T15:15:00Z",
++        "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.5",
++        "source_id": "metro-1.4.5-release"
+       },
+       "skie": {
+-        "version": "0.10.14",
+-        "published_at": "2026-07-27T15:09:23Z",
+-        "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.14",
+-        "source_id": "skie-releases"
++        "version": "0.10.15",
++        "published_at": "2026-09-25T17:59:28Z",
++        "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.15",
++        "source_id": "skie-0.10.15-release"
+       }
+     },
+     "compose": "1.9.0"
+@@ -142,6 +142,60 @@
+       "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/docs/src/user-guide/product-types/ios-app.md",
+       "retrieved_at": "2026-09-27T20:32:13.728643+00:00",
+       "sha256": "3fe4c63a671e14376f5d486100bb2cd1972286585dc45395c6bb221643136c37"
++    },
++    {
++      "id": "kotlin-2.4.20-release",
++      "url": "https://api.github.com/repos/JetBrains/kotlin/releases/tags/v2.4.20",
++      "retrieved_at": "2026-10-02T15:02:35.664781+00:00",
++      "sha256": "18bc0b09cdf94e0505f0364a7147e3d9fb0508024b2493cf25e753a745bfea3a"
++    },
++    {
++      "id": "skie-0.10.15-release",
++      "url": "https://api.github.com/repos/touchlab/SKIE/releases/tags/0.10.15",
++      "retrieved_at": "2026-10-02T15:02:35.560083+00:00",
++      "sha256": "a4d4227b9e43809940e5349b277a74b14db6269f652694068cf1e4be0a598feb"
++    },
++    {
++      "id": "metro-1.4.5-release",
++      "url": "https://api.github.com/repos/ZacSweers/metro/releases/tags/1.4.5",
++      "retrieved_at": "2026-10-02T15:02:35.575726+00:00",
++      "sha256": "a4605492b41c304665ba5e93c31a5d46383e9779eea091e46627d0191f57ddd5"
++    },
++    {
++      "id": "metro-1.4.5-compatibility",
++      "url": "https://raw.githubusercontent.com/ZacSweers/metro/1.4.5/docs/compatibility.md",
++      "retrieved_at": "2026-10-02T15:02:35.588226+00:00",
++      "sha256": "15661ce15467ca1f24fe48e025362771799a4c67bbb70ea5047b93add8506533"
++    },
++    {
++      "id": "metro-1.4.5-changelog",
++      "url": "https://raw.githubusercontent.com/ZacSweers/metro/1.4.5/CHANGELOG.md",
++      "retrieved_at": "2026-10-02T15:02:35.674196+00:00",
++      "sha256": "a545b95d0f5ac01387273df1716be9feecc7523623b5aa7c7e107a82c0a10674"
++    },
++    {
++      "id": "kotlin-2.4.20-changelog",
++      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.20/ChangeLog.md",
++      "retrieved_at": "2026-10-02T15:02:35.995493+00:00",
++      "sha256": "8896a4bd7abafdbe96884ceb4f05266bcb8024f63a6b6c4136083cacfc65c44b"
++    },
++    {
++      "id": "skie-0.10.15-changelog",
++      "url": "https://skie.touchlab.co/changelog/0.10.15",
++      "retrieved_at": "2026-10-02T15:02:36.113990+00:00",
++      "sha256": "21b42c5755b24d5885c0e0b714c15ce08f30a0ace286ddf555641cd32b5172c7"
++    },
++    {
++      "id": "kotlin-advisory",
++      "url": "https://api.github.com/advisories/GHSA-r937-wjx7-w2jp",
++      "retrieved_at": "2026-10-02T15:02:36.239253+00:00",
++      "sha256": "208b167fd2934522b97974136794357b479d1481feef0f9b9cd11bb3663ceaea"
++    },
++    {
++      "id": "otel-advisory",
++      "url": "https://api.github.com/advisories/GHSA-rcgg-9c38-7xpx",
++      "retrieved_at": "2026-10-02T15:02:36.249275+00:00",
++      "sha256": "5b9ce6b2d4f533c36fbec89d9312617a3b87278a7dd09cf032c31c66b5f25172"
+     }
+   ],
+   "direct_paths": {
+@@ -164,22 +218,5 @@
+       ]
+     }
+   },
+-  "newer_releases": [
+-    {
+-      "component": "skie",
+-      "version": "0.10.15",
+-      "published_at": "2026-09-25T17:59:28Z",
+-      "release_url": "https://github.com/touchlab/SKIE/releases/tag/0.10.15",
+-      "source_id": "skie-releases",
+-      "selection": "not_nominated"
+-    },
+-    {
+-      "component": "metro",
+-      "version": "1.4.5",
+-      "published_at": "2026-09-24T15:15:00Z",
+-      "release_url": "https://github.com/ZacSweers/metro/releases/tag/1.4.5",
+-      "source_id": "metro-releases",
+-      "selection": "not_nominated"
+-    }
+-  ]
++  "newer_releases": []
+ }
+--- a/scripts/maintenance/test_compatibility.rb
++++ b/scripts/maintenance/test_compatibility.rb
+@@ -48,11 +48,11 @@
+ 
+   test('baseline drift and unmatched Metro compiler/runtime refuse candidate edits') do
+     fixture do |root|
+-      file = File.join(root, 'gradle/libs.versions.toml'); File.write(file, File.read(file).sub('2.3.20', '2.3.21'))
++      file = File.join(root, 'gradle/libs.versions.toml'); File.write(file, File.read(file).sub(/^kotlin = "[^"]+"$/, 'kotlin = "0.0.0"'))
+       reject(/baseline differs/) { Maintenance::Compatibility.new(root).edits(Maintenance::Source.new(root), 'bridge-mobile') }
+     end
+     fixture do |root|
+-      file = File.join(root, 'shared-di/module.yaml'); File.write(file, File.read(file).sub('compiler:1.1.1', 'compiler:1.4.4'))
++      file = File.join(root, 'shared-di/module.yaml'); File.write(file, File.read(file).sub(/compiler:[^\s]+/, 'compiler:0.0.0'))
+       reject(/runtime\/compiler/) { Maintenance::Compatibility.new(root).edits(Maintenance::Source.new(root), 'bridge-mobile') }
+     end
+   end
+--- a/scripts/maintenance/test_inventory.rb
++++ b/scripts/maintenance/test_inventory.rb
+@@ -153,6 +153,8 @@
+     source = Maintenance::Source.new(ROOT)
+     native = Maintenance::NativeExtraction.parse(File.join(ROOT, 'scripts/maintenance/fixtures/renovate-44.93.5.jsonl'))
+     config = JSON.parse(File.read(File.join(ROOT, 'renovate.json')))
++    # Deliberate fixture ceiling, independent of the repository's adopted policy.
++    config.fetch('packageRules').each { |r| r['allowedVersions'] = '<1.2.0' if r['allowedVersions'] && r.fetch('matchPackageNames', []).include?('/^dev\\.zacsweers\\.metro:/') }
+     result = Maintenance::Kotlin.new(ROOT, source.files, native, config).inventory
+     assert(result['modules'].size == 7)
+     assert(result['resolved_inputs'].map { |r| r['id'].split(':').first }.sort == %w[npm rubygems swift])

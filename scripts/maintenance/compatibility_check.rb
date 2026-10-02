@@ -3,6 +3,7 @@
 require_relative 'kotlin_check'
 require_relative 'adapters/compatibility'
 require_relative 'adapters/interop_experiment'
+require_relative 'adapters/direct_roundtrip'
 require_relative 'lib/upgrade_graph'
 
 module Maintenance
@@ -23,8 +24,11 @@ module Maintenance
       @report['cells'] = {}
       @report['missing_capabilities'] = Compatibility::UNPROVEN.dup
       @report['bridge_retirement'] = 'defer'
-      @direct = profile == 'direct-facade' && @report['phase'] == 'candidate'
-      @config = Compatibility.new(source).config
+      @direct = profile.start_with?('direct-') && @report['phase'] == 'candidate'
+      assessment = Compatibility.new(source, experimental: @host.fetch('experimental', false))
+      @config = assessment.config
+      @report['candidate_selection'] = assessment.selection
+      @report['missing_capabilities'] << 'release_age' if assessment.selection['age_state'] == 'age_blocked'
       @report['configuration_sha256'] = Maintenance.file_sha(File.join(source, Compatibility::CONFIG))
       @report['di_reachability_scope'] = 'toolchain_module_graph_not_flattened_bridge'
     end
@@ -68,17 +72,71 @@ module Maintenance
       end
     end
 
+    def native_cases(log, name, probe: false)
+      tests = log.scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
+      write_evidence(name, tests)
+      original = tests.select { |test| test.start_with?('HomeFeatureTests/', 'NearbyVehicleMapFeatureTests/') }
+      throw :outcome, 'missing' unless original.size >= 12 && original.any? { |test| test.start_with?('HomeFeatureTests/') } && original.any? { |test| test.start_with?('NearbyVehicleMapFeatureTests/') }
+      throw :outcome, 'missing' if probe && !tests.include?('MobiIncrementalProbeTests/kotlinChangeReachesSwift()')
+    end
+
+    def frameworks
+      files = Dir.glob(File.join(@work, 'build', '**', 'KotlinModules.framework', 'KotlinModules')).select { |p| File.file?(p) && !File.symlink?(p) && File.size(p) > 0 }
+      raise Failure, 'No roundtrip framework identity' if files.empty?
+      files.sort.to_h { |p| [p.delete_prefix(@work + '/'), Maintenance.file_sha(p)] }
+    end
+
+    def roundtrip
+      before = frameworks
+      write_evidence('direct-frameworks-before', before)
+      write_evidence('incremental-mutation', @experiment.mutate!)
+      @manifest = @experiment.manifest
+      write_evidence('incremental-source-manifest', @manifest)
+      measured('incremental_ios_test') do
+        log = command('incremental_ios_test', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-test'])
+        native_cases(log, 'incremental-native-test-cases', probe: true)
+      end
+      measured('incremental_ios_build') { command('incremental_ios_build', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-build-debug']) }
+      measured('incremental_framework_change') do
+        after = frameworks
+        write_evidence('direct-frameworks-after', after)
+        changed = (before.keys & after.keys).select { |path| before[path] != after[path] }.sort
+        write_evidence('incremental-framework-change', { 'changed' => changed })
+        throw :outcome, 'missing' if changed.empty?
+      end
+      measured('bridge_restore') do
+        restoration = @experiment.restore!
+        @manifest = @experiment.manifest
+        @direct = false
+        @env['KOTLIN_IOS_BUILDER'] = 'gradle'
+        @report['environment']['final_bridge'] = 'gradle'
+        write_evidence('roundtrip-restoration', restoration)
+        write_evidence('restored-source-manifest', @manifest)
+        verify_source!
+      end
+      @report['cells']['bridge_restore']['evidence_kind'] = 'isolated_source_transformation'
+      measured('rollback_ios_test') do
+        log = command('rollback_ios_test', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-test'])
+        native_cases(log, 'rollback-native-test-cases')
+      end
+      measured('rollback_ios_build') { command('rollback_ios_build', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-build-debug']) }
+      write_evidence('rollback-frameworks', frameworks)
+    end
+
     def run
       outcome = catch(:outcome) do
         write_evidence('source-manifest', @manifest)
         write_evidence('declared-inputs', self.class.declared_inputs(@work, @modules))
         if @direct
-          @experiment = InteropExperiment.new(@work, File.join(@work, 'scripts/maintenance/fixtures/interop'))
+          experiment_class = @profile == 'direct-roundtrip' ? DirectRoundtrip : InteropExperiment
+          @experiment = experiment_class.new(@work, File.join(@work, 'scripts/maintenance/fixtures/interop'))
           changes = @experiment.prepare!
           write_evidence('experiment-transformations', changes)
-          @manifest = tree(@work)
+          @manifest = @profile == 'direct-roundtrip' ? @experiment.manifest : tree(@work)
           @report['bridge_unavailable'] = true
+          @report['bridge_absence_scope'] = 'direct_checks_before_restoration' if @profile == 'direct-roundtrip'
           @report['authored_experiment_sha256'] = Maintenance.digest(@manifest)
+          write_evidence('direct-source-manifest', @manifest) if @profile == 'direct-roundtrip'
         end
         write_evidence('reachable-modules', InteropExperiment.reachable_modules(@work))
         @report['di_reachable'] = InteropExperiment.reachable_modules(@work).include?('shared-di')
@@ -117,14 +175,12 @@ module Maintenance
             measured(job) do
               log = command(job, [File.join(@work, 'scripts/ci/run_job.sh'), job])
               if job == 'ios-test'
-                tests = log.scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
-                write_evidence('native-test-cases', tests)
-                # Current Mobi has 3 Home and 9 Nearby Swift Testing cases.
-                throw :outcome, 'missing' unless tests.size >= 12 && tests.any? { |t| t.start_with?('HomeFeatureTests/') } && tests.any? { |t| t.start_with?('NearbyVehicleMapFeatureTests/') }
+                native_cases(log, 'native-test-cases', probe: @direct && @profile == 'direct-roundtrip')
               end
             end
           end
         end
+        roundtrip if @direct && @profile == 'direct-roundtrip'
         'passed'
       end
       outcome
@@ -143,6 +199,11 @@ module Maintenance
         @report['cells'].each_value { |cell| cell['status'] = 'infrastructure' if cell['status'] == 'running' }
         %w[native_library_compile framework_link android-test android-build-debug ios-test ios-build-debug].each do |cell|
           @report['cells'][cell] ||= { 'status' => 'not_attempted', 'evidence_kind' => 'none' }
+        end
+        if @profile == 'direct-roundtrip' && @report['phase'] == 'candidate'
+          %w[incremental_ios_test incremental_ios_build incremental_framework_change bridge_restore rollback_ios_test rollback_ios_build].each do |cell|
+            @report['cells'][cell] ||= { 'status' => 'not_attempted', 'evidence_kind' => 'none' }
+          end
         end
         products = %w[build gradle-bridge/shared-kit/build].flat_map { |dir| Dir.glob(File.join(@work, dir, '**', '*')) }.select { |p| File.file?(p) && !File.symlink?(p) && p.match?(/\.apk\z|\.app\/|\.framework\//) }
         write_evidence('products', products.sort.to_h { |p| [p.delete_prefix(@work + '/'), Maintenance.file_sha(p)] })

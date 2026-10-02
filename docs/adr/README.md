@@ -12,6 +12,10 @@ Current ADRs:
 - [ADR 0005: iOS uses TCA dependencies with a lightweight app composition root](0005-ios-uses-tca-dependencies-with-a-lightweight-app-composition-root.md)
 - [ADR 0006: Shared feature state uses sealed value types and SKIE](0006-shared-async-feature-state-uses-sealed-loadable-and-skie.md)
 
+Proposed, without changing the accepted decisions:
+
+- [ADR 0007: Direct iOS transition requires measured capability evidence](0007-direct-ios-transition-requires-capability-evidence.md)
+
 Use a new ADR when a decision changes one of these:
 
 - module boundaries

@@ -23,3 +23,5 @@ None.
 ## Impact
 
 Repository-owned compatibility scripts, targeted contracts and maintenance documentation. The candidate is Kotlin 2.4.10 / Metro 1.4.4 / SKIE 0.10.14 with Toolchain 0.12.2. The existing executor, ownership, cleanup and native jobs remain the execution path. No schedule, release-default switch or automatic adoption is introduced. Elixir remains dormant.
+
+The subsequent adoption milestone assesses Kotlin 2.4.20 / Metro 1.4.5 / SKIE 0.10.15 in a separately configured source copy. The earlier candidate's evidence remains historical. Explicit experimental admission retains the normal seven-day adoption gate and requires fresh age/advisory review before any maintainer decision.

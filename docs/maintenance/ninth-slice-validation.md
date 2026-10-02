@@ -1,6 +1,6 @@
 # Ninth slice validation
 
-Status: the review implementation is uncommitted. Production dependency pins and Renovate policy are unchanged. The retained bridge remains selected. Adoption and integration need separate authorization.
+Status: this record describes the historical working-snapshot measurement. The review implementation was subsequently committed locally as `9f730ef`, with the full pre-commit gate passing as recorded in [slice 10](tenth-slice-validation.md). Production dependency pins and Renovate policy are unchanged. The retained bridge remains selected. The [revised candidate](bridge-adoption-review.md) has separate evidence; dependency adoption needs a named decision.
 
 ## Implemented behavior
 

@@ -9,7 +9,7 @@ dependencies:
   - androidx.activity:activity-compose:1.13.0
   - androidx.lifecycle:lifecycle-runtime-compose:2.9.4
   - com.slack.circuit:circuit-foundation:0.34.0
-  - dev.zacsweers.metro:runtime:1.1.1
+  - dev.zacsweers.metro:runtime:1.4.5
   - org.maplibre.gl:android-sdk:13.3.0
 
 test-dependencies:
@@ -21,7 +21,7 @@ settings:
   kotlin:
     compilerPlugins:
       - id: dev.zacsweers.metro.compiler
-        dependency: dev.zacsweers.metro:compiler:1.1.1
+        dependency: dev.zacsweers.metro:compiler:1.4.5
   android:
     namespace: studio.mekate.mobi
     applicationId: studio.mekate.mobi

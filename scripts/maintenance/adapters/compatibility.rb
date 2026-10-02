@@ -8,14 +8,15 @@ require 'uri'
 
 module Maintenance
   class Compatibility
-    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade].freeze
+    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip].freeze
     CONFIG = 'maintenance-compatibility.json'
     CATALOG = 'gradle/libs.versions.toml'
-    UNPROVEN = %w[device_execution release_archive signed_packaging cancellation_parity generic_export cold_direct_ci incremental_direct_build complete_release_interval_review complete_bridge_target_graph advisory_review].freeze
-    attr_reader :config, :root
+    UNPROVEN = %w[device_execution release_archive signed_packaging cancellation_parity generic_export cold_direct_ci clean_clone_onboarding incremental_direct_build local_bridge_rollback complete_release_interval_review complete_bridge_target_graph advisory_review].freeze
+    attr_reader :config, :root, :selection
 
-    def initialize(root, now: Time.now.utc)
+    def initialize(root, now: Time.now.utc, experimental: false)
       @root = root
+      raise Failure, 'Experimental mode must be explicit boolean' unless [true, false].include?(experimental)
       @config = JSON.parse(File.read(File.join(root, CONFIG)))
       valid = @config['schema'] == 1 && @config['automatic_adoption'] == false && @config['toolchain'] == '0.12.2' &&
               @config['minimum_release_age_days'].is_a?(Integer) && @config['minimum_release_age_days'] >= 7
@@ -31,11 +32,19 @@ module Maintenance
       end
       releases = @config.fetch('candidate').fetch('releases')
       raise Failure, 'Incomplete compatibility tuple' unless releases.keys.sort == %w[kotlin metro skie]
+      thresholds = []
       releases.each_value do |release|
         raise Failure, 'Unsupported release version' unless release.fetch('version').match?(/\A\d+\.\d+\.\d+\z/)
         raise Failure, 'Candidate lacks captured release evidence' unless sources.any? { |s| s['id'] == release.fetch('source_id') }
-        raise Failure, 'Compatibility candidate is age-blocked' if now - Time.iso8601(release.fetch('published_at')) < @config['minimum_release_age_days'] * 86_400
+        published = Time.iso8601(release.fetch('published_at'))
+        raise Failure, 'Compatibility release publication is in the future' if published > now
+        thresholds << published + @config['minimum_release_age_days'] * 86_400
       end
+      eligible_at = thresholds.max
+      blocked = now < eligible_at
+      raise Failure, 'Compatibility candidate is age-blocked' if blocked && !experimental
+      @selection = { 'mode' => experimental ? 'experimental' : 'normal', 'age_state' => blocked ? 'age_blocked' : 'age_eligible',
+                     'assessed_at' => now.iso8601, 'eligible_at' => eligible_at.iso8601, 'adoption_authorized' => false }
       unless @config.fetch('direct_paths').keys.sort == %w[skie swift-export] && @config['direct_paths'].values.all? { |p| p['status'] == 'missing' && p['reason'].is_a?(String) && !p.fetch('sources').empty? && (p['sources'] - sources.map { |s| s['id'] }).empty? }
         raise Failure, 'Unsupported direct prerequisite assessment; review the adapter before enabling a new path'
       end
@@ -66,7 +75,7 @@ module Maintenance
     def edits(source, profile)
       raise Failure, 'Unknown compatibility profile' unless PROFILES.include?(profile)
       verify_baseline!(source)
-      return [] if profile == 'direct-facade'
+      return [] if profile.start_with?('direct-')
       paths = [CATALOG] + source.files.keys.select { |p| p.end_with?('/module.yaml') && File.read(File.join(source.root, p)).include?('dev.zacsweers.metro:') }
       paths.map do |path|
         before = File.read(File.join(source.root, path)); after = before.dup
@@ -86,8 +95,8 @@ module Maintenance
   class CompatibilityRehearsal
     attr_reader :host_file
 
-    def initialize(root, source:, profile:)
-      config = Compatibility.new(root)
+    def initialize(root, source:, profile:, experimental: false)
+      config = Compatibility.new(root, experimental: experimental)
       edits = config.edits(source, profile)
       raise Failure, 'Compatibility rehearsal requires an Apple Silicon macOS runtime' unless RUBY_PLATFORM.match?(/arm64.*darwin/)
       wrappers = KotlinWrappers.new(root); wrappers.verify!
@@ -101,6 +110,7 @@ module Maintenance
       raise Failure, 'Compatibility prerequisites missing: JDK 21, Xcode and Android SDK' unless java_status.success? && xcode_status.success? && sdk
       host = { 'schema' => 1, 'ruby' => File.realpath(RbConfig.ruby), 'profile' => profile, 'target_policy' => 'apple-silicon',
                'java_home' => File.realpath(java.strip), 'developer_dir' => File.realpath(xcode.strip), 'android_sdk' => File.realpath(sdk) }
+      host['experimental'] = true if experimental
       inputs = File.join(root, '.maintenance', 'kotlin-inputs')
       raise Failure, 'Symlinked compatibility host-input store' if File.symlink?(File.dirname(inputs)) || File.symlink?(inputs)
       FileUtils.mkdir_p(inputs)
@@ -115,8 +125,8 @@ module Maintenance
       @files += %w[compatibility_check.rb kotlin_check.rb].map { |p| File.join(root, 'scripts/maintenance', p) }
       @plan = { 'schema' => 1, 'id' => 'compatibility-' + profile, 'scope' => 'compatibility_' + profile.tr('-', '_'),
                 'resource_types' => %w[filesystem process-group kotlin-native], 'edits' => edits,
-                'missing_capabilities' => Compatibility::UNPROVEN + (profile == 'bridge-compile' ? %w[native_tests application_builds] : []) + ['retirement_approval'],
-                'checks' => [{ 'id' => profile, 'required' => true, 'timeout_seconds' => 1200,
+                'missing_capabilities' => Compatibility::UNPROVEN + (profile == 'bridge-compile' ? %w[native_tests application_builds] : []) + ['retirement_approval'] + (config.selection['age_state'] == 'age_blocked' ? ['release_age'] : []),
+                'checks' => [{ 'id' => profile, 'required' => true, 'timeout_seconds' => profile == 'direct-roundtrip' ? 2400 : 1200,
                                'argv' => [File.realpath(RbConfig.ruby), File.join(root, 'scripts/maintenance/compatibility_check.rb'), '{source}', '{output}', '{cache}', @host_file, profile] }] }
     end
 

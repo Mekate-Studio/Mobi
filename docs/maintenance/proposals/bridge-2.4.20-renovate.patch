@@ -1,0 +1,41 @@
+--- a/renovate.json
++++ b/renovate.json
+@@ -76,7 +76,7 @@
+         "swift"
+       ],
+       "matchPackageNames": [
+-        "/^pointfreeco\/(swift-composable-architecture|swift-dependencies)$/"
++        "/^pointfreeco/(swift-composable-architecture|swift-dependencies)$/"
+       ],
+       "groupName": "ios point-free stack",
+       "groupSlug": "ios-point-free-stack"
+@@ -111,17 +111,17 @@
+       "minimumGroupSize": 2
+     },
+     {
+-      "description": "Hold Metro below the Kotlin 2.4 Native ABI line while the Gradle bridge still uses SKIE with Kotlin 2.3.x.",
++      "description": "Keep Metro within the explicitly reviewed compiler/plugin compatibility interval; further upgrades require a new assessment.",
+       "matchDatasources": [
+         "maven"
+       ],
+       "matchPackageNames": [
+         "/^dev\\.zacsweers\\.metro:/"
+       ],
+-      "allowedVersions": "<1.2.0"
++      "allowedVersions": "<=1.4.5"
+     },
+     {
+-      "description": "Hold the Gradle bridge Kotlin compiler below 2.4 until SKIE supports Kotlin 2.4.",
++      "description": "Keep Kotlin dependencies within the explicitly reviewed bridge compiler/SKIE compatibility interval; further upgrades require a new assessment.",
+       "matchDatasources": [
+         "maven"
+       ],
+@@ -129,7 +129,7 @@
+         "/^org\\.jetbrains\\.kotlin\\./",
+         "/^org\\.jetbrains\\.kotlin:/"
+       ],
+-      "allowedVersions": "<2.4.0"
++      "allowedVersions": "<=2.4.20"
+     },
+     {
+       "description": "Keep Kotlin coroutines versions synchronized between Kotlin Toolchain modules and the Gradle bridge catalog.",

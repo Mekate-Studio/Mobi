@@ -3,6 +3,7 @@
 require_relative 'recovery'
 require_relative '../adapters/compatibility'
 require_relative 'upgrade_graph'
+require_relative 'roundtrip_evidence'
 
 module Maintenance
   class CompatibilityReport
@@ -22,6 +23,7 @@ module Maintenance
           end
         end
         resolution = {}
+        roundtrip = {}
         phases = result.fetch('steps').map do |step|
           record = journal.fetch('steps').find { |s| s['id'] == step['phase'] + '-' + step['check'] }
           raise Failure, 'Compatibility step is missing from journal' unless record && record['state'] == 'stopped'
@@ -50,10 +52,11 @@ module Maintenance
           end
           if step['status'] == 'passed'
             required = %w[effective_toolchain]
-            direct = step['check'] == 'direct-facade' && step['phase'] == 'candidate'
+            direct = %w[direct-facade direct-roundtrip].include?(step['check']) && step['phase'] == 'candidate'
             required += %w[native_library_compile framework_link] unless direct
             required += %w[toolchain_resolution bridge_resolution] if step['check'] == 'bridge-review'
             required += %w[android-test android-build-debug ios-test ios-build-debug] unless step['check'] == 'bridge-compile'
+            required += RoundtripEvidence::CELLS if direct && step['check'] == 'direct-roundtrip'
             unless required.all? { |cell| evidence.fetch('cells').dig(cell, 'status') == 'passed' } && evidence['source_preservation'] == 'verified'
               raise Failure, 'Passing compatibility phase lacks required capability evidence'
             end
@@ -65,8 +68,29 @@ module Maintenance
               toolchain = JSON.parse(File.read(File.join(control, evidence.fetch('resolved-graphs').fetch('file'))))
               resolution[step['phase']] = { 'bridge' => bridge, 'queries' => UpgradeGraph.maven_queries(bridge, toolchain) }
             end
+            if step['check'] == 'direct-roundtrip'
+              keys = step['phase'] == 'baseline' ? %w[source-manifest native-test-cases] : RoundtripEvidence::REFERENCES
+              roundtrip[step['phase']] = keys.to_h do |key|
+                reference = evidence.fetch(key)
+                raise Failure, 'Invalid roundtrip reference' unless reference.fetch('file').match?(/\A[a-z][a-z0-9-]*\.json\z/)
+                path = File.join(control, reference['file']); verify_file!(path, reference.fetch('sha256'))
+                [key, JSON.parse(File.read(path))]
+              end
+              if direct && evidence['bridge_absence_scope'] != 'direct_checks_before_restoration'
+                raise Failure, 'Roundtrip lacks direct-stage bridge absence evidence'
+              end
+            end
           end
-          { 'phase' => step['phase'], 'outcome' => step['status'], 'evidence_sha256' => check['evidence_sha256'],
+          selection = evidence['candidate_selection']
+          raise Failure, 'Missing experimental release-age evidence' if result.fetch('missing_capabilities').include?('release_age') && !selection
+          if selection
+            unless %w[normal experimental].include?(selection['mode']) && %w[age_blocked age_eligible].include?(selection['age_state']) && selection['adoption_authorized'] == false &&
+                   (Time.iso8601(selection.fetch('assessed_at')) >= Time.iso8601(selection.fetch('eligible_at'))) == (selection['age_state'] == 'age_eligible') &&
+                   (selection['age_state'] != 'age_blocked' || selection['mode'] == 'experimental' && evidence.fetch('missing_capabilities').include?('release_age') && result.fetch('missing_capabilities').include?('release_age'))
+              raise Failure, 'Invalid experimental release-age evidence'
+            end
+          end
+          { 'phase' => step['phase'], 'outcome' => step['status'], 'evidence_sha256' => check['evidence_sha256'], 'candidate_selection' => selection,
             'diagnostic' => diagnostic(evidence),
             'cells' => evidence.fetch('cells'), 'di_reachable' => evidence['di_reachable'], 'bridge_unavailable' => evidence.fetch('bridge_unavailable', false),
             'source_preservation' => evidence['source_preservation'], 'missing_capabilities' => evidence['missing_capabilities'] }
@@ -80,9 +104,14 @@ module Maintenance
           report['missing_capabilities'] -= ['complete_bridge_target_graph']
           report['phases'].each { |phase| phase['missing_capabilities'] -= ['complete_bridge_target_graph'] }
         end
+        if roundtrip.keys.sort == %w[baseline candidate]
+          report['roundtrip'] = RoundtripEvidence.verify!(roundtrip['baseline'], roundtrip['candidate'])
+          report['missing_capabilities'] -= %w[incremental_direct_build local_bridge_rollback]
+          report['phases'].find { |phase| phase['phase'] == 'candidate' }['missing_capabilities'] -= %w[incremental_direct_build local_bridge_rollback]
+        end
         report
       end
-    rescue KeyError, TypeError, NoMethodError, JSON::ParserError
+    rescue KeyError, TypeError, NoMethodError, ArgumentError, JSON::ParserError
       raise Failure, 'Malformed compatibility evidence'
     end
 

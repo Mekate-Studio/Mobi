@@ -2,6 +2,11 @@
 
 Status: local review checks passed; adoption deferred. The maintainer has not approved this named tuple or policy patch. This review names Toolchain 0.12.2, bridge Kotlin 2.4.10, Metro 1.4.4 and SKIE 0.10.14, holding bridge Compose 1.9.0. Toolchain-managed defaults are Kotlin 2.4.10 and Compose 1.11.1 in the measured UI settings, independently of bridge Compose 1.9.0. This is a retained-bridge upgrade, with ARM device/simulator declarations, native Xcode targets/tests and sealed-state adapters preserved.
 
+The subsequent [revised adoption assessment](bridge-adoption-review.md) evaluates
+Kotlin 2.4.20 / Metro 1.4.5 / SKIE 0.10.15 with separate receipts and proposals.
+The older tuple and findings below remain historical evidence and are not
+relabeled as validation of the newer candidate.
+
 [Validation and retained failures](ninth-slice-validation.md), [source-bound receipt](evidence/2026-10-02-slice-9.json), [queried packages and advisory matches](evidence/2026-10-02-slice-9-maven-queries.json), [six-file dependency proposal](proposals/slice-9-dependencies.patch) and [separate bounded Renovate proposal](proposals/slice-9-renovate.patch) are review artifacts. Neither patch has been applied.
 
 ## Decision boundary

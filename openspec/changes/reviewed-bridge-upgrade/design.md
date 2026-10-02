@@ -28,3 +28,11 @@ Slice 7 validates the reviewed tuple through native jobs; slice 8 watches only c
 ## Migration Plan
 
 Implement and contract-test the manual profile, capture sources and paired native/graph evidence, recover/clean owned resources, then produce the review packet. Apply only after the maintainer approves the exact scope; final staged and hosted checks remain distinct integration gates. Rollback is the reverse reviewed patch after verifying file identities.
+
+## Revised candidate assessment
+
+The follow-up assesses Kotlin 2.4.20 / Metro 1.4.5 / SKIE 0.10.15, preserving Toolchain 0.12.2 and bridge Compose 1.9.0. Keep the earlier tuple, failures and receipts as historical evidence. Configure the revised tuple only in an isolated source snapshot; record the caller identity and exact configuration overlay. Production pins and the current watch nomination remain unchanged pending the maintainer decision.
+
+An explicit `--experimental` rehearsal may measure a published stable candidate before its minimum age, with the real timestamps and `release_age` gap retained. Normal admission still refuses an under-age release, future publication timestamps always refuse, and neither mode grants adoption permission. No fake clock, publication-date rewrite or age-policy edit is allowed. An experimental pass requires a fresh real-time age/source/advisory review before it can support normal adoption.
+
+The revised packet was subsequently approved and applied after normal age admission and fresh source/advisory checks. The full local pre-commit gate passed with the bridge retained; see [adoption validation](../../../docs/maintenance/bridge-adoption-validation.md). Historical experimental evidence remains unchanged.

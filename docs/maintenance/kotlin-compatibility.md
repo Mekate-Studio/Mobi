@@ -13,6 +13,36 @@ build-tooling advisories; adoption is deferred. Toolchain 0.12.2 and the adopted
 ARM targets/OS floors remain current. This evidence does not qualify a direct
 path or change the bridge-retirement decision.
 
+The [2026-10-02 slice-10 round trip](tenth-slice-validation.md) separately
+passes bounded local incremental and exact bridge-restoration checks for the
+direct Toolchain 0.12.2 / Kotlin 2.4.10 / Metro 1.1.1 typed-facade experiment.
+It does not adopt Metro 1.4.4 or a bridge upgrade. The original audit and slice-7
+tables below keep their historical scope; the following row records only the
+new measurement.
+
+| Track | Measured local result | Remaining decision |
+| --- | --- | --- |
+| Direct incremental and restoration | Baseline 12 Swift cases; initial and changed direct stages 13 cases each with bridge unavailable; three framework binaries change with caches retained; exact source/mode restoration, cleared products and rebuilt bridge with the original 12 cases; recovery/cleanup complete | Device/minimum-floor, Full test plan/macro validation, release/signing, generic/lifecycle, true onboarding, cold hosted CI, exact direct dependency/advisory review and architecture/transition approval remain open. Bridge retirement remains deferred. |
+
+The [source-bound receipt](evidence/2026-10-02-slice-10.json) distinguishes
+direct-stage DI/bridge absence from the final restored copy. Candidate standalone
+KLIB/link cells were not attempted separately; native jobs generated/consumed
+the frameworks. Production defaults and accepted ADRs remain unchanged.
+
+The [revised retained-bridge adoption review](bridge-adoption-review.md)
+separately records a passing paired Kotlin 2.4.20 / Metro 1.4.5 / SKIE 0.10.15
+assessment. The candidate no longer matches the baseline's mapped Kotlin
+advisory; OpenTelemetry remains a moderate finding on unselected Swift-export
+tooling. Normal release-age admission, fresh identity/advisory review and a named
+maintainer decision precede application of the exact proposals. It does not
+qualify direct iOS Metro 1.4.5 or change default/retirement decisions.
+
+The maintainer subsequently approved the revised three-patch packet. The
+retained-bridge pins, bounded ceilings and maintenance baseline are now applied;
+see [resulting-tree validation](bridge-adoption-validation.md). The earlier
+experimental age-blocked receipt remains historical. Direct bridge-removal
+capabilities remain independent and unproven.
+
 ## Measured follow-up on 2026-09-27
 
 The [Apple Silicon assessment](apple-silicon-assessment.md) established passing

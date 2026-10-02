@@ -153,6 +153,8 @@ module InventoryTest
     source = Maintenance::Source.new(ROOT)
     native = Maintenance::NativeExtraction.parse(File.join(ROOT, 'scripts/maintenance/fixtures/renovate-44.93.5.jsonl'))
     config = JSON.parse(File.read(File.join(ROOT, 'renovate.json')))
+    # Deliberate fixture ceiling, independent of the repository's adopted policy.
+    config.fetch('packageRules').each { |r| r['allowedVersions'] = '<1.2.0' if r['allowedVersions'] && r.fetch('matchPackageNames', []).include?('/^dev\\.zacsweers\\.metro:/') }
     result = Maintenance::Kotlin.new(ROOT, source.files, native, config).inventory
     assert(result['modules'].size == 7)
     assert(result['resolved_inputs'].map { |r| r['id'].split(':').first }.sort == %w[npm rubygems swift])

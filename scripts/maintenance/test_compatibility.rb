@@ -48,11 +48,11 @@ module CompatibilityTest
 
   test('baseline drift and unmatched Metro compiler/runtime refuse candidate edits') do
     fixture do |root|
-      file = File.join(root, 'gradle/libs.versions.toml'); File.write(file, File.read(file).sub('2.3.20', '2.3.21'))
+      file = File.join(root, 'gradle/libs.versions.toml'); File.write(file, File.read(file).sub(/^kotlin = "[^"]+"$/, 'kotlin = "0.0.0"'))
       reject(/baseline differs/) { Maintenance::Compatibility.new(root).edits(Maintenance::Source.new(root), 'bridge-mobile') }
     end
     fixture do |root|
-      file = File.join(root, 'shared-di/module.yaml'); File.write(file, File.read(file).sub('compiler:1.1.1', 'compiler:1.4.4'))
+      file = File.join(root, 'shared-di/module.yaml'); File.write(file, File.read(file).sub(/compiler:[^\s]+/, 'compiler:0.0.0'))
       reject(/runtime\/compiler/) { Maintenance::Compatibility.new(root).edits(Maintenance::Source.new(root), 'bridge-mobile') }
     end
   end
@@ -61,6 +61,22 @@ module CompatibilityTest
     fixture do |root|
       config(root) { |c| c['candidate']['releases']['skie']['published_at'] = Time.now.utc.iso8601 }
       reject(/age-blocked/) { Maintenance::Compatibility.new(root) }
+    end
+  end
+
+  test('experimental assessment records the real age gate and never authorizes adoption') do
+    fixture do |root|
+      now = Time.now.utc
+      config(root) { |c| c['candidate']['releases']['skie']['published_at'] = now.iso8601 }
+      adapter = Maintenance::Compatibility.new(root, now: now, experimental: true)
+      assert(adapter.selection['mode'] == 'experimental' && adapter.selection['age_state'] == 'age_blocked')
+      assert(Time.iso8601(adapter.selection['eligible_at']) == Time.iso8601(now.iso8601) + 7 * 86_400)
+      assert(adapter.selection['adoption_authorized'] == false)
+      reject(/age-blocked/) { Maintenance::Compatibility.new(root, now: now) }
+      assert(Maintenance::Compatibility.new(root, now: now + 7 * 86_400).selection['age_state'] == 'age_eligible')
+      reject(/explicit boolean/) { Maintenance::Compatibility.new(root, experimental: 'true') }
+      config(root) { |c| c['candidate']['releases']['skie']['published_at'] = (now + 60).iso8601 }
+      reject(/publication is in the future/) { Maintenance::Compatibility.new(root, now: now, experimental: true) }
     end
   end
 
@@ -178,7 +194,27 @@ module CompatibilityTest
     end
   end
 
-  def self.report_fixture(profile = 'bridge-compile')
+  test('release-age reports reject false normal readiness and malformed timestamps') do
+    [
+      { 'mode' => 'normal', 'age_state' => 'age_blocked', 'assessed_at' => '2026-10-02T15:00:00Z', 'eligible_at' => '2026-10-02T17:59:28Z', 'adoption_authorized' => false },
+      { 'mode' => 'experimental', 'age_state' => 'age_eligible', 'assessed_at' => '2026-10-02T15:00:00Z', 'eligible_at' => '2026-10-02T17:59:28Z', 'adoption_authorized' => false },
+      { 'mode' => 'experimental', 'age_state' => 'age_blocked', 'assessed_at' => 'invalid', 'eligible_at' => '2026-10-02T17:59:28Z', 'adoption_authorized' => false }
+    ].each do |selection|
+      report_fixture do |store, id, profile|
+        change_phase_evidence(store, id, profile, 'candidate') { |e| e['candidate_selection'] = selection }
+        reject(/release-age|Malformed/) { Maintenance::CompatibilityReport.read(store, id) }
+      end
+    end
+    report_fixture do |store, id, profile|
+      change_phase_evidence(store, id, profile, 'candidate') do |e|
+        e['candidate_selection'] = { 'mode' => 'experimental', 'age_state' => 'age_eligible', 'assessed_at' => '2026-10-02T18:00:00Z', 'eligible_at' => '2026-10-02T17:59:28Z', 'adoption_authorized' => false }
+      end
+      report = Maintenance::CompatibilityReport.read(store, id)
+      assert(report['phases'].last['candidate_selection']['mode'] == 'experimental' && !report['adoption_authorized'])
+    end
+  end
+
+  def self.report_fixture(profile = 'bridge-compile', references: nil)
     Dir.mktmpdir('mobi-compatibility-report-') do |root|
       store = Maintenance::RunStore.new(File.join(root, 'runs')); id = SecureRandom.hex(16)
       binding = { 'adapter' => 'compatibility-' + profile }
@@ -193,7 +229,7 @@ module CompatibilityTest
             %w[android-test android-build-debug ios-test ios-build-debug].each { |cell| cells[cell]['status'] = 'not_attempted' }
           end
           evidence = { 'schema' => 1, 'profile' => profile, 'phase' => phase, 'adoption_authorized' => false,
-                       'cells' => cells, 'source_preservation' => 'verified', 'bridge_unavailable' => profile == 'direct-facade' && phase == 'candidate',
+                       'cells' => cells, 'source_preservation' => 'verified', 'bridge_unavailable' => %w[direct-facade direct-roundtrip].include?(profile) && phase == 'candidate',
                        'di_reachable' => true, 'missing_capabilities' => %w[release_archive complete_bridge_target_graph],
                        'commands' => [{ 'log' => 'native_library_compile.log', 'sha256' => Maintenance.file_sha(File.join(control, 'native_library_compile.log')) }] }
           if profile == 'bridge-review'
@@ -213,6 +249,17 @@ module CompatibilityTest
               evidence[name] = { 'file' => file, 'sha256' => Maintenance.file_sha(File.join(control, file)) }
             end
           end
+          if profile == 'direct-roundtrip'
+            evidence['missing_capabilities'] += %w[incremental_direct_build local_bridge_rollback]
+            if phase == 'candidate'
+              Maintenance::RoundtripEvidence::CELLS.each { |cell| cells[cell] = { 'status' => 'passed' } }
+              evidence['bridge_absence_scope'] = 'direct_checks_before_restoration'
+            end
+            references.fetch(phase).each do |name, data|
+              file = name + '.json'; Maintenance::RunStore.atomic(File.join(control, file), data)
+              evidence[name] = { 'file' => file, 'sha256' => Maintenance.file_sha(File.join(control, file)) }
+            end
+          end
           Maintenance::RunStore.atomic(File.join(control, 'evidence.json'), evidence)
           check = { 'schema' => 1, 'phase' => phase, 'check' => profile, 'status' => 'passed', 'evidence_sha256' => Maintenance.file_sha(File.join(control, 'evidence.json')) }
           Maintenance::RunStore.atomic(File.join(control, 'check.json'), check)
@@ -223,7 +270,7 @@ module CompatibilityTest
         end
         store.save(journal)
         store.result(journal, { 'run_id' => id, 'state' => 'checks_passed', 'reason' => 'named_checks_passed', 'binding' => binding,
-                               'steps' => steps, 'ended_at' => Time.now.utc.iso8601, 'adoption_authorized' => false, 'missing_capabilities' => %w[release_archive complete_bridge_target_graph] })
+                               'steps' => steps, 'ended_at' => Time.now.utc.iso8601, 'adoption_authorized' => false, 'missing_capabilities' => %w[release_archive complete_bridge_target_graph] + (profile == 'direct-roundtrip' ? %w[incremental_direct_build local_bridge_rollback] : []) })
       end
       yield store, id, profile
     end

@@ -9,12 +9,25 @@ Audit baseline: `7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
 Slice 9's manual review profile and [upgrade packet](ninth-slice-review.md) are
 implemented locally, with [paired validation and cleanup](ninth-slice-validation.md).
 The candidate passed the local checks but still matches moderate build-tooling
-advisories. Adoption is deferred; production pins and policy are unchanged.
-This slice is uncommitted and has no hosted validation yet.
+advisories. That earlier candidate was deferred; its assessment did not change production pins or policy.
+Its implementation is committed locally as `9f730ef`, with the full pre-commit gate passing; it has no hosted validation yet.
+
+Slice 10 adds a manual [direct incremental/restoration profile](direct-roundtrip.md).
+Its [validation record](tenth-slice-validation.md) distinguishes implementation
+checks from passing local native incremental/restoration evidence and the
+remaining untested gates. Its original receipt predates integration. The transition ADR remains proposed and
+the retained bridge remains the default.
+
+The [retained-bridge adoption review](bridge-adoption-review.md) records a passing
+paired assessment for Kotlin 2.4.20 / Metro 1.4.5 / SKIE 0.10.15. The maintainer
+approved the exact three-patch packet after its concrete review; real age
+admission and fresh checks passed, and the pins, bounded ceilings and matching
+maintenance baseline are applied. [Final local validation](bridge-adoption-validation.md)
+passed 204 contracts and all four native pre-commit jobs. Its measurement receipt predates integration; direct-path retirement and Elixir activation remain independent.
 
 Mobi's maintenance workflow starts with reproducible pre-commit checks and uses
 isolated evidence to assess Kotlin Toolchain upgrades. Upgrading the current iOS bridge and retiring it are separate decisions.
-Bridge retirement is **deferred** pending native, clean-clone and release evidence.
+Bridge retirement is **deferred** pending the remaining native, clean-clone and release evidence.
 
 The [Apple Silicon target assessment](apple-silicon-assessment.md) evaluates
 Toolchain 0.12.2 with upstream-supported iOS architectures. It keeps the bridge
@@ -77,6 +90,10 @@ Read the documents in this order:
     complete release interval, graph/artifact comparison, advisory triage and OS assessment.
 24. [Ninth slice validation](ninth-slice-validation.md): paired native checks,
     contract evidence, retained failures, cleanup and remaining gates.
+25. [Direct round-trip guide](direct-roundtrip.md): bounded incremental and exact
+    bridge-restoration checks with existing executor recovery.
+26. [Tenth slice validation](tenth-slice-validation.md): source-bound stage evidence
+    and explicit remaining default/retirement gates.
 
 [Audit evidence](evidence/2026-09-19.json) preserves sanitized probe results,
 input identities and upstream source hashes. It is an audit record, not a
@@ -97,3 +114,5 @@ hosted workflow passed for slice 6's exact commit. Linux execution remains unver
 are excluded by the adopted support policy.
 The proposal requires no private service, account, Codex installation or Go
 application profile.
+
+The [bridge-retirement path](bridge-retirement-path.md) explains the independent workflow track, remaining evidence and first assessment against the adopted tuple.

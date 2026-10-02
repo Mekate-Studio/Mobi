@@ -170,18 +170,17 @@ self-hosted Renovate runner at this repository.
 Metro and Kotlin coroutines updates are grouped across Kotlin Toolchain modules
 and the Gradle bridge catalog because the bridge must stay aligned with the
 shared Kotlin dependency surface used by the app modules.
-Metro is currently held below `1.2.0`, and the bridge Kotlin compiler below
-`2.4.0`. Those constraints protect the checked-in bridge stack; newer upstream
-SKIE releases now support Kotlin `2.4.x`. The dated
-[compatibility assessment](docs/maintenance/kotlin-compatibility.md) separates
-upgrading that stack from proving an equivalent direct Kotlin Toolchain path.
-The scheduled `Dependency Compatibility` workflow runs the repo-owned
-`scripts/ci/check_skie_kotlin_compatibility.sh` probe to detect when the latest
-SKIE release can compile the bridge on the Kotlin `2.4.x` line. Its current
-result handling and isolation have known gaps documented in the
-[audit](docs/maintenance/audit.md). A successful framework compile is only
-narrow evidence; native tests, interop, onboarding and release packaging are
-required before considering bridge retirement.
+The retained bridge uses Kotlin 2.4.20, Metro 1.4.5 and SKIE 0.10.15; bridge
+Compose remains 1.9.0. Renovate ceilings are bounded at Metro <=1.4.5 and bridge
+Kotlin <=2.4.20 after the [reviewed adoption](docs/maintenance/bridge-adoption-review.md).
+Toolchain 0.12.2 supplies Kotlin 2.4.10 independently. The
+[compatibility assessment](docs/maintenance/kotlin-compatibility.md) keeps this
+upgrade separate from proving an equivalent direct Kotlin Toolchain path.
+The existing scheduled compatibility workflow uses the repository-owned
+[isolated watch](docs/maintenance/compatibility-watch.md). It records evidence
+without changing production dependencies or granting adoption permission.
+Bridge retirement still requires native app/test, interop, onboarding and
+release evidence with the bridge unavailable.
 
 Install the pinned discovery tools once, then record a local inventory:
 

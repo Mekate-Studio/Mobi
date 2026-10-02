@@ -1,0 +1,330 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-10-02T18:13:05.081283+00:00",
+  "status": "approved_applied_final_local_gate_passed",
+  "authorization": {
+    "decision": "approve_three_reviewed_patches_and_documented_residual_risk",
+    "user_request": "ok apply, so this does not exercise the removal of the bridge yet?",
+    "commit_authorized": false,
+    "push_authorized": false
+  },
+  "applied_at": "2026-10-02T17:59:40Z",
+  "normal_admission": {
+    "mode": "normal",
+    "age_state": "age_eligible",
+    "assessed_at": "2026-10-02T17:59:40Z",
+    "eligible_at": "2026-10-02T17:59:28Z",
+    "adoption_authorized": false
+  },
+  "rehearsal": {
+    "run_id": "57718fe461282da2a79b4fd9817e0221",
+    "receipt_sha256": "4c8fa7642a2f43ae160c50a8691bfd6383dfbd449d406bf726003a020c784305",
+    "experimental_age_gap_preserved": true
+  },
+  "primary_advisory_refresh": {
+    "schema": 1,
+    "created_at": "2026-10-02T17:58:05.992007+00:00",
+    "primary_sources": [
+      {
+        "id": "kotlin-2.4.20-release",
+        "url": "https://api.github.com/repos/JetBrains/kotlin/releases/tags/v2.4.20",
+        "retrieved_at": "2026-10-02T17:58:02.493197+00:00",
+        "sha256": "bef2fcaa21993e13cd729fd8be1c899ab89912cd6ed7ab85c42579288604ac26",
+        "same_semantic_contents": true,
+        "response_bytes_changed": true
+      },
+      {
+        "id": "skie-0.10.15-release",
+        "url": "https://api.github.com/repos/touchlab/SKIE/releases/tags/0.10.15",
+        "retrieved_at": "2026-10-02T17:58:02.445843+00:00",
+        "sha256": "a4d4227b9e43809940e5349b277a74b14db6269f652694068cf1e4be0a598feb",
+        "same_semantic_contents": true,
+        "response_bytes_changed": false
+      },
+      {
+        "id": "metro-1.4.5-release",
+        "url": "https://api.github.com/repos/ZacSweers/metro/releases/tags/1.4.5",
+        "retrieved_at": "2026-10-02T17:58:02.429066+00:00",
+        "sha256": "a4605492b41c304665ba5e93c31a5d46383e9779eea091e46627d0191f57ddd5",
+        "same_semantic_contents": true,
+        "response_bytes_changed": false
+      },
+      {
+        "id": "metro-1.4.5-compatibility",
+        "url": "https://raw.githubusercontent.com/ZacSweers/metro/1.4.5/docs/compatibility.md",
+        "retrieved_at": "2026-10-02T17:58:02.163222+00:00",
+        "sha256": "15661ce15467ca1f24fe48e025362771799a4c67bbb70ea5047b93add8506533",
+        "same_semantic_contents": true,
+        "response_bytes_changed": false
+      },
+      {
+        "id": "metro-1.4.5-changelog",
+        "url": "https://raw.githubusercontent.com/ZacSweers/metro/1.4.5/CHANGELOG.md",
+        "retrieved_at": "2026-10-02T17:58:02.239583+00:00",
+        "sha256": "a545b95d0f5ac01387273df1716be9feecc7523623b5aa7c7e107a82c0a10674",
+        "same_semantic_contents": true,
+        "response_bytes_changed": false
+      },
+      {
+        "id": "kotlin-2.4.20-changelog",
+        "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.20/ChangeLog.md",
+        "retrieved_at": "2026-10-02T17:58:02.249750+00:00",
+        "sha256": "8896a4bd7abafdbe96884ceb4f05266bcb8024f63a6b6c4136083cacfc65c44b",
+        "same_semantic_contents": true,
+        "response_bytes_changed": false
+      },
+      {
+        "id": "skie-0.10.15-changelog",
+        "url": "https://skie.touchlab.co/changelog/0.10.15",
+        "retrieved_at": "2026-10-02T17:58:02.496784+00:00",
+        "sha256": "21b42c5755b24d5885c0e0b714c15ce08f30a0ace286ddf555641cd32b5172c7",
+        "same_semantic_contents": true,
+        "response_bytes_changed": false
+      },
+      {
+        "id": "kotlin-advisory",
+        "url": "https://api.github.com/advisories/GHSA-r937-wjx7-w2jp",
+        "retrieved_at": "2026-10-02T17:58:02.824000+00:00",
+        "sha256": "f616c5fc9d6a3ee50310629aa475b9758487fe826e14879d93cb0cdaff2bc54e",
+        "same_semantic_contents": true,
+        "response_bytes_changed": true
+      },
+      {
+        "id": "otel-advisory",
+        "url": "https://api.github.com/advisories/GHSA-rcgg-9c38-7xpx",
+        "retrieved_at": "2026-10-02T17:58:02.839441+00:00",
+        "sha256": "c1d2c36dd3a9f89c943d7270345253aa4e5a1097e6aed98e7a8840ac4146fc77",
+        "same_semantic_contents": true,
+        "response_bytes_changed": true
+      }
+    ],
+    "candidate_queries": 495,
+    "query_set_sha256": "5cc2529b5bdc3756f45ef2d774d6ec1e34cec5c88fb6b52508b9d369c601e3d7",
+    "responses": [
+      {
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-02T17:58:03.400725+00:00",
+        "request_sha256": "1d1af687dbc6f078083d2bcd75d3e45bc2fec88f9130c0fceb162b001054fdcf",
+        "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686"
+      },
+      {
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-02T17:58:03.919452+00:00",
+        "request_sha256": "c7bc6aad76368bd0ffa89e6024d93b378585634e61ceed159005611837f0c55d",
+        "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686"
+      },
+      {
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-02T17:58:04.546590+00:00",
+        "request_sha256": "59acc3b7f3fa0c51121829b4d994ba58d8089ef797d0e9f1bb6949b4cd854ee2",
+        "response_sha256": "96937ca14a5fa457669b5fd78f0d2fb4c1f0c4cfda282ea1a73eec34929d9b51"
+      },
+      {
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-02T17:58:05.394599+00:00",
+        "request_sha256": "3679ae669270d3fb66ff1f27a5b717196a92eb5617f4e89f7c463569afb43ef3",
+        "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686"
+      },
+      {
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-02T17:58:05.983592+00:00",
+        "request_sha256": "3be576f755884797c2ed8df88ff13fca71da2e4de822bc45a7a8478039fcb7d4",
+        "response_sha256": "53b84279a602723bf70205f49c41301a5c3a36dda50542e83ffcb2ef344e5ef4"
+      }
+    ],
+    "matches": [
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "io.opentelemetry:opentelemetry-api"
+          },
+          "version": "1.41.0"
+        },
+        "advisory_ids": [
+          "GHSA-rcgg-9c38-7xpx"
+        ]
+      }
+    ],
+    "findings": {
+      "GHSA-rcgg-9c38-7xpx": {
+        "url": "https://api.osv.dev/v1/vulns/GHSA-rcgg-9c38-7xpx",
+        "retrieved_at": "2026-10-02T17:58:04.906229+00:00",
+        "sha256": "8a9cef0f4fa706aeda91133d68748b21c3defb07f0c1a30564f098b80b0a2a8b",
+        "severity": "MODERATE",
+        "withdrawn": null,
+        "summary": "OpenTelemetry Java SDK has Unbounded Memory Allocation in W3C Baggage Propagation"
+      }
+    },
+    "unchanged_candidate_findings": true,
+    "unsupported_scopes_remain": true
+  },
+  "primary_advisory_refresh_sha256": "d5edfb68c4e45e6b2574c6e2e8e37b7b9987e3a8dd598f01a0345f1357cd0469",
+  "proposals": {
+    "bridge-2.4.20-dependencies.patch": "0b690fc52d505553f202770a34f3525fd01baa2695455bd4736aae36ccaff872",
+    "bridge-2.4.20-renovate.patch": "729fd55d82b89ccfc974378a99752323f9ba5be3ec5e972f3d62fe393c28e9f2",
+    "bridge-2.4.20-maintenance.patch": "06db4aa29db9a24b36eb14b3076c53e157e2e4810be8aa9ea37343a735aa168a"
+  },
+  "applied_file_identities": {
+    "gradle/libs.versions.toml": {
+      "before_sha256": "8d41c920b8e350a136295cc27781aff5b6f1fac12a844ad27c54e65c2d152e44",
+      "after_sha256": "6f3369d743c6801008b3c3e5cba323a7cbdcfa8edbecdefa30cc17b3cf34377f"
+    },
+    "android-app/module.yaml": {
+      "before_sha256": "4cace3c522e9d6e9ec4c802fdef3c2168b46e6cc42cf9628bc67a8a5cf258fd1",
+      "after_sha256": "da50d4195d72566b83af9b99c39c0cd7f716d56a4a7096e1a3e43ead7df5ec65"
+    },
+    "shared-core/module.yaml": {
+      "before_sha256": "c3c57fcfe55ab7499c34ec6e9a3d27cf4b7552fb35ce034ec15b45b1387e8f21",
+      "after_sha256": "758e36e750b7a4248f42cf309c2db3a7726289f15678b86b44bf41c2cd9f21d6"
+    },
+    "shared-di/module.yaml": {
+      "before_sha256": "ca0cc3672e0d4e0c7b4bf188471876084ce846dce16e843511125337f1491897",
+      "after_sha256": "83a637f8dbef4d79b4deae4e6e9edfcd1f8bb030dd1e97b791d54a880ae9b0ba"
+    },
+    "shared-feature-home/module.yaml": {
+      "before_sha256": "ccc577e4cca35b82069488d2dc0d144fde2cee75895f437c3d5c66d3dc4e32ea",
+      "after_sha256": "f4c3a538616b6e01251ebe575b8a47ecb301ec1a2045c7432a00bbb6fea72bca"
+    },
+    "shared-feature-nearby-vehicle-map/module.yaml": {
+      "before_sha256": "ccc577e4cca35b82069488d2dc0d144fde2cee75895f437c3d5c66d3dc4e32ea",
+      "after_sha256": "f4c3a538616b6e01251ebe575b8a47ecb301ec1a2045c7432a00bbb6fea72bca"
+    },
+    "renovate.json": {
+      "before_sha256": "43fdb773f997285d48c1a24068f0a50d431c284440ace89c7622804ae973bf3e",
+      "after_sha256": "de0cd9daba0097336379cf80c6293c04cfff8aac042afd9b1fb9f46e20c65761"
+    },
+    "maintenance-compatibility.json": {
+      "before_sha256": "64252e11ca5f01e2cd45110e34aeb8c3a9803dbf8d6f44e82553673e26976483",
+      "after_sha256": "565dfc2db290745041c299c3f5568cbc55ad43c3eb12bc996d3757606fc30c81"
+    },
+    "scripts/maintenance/test_compatibility.rb": {
+      "before_sha256": "190a29816922c98f6db14960fd3d2dd2846c2be0b30e0f2dfd32ca96a6105db3",
+      "after_sha256": "9b3d677d069367c36b2e496066274b30b2f20f7fe0610cd6e96a67af70becd8b"
+    },
+    "scripts/maintenance/test_inventory.rb": {
+      "before_sha256": "7963d41abd04edd7783883e6209ac7745dfeacf2c4b542698b2d6effd03056e9",
+      "after_sha256": "1a39bae19222f4ac3651372af4c9dde009e69bd758da14f9fdbd3b244fd84453"
+    }
+  },
+  "rollback_preimages_verified": true,
+  "rebased_nomination_no_obsolete_edits": true,
+  "contracts": {
+    "tests": 204,
+    "suites": 10,
+    "failures": 0,
+    "log_sha256": "4b9986d325426fd6e386220286195f6bae7ea592132cf3b1d190cb5bd1991eed"
+  },
+  "native_precommit": {
+    "gate": {
+      "schema": 1,
+      "started_at": "2026-10-02T18:01:09.134492+00:00",
+      "ended_at": "2026-10-02T18:12:46.929137+00:00",
+      "exit": 0,
+      "state": "passed",
+      "caller_index_unchanged": true,
+      "caller_inputs_unchanged": true,
+      "temporary_index_used": true,
+      "manifest_sha256": "f66e52a752b51b467db3621dca7fe9e20f39a5adc0999053fb718370be9f70ac",
+      "log_sha256": "eefe2edac0f8f892af8821ffc2308b979a2170a3c811f01148aadc500bc89a2e"
+    },
+    "selection": {
+      "docs_only": "false",
+      "shared_tests": "true",
+      "android_tests": "true",
+      "ios_tests": "true",
+      "android_build": "true",
+      "ios_build": "true",
+      "full_validation": "true",
+      "path_count": "47"
+    },
+    "jobs": [
+      {
+        "job": "android-test",
+        "seconds": 266.448
+      },
+      {
+        "job": "ios-test",
+        "seconds": 318.963
+      },
+      {
+        "job": "android-build-debug",
+        "seconds": 30.069
+      },
+      {
+        "job": "ios-build-debug",
+        "seconds": 66.075
+      }
+    ],
+    "index_sha256": "acfc7b6ffc9da2ee1b1bde59b22580b38692c98a09bba09c8f0891d346e0ab77",
+    "inputs_sha256": "415e7c904d283588730f04229561626ed890edc3d6dfae9f695e4db98bc7b0c0",
+    "manifest_sha256": "f66e52a752b51b467db3621dca7fe9e20f39a5adc0999053fb718370be9f70ac",
+    "static_timings": {
+      "ktlint": 1.094,
+      "detekt": 1.182,
+      "swiftformat": 0.118,
+      "swiftlint": 0.272,
+      "shellcheck": 1.399,
+      "total_seconds": 5.455
+    },
+    "swift_cases": [
+      "HomeFeatureTests/shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent()",
+      "HomeFeatureTests/shouldHaveInitialSharedStateWhenTaskIsSent()",
+      "HomeFeatureTests/shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent()",
+      "NearbyVehicleMapFeatureTests/shouldBlockReducedAccuracyLocation()",
+      "NearbyVehicleMapFeatureTests/shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads()",
+      "NearbyVehicleMapFeatureTests/shouldHaveResolvingRiderLocationWhenTaskIsSent()",
+      "NearbyVehicleMapFeatureTests/shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable()",
+      "NearbyVehicleMapFeatureTests/shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved()",
+      "NearbyVehicleMapFeatureTests/shouldMapLoadedSharedStateIntoProviderNeutralMapScene()",
+      "NearbyVehicleMapFeatureTests/shouldPreserveBlockingOverlaySeparatelyFromMapContent()",
+      "NearbyVehicleMapFeatureTests/shouldRequestVisibleRefreshWhenRefreshIsDue()",
+      "NearbyVehicleMapFeatureTests/shouldWireDeniedPermissionIntoBlockingOverlay()"
+    ],
+    "skip_macro_validation": "NO",
+    "owned_workspace_removed": true,
+    "caller_index_unchanged": true,
+    "caller_inputs_unchanged": true,
+    "base_commit": "9f730efd19fbfa6eb13276a38e7c4eed5b7b5556",
+    "scope": "complete_working_snapshot_in_temporary_index_prepared_local_host",
+    "android_successful_tests": {
+      "total": 38,
+      "module_counts": {
+        "android-app": 12,
+        "shared-core": 9,
+        "shared-di": 2,
+        "shared-feature-home": 5,
+        "shared-feature-nearby-vehicle-map": 10
+      }
+    }
+  },
+  "toolchain": "0.12.2",
+  "toolchain_kotlin": "2.4.10",
+  "bridge_kotlin": "2.4.20",
+  "metro": "1.4.5",
+  "skie": "0.10.15",
+  "bridge_compose": "1.9.0",
+  "builder": "gradle",
+  "bridge_retirement": "defer",
+  "elixir": "dormant",
+  "remaining_gaps": [
+    "direct_Metro_1.4.5_parity",
+    "physical_device_compile_execution",
+    "minimum_floor_runtime",
+    "Full_test_plan",
+    "release_archive_export_signing",
+    "cold_hosted",
+    "unsupported_security_scopes"
+  ],
+  "committed": false,
+  "pushed": false,
+  "post_gate_changes": "documentation_and_evidence_only",
+  "post_gate_markdown_changes": [
+    "docs/maintenance/README.md",
+    "docs/maintenance/bridge-adoption-review.md",
+    "docs/maintenance/bridge-adoption-validation.md",
+    "docs/maintenance/implementation-proposal.md",
+    "openspec/changes/reviewed-bridge-upgrade/design.md",
+    "openspec/changes/reviewed-bridge-upgrade/tasks.md"
+  ]
+}
