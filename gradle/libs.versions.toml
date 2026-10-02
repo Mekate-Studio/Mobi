@@ -4,7 +4,7 @@
 
 [versions]
 kotlin = "2.4.20"
-compose = "1.9.0"
+compose = "1.12.1"
 metro = "1.4.5"
 coroutines = "1.11.0"
 skie = "0.10.15"
