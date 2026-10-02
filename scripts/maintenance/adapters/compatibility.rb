@@ -8,7 +8,7 @@ require 'uri'
 
 module Maintenance
   class Compatibility
-    PROFILES = %w[bridge-compile bridge-mobile direct-facade].freeze
+    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade].freeze
     CONFIG = 'maintenance-compatibility.json'
     CATALOG = 'gradle/libs.versions.toml'
     UNPROVEN = %w[device_execution release_archive signed_packaging cancellation_parity generic_export cold_direct_ci incremental_direct_build complete_release_interval_review complete_bridge_target_graph advisory_review].freeze

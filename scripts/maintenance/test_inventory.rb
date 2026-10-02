@@ -90,6 +90,24 @@ module InventoryTest
       end
     end
   end
+  test('Git stderr diagnostics cannot contaminate NUL-delimited source paths') do
+    fixture do |root|
+      original = Open3.method(:capture3)
+      Open3.define_singleton_method(:capture3) do |*args, **options|
+        stdout, stderr, status = original.call(*args, **options)
+        [stdout, 'git: temporary-directory warning\n' + stderr, status]
+      end
+      begin
+        source = Maintenance::Source.new(root)
+        assert(source.files.keys == ['input.txt'])
+        File.write(File.join(root, 'input.txt'), 'modified')
+        reject(/Source changed/) { source.verify! }
+      ensure
+        Open3.define_singleton_method(:capture3, original)
+      end
+    end
+  end
+
   test('source symlinks fail instead of following unowned input') do
     fixture do |root|
       File.symlink('/etc/hosts', File.join(root, 'escape'))

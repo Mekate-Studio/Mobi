@@ -1,10 +1,13 @@
 # Staged implementation proposal
 
-Status: slices 1–8 integrated, through `815b16d`. Slice 7's
+Status: slices 1–8 integrated, through `3e6f1d5`. Slice 7's
 [compatibility runner](compatibility-runner.md) has passing bridge and direct-facade
 mobile comparisons. Slice 8 consolidates the [existing watch](compatibility-watch.md);
 [its validation](eighth-slice-validation.md) records execution and remaining limits.
-Slices 9–12 remain proposed. Earlier validation records preserve
+Slice 9's [review implementation](ninth-slice-validation.md) and
+[upgrade packet](ninth-slice-review.md) are locally validated and uncommitted;
+adoption is deferred after fresh advisory assessment. Slices 10–12 remain proposed.
+Earlier validation records preserve
 their original source identities and limits. The [audit](audit.md),
 [compatibility matrix](kotlin-compatibility.md) and
 [workflow design](workflow-design.md) define the evidence behind this backlog.
@@ -97,7 +100,7 @@ local measured evidence; it does not authorize dependency adoption.
 | 6. Kotlin Toolchain rehearsal | Source-bound current/candidate effective settings and graphs; actual repo-owned build/test commands | Reproduce baseline; candidate 0.12.2 bootstrap/hash, plugin/factory/UI/native/package checks; current bridge remains selected. Any candidate younger than seven days is experimental only |
 | 7. Compatibility matrix runner | Implemented: separate bridge compile/link and mobile profiles; direct prerequisite assessments and typed-facade experiment | [Integrated](seventh-slice-validation.md) in `9d25553`: both full comparisons pass, native tests/targets retained, DI reachability and bridge absence checked, transformations recorded; adoption/retirement gaps remain |
 | 8. Consolidate existing watch | [Integrated](eighth-slice-validation.md) in `815b16d`: existing workflow calls the isolated evaluator and bounded release providers | Passing real baseline/candidate compile/link and cleanup; quiet/improved/regressed/provider/history fixtures; technical success never adopts; no duplicate schedule |
-| 9. Reviewed upgrade | Exact source/patch-bound adoption and final checks | Maintainer approves named coupled set, full interval assessment/graph diff complete, final receipt current; existing defaults retained unless separately authorized |
+| 9. Reviewed upgrade | Implemented local review profile, paired graphs/native checks and exact proposed patches; adoption pending | [Review](ninth-slice-review.md) recommends assessing the newer fixed tuple after its age gate. Any adoption needs named approval, current source/patch/policy identities and final validation; defaults remain separately authorized |
 | 10. Optional direct default and retirement | ADR update plus reversible switch, then bridge removal only when matrix proves parity | Local/cold CI native tests, architectures, required release evidence and physically absent bridge; rollback tested. May remain deferred indefinitely if gaps persist |
 | 11. Elixir activation | Enable the dormant adapter only with a real backend capability | Format/compile/Credo/Sobelow/Boundary/audit/ExUnit/PostgreSQL/release checks; failure/recovery fixtures; unrelated mobile jobs require none of its tools |
 | 12. Reuse refinement | Public configuration/examples and optional review skill | Fresh-clone Kotlin-only and independent Elixir contract demonstrations, license/contribution fit, no private dependencies; separate packaging only after actual reuse |

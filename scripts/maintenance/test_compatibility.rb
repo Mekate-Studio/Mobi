@@ -35,6 +35,7 @@ module CompatibilityTest
     source = Maintenance::Source.new(ROOT)
     adapter = Maintenance::Compatibility.new(ROOT)
     edits = adapter.edits(source, 'bridge-mobile')
+    assert(adapter.edits(source, 'bridge-review') == edits)
     assert(edits.size == 6)
     assert(edits.map { |e| e['path'] }.include?('shared-di/module.yaml'))
     edits.each do |edit|
@@ -193,8 +194,25 @@ module CompatibilityTest
           end
           evidence = { 'schema' => 1, 'profile' => profile, 'phase' => phase, 'adoption_authorized' => false,
                        'cells' => cells, 'source_preservation' => 'verified', 'bridge_unavailable' => profile == 'direct-facade' && phase == 'candidate',
-                       'di_reachable' => true, 'missing_capabilities' => ['release_archive'],
+                       'di_reachable' => true, 'missing_capabilities' => %w[release_archive complete_bridge_target_graph],
                        'commands' => [{ 'log' => 'native_library_compile.log', 'sha256' => Maintenance.file_sha(File.join(control, 'native_library_compile.log')) }] }
+          if profile == 'bridge-review'
+            %w[toolchain_resolution bridge_resolution].each { |cell| cells[cell] = { 'status' => 'passed' } }
+            component = { 'kind' => 'maven', 'group' => 'example', 'name' => 'library', 'version' => '1.0.0' }
+            rows = %w[iosArm64Compile iosArm64TestCompile iosSimulatorArm64Compile iosSimulatorArm64TestCompile classpath].map do |name|
+              { 'project' => ':shared-kit', 'owner' => name == 'classpath' ? 'buildscript' : 'project', 'configuration' => name,
+                'resolvable' => true, 'attributes' => {}, 'state' => 'resolved', 'failures' => [], 'edges' => [],
+                'nodes' => [{ 'component' => component, 'variants' => [] }],
+                'artifacts' => [{ 'component' => component, 'name' => 'library.jar', 'variant' => { 'name' => 'runtime', 'attributes' => {} },
+                                 'identity' => { 'kind' => 'file', 'sha256' => 'a' * 64, 'bytes' => 10 } }] }
+            end
+            graphs = { 'bridge-resolution' => { 'schema' => 1, 'gradle' => '9.6.1', 'configurations' => rows },
+                       'resolved-graphs' => { 'format' => 'toolchain-pretty-graph-v1', 'graphs' => [{ 'nodes' => [] }] } }
+            graphs.each do |name, data|
+              file = name + '.json'; Maintenance::RunStore.atomic(File.join(control, file), data)
+              evidence[name] = { 'file' => file, 'sha256' => Maintenance.file_sha(File.join(control, file)) }
+            end
+          end
           Maintenance::RunStore.atomic(File.join(control, 'evidence.json'), evidence)
           check = { 'schema' => 1, 'phase' => phase, 'check' => profile, 'status' => 'passed', 'evidence_sha256' => Maintenance.file_sha(File.join(control, 'evidence.json')) }
           Maintenance::RunStore.atomic(File.join(control, 'check.json'), check)
@@ -205,7 +223,7 @@ module CompatibilityTest
         end
         store.save(journal)
         store.result(journal, { 'run_id' => id, 'state' => 'checks_passed', 'reason' => 'named_checks_passed', 'binding' => binding,
-                               'steps' => steps, 'ended_at' => Time.now.utc.iso8601, 'adoption_authorized' => false, 'missing_capabilities' => ['release_archive'] })
+                               'steps' => steps, 'ended_at' => Time.now.utc.iso8601, 'adoption_authorized' => false, 'missing_capabilities' => %w[release_archive complete_bridge_target_graph] })
       end
       yield store, id, profile
     end
@@ -243,6 +261,18 @@ module CompatibilityTest
       result['steps'].first['output_sha256'].delete('check.json')
       Maintenance::RunStore.atomic(path, result)
       reject(/complete process\/output/) { Maintenance::CompatibilityReport.read(store, id) }
+    end
+  end
+  test('review report compares verified graphs without inventing advisory provider success') do
+    report_fixture('bridge-review') do |store, id, profile|
+      report = Maintenance::CompatibilityReport.read(store, id)
+      assert(report['resolution']['bridge_diff']['changed'].empty?)
+      assert(report['resolution']['candidate_advisory_queries']['queries'].size == 1)
+      assert(report['resolution']['candidate_advisory_queries']['provider_state'] == 'not_queried')
+      assert(report['missing_capabilities'] == ['release_archive'])
+      assert(report['phases'].all? { |phase| phase['missing_capabilities'] == ['release_archive'] })
+      change_phase_evidence(store, id, profile, 'candidate') { |e| e.delete('bridge-resolution') }
+      reject(/Malformed compatibility evidence/) { Maintenance::CompatibilityReport.read(store, id) }
     end
   end
 

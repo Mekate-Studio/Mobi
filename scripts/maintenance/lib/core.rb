@@ -59,7 +59,7 @@ module Maintenance
 
     def refresh
       git_env = { 'PATH' => '/usr/bin:/bin', 'LC_ALL' => 'C', 'GIT_CONFIG_GLOBAL' => File::NULL, 'GIT_CONFIG_NOSYSTEM' => '1', 'GIT_OPTIONAL_LOCKS' => '0' }
-      output, status = Open3.capture2e(git_env, '/usr/bin/git', '-C', @root, 'ls-files', '--cached', '--others', '--exclude-standard', '-z', unsetenv_others: true)
+      output, _diagnostic, status = Open3.capture3(git_env, '/usr/bin/git', '-C', @root, 'ls-files', '--cached', '--others', '--exclude-standard', '-z', unsetenv_others: true)
       raise Failure, 'Cannot enumerate repository inputs' unless status.success?
 
       @paths = output.split("\0").uniq.sort

@@ -6,6 +6,13 @@ retirement**. This matrix preserves the original audit snapshot; subsequent
 [slice 6 Toolchain rehearsal](sixth-slice-validation.md) have separate receipts.
 Kotlin Toolchain means the CLI/workspace behind `./kotlin`, not Gradle's JVM toolchain.
 
+The [2026-10-02 slice-9 review](ninth-slice-review.md) records passing paired
+retained-bridge graphs/native checks for Kotlin 2.4.10 / Metro 1.4.4 /
+SKIE 0.10.14. It closes that bridge-resolution scope and reports fresh moderate
+build-tooling advisories; adoption is deferred. Toolchain 0.12.2 and the adopted
+ARM targets/OS floors remain current. This evidence does not qualify a direct
+path or change the bridge-retirement decision.
+
 ## Measured follow-up on 2026-09-27
 
 The [Apple Silicon assessment](apple-silicon-assessment.md) established passing

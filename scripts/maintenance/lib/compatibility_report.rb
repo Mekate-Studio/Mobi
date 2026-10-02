@@ -2,6 +2,7 @@
 
 require_relative 'recovery'
 require_relative '../adapters/compatibility'
+require_relative 'upgrade_graph'
 
 module Maintenance
   class CompatibilityReport
@@ -20,6 +21,7 @@ module Maintenance
             raise Failure, 'Successful compatibility result lacks both passing phases'
           end
         end
+        resolution = {}
         phases = result.fetch('steps').map do |step|
           record = journal.fetch('steps').find { |s| s['id'] == step['phase'] + '-' + step['check'] }
           raise Failure, 'Compatibility step is missing from journal' unless record && record['state'] == 'stopped'
@@ -50,6 +52,7 @@ module Maintenance
             required = %w[effective_toolchain]
             direct = step['check'] == 'direct-facade' && step['phase'] == 'candidate'
             required += %w[native_library_compile framework_link] unless direct
+            required += %w[toolchain_resolution bridge_resolution] if step['check'] == 'bridge-review'
             required += %w[android-test android-build-debug ios-test ios-build-debug] unless step['check'] == 'bridge-compile'
             unless required.all? { |cell| evidence.fetch('cells').dig(cell, 'status') == 'passed' } && evidence['source_preservation'] == 'verified'
               raise Failure, 'Passing compatibility phase lacks required capability evidence'
@@ -57,15 +60,27 @@ module Maintenance
             if direct && !(evidence['bridge_unavailable'] == true && evidence['di_reachable'] == true)
               raise Failure, 'Passing direct phase lacks bridge absence or DI reachability'
             end
+            if step['check'] == 'bridge-review'
+              bridge = JSON.parse(File.read(File.join(control, evidence.fetch('bridge-resolution').fetch('file'))))
+              toolchain = JSON.parse(File.read(File.join(control, evidence.fetch('resolved-graphs').fetch('file'))))
+              resolution[step['phase']] = { 'bridge' => bridge, 'queries' => UpgradeGraph.maven_queries(bridge, toolchain) }
+            end
           end
           { 'phase' => step['phase'], 'outcome' => step['status'], 'evidence_sha256' => check['evidence_sha256'],
             'diagnostic' => diagnostic(evidence),
             'cells' => evidence.fetch('cells'), 'di_reachable' => evidence['di_reachable'], 'bridge_unavailable' => evidence.fetch('bridge_unavailable', false),
             'source_preservation' => evidence['source_preservation'], 'missing_capabilities' => evidence['missing_capabilities'] }
         end
-        { 'schema' => 1, 'run_id' => id, 'state' => result['state'], 'reason' => result['reason'], 'binding' => result['binding'],
+        report = { 'schema' => 1, 'run_id' => id, 'state' => result['state'], 'reason' => result['reason'], 'binding' => result['binding'],
           'result_sha256' => Maintenance.file_sha(result_path), 'phases' => phases, 'missing_capabilities' => result['missing_capabilities'],
           'bridge_retirement' => 'defer', 'adoption_authorized' => false }
+        if resolution.keys.sort == %w[baseline candidate]
+          report['resolution'] = { 'bridge_diff' => UpgradeGraph.diff(resolution['baseline']['bridge'], resolution['candidate']['bridge']),
+                                   'baseline_advisory_queries' => resolution['baseline']['queries'], 'candidate_advisory_queries' => resolution['candidate']['queries'] }
+          report['missing_capabilities'] -= ['complete_bridge_target_graph']
+          report['phases'].each { |phase| phase['missing_capabilities'] -= ['complete_bridge_target_graph'] }
+        end
+        report
       end
     rescue KeyError, TypeError, NoMethodError, JSON::ParserError
       raise Failure, 'Malformed compatibility evidence'

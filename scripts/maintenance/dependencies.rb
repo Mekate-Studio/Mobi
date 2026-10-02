@@ -86,7 +86,7 @@ if $PROGRAM_NAME == __FILE__
       puts JSON.pretty_generate(result)
       exit(result['state'] == 'checks_passed' ? 0 : 2)
     else
-      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|assess-support|assess-compatibility|watch-compatibility [--previous FILE] [--output DIR]|compatibility-watch-history|verify|evaluate <inventory.json> <evidence.json>|prepare-kotlin|rehearse-kotlin <version> <inputs|mobile> [current|apple-silicon]|rehearse-support <inputs|mobile>|rehearse-compatibility <bridge-compile|bridge-mobile|direct-facade>|compatibility-report RUN_ID|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]] (execution commands accept trailing --store NAME)'
+      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|assess-support|assess-compatibility|watch-compatibility [--previous FILE] [--output DIR]|compatibility-watch-history|verify|evaluate <inventory.json> <evidence.json>|prepare-kotlin|rehearse-kotlin <version> <inputs|mobile> [current|apple-silicon]|rehearse-support <inputs|mobile>|rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade>|compatibility-report RUN_ID|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]] (execution commands accept trailing --store NAME)'
     end
   rescue StandardError, Interrupt => error
     warn JSON.generate('schema' => 1, 'state' => 'failed', 'message' => error.message)

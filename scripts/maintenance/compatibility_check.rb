@@ -3,6 +3,7 @@
 require_relative 'kotlin_check'
 require_relative 'adapters/compatibility'
 require_relative 'adapters/interop_experiment'
+require_relative 'lib/upgrade_graph'
 
 module Maintenance
   class CompatibilityCheck < KotlinCheck
@@ -90,6 +91,25 @@ module Maintenance
           banner = cli('version', '--version')
           raise Failure, 'Executed Toolchain version differs' unless banner.include?('Kotlin Toolchain version ' + @version + ' ')
           write_evidence('effective-settings', KotlinEvidence.settings(cli('settings', 'show', 'settings', '--all-modules'), modules: @modules, version: @version, source: @work))
+        end
+        if @profile == 'bridge-review'
+          measured('toolchain_resolution') do
+            graphs = KotlinEvidence.graphs(cli('dependencies', 'show', 'dependencies', '--all-modules', '--include-tests'), modules: @modules, version: @version)
+            write_evidence('resolved-graphs', graphs)
+          end
+          measured('bridge_resolution') do
+            begin
+              text = command('bridge-resolution', [File.join(@work, 'gradle-bridge/gradlew'), '--no-daemon', '--console=plain', '-p', File.join(@work, 'gradle-bridge'),
+              '-I', File.join(@work, 'scripts/maintenance/adapters/bridge_resolution.gradle'), 'mobiResolutionEvidence'])
+              write_evidence('bridge-resolution', UpgradeGraph.parse(text))
+            ensure
+              log = File.join(@control, 'bridge-resolution.log')
+              if File.file?(log)
+                lines = File.readlines(log).grep(/^MOBI_RESOLUTION_JSON=/)
+                write_evidence('bridge-resolution-partial', JSON.parse(lines.first.delete_prefix(UpgradeGraph::PREFIX))) if lines.size == 1
+              end
+            end
+          end
         end
         bridge_compile unless @direct
         unless @profile == 'bridge-compile'

@@ -27,7 +27,7 @@ module Maintenance
       case command
       when 'rehearse-compatibility'
         require_relative 'adapters/compatibility'
-        raise Failure, 'Usage: rehearse-compatibility <bridge-compile|bridge-mobile|direct-facade> [--store NAME]' unless args.size == 1
+        raise Failure, 'Usage: rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade> [--store NAME]' unless args.size == 1
         source = Source.new(root)
         adapter = CompatibilityRehearsal.new(root, source: source, profile: args.first)
         policy_path = File.join(root, 'maintenance-execution-policy.json')

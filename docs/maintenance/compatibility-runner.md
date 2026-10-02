@@ -13,6 +13,9 @@ Status: implemented, locally validated, committed and pushed as `9d25553`. The b
 ./scripts/dev/dependency_updates.sh compatibility-report RUN_ID --store compatibility
 # Only after the narrow candidate passes:
 ./scripts/dev/dependency_updates.sh rehearse-compatibility bridge-mobile --store compatibility
+# Manual upgrade review: graphs plus the same mobile jobs
+./scripts/dev/dependency_updates.sh rehearse-compatibility bridge-review --store upgrade-review
+./scripts/dev/dependency_updates.sh compatibility-report RUN_ID --store upgrade-review
 # Independent experiment, with the current production tuple as baseline:
 ./scripts/dev/dependency_updates.sh rehearse-compatibility direct-facade --store compatibility-direct
 ./scripts/dev/dependency_updates.sh recover RUN_ID --store compatibility
@@ -23,9 +26,44 @@ Use the matching store for recovery, reporting and cleanup. The execution host m
 
 The bridge candidate is nominated in `maintenance-compatibility.json`: Kotlin 2.4.10, Metro 1.4.4 and SKIE 0.10.14, holding bridge Compose 1.9.0. Runtime/compiler Metro declarations stay coupled across module manifests and the bridge catalog in the disposable candidate. Versioned sources and dated release responses support nomination; they do not establish Mobi compatibility or complete interval review. Newer releases are shown separately with age eligibility; the command reads the reviewed snapshot, not live release discovery.
 
-The initial source review read the Metro 1.2.0–1.4.4 release notes, including Native scoped-initialization changes, KLIB factory fixes, opt-in IR generation and newer compiler build versions. Language/API targets and the compiler compatibility table do not establish Native artifact compatibility. The complete Kotlin/Compose migration interval, advisory review and bridge target graphs remain explicit gaps. Current evidence does not make this candidate ready for adoption.
+The initial slice-7 source review read the Metro 1.2.0–1.4.4 release notes, including Native scoped-initialization changes, KLIB factory fixes, opt-in IR generation and newer compiler build versions. The [slice-9 review](ninth-slice-review.md) adds the complete stable Kotlin/Metro/SKIE interval, paired bridge resolution and fresh mapped Maven advisories. It recommends deferring this older compiler tuple despite passing local checks. Language/API targets or a compiler table alone cannot establish Native artifact compatibility or adoption readiness.
 
 `bridge-compile` first executes the unchanged baseline, then the candidate. KLIB compilation and framework linking are separate cells. A produced framework is required for the link cell. `bridge-mobile` also runs the existing Android/shared tests, Android debug build, iOS test plan and iOS debug build. The native test evidence must include both current suites and at least 12 distinct cases. A compile-only success never fills these cells.
+
+## Manual upgrade review
+
+`bridge-review` adds `show dependencies --all-modules --include-tests` and all
+project/buildscript configurations of `gradle-bridge/` to `bridge-mobile`.
+Non-resolvable configurations are inventoried explicitly. Resolvable graphs
+retain selected components, dependency edges, variants and artifact identities.
+Kotlin/Native distributions use sorted relative tree fingerprints. Kotlin's
+existing SwiftPM lock-file metadata producer runs before its project output is
+hashed; authored source remains guarded. Missing outputs, unresolved edges,
+unknown identities or incomplete target/plugin scope cannot pass. Controlled
+partial graphs remain available locally after failure; the candidate is stopped
+when baseline evidence cannot be established.
+
+After both phases pass, `compatibility-report` verifies their digest chains,
+compares graph/configuration/variant/artifact content and emits
+`resolution.baseline_advisory_queries` and `candidate_advisory_queries`.
+Those lists contain exact normalized Maven names/versions. Toolchain artifact
+suffixes are recorded when normalized; constraint labels are excluded. The
+provider state is `not_queried`. Submit their deduplicated union to a reviewed
+provider such as [OSV querybatch](https://google.github.io/osv.dev/api/#tag/vulnerabilities/operation/queryBatch),
+retain exact request/response hashes and timestamps, check response counts and
+pagination, fetch each finding's full record and triage it against actual use.
+Provider failure, missing/paginated responses or data older than policy permits
+cannot be called clean. Preserve the query-to-input binding in the review packet.
+
+This is semi-automated collection and comparison with manual semantic/advisory
+review. It does not prove shaded-code, Native-distribution, Swift/Ruby/npm or
+Toolchain-delegated Android plugin coverage. Only the measured bridge graph gap
+closes automatically; independent provider, release and direct-path gates remain.
+Finish or recover a run before changing source/code; report after cleanup has
+released its lease. Use the matching named store for recovery and cleanup.
+The [slice-9 validation](ninth-slice-validation.md) records a real paired run,
+retained failures, cleanup and exact review-only patches. No new watch schedule
+or mutating adoption command is introduced.
 
 ## Direct experiments
 
@@ -45,6 +83,6 @@ Expected authored inputs remain guarded before and after each command. Unexpecte
 
 `compatibility-report` verifies the run/journal/check/evidence/log digest chain and keeps baseline/candidate cells separate. It refuses a successful summary without both passing phases or altered referenced evidence. Causal candidate failure after a passing baseline is `incompatible`; network or unknown failures are inconclusive, missing prerequisites incomplete, and source drift refused. Missing/unexecuted capabilities do not become passing when another cell succeeds.
 
-Device execution, archive/export, cancellation/lifecycle equivalence, generic export, full release-interval and advisory review, complete bridge target graphs, cold direct CI and incremental direct builds are separate gaps. Bridge retirement remains deferred and adoption authorization remains false. Local framework or simulator success cannot remove these gates.
+Device execution, archive/export, cancellation/lifecycle equivalence, generic export, cold direct CI and incremental direct builds remain separate gaps. The manual `bridge-review` profile adds complete measured bridge target graphs; the slice-9 packet supplies dated interval and mapped Maven advisory review with explicit coverage limits. Older profiles do not acquire that evidence retroactively. Bridge retirement remains deferred and adoption authorization remains false. Local framework or simulator success cannot remove these gates.
 
 Slice 8 consolidates the existing compatibility workflow around this evaluator’s reviewed compile/link profile. See the [watch guide](compatibility-watch.md) for bounded release discovery, semantic comparison, history and recovery. A watch observation never authorizes adoption.

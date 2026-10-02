@@ -231,18 +231,22 @@ At minimum, the catalog should capture:
 This does not remove all duplication, but it gives the repository a single
 version reference point for the temporary bridge period.
 
-The bridge currently treats SKIE as the common denominator for Kotlin and Metro
-updates. Metro `1.2.x` publishes Kotlin/Native artifacts on the Kotlin `2.4.0`
-ABI line, while the currently verified SKIE release supports the Kotlin `2.3.x`
-line. Renovate therefore holds Metro below `1.2.0` and Kotlin below `2.4.0`
-until the scheduled `Dependency Compatibility` workflow proves that the latest
-SKIE release can compile the bridge with Kotlin `2.4.x`.
+Renovate still holds Metro below `1.2.0` and bridge Kotlin below `2.4.0` under
+the earlier compatibility policy. Those configured bounds are not evidence
+that newer SKIE releases lack Kotlin 2.4 support. The
+[slice-9 review](../maintenance/ninth-slice-review.md) validates the nominated
+Kotlin 2.4.10 / Metro 1.4.4 / SKIE 0.10.14 tuple through paired graphs and native
+jobs, but defers adoption after finding moderate build-tooling advisories.
+Bridge Compose stays 1.9.0; Toolchain-managed defaults are assessed separately.
 
-The workflow runs [`scripts/ci/check_skie_kotlin_compatibility.sh`](../../scripts/ci/check_skie_kotlin_compatibility.sh),
-which temporarily edits the local version catalog, runs the narrow
-`:shared-kit:compileKotlinIosSimulatorArm64` bridge task, then restores the
-catalog. When that probe passes, remove the Renovate ceilings and let Renovate
-open one coordinated Metro, Kotlin, and SKIE update.
+[`scripts/ci/check_skie_kotlin_compatibility.sh`](../../scripts/ci/check_skie_kotlin_compatibility.sh)
+now forwards to the [isolated compatibility watch](../maintenance/compatibility-watch.md).
+It does not edit production pins or remove policy ceilings. A manual
+[`bridge-review` rehearsal](../maintenance/compatibility-runner.md) adds resolved
+graphs, artifact identities and advisory-query inputs to the existing mobile
+jobs. Review the full upstream interval, OS/architecture implications and fresh
+advisories before approving an exact coupled patch and any bounded policy lift.
+A successful compile or watch result cannot authorize either change.
 
 ## Swift export watch
 

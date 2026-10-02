@@ -6,8 +6,11 @@ The proposed lifecycle verbs in [workflow-design.md](workflow-design.md) must
 exist and have contract tests before an assistant presents them as commands.
 The [inventory](dependency-inventory.md), [Kotlin rehearsal](kotlin-rehearsal.md)
 and [mobile support](mobile-support-policy.md) guides name implemented commands.
-The legacy compatibility probe still has the [audit](audit.md)'s limitations;
-do not run its mutating behavior in the main checkout.
+The [compatibility runner](compatibility-runner.md) now includes a manual
+`bridge-review` profile and verified graph/advisory-query output. The legacy
+probe entry point forwards to the isolated watch; its former mutating behavior
+is preserved only as a historical audit finding. The
+[slice-9 packet](ninth-slice-review.md) demonstrates review without adoption.
 
 ## Purpose
 

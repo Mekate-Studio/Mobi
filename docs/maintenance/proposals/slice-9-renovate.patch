@@ -1,0 +1,32 @@
+--- a/renovate.json
++++ b/renovate.json
+@@ -111,17 +111,17 @@
+       "minimumGroupSize": 2
+     },
+     {
+-      "description": "Hold Metro below the Kotlin 2.4 Native ABI line while the Gradle bridge still uses SKIE with Kotlin 2.3.x.",
++      "description": "Hold Metro at the last explicitly reviewed bridge tuple; newer versions require a fresh assessment.",
+       "matchDatasources": [
+         "maven"
+       ],
+       "matchPackageNames": [
+         "/^dev\\.zacsweers\\.metro:/"
+       ],
+-      "allowedVersions": "<1.2.0"
++      "allowedVersions": "<=1.4.4"
+     },
+     {
+-      "description": "Hold the Gradle bridge Kotlin compiler below 2.4 until SKIE supports Kotlin 2.4.",
++      "description": "Hold bridge Kotlin at the last explicitly reviewed SKIE-compatible tuple; compiler support alone does not authorize adoption.",
+       "matchDatasources": [
+         "maven"
+       ],
+@@ -129,7 +129,7 @@
+         "/^org\\.jetbrains\\.kotlin\\./",
+         "/^org\\.jetbrains\\.kotlin:/"
+       ],
+-      "allowedVersions": "<2.4.0"
++      "allowedVersions": "<=2.4.10"
+     },
+     {
+       "description": "Keep Kotlin coroutines versions synchronized between Kotlin Toolchain modules and the Gradle bridge catalog.",

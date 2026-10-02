@@ -6,6 +6,12 @@ from direct-path parity. Slice 8 was committed and pushed as `815b16d` and conso
 [validation and hosted status](eighth-slice-validation.md) remain explicit.
 Audit baseline: `7810841cf58196b4564ce78ce30d6ebb1f0db2f4`.
 
+Slice 9's manual review profile and [upgrade packet](ninth-slice-review.md) are
+implemented locally, with [paired validation and cleanup](ninth-slice-validation.md).
+The candidate passed the local checks but still matches moderate build-tooling
+advisories. Adoption is deferred; production pins and policy are unchanged.
+This slice is uncommitted and has no hosted validation yet.
+
 Mobi's maintenance workflow starts with reproducible pre-commit checks and uses
 isolated evidence to assess Kotlin Toolchain upgrades. Upgrading the current iOS bridge and retiring it are separate decisions.
 Bridge retirement is **deferred** pending native, clean-clone and release evidence.
@@ -67,6 +73,10 @@ Read the documents in this order:
 
 21. [Compatibility watch](compatibility-watch.md): bounded release discovery, semantic deltas, existing hosted caller and recovery.
 22. [Eighth slice validation](eighth-slice-validation.md): local watch evidence and separate integration/hosted results.
+23. [Ninth slice upgrade review](ninth-slice-review.md): exact proposed patches,
+    complete release interval, graph/artifact comparison, advisory triage and OS assessment.
+24. [Ninth slice validation](ninth-slice-validation.md): paired native checks,
+    contract evidence, retained failures, cleanup and remaining gates.
 
 [Audit evidence](evidence/2026-09-19.json) preserves sanitized probe results,
 input identities and upstream source hashes. It is an audit record, not a
