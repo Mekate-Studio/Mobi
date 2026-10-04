@@ -1,75 +1,43 @@
-name: Dependency Compatibility
+name: Manual Direct Operations Assessment
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "23 5 * * 1"
 
 permissions:
   contents: read
-  actions: read
 
 concurrency:
-  group: dependency-compatibility-${{ github.workflow }}-${{ github.ref }}
+  group: manual-direct-operations-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  compatibility_watch:
+  direct_operations:
     runs-on: macos-26
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/cache@v6
-        with:
-          path: .quality
-          key: ${{ runner.os }}-${{ runner.arch }}-macos26-quality-${{ hashFiles('quality-tools.json', 'scripts/quality_tools.rb') }}
-      - name: Install or verify pinned quality tools
+      - name: Install and verify repository-locked tools without a repository cache restore
         run: ./scripts/ci/install_quality_tools.sh
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
       - uses: android-actions/setup-android@v4
+        with:
+          accept-android-sdk-licenses: false
+          packages: ""
       - name: Prepare reviewed Kotlin distributions
         run: ./scripts/dev/dependency_updates.sh prepare-kotlin
-      - name: Locate previous same-branch observation
-        id: history
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: ./scripts/dev/dependency_updates.sh compatibility-watch-history
-      - name: Restore previous observation
-        id: restore
-        if: steps.history.outputs.state == 'found'
-        continue-on-error: true
-        uses: actions/download-artifact@v8
-        with:
-          name: compatibility-watch-state
-          path: .maintenance/watch-previous
-          github-token: ${{ github.token }}
-          run-id: ${{ steps.history.outputs.run_id }}
-      - name: Observe reviewed compatibility and meaningful changes
-        env:
-          MOBI_WATCH_GITHUB_TOKEN: ${{ github.token }}
-          MOBI_WATCH_HISTORY: ${{ steps.history.outputs.state == 'found' && steps.restore.outcome != 'success' && 'incomplete' || steps.history.outputs.state }}
-          MOBI_WATCH_SCOPE: ${{ github.repository }}:${{ github.ref_name }}
-        run: ./scripts/ci/check_skie_kotlin_compatibility.sh --previous .maintenance/watch-previous/snapshot.json --output .maintenance/watch-reports/current
-      - name: Retain observation for the next run
-        if: always() && hashFiles('.maintenance/watch-reports/current/snapshot.json') != ''
+      - name: Assess paired unsigned operations with owned recovery
+        run: ./docs/maintenance/evidence/probes/run_direct_operations.sh
+      - name: Retain bounded summary and raw producer evidence
+        if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: compatibility-watch-state
-          path: .maintenance/watch-reports/current/snapshot.json
+          name: direct-operations-evidence
+          path: |
+            .maintenance/direct-operations-summary
+            .maintenance/runs-ios-operations
           retention-days: 90
-          overwrite: true
-          if-no-files-found: error
-          include-hidden-files: true
-      - name: Retain public compatibility evidence
-        if: always() && hashFiles('.maintenance/watch-reports/current/report.json') != ''
-        uses: actions/upload-artifact@v7
-        with:
-          name: compatibility-watch-evidence
-          path: .maintenance/watch-reports/current
-          retention-days: 90
-          overwrite: true
           if-no-files-found: error
           include-hidden-files: true
