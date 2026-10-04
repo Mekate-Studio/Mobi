@@ -1,0 +1,840 @@
+--- a/kotlin
++++ b/kotlin
+@@ -17,9 +17,9 @@
+ set -e -u
+ 
+ # The version of the Kotlin Toolchain (and CLI) distribution to provision and use
+-kotlin_cli_version=0.12.2
++kotlin_cli_version=0.13.0
+ # Establish chain of trust from here by specifying exact checksum of Kotlin Toolchain (and CLI) distribution to be run
+-kotlin_cli_sha256=9fec42de4f378a27240b78c1b66ffef0c2aca66a4a6390ca67fe51aacb75677e
++kotlin_cli_sha256=fa82b9872dcfa04d26c8f800f33d597c99fbffd747a0e9bbce3a9e4424b3a588
+ 
+ KOTLIN_CLI_DOWNLOAD_ROOT="${KOTLIN_CLI_DOWNLOAD_ROOT:-https://packages.jetbrains.team/maven/p/amper/amper}"
+ 
+@@ -78,6 +78,7 @@
+   short_sha=$(echo "$file_sha" | cut -c1-32) # cannot use the ${short_sha:0:32} syntax in regular /bin/sh
+   download_lock_file="$cache_dir/download-${short_sha}.lock"
+   process_lock_file="$cache_dir/download-${short_sha}.$$.lock"
++  temp_file="$cache_dir/download-${short_sha}.$$.bin"
+   echo $$ >"$process_lock_file"
+   while ! ln "$process_lock_file" "$download_lock_file" 2>/dev/null; do
+     lock_owner=$(cat "$download_lock_file" 2>/dev/null || true)
+@@ -95,8 +96,14 @@
+     fi
+   done
+ 
+-  # shellcheck disable=SC2064
+-  trap "rm -f \"$download_lock_file\"" EXIT
++
++  # An extraction left half-done must never keep the .flag file, which marks $extract_dir as complete: subsequent runs
++  # would skip the extraction and use the broken directory.
++  cleanup_incomplete_provisioning() {
++    rm -f "$download_lock_file" "$temp_file"
++    rm -rf "$extract_dir"
++  }
++  trap cleanup_incomplete_provisioning EXIT
+   rm -f "$process_lock_file"
+ 
+   unlock_and_cleanup() {
+@@ -136,7 +143,6 @@
+ 
+   echo "Downloading $moniker..."
+ 
+-  temp_file="$cache_dir/download-file-$$.bin"
+   rm -f "$temp_file"
+   if command -v curl >/dev/null 2>&1; then
+     if [ -t 1 ]; then CURL_PROGRESS="--progress-bar"; else CURL_PROGRESS="--silent --show-error"; fi
+--- a/kotlin.bat
++++ b/kotlin.bat
+@@ -1,264 +1,280 @@
+-@echo off
+-
+-@rem
+-@rem Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+-@rem
+-
+-@rem Possible environment variables:
+-@rem   KOTLIN_CLI_DOWNLOAD_ROOT        Maven repository to download the Kotlin CLI dist from
+-@rem                              default: https://packages.jetbrains.team/maven/p/amper/amper
+-@rem   KOTLIN_CLI_JRE_DOWNLOAD_ROOT    Url prefix to download the Kotlin CLI JRE from.
+-@rem                              default: https:/
+-@rem   KOTLIN_CLI_BOOTSTRAP_CACHE_DIR  Cache directory to store the extracted JRE and Kotlin CLI distribution
+-@rem   KOTLIN_CLI_JAVA_HOME            JRE to run the Kotlin CLI itself (optional, does not affect compilation)
+-@rem   KOTLIN_CLI_JAVA_OPTIONS         JVM options to pass to the JVM running the Kotlin CLI (does not affect the user's application)
+-@rem   KOTLIN_CLI_NO_WELCOME_BANNER    Disables the first-run welcome message if set to a non-empty value
+-
+-setlocal
+-
+-@rem The version of the Kotlin Toolchain distribution to provision and use
+-set kotlin_cli_version=0.12.2
+-@rem Establish chain of trust from here by specifying the exact checksum of the Kotlin Toolchain distribution to be run
+-set kotlin_cli_sha256=9fec42de4f378a27240b78c1b66ffef0c2aca66a4a6390ca67fe51aacb75677e
+-
+-if not defined KOTLIN_CLI_DOWNLOAD_ROOT set KOTLIN_CLI_DOWNLOAD_ROOT=https://packages.jetbrains.team/maven/p/amper/amper
+-if not defined KOTLIN_CLI_BOOTSTRAP_CACHE_DIR set KOTLIN_CLI_BOOTSTRAP_CACHE_DIR=%LOCALAPPDATA%\JetBrains\Kotlin\cli
+-@rem remove trailing \ if present
+-if [%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR:~-1%] EQU [\] set KOTLIN_CLI_BOOTSTRAP_CACHE_DIR=%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR:~0,-1%
+-
+-goto :after_function_declarations
+-
+-REM ********** Download and extract any zip or .tar.gz archive **********
+-
+-:download_and_extract
+-setlocal
+-
+-set moniker=%~1
+-set url=%~2
+-set target_dir=%~3
+-set sha=%~4
+-set sha_size=%~5
+-set show_banner_on_cache_miss=%~6
+-
+-set flag_file=%target_dir%\.flag
+-if exist "%flag_file%" (
+-    set /p current_flag=<"%flag_file%"
+-    if "%current_flag%" == "%sha%" exit /b
+-)
+-
+-setlocal enableDelayedExpansion
+-set NL=^
+-
+-
+-@rem two empty lines required above for the NL character
+-
+-@rem We have to build the welcome banner here as an env var because we
+-@rem can't pass a multiline string through the single line powershell
+-set welcome_banner=!NL! ^
+-Welcome to !NL! ^
+- !NL! ^
+-@@@        @@@@                               @@@    @@@ !NL! ^
+-@@@      @@@@                       @@@       @@@    @@@ !NL! ^
+-@@@    #@@@^"                       ,@@@       @@@ !NL! ^
+-@@@  ,@@@%%         ,@@@@@@@,     @@@@@@@@@@   @@@    @@@    @@@  ,@@@@@, !NL! ^
+-@@@ @@@@         @@@@@%%^"%%@@@@@   @@@@@@@@@@   @@@    @@@    @@@@@@%%%%@@@@@ !NL! ^
+-@@@@@@%%         @@@%%       %%@@@     @@@       @@@    @@@    @@@@      %%@@%% !NL! ^
+-@@@ @@@@=      #@@@         @@@#    @@@       @@@    @@@    @@@        @@@ !NL! ^
+-@@@   @@@@     #@@@         @@@#    @@@       @@@    @@@    @@@        @@@ !NL! ^
+-@@@    *@@@%%    @@@@       @@@@     @@@       @@@    @@@    @@@        @@@ !NL! ^
+-@@@      %%@@@=   %%@@@@*,*@@@@%%      @@@@###   @@@    @@@    @@@        @@@ !NL! ^
+-@@@        @@@@    ^"@@@@@@@^"         %%@@@@@   @@@    @@@    @@@        @@@ !NL!
+-
+-@rem This multiline string is actually passed as a single line to powershell, meaning #-comments are not possible.
+-@rem So here are a few comments about the code below:
+-@rem  - we need to support both .zip and .tar.gz archives (for the Kotlin Toolchain distribution and the JRE)
+-@rem  - tar should be present in all Windows machines since 2018 (and usable from both cmd and powershell)
+-@rem  - tar requires the destination dir to exist
+-@rem  - We use (New-Object Net.WebClient).DownloadFile instead of Invoke-WebRequest for performance. See the issue
+-@rem    https://github.com/PowerShell/PowerShell/issues/16914, which is still not fixed in Windows PowerShell 5.1
+-@rem  - DownloadFile requires the directories in the destination file's path to exist
+-set download_and_extract_ps1= ^
+-Set-StrictMode -Version 3.0; ^
+-$ErrorActionPreference = 'Stop'; ^
+- ^
+-$createdNew = $false; ^
+-$lock = New-Object System.Threading.Mutex($true, ('Global\kotlin-cli-bootstrap.' + '%target_dir%'.GetHashCode().ToString()), [ref]$createdNew); ^
+-if (-not $createdNew) { ^
+-    Write-Host 'Another Kotlin CLI instance is bootstrapping. Waiting for our turn...'; ^
+-    [void]$lock.WaitOne(); ^
+-} ^
+- ^
+-try { ^
+-    if ((Get-Content '%flag_file%' -ErrorAction Ignore) -ne '%sha%') { ^
+-        if (('%show_banner_on_cache_miss%' -eq 'true') -and [string]::IsNullOrEmpty('%KOTLIN_CLI_NO_WELCOME_BANNER%')) { ^
+-            Write-Host \"$env:welcome_banner\"; ^
+-            Write-Host ''; ^
+-            Write-Host 'This is the first run of the Kotlin CLI v%kotlin_cli_version%, so we need to download the Kotlin Toolchain.'; ^
+-            Write-Host 'Please give us a few seconds now, subsequent runs will be faster.'; ^
+-            Write-Host ''; ^
+-        } ^
+-        $temp_file = '%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR%\' + [System.IO.Path]::GetRandomFileName(); ^
+-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; ^
+-        Write-Host 'Downloading %moniker%...'; ^
+-        [void](New-Item '%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR%' -ItemType Directory -Force); ^
+-        if (Get-Command curl.exe -errorAction SilentlyContinue) { ^
+-            curl.exe -L --silent --show-error --fail --output $temp_file '%url%'; ^
+-        } else { ^
+-            (New-Object Net.WebClient).DownloadFile('%url%', $temp_file); ^
+-        } ^
+- ^
+-        $actualSha = (Get-FileHash -Algorithm SHA%sha_size% -Path $temp_file).Hash.ToString(); ^
+-        if ($actualSha -ne '%sha%') { ^
+-            $writeErr = if ($Host.Name -eq 'ConsoleHost') { [Console]::Error.WriteLine } else { $host.ui.WriteErrorLine } ^
+-            $writeErr.Invoke(\"ERROR: Checksum mismatch for $temp_file (downloaded from %url%): expected checksum %sha% but got $actualSha\"); ^
+-            exit 1; ^
+-        } ^
+- ^
+-        if (Test-Path '%target_dir%') { ^
+-            Remove-Item '%target_dir%' -Recurse; ^
+-        } ^
+-        if ($temp_file -like '*.zip') { ^
+-            Add-Type -A 'System.IO.Compression.FileSystem'; ^
+-            [IO.Compression.ZipFile]::ExtractToDirectory($temp_file, '%target_dir%'); ^
+-        } else { ^
+-            [void](New-Item '%target_dir%' -ItemType Directory -Force); ^
+-            tar -xzf $temp_file -C '%target_dir%'; ^
+-        } ^
+-        Remove-Item $temp_file; ^
+- ^
+-        Set-Content '%flag_file%' -Value '%sha%'; ^
+-        Write-Host 'Download complete.'; ^
+-        Write-Host ''; ^
+-    } ^
+-} ^
+-finally { ^
+-    $lock.ReleaseMutex(); ^
+-}
+-
+-rem We reset the PSModulePath in case this batch script was called from PowerShell Core
+-rem See https://github.com/PowerShell/PowerShell/issues/18108#issuecomment-2269703022
+-set PSModulePath=
+-set powershell=%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe
+-"%powershell%" -NonInteractive -NoProfile -NoLogo -Command %download_and_extract_ps1%
+-if errorlevel 1 exit /b 1
+-exit /b 0
+-
+-:find_project_context
+-@rem Search upwards for a kotlin.bat wrapper file and/or project.yaml
+-@rem Sets wrapper_script to the found wrapper path, or empty string if not found.
+-@rem Returns errorlevel 0 if a valid wrapper (that is not this script itself) was found, 1 otherwise.
+-set wrapper_script=
+-set this_script=%~f0
+-set project_dir=%CD%
+-
+-:find_loop
+-set wrapper_candidate=%project_dir%\kotlin.bat
+-if "%this_script%"=="%wrapper_candidate%" (
+-    @rem Found itself (local wrapper case), no need to update any version or search further.
+-    exit /b 1
+-)
+-
+-if exist "%wrapper_candidate%" (
+-    @rem Found a wrapper — check that a project context exists alongside it
+-    if exist "%project_dir%\project.yaml" (
+-        set wrapper_script=%wrapper_candidate%
+-        exit /b 0
+-    )
+-    if exist "%project_dir%\module.yaml" (
+-        set wrapper_script=%wrapper_candidate%
+-        exit /b 0
+-    )
+-    echo WARNING: Found wrapper script '%wrapper_candidate%', but no project.yaml or module.yaml near it. Skipping. >&2
+-    @rem Continue the search
+-    goto :find_next_parent
+-)
+-
+-if exist "%project_dir%\project.yaml" (
+-    @rem Found project.yaml but no wrapper alongside it
+-    echo WARNING: Found a project.yaml in '%project_dir%', but the wrapper script is missing; using Kotlin Toolchain v%kotlin_cli_version%. >&2
+-    exit /b 1
+-)
+-
+-:find_next_parent
+-@rem Move to parent directory
+-for %%P in ("%project_dir%\..") do set parent_dir=%%~fP
+-if "%parent_dir%"=="%project_dir%" (
+-    @rem Reached the root, stop searching
+-    exit /b 1
+-)
+-set project_dir=%parent_dir%
+-goto :find_loop
+-
+-:parse_project_context
+-@rem Parse kotlin_cli_version and kotlin_cli_sha256 from the found wrapper_script without executing it.
+-set parsed_kotlin_cli_version=
+-set parsed_kotlin_cli_sha256=
+-
+-for /f "tokens=2 delims==" %%A in ('findstr /r /c:"^set kotlin_cli_version=[A-Za-z0-9._+-]*$" "%wrapper_script%"') do (
+-    if not defined parsed_kotlin_cli_version set parsed_kotlin_cli_version=%%A
+-)
+-for /f "tokens=2 delims==" %%A in ('findstr /r /c:"^set kotlin_cli_sha256=[0-9a-fA-F]*$" "%wrapper_script%"') do (
+-    if not defined parsed_kotlin_cli_sha256 set parsed_kotlin_cli_sha256=%%A
+-)
+-
+-if not defined parsed_kotlin_cli_version (
+-    echo ERROR: Suspicious local wrapper script: failed to detect the distribution version in '%wrapper_script%' >&2
+-    exit /b 1
+-)
+-if not defined parsed_kotlin_cli_sha256 (
+-    echo ERROR: Suspicious local wrapper script: failed to detect the distribution checksum in '%wrapper_script%' >&2
+-    exit /b 1
+-)
+-
+-@rem Overwrite builtin values and proceed
+-set kotlin_cli_version=%parsed_kotlin_cli_version%
+-set kotlin_cli_sha256=%parsed_kotlin_cli_sha256%
+-exit /b 0
+-
+-:fail
+-echo ERROR: Kotlin CLI bootstrap failed, see errors above
+-exit /b 1
+-
+-:after_function_declarations
+-
+-REM ********** Project-local version detection **********
+-
+-if defined KOTLIN_CLI_WRAPPER_ALWAYS_USE_INTRINSIC_VERSION goto :after_local_version_detection
+-
+-call :find_project_context
+-if errorlevel 1 goto :after_local_version_detection
+-call :parse_project_context
+-if errorlevel 1 goto fail
+-:after_local_version_detection
+-
+-REM ********** Provision the Kotlin Toolchain distribution **********
+-
+-set kotlin_cli_url=%KOTLIN_CLI_DOWNLOAD_ROOT%/org/jetbrains/kotlin/kotlin-cli/%kotlin_cli_version%/kotlin-cli-%kotlin_cli_version%-dist.tgz
+-set kotlin_cli_target_dir=%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR%\kotlin-cli-%kotlin_cli_version%
+-call :download_and_extract "Kotlin Toolchain distribution v%kotlin_cli_version%" "%kotlin_cli_url%" "%kotlin_cli_target_dir%" "%kotlin_cli_sha256%" "256" "true"
+-if errorlevel 1 goto fail
+-
+-REM ********** Launch the Kotlin CLI **********
+-
+-rem Determine the correct busybox binary based on architecture
+-if "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
+-    set busybox_exe=%kotlin_cli_target_dir%\bin\busybox64a.exe
+-) else if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
+-    set busybox_exe=%kotlin_cli_target_dir%\bin\busybox64u.exe
+-) else (
+-    echo Unsupported architecture %PROCESSOR_ARCHITECTURE% >&2
+-    goto fail
+-)
+-
+-rem We use busybox here because it doesn't reinterpret the user-passed command-line arguments (that we pass via %*).
+-rem Also this way we can use the unified launcher script (.sh)
+-set KOTLIN_CLI_WRAPPER_PATH=%~f0
+-
+-rem The '& call' after the app run is to avoid the "Terminate batch job (Y/N)?" prompt
+-"%busybox_exe%" sh "%kotlin_cli_target_dir%\bin\launcher.sh" %* & call :exitWithErrorLevel
+-
+-:exitWithErrorLevel
+-@rem We use "%COMSPEC%" /d /c exit so that and/or operators work properly when calling kotlin.bat directly from a script
+-@rem without the `call` command. With a plain `exit /B %ERRORLEVEL%`, using `kotlin.bat && echo success` would print
+-@rem 'success' even in case of failure. Consumers would have to use `call kotlin.bat && echo success` for it to work.`
+-"%COMSPEC%" /d /c exit %ERRORLEVEL%
++@echo off
++
++@rem
++@rem Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
++@rem
++
++@rem Possible environment variables:
++@rem   KOTLIN_CLI_DOWNLOAD_ROOT        Maven repository to download the Kotlin CLI dist from
++@rem                              default: https://packages.jetbrains.team/maven/p/amper/amper
++@rem   KOTLIN_CLI_JRE_DOWNLOAD_ROOT    Url prefix to download the Kotlin CLI JRE from.
++@rem                              default: https:/
++@rem   KOTLIN_CLI_BOOTSTRAP_CACHE_DIR  Cache directory to store the extracted JRE and Kotlin CLI distribution
++@rem   KOTLIN_CLI_JAVA_HOME            JRE to run the Kotlin CLI itself (optional, does not affect compilation)
++@rem   KOTLIN_CLI_JAVA_OPTIONS         JVM options to pass to the JVM running the Kotlin CLI (does not affect the user's application)
++@rem   KOTLIN_CLI_NO_WELCOME_BANNER    Disables the first-run welcome message if set to a non-empty value
++
++setlocal
++
++@rem The version of the Kotlin Toolchain distribution to provision and use
++set kotlin_cli_version=0.13.0
++@rem Establish chain of trust from here by specifying the exact checksum of the Kotlin Toolchain distribution to be run
++set kotlin_cli_sha256=fa82b9872dcfa04d26c8f800f33d597c99fbffd747a0e9bbce3a9e4424b3a588
++
++if not defined KOTLIN_CLI_DOWNLOAD_ROOT set KOTLIN_CLI_DOWNLOAD_ROOT=https://packages.jetbrains.team/maven/p/amper/amper
++if not defined KOTLIN_CLI_BOOTSTRAP_CACHE_DIR set KOTLIN_CLI_BOOTSTRAP_CACHE_DIR=%LOCALAPPDATA%\JetBrains\Kotlin\cli
++@rem remove trailing \ if present
++if [%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR:~-1%] EQU [\] set KOTLIN_CLI_BOOTSTRAP_CACHE_DIR=%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR:~0,-1%
++
++goto :after_function_declarations
++
++REM ********** Download and extract any zip or .tar.gz archive **********
++
++:download_and_extract
++setlocal
++
++set moniker=%~1
++set url=%~2
++set target_dir=%~3
++set sha=%~4
++set sha_size=%~5
++set show_banner_on_cache_miss=%~6
++
++setlocal enableDelayedExpansion
++
++set flag_file=%target_dir%\.flag
++if exist "%flag_file%" (
++    set /p current_flag=<"%flag_file%"
++    if "!current_flag!" == "%sha%" exit /b
++)
++
++set NL=^
++
++
++@rem two empty lines required above for the NL character
++
++@rem We have to build the welcome banner here as an env var because we
++@rem can't pass a multiline string through the single line powershell
++set welcome_banner=!NL! ^
++Welcome to !NL! ^
++ !NL! ^
++@@@        @@@@                               @@@    @@@ !NL! ^
++@@@      @@@@                       @@@       @@@    @@@ !NL! ^
++@@@    #@@@^"                       ,@@@       @@@ !NL! ^
++@@@  ,@@@%%         ,@@@@@@@,     @@@@@@@@@@   @@@    @@@    @@@  ,@@@@@, !NL! ^
++@@@ @@@@         @@@@@%%^"%%@@@@@   @@@@@@@@@@   @@@    @@@    @@@@@@%%%%@@@@@ !NL! ^
++@@@@@@%%         @@@%%       %%@@@     @@@       @@@    @@@    @@@@      %%@@%% !NL! ^
++@@@ @@@@=      #@@@         @@@#    @@@       @@@    @@@    @@@        @@@ !NL! ^
++@@@   @@@@     #@@@         @@@#    @@@       @@@    @@@    @@@        @@@ !NL! ^
++@@@    *@@@%%    @@@@       @@@@     @@@       @@@    @@@    @@@        @@@ !NL! ^
++@@@      %%@@@=   %%@@@@*,*@@@@%%      @@@@###   @@@    @@@    @@@        @@@ !NL! ^
++@@@        @@@@    ^"@@@@@@@^"         %%@@@@@   @@@    @@@    @@@        @@@ !NL!
++
++@rem This multiline string is actually passed as a single line to powershell, meaning #-comments are not possible.
++@rem So here are a few comments about the code below:
++@rem  - we need to support both .zip and .tar.gz archives (for the Kotlin Toolchain distribution and the JRE)
++@rem  - tar should be present in all Windows machines since 2018 (and usable from both cmd and powershell)
++@rem  - tar requires the destination dir to exist
++@rem  - native commands like tar don't raise PowerShell errors on failure, so we have to check $LASTEXITCODE.
++@rem    The extraction must never be left half-done with the .flag file in place, because the .flag file marks the
++@rem    target dir as complete, and subsequent runs would then skip the extraction and use the broken directory.
++@rem  - We use (New-Object Net.WebClient).DownloadFile instead of Invoke-WebRequest for performance. See the issue
++@rem    https://github.com/PowerShell/PowerShell/issues/16914, which is still not fixed in Windows PowerShell 5.1
++@rem  - DownloadFile requires the directories in the destination file's path to exist
++set download_and_extract_ps1= ^
++Set-StrictMode -Version 3.0; ^
++$ErrorActionPreference = 'Stop'; ^
++ ^
++$temp_file = $null; ^
++$createdNew = $false; ^
++$lock = New-Object System.Threading.Mutex($true, ('Global\kotlin-cli-bootstrap.' + '%target_dir%'.GetHashCode().ToString()), [ref]$createdNew); ^
++if (-not $createdNew) { ^
++    Write-Host 'Another Kotlin CLI instance is bootstrapping. Waiting for our turn...'; ^
++    [void]$lock.WaitOne(); ^
++} ^
++ ^
++try { ^
++    if ((Get-Content '%flag_file%' -ErrorAction Ignore) -ne '%sha%') { ^
++        if (('%show_banner_on_cache_miss%' -eq 'true') -and [string]::IsNullOrEmpty('%KOTLIN_CLI_NO_WELCOME_BANNER%')) { ^
++            Write-Host \"$env:welcome_banner\"; ^
++            Write-Host ''; ^
++            Write-Host 'This is the first run of the Kotlin CLI v%kotlin_cli_version%, so we need to download the Kotlin Toolchain.'; ^
++            Write-Host 'Please give us a few seconds now, subsequent runs will be faster.'; ^
++            Write-Host ''; ^
++        } ^
++        $temp_file = '%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR%\' + [System.IO.Path]::GetRandomFileName(); ^
++        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; ^
++        Write-Host 'Downloading %moniker%...'; ^
++        [void](New-Item '%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR%' -ItemType Directory -Force); ^
++        if (Get-Command curl.exe -errorAction SilentlyContinue) { ^
++            curl.exe -L --silent --show-error --fail --output $temp_file '%url%'; ^
++        } else { ^
++            (New-Object Net.WebClient).DownloadFile('%url%', $temp_file); ^
++        } ^
++ ^
++        $actualSha = (Get-FileHash -Algorithm SHA%sha_size% -Path $temp_file).Hash.ToString(); ^
++        if ($actualSha -ne '%sha%') { ^
++            $writeErr = if ($Host.Name -eq 'ConsoleHost') { [Console]::Error.WriteLine } else { $host.ui.WriteErrorLine } ^
++            $writeErr.Invoke(\"ERROR: Checksum mismatch for $temp_file (downloaded from %url%): expected checksum %sha% but got $actualSha\"); ^
++            exit 1; ^
++        } ^
++ ^
++        if (Test-Path '%target_dir%') { ^
++            Remove-Item '%target_dir%' -Recurse; ^
++        } ^
++        try { ^
++            if ($temp_file -like '*.zip') { ^
++                Add-Type -A 'System.IO.Compression.FileSystem'; ^
++                [IO.Compression.ZipFile]::ExtractToDirectory($temp_file, '%target_dir%'); ^
++            } else { ^
++                [void](New-Item '%target_dir%' -ItemType Directory -Force); ^
++                tar -xzf $temp_file -C '%target_dir%'; ^
++                if ($LASTEXITCODE -ne 0) { ^
++                    throw \"tar failed to extract %moniker% (exit code $LASTEXITCODE)\"; ^
++                } ^
++            } ^
++        } catch { ^
++            Remove-Item '%flag_file%' -Force -ErrorAction Ignore; ^
++            Remove-Item '%target_dir%' -Recurse -Force -ErrorAction Ignore; ^
++            throw; ^
++        } ^
++ ^
++        Set-Content '%flag_file%' -Value '%sha%'; ^
++        Write-Host 'Download complete.'; ^
++        Write-Host ''; ^
++    } ^
++} ^
++finally { ^
++    if ($temp_file) { ^
++        Remove-Item $temp_file -Force -ErrorAction Ignore; ^
++    } ^
++    $lock.ReleaseMutex(); ^
++}
++
++rem We reset the PSModulePath in case this batch script was called from PowerShell Core
++rem See https://github.com/PowerShell/PowerShell/issues/18108#issuecomment-2269703022
++set PSModulePath=
++set powershell=%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe
++"%powershell%" -NonInteractive -NoProfile -NoLogo -Command %download_and_extract_ps1%
++if errorlevel 1 exit /b 1
++exit /b 0
++
++:find_project_context
++@rem Search upwards for a kotlin.bat wrapper file and/or project.yaml
++@rem Sets wrapper_script to the found wrapper path, or empty string if not found.
++@rem Returns errorlevel 0 if a valid wrapper (that is not this script itself) was found, 1 otherwise.
++set wrapper_script=
++set this_script=%~f0
++set project_dir=%CD%
++
++:find_loop
++set wrapper_candidate=%project_dir%\kotlin.bat
++if "%this_script%"=="%wrapper_candidate%" (
++    @rem Found itself (local wrapper case), no need to update any version or search further.
++    exit /b 1
++)
++
++if exist "%wrapper_candidate%" (
++    @rem Found a wrapper — check that a project context exists alongside it
++    if exist "%project_dir%\project.yaml" (
++        set wrapper_script=%wrapper_candidate%
++        exit /b 0
++    )
++    if exist "%project_dir%\module.yaml" (
++        set wrapper_script=%wrapper_candidate%
++        exit /b 0
++    )
++    echo WARNING: Found wrapper script '%wrapper_candidate%', but no project.yaml or module.yaml near it. Skipping. >&2
++    @rem Continue the search
++    goto :find_next_parent
++)
++
++if exist "%project_dir%\project.yaml" (
++    @rem Found project.yaml but no wrapper alongside it
++    echo WARNING: Found a project.yaml in '%project_dir%', but the wrapper script is missing; using Kotlin Toolchain v%kotlin_cli_version%. >&2
++    exit /b 1
++)
++
++:find_next_parent
++@rem Move to parent directory
++for %%P in ("%project_dir%\..") do set parent_dir=%%~fP
++if "%parent_dir%"=="%project_dir%" (
++    @rem Reached the root, stop searching
++    exit /b 1
++)
++set project_dir=%parent_dir%
++goto :find_loop
++
++:parse_project_context
++@rem Parse kotlin_cli_version and kotlin_cli_sha256 from the found wrapper_script without executing it.
++set parsed_kotlin_cli_version=
++set parsed_kotlin_cli_sha256=
++
++for /f "tokens=2 delims==" %%A in ('findstr /r /c:"^set kotlin_cli_version=[A-Za-z0-9._+-]*$" "%wrapper_script%"') do (
++    if not defined parsed_kotlin_cli_version set parsed_kotlin_cli_version=%%A
++)
++for /f "tokens=2 delims==" %%A in ('findstr /r /c:"^set kotlin_cli_sha256=[0-9a-fA-F]*$" "%wrapper_script%"') do (
++    if not defined parsed_kotlin_cli_sha256 set parsed_kotlin_cli_sha256=%%A
++)
++
++if not defined parsed_kotlin_cli_version (
++    echo ERROR: Suspicious local wrapper script: failed to detect the distribution version in '%wrapper_script%' >&2
++    exit /b 1
++)
++if not defined parsed_kotlin_cli_sha256 (
++    echo ERROR: Suspicious local wrapper script: failed to detect the distribution checksum in '%wrapper_script%' >&2
++    exit /b 1
++)
++
++@rem Overwrite builtin values and proceed
++set kotlin_cli_version=%parsed_kotlin_cli_version%
++set kotlin_cli_sha256=%parsed_kotlin_cli_sha256%
++exit /b 0
++
++:fail
++echo ERROR: Kotlin CLI bootstrap failed, see errors above
++exit /b 1
++
++:after_function_declarations
++
++REM ********** Project-local version detection **********
++
++if defined KOTLIN_CLI_WRAPPER_ALWAYS_USE_INTRINSIC_VERSION goto :after_local_version_detection
++
++call :find_project_context
++if errorlevel 1 goto :after_local_version_detection
++call :parse_project_context
++if errorlevel 1 goto fail
++:after_local_version_detection
++
++REM ********** Provision the Kotlin Toolchain distribution **********
++
++set kotlin_cli_url=%KOTLIN_CLI_DOWNLOAD_ROOT%/org/jetbrains/kotlin/kotlin-cli/%kotlin_cli_version%/kotlin-cli-%kotlin_cli_version%-dist.tgz
++set kotlin_cli_target_dir=%KOTLIN_CLI_BOOTSTRAP_CACHE_DIR%\kotlin-cli-%kotlin_cli_version%
++call :download_and_extract "Kotlin Toolchain distribution v%kotlin_cli_version%" "%kotlin_cli_url%" "%kotlin_cli_target_dir%" "%kotlin_cli_sha256%" "256" "true"
++if errorlevel 1 goto fail
++
++REM ********** Launch the Kotlin CLI **********
++
++rem Determine the correct busybox binary based on architecture
++if "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
++    set busybox_exe=%kotlin_cli_target_dir%\bin\busybox64a.exe
++) else if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
++    set busybox_exe=%kotlin_cli_target_dir%\bin\busybox64u.exe
++) else (
++    echo Unsupported architecture %PROCESSOR_ARCHITECTURE% >&2
++    goto fail
++)
++
++rem We use busybox here because it doesn't reinterpret the user-passed command-line arguments (that we pass via %*).
++rem Also this way we can use the unified launcher script (.sh)
++set KOTLIN_CLI_WRAPPER_PATH=%~f0
++
++rem The '& call' after the app run is to avoid the "Terminate batch job (Y/N)?" prompt
++"%busybox_exe%" sh "%kotlin_cli_target_dir%\bin\launcher.sh" %* & call :exitWithErrorLevel
++
++:exitWithErrorLevel
++@rem We use "%COMSPEC%" /d /c exit so that and/or operators work properly when calling kotlin.bat directly from a script
++@rem without the `call` command. With a plain `exit /B %ERRORLEVEL%`, using `kotlin.bat && echo success` would print
++@rem 'success' even in case of failure. Consumers would have to use `call kotlin.bat && echo success` for it to work.`
++"%COMSPEC%" /d /c exit %ERRORLEVEL%
+--- a/android-app/module.yaml
++++ b/android-app/module.yaml
+@@ -26,7 +26,7 @@
+     namespace: studio.mekate.mobi
+     applicationId: studio.mekate.mobi
+     minSdk: 36
+-    compileSdk: 36
++    compileSdk: 37
+     targetSdk: 36
+     signing:
+       enabled: true
+--- a/maintenance-kotlin-toolchains.json
++++ b/maintenance-kotlin-toolchains.json
+@@ -1,10 +1,8 @@
+ {
+   "schema": 1,
+-  "reviewed_on": "2026-10-03",
+-  "baseline": "0.12.2",
+-  "candidates": [
+-    "0.13.0"
+-  ],
++  "reviewed_on": "2026-10-04",
++  "baseline": "0.13.0",
++  "candidates": [],
+   "versions": {
+     "0.11.1": {
+       "release_url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.11.1",
+--- a/maintenance-compatibility.json
++++ b/maintenance-compatibility.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": 1,
+   "reviewed_at": "2026-10-03T11:10:06.990536+00:00",
+-  "toolchain": "0.12.2",
++  "toolchain": "0.13.0",
+   "baseline": {
+     "kotlin": "2.4.20",
+     "metro": "1.4.5",
+--- a/maintenance-plugin-resolution.json
++++ b/maintenance-plugin-resolution.json
+@@ -1,6 +1,6 @@
+ {
+   "schema": 1,
+-  "toolchain": "0.12.2",
++  "toolchain": "0.13.0",
+   "compose": {
+     "group": "org.jetbrains.kotlin",
+     "name": "kotlin-compose-compiler-plugin-embeddable"
+@@ -11,35 +11,23 @@
+   },
+   "sources": [
+     {
+-      "id": "mapping",
+-      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/frontend/schema/src/org/jetbrains/amper/frontend/kotlin/CompilerPluginConfig.kt",
+-      "sha256": "ac74722ff980ffa76f76c89ae9376ffd6cdfa60eb907bd424d2b6bd153143730",
+-      "retrieved_at": "2026-10-03T09:30:09.735429+00:00"
++      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
++      "sha256": "af6d92c7d659ffab501b3ec6dfe78fc6d8b08390246efdff54918e93fb9ef3b2",
++      "retrieved_at": "2026-10-03T18:24:44.303003+00:00",
++      "id": "classpath"
+     },
+     {
+-      "id": "latest",
+-      "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/latest",
+-      "sha256": "9c88125b3ebd84e853da6086a27fda5f86ecc5ed5d054a501eb445155d9eebf4",
+-      "retrieved_at": "2026-10-03T09:30:10.134420+00:00"
+-    },
+-    {
+-      "id": "gradle-sha",
+-      "url": "https://services.gradle.org/distributions/gradle-9.6.1-bin.zip.sha256",
+-      "sha256": "896bed90c4c17e0a4c779683aeba2a63f3df10cedc31244e391850feee597925",
+-      "retrieved_at": "2026-10-03T09:30:10.522587+00:00"
+-    },
+-    {
+-      "path": "sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
+-      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
+-      "sha256": "e05e05e7eaf728ccd2d43d3cdc9acef525793e8e8ada155786e1c55e37eb1f2f",
+-      "retrieved_at": "2026-10-03T04:34:04.686771+00:00"
++      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/frontend/schema/src/org/jetbrains/amper/frontend/kotlin/CompilerPluginConfig.kt",
++      "sha256": "be05f876194e1e4103f1d942ebb5138865f5585b9d5f32807902f1e08fe5d58c",
++      "retrieved_at": "2026-10-03T18:24:44.491021+00:00",
++      "id": "mapping"
+     }
+   ],
+   "automatic_adoption": false,
+   "candidate_mappings": {
+-    "0.13.0": {
++    "0.12.2": {
+       "schema": 1,
+-      "toolchain": "0.13.0",
++      "toolchain": "0.12.2",
+       "compose": {
+         "group": "org.jetbrains.kotlin",
+         "name": "kotlin-compose-compiler-plugin-embeddable"
+@@ -50,16 +38,28 @@
+       },
+       "sources": [
+         {
+-          "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
+-          "sha256": "af6d92c7d659ffab501b3ec6dfe78fc6d8b08390246efdff54918e93fb9ef3b2",
+-          "retrieved_at": "2026-10-03T18:24:44.303003+00:00",
+-          "id": "classpath"
++          "id": "mapping",
++          "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/frontend/schema/src/org/jetbrains/amper/frontend/kotlin/CompilerPluginConfig.kt",
++          "sha256": "ac74722ff980ffa76f76c89ae9376ffd6cdfa60eb907bd424d2b6bd153143730",
++          "retrieved_at": "2026-10-03T09:30:09.735429+00:00"
+         },
+         {
+-          "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/frontend/schema/src/org/jetbrains/amper/frontend/kotlin/CompilerPluginConfig.kt",
+-          "sha256": "be05f876194e1e4103f1d942ebb5138865f5585b9d5f32807902f1e08fe5d58c",
+-          "retrieved_at": "2026-10-03T18:24:44.491021+00:00",
+-          "id": "mapping"
++          "id": "latest",
++          "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/latest",
++          "sha256": "9c88125b3ebd84e853da6086a27fda5f86ecc5ed5d054a501eb445155d9eebf4",
++          "retrieved_at": "2026-10-03T09:30:10.134420+00:00"
++        },
++        {
++          "id": "gradle-sha",
++          "url": "https://services.gradle.org/distributions/gradle-9.6.1-bin.zip.sha256",
++          "sha256": "896bed90c4c17e0a4c779683aeba2a63f3df10cedc31244e391850feee597925",
++          "retrieved_at": "2026-10-03T09:30:10.522587+00:00"
++        },
++        {
++          "path": "sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
++          "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
++          "sha256": "e05e05e7eaf728ccd2d43d3cdc9acef525793e8e8ada155786e1c55e37eb1f2f",
++          "retrieved_at": "2026-10-03T04:34:04.686771+00:00"
+         }
+       ],
+       "automatic_adoption": false
+--- a/scripts/maintenance/adapters/compatibility.rb
++++ b/scripts/maintenance/adapters/compatibility.rb
+@@ -19,7 +19,7 @@
+       @root = root
+       raise Failure, 'Experimental mode must be explicit boolean' unless [true, false].include?(experimental)
+       @config = JSON.parse(File.read(File.join(root, CONFIG)))
+-      valid = @config['schema'] == 1 && @config['automatic_adoption'] == false && @config['toolchain'] == '0.12.2' &&
++      valid = @config['schema'] == 1 && @config['automatic_adoption'] == false && %w[0.12.2 0.13.0].include?(@config['toolchain']) &&
+               @config['minimum_release_age_days'].is_a?(Integer) && @config['minimum_release_age_days'] >= 7
+       raise Failure, 'Unsupported compatibility policy' unless valid
+       raise Failure, 'Compatibility review timestamp is in the future' if Time.iso8601(@config.fetch('reviewed_at')) > now
+--- a/README.md
++++ b/README.md
+@@ -29,14 +29,18 @@
+ 
+ ## Clean-Clone Quickstart
+ 
+-The reviewed baseline is Kotlin Toolchain 0.12.2. iOS development requires an
++The reviewed baseline is Kotlin Toolchain 0.13.0. iOS development requires an
+ Apple Silicon Mac; shared Kotlin and the bridge target `iosArm64` devices and
+ `iosSimulatorArm64` simulators. Intel iOS simulators are outside Mobi's support
+-policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile/target SDK
+-remain API 36. These floors follow a configurable policy of one stable major
++policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile SDK is API 37; target SDK
++remains API 36. These floors follow a configurable policy of one stable major
+ behind the latest reviewed stable release. See the
+ [mobile support workflow](docs/maintenance/mobile-support-policy.md) and
+ [adoption evidence](docs/maintenance/support-policy-validation.md).
++
++Install Android platform API 37 and build tools 37.0.0, and review/accept the
++Android SDK license explicitly before running Android jobs. See the
++[local SDK setup](docs/reference/local-development.md#android-sdk-provisioning).
+ 
+ Install Ruby dependencies:
+ 
+@@ -173,7 +177,7 @@
+ The retained bridge uses Kotlin 2.4.20, Metro 1.4.5 and SKIE 0.10.15; bridge
+ Compose remains 1.9.0. Renovate ceilings are bounded at Metro <=1.4.5 and bridge
+ Kotlin <=2.4.20 after the [reviewed adoption](docs/maintenance/bridge-adoption-review.md).
+-Toolchain 0.12.2 supplies Kotlin 2.4.10 independently. The
++Toolchain 0.13.0 supplies Kotlin 2.4.20 and Compose 1.12.1 independently. The
+ [compatibility assessment](docs/maintenance/kotlin-compatibility.md) keeps this
+ upgrade separate from proving an equivalent direct Kotlin Toolchain path.
+ The existing scheduled compatibility workflow uses the repository-owned
+--- a/docs/reference/local-development.md
++++ b/docs/reference/local-development.md
+@@ -18,6 +18,25 @@
+ ```bash
+ export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
+ ```
++
++## Android SDK provisioning
++
++The pinned Toolchain 0.13.0 and Compose 1.12.1 require application compile SDK
++37. Android minimum and target remain API 36. With Android SDK command-line
++tools available, point `ANDROID_HOME` to a writable SDK directory and run:
++
++```bash
++sdkmanager --sdk_root="$ANDROID_HOME" --licenses
++sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-37.0" "build-tools;37.0.0" "platform-tools"
++```
++
++Review the license terms and accept them explicitly. These commands are setup
++steps; repository smoke jobs do not grant license acceptance. CI must use an SDK
++whose terms have been accepted by its operator; do not infer that missing
++packages or licenses exist on a cold runner. The Toolchain can provision missing
++packages in a writable SDK after prerequisites are met. Verify with the ordinary
++Android smoke jobs and retain cold-run receipts before claiming hosted parity.
++A private SDK with copied host licenses is insufficient empty-host evidence.
+ 
+ ## IDE flow without Gradle sync
+ 
+--- a/scripts/maintenance/test_compatibility.rb
++++ b/scripts/maintenance/test_compatibility.rb
+@@ -49,6 +49,8 @@
+ 
+   test('compile SDK remediation is isolated and preserves minimum target and namespace declarations') do
+     fixture do |root|
++      sdk_file = File.join(root, "android-app/module.yaml")
++      File.write(sdk_file, File.read(sdk_file).sub("compileSdk: 37", "compileSdk: 36"))
+       source = Maintenance::Source.new(root)
+       edits = Maintenance::UpstreamRemediationRehearsal.sdk_edits(source, 37)
+       assert(edits.map { |e| e['path'] } == ['android-app/module.yaml'])
+@@ -186,7 +188,7 @@
+   test('unknown profile and wrong Toolchain refuse assessment') do
+     reject(/Unknown compatibility profile/) { Maintenance::Compatibility.new(ROOT).edits(Maintenance::Source.new(ROOT), 'guess') }
+     fixture do |root|
+-      file = File.join(root, 'kotlin'); File.write(file, File.read(file).sub('kotlin_cli_version=0.12.2', 'kotlin_cli_version=0.12.1'))
++      file = File.join(root, 'kotlin'); File.write(file, File.read(file).sub(/^kotlin_cli_version=.+$/, 'kotlin_cli_version=0.12.1'))
+       reject(/Toolchain differs/) { Maintenance::Compatibility.new(root).assessment }
+     end
+   end
+--- a/scripts/maintenance/test_support_policy.rb
++++ b/scripts/maintenance/test_support_policy.rb
+@@ -33,7 +33,7 @@
+       end
+       # Keep this historical mismatch independent of adopted current declarations.
+       android = File.join(root, adapter::ANDROID)
+-      File.write(android, File.read(android).sub(/^    minSdk: \d+$/, '    minSdk: 23'))
++      File.write(android, File.read(android).sub(/^    minSdk: \d+$/, '    minSdk: 23').sub(/^    compileSdk: \d+$/, '    compileSdk: 36'))
+       package = File.join(root, adapter::PACKAGE)
+       File.write(package, File.read(package).sub(/\.iOS\((?:\.v\d+|"[\d.]+")\)/, '.iOS(.v16)'))
+       project = File.join(root, adapter::XCODE)
+--- a/scripts/maintenance/test_plugin_attribution.rb
++++ b/scripts/maintenance/test_plugin_attribution.rb
+@@ -32,7 +32,8 @@
+     input, = fixture
+     config = input['config']
+     reject { Maintenance::PluginAttribution.phase_mapping(config, '0.13.0') }
+-    candidate = JSON.parse(File.read(File.expand_path('../../maintenance-plugin-resolution.json', __dir__))).fetch('candidate_mappings').fetch('0.13.0')
++    reviewed = JSON.parse(File.read(File.expand_path('../../maintenance-plugin-resolution.json', __dir__)))
++    candidate = Maintenance::PluginAttribution.phase_mapping(reviewed, '0.13.0')
+     config['gradle'] = candidate['gradle']
+     config['candidate_mappings'] = { '0.13.0' => candidate }
+     selected = Maintenance::PluginAttribution.phase_mapping(config, '0.13.0')

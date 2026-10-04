@@ -52,6 +52,9 @@ module WatchTest
     fixture do |root|
       source = Maintenance::Source.new(root)
       first, output = run_watch(root)
+      observation = first.dig('snapshot', 'observation', 'capability_observations').first
+      assert(observation['state'] == 'documented_not_rehearsed' && observation['missing_capabilities'].include?('swiftpm_execution'))
+      assert(File.read(File.join(output, 'summary.md')).include?('swiftpm_objective_c_visible_api_import_into_kotlin'))
       assert(first['notification']['notify'] && first.dig('notification', 'continuity') == 'initial')
       watcher = Maintenance::CompatibilityWatch.new(root, previous: File.join(output, 'snapshot.json'), fetcher: Fetcher.new([release]), probe: ->(_source) { probe('b' * 32) })
       second = watcher.run

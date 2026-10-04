@@ -1,0 +1,1456 @@
+diff --git a/.github/workflows/mobile-ci.yml b/.github/workflows/mobile-ci.yml
+index 3e755fc7dd4fb46578cd3a5d31a8cbb426c03d33..775e822110b9f0ff26dc732c4a3eb1761dc54965 100644
+--- a/.github/workflows/mobile-ci.yml
++++ b/.github/workflows/mobile-ci.yml
+@@ -141,7 +141,7 @@ jobs:
+     timeout-minutes: 45
+     env:
+       IOS_TEST_PLAN: PullRequest
+-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
++      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
+     steps:
+       - uses: actions/checkout@v7
+       - uses: actions/cache@v6
+@@ -208,7 +208,7 @@ jobs:
+     runs-on: macos-26
+     timeout-minutes: 45
+     env:
+-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
++      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
+     steps:
+       - uses: actions/checkout@v7
+       - uses: actions/cache@v6
+diff --git a/.github/workflows/mobile-release.yml b/.github/workflows/mobile-release.yml
+index d2eb78394540b9601f0648a7604a5866bcbfa8e1..b8a953c5e442ca36b115fbc44ba22975ef68a0bb 100644
+--- a/.github/workflows/mobile-release.yml
++++ b/.github/workflows/mobile-release.yml
+@@ -90,7 +90,7 @@ jobs:
+     runs-on: macos-26
+     environment: ios-release
+     env:
+-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
++      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
+       IOS_BUNDLE_IDENTIFIER: ${{ secrets.IOS_BUNDLE_IDENTIFIER }}
+       IOS_DEVELOPMENT_TEAM: ${{ secrets.IOS_DEVELOPMENT_TEAM }}
+       IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}
+@@ -119,7 +119,7 @@ jobs:
+     runs-on: macos-26
+     environment: testflight
+     env:
+-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
++      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
+       APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+       APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+diff --git a/.github/workflows/nightly-mobile-candidate.yml b/.github/workflows/nightly-mobile-candidate.yml
+index 36ad3d9c5d1f91bfba15465ff20918b428e0bd05..d31187fefe33b09de5db9bfa104fd5f1e6693c28 100644
+--- a/.github/workflows/nightly-mobile-candidate.yml
++++ b/.github/workflows/nightly-mobile-candidate.yml
+@@ -60,7 +60,7 @@ jobs:
+     timeout-minutes: 60
+     env:
+       IOS_TEST_PLAN: Nightly
+-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
++      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
+     steps:
+       - uses: actions/checkout@v7
+       - uses: actions/cache@v6
+@@ -130,7 +130,7 @@ jobs:
+     runs-on: macos-26
+     timeout-minutes: 60
+     env:
+-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
++      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
+     steps:
+       - uses: actions/checkout@v7
+       - uses: actions/cache@v6
+diff --git a/README.md b/README.md
+index 4c57c491441f637e6fc7ad7d127d0ef2f62defd9..dd04b0b8151c04eff0c6f15aa8166b7cd4932929 100644
+--- a/README.md
++++ b/README.md
+@@ -93,8 +93,12 @@ entry points:
+ - [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
+ - [Quality And Dependency Maintenance Audit](docs/maintenance/README.md)
+ 
+-The Gradle bridge material is intentionally documented as a transitional
+-constraint in the current repository shape, not as the long-term ideal.
++This direct-content candidate uses Kotlin Toolchain for iOS development, tests
++and unsigned builds, with explicit typed Swift projections. Gradle/unknown
++iOS builder overrides refuse; rollback restores complete content first.
++Credentialed iOS archive/export/TestFlight lanes are held pending separate
++signed-delivery evidence and authorization. The retained bridge files are
++preserved for content rollback. See the [proposed decision](docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+ 
+ ## Repository Shape
+ 
+@@ -183,8 +187,9 @@ upgrade separate from proving an equivalent direct Kotlin Toolchain path.
+ The existing scheduled compatibility workflow uses the repository-owned
+ [isolated watch](docs/maintenance/compatibility-watch.md). It records evidence
+ without changing production dependencies or granting adoption permission.
+-Bridge retirement still requires native app/test, interop, onboarding and
+-release evidence with the bridge unavailable.
++Physical bridge deletion still requires its own review after default integration
++and applicable native, interop, onboarding and release gates. Preserved bridge
++pins remain rollback inputs; they are not the active iOS builder in this candidate.
+ 
+ Install the pinned discovery tools once, then record a local inventory:
+ 
+diff --git a/docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md b/docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..dfd46baae99b63ef5c09c8a7f8ab121bec308ee8
+--- /dev/null
++++ b/docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md
+@@ -0,0 +1,70 @@
++# ADR 0008: Explicit iOS projections and direct development builds
++
++Status: Proposed
++
++Date: 2026-10-04
++
++## Context
++
++The adopted source at `349e07e` still uses the Gradle bridge and SKIE. Paired,
++bridge-unavailable interop and operational assessments support preparing a
++direct-content candidate. Those assessments do not approve the production API,
++default switch, credentialed delivery or bridge deletion.
++
++## Proposed decision
++
++Shared feature modules keep their sealed states, concrete payloads and typed
++failure reasons. `shared-di` exposes six visitor protocols and exhaustive Kotlin
++dispatch over 27 cases beside its explicit factories. Native Swift adapters
++produce six Swift projection enums through `mobiProjection(of:)`; native
++consumers switch exhaustively. A new Kotlin case requires corresponding visitor,
++Swift enum/adapter and native consumer coverage. Keep Circuit and TCA types in
++their platform shells. Keep the facade in the measured common source location
++for this first transition.
++
++Preserve async behavior during the build migration. Kotlin services rethrow
++cancellation. Home's Swift catch-all produces `Unexpected`; Nearby Map's
++catch-all returns its input state. A controlled Kotlin continuation remains
++pending after Swift task cancellation until explicit completion. The Home and
++controlled-continuation observations were executed in paired fixtures; Nearby's
++fallback and the absence of reducer cancellation IDs are source review facts.
++Propagation, stale-response protection and deallocation need separate changes
++and evidence. Neither builder promises automatic cancellation propagation.
++
++The proposed content uses the Toolchain-managed Xcode integration phase with a
++separate repo-owned selector preflight. All development, test and unsigned
++callers default to Kotlin and reject Gradle/unknown overrides. Xcode retains its
++native app/test targets, Swift packages and TCA ownership. Existing GitHub
++variable overrides remain explicit and must be reviewed before rollout.
++
++Credentialed iOS archive/export/TestFlight entry points refuse before signing
++or API-key handling. Activating them requires separate signed/export evidence
++and risk authorization. Raw unsigned archive assessment remains available.
++This hold is a proposed breaking scope decision, not an existing release policy.
++
++Keep every bridge and catalog byte for rollback. Returning to Gradle requires
++restoring the entire reviewed content patch, cleaning only owned generated
++products and revalidating restored consumers. An environment variable alone
++cannot undo the projection and integration changes.
++
++## Consequences and approval
++
++Hand-maintained visitors make the export boundary explicit and compiler checked,
++but add work when feature states grow. Regular Kotlin export enum spellings are
++adapted explicitly in Swift. Earlier generic/identity fixtures support only
++their measured cases; they are not a universal lifetime guarantee.
++
++The concrete patch needs exact local validation and maintainer approval of API,
++cancellation preservation and unsigned development scope. Refresh source/risk
++bindings before adoption without extending the existing expiry. Collect hosted
++integration at the final approved revision. Physical/exact-floor execution,
++broader Compose/resource/onboarding coverage and signed delivery remain distinct
++gates. Physical bridge deletion needs its own later decision.
++
++Until approved and integrated, ADRs 0003 and 0006 remain accepted and production
++retains Gradle/SKIE. Record adoption status separately when that decision occurs.
++
++## Evidence outside this draft
++
++- Source-bound interop behavior assessment at adoption revision `349e07e`.
++- Local and hosted operational pairs, including hosted run `37203086765`.
+diff --git a/docs/adr/README.md b/docs/adr/README.md
+index 2d57f65db77f65e099185edaa20778c8021db331..53bb5008bb1032d2a30cfecae40b2f2757da9454 100644
+--- a/docs/adr/README.md
++++ b/docs/adr/README.md
+@@ -15,6 +15,7 @@ Current ADRs:
+ Proposed, without changing the accepted decisions:
+ 
+ - [ADR 0007: Direct iOS transition requires measured capability evidence](0007-direct-ios-transition-requires-capability-evidence.md)
++- [ADR 0008: Explicit iOS projections and direct development builds](0008-explicit-ios-projections-and-direct-development-builds.md)
+ 
+ Use a new ADR when a decision changes one of these:
+ 
+diff --git a/docs/reference/how-to-add-a-feature.md b/docs/reference/how-to-add-a-feature.md
+index acae01b857eb9305de44571b6d324fab4acd1f37..f35004a49f7e40bf781587b837acc97341db9518 100644
+--- a/docs/reference/how-to-add-a-feature.md
++++ b/docs/reference/how-to-add-a-feature.md
+@@ -290,6 +290,15 @@ iOS owns:
+ 
+ Shared Kotlin should feed feature behavior, but should not expose TCA types.
+ 
++For direct iOS content, expose sealed states/reasons through typed visitors in
++`shared-di/src/MobiInteropProjection.kt` and native Swift enums/adapters in
++`ios-app/src/MobiInteropProjection.swift`. Use `mobiProjection(of:)` at native
++consumer switches. A new case needs an exhaustive Kotlin dispatch branch,
++protocol method, Swift enum/adapter and native consumer tests. Keep concrete
++payloads, typed failure reasons and explicit feature factories; do not hide a
++missing case behind a string tag, `else` or native default branch. See the
++[proposed decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
++
+ ### 6. Decide whether shared Compose UI is worth it
+ 
+ Only add `shared-ui-*` when the feature benefits from a reusable shared screen.
+diff --git a/docs/reference/ios-gradle-bridge.md b/docs/reference/ios-gradle-bridge.md
+index d966b2bf8e5d09b8cbe843b6961ad4bd5d14acc2..e49e6413a2fdd5e6326f12cd09800db319d4e41f 100644
+--- a/docs/reference/ios-gradle-bridge.md
++++ b/docs/reference/ios-gradle-bridge.md
+@@ -1,5 +1,15 @@
+ # iOS Gradle Bridge Migration
+ 
++This is the retained-integration reference and historical migration guide.
++In this direct-content candidate, development/test/unsigned iOS callers use
++Kotlin Toolchain and explicit typed projections. The examples below apply to
++restored retained content, not to selecting Gradle on the new facade. Rollback
++requires restoring the complete reviewed source patch and cleaning owned build
++products before rebuilding. Bridge files remain preserved; credentialed iOS
++delivery is held pending separate evidence and authorization. See the
++[proposed decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
++
++
+ For the 2026-09-19 source audit and proposed upgrade/retirement gates, read the
+ [Kotlin compatibility matrix](../maintenance/kotlin-compatibility.md). It
+ revisits the target-count explanation, current Swift export capabilities and
+diff --git a/docs/reference/local-development.md b/docs/reference/local-development.md
+index 5fb2de7912439ee30a783e4567af404753177225..5a7871d4353dd95e1ca4092afcff2aa9546846e1 100644
+--- a/docs/reference/local-development.md
++++ b/docs/reference/local-development.md
+@@ -92,30 +92,33 @@ writes its output to `build/logs/android-emulator-<avd-name>.log`.
+ in Xcode, where you can use the standard iOS run/debug loop against a simulator
+ or device.
+ 
+-By default, the iOS project builds Kotlin through the temporary Gradle bridge.
+-To override the cache location explicitly, set:
+-
+-```bash
+-export KOTLIN_IOS_BUILDER=gradle
+-export GRADLE_USER_HOME="$PWD/.gradle-user-home"
+-```
+-
+-Then run the same local entry points, for example:
++This direct-content candidate defaults to Kotlin Toolchain for iOS development,
++tests and unsigned builds. Use the same repo-owned smoke jobs as CI:
+ 
+ ```bash
++export KOTLIN_IOS_BUILDER=kotlin
+ ./scripts/ci/run_job.sh ios-build-debug
+-bundle exec fastlane ios buildRelease
++./scripts/ci/run_job.sh ios-test
++./scripts/ci/run_job.sh ios-build-release
+ ```
+ 
+-That keeps the local flow aligned with the CI and TestFlight path while the
+-bridge is in use.
++Xcode runs a repo-owned builder preflight before its managed Kotlin phase.
++Gradle and unknown selectors refuse; remove a stale Gradle override to build
++direct content. To return to the retained integration, restore the complete
++reviewed content patch, clean only owned generated products and revalidate the
++restored native consumers before selecting Gradle. Preserved bridge files alone
++do not make this candidate interchangeable with SKIE content.
++
++Credentialed iOS archive/export/TestFlight lanes are held before signing or API
++key processing pending separate signed-delivery evidence and authorization.
++The simulator Release smoke job remains unsigned; raw unsigned archive
++assessment is a separate capability check. See the
++[proposed decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+ 
+-`KOTLIN_IOS_BUILDER=kotlin` is kept as an experimental direct integration path,
+-but it is not the default: equivalent native app/test, SKIE-backed sealed-state,
+-clean-clone and packaging behavior has not been proven with the bridge unavailable.
+ The reviewed Toolchain 0.13.0 targets Apple Silicon iOS simulators and ARM devices.
+-A separate native test target is not itself a demonstrated direct-path blocker.
+-See the [compatibility matrix](../maintenance/kotlin-compatibility.md) and
++Physical/exact-floor execution, broader Compose/resources, empty-host onboarding
++and signed/export delivery remain distinct evidence gates. See the
++[compatibility matrix](../maintenance/kotlin-compatibility.md) and
+ [minimum-OS policy](../maintenance/mobile-support-policy.md).
+ 
+ `just doctor` checks the expected local toolchain and shows whether an Android
+diff --git a/docs/reference/mobile-architecture.md b/docs/reference/mobile-architecture.md
+index 95c1f097162e592bc68a7743f42970cb53035902..d0454d185527f1e90ee1a1ee75c0fdf20821adc6 100644
+--- a/docs/reference/mobile-architecture.md
++++ b/docs/reference/mobile-architecture.md
+@@ -115,7 +115,7 @@ for this toolchain.
+ - TCA for reducers, stores, and navigation state
+ - Explicit dependency injection into stores and dependencies
+ - A small app composition root instead of a separate Swift DI container
+-- SKIE on the Gradle bridge for shared sealed-state ergonomics in Swift
++- Explicit typed Kotlin visitors and native Swift projections for shared sealed state
+ 
+ Metro powers the shared Kotlin graph, but Swift should still depend on small
+ KMP facades or adapters instead of reaching into a Kotlin DI container
+@@ -144,7 +144,7 @@ shared Kotlin `HomeFeatureService` and its sealed async state into SwiftUI
+ state.
+ 
+ One implementation detail matters for automation: Xcode GUI builds work with
+-the current TCA package setup, and the Gradle bridge CLI path is stable when two
++the current TCA package setup. The retained bridge assessment established two
+ conditions are met:
+ 
+ - `SWIFT_ENABLE_EXPLICIT_MODULES=NO` is passed to `xcodebuild`
+@@ -156,22 +156,29 @@ under `Debug-iphonesimulator` instead of the macOS host products directory,
+ which broke `@Reducer` and `@ObservableState` expansion from the CLI. The
+ repo's iOS CI and Fastlane entrypoints therefore disable explicit Swift modules
+ by default while also letting Xcode choose the simulator architectures itself.
+-The experimental direct Kotlin Toolchain iOS path is not the default yet.
+-Mobi uses Toolchain 0.13.0 with ARM device/simulator targets and keeps its Xcode
+-app and native test targets. The versioned integration selects one marked app
+-target; that does not establish a prohibition on a separate test target.
+-Mobi still relies on SKIE in the Gradle bridge for sealed-state Swift ergonomics.
+-Equivalent direct-path native tests, interop, clean-clone and release packaging
+-remain unproven. See the [compatibility matrix](../maintenance/kotlin-compatibility.md)
+-and [minimum-OS policy](../maintenance/mobile-support-policy.md).
+-There is one tooling split to keep in mind: the low-level CI wrapper uses the
+-workspace path for raw `xcodebuild`, while Fastlane archives against the plain
+-`.xcodeproj` because Fastlane's Xcodeproj-based scheme discovery does not
+-reliably detect shared schemes from the nested workspace path in this repo.
+-SKIE is enabled on the Gradle bridge specifically for sealed hierarchy
+-ergonomics, while SKIE coroutine and Flow interop are currently disabled. This
+-repo still uses the standard Kotlin suspend bridge for async calls and only
+-leans on SKIE for the shared sealed-state experience.
++This direct-content candidate uses Toolchain 0.13.0 with ARM device/simulator
++targets and keeps Xcode's app/test targets and native Swift packages. Shared DI
++exposes exhaustive typed visitors; `mobiProjection(of:)` maps concrete Kotlin
++states/reasons into native Swift enums. New cases require Kotlin dispatch,
++protocol, Swift enum/adapter and native consumer coverage. Shared Kotlin keeps
++business state and transitions; Swift owns localized copy and TCA presentation.
++
++Standard suspend bridging remains in use. Kotlin services rethrow cancellation;
++Home's Swift client returns `Unexpected` on caught errors, while Nearby Map's
++client returns its input state. The build migration preserves these behaviors
++and adds no automatic task cancellation or stale-response policy.
++
++A repo-owned preflight rejects incompatible builder selectors before the managed
++Toolchain phase. Credentialed iOS archive/export/upload entry points are held
++pending separate delivery evidence and authorization; development, tests and
++unsigned assessment remain available. The bridge files are preserved for
++complete content rollback. See the
++[proposed decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md)
++and [compatibility matrix](../maintenance/kotlin-compatibility.md).
++
++Raw Xcode wrappers use the workspace; the held Fastlane archive lane still
++declares the plain `.xcodeproj` for its scheme-discovery contract. Activating
++that lane requires a separate signing/export review.
+ 
+ ### Shared
+ 
+diff --git a/fastlane/Fastfile b/fastlane/Fastfile
+index 2a1588adbdd58cf2f3298f6d61db60c479f1f9da..d07d910142227c19fa4b5e0d12040fe8c81b5005 100644
+--- a/fastlane/Fastfile
++++ b/fastlane/Fastfile
+@@ -11,6 +11,7 @@
+ #
+ 
+ require "shellwords"
++require "open3"
+ 
+ default_platform(:android)
+ 
+@@ -56,8 +57,14 @@ def ios_project_path
+   File.join(project_root, "ios-app", "module.xcodeproj")
+ end
+ 
++def validate_ios_builder!(scope = "build")
++  output, status = Open3.capture2e(File.join(project_root, "scripts/ci/validate_ios_builder.sh"), scope)
++  UI.user_error!(output.strip) unless status.success?
++end
++
+ def ios_kotlin_builder
+-  ENV.fetch("KOTLIN_IOS_BUILDER", "gradle")
++  validate_ios_builder!
++  ENV["KOTLIN_IOS_BUILDER"].to_s.empty? ? "kotlin" : ENV.fetch("KOTLIN_IOS_BUILDER")
+ end
+ 
+ def ios_gradle_user_home
+@@ -242,6 +249,7 @@ end
+ platform :ios do
+   desc "Builds the iOS app for release/TestFlight delivery"
+   lane :buildRelease do
++    validate_ios_builder!("signed-release")
+     with_ios_kotlin_builder_env do
+       build_ios_app(
+         project: ios_project_path,
+@@ -260,6 +268,7 @@ platform :ios do
+ 
+   desc "Uploads a signed iOS release build to TestFlight"
+   lane :uploadTestFlight do
++    validate_ios_builder!("signed-release")
+     api_key = app_store_connect_api_key_from_env!
+ 
+     upload_to_testflight(
+diff --git a/ios-app/module.xcodeproj/project.pbxproj b/ios-app/module.xcodeproj/project.pbxproj
+index 5850b8c82e86fcf6ad1c4e1699327ec024da4d4b..dcabbc0ee069d6b2361a6586ce702bb635da3b83 100644
+--- a/ios-app/module.xcodeproj/project.pbxproj
++++ b/ios-app/module.xcodeproj/project.pbxproj
+@@ -108,7 +108,8 @@
+ 			isa = PBXNativeTarget;
+ 			buildConfigurationList = A93CF6C7C75BDE670B90B8EE /* Build configuration list for PBXNativeTarget "app" */;
+ 			buildPhases = (
+-				A93CF46588F1B180AC5404FB /* Build Kotlin Framework */,
++				E04D202610040001001664A3 /* Validate Kotlin Builder */,
++				A93CF46588F1B180AC5404FB /* Build Kotlin */,
+ 				A93CF19A71E94FF8EAB2A48D /* Sources */,
+ 				A93CFB18D8F0162B8642836E /* Frameworks */,
+ 				A93CF1127A893585707018F1 /* Resources */,
+@@ -213,7 +214,7 @@
+ 			shellPath = /bin/sh;
+ 			shellScript = "set -eu\nKotlinFrameworksDir=\"${TARGET_BUILD_DIR}/AmperFrameworks\"\nAppFrameworksDir=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nStampFile=\"${TARGET_TEMP_DIR}/.kotlin-embed-stamp\"\nLegacyStampFile=\"${AppFrameworksDir}/.amper-embed-stamp\"\n\nmkdir -p \"${AppFrameworksDir}\"\nmkdir -p \"$(dirname \"${StampFile}\")\"\n/bin/rm -f \"${LegacyStampFile}\"\n\nif [ -d \"${KotlinFrameworksDir}\" ]; then\n  for framework in \"${KotlinFrameworksDir}\"/*.framework; do\n    [ -e \"${framework}\" ] || continue\n\n    framework_name=\"$(basename \"${framework}\")\"\n    executable_name=\"$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' \"${framework}/Info.plist\" 2>/dev/null || basename \"${framework}\" .framework)\"\n    binary_path=\"${framework}/${executable_name}\"\n    file_output=\"$(/usr/bin/file \"${binary_path}\" 2>/dev/null || true)\"\n\n    case \"${file_output}\" in\n      *\"dynamically linked shared library\"*)\n        /usr/bin/rsync -aL \"${framework}/\" \"${AppFrameworksDir}/${framework_name}/\"\n        if [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n          /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --generate-entitlement-der \"${AppFrameworksDir}/${framework_name}\"\n        fi\n        ;;\n      *)\n        echo \"Skipping static framework ${framework_name}\"\n        ;;\n    esac\n  done\n\n  /bin/rm -rf \"${KotlinFrameworksDir}\"\nfi\n\n/usr/bin/touch \"${StampFile}\"\n";
+ 		};
+-		A93CF46588F1B180AC5404FB /* Build Kotlin Framework */ = {
++		A93CF46588F1B180AC5404FB /* Build Kotlin */ = {
+ 			isa = PBXShellScriptBuildPhase;
+ 			alwaysOutOfDate = 1;
+ 			buildActionMask = 2147483647;
+@@ -221,12 +222,24 @@
+ 			);
+ 			inputPaths = (
+ 			);
+-			name = "Build Kotlin Framework";
++			name = "Build Kotlin";
+ 			outputPaths = (
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "set -eu\n\nBuilder=\"${KOTLIN_IOS_BUILDER:-gradle}\"\n\nif [ \"YES\" = \"${OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED:-}\" ]; then\n  echo \"Skipping Kotlin framework build because OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES\"\n  exit 0\nfi\n\ncase \"${Builder}\" in\n  kotlin)\n    echo \"Building Kotlin framework with Kotlin Toolchain\"\n    \"${KOTLIN_CLI_WRAPPER_PATH}\" tool xcode-integration\n    ;;\n  gradle)\n    export JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n    export PATH=\"${JAVA_HOME}/bin:${PATH}\"\n    export GRADLE_USER_HOME=\"${GRADLE_USER_HOME:-${SRCROOT}/../.gradle-user-home}\"\n    echo \"Building Kotlin framework with Gradle bridge\"\n    echo \"Using JAVA_HOME=${JAVA_HOME}\"\n    echo \"Using GRADLE_USER_HOME=${GRADLE_USER_HOME}\"\n    mkdir -p \"${TARGET_BUILD_DIR}/AmperFrameworks\"\n    \"${SRCROOT}/../gradle-bridge/gradlew\" -p \"${SRCROOT}/../gradle-bridge\" :shared-kit:embedAndSignAppleFrameworkForXcode\n    ;;\n  *)\n    echo \"Unsupported KOTLIN_IOS_BUILDER=${Builder}. Expected 'kotlin' or 'gradle'.\" >&2\n    exit 1\n    ;;\n esac\n";
++			shellScript = "# !KOTLIN INTEGRATION STEP!\n# This script is managed by the Kotlin Toolchain, do not edit manually!\n\"${KOTLIN_CLI_WRAPPER_PATH}\" tool xcode-integration\n";
++		};
++		E04D202610040001001664A3 /* Validate Kotlin Builder */ = {
++			isa = PBXShellScriptBuildPhase;
++			alwaysOutOfDate = 1;
++			buildActionMask = 2147483647;
++			files = ();
++			inputPaths = ();
++			name = "Validate Kotlin Builder";
++			outputPaths = ();
++			runOnlyForDeploymentPostprocessing = 0;
++			shellPath = /bin/sh;
++			shellScript = "set -eu\n\"${SRCROOT}/../scripts/ci/validate_ios_builder.sh\" build\n";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+diff --git a/ios-app/module.yaml b/ios-app/module.yaml
+index e2144ab75bf4eb35b963338b359e76440a5df2b7..3885f0fe83737142602e25083a91844a13569389 100644
+--- a/ios-app/module.yaml
++++ b/ios-app/module.yaml
+@@ -2,6 +2,7 @@ product:
+   type: ios/app
+ 
+ dependencies:
++  - ../shared-di
+   - ../shared-feature-home
+   - ../shared-feature-nearby-vehicle-map
+   - ../shared-ui-home
+diff --git a/ios-app/src/Features/Home/HomeCounterLoadable.swift b/ios-app/src/Features/Home/HomeCounterLoadable.swift
+index 9c6825004acdf157c5808dcc9807da6161c26ad4..f33a7c1ca4e315867b6398865df568ba40c61208 100644
+--- a/ios-app/src/Features/Home/HomeCounterLoadable.swift
++++ b/ios-app/src/Features/Home/HomeCounterLoadable.swift
+@@ -8,7 +8,7 @@ enum HomeCounterLoadable: Equatable {
+     case error(previousValue: Int?, reason: HomeCounterLoadFailureReason)
+ 
+     init(sharedLoadable: CounterLoadable) {
+-        switch onEnum(of: sharedLoadable) {
++        switch mobiProjection(of: sharedLoadable) {
+         case .initial:
+             self = .initial
+ 
+@@ -88,7 +88,7 @@ enum HomeCounterLoadFailureReason: Equatable {
+     case unexpected
+ 
+     init(sharedReason: CounterLoadFailureReason) {
+-        switch onEnum(of: sharedReason) {
++        switch mobiProjection(of: sharedReason) {
+         case .repositoryUnavailable:
+             self = .repositoryUnavailable
+         case .unexpected:
+diff --git a/ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift b/ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift
+index 72e0a73e0045224396cf2887cf557896a0d6f638..5c5abd6380effb8a59deb1658a3befec4b240d8a 100644
+--- a/ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift
++++ b/ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift
+@@ -30,7 +30,7 @@ extension NearbyVehicleMapFeature {
+                 return "Preparing the rider-centered nearby vehicle map."
+             }
+ 
+-            switch onEnum(of: sharedState.riderLocationState) {
++            switch mobiProjection(of: sharedState.riderLocationState) {
+             case .resolving:
+                 return "Grant while-in-use location access to center discovery around the rider."
+             case .available:
+@@ -48,7 +48,7 @@ extension NearbyVehicleMapFeature {
+ 
+         var canInteractWithVehicles: Bool {
+             guard riderLocation != nil, let sharedState else { return false }
+-            guard case .blockingFailure = onEnum(of: sharedState.mapOverlayState) else {
++            guard case .blockingFailure = mobiProjection(of: sharedState.mapOverlayState) else {
+                 return true
+             }
+             return false
+@@ -69,7 +69,7 @@ extension NearbyVehicleMapFeature {
+         var overlay: NearbyVehicleMapOverlay {
+             guard let sharedState else { return .none }
+ 
+-            switch onEnum(of: sharedState.mapOverlayState) {
++            switch mobiProjection(of: sharedState.mapOverlayState) {
+             case .none:
+                 return .none
+             case .refreshingIndicator:
+@@ -84,7 +84,7 @@ extension NearbyVehicleMapFeature {
+         var canRequestRefresh: Bool {
+             guard riderLocation != nil, let sharedState else { return false }
+ 
+-            switch onEnum(of: sharedState.snapshotState) {
++            switch mobiProjection(of: sharedState.snapshotState) {
+             case .loading, .refreshing:
+                 return false
+             case .initial, .loaded, .failedWithSnapshot, .failedWithoutSnapshot:
+@@ -95,7 +95,7 @@ extension NearbyVehicleMapFeature {
+         private var currentSnapshot: FleetSnapshot? {
+             guard let sharedState else { return nil }
+ 
+-            switch onEnum(of: sharedState.snapshotState) {
++            switch mobiProjection(of: sharedState.snapshotState) {
+             case .initial, .loading:
+                 return nil
+             case let .loaded(state):
+@@ -119,7 +119,7 @@ extension NearbyVehicleMapFeature {
+         private var riderLocation: RiderLocation? {
+             guard let sharedState else { return nil }
+ 
+-            switch onEnum(of: sharedState.riderLocationState) {
++            switch mobiProjection(of: sharedState.riderLocationState) {
+             case .resolving, .denied, .blocked:
+                 return nil
+             case let .available(state):
+@@ -132,7 +132,7 @@ extension NearbyVehicleMapFeature {
+         }
+ 
+         private func blockedLocationMessage(_ reason: RiderLocationBlockedReason) -> String {
+-            switch reason {
++            switch mobiProjection(of: reason) {
+             case .accessDenied:
+                 "Precise location access is required before nearby vehicles can be positioned relative to the rider."
+             case .accessRestricted:
+diff --git a/ios-app/src/MobiInteropProjection.swift b/ios-app/src/MobiInteropProjection.swift
+new file mode 100644
+index 0000000000000000000000000000000000000000..1376f4cdd4ce131b83f2e0af0f232091a1939cef
+--- /dev/null
++++ b/ios-app/src/MobiInteropProjection.swift
+@@ -0,0 +1,268 @@
++import Foundation
++@preconcurrency import KotlinModules
++
++// Isolated maintenance experiment; production adapters retain their typed switches.
++
++enum MobiCounterProjection {
++    case initial
++    case loading(CounterLoadableLoading)
++    case loaded(CounterLoadableLoaded)
++    case error(CounterLoadableError)
++}
++
++private final class MobiCounterVisitorAdapter: NSObject, MobiCounterVisitor {
++    var result: MobiCounterProjection?
++
++    func onInitial() {
++        result = .some(.initial)
++    }
++
++    func onLoading(value: CounterLoadableLoading) {
++        result = .some(.loading(value))
++    }
++
++    func onLoaded(value: CounterLoadableLoaded) {
++        result = .some(.loaded(value))
++    }
++
++    func onError(value: CounterLoadableError) {
++        result = .some(.error(value))
++    }
++}
++
++func mobiProjection(of value: CounterLoadable) -> MobiCounterProjection {
++    let visitor = MobiCounterVisitorAdapter()
++    MobiInteropProjection.shared.counter(state: value, visitor: visitor)
++    guard let result = visitor.result else {
++        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
++    }
++    return result
++}
++
++enum MobiCounterFailureProjection {
++    case repositoryUnavailable
++    case unexpected
++}
++
++private final class MobiCounterFailureVisitorAdapter: NSObject, MobiCounterFailureVisitor {
++    var result: MobiCounterFailureProjection?
++
++    func onRepositoryUnavailable() {
++        result = .some(.repositoryUnavailable)
++    }
++
++    func onUnexpected() {
++        result = .some(.unexpected)
++    }
++}
++
++func mobiProjection(of value: CounterLoadFailureReason) -> MobiCounterFailureProjection {
++    let visitor = MobiCounterFailureVisitorAdapter()
++    MobiInteropProjection.shared.counterFailure(state: value, visitor: visitor)
++    guard let result = visitor.result else {
++        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
++    }
++    return result
++}
++
++enum MobiRiderLocationProjection {
++    case resolving
++    case available(RiderLocationStateAvailable)
++    case denied
++    case blocked(RiderLocationStateBlocked)
++    case temporarilyUnavailable(RiderLocationStateTemporarilyUnavailable)
++    case unavailable
++}
++
++private final class MobiRiderLocationVisitorAdapter: NSObject, MobiRiderLocationVisitor {
++    var result: MobiRiderLocationProjection?
++
++    func onResolving() {
++        result = .some(.resolving)
++    }
++
++    func onAvailable(value: RiderLocationStateAvailable) {
++        result = .some(.available(value))
++    }
++
++    func onDenied() {
++        result = .some(.denied)
++    }
++
++    func onBlocked(value: RiderLocationStateBlocked) {
++        result = .some(.blocked(value))
++    }
++
++    func onTemporarilyUnavailable(value: RiderLocationStateTemporarilyUnavailable) {
++        result = .some(.temporarilyUnavailable(value))
++    }
++
++    func onUnavailable() {
++        result = .some(.unavailable)
++    }
++}
++
++func mobiProjection(of value: RiderLocationState) -> MobiRiderLocationProjection {
++    let visitor = MobiRiderLocationVisitorAdapter()
++    MobiInteropProjection.shared.riderLocation(state: value, visitor: visitor)
++    guard let result = visitor.result else {
++        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
++    }
++    return result
++}
++
++enum MobiSnapshotProjection {
++    case initial
++    case loading
++    case loaded(NearbyVehicleSnapshotStateLoaded)
++    case refreshing(NearbyVehicleSnapshotStateRefreshing)
++    case failedWithSnapshot(NearbyVehicleSnapshotStateFailedWithSnapshot)
++    case failedWithoutSnapshot(NearbyVehicleSnapshotStateFailedWithoutSnapshot)
++}
++
++private final class MobiSnapshotVisitorAdapter: NSObject, MobiSnapshotVisitor {
++    var result: MobiSnapshotProjection?
++
++    func onInitial() {
++        result = .some(.initial)
++    }
++
++    func onLoading() {
++        result = .some(.loading)
++    }
++
++    func onSnapshotLoaded(value: NearbyVehicleSnapshotStateLoaded) {
++        result = .some(.loaded(value))
++    }
++
++    func onRefreshing(value: NearbyVehicleSnapshotStateRefreshing) {
++        result = .some(.refreshing(value))
++    }
++
++    func onFailedWithSnapshot(value: NearbyVehicleSnapshotStateFailedWithSnapshot) {
++        result = .some(.failedWithSnapshot(value))
++    }
++
++    func onFailedWithoutSnapshot(value: NearbyVehicleSnapshotStateFailedWithoutSnapshot) {
++        result = .some(.failedWithoutSnapshot(value))
++    }
++}
++
++func mobiProjection(of value: NearbyVehicleSnapshotState) -> MobiSnapshotProjection {
++    let visitor = MobiSnapshotVisitorAdapter()
++    MobiInteropProjection.shared.snapshot(state: value, visitor: visitor)
++    guard let result = visitor.result else {
++        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
++    }
++    return result
++}
++
++enum MobiOverlayProjection {
++    case none
++    case refreshingIndicator
++    case staleIndicator
++    case blockingFailure
++}
++
++private final class MobiOverlayVisitorAdapter: NSObject, MobiOverlayVisitor {
++    var result: MobiOverlayProjection?
++
++    func onNone() {
++        result = .some(.none)
++    }
++
++    func onRefreshingIndicator() {
++        result = .some(.refreshingIndicator)
++    }
++
++    func onStaleIndicator() {
++        result = .some(.staleIndicator)
++    }
++
++    func onBlockingFailure() {
++        result = .some(.blockingFailure)
++    }
++}
++
++func mobiProjection(of value: NearbyVehicleMapOverlayState) -> MobiOverlayProjection {
++    let visitor = MobiOverlayVisitorAdapter()
++    MobiInteropProjection.shared.overlay(state: value, visitor: visitor)
++    guard let result = visitor.result else {
++        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
++    }
++    return result
++}
++
++enum MobiRiderReasonProjection {
++    case accessDenied
++    case accessRestricted
++    case servicesDisabled
++    case approximateOnly
++    case temporarilyUnavailable
++}
++
++private final class MobiRiderReasonVisitorAdapter: NSObject, MobiRiderReasonVisitor {
++    var result: MobiRiderReasonProjection?
++
++    func onAccessDenied() {
++        result = .some(.accessDenied)
++    }
++
++    func onAccessRestricted() {
++        result = .some(.accessRestricted)
++    }
++
++    func onServicesDisabled() {
++        result = .some(.servicesDisabled)
++    }
++
++    func onApproximateOnly() {
++        result = .some(.approximateOnly)
++    }
++
++    func onTemporarilyUnavailable() {
++        result = .some(.temporarilyUnavailable)
++    }
++}
++
++func mobiProjection(of value: RiderLocationBlockedReason) -> MobiRiderReasonProjection {
++    let visitor = MobiRiderReasonVisitorAdapter()
++    MobiInteropProjection.shared.riderReason(state: value, visitor: visitor)
++    guard let result = visitor.result else {
++        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
++    }
++    return result
++}
++
++/// Preserve the native consumer spelling over the regular Objective-C export.
++extension RiderLocationBlockedReason {
++    static var accessDenied: RiderLocationBlockedReason {
++        .accessdenied
++    }
++
++    static var accessRestricted: RiderLocationBlockedReason {
++        .accessrestricted
++    }
++
++    static var servicesDisabled: RiderLocationBlockedReason {
++        .servicesdisabled
++    }
++
++    static var approximateOnly: RiderLocationBlockedReason {
++        .approximateonly
++    }
++
++    static var temporarilyUnavailable: RiderLocationBlockedReason {
++        .temporarilyunavailable
++    }
++}
++
++extension NearbyVehicleMapFailureReason {
++    static var riderLocationUnavailable: NearbyVehicleMapFailureReason {
++        .riderlocationunavailable
++    }
++
++    static var repositoryUnavailable: NearbyVehicleMapFailureReason {
++        .repositoryunavailable
++    }
++}
+diff --git a/ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift b/ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift
+index b03e82ea026a94f7b63a452e2dfc23f62c146496..32fb054e5ca2192ae479e5d23a610c106b09514b 100644
+--- a/ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift
++++ b/ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift
+@@ -381,7 +381,7 @@ private enum NearbyVehicleMapFeatureTestFactory {
+     }
+ 
+     static func currentSnapshot(from state: NearbyVehicleSnapshotState) -> FleetSnapshot? {
+-        switch onEnum(of: state) {
++        switch mobiProjection(of: state) {
+         case .initial, .loading:
+             nil
+         case let .loaded(state):
+diff --git a/scripts/ci/lib/ios.sh b/scripts/ci/lib/ios.sh
+index 67645981282dd851a4913cdcfe59fc47f82fef6d..43c76f3665e03495c8c97ab7a19c16d7f5af6c9e 100644
+--- a/scripts/ci/lib/ios.sh
++++ b/scripts/ci/lib/ios.sh
+@@ -3,7 +3,7 @@
+ set -euo pipefail
+ 
+ ci_configure_ios_kotlin_builder() {
+-  export KOTLIN_IOS_BUILDER="${KOTLIN_IOS_BUILDER:-gradle}"
++  export KOTLIN_IOS_BUILDER="${KOTLIN_IOS_BUILDER:-kotlin}"
+   export SWIFT_ENABLE_EXPLICIT_MODULES="${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
+ 
+   if [[ -n "${GITLAB_CI:-}" ]]; then
+@@ -23,15 +23,7 @@ ci_configure_ios_kotlin_builder() {
+     fi
+   fi
+ 
+-  case "${KOTLIN_IOS_BUILDER}" in
+-    kotlin|gradle)
+-      ;;
+-    *)
+-      printf 'Unsupported KOTLIN_IOS_BUILDER: %s\n' "${KOTLIN_IOS_BUILDER}" >&2
+-      printf 'Supported values: kotlin, gradle\n' >&2
+-      exit 1
+-      ;;
+-  esac
++  "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" build
+ 
+   printf 'Using iOS Kotlin builder: %s\n' "${KOTLIN_IOS_BUILDER}"
+   printf 'Using GRADLE_USER_HOME: %s\n' "${GRADLE_USER_HOME}"
+@@ -39,6 +31,7 @@ ci_configure_ios_kotlin_builder() {
+ }
+ 
+ ci_prepare_ios_job() {
++  "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" build
+   ci_detect_context
+   ci_prepare_workspace
+   ci_set_java_home
+@@ -51,6 +44,7 @@ ci_prepare_ios_job() {
+ }
+ 
+ ci_prepare_ios_fastlane_job() {
++  "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" signed-release
+   ci_prepare_ios_job
+   ci_bundle_install
+ }
+diff --git a/scripts/ci/run_job.sh b/scripts/ci/run_job.sh
+index d7b2c768cc589989033b735a2a7d6c3f158ca5cd..73648cb4ee8bb56ab27ede9a7c71f5212ac437ff 100755
+--- a/scripts/ci/run_job.sh
++++ b/scripts/ci/run_job.sh
+@@ -69,12 +69,14 @@ case "${job_name}" in
+     ./scripts/ci/run_xcodebuild_with_logs.sh Release "$@"
+     ;;
+   ios-archive-release)
++    "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" signed-release
+     trap ci_cleanup_app_store_connect_key EXIT
+     ci_prepare_ios_fastlane_job
+     cd "${CI_PROJECT_DIR}"
+     bundle exec fastlane ios buildRelease "$@"
+     ;;
+   ios-testflight)
++    "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" signed-release
+     trap ci_cleanup_app_store_connect_key EXIT
+     ci_prepare_ios_testflight_job
+     cd "${CI_PROJECT_DIR}"
+diff --git a/scripts/ci/run_xcode_tests_with_logs.sh b/scripts/ci/run_xcode_tests_with_logs.sh
+index f7604d0706c6245f029493b5c108a8e60799b491..1afef9e49404775c4f2771435c468b36f4501acc 100755
+--- a/scripts/ci/run_xcode_tests_with_logs.sh
++++ b/scripts/ci/run_xcode_tests_with_logs.sh
+@@ -3,6 +3,7 @@
+ set -euo pipefail
+ 
+ project_root="$(cd "$(dirname "$0")/../.." && pwd)"
++"${project_root}/scripts/ci/validate_ios_builder.sh" build
+ log_dir="${project_root}/build/logs"
+ derived_data_dir="${project_root}/build/xcode-derived-data-cli-tests"
+ log_file="${log_dir}/xcodebuild-ios-tests.log"
+@@ -17,7 +18,7 @@ project_path="${project_root}/ios-app/module.xcodeproj"
+ mkdir -p "${log_dir}" "${derived_data_dir}" "${result_bundle_dir}"
+ rm -rf "${result_bundle_path}"
+ 
+-echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-gradle}"
++echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-kotlin}"
+ echo "Using GRADLE_USER_HOME=${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
+ echo "Using SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
+ echo "Using IOS_TEST_PLAN=${test_plan}"
+diff --git a/scripts/ci/run_xcodebuild_with_logs.sh b/scripts/ci/run_xcodebuild_with_logs.sh
+index 2f8f63db9d3530a0fcbf7e3490404488fcfb6f2f..21a416af4d9c9b5585469492a489cf2ada3466b2 100755
+--- a/scripts/ci/run_xcodebuild_with_logs.sh
++++ b/scripts/ci/run_xcodebuild_with_logs.sh
+@@ -10,6 +10,7 @@ if [[ -z "${configuration}" ]]; then
+ fi
+ 
+ project_root="$(cd "$(dirname "$0")/../.." && pwd)"
++"${project_root}/scripts/ci/validate_ios_builder.sh" build
+ configuration_slug="$(printf '%s' "${configuration}" | tr '[:upper:]' '[:lower:]')"
+ log_dir="${project_root}/build/logs"
+ derived_data_dir="${project_root}/build/xcode-derived-data-cli-${configuration_slug}"
+@@ -20,7 +21,7 @@ project_path="${project_root}/ios-app/module.xcodeproj"
+ 
+ mkdir -p "${log_dir}" "${derived_data_dir}"
+ 
+-echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-gradle}"
++echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-kotlin}"
+ echo "Using GRADLE_USER_HOME=${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
+ echo "Using SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
+ echo "Using IOS_SIMULATOR_ARCHS=${IOS_SIMULATOR_ARCHS:-$(uname -m)}"
+diff --git a/scripts/ci/test_ios_builder.rb b/scripts/ci/test_ios_builder.rb
+new file mode 100644
+index 0000000000000000000000000000000000000000..c961723fb5cab3fe150430afbe9935f0950f1997
+--- /dev/null
++++ b/scripts/ci/test_ios_builder.rb
+@@ -0,0 +1,157 @@
++# frozen_string_literal: true
++
++require 'fileutils'
++require 'json'
++require 'open3'
++require 'tmpdir'
++
++# Execute refusal paths without native tools, signing material or provider keys.
++module IOSBuilderTest
++  ROOT = File.expand_path('../..', __dir__)
++  GUARD = File.join(ROOT, 'scripts/ci/validate_ios_builder.sh')
++  @tests = []
++  def self.test(name, &block); @tests << [name, block]; end
++  def self.assert(value, message = 'assertion failed'); raise message unless value; end
++  def self.run(*argv, builder: nil, project: ROOT)
++    Open3.capture2e({ 'PATH' => '/usr/bin:/bin', 'KOTLIN_IOS_BUILDER' => builder, 'CI_PROJECT_DIR' => project }, *argv, unsetenv_others: true)
++  end
++  class Held < StandardError; end
++  module UI
++    def self.user_error!(message); raise Held, message; end
++    def self.message(_message); end
++  end
++  class FastlaneDSL
++    attr_reader :lanes, :calls
++    def initialize; @lanes = {}; @calls = []; end
++    def default_platform(_name); end
++    def desc(_text); end
++    def platform(name, &block); @platform = name; instance_eval(&block); end
++    def lane(name, &block); @lanes[[@platform, name]] = block; end
++    def build_ios_app(**_options); @calls << :signing; raise 'Signing was reached'; end
++    def app_store_connect_api_key(**_options); @calls << :credentials; raise 'Credentials were reached'; end
++    def upload_to_testflight(**_options); @calls << :upload; raise 'Upload was reached'; end
++  end
++  def self.with_fastlane
++    previous = ENV.to_h
++    ENV.replace('PATH' => '/usr/bin:/bin')
++    dsl = FastlaneDSL.new
++    file = File.join(ROOT, 'fastlane/Fastfile')
++    dsl.instance_eval(File.read(file), file)
++    yield dsl
++  ensure
++    ENV.replace(previous)
++  end
++  test('unset, empty and explicit Kotlin selectors permit build scope') do
++    [nil, '', 'kotlin'].each do |builder|
++      _, status = run(GUARD, 'build', builder: builder)
++      assert(status.success?)
++    end
++  end
++  test('Gradle and unknown selectors require content rollback before compilation') do
++    %w[gradle unknown].each do |builder|
++      output, status = run(GUARD, 'build', builder: builder)
++      assert(status.exitstatus == 64 && output.include?('complete reviewed content patch'))
++    end
++  end
++  test('unknown scope and surplus arguments refuse') do
++    [['other'], ['build', 'extra']].each do |args|
++      _, status = run(GUARD, *args)
++      assert(status.exitstatus == 64)
++    end
++  end
++  test('signed scope is held with no enabling environment bypass') do
++    output, status = run(GUARD, 'signed-release')
++    assert(status.exitstatus == 69 && output.include?('separate signed-delivery evidence'))
++  end
++  test('raw wrappers reject incompatible content before creating output roots') do
++    [['run_xcodebuild_with_logs.sh', 'Debug'], ['run_xcode_tests_with_logs.sh']].each do |args|
++      output, status = run(File.join(ROOT, 'scripts/ci', args.first), *args.drop(1), builder: 'gradle')
++      assert(status.exitstatus == 64 && output.include?('complete reviewed content patch'))
++    end
++  end
++  test('Xcode delivery signing is held while unsigned archive assessments remain available') do
++    cases = [
++      [{ 'ACTION' => 'install', 'CODE_SIGNING_ALLOWED' => 'YES' }, 69],
++      [{ 'ACTION' => 'install', 'CODE_SIGNING_ALLOWED' => 'NO' }, 0],
++      [{ 'ACTION' => 'build', 'CONFIGURATION' => 'Release', 'PLATFORM_NAME' => 'iphoneos', 'CODE_SIGNING_ALLOWED' => 'YES' }, 69],
++      [{ 'ACTION' => 'build', 'CONFIGURATION' => 'Release', 'PLATFORM_NAME' => 'iphoneos', 'CODE_SIGNING_ALLOWED' => 'NO' }, 0],
++      [{ 'ACTION' => 'build', 'CONFIGURATION' => 'Debug', 'PLATFORM_NAME' => 'iphonesimulator' }, 0]
++    ]
++    cases.each do |settings, expected|
++      _, status = Open3.capture2e({ 'PATH' => '/usr/bin:/bin' }.merge(settings), GUARD, 'build', unsetenv_others: true)
++      assert(status.exitstatus == expected)
++    end
++  end
++  test('CI release preparation refuses before normal setup or bundle installation') do
++    script = 'source "$CI_PROJECT_DIR/scripts/ci/lib/ios.sh"; ci_prepare_ios_job() { echo UNEXPECTED_SETUP; }; ci_bundle_install() { echo UNEXPECTED_BUNDLE; }; ci_prepare_ios_fastlane_job'
++    output, status = run('/bin/bash', '-c', script)
++    assert(status.exitstatus == 69 && !output.include?('UNEXPECTED'))
++  end
++  test('CI delivery entries hold before even installing credential cleanup traps') do
++    Dir.mktmpdir('mobi-delivery-refusal-') do |project|
++      FileUtils.mkdir_p(File.join(project, 'scripts/ci'))
++      FileUtils.cp(GUARD, File.join(project, 'scripts/ci'))
++      FileUtils.mkdir_p(File.join(project, 'fastlane'))
++      sentinel = File.join(project, 'fastlane/AuthKey.p8')
++      File.write(sentinel, 'owned test sentinel, not a credential')
++      %w[ios-archive-release ios-testflight].each do |job|
++        output, status = run(File.join(ROOT, 'scripts/ci/run_job.sh'), job, project: project)
++        assert(status.exitstatus == 69 && output.include?('Credentialed iOS') && File.exist?(sentinel))
++      end
++    end
++  end
++  test('Xcode preflight precedes the managed integration phase and rejects Gradle') do
++    output, status = run('/usr/bin/plutil', '-convert', 'json', '-o', '-', File.join(ROOT, 'ios-app/module.xcodeproj/project.pbxproj'))
++    assert(status.success?)
++    objects = JSON.parse(output).fetch('objects')
++    app = objects.fetch('A93CFF74FDA625823427EABC')
++    phases = app.fetch('buildPhases')
++    preflight = 'E04D202610040001001664A3'
++    managed = 'A93CF46588F1B180AC5404FB'
++    assert(phases.index(preflight) < phases.index(managed))
++    script = objects.fetch(preflight).fetch('shellScript')
++    output, status = Open3.capture2e({ 'PATH' => '/usr/bin:/bin', 'SRCROOT' => File.join(ROOT, 'ios-app'), 'KOTLIN_IOS_BUILDER' => 'gradle' }, '/bin/sh', '-c', script, unsetenv_others: true)
++    assert(status.exitstatus == 64 && output.include?('complete reviewed content patch'))
++    assert(objects.fetch(managed).fetch('shellScript') == "# !KOTLIN INTEGRATION STEP!\n# This script is managed by the Kotlin Toolchain, do not edit manually!\n\"${KOTLIN_CLI_WRAPPER_PATH}\" tool xcode-integration\n")
++  end
++  test('Fastlane selector normalization agrees with shell defaults') do
++    with_fastlane do |dsl|
++      [nil, '', 'kotlin'].each do |builder|
++        builder.nil? ? ENV.delete('KOTLIN_IOS_BUILDER') : ENV['KOTLIN_IOS_BUILDER'] = builder
++        assert(dsl.ios_kotlin_builder == 'kotlin')
++      end
++    end
++  end
++  test('Fastlane release lanes hold before signing, credentials or uploads') do
++    with_fastlane do |dsl|
++      %i[buildRelease uploadTestFlight].each do |name|
++        begin
++          dsl.lanes.fetch([:ios, name]).call
++          raise 'Expected release hold'
++        rescue Held => error
++          assert(error.message.include?('separate signed-delivery evidence') && dsl.calls.empty?)
++        end
++      end
++    end
++  end
++  test('Fastlane refuses stale selectors and restores caller environment on failure') do
++    with_fastlane do |dsl|
++      ENV['KOTLIN_IOS_BUILDER'] = 'gradle'
++      ENV['GRADLE_USER_HOME'] = '/owned-test-home'
++      previous = ENV.to_h
++      begin
++        dsl.with_ios_kotlin_builder_env { raise 'Unexpected build' }
++        raise 'Expected selector refusal'
++      rescue Held => error
++        assert(error.message.include?('complete reviewed content patch') && ENV.to_h == previous)
++      end
++    end
++  end
++  failures = @tests.count do |name, block|
++    block.call; puts "PASS #{name}"; false
++  rescue StandardError => error
++    warn "FAIL #{name}: #{error.message}"; true
++  end
++  puts "#{@tests.size} iOS builder contracts, #{failures} failures"
++  exit 1 unless failures.zero?
++end
+diff --git a/scripts/ci/validate_ios_builder.sh b/scripts/ci/validate_ios_builder.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..39d9190403b00a7af62f146f936244669e7093cb
+--- /dev/null
++++ b/scripts/ci/validate_ios_builder.sh
+@@ -0,0 +1,32 @@
++#!/usr/bin/env bash
++
++set -euo pipefail
++
++scope="${1:-build}"
++builder="${KOTLIN_IOS_BUILDER:-kotlin}"
++
++if [[ $# -gt 1 || ( "${scope}" != build && "${scope}" != signed-release ) ]]; then
++  printf 'Usage: validate_ios_builder.sh [build|signed-release]\n' >&2
++  exit 64
++fi
++
++if [[ "${builder}" != kotlin ]]; then
++  printf 'Unsupported KOTLIN_IOS_BUILDER=%s for direct-content builds. Expected kotlin.\n' "${builder}" >&2
++  printf 'Gradle rollback requires restoring the complete reviewed content patch and cleaning owned build products first.\n' >&2
++  exit 64
++fi
++
++# Xcode archive actions use install. Unsigned archive assessments explicitly
++# disable signing; a signing-enabled Release device build is delivery scope too.
++xcode_delivery=false
++if [[ "${CODE_SIGNING_ALLOWED:-YES}" != NO ]]; then
++  if [[ "${ACTION:-}" == install || ( "${CONFIGURATION:-}" == Release && "${PLATFORM_NAME:-}" == iphoneos ) ]]; then
++    xcode_delivery=true
++  fi
++fi
++
++if [[ "${scope}" == signed-release || "${xcode_delivery}" == true ]]; then
++  printf 'Credentialed iOS archive/export/upload is held pending separate signed-delivery evidence and risk authorization.\n' >&2
++  printf 'Development, tests and unsigned assessments remain available.\n' >&2
++  exit 69
++fi
+diff --git a/scripts/dev/test_contracts.rb b/scripts/dev/test_contracts.rb
+index f08ea64f4fcde3a7e8476d4fcb828fc6355f618d..795c587a921612442c6a1e76b905f4ee5316a714 100644
+--- a/scripts/dev/test_contracts.rb
++++ b/scripts/dev/test_contracts.rb
+@@ -3,7 +3,7 @@
+ require 'rbconfig'
+ 
+ root = File.expand_path('../..', __dir__)
+-%w[scripts/dev/test_quality.rb scripts/dev/test_validate.rb scripts/maintenance/test_inventory.rb scripts/maintenance/test_executor.rb scripts/maintenance/test_kotlin_rehearsal.rb scripts/maintenance/test_support_policy.rb scripts/maintenance/test_compatibility.rb scripts/maintenance/test_watch.rb scripts/maintenance/test_upgrade_graph.rb scripts/maintenance/test_direct_roundtrip.rb scripts/maintenance/test_direct_resolution.rb scripts/maintenance/test_build_inputs.rb scripts/maintenance/test_plugin_attribution.rb scripts/maintenance/test_bundled_attribution.rb scripts/maintenance/test_adoption_gates.rb scripts/maintenance/test_jetifier_conditions.rb scripts/maintenance/test_risk_acceptance.rb].each do |suite|
++%w[scripts/ci/test_ios_builder.rb scripts/dev/test_quality.rb scripts/dev/test_validate.rb scripts/maintenance/test_inventory.rb scripts/maintenance/test_executor.rb scripts/maintenance/test_kotlin_rehearsal.rb scripts/maintenance/test_support_policy.rb scripts/maintenance/test_compatibility.rb scripts/maintenance/test_watch.rb scripts/maintenance/test_upgrade_graph.rb scripts/maintenance/test_direct_roundtrip.rb scripts/maintenance/test_direct_resolution.rb scripts/maintenance/test_build_inputs.rb scripts/maintenance/test_plugin_attribution.rb scripts/maintenance/test_bundled_attribution.rb scripts/maintenance/test_adoption_gates.rb scripts/maintenance/test_jetifier_conditions.rb scripts/maintenance/test_risk_acceptance.rb].each do |suite|
+   puts "[contracts] #{suite} (Ruby #{RUBY_VERSION})"
+   exit 1 unless system(RbConfig.ruby, File.join(root, suite), chdir: root)
+ end
+diff --git a/scripts/dev/test_validate.rb b/scripts/dev/test_validate.rb
+index 5b83533761ba202560333cac157caa10b3d7de48..7f5fee2955e761a3aa766a4a37de7f61963e1b24 100644
+--- a/scripts/dev/test_validate.rb
++++ b/scripts/dev/test_validate.rb
+@@ -87,6 +87,21 @@ module ValidationTest
+     assert(ok && jobs(log).empty? && f.calls.size == 5, output)
+   end
+ 
++  test('source copies use canonical module paths through a symlinked TMPDIR') do |f|
++    log = base(f)
++    Dir.mktmpdir('mobi-temp-path-contract-') do |parent|
++      real = File.realpath(parent)
++      target = File.join(real, 'target'); Dir.mkdir(target)
++      alias_path = File.join(real, 'alias'); File.symlink(target, alias_path)
++      ok, output = f.run('./scripts/dev/check.sh', extra_env: { 'TMPDIR' => alias_path })
++      assert(ok, output)
++      records = jobs(log)
++      assert(records.size == 1 && records.first['env']['CI_PROJECT_DIR'].start_with?(target + '/'), 'module path retained a temporary-directory alias')
++      assert(!records.first['env']['CI_PROJECT_DIR'].start_with?(alias_path + '/'), 'logical TMPDIR was passed to Xcode')
++      assert(!Dir.exist?(records.first['cwd']), 'canonical snapshot leaked')
++    end
++  end
++
+   test('full validation executes every selected job exactly once') do |f|
+     log = base(f)
+     f.write('unexpected.txt', 'full validation')
+diff --git a/scripts/dev/validate.rb b/scripts/dev/validate.rb
+index b4ab92e1bc6ced8f0508a0fe8708b70d7e5e427d..fb259f619ab1b4fd1f0ce3740dbc09974b85ac4e 100644
+--- a/scripts/dev/validate.rb
++++ b/scripts/dev/validate.rb
+@@ -123,7 +123,10 @@ module Precommit
+       expected = tracked_manifest(@root, paths)
+       completed = []
+       unless @plan.fetch('jobs').empty?
+-        copy = Dir.mktmpdir('mobi-validation-')
++        # Xcode passes its module directory to Toolchain, which resolves the
++        # wrapper/project root physically. Use the same spelling through /var
++        # aliases and symlinked TMPDIRs before assigning any job paths.
++        copy = File.realpath(Dir.mktmpdir('mobi-validation-'))
+         begin
+           puts "[validation] workspace=#{copy}"
+           paths.each do |path|
+@@ -136,7 +139,7 @@ module Precommit
+           verify_caller!
+           env = ENV_KEYS.to_h { |key| [key, ENV[key]] }.reject { |_key, value| value.nil? }
+           env.merge!('MOBI_VALIDATION' => '1', 'CI_PROJECT_DIR' => copy,
+-                     'KOTLIN_IOS_BUILDER' => 'gradle', 'IOS_TEST_PLAN' => 'PullRequest',
++                     'KOTLIN_IOS_BUILDER' => 'kotlin', 'IOS_TEST_PLAN' => 'PullRequest',
+                      'KOTLIN_CLI_BOOTSTRAP_CACHE_DIR' => File.join(copy, '.kotlin-cache'),
+                      'GRADLE_USER_HOME' => File.join(copy, '.gradle-user-home'))
+           FileUtils.mkdir_p(env.fetch('GRADLE_USER_HOME'))
+diff --git a/scripts/maintenance/fixtures/interop/RetainedKotlinBuildPhase.pbxproj.template b/scripts/maintenance/fixtures/interop/RetainedKotlinBuildPhase.pbxproj.template
+new file mode 100644
+index 0000000000000000000000000000000000000000..247d0d8c5da7eef2fde9dd0ca1527bf447f02935
+--- /dev/null
++++ b/scripts/maintenance/fixtures/interop/RetainedKotlinBuildPhase.pbxproj.template
+@@ -0,0 +1,15 @@
++		A93CF46588F1B180AC5404FB /* Build Kotlin Framework */ = {
++			isa = PBXShellScriptBuildPhase;
++			alwaysOutOfDate = 1;
++			buildActionMask = 2147483647;
++			files = (
++			);
++			inputPaths = (
++			);
++			name = "Build Kotlin Framework";
++			outputPaths = (
++			);
++			runOnlyForDeploymentPostprocessing = 0;
++			shellPath = /bin/sh;
++			shellScript = "set -eu\n\nBuilder=\"${KOTLIN_IOS_BUILDER:-gradle}\"\n\nif [ \"YES\" = \"${OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED:-}\" ]; then\n  echo \"Skipping Kotlin framework build because OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES\"\n  exit 0\nfi\n\ncase \"${Builder}\" in\n  kotlin)\n    echo \"Building Kotlin framework with Kotlin Toolchain\"\n    \"${KOTLIN_CLI_WRAPPER_PATH}\" tool xcode-integration\n    ;;\n  gradle)\n    export JAVA_HOME=\"$(/usr/libexec/java_home -v 21)\"\n    export PATH=\"${JAVA_HOME}/bin:${PATH}\"\n    export GRADLE_USER_HOME=\"${GRADLE_USER_HOME:-${SRCROOT}/../.gradle-user-home}\"\n    echo \"Building Kotlin framework with Gradle bridge\"\n    echo \"Using JAVA_HOME=${JAVA_HOME}\"\n    echo \"Using GRADLE_USER_HOME=${GRADLE_USER_HOME}\"\n    mkdir -p \"${TARGET_BUILD_DIR}/AmperFrameworks\"\n    \"${SRCROOT}/../gradle-bridge/gradlew\" -p \"${SRCROOT}/../gradle-bridge\" :shared-kit:embedAndSignAppleFrameworkForXcode\n    ;;\n  *)\n    echo \"Unsupported KOTLIN_IOS_BUILDER=${Builder}. Expected 'kotlin' or 'gradle'.\" >&2\n    exit 1\n    ;;\n esac\n";
++		};
+diff --git a/scripts/maintenance/test_compatibility.rb b/scripts/maintenance/test_compatibility.rb
+index 49b9efc2d52a1cf44b95279a77c4484fbedec8b9..a0a32cc3b86fb839e3b62af2480da5530346458f 100644
+--- a/scripts/maintenance/test_compatibility.rb
++++ b/scripts/maintenance/test_compatibility.rb
+@@ -26,6 +26,30 @@ module CompatibilityTest
+       yield root
+     end
+   end
++# Only the historical integration-transform contracts need retained inputs.
++# Native tests execute the real direct candidate, not this synthetic fixture.
++def self.retained_fixture
++  fixture do |root|
++    project = File.join(root, Maintenance::InteropExperiment::PROJECT)
++    content = File.read(project)
++    if content.include?('name = "Validate Kotlin Builder";')
++      old = File.read(File.join(ROOT, 'scripts/maintenance/fixtures/interop/RetainedKotlinBuildPhase.pbxproj.template'))
++      current = /\t\tA93CF46588F1B180AC5404FB \/\* Build Kotlin \*\/ = \{.*?\n\t\t\};\n/m
++      raise 'Unexpected direct phase in contract fixture' unless content.scan(current).size == 1
++      content = content.sub(current, old).sub('A93CF46588F1B180AC5404FB /* Build Kotlin */,', 'A93CF46588F1B180AC5404FB /* Build Kotlin Framework */,')
++      content = content.sub(/\t\tE04D202610040001001664A3 \/\* Validate Kotlin Builder \*\/ = \{.*?\n\t\t\};\n/m, '')
++      content = content.sub(/\t\t\t\tE04D202610040001001664A3 \/\* Validate Kotlin Builder \*\/,\n/, '')
++      File.write(project, content)
++      manifest = File.join(root, 'ios-app/module.yaml')
++      File.write(manifest, File.read(manifest).sub("  - ../shared-di\n", ''))
++      %w[shared-di/src/MobiInteropProjection.kt ios-app/src/MobiInteropProjection.swift].each { |path| File.unlink(File.join(root, path)) }
++      state = File.join(root, 'ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift')
++      File.write(state, File.read(state).sub('switch mobiProjection(of: reason) {', 'switch reason {'))
++    end
++    yield root
++  end
++end
++
+   def self.config(root)
+     file = File.join(root, Maintenance::Compatibility::CONFIG)
+     data = JSON.parse(File.read(file)); yield data
+@@ -150,7 +174,7 @@ module CompatibilityTest
+   end
+ 
+   test('direct copy keeps native tests, schemes and targets while removing its bridge') do
+-    fixture do |root|
++    retained_fixture do |root|
+       source = Maintenance::Source.new(root)
+       tests = source.files.select { |path, _| path.start_with?('ios-app/tests/') || path.end_with?('.xcscheme', '.xctestplan') }
+       assert(tests.keys.count { |path| path.start_with?('ios-app/tests/') } >= 2)
+@@ -170,14 +194,14 @@ module CompatibilityTest
+   end
+ 
+   test('stale products refuse a direct experiment') do
+-    fixture do |root|
++    retained_fixture do |root|
+       FileUtils.mkdir_p(File.join(root, 'build/stale.framework'))
+       reject(/stale build products/) { Maintenance::InteropExperiment.new(root, '').prepare! }
+     end
+   end
+ 
+   test('unrecognized native integration layout refuses instead of deleting targets') do
+-    fixture do |root|
++    retained_fixture do |root|
+       file = File.join(root, Maintenance::InteropExperiment::PROJECT)
+       File.write(file, File.read(file).gsub('KOTLIN_IOS_BUILDER', 'UNKNOWN_BUILDER'))
+       reject(/integration phase/) { Maintenance::InteropExperiment.new(root, '').prepare! }
+diff --git a/scripts/maintenance/test_direct_roundtrip.rb b/scripts/maintenance/test_direct_roundtrip.rb
+index cbe302c59053057dae44fee3bf93105c22e16aa0..98bff898bb165b3210d2f98c3e74003667c70bf6 100644
+--- a/scripts/maintenance/test_direct_roundtrip.rb
++++ b/scripts/maintenance/test_direct_roundtrip.rb
+@@ -9,7 +9,7 @@ module DirectRoundtripTest
+   def self.assert(value, message = 'assertion failed'); CompatibilityTest.assert(value, message); end
+   def self.reject(pattern, &block); CompatibilityTest.reject(pattern, &block); end
+   def self.fixture
+-    CompatibilityTest.fixture do |root|
++    CompatibilityTest.retained_fixture do |root|
+       experiment = Maintenance::DirectRoundtrip.new(root, File.join(root, 'scripts/maintenance/fixtures/interop'))
+       yield root, experiment
+     end
+diff --git a/shared-di/src/MobiInteropProjection.kt b/shared-di/src/MobiInteropProjection.kt
+new file mode 100644
+index 0000000000000000000000000000000000000000..41b0a48e373e26d3192412bea252058af086727a
+--- /dev/null
++++ b/shared-di/src/MobiInteropProjection.kt
+@@ -0,0 +1,153 @@
++package studio.mekate.mobi.di
++
++import studio.mekate.mobi.feature.home.CounterLoadFailureReason
++import studio.mekate.mobi.feature.home.CounterLoadable
++import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
++import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
++import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
++import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
++
++// Isolated maintenance experiment. No string tags, casts or domain changes.
++
++interface MobiCounterVisitor {
++    fun onInitial()
++
++    fun onLoading(value: CounterLoadable.Loading)
++
++    fun onLoaded(value: CounterLoadable.Loaded)
++
++    fun onError(value: CounterLoadable.Error)
++}
++
++interface MobiCounterFailureVisitor {
++    fun onRepositoryUnavailable()
++
++    fun onUnexpected()
++}
++
++interface MobiRiderLocationVisitor {
++    fun onResolving()
++
++    fun onAvailable(value: RiderLocationState.Available)
++
++    fun onDenied()
++
++    fun onBlocked(value: RiderLocationState.Blocked)
++
++    fun onTemporarilyUnavailable(value: RiderLocationState.TemporarilyUnavailable)
++
++    fun onUnavailable()
++}
++
++interface MobiSnapshotVisitor {
++    fun onInitial()
++
++    fun onLoading()
++
++    fun onSnapshotLoaded(value: NearbyVehicleSnapshotState.Loaded)
++
++    fun onRefreshing(value: NearbyVehicleSnapshotState.Refreshing)
++
++    fun onFailedWithSnapshot(value: NearbyVehicleSnapshotState.FailedWithSnapshot)
++
++    fun onFailedWithoutSnapshot(value: NearbyVehicleSnapshotState.FailedWithoutSnapshot)
++}
++
++interface MobiOverlayVisitor {
++    fun onNone()
++
++    fun onRefreshingIndicator()
++
++    fun onStaleIndicator()
++
++    fun onBlockingFailure()
++}
++
++interface MobiRiderReasonVisitor {
++    fun onAccessDenied()
++
++    fun onAccessRestricted()
++
++    fun onServicesDisabled()
++
++    fun onApproximateOnly()
++
++    fun onTemporarilyUnavailable()
++}
++
++object MobiInteropProjection {
++    fun counter(
++        state: CounterLoadable,
++        visitor: MobiCounterVisitor,
++    ) {
++        when (state) {
++            CounterLoadable.Initial -> visitor.onInitial()
++            is CounterLoadable.Loading -> visitor.onLoading(state)
++            is CounterLoadable.Loaded -> visitor.onLoaded(state)
++            is CounterLoadable.Error -> visitor.onError(state)
++        }
++    }
++
++    fun counterFailure(
++        state: CounterLoadFailureReason,
++        visitor: MobiCounterFailureVisitor,
++    ) {
++        when (state) {
++            CounterLoadFailureReason.RepositoryUnavailable -> visitor.onRepositoryUnavailable()
++            CounterLoadFailureReason.Unexpected -> visitor.onUnexpected()
++        }
++    }
++
++    fun riderLocation(
++        state: RiderLocationState,
++        visitor: MobiRiderLocationVisitor,
++    ) {
++        when (state) {
++            RiderLocationState.Resolving -> visitor.onResolving()
++            is RiderLocationState.Available -> visitor.onAvailable(state)
++            RiderLocationState.Denied -> visitor.onDenied()
++            is RiderLocationState.Blocked -> visitor.onBlocked(state)
++            is RiderLocationState.TemporarilyUnavailable -> visitor.onTemporarilyUnavailable(state)
++            RiderLocationState.Unavailable -> visitor.onUnavailable()
++        }
++    }
++
++    fun snapshot(
++        state: NearbyVehicleSnapshotState,
++        visitor: MobiSnapshotVisitor,
++    ) {
++        when (state) {
++            NearbyVehicleSnapshotState.Initial -> visitor.onInitial()
++            NearbyVehicleSnapshotState.Loading -> visitor.onLoading()
++            is NearbyVehicleSnapshotState.Loaded -> visitor.onSnapshotLoaded(state)
++            is NearbyVehicleSnapshotState.Refreshing -> visitor.onRefreshing(state)
++            is NearbyVehicleSnapshotState.FailedWithSnapshot -> visitor.onFailedWithSnapshot(state)
++            is NearbyVehicleSnapshotState.FailedWithoutSnapshot -> visitor.onFailedWithoutSnapshot(state)
++        }
++    }
++
++    fun overlay(
++        state: NearbyVehicleMapOverlayState,
++        visitor: MobiOverlayVisitor,
++    ) {
++        when (state) {
++            NearbyVehicleMapOverlayState.None -> visitor.onNone()
++            NearbyVehicleMapOverlayState.RefreshingIndicator -> visitor.onRefreshingIndicator()
++            NearbyVehicleMapOverlayState.StaleIndicator -> visitor.onStaleIndicator()
++            NearbyVehicleMapOverlayState.BlockingFailure -> visitor.onBlockingFailure()
++        }
++    }
++
++    fun riderReason(
++        state: RiderLocationBlockedReason,
++        visitor: MobiRiderReasonVisitor,
++    ) {
++        when (state) {
++            RiderLocationBlockedReason.AccessDenied -> visitor.onAccessDenied()
++            RiderLocationBlockedReason.AccessRestricted -> visitor.onAccessRestricted()
++            RiderLocationBlockedReason.ServicesDisabled -> visitor.onServicesDisabled()
++            RiderLocationBlockedReason.ApproximateOnly -> visitor.onApproximateOnly()
++            RiderLocationBlockedReason.TemporarilyUnavailable -> visitor.onTemporarilyUnavailable()
++        }
++    }
++}

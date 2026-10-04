@@ -1,0 +1,873 @@
+{
+  "schema": 1,
+  "validated_at": "2026-10-04T06:28:58Z",
+  "state": "adopted_locally_for_approved_manual_scope",
+  "tuple": {
+    "toolchain": "0.13.0",
+    "direct_kotlin": "2.4.20",
+    "application_compose": "1.12.1",
+    "compile_sdk": 37,
+    "min_target_sdk": 36,
+    "metro": "1.4.5",
+    "bridge_kotlin": "2.4.20",
+    "skie": "0.10.15",
+    "bridge_compose": "1.9.0"
+  },
+  "native_report": {
+    "schema": 1,
+    "run_id": "96942bc52fc76b115913cf5011cc6bf4",
+    "state": "checks_passed",
+    "reason": "named_checks_passed",
+    "binding": {
+      "source_sha256": "2a055657ab33957bc7559ac4084cf3d4ae2813435aaf118c59ec81ef3b365338",
+      "capture_mode": "working_snapshot",
+      "git": {
+        "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+        "index_sha256": "4bde9550c9915bad7f911c76491599d7f452e5e2acd3f3e705f42e6dd9890dd5"
+      },
+      "adapter": "compatibility-direct-roundtrip",
+      "adapter_schema": 1,
+      "plan_sha256": "b954ca107554c87105bf6004483a9b33b8f9d8eaf278c1c19730e549c158dcce",
+      "patch_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "tools_sha256": "e8ce42d51cbd67a7b3b3d1d661b1bc77229e64c0a55bd4848adce48f0dedfb86",
+      "execution_files": [
+        {
+          "name": "executor.rb",
+          "sha256": "6e7b988602caa2b1a27b227f98ea0fbff84dfe31f40b7f47a70d1bb24d8edbcd"
+        },
+        {
+          "name": "worker.rb",
+          "sha256": "790b8720eb98b2dee0d46078e4154953e51345a558be17000aeb324df94fb3a2"
+        },
+        {
+          "name": "core.rb",
+          "sha256": "3ff8ba920a07973e28e62272e952314868a6aae6225cc99659f8707b2064c028"
+        },
+        {
+          "name": "run_store.rb",
+          "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc"
+        },
+        {
+          "name": "process_group.rb",
+          "sha256": "378133febaf2bd9432119ada0947be8119dcea7b9e9b552c2358eadad8b51c90"
+        },
+        {
+          "name": "resource_handlers.rb",
+          "sha256": "8d30b88bd1a0c1e8f25972dff989dd0f4bdab8e37c6d7fe363b7a3ae55a21e93"
+        },
+        {
+          "name": "ruby",
+          "sha256": "80e70b56c0332ab44deffc20c2b816f85bb1239b7e8ce6a12942373deadf072e"
+        },
+        {
+          "name": "ps",
+          "sha256": "a06fe087161557f1f8c030672eaedcd90bc6a8e92b8f2d44e07cffedc3349205"
+        },
+        {
+          "name": "git",
+          "sha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2"
+        },
+        {
+          "name": "compatibility.rb",
+          "sha256": "d7dbeb20453d88f916377a780b4abf0e2f9c9b7763e590f56ea1f72cd1b892a5"
+        },
+        {
+          "name": "d1e532f0f257ced531495f9696b148cd29de981b5ebd7fa3909b85dc6e1d43f2.json",
+          "sha256": "2758bd7af788797b7b0cf889e67ea4e6d77bb0ee8310e5671d725b4ad6fce8de"
+        },
+        {
+          "name": "maintenance-compatibility.json",
+          "sha256": "474ddd275eb473b4b21156ecce31a417d3cd3ce46bf7eb416a41ba5add3006c5"
+        },
+        {
+          "name": "maintenance-kotlin-toolchains.json",
+          "sha256": "ea61b7bdbe2b42e3c5bb7ed0960ffee7843f742836ebc37c0af1353c9f4e2a87"
+        },
+        {
+          "name": "java",
+          "sha256": "4ddcf3ee5d518bd98d55f00da6747d20dddf2c4d7e555fddb9d26db6362424ce"
+        },
+        {
+          "name": "advisory_review.rb",
+          "sha256": "3db5c8c63731af12ac18caecd81a5b9d9fe2910c0c4f182fa829f6cad4d26133"
+        },
+        {
+          "name": "build_inputs.rb",
+          "sha256": "9bbabf2c10af307b6501c43c20230afaa1537fb053b8276dc38dbed5461e75eb"
+        },
+        {
+          "name": "bundled_attribution.rb",
+          "sha256": "a09e8e25e3ba7b387b0fbcadf229efd8c07b101f19595b90035bee8ae215e3d4"
+        },
+        {
+          "name": "bundled_inputs.rb",
+          "sha256": "be0f925a64db1bedfe3e31ac0cedbfd5855202008f118889e22b069ecbdc989f"
+        },
+        {
+          "name": "compatibility_report.rb",
+          "sha256": "5bc3d734ad71ab5dce11fdef5dceaedb5909e5fc8cfbc3588d771bea662512fc"
+        },
+        {
+          "name": "direct_resolution.rb",
+          "sha256": "99f4dbc96c0ec15d42cefc8410ea868b59e7aaa080f840a7a4851a76f78346d0"
+        },
+        {
+          "name": "jetifier_conditions.rb",
+          "sha256": "ae6ce3cb54ded153ed97b6163d68fcdb80a21eb730cc6884051d89089671b395"
+        },
+        {
+          "name": "kotlin_evidence.rb",
+          "sha256": "abcf2dd5754a329f5dcf5cc02791f4b2927d7b3252f29d671b391926768edd3b"
+        },
+        {
+          "name": "kotlin_wrappers.rb",
+          "sha256": "decb290f7a9232ed794a1329d04a84c3e750bf521e62e0bdf7c27f2844b7467a"
+        },
+        {
+          "name": "maintenance.rb",
+          "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3"
+        },
+        {
+          "name": "plugin_attribution.rb",
+          "sha256": "54ba04e2e4425f6262bf03735516ee41cf041ce8d1a6d87e900e884a2769bf37"
+        },
+        {
+          "name": "policy.rb",
+          "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965"
+        },
+        {
+          "name": "recovery.rb",
+          "sha256": "bf81138efc57878ae98759bf25252aa6df97847786f7b84bd8999a254b520ae9"
+        },
+        {
+          "name": "risk_acceptance.rb",
+          "sha256": "55e13089cb8d356ec9cc9d33bc58a961250c7ecb71800346556492ab6c6958dd"
+        },
+        {
+          "name": "roundtrip_evidence.rb",
+          "sha256": "b00f3416206b3d2ba9ddd431a9b14eb3bb5fbc2ae0430d757084ff01c7c028f4"
+        },
+        {
+          "name": "support_policy.rb",
+          "sha256": "9a64240fba1af2f6a0724e8b8f5babfad5aa80fcf1b9b23e60a1467a52744c3e"
+        },
+        {
+          "name": "toolchain_risk_review.rb",
+          "sha256": "4e4dd7f6ab9a46bbe51be5d64cd7067705a4c513dd5850a8e57a2b4271da996b"
+        },
+        {
+          "name": "tools.rb",
+          "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8"
+        },
+        {
+          "name": "upgrade_graph.rb",
+          "sha256": "98f81c579f866858bfad46df5edc3e0db63882bbc1689df7778c2fb73ed91660"
+        },
+        {
+          "name": "watch.rb",
+          "sha256": "194050afeeb45914008929b33e89e058b98a8671634d0949ee07fe41f98a7151"
+        },
+        {
+          "name": "watch_history.rb",
+          "sha256": "26e07b4ef76698e486e9e4eb4ea0b8d460ce7812b5c6ce71046d1109140fc005"
+        },
+        {
+          "name": "bridge_resolution.gradle",
+          "sha256": "681990e98f479bd0f27cd61ce932142136b93a5b6c241cf0659f1efe3c78c42f"
+        },
+        {
+          "name": "delegated_resolution.gradle",
+          "sha256": "3a1b35044e44d7c0d029bb5e039e4052b703a792eb02583ee8cb2a230034bbf4"
+        },
+        {
+          "name": "direct_roundtrip.rb",
+          "sha256": "6ccd67c443fea9dabfdb0fed227f5e3bfee3e283cc404bc302e80b1f8b1ad403"
+        },
+        {
+          "name": "elixir.rb",
+          "sha256": "1adbc0c83b3ccc95c7cf4e5bb0d91e92492c5f670eebcb45c5331b0f5ba84d56"
+        },
+        {
+          "name": "interop_experiment.rb",
+          "sha256": "d5cff4d4d13be4f6a8a5381de5e2a3e455e8fcf10f71e98fa23f533f679af55c"
+        },
+        {
+          "name": "kotlin.rb",
+          "sha256": "087ec8c26eb601cc39baf973b6dbbe24bae9340cd918d509c68d823f82fec1cd"
+        },
+        {
+          "name": "kotlin_rehearsal.rb",
+          "sha256": "2fd5ddf3369ee1538efc834a36798ad2a3f49703efc4ebff504b8e2b6d40fd37"
+        },
+        {
+          "name": "kotlin_resources.rb",
+          "sha256": "323e21461f01d1d55002fac0e1df6f041169fa06acfbf535d7b1dec340555874"
+        },
+        {
+          "name": "kotlin_targets.rb",
+          "sha256": "9c9fb2fcefae650787d8e81689c43a9c2a17d54dd1483e3e42ec336b9063857f"
+        },
+        {
+          "name": "kotlin_watch.rb",
+          "sha256": "eb14e40be79e89c376a85cae85ab24074e1293b3f8fa4fe8e122af8fa57d7488"
+        },
+        {
+          "name": "mobile_support.rb",
+          "sha256": "d14482749ddec84c4cb67da5617811497fadb62c1599b7c0a37e008599cc8947"
+        },
+        {
+          "name": "plugin_attribution.rb",
+          "sha256": "c77debedbfee14e8598d66c91cc4b422853bd896a81df9d8c2747c249d56a857"
+        },
+        {
+          "name": "plugin_resolution.gradle",
+          "sha256": "e38797d347336609c6e37a605bc8c294ae6d0653872d533af9fb020c6915e229"
+        },
+        {
+          "name": "upstream_remediation.rb",
+          "sha256": "a7aa022b825e8978087632ed053e0773ebae3eee490bb6afe8033c181e88f8f8"
+        },
+        {
+          "name": "MobiInteropProjection.kt.template",
+          "sha256": "e83d0f5d69f95479203058546d023b34d04cf9f37d103c2fda1b98de38c9ef64"
+        },
+        {
+          "name": "MobiInteropProjection.swift.template",
+          "sha256": "aa1a45dbdf6f24b4c0b77f01572b11b707ec9896c94d42118fd57e924dc321a8"
+        },
+        {
+          "name": "compatibility_check.rb",
+          "sha256": "b630dcd81de16b5c914bfe3db2a18d6b25b63ac23b03dbea861da23c1e243e87"
+        },
+        {
+          "name": "kotlin_check.rb",
+          "sha256": "5c3a80c4d3e098764c4a1a221fd119e0f62c46c9228776f7912debd820b67871"
+        },
+        {
+          "name": "maintenance-execution-policy.json",
+          "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b"
+        },
+        {
+          "name": "execution_cli.rb",
+          "sha256": "54cf252a899c18a6ef8f6620460676252d9e02d3f0dfa21d0bb4473f9b09c6ff"
+        },
+        {
+          "name": "dependencies.rb",
+          "sha256": "cfb4e6e2e54189677a4ec38bd94eb5e2ec9114d156e8f27caf31e26cfb1c448b"
+        }
+      ],
+      "runtime": {
+        "ruby": "4.0.6",
+        "platform": "arm64-darwin27"
+      },
+      "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+    },
+    "result_sha256": "5bbd6a285a8edaaf3945f5b03070929999cb15430054c48c0a56fdbd3eba1bc4",
+    "phases": [
+      {
+        "phase": "baseline",
+        "outcome": "passed",
+        "evidence_sha256": "1b49462961e75abe21b2fd263f78e017feb8ca0c315e293ffeb1658fef2e73ab",
+        "candidate_selection": {
+          "mode": "normal",
+          "age_state": "age_eligible",
+          "assessed_at": "2026-10-04T05:54:08Z",
+          "eligible_at": "2026-10-02T17:59:28Z",
+          "adoption_authorized": false
+        },
+        "diagnostic": {
+          "setup_stage": "complete"
+        },
+        "cells": {
+          "effective_toolchain": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "version",
+              "settings"
+            ]
+          },
+          "native_library_compile": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "native_library_compile"
+            ]
+          },
+          "framework_link": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "framework_link"
+            ]
+          },
+          "android-test": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "android-test"
+            ]
+          },
+          "android-build-debug": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "android-build-debug"
+            ]
+          },
+          "ios-test": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "ios-test"
+            ]
+          },
+          "ios-build-debug": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "ios-build-debug"
+            ]
+          }
+        },
+        "di_reachable": false,
+        "bridge_unavailable": false,
+        "source_preservation": "verified",
+        "missing_capabilities": [
+          "device_execution",
+          "release_archive",
+          "signed_packaging",
+          "cancellation_parity",
+          "generic_export",
+          "cold_direct_ci",
+          "clean_clone_onboarding",
+          "incremental_direct_build",
+          "local_bridge_rollback",
+          "complete_release_interval_review",
+          "complete_bridge_target_graph",
+          "advisory_review"
+        ]
+      },
+      {
+        "phase": "candidate",
+        "outcome": "passed",
+        "evidence_sha256": "6cbac7172ca30ba38c6dfc568916e641bfd0558887107c26adf448ac281e8941",
+        "candidate_selection": {
+          "mode": "normal",
+          "age_state": "age_eligible",
+          "assessed_at": "2026-10-04T06:04:02Z",
+          "eligible_at": "2026-10-02T17:59:28Z",
+          "adoption_authorized": false
+        },
+        "diagnostic": {
+          "setup_stage": "complete"
+        },
+        "cells": {
+          "effective_toolchain": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "version",
+              "settings"
+            ]
+          },
+          "android-test": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "android-test"
+            ]
+          },
+          "android-build-debug": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "android-build-debug"
+            ]
+          },
+          "ios-test": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "ios-test"
+            ]
+          },
+          "ios-build-debug": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "ios-build-debug"
+            ]
+          },
+          "incremental_ios_test": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "incremental_ios_test"
+            ]
+          },
+          "incremental_ios_build": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "incremental_ios_build"
+            ]
+          },
+          "incremental_framework_change": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": []
+          },
+          "bridge_restore": {
+            "status": "passed",
+            "evidence_kind": "isolated_source_transformation",
+            "commands": []
+          },
+          "rollback_ios_test": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "rollback_ios_test"
+            ]
+          },
+          "rollback_ios_build": {
+            "status": "passed",
+            "evidence_kind": "local_execution",
+            "commands": [
+              "rollback_ios_build"
+            ]
+          },
+          "native_library_compile": {
+            "status": "not_attempted",
+            "evidence_kind": "none"
+          },
+          "framework_link": {
+            "status": "not_attempted",
+            "evidence_kind": "none"
+          }
+        },
+        "di_reachable": true,
+        "bridge_unavailable": true,
+        "source_preservation": "verified",
+        "missing_capabilities": [
+          "device_execution",
+          "release_archive",
+          "signed_packaging",
+          "cancellation_parity",
+          "generic_export",
+          "cold_direct_ci",
+          "clean_clone_onboarding",
+          "complete_release_interval_review",
+          "complete_bridge_target_graph",
+          "advisory_review"
+        ]
+      }
+    ],
+    "missing_capabilities": [
+      "device_execution",
+      "release_archive",
+      "signed_packaging",
+      "cancellation_parity",
+      "generic_export",
+      "cold_direct_ci",
+      "clean_clone_onboarding",
+      "complete_release_interval_review",
+      "complete_bridge_target_graph",
+      "advisory_review",
+      "retirement_approval"
+    ],
+    "bridge_retirement": "defer",
+    "adoption_authorized": false,
+    "roundtrip": {
+      "scope": "local_simulator_incremental_and_restoration",
+      "incremental_direct_build": "passed",
+      "local_bridge_rollback": "passed",
+      "preserved_native_case_count": 12,
+      "probe_case": "MobiIncrementalProbeTests/kotlinChangeReachesSwift()",
+      "changed_framework_count": 3,
+      "restored_source_sha256": "2a055657ab33957bc7559ac4084cf3d4ae2813435aaf118c59ec81ef3b365338",
+      "adoption_authorized": false
+    }
+  },
+  "recovery": {
+    "schema": 1,
+    "operation": "recover",
+    "run_id": "96942bc52fc76b115913cf5011cc6bf4",
+    "state": "quiescent",
+    "hold": false,
+    "processes": [
+      {
+        "check": "baseline-direct-roundtrip",
+        "state": "absent"
+      },
+      {
+        "check": "candidate-direct-roundtrip",
+        "state": "absent"
+      }
+    ],
+    "recorded_outcome": "checks_passed",
+    "resume_allowed": false,
+    "adoption_authorized": false
+  },
+  "cleanup": {
+    "schema": 1,
+    "operation": "cleanup",
+    "run_id": "96942bc52fc76b115913cf5011cc6bf4",
+    "state": "cleaned",
+    "eligible": true,
+    "retention_due_at": "2026-10-11T06:23:08Z",
+    "paths": [
+      "work/baseline",
+      "work/candidate"
+    ],
+    "evidence_retained": true,
+    "recorded_outcome": "checks_passed",
+    "adoption_authorized": false
+  },
+  "risk_review": {
+    "schema": 1,
+    "state": "accepted_risk_for_scoped_manual_use",
+    "reasons": [],
+    "accepted_risk_ids": [
+      "GHSA-2363-cqg2-863c",
+      "GHSA-3677-xxcr-wjqv",
+      "GHSA-574f-3g2m-x479",
+      "GHSA-7hhh-6rmp-j9qf",
+      "GHSA-9pwp-9qqc-pr26",
+      "GHSA-cmp6-m4wj-q63q",
+      "GHSA-p6pp-m3f8-5c89",
+      "GHSA-qp49-qgx5-5m26",
+      "GHSA-r7wm-3cxj-wff9",
+      "GHSA-vqf4-7m7x-wgfc"
+    ],
+    "findings": [
+      {
+        "id": "GHSA-2363-cqg2-863c",
+        "severity": "HIGH",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.jdom",
+              "name": "jdom2",
+              "version": "2.0.6"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "1345f11ba606d15603d6740551a8c21947c0215640770ec67271fe78bea97cf5",
+              "bytes": 304924
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-3677-xxcr-wjqv",
+        "severity": "HIGH",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.bitbucket.b_c",
+              "name": "jose4j",
+              "version": "0.9.5"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "808fb3166f3e67dad9811c331029ab1681242fd52b735bc3f33f281167fcc72e",
+              "bytes": 298683
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-574f-3g2m-x479",
+        "severity": "CRITICAL",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+              "bytes": 8575537
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-7hhh-6rmp-j9qf",
+        "severity": "HIGH",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "com.fasterxml.jackson.core",
+              "name": "jackson-core",
+              "version": "2.21.1"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "1edd5f2e49dca5f8e4519957c24b7b3050bd1c7ee883920da33cff031ff1f7c0",
+              "bytes": 594806
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-7r82-7xv7-xcpj",
+        "severity": "MODERATE",
+        "artifacts": []
+      },
+      {
+        "id": "GHSA-9pwp-9qqc-pr26",
+        "severity": "CRITICAL",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+              "bytes": 8575537
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-c3fc-8qff-9hwx",
+        "severity": "MODERATE",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+              "bytes": 8575537
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-cmp6-m4wj-q63q",
+        "severity": "HIGH",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.lz4",
+              "name": "lz4-java",
+              "version": "1.8.0"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef",
+              "bytes": 682804
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-j288-q9x7-2f5v",
+        "severity": "MODERATE",
+        "artifacts": []
+      },
+      {
+        "id": "GHSA-p6pp-m3f8-5c89",
+        "severity": "HIGH",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "com.fasterxml.jackson.core",
+              "name": "jackson-core",
+              "version": "2.21.1"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "1edd5f2e49dca5f8e4519957c24b7b3050bd1c7ee883920da33cff031ff1f7c0",
+              "bytes": 594806
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-qp49-qgx5-5m26",
+        "severity": "HIGH",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+              "bytes": 8575537
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-r7wm-3cxj-wff9",
+        "severity": "HIGH",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "com.fasterxml.jackson.core",
+              "name": "jackson-core",
+              "version": "2.21.1"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "1edd5f2e49dca5f8e4519957c24b7b3050bd1c7ee883920da33cff031ff1f7c0",
+              "bytes": 594806
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-r937-wjx7-w2jp",
+        "severity": "MODERATE",
+        "artifacts": [
+          {
+            "component": {
+              "group": "org.jetbrains.kotlin",
+              "name": "kotlin-gradle-plugin",
+              "version": "2.2.10",
+              "kind": "maven"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "12e99741802f8e981341eda3f501f399d1a3dcada212da29b8d02cbfe9a073bf",
+              "bytes": 23185614
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "severity": "MODERATE",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "io.opentelemetry",
+              "name": "opentelemetry-api",
+              "version": "1.60.1"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "8e4ea94bbe9b94d823ac6e7dda7c74624659a1352caf0529a07f43f86b6ca0d5",
+              "bytes": 170144
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-vqf4-7m7x-wgfc",
+        "severity": "HIGH",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.lz4",
+              "name": "lz4-java",
+              "version": "1.8.0"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef",
+              "bytes": 682804
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-wg6q-6289-32hp",
+        "severity": "MODERATE",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcpkix-jdk18on",
+              "version": "1.79"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "3639a24ddf9ba4b7eba0659b44770e91eba816421888e571f285aadefe532cd6",
+              "bytes": 1134345
+            }
+          }
+        ]
+      },
+      {
+        "id": "GHSA-xx22-p4ch-683r",
+        "severity": "MODERATE",
+        "artifacts": [
+          {
+            "component": {
+              "kind": "maven",
+              "group": "org.lz4",
+              "name": "lz4-java",
+              "version": "1.8.0"
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef",
+              "bytes": 682804
+            }
+          }
+        ]
+      }
+    ],
+    "age_state": "age_blocked_with_explicit_exception",
+    "expires_at": "2026-11-03T05:48:38Z",
+    "dependency_surface": "bounded_measured_inputs",
+    "remediation_verified": false,
+    "adoption_authorized": false,
+    "bridge_retirement": "defer",
+    "query_count": 549,
+    "provider_scope": "candidate_named_resolved_maven_packages_only",
+    "decision_sha256": "039567731ae996083ffaf8dc16101c9d72fbb1e8bdc5534efd0b5c5622fa7003",
+    "measured_input_source": "retained_verified_producers_not_new_integrated_selection"
+  },
+  "risk_decision_sha256": "039567731ae996083ffaf8dc16101c9d72fbb1e8bdc5534efd0b5c5622fa7003",
+  "validation": {
+    "contract_count": 272,
+    "suite_count": 17,
+    "static_analyzers": 5,
+    "strict_openspec_items": 23,
+    "baseline_android_tests": 38,
+    "direct_android_tests": 38,
+    "original_swift_cases": 12,
+    "direct_and_incremental_swift_cases": 13,
+    "restored_swift_cases": 12
+  },
+  "local_log_sha256": {
+    "contracts.log": "fd280bf9d08fcf21da7202c0152d189d6942f8d6917c44c32a5197b1087ade77",
+    "static.log": "04a242d13f062855ef378dd4d9cf1654204c28529ec62b3b141ad5ec2a9e4901",
+    "risk-contracts.log": "7ad823b5f919a9ab8fd07f366f165e7f7001b3460fe7d60cf59fcd35a634b6d8",
+    "native-roundtrip-report-cleaned.json": "8ef0cc1d64ecd5a572bc2f4c7b1eefdfd348d8a47b416d92024457c63a1cc81a"
+  },
+  "ios_builder": "gradle",
+  "bridge_retirement": "defer",
+  "commit_push_hosted": "not_authorized_or_executed",
+  "release_delivery": "not_authorized_or_proven"
+}

@@ -123,7 +123,7 @@ module Maintenance
                 'minimum_release_age_days' => adapter.config['minimum_release_age_days'] }
       observation = { 'assessment_state' => state, 'native_state' => native_report['state'], 'native_reason' => native_report['reason'],
                       'matrix' => matrix, 'releases' => releases.transform_values { |r| r.reject { |key, _| key == 'source' } },
-                      'direct_paths' => assessment['direct_paths'], 'missing_capabilities' => gaps.uniq.sort,
+                      'direct_paths' => assessment['direct_paths'], 'capability_observations' => assessment.fetch('capability_observations', []), 'missing_capabilities' => gaps.uniq.sort,
                       'cleanup' => @cleanup_state || 'not_started', 'history_provider' => @history == 'local' ? 'local' : @history == 'initial' ? 'available' : @history == 'found' ? 'available' : 'incomplete' }
       previous, continuity = Watch.previous(@history == 'initial' ? nil : @previous, scope, now: @now)
       continuity = 'history_provider_unavailable' unless %w[local found initial].include?(@history)

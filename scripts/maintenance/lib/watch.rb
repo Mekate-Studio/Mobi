@@ -120,6 +120,11 @@ module Maintenance
         finding = provider['state'] == 'observed' ? (versions.empty? ? 'None observed in this bounded response' : versions) : 'Unknown: provider evidence is incomplete'
         lines << '| ' + name + ' | `' + provider['state'] + '` | ' + finding + ' |'
       end
+      observations = observation.fetch('capability_observations', [])
+      unless observations.empty?
+        lines += ['', '| Upstream capability observation | Scope | Evidence state |', '| --- | --- | --- |']
+        observations.each { |entry| lines << '| `' + entry.fetch('id') + '` | `' + entry.fetch('scope') + '` | `' + entry.fetch('state') + '` |' }
+      end
       lines += ['', 'Missing capabilities: ' + observation.fetch('missing_capabilities').map { |s| '`' + s + '`' }.join(', ') + '.', '']
       lines.join("\n")
     end

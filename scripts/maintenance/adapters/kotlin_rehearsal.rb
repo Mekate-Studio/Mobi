@@ -10,7 +10,7 @@ module Maintenance
     PROFILES = %w[inputs mobile].freeze
     attr_reader :host_file
 
-    def initialize(root, source:, candidate:, profile:, target_policy: nil, support_policy: false)
+    def initialize(root, source:, candidate:, profile:, target_policy: nil, support_policy: false, experimental: false)
       raise Failure, 'Use Kotlin profile inputs or mobile' unless PROFILES.include?(profile)
       @root = root
       wrappers = KotlinWrappers.new(root)
@@ -18,7 +18,7 @@ module Maintenance
       if support_policy
         raise Failure, 'Support rehearsal must keep the current Toolchain' unless candidate == baseline
       else
-        wrappers.candidate!(candidate)
+        wrappers.candidate!(candidate, experimental: experimental)
       end
       wrappers.verify!
       target_policy ||= wrappers.pins.fetch('target_policy', 'current')

@@ -29,14 +29,18 @@ architecture itself and the documentation around it.
 
 ## Clean-Clone Quickstart
 
-The reviewed baseline is Kotlin Toolchain 0.12.2. iOS development requires an
+The reviewed baseline is Kotlin Toolchain 0.13.0. iOS development requires an
 Apple Silicon Mac; shared Kotlin and the bridge target `iosArm64` devices and
 `iosSimulatorArm64` simulators. Intel iOS simulators are outside Mobi's support
-policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile/target SDK
-remain API 36. These floors follow a configurable policy of one stable major
+policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile SDK is API 37; target SDK
+remains API 36. These floors follow a configurable policy of one stable major
 behind the latest reviewed stable release. See the
 [mobile support workflow](docs/maintenance/mobile-support-policy.md) and
 [adoption evidence](docs/maintenance/support-policy-validation.md).
+
+Install Android platform API 37 and build tools 37.0.0, and review/accept the
+Android SDK license explicitly before running Android jobs. See the
+[local SDK setup](docs/reference/local-development.md#android-sdk-provisioning).
 
 Install Ruby dependencies:
 
@@ -89,8 +93,12 @@ entry points:
 - [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
 - [Quality And Dependency Maintenance Audit](docs/maintenance/README.md)
 
-The Gradle bridge material is intentionally documented as a transitional
-constraint in the current repository shape, not as the long-term ideal.
+The approved direct development default uses Kotlin Toolchain for iOS development, tests
+and unsigned builds, with explicit typed Swift projections. Gradle/unknown
+iOS builder overrides refuse; rollback restores complete content first.
+Credentialed iOS archive/export/TestFlight lanes are held pending separate
+signed-delivery evidence and authorization. The retained bridge files are
+preserved for content rollback. See the [accepted decision](docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md).
 
 ## Repository Shape
 
@@ -173,14 +181,15 @@ shared Kotlin dependency surface used by the app modules.
 The retained bridge uses Kotlin 2.4.20, Metro 1.4.5 and SKIE 0.10.15; bridge
 Compose remains 1.9.0. Renovate ceilings are bounded at Metro <=1.4.5 and bridge
 Kotlin <=2.4.20 after the [reviewed adoption](docs/maintenance/bridge-adoption-review.md).
-Toolchain 0.12.2 supplies Kotlin 2.4.10 independently. The
+Toolchain 0.13.0 supplies Kotlin 2.4.20 and Compose 1.12.1 independently. The
 [compatibility assessment](docs/maintenance/kotlin-compatibility.md) keeps this
 upgrade separate from proving an equivalent direct Kotlin Toolchain path.
 The existing scheduled compatibility workflow uses the repository-owned
 [isolated watch](docs/maintenance/compatibility-watch.md). It records evidence
 without changing production dependencies or granting adoption permission.
-Bridge retirement still requires native app/test, interop, onboarding and
-release evidence with the bridge unavailable.
+Physical bridge deletion still requires its own review after default integration
+and applicable native, interop, onboarding and release gates. Preserved bridge
+pins remain rollback inputs; they are not the active iOS builder on the adopted source.
 
 Install the pinned discovery tools once, then record a local inventory:
 

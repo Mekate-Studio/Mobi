@@ -1,6 +1,6 @@
 # Direct iOS incremental and bridge-restoration assessment
 
-This manual slice-10 profile extends the [compatibility runner](compatibility-runner.md). Its original measurement assessed the typed-facade experiment with Toolchain 0.12.2 and Metro 1.1.1. The profile inherits current baseline pins, so a new run now assesses Metro 1.4.5; that direct tuple is unmeasured. See the [retirement path](bridge-retirement-path.md). It does not adopt the separate Kotlin/Metro/SKIE bridge-upgrade tuple. Production defaults, native targets/tests, OS/architecture policy and release jobs remain unchanged. The [proposed transition ADR](../adr/0007-direct-ios-transition-requires-capability-evidence.md) leaves ADRs 0003/0006 accepted.
+This manual slice-10 profile extends the [compatibility runner](compatibility-runner.md). Its original measurement assessed the typed-facade experiment with Toolchain 0.12.2 and Metro 1.1.1. The profile inherits current baseline pins, so a new run now assesses Metro 1.4.5; the [current-tuple assessment](direct-current-assessment.md) now records a passing bounded local round trip. See the [retirement path](bridge-retirement-path.md). It does not adopt the separate Kotlin/Metro/SKIE bridge-upgrade tuple. Production defaults, native targets/tests, OS/architecture policy and release jobs remain unchanged. The [proposed transition ADR](../adr/0007-direct-ios-transition-requires-capability-evidence.md) leaves ADRs 0003/0006 accepted.
 
 ## Commands and prerequisites
 
@@ -41,3 +41,5 @@ The [2026-10-02 paired assessment](tenth-slice-validation.md) and [public receip
 Physical-device and minimum-floor execution, release configuration/archive/export, signed packaging, generic export, cancellation/lifecycle parity, true clean-clone onboarding and cold hosted direct CI remain independent gates. A fresh local snapshot on a prepared host is not a new-machine onboarding result. The typed-facade API still needs architecture review. Current build-tooling advisory findings from [slice 9](ninth-slice-review.md) remain visible and are not cleared by these builds.
 
 The full retirement matrix and a named maintainer decision must precede any default or removal patch. The independent dormant Elixir profile adds no prerequisites to this mobile path. The [slice-10 validation record](tenth-slice-validation.md) separates implementation checks from actual native measurements and outstanding gates.
+
+The [Metro 1.4.5 follow-up](direct-current-assessment.md) records fresh current-tuple evidence; the earlier Metro 1.1.1 receipt remains unchanged.

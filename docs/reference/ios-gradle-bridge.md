@@ -1,10 +1,20 @@
 # iOS Gradle Bridge Migration
 
+This is the retained-integration reference and historical migration guide.
+With the approved direct development default, development/test/unsigned iOS callers use
+Kotlin Toolchain and explicit typed projections. The examples below apply to
+restored retained content, not to selecting Gradle on the new facade. Rollback
+requires restoring the complete reviewed source patch and cleaning owned build
+products before rebuilding. Bridge files remain preserved; credentialed iOS
+delivery is held pending separate evidence and authorization. See the
+[accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+
+
 For the 2026-09-19 source audit and proposed upgrade/retirement gates, read the
 [Kotlin compatibility matrix](../maintenance/kotlin-compatibility.md). It
 revisits the target-count explanation, current Swift export capabilities and
 SKIE compatibility below. Historical build claims in this guide are not fresh
-validation of the current checkout. The existing bridge remains the default.
+validation of the current checkout. The historical source used the bridge default; ADR 0008 records the current direct development default.
 
 This document describes a temporary migration path for this repository when the
 native iOS application needs a more traditional Xcode plus Gradle integration,
@@ -41,7 +51,7 @@ repository. Instead, Gradle will own only an iOS-facing framework bridge.
 ## Why the bridge still exists
 
 The bridge is no longer best explained as "needed for Swift Package Manager."
-Mobi now uses Toolchain 0.12.2 with ARM iOS targets, while the bridge remains
+Mobi now uses Toolchain 0.13.0 with ARM iOS targets, while the bridge remains
 the validated native app/test path. The remaining evidence gaps are more
 specific:
 
@@ -235,8 +245,8 @@ The reviewed retained-bridge tuple is Kotlin 2.4.20 / Metro 1.4.5 /
 SKIE 0.10.15, with bounded Renovate ceilings of <=1.4.5 for Metro and <=2.4.20
 for bridge Kotlin. The [adoption review](../maintenance/bridge-adoption-review.md)
 records the paired graphs/native checks, maintainer decision and residual
-OpenTelemetry tooling finding. Bridge Compose stays 1.9.0; Toolchain 0.12.2
-supplies Kotlin 2.4.10 independently. This upgrade does not qualify the direct
+OpenTelemetry tooling finding. Bridge Compose stays 1.9.0; Toolchain 0.13.0
+supplies Kotlin 2.4.20 and Compose 1.12.1 independently. This upgrade does not qualify the direct
 path or remove the bridge.
 
 [`scripts/ci/check_skie_kotlin_compatibility.sh`](../../scripts/ci/check_skie_kotlin_compatibility.sh)

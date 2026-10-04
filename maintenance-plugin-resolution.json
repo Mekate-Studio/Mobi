@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "toolchain": "0.13.0",
+  "compose": {
+    "group": "org.jetbrains.kotlin",
+    "name": "kotlin-compose-compiler-plugin-embeddable"
+  },
+  "gradle": {
+    "version": "9.6.1",
+    "distribution_sha256": "9c0f7faeeb306cb14e4279a3e084ca6b596894089a0638e68a07c945a32c9e14"
+  },
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
+      "sha256": "af6d92c7d659ffab501b3ec6dfe78fc6d8b08390246efdff54918e93fb9ef3b2",
+      "retrieved_at": "2026-10-03T18:24:44.303003+00:00",
+      "id": "classpath"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/frontend/schema/src/org/jetbrains/amper/frontend/kotlin/CompilerPluginConfig.kt",
+      "sha256": "be05f876194e1e4103f1d942ebb5138865f5585b9d5f32807902f1e08fe5d58c",
+      "retrieved_at": "2026-10-03T18:24:44.491021+00:00",
+      "id": "mapping"
+    }
+  ],
+  "automatic_adoption": false,
+  "candidate_mappings": {
+    "0.12.2": {
+      "schema": 1,
+      "toolchain": "0.12.2",
+      "compose": {
+        "group": "org.jetbrains.kotlin",
+        "name": "kotlin-compose-compiler-plugin-embeddable"
+      },
+      "gradle": {
+        "version": "9.6.1",
+        "distribution_sha256": "9c0f7faeeb306cb14e4279a3e084ca6b596894089a0638e68a07c945a32c9e14"
+      },
+      "sources": [
+        {
+          "id": "mapping",
+          "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/frontend/schema/src/org/jetbrains/amper/frontend/kotlin/CompilerPluginConfig.kt",
+          "sha256": "ac74722ff980ffa76f76c89ae9376ffd6cdfa60eb907bd424d2b6bd153143730",
+          "retrieved_at": "2026-10-03T09:30:09.735429+00:00"
+        },
+        {
+          "id": "latest",
+          "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/latest",
+          "sha256": "9c88125b3ebd84e853da6086a27fda5f86ecc5ed5d054a501eb445155d9eebf4",
+          "retrieved_at": "2026-10-03T09:30:10.134420+00:00"
+        },
+        {
+          "id": "gradle-sha",
+          "url": "https://services.gradle.org/distributions/gradle-9.6.1-bin.zip.sha256",
+          "sha256": "896bed90c4c17e0a4c779683aeba2a63f3df10cedc31244e391850feee597925",
+          "retrieved_at": "2026-10-03T09:30:10.522587+00:00"
+        },
+        {
+          "path": "sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
+          "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
+          "sha256": "e05e05e7eaf728ccd2d43d3cdc9acef525793e8e8ada155786e1c55e37eb1f2f",
+          "retrieved_at": "2026-10-03T04:34:04.686771+00:00"
+        }
+      ],
+      "automatic_adoption": false
+    }
+  }
+}

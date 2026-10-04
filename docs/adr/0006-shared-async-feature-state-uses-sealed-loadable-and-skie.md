@@ -1,5 +1,10 @@
 # ADR 0006: Shared Feature State Uses Sealed Value Types and SKIE
 
+The iOS Gradle/SKIE build and projection portions are superseded for development,
+repository tests and unsigned builds by [ADR 0008](0008-explicit-ios-projections-and-direct-development-builds.md).
+Native package ownership and shared sealed-state decisions remain accepted.
+This record preserves the historical retained-bridge rationale.
+
 ## Status
 
 Accepted

@@ -19,6 +19,25 @@ Set a writable Kotlin Toolchain cache before running build commands:
 export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
 ```
 
+## Android SDK provisioning
+
+The pinned Toolchain 0.13.0 and Compose 1.12.1 require application compile SDK
+37. Android minimum and target remain API 36. With Android SDK command-line
+tools available, point `ANDROID_HOME` to a writable SDK directory and run:
+
+```bash
+sdkmanager --sdk_root="$ANDROID_HOME" --licenses
+sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-37.0" "build-tools;37.0.0" "platform-tools"
+```
+
+Review the license terms and accept them explicitly. These commands are setup
+steps; repository smoke jobs do not grant license acceptance. CI must use an SDK
+whose terms have been accepted by its operator; do not infer that missing
+packages or licenses exist on a cold runner. The Toolchain can provision missing
+packages in a writable SDK after prerequisites are met. Verify with the ordinary
+Android smoke jobs and retain cold-run receipts before claiming hosted parity.
+A private SDK with copied host licenses is insufficient empty-host evidence.
+
 ## IDE flow without Gradle sync
 
 Because this repository uses Kotlin Toolchain instead of Gradle as the project
@@ -73,30 +92,33 @@ writes its output to `build/logs/android-emulator-<avd-name>.log`.
 in Xcode, where you can use the standard iOS run/debug loop against a simulator
 or device.
 
-By default, the iOS project builds Kotlin through the temporary Gradle bridge.
-To override the cache location explicitly, set:
+The approved direct development default defaults to Kotlin Toolchain for iOS development,
+tests and unsigned builds. Use the same repo-owned smoke jobs as CI:
 
 ```bash
-export KOTLIN_IOS_BUILDER=gradle
-export GRADLE_USER_HOME="$PWD/.gradle-user-home"
-```
-
-Then run the same local entry points, for example:
-
-```bash
+export KOTLIN_IOS_BUILDER=kotlin
 ./scripts/ci/run_job.sh ios-build-debug
-bundle exec fastlane ios buildRelease
+./scripts/ci/run_job.sh ios-test
+./scripts/ci/run_job.sh ios-build-release
 ```
 
-That keeps the local flow aligned with the CI and TestFlight path while the
-bridge is in use.
+Xcode runs a repo-owned builder preflight before its managed Kotlin phase.
+Gradle and unknown selectors refuse; remove a stale Gradle override to build
+direct content. To return to the retained integration, restore the complete
+reviewed content patch, clean only owned generated products and revalidate the
+restored native consumers before selecting Gradle. Preserved bridge files alone
+do not make this source interchangeable with SKIE content.
 
-`KOTLIN_IOS_BUILDER=kotlin` is kept as an experimental direct integration path,
-but it is not the default: equivalent native app/test, SKIE-backed sealed-state,
-clean-clone and packaging behavior has not been proven with the bridge unavailable.
-The reviewed Toolchain 0.12.2 targets Apple Silicon iOS simulators and ARM devices.
-A separate native test target is not itself a demonstrated direct-path blocker.
-See the [compatibility matrix](../maintenance/kotlin-compatibility.md) and
+Credentialed iOS archive/export/TestFlight lanes are held before signing or API
+key processing pending separate signed-delivery evidence and authorization.
+The simulator Release smoke job remains unsigned; raw unsigned archive
+assessment is a separate capability check. See the
+[accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+
+The reviewed Toolchain 0.13.0 targets Apple Silicon iOS simulators and ARM devices.
+Physical/exact-floor execution, broader Compose/resources, empty-host onboarding
+and signed/export delivery remain distinct evidence gates. See the
+[compatibility matrix](../maintenance/kotlin-compatibility.md) and
 [minimum-OS policy](../maintenance/mobile-support-policy.md).
 
 `just doctor` checks the expected local toolchain and shows whether an Android
@@ -127,7 +149,7 @@ symlinks explicitly.
 Host tests are discovered from the declared module graph, including `test` and
 `test@android` roots. Other Kotlin test targets fail with an explicit coverage
 error until a runner is provided. The iOS job retains the `PullRequest` Xcode
-plan and Gradle bridge. Native tests require Java/SDK/Xcode and an existing
+plan and direct Kotlin integration. Native tests require Java/SDK/Xcode and an existing
 available simulator. The gate never provisions one. Set
 `IOS_SIMULATOR_DESTINATION` to choose an existing simulator if needed.
 

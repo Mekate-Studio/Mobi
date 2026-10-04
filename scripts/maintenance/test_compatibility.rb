@@ -5,6 +5,7 @@ require_relative 'adapters/compatibility'
 require_relative 'adapters/interop_experiment'
 require_relative 'lib/compatibility_report'
 require_relative 'compatibility_check'
+require_relative 'adapters/upstream_remediation'
 
 module CompatibilityTest
   ROOT = File.expand_path('../..', __dir__)
@@ -25,10 +26,84 @@ module CompatibilityTest
       yield root
     end
   end
+# Only the historical integration-transform contracts need retained inputs.
+# Native tests execute the real direct candidate, not this synthetic fixture.
+def self.retained_fixture
+  fixture do |root|
+    project = File.join(root, Maintenance::InteropExperiment::PROJECT)
+    content = File.read(project)
+    if content.include?('name = "Validate Kotlin Builder";')
+      old = File.read(File.join(ROOT, 'scripts/maintenance/fixtures/interop/RetainedKotlinBuildPhase.pbxproj.template'))
+      current = /\t\tA93CF46588F1B180AC5404FB \/\* Build Kotlin \*\/ = \{.*?\n\t\t\};\n/m
+      raise 'Unexpected direct phase in contract fixture' unless content.scan(current).size == 1
+      content = content.sub(current, old).sub('A93CF46588F1B180AC5404FB /* Build Kotlin */,', 'A93CF46588F1B180AC5404FB /* Build Kotlin Framework */,')
+      content = content.sub(/\t\tE04D202610040001001664A3 \/\* Validate Kotlin Builder \*\/ = \{.*?\n\t\t\};\n/m, '')
+      content = content.sub(/\t\t\t\tE04D202610040001001664A3 \/\* Validate Kotlin Builder \*\/,\n/, '')
+      File.write(project, content)
+      manifest = File.join(root, 'ios-app/module.yaml')
+      File.write(manifest, File.read(manifest).sub("  - ../shared-di\n", ''))
+      %w[shared-di/src/MobiInteropProjection.kt ios-app/src/MobiInteropProjection.swift].each { |path| File.unlink(File.join(root, path)) }
+      state = File.join(root, 'ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift')
+      File.write(state, File.read(state).sub('switch mobiProjection(of: reason) {', 'switch reason {'))
+    end
+    yield root
+  end
+end
+
   def self.config(root)
     file = File.join(root, Maintenance::Compatibility::CONFIG)
     data = JSON.parse(File.read(file)); yield data
     File.write(file, JSON.pretty_generate(data))
+  end
+
+  test('Xcode first-launch readiness refuses before another cold pair and does not run setup') do
+    calls = []
+    status = Struct.new(:exitstatus) { def success?; exitstatus.zero?; end }
+    runner = lambda do |*args, **options|
+      calls << [args, options]
+      ['', '', status.new(69)]
+    end
+    reject(/first-launch readiness/) { Maintenance::UpstreamRemediationRehearsal.xcode_ready!('/Applications/Xcode.app/Contents/Developer', runner: runner) }
+    assert(calls.first[0][1..] == ['/usr/bin/xcodebuild', '-checkFirstLaunchStatus'])
+    assert(calls.first[1][:unsetenv_others])
+    Maintenance::UpstreamRemediationRehearsal.xcode_ready!('/Applications/Xcode.app/Contents/Developer', runner: ->(*_args, **_options) { ['', '', status.new(0)] })
+    assert(Maintenance::KotlinEvidence.classify('ERROR: Xcode first-launch setup could not be completed.', 1) == 'missing')
+    assert(Maintenance::KotlinEvidence.classify('ERROR: Xcode first-launch setup could not be completed. HTTP 403', 1) == 'infrastructure')
+  end
+
+  test('compile SDK remediation is isolated and preserves minimum target and namespace declarations') do
+    fixture do |root|
+      sdk_file = File.join(root, "android-app/module.yaml")
+      File.write(sdk_file, File.read(sdk_file).sub("compileSdk: 37", "compileSdk: 36"))
+      source = Maintenance::Source.new(root)
+      edits = Maintenance::UpstreamRemediationRehearsal.sdk_edits(source, 37)
+      assert(edits.map { |e| e['path'] } == ['android-app/module.yaml'])
+      android = YAML.safe_load(edits.first['content']).fetch('settings').fetch('android')
+      assert(android.values_at('compileSdk', 'minSdk', 'targetSdk', 'namespace') == [37, 36, 36, 'studio.mekate.mobi'])
+      source.verify!
+      reject(/Only the reviewed/) { Maintenance::UpstreamRemediationRehearsal.sdk_edits(source, 38) }
+      file = File.join(root, 'android-app/module.yaml'); File.write(file, File.read(file).sub('minSdk: 36', 'minSdk: 35'))
+      reject(/baseline/) { Maintenance::UpstreamRemediationRehearsal.sdk_edits(Maintenance::Source.new(root), 37) }
+    end
+  end
+
+  test('AAR compile SDK incompatibility is causal while unexplained and transport failures remain inconclusive') do
+    log = "CheckAarMetadataWorkAction: Dependency requires libraries and applications that\n depend on it to compile against version 37 or later of the\n Android APIs.\n :android-app is currently compiled against android-36.0."
+    assert(Maintenance::KotlinEvidence.classify(log, 1) == 'failed')
+    assert(Maintenance::KotlinEvidence.classify('Unknown failure', 1) == 'infrastructure')
+    assert(Maintenance::KotlinEvidence.classify(log + ' HTTP 403', 1) == 'infrastructure')
+  end
+
+  test('SwiftPM announcement cannot be promoted to passing execution or lose source binding') do
+    fixture do |root|
+      assessment = Maintenance::Compatibility.new(root).assessment
+      observation = assessment['capability_observations'].first
+      assert(observation['state'] == 'documented_not_rehearsed' && observation['missing_capabilities'].include?('swiftpm_execution'))
+      config(root) { |c| c['capability_observations'][0]['state'] = 'passed' }
+      reject(/Unsupported capability observation/) { Maintenance::Compatibility.new(root) }
+      config(root) { |c| c['capability_observations'][0]['state'] = 'documented_not_rehearsed'; c['capability_observations'][0]['sources'] = ['unknown'] }
+      reject(/Unsupported capability observation/) { Maintenance::Compatibility.new(root) }
+    end
   end
 
   test('reviewed tuple creates isolated coupled edits without changing caller pins') do
@@ -99,7 +174,7 @@ module CompatibilityTest
   end
 
   test('direct copy keeps native tests, schemes and targets while removing its bridge') do
-    fixture do |root|
+    retained_fixture do |root|
       source = Maintenance::Source.new(root)
       tests = source.files.select { |path, _| path.start_with?('ios-app/tests/') || path.end_with?('.xcscheme', '.xctestplan') }
       assert(tests.keys.count { |path| path.start_with?('ios-app/tests/') } >= 2)
@@ -119,14 +194,14 @@ module CompatibilityTest
   end
 
   test('stale products refuse a direct experiment') do
-    fixture do |root|
+    retained_fixture do |root|
       FileUtils.mkdir_p(File.join(root, 'build/stale.framework'))
       reject(/stale build products/) { Maintenance::InteropExperiment.new(root, '').prepare! }
     end
   end
 
   test('unrecognized native integration layout refuses instead of deleting targets') do
-    fixture do |root|
+    retained_fixture do |root|
       file = File.join(root, Maintenance::InteropExperiment::PROJECT)
       File.write(file, File.read(file).gsub('KOTLIN_IOS_BUILDER', 'UNKNOWN_BUILDER'))
       reject(/integration phase/) { Maintenance::InteropExperiment.new(root, '').prepare! }
@@ -137,7 +212,7 @@ module CompatibilityTest
   test('unknown profile and wrong Toolchain refuse assessment') do
     reject(/Unknown compatibility profile/) { Maintenance::Compatibility.new(ROOT).edits(Maintenance::Source.new(ROOT), 'guess') }
     fixture do |root|
-      file = File.join(root, 'kotlin'); File.write(file, File.read(file).sub('kotlin_cli_version=0.12.2', 'kotlin_cli_version=0.12.1'))
+      file = File.join(root, 'kotlin'); File.write(file, File.read(file).sub(/^kotlin_cli_version=.+$/, 'kotlin_cli_version=0.12.1'))
       reject(/Toolchain differs/) { Maintenance::Compatibility.new(root).assessment }
     end
   end
@@ -214,7 +289,7 @@ module CompatibilityTest
     end
   end
 
-  def self.report_fixture(profile = 'bridge-compile', references: nil)
+  def self.report_fixture(profile = 'bridge-compile', references: nil, dependency_log: nil)
     Dir.mktmpdir('mobi-compatibility-report-') do |root|
       store = Maintenance::RunStore.new(File.join(root, 'runs')); id = SecureRandom.hex(16)
       binding = { 'adapter' => 'compatibility-' + profile }
@@ -229,9 +304,31 @@ module CompatibilityTest
             %w[android-test android-build-debug ios-test ios-build-debug].each { |cell| cells[cell]['status'] = 'not_attempted' }
           end
           evidence = { 'schema' => 1, 'profile' => profile, 'phase' => phase, 'adoption_authorized' => false,
-                       'cells' => cells, 'source_preservation' => 'verified', 'bridge_unavailable' => %w[direct-facade direct-roundtrip].include?(profile) && phase == 'candidate',
+                       'cells' => cells, 'source_preservation' => 'verified', 'bridge_unavailable' => %w[direct-facade direct-roundtrip direct-resolution direct-build-inputs].include?(profile) && phase == 'candidate',
                        'di_reachable' => true, 'missing_capabilities' => %w[release_archive complete_bridge_target_graph],
                        'commands' => [{ 'log' => 'native_library_compile.log', 'sha256' => Maintenance.file_sha(File.join(control, 'native_library_compile.log')) }] }
+          if %w[direct-resolution direct-build-inputs upstream-build-inputs].include?(profile)
+            Maintenance::DirectResolution::NATIVE_CELLS.each { |cell| cells[cell]['status'] = 'not_attempted' }
+            cells['toolchain_resolution'] = { 'status' => 'passed' }
+            if %w[direct-build-inputs upstream-build-inputs].include?(profile)
+              %w[android-test android-build-debug native_klib_iosarm64 native_klib_iossimulatorarm64 build_input_evidence].each { |name| cells[name] = { 'status' => 'passed' } }
+            end
+            evidence['missing_capabilities'] += Maintenance::DirectResolution::GAPS
+            references.fetch(phase).each do |name, data|
+              file = name + '.json'; Maintenance::RunStore.atomic(File.join(control, file), data)
+              evidence[name] = { 'file' => file, 'sha256' => Maintenance.file_sha(File.join(control, file)) }
+            end
+            log = dependency_log || DirectResolutionTest.graph_text
+            File.write(File.join(control, 'dependencies.log'), log)
+            evidence['commands'] << { 'check' => 'dependencies', 'exit' => 0, 'capability' => 'toolchain_resolution', 'log' => 'dependencies.log', 'sha256' => Maintenance.file_sha(File.join(control, 'dependencies.log')) }
+          end
+          evidence['environment'] = { 'bridge' => 'gradle' } if profile == 'upstream-build-inputs'
+          packaging_cells = { 'upstream-android-packaging' => %w[android-build-debug android_release android_aab],
+                              'upstream-ios-release' => ['ios_release_simulator'], 'upstream-ios-archive' => ['ios_unsigned_archive'] }
+          if packaging_cells.key?(profile)
+            cells.each_value { |cell| cell['status'] = 'not_attempted' }
+            (['effective_toolchain'] + packaging_cells.fetch(profile)).each { |name| cells[name] = { 'status' => 'passed' } }
+          end
           if profile == 'bridge-review'
             %w[toolchain_resolution bridge_resolution].each { |cell| cells[cell] = { 'status' => 'passed' } }
             component = { 'kind' => 'maven', 'group' => 'example', 'name' => 'library', 'version' => '1.0.0' }
@@ -270,7 +367,7 @@ module CompatibilityTest
         end
         store.save(journal)
         store.result(journal, { 'run_id' => id, 'state' => 'checks_passed', 'reason' => 'named_checks_passed', 'binding' => binding,
-                               'steps' => steps, 'ended_at' => Time.now.utc.iso8601, 'adoption_authorized' => false, 'missing_capabilities' => %w[release_archive complete_bridge_target_graph] + (profile == 'direct-roundtrip' ? %w[incremental_direct_build local_bridge_rollback] : []) })
+                               'steps' => steps, 'ended_at' => Time.now.utc.iso8601, 'adoption_authorized' => false, 'missing_capabilities' => %w[release_archive complete_bridge_target_graph] + (%w[direct-resolution direct-build-inputs upstream-build-inputs].include?(profile) ? Maintenance::DirectResolution::GAPS : []) + (profile == 'direct-roundtrip' ? %w[incremental_direct_build local_bridge_rollback] : []) })
       end
       yield store, id, profile
     end
@@ -308,6 +405,19 @@ module CompatibilityTest
       result['steps'].first['output_sha256'].delete('check.json')
       Maintenance::RunStore.atomic(path, result)
       reject(/complete process\/output/) { Maintenance::CompatibilityReport.read(store, id) }
+    end
+  end
+
+  test('packaging receipts require their actual jobs without crediting native tests') do
+    { 'upstream-android-packaging' => 'android_aab', 'upstream-ios-release' => 'ios_release_simulator',
+      'upstream-ios-archive' => 'ios_unsigned_archive' }.each do |profile, required|
+      report_fixture(profile) do |store, id, _|
+        report = Maintenance::CompatibilityReport.read(store, id)
+        assert(report['state'] == 'checks_passed' && report['bridge_retirement'] == 'defer')
+        assert(report['phases'].all? { |phase| phase['cells']['ios-test']['status'] == 'not_attempted' })
+        change_phase_evidence(store, id, profile, 'candidate') { |e| e['cells'][required]['status'] = 'not_attempted' }
+        reject(/required capability/) { Maintenance::CompatibilityReport.read(store, id) }
+      end
     end
   end
   test('review report compares verified graphs without inventing advisory provider success') do

@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "assessment": "complete_hosted_operations_via_three_bounded_pairs",
+  "github_run_id": 37203086765,
+  "github_run_url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37203086765",
+  "workflow_conclusion": "success",
+  "state": "checks_passed",
+  "source_revision": "faf6787742e7b3d49ad64754b8185e76f18a505c",
+  "source_sha256": "8177b67f961dcfa96ad87d3e9f3ba68c7faf7c7dd391be2172ffa871ca7c0b19",
+  "probe_sha256": "3bc19fe3811ea10bf83495019ff5811afb44790ac0f7b744139d12e5c14533e2",
+  "phase_derivation_sha256": "eca32c2e0f1fe55f0bf7475a4ec253309eae9bf2f0025e8373ce7da3f9f3f0ba",
+  "foreign_derivation_sha256": "6b62dedc37b8b0666889805e2cd007798964fa997f57cf944ec73cd52b324578",
+  "required_cells": [
+    "effective_toolchain",
+    "nightly_test",
+    "ios_release_simulator",
+    "simulator_product",
+    "ios_unsigned_archive",
+    "archive_product"
+  ],
+  "pairs": {
+    "nightly": {
+      "receipt": "2026-10-04-hosted-direct-nightly.json",
+      "receipt_sha256": "5ebf73fb89dc3805ec596eb1d7baf2f224d83394a738fb33595e174cc5789cea",
+      "producer_id": "ba019de082d2eb9a813e8b9b8f12cefb",
+      "artifact": {
+        "id": 11304387303,
+        "name": "direct-operations-evidence-nightly",
+        "digest": "sha256:d6aaf373967ad967ec5b04450f444edbed643ea34f277158c962edd4f2868734",
+        "size_in_bytes": 726687
+      },
+      "provider_zip_digest_verified": true,
+      "owned_recovery": "quiescent",
+      "owned_cleanup": "verified"
+    },
+    "release": {
+      "receipt": "2026-10-04-hosted-direct-release.json",
+      "receipt_sha256": "a0dcf81889c484cc3720a6c7dc7969292b78287c290438a1fb473826b11135db",
+      "producer_id": "584da6aadf897d1bbaef43b499f1db90",
+      "artifact": {
+        "id": 11303829038,
+        "name": "direct-operations-evidence-release",
+        "digest": "sha256:ea9759b9fbd3c4201455e3cc036ed9ca1a2c708aa95963789c637d822cf311f8",
+        "size_in_bytes": 280854
+      },
+      "provider_zip_digest_verified": true,
+      "owned_recovery": "quiescent",
+      "owned_cleanup": "verified"
+    },
+    "archive": {
+      "receipt": "2026-10-04-hosted-direct-archive.json",
+      "receipt_sha256": "1e55671fdc33055ce435f30cae1ca1b9d4395ad1018cba78e616679f9df2c7c3",
+      "producer_id": "fe525253dc402b8a4bbdd3bb02bf7482",
+      "artifact": {
+        "id": 11304423124,
+        "name": "direct-operations-evidence-archive",
+        "digest": "sha256:a56083ec992d4319bb6a3e0a40ae9fbd8597a3db73105f42ea8013227ce6b69d",
+        "size_in_bytes": 497769
+      },
+      "provider_zip_digest_verified": true,
+      "owned_recovery": "quiescent",
+      "owned_cleanup": "verified"
+    }
+  },
+  "missing_capabilities": [
+    "physical_device_execution",
+    "exact_floor_runtime",
+    "signed_export_delivery",
+    "complete_compose_resource_parity",
+    "empty_host_onboarding",
+    "architecture_approval",
+    "retirement_approval"
+  ],
+  "owned_store_rebound": false,
+  "bridge_retirement": "defer",
+  "adoption_authorized": false
+}

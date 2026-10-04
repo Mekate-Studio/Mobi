@@ -1,5 +1,9 @@
 # Quality and dependency maintenance
 
+The [direct-default proposal review](direct-default-proposal-review.md) records the next API, cancellation, caller and rollback decision as an isolated unapplied patch. Its proposed scope holds credentialed iOS delivery; production and the existing risk expiry remain unchanged.
+
+Current adoption: [Toolchain 0.13.0 with bounded risk/age acceptance](toolchain-adoption-risk-review.md) is committed and published through PR #35. Its [hosted integration record](toolchain-adoption-integration.md) verifies all seven PR checks. Independent direct evidence includes the [adopted-tuple input assessment](direct-adopted-toolchain-assessment.md), [typed/async fixture assessment](direct-interop-behavior-assessment.md) and [release/onboarding assessment](direct-release-onboarding-assessment.md). The operational local and hosted pairs passed; their follow-up review records remain uncommitted drafts. The Gradle iOS bridge stays current while the remaining retirement gates stay open.
+
 Status: slices 1–8 integrated. Slice 7 was committed and pushed as `9d25553`;
 its [measured results](seventh-slice-validation.md) keep bridge upgrades separate
 from direct-path parity. Slice 8 was committed and pushed as `815b16d` and consolidates the [existing watch](compatibility-watch.md);
@@ -116,3 +120,46 @@ The proposal requires no private service, account, Codex installation or Go
 application profile.
 
 The [bridge-retirement path](bridge-retirement-path.md) explains the independent workflow track, remaining evidence and first assessment against the adopted tuple.
+
+The [adopted-tuple direct assessment](direct-current-assessment.md) passes the
+bounded Metro 1.4.5 simulator round trip with exact restored-bridge consumers and
+cleanup. The [direct resolution assessment](direct-resolution-assessment.md)
+captures module/target graphs and fresh named Maven advisories. The
+[selected build-input assessment](direct-build-input-assessment.md) separately
+proves compiler plugin paths/hashes and required delegated Android scopes.
+Its fresh review finds 17 matches in shared build tooling; broader attribution,
+security review and retirement remain deferred.
+
+The [direct resolution guide](direct-resolution-review.md) documents the manual graph-only profile and exact-input advisory command.
+
+The [build-input proof guide](direct-build-input-proof.md) documents the manual
+paired profile, explicit uncollected scopes and failed-run evidence handling.
+
+The [compiler plugin attribution follow-up](compiler-plugin-attribution.md) joins
+independent resolver artifacts to actual compiler fingerprints and extends the
+[advisory triage](direct-advisory-triage.md) without authorizing adoption.
+
+The [current attribution assessment](compiler-plugin-assessment.md) records
+passing joins, fresh provider evidence and remaining retirement gates.
+
+- [Toolchain SwiftPM scope and workflow tracking](toolchain-swiftpm-assessment.md)
+
+- [Upstream Toolchain remediation rehearsal](upstream-toolchain-remediation.md)
+
+- [Toolchain 0.13.0 build and advisory assessment](upstream-toolchain-assessment.md)
+
+- [Bundled-file identity follow-up and restored advisory finding](bundled-input-assessment.md)
+
+- [Retained-bridge adoption gates and isolated command guide](toolchain-adoption-gates.md)
+
+- [Toolchain 0.13.0 native, runtime, packaging and plugin adoption assessment](toolchain-adoption-assessment.md)
+
+- [Advisory condition probes, mitigation review and remaining closure checks](advisory-mitigation-review.md)
+
+- [Effective Jetifier conditions, owner-release discovery and remaining security gates](jetifier-condition-assessment.md)
+
+- [Toolchain security decision packet, refreshed fix leads and adoption requirements](toolchain-security-decision.md)
+
+- [Adoption direction, exact draft and bounded residual-risk proposal](toolchain-adoption-risk-review.md)
+
+- [Approved direct iOS default integration](direct-default-integration.md)

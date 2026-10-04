@@ -1,0 +1,89 @@
+@testable import app
+import Foundation
+@preconcurrency import KotlinModules
+import Testing
+
+@MainActor
+@Suite("Bounded Kotlin and Swift interop parity")
+struct MobiInteropParityTests {
+    @Test
+    func typedStatePayloadsSurviveNativeAdapters() {
+        let service = MobiInteropParity.shared.successService()
+        #expect(HomeCounterLoadable(sharedLoadable: service.initialState().counterLoadable) == .initial)
+        #expect(HomeCounterLoadable(sharedLoadable: service.loadingState(counterValue: 0).counterLoadable) == .loading(previousValue: nil))
+        #expect(HomeCounterLoadable(sharedLoadable: service.loadingState(counterValue: 13).counterLoadable) == .loading(previousValue: 13))
+        #expect(HomeCounterLoadable(sharedLoadable: MobiInteropParity.shared.loadedState(value: 21).counterLoadable) == .loaded(value: 21))
+        #expect(HomeCounterLoadable(sharedLoadable: service.unexpectedErrorState(counterValue: 13).counterLoadable) == .error(previousValue: 13, reason: .unexpected))
+    }
+
+    @Test
+    func genericPayloadRetainsItsTypeAndIdentity() {
+        let payload = MobiInteropPayload(label: "owned payload", count: 21)
+        let box: MobiInteropBox<MobiInteropPayload> = MobiInteropParity.shared.box(payload: payload)
+        #expect(box.value.label == "owned payload")
+        #expect(box.value.count == 21)
+        #expect(box.value === payload)
+    }
+
+    @Test
+    func realSuspendClientsPreserveSuccessAndFailurePayloads() async {
+        let success = await HomeFeatureClient(service: MobiInteropParity.shared.successService()).refresh(13)
+        #expect(HomeCounterLoadable(sharedLoadable: success.counterLoadable) == .loaded(value: 14))
+        let repositoryFailure = await HomeFeatureClient(service: MobiInteropParity.shared.repositoryFailureService()).refresh(13)
+        #expect(HomeCounterLoadable(sharedLoadable: repositoryFailure.counterLoadable) == .error(previousValue: 13, reason: .repositoryUnavailable))
+        let unexpectedFailure = await HomeFeatureClient(service: MobiInteropParity.shared.unexpectedFailureService()).refresh(0)
+        #expect(HomeCounterLoadable(sharedLoadable: unexpectedFailure.counterLoadable) == .error(previousValue: nil, reason: .unexpected))
+    }
+
+    @Test
+    func kotlinCancellationThrowsAndCurrentClientMapsItToUnexpected() async {
+        let service = MobiInteropParity.shared.cancellationService()
+        do {
+            _ = try await service.refresh(counterValue: 13)
+            Issue.record("Kotlin cancellation must throw at the exported suspend boundary")
+        } catch {
+            let mapped = await HomeFeatureClient(service: service).refresh(13)
+            #expect(HomeCounterLoadable(sharedLoadable: mapped.counterLoadable) == .error(previousValue: 13, reason: .unexpected))
+        }
+    }
+
+    @Test
+    func swiftTaskCancellationLeavesKotlinWorkPendingUntilExplicitCompletion() async throws {
+        let lifetime = MobiInteropLifetime()
+        let task = Task { try await lifetime.waitForValue() }
+        defer { lifetime.resume(value: "cleanup") }
+        for _ in 0..<10_000 {
+            if lifetime.isWaiting { break }
+            await Task.yield()
+        }
+        try #require(lifetime.isWaiting)
+        task.cancel()
+        await Task.yield()
+        #expect(lifetime.isWaiting)
+        #expect(lifetime.completed == 0)
+        lifetime.resume(value: "after cancellation")
+        #expect(try await task.value == "after cancellation")
+        #expect(!lifetime.isWaiting)
+        #expect(lifetime.started == 1)
+        #expect(lifetime.completed == 1)
+    }
+
+    @Test
+    func completedContinuationIsReleasedAndSecondCycleIsFresh() async throws {
+        let lifetime = MobiInteropLifetime()
+        for cycle in 1...2 {
+            let task = Task { try await lifetime.waitForValue() }
+            defer { lifetime.resume(value: "cleanup") }
+            for _ in 0..<10_000 {
+                if lifetime.isWaiting { break }
+                await Task.yield()
+            }
+            try #require(lifetime.isWaiting)
+            lifetime.resume(value: "cycle \(cycle)")
+            #expect(try await task.value == "cycle \(cycle)")
+            #expect(!lifetime.isWaiting)
+            #expect(lifetime.started == Int32(cycle))
+            #expect(lifetime.completed == Int32(cycle))
+        }
+    }
+}

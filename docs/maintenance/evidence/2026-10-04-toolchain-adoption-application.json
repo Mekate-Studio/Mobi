@@ -1,0 +1,317 @@
+{
+  "schema": 1,
+  "state": "adopted_locally_for_approved_manual_scope",
+  "applied_at": "2026-10-04T05:43:48.514151+00:00",
+  "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+  "paths": [
+    {
+      "path": "kotlin",
+      "before_sha256": "d8b5b852e54d4af5d92c6e1d3535ba60ec6485590e6d0dbc3666171e6136e040",
+      "after_sha256": "8e5972c57ee6cb277ea3ec48a7b5ace1f19983e5f4373f3f29752b31082d340b",
+      "mode": "0o755",
+      "current_sha256": "8e5972c57ee6cb277ea3ec48a7b5ace1f19983e5f4373f3f29752b31082d340b"
+    },
+    {
+      "path": "kotlin.bat",
+      "before_sha256": "41b25b605e371ace9f4c034ef2d9ef0a486add0918e2b63af317174b2f949c38",
+      "after_sha256": "7d5ab19b9eb293c9485ac6de256630d4fdc450da0c61a686b02cdf8735de4856",
+      "mode": "0o755",
+      "current_sha256": "7d5ab19b9eb293c9485ac6de256630d4fdc450da0c61a686b02cdf8735de4856"
+    },
+    {
+      "path": "android-app/module.yaml",
+      "before_sha256": "da50d4195d72566b83af9b99c39c0cd7f716d56a4a7096e1a3e43ead7df5ec65",
+      "after_sha256": "1361a37a5e4ec8843fb019adff3629fa31eebc597bf197b423854f7457b4671b",
+      "mode": "0o644",
+      "current_sha256": "1361a37a5e4ec8843fb019adff3629fa31eebc597bf197b423854f7457b4671b"
+    },
+    {
+      "path": "maintenance-kotlin-toolchains.json",
+      "before_sha256": "2d772850f78b5ce0844a588e23568eddab03c86092f90220397df2d39b185569",
+      "after_sha256": "ea61b7bdbe2b42e3c5bb7ed0960ffee7843f742836ebc37c0af1353c9f4e2a87",
+      "mode": "0o644",
+      "current_sha256": "ea61b7bdbe2b42e3c5bb7ed0960ffee7843f742836ebc37c0af1353c9f4e2a87"
+    },
+    {
+      "path": "maintenance-compatibility.json",
+      "before_sha256": "e2a93687d2cf60be10cf6f64d5d8228bd7daaa9f1ba542f46e19214a863b2158",
+      "after_sha256": "474ddd275eb473b4b21156ecce31a417d3cd3ce46bf7eb416a41ba5add3006c5",
+      "mode": "0o644",
+      "current_sha256": "474ddd275eb473b4b21156ecce31a417d3cd3ce46bf7eb416a41ba5add3006c5"
+    },
+    {
+      "path": "maintenance-plugin-resolution.json",
+      "before_sha256": "c878a0e38e8a913080ea635dd51009e841f5bdc9eb9f88c41822b092a3795da5",
+      "after_sha256": "2ad6780e3b406d4326d04fab37e0de55a04482faaf357d84d3c88e2f0c37924c",
+      "mode": "0o644",
+      "current_sha256": "2ad6780e3b406d4326d04fab37e0de55a04482faaf357d84d3c88e2f0c37924c"
+    },
+    {
+      "path": "scripts/maintenance/adapters/compatibility.rb",
+      "before_sha256": "a9036c23a6789d725cf5e0ba8ed68c70f62c143ececf517447d1b8f3be3a9a56",
+      "after_sha256": "d7dbeb20453d88f916377a780b4abf0e2f9c9b7763e590f56ea1f72cd1b892a5",
+      "mode": "0o644",
+      "current_sha256": "d7dbeb20453d88f916377a780b4abf0e2f9c9b7763e590f56ea1f72cd1b892a5"
+    },
+    {
+      "path": "README.md",
+      "before_sha256": "b4e28400934eb564b52a82ed27a0dedf5f56ec0b4c1789c6d8b246951273100d",
+      "after_sha256": "a058a8b0873ca2472b42d7e2f7949e5096ce2ab3ca9224c2ae6a68a91cd003f2",
+      "mode": "0o644",
+      "current_sha256": "a058a8b0873ca2472b42d7e2f7949e5096ce2ab3ca9224c2ae6a68a91cd003f2"
+    },
+    {
+      "path": "docs/reference/local-development.md",
+      "before_sha256": "75a17882e897346482ba875bd00e21247b13a47cecc7e283e0f534322ee23933",
+      "after_sha256": "4f74fb9579edc54005145452439b1575817b808a5d05180d518b44b7fdf83339",
+      "mode": "0o644",
+      "current_sha256": "b845b645720d8bbbf69aab91454f8f5ffd5346c7141de8f657a6289825319464"
+    },
+    {
+      "path": "scripts/maintenance/test_compatibility.rb",
+      "before_sha256": "104f8ca4f361a19a9718ef983458dc4218b068cffb0fbf202e56c210da3e41e6",
+      "after_sha256": "d4761ade640ea83274e812db07e657df1bd4eb24db4fc6b83b0fa4441c1a9a15",
+      "mode": "0o644",
+      "current_sha256": "d4761ade640ea83274e812db07e657df1bd4eb24db4fc6b83b0fa4441c1a9a15"
+    },
+    {
+      "path": "scripts/maintenance/test_support_policy.rb",
+      "before_sha256": "bc8a91d6310422bf525bcf787ef4812ca0739c50db98a772f59bc59e01fe7bfb",
+      "after_sha256": "0bfec9cb36779a052480a5d0a983bdc308bc32a5ba2a5cc691fa013774145dea",
+      "mode": "0o644",
+      "current_sha256": "0bfec9cb36779a052480a5d0a983bdc308bc32a5ba2a5cc691fa013774145dea"
+    },
+    {
+      "path": "scripts/maintenance/test_plugin_attribution.rb",
+      "before_sha256": "27d812d4a7b14f373935e3feadb4e3c78de81c97725452f7199d0b5b2b03cde6",
+      "after_sha256": "498a095a1b33499db8658dd77a02eded35081febadfd093e428c9937f9a6328b",
+      "mode": "0o644",
+      "current_sha256": "498a095a1b33499db8658dd77a02eded35081febadfd093e428c9937f9a6328b"
+    }
+  ],
+  "index_sha256": "c6e5b959fa8620b17221e4df5a21dfa114ae7762330d78d8749a941ac0c71f71",
+  "unrelated_source_preserved": true,
+  "approved_draft_patch_sha256": "3da763cbf03e7e1c52dbd3aaacd236c4650b90df1bacee0ca97f7a48620eb9f5",
+  "applied_patch_sha256": "d9596aadf1bc8e580f13d2e4fe8de7b201bd1bbe0b63fa6d387cc23f20759fc5",
+  "correction": "Windows wrapper normalized to LF consistently with existing rehearsal contract; vendor pin remains raw",
+  "authorization": "User approved adoption and residual-risk/early-age exceptions conditional on compatibility",
+  "compatibility": {
+    "state": "checks_passed",
+    "run_id": "96942bc52fc76b115913cf5011cc6bf4",
+    "result_sha256": "5bbd6a285a8edaaf3945f5b03070929999cb15430054c48c0a56fdbd3eba1bc4",
+    "scope": "local_mobile_debug_simulator_incremental_and_restoration"
+  },
+  "bridge_builder": "gradle",
+  "bridge_retirement": "defer",
+  "release_delivery_authorized": false,
+  "risk_decision_sha256": "039567731ae996083ffaf8dc16101c9d72fbb1e8bdc5534efd0b5c5622fa7003",
+  "risk_review_state": "accepted_risk_for_scoped_manual_use",
+  "validation_receipt": "2026-10-04-toolchain-adoption-validation.json",
+  "post_application_supplements": [
+    {
+      "path": "docs/adr/0007-direct-ios-transition-requires-capability-evidence.md",
+      "sha256": "0ac8367b6a049160df7feee97629814af55524e3a2e4531a1ac3dba64f791393",
+      "mode": "644"
+    },
+    {
+      "path": "docs/reference/ios-gradle-bridge.md",
+      "sha256": "b36cf5529cfb449f6debad0ef2fa97f84def05b6c2a4e839d7cb35320f02ecbe",
+      "mode": "644"
+    },
+    {
+      "path": "docs/reference/local-development.md",
+      "sha256": "b845b645720d8bbbf69aab91454f8f5ffd5346c7141de8f657a6289825319464",
+      "mode": "644"
+    },
+    {
+      "path": "docs/reference/mobile-architecture.md",
+      "sha256": "32d7b32f38d5c498febe92d94ad6d51e432c0f60041a7e0b9eace1c93aa46f0f",
+      "mode": "644"
+    },
+    {
+      "path": "docs/maintenance/bridge-retirement-path.md",
+      "sha256": "0f6f042da09ee94c612f0a2c2cc78a51ce3fe97ad3da7ee97f02fbcf5ef0fec7",
+      "mode": "644"
+    },
+    {
+      "path": "docs/maintenance/toolchain-adoption-risk-review.md",
+      "sha256": "2da08167914182aaf5b79a4e29326ac2ef9567f97f945e52b922050c9cd32db0",
+      "mode": "644"
+    },
+    {
+      "path": "openspec/changes/toolchain-adoption-risk-review/tasks.md",
+      "sha256": "d33343950157bcd9f2174412ae1482e7e869eb17266d8d7d7d440b596940114e",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/dev/test_contracts.rb",
+      "sha256": "54191713c52d170cb0620b8cb3f6d3de041443f5706d25f3a8eabfe35e6b3e27",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/dependencies.rb",
+      "sha256": "a025e5ef4eba429fd9c72c0607bc9aeef291a559aa3d9023325e934b920f3a8d",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/lib/risk_acceptance.rb",
+      "sha256": "55e13089cb8d356ec9cc9d33bc58a961250c7ecb71800346556492ab6c6958dd",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/lib/toolchain_risk_review.rb",
+      "sha256": "4e4dd7f6ab9a46bbe51be5d64cd7067705a4c513dd5850a8e57a2b4271da996b",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/test_risk_acceptance.rb",
+      "sha256": "8632847491761d9b165a9bdeb36de600dfc738c694dfdec5385c8a9a9fc29ecc",
+      "mode": "644"
+    },
+    {
+      "path": "maintenance-toolchain-risk-acceptance.json",
+      "sha256": "039567731ae996083ffaf8dc16101c9d72fbb1e8bdc5534efd0b5c5622fa7003",
+      "mode": "644"
+    }
+  ],
+  "index_snapshot_kind": "raw_index_file_at_initial_application_time; final staging compared by executor logical entries",
+  "verified_logical_index_sha256": "4bde9550c9915bad7f911c76491599d7f452e5e2acd3f3e705f42e6dd9890dd5",
+  "rollback_preimages": "owned local preimages preserve prior bytes/modes; reverse only the application allowlist and separately recorded supplements",
+  "finalized_at": "2026-10-04T06:48:58Z",
+  "head_and_staging_preserved": true,
+  "final_changed_existing_files": [
+    {
+      "path": "README.md",
+      "before_sha256": "b4e28400934eb564b52a82ed27a0dedf5f56ec0b4c1789c6d8b246951273100d",
+      "current_sha256": "a058a8b0873ca2472b42d7e2f7949e5096ce2ab3ca9224c2ae6a68a91cd003f2",
+      "mode": "644"
+    },
+    {
+      "path": "android-app/module.yaml",
+      "before_sha256": "da50d4195d72566b83af9b99c39c0cd7f716d56a4a7096e1a3e43ead7df5ec65",
+      "current_sha256": "1361a37a5e4ec8843fb019adff3629fa31eebc597bf197b423854f7457b4671b",
+      "mode": "644"
+    },
+    {
+      "path": "docs/adr/0007-direct-ios-transition-requires-capability-evidence.md",
+      "before_sha256": "ef64e082783ef48539ffce94dc51573c638632df9c4fb05cd4caf090f7ac3ff3",
+      "current_sha256": "0ac8367b6a049160df7feee97629814af55524e3a2e4531a1ac3dba64f791393",
+      "mode": "644"
+    },
+    {
+      "path": "docs/maintenance/README.md",
+      "before_sha256": "5255540c5d1cf406acd2c787991e2d01f1316ce0eadd9dcdd1febfd1cf6460e9",
+      "current_sha256": "6fa88ddbffa29d0b66f9fc4ee83c78d7d876de8de23268b5ed0ca09376801a9a",
+      "mode": "644"
+    },
+    {
+      "path": "docs/maintenance/bridge-retirement-path.md",
+      "before_sha256": "30ca18bca1bdd9cba634ac74e8d1b16b2ebdb4a1f6c0d5205ee8f41182440fc2",
+      "current_sha256": "0f6f042da09ee94c612f0a2c2cc78a51ce3fe97ad3da7ee97f02fbcf5ef0fec7",
+      "mode": "644"
+    },
+    {
+      "path": "docs/maintenance/toolchain-adoption-risk-review.md",
+      "before_sha256": "22aee13645ee897ce8dfb7536df2a922e759bcee5858f08e0f7fabcdf55667cd",
+      "current_sha256": "2da08167914182aaf5b79a4e29326ac2ef9567f97f945e52b922050c9cd32db0",
+      "mode": "644"
+    },
+    {
+      "path": "docs/reference/ios-gradle-bridge.md",
+      "before_sha256": "0f84e5a88293656b72055f5db5632765e30b56c9f0ec14415a9b459fbe0e3253",
+      "current_sha256": "b36cf5529cfb449f6debad0ef2fa97f84def05b6c2a4e839d7cb35320f02ecbe",
+      "mode": "644"
+    },
+    {
+      "path": "docs/reference/local-development.md",
+      "before_sha256": "75a17882e897346482ba875bd00e21247b13a47cecc7e283e0f534322ee23933",
+      "current_sha256": "b845b645720d8bbbf69aab91454f8f5ffd5346c7141de8f657a6289825319464",
+      "mode": "644"
+    },
+    {
+      "path": "docs/reference/mobile-architecture.md",
+      "before_sha256": "fc7ca278a8e178ad81a1858fe394e45036a85a8c9e35f021cf582a065fd8aab7",
+      "current_sha256": "32d7b32f38d5c498febe92d94ad6d51e432c0f60041a7e0b9eace1c93aa46f0f",
+      "mode": "644"
+    },
+    {
+      "path": "kotlin",
+      "before_sha256": "d8b5b852e54d4af5d92c6e1d3535ba60ec6485590e6d0dbc3666171e6136e040",
+      "current_sha256": "8e5972c57ee6cb277ea3ec48a7b5ace1f19983e5f4373f3f29752b31082d340b",
+      "mode": "755"
+    },
+    {
+      "path": "kotlin.bat",
+      "before_sha256": "41b25b605e371ace9f4c034ef2d9ef0a486add0918e2b63af317174b2f949c38",
+      "current_sha256": "7d5ab19b9eb293c9485ac6de256630d4fdc450da0c61a686b02cdf8735de4856",
+      "mode": "755"
+    },
+    {
+      "path": "maintenance-compatibility.json",
+      "before_sha256": "e2a93687d2cf60be10cf6f64d5d8228bd7daaa9f1ba542f46e19214a863b2158",
+      "current_sha256": "474ddd275eb473b4b21156ecce31a417d3cd3ce46bf7eb416a41ba5add3006c5",
+      "mode": "644"
+    },
+    {
+      "path": "maintenance-kotlin-toolchains.json",
+      "before_sha256": "2d772850f78b5ce0844a588e23568eddab03c86092f90220397df2d39b185569",
+      "current_sha256": "ea61b7bdbe2b42e3c5bb7ed0960ffee7843f742836ebc37c0af1353c9f4e2a87",
+      "mode": "644"
+    },
+    {
+      "path": "maintenance-plugin-resolution.json",
+      "before_sha256": "c878a0e38e8a913080ea635dd51009e841f5bdc9eb9f88c41822b092a3795da5",
+      "current_sha256": "2ad6780e3b406d4326d04fab37e0de55a04482faaf357d84d3c88e2f0c37924c",
+      "mode": "644"
+    },
+    {
+      "path": "openspec/changes/toolchain-adoption-risk-review/tasks.md",
+      "before_sha256": "a2c7c83c4101a195257b06419c93f2b4317f14d7a71cb4906b4e64a11e86f16a",
+      "current_sha256": "d33343950157bcd9f2174412ae1482e7e869eb17266d8d7d7d440b596940114e",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/dev/test_contracts.rb",
+      "before_sha256": "d50d965e16bf8a77610e6598084bc74a9092b4bbbf8c876e4391318ecf96a72d",
+      "current_sha256": "54191713c52d170cb0620b8cb3f6d3de041443f5706d25f3a8eabfe35e6b3e27",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/adapters/compatibility.rb",
+      "before_sha256": "a9036c23a6789d725cf5e0ba8ed68c70f62c143ececf517447d1b8f3be3a9a56",
+      "current_sha256": "d7dbeb20453d88f916377a780b4abf0e2f9c9b7763e590f56ea1f72cd1b892a5",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/dependencies.rb",
+      "before_sha256": "06ccd0c74f5ebe0a33ee67515f452e4dd62f39feaa3a3aedc269518f5bb85cd9",
+      "current_sha256": "a025e5ef4eba429fd9c72c0607bc9aeef291a559aa3d9023325e934b920f3a8d",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/test_compatibility.rb",
+      "before_sha256": "104f8ca4f361a19a9718ef983458dc4218b068cffb0fbf202e56c210da3e41e6",
+      "current_sha256": "d4761ade640ea83274e812db07e657df1bd4eb24db4fc6b83b0fa4441c1a9a15",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/test_plugin_attribution.rb",
+      "before_sha256": "27d812d4a7b14f373935e3feadb4e3c78de81c97725452f7199d0b5b2b03cde6",
+      "current_sha256": "498a095a1b33499db8658dd77a02eded35081febadfd093e428c9937f9a6328b",
+      "mode": "644"
+    },
+    {
+      "path": "scripts/maintenance/test_support_policy.rb",
+      "before_sha256": "bc8a91d6310422bf525bcf787ef4812ca0739c50db98a772f59bc59e01fe7bfb",
+      "current_sha256": "0bfec9cb36779a052480a5d0a983bdc308bc32a5ba2a5cc691fa013774145dea",
+      "mode": "644"
+    }
+  ],
+  "verified_operational_preimage_count": 19,
+  "audit_records_retained_on_rollback": [
+    "docs/maintenance/toolchain-adoption-risk-review.md",
+    "openspec/changes/toolchain-adoption-risk-review/tasks.md"
+  ],
+  "direct_assessment_receipt": "2026-10-04-direct-adopted-toolchain.json",
+  "remaining_scope": "uncommitted_local_development_assessment; hosted_runtime_signed_full_dependency_surface_and_retirement_gates_open"
+}

@@ -25,11 +25,22 @@ module Maintenance
       end
     end
 
-    def candidate!(version, now: Time.now.utc)
+    def selection(version, now: Time.now.utc, experimental: false)
+      raise Failure, 'Experimental mode must be explicit boolean' unless [true, false].include?(experimental)
       raise Failure, 'Unreviewed Kotlin Toolchain candidate' unless @pins['candidates'].include?(version)
       policy = JSON.parse(File.read(File.join(@root, 'maintenance-policy.json')))
       published = Time.iso8601(@pins.fetch('versions').fetch(version).fetch('published_at'))
-      raise Failure, 'Candidate has not reached the release-age threshold' unless now - published >= policy.fetch('minimum_release_age_days') * 86_400
+      raise Failure, 'Candidate publication is in the future' if published > now
+      eligible = published + policy.fetch('minimum_release_age_days') * 86_400
+      blocked = now < eligible
+      raise Failure, 'Candidate has not reached the release-age threshold' if blocked && !experimental
+      { 'version' => version, 'mode' => experimental ? 'experimental' : 'normal',
+        'age_state' => blocked ? 'age_blocked' : 'age_eligible', 'assessed_at' => now.iso8601,
+        'eligible_at' => eligible.iso8601, 'adoption_authorized' => false }
+    end
+
+    def candidate!(version, now: Time.now.utc, experimental: false)
+      selection(version, now: now, experimental: experimental)
       version
     end
 

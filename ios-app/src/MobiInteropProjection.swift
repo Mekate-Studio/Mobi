@@ -1,0 +1,268 @@
+import Foundation
+@preconcurrency import KotlinModules
+
+// Explicit projections preserve typed, exhaustive native consumer switches.
+
+enum MobiCounterProjection {
+    case initial
+    case loading(CounterLoadableLoading)
+    case loaded(CounterLoadableLoaded)
+    case error(CounterLoadableError)
+}
+
+private final class MobiCounterVisitorAdapter: NSObject, MobiCounterVisitor {
+    var result: MobiCounterProjection?
+
+    func onInitial() {
+        result = .some(.initial)
+    }
+
+    func onLoading(value: CounterLoadableLoading) {
+        result = .some(.loading(value))
+    }
+
+    func onLoaded(value: CounterLoadableLoaded) {
+        result = .some(.loaded(value))
+    }
+
+    func onError(value: CounterLoadableError) {
+        result = .some(.error(value))
+    }
+}
+
+func mobiProjection(of value: CounterLoadable) -> MobiCounterProjection {
+    let visitor = MobiCounterVisitorAdapter()
+    MobiInteropProjection.shared.counter(state: value, visitor: visitor)
+    guard let result = visitor.result else {
+        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
+    }
+    return result
+}
+
+enum MobiCounterFailureProjection {
+    case repositoryUnavailable
+    case unexpected
+}
+
+private final class MobiCounterFailureVisitorAdapter: NSObject, MobiCounterFailureVisitor {
+    var result: MobiCounterFailureProjection?
+
+    func onRepositoryUnavailable() {
+        result = .some(.repositoryUnavailable)
+    }
+
+    func onUnexpected() {
+        result = .some(.unexpected)
+    }
+}
+
+func mobiProjection(of value: CounterLoadFailureReason) -> MobiCounterFailureProjection {
+    let visitor = MobiCounterFailureVisitorAdapter()
+    MobiInteropProjection.shared.counterFailure(state: value, visitor: visitor)
+    guard let result = visitor.result else {
+        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
+    }
+    return result
+}
+
+enum MobiRiderLocationProjection {
+    case resolving
+    case available(RiderLocationStateAvailable)
+    case denied
+    case blocked(RiderLocationStateBlocked)
+    case temporarilyUnavailable(RiderLocationStateTemporarilyUnavailable)
+    case unavailable
+}
+
+private final class MobiRiderLocationVisitorAdapter: NSObject, MobiRiderLocationVisitor {
+    var result: MobiRiderLocationProjection?
+
+    func onResolving() {
+        result = .some(.resolving)
+    }
+
+    func onAvailable(value: RiderLocationStateAvailable) {
+        result = .some(.available(value))
+    }
+
+    func onDenied() {
+        result = .some(.denied)
+    }
+
+    func onBlocked(value: RiderLocationStateBlocked) {
+        result = .some(.blocked(value))
+    }
+
+    func onTemporarilyUnavailable(value: RiderLocationStateTemporarilyUnavailable) {
+        result = .some(.temporarilyUnavailable(value))
+    }
+
+    func onUnavailable() {
+        result = .some(.unavailable)
+    }
+}
+
+func mobiProjection(of value: RiderLocationState) -> MobiRiderLocationProjection {
+    let visitor = MobiRiderLocationVisitorAdapter()
+    MobiInteropProjection.shared.riderLocation(state: value, visitor: visitor)
+    guard let result = visitor.result else {
+        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
+    }
+    return result
+}
+
+enum MobiSnapshotProjection {
+    case initial
+    case loading
+    case loaded(NearbyVehicleSnapshotStateLoaded)
+    case refreshing(NearbyVehicleSnapshotStateRefreshing)
+    case failedWithSnapshot(NearbyVehicleSnapshotStateFailedWithSnapshot)
+    case failedWithoutSnapshot(NearbyVehicleSnapshotStateFailedWithoutSnapshot)
+}
+
+private final class MobiSnapshotVisitorAdapter: NSObject, MobiSnapshotVisitor {
+    var result: MobiSnapshotProjection?
+
+    func onInitial() {
+        result = .some(.initial)
+    }
+
+    func onLoading() {
+        result = .some(.loading)
+    }
+
+    func onSnapshotLoaded(value: NearbyVehicleSnapshotStateLoaded) {
+        result = .some(.loaded(value))
+    }
+
+    func onRefreshing(value: NearbyVehicleSnapshotStateRefreshing) {
+        result = .some(.refreshing(value))
+    }
+
+    func onFailedWithSnapshot(value: NearbyVehicleSnapshotStateFailedWithSnapshot) {
+        result = .some(.failedWithSnapshot(value))
+    }
+
+    func onFailedWithoutSnapshot(value: NearbyVehicleSnapshotStateFailedWithoutSnapshot) {
+        result = .some(.failedWithoutSnapshot(value))
+    }
+}
+
+func mobiProjection(of value: NearbyVehicleSnapshotState) -> MobiSnapshotProjection {
+    let visitor = MobiSnapshotVisitorAdapter()
+    MobiInteropProjection.shared.snapshot(state: value, visitor: visitor)
+    guard let result = visitor.result else {
+        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
+    }
+    return result
+}
+
+enum MobiOverlayProjection {
+    case none
+    case refreshingIndicator
+    case staleIndicator
+    case blockingFailure
+}
+
+private final class MobiOverlayVisitorAdapter: NSObject, MobiOverlayVisitor {
+    var result: MobiOverlayProjection?
+
+    func onNone() {
+        result = .some(.none)
+    }
+
+    func onRefreshingIndicator() {
+        result = .some(.refreshingIndicator)
+    }
+
+    func onStaleIndicator() {
+        result = .some(.staleIndicator)
+    }
+
+    func onBlockingFailure() {
+        result = .some(.blockingFailure)
+    }
+}
+
+func mobiProjection(of value: NearbyVehicleMapOverlayState) -> MobiOverlayProjection {
+    let visitor = MobiOverlayVisitorAdapter()
+    MobiInteropProjection.shared.overlay(state: value, visitor: visitor)
+    guard let result = visitor.result else {
+        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
+    }
+    return result
+}
+
+enum MobiRiderReasonProjection {
+    case accessDenied
+    case accessRestricted
+    case servicesDisabled
+    case approximateOnly
+    case temporarilyUnavailable
+}
+
+private final class MobiRiderReasonVisitorAdapter: NSObject, MobiRiderReasonVisitor {
+    var result: MobiRiderReasonProjection?
+
+    func onAccessDenied() {
+        result = .some(.accessDenied)
+    }
+
+    func onAccessRestricted() {
+        result = .some(.accessRestricted)
+    }
+
+    func onServicesDisabled() {
+        result = .some(.servicesDisabled)
+    }
+
+    func onApproximateOnly() {
+        result = .some(.approximateOnly)
+    }
+
+    func onTemporarilyUnavailable() {
+        result = .some(.temporarilyUnavailable)
+    }
+}
+
+func mobiProjection(of value: RiderLocationBlockedReason) -> MobiRiderReasonProjection {
+    let visitor = MobiRiderReasonVisitorAdapter()
+    MobiInteropProjection.shared.riderReason(state: value, visitor: visitor)
+    guard let result = visitor.result else {
+        preconditionFailure("Exhaustive Kotlin projection did not visit a case")
+    }
+    return result
+}
+
+/// Preserve the native consumer spelling over the regular Objective-C export.
+extension RiderLocationBlockedReason {
+    static var accessDenied: RiderLocationBlockedReason {
+        .accessdenied
+    }
+
+    static var accessRestricted: RiderLocationBlockedReason {
+        .accessrestricted
+    }
+
+    static var servicesDisabled: RiderLocationBlockedReason {
+        .servicesdisabled
+    }
+
+    static var approximateOnly: RiderLocationBlockedReason {
+        .approximateonly
+    }
+
+    static var temporarilyUnavailable: RiderLocationBlockedReason {
+        .temporarilyunavailable
+    }
+}
+
+extension NearbyVehicleMapFailureReason {
+    static var riderLocationUnavailable: NearbyVehicleMapFailureReason {
+        .riderlocationunavailable
+    }
+
+    static var repositoryUnavailable: NearbyVehicleMapFailureReason {
+        .repositoryunavailable
+    }
+}

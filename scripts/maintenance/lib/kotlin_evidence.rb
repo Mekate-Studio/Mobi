@@ -5,7 +5,7 @@ require 'yaml'
 
 module Maintenance
   module KotlinEvidence
-    VERSIONS = %w[0.11.1 0.12.2].freeze
+    VERSIONS = %w[0.11.1 0.12.2 0.13.0].freeze
 
     def self.clean(text, source: nil)
       value = text.gsub(/\e\[[0-9;]*m/, '')
@@ -105,7 +105,11 @@ module Maintenance
       # diagnostic. A nominal zero exit does not establish target compatibility.
       return unsupported_target ? 'failed' : 'passed' if code == 0
       return 'infrastructure' if log.match?(/timed? ?out|timeout|UnknownHost|Connection (?:reset|refused)|Could not (?:GET|HEAD)|HTTP (?:4\d\d|5\d\d)|checksum mismatch|No space left|unable to download|could not download|daemon disappeared|was killed|OutOfMemory/i)
+      return 'missing' if log.include?('Xcode first-launch setup could not be completed')
       return 'missing' if log.match?(/SDK (?:location|not found)|SDK is not|license.*not accepted|No (?:available|matching).*simulator|toolchain.*not found|Cannot find.*(?:SDK|JDK)/i)
+      if log.include?('CheckAarMetadataWorkAction') && log.match?(/requires libraries and applications that\s+depend on it to compile against version \d+ or later of the\s+Android APIs\./) && log.match?(/:android-app is currently compiled against android-\d/)
+        return 'failed'
+      end
       return 'failed' if unsupported_target || log.match?(/Compilation failed|compile.*error|(?:^|\n)e: .*\.kt:|tests? failed|\*\* TEST FAILED \*\*|error:.*(?:incompatible|unresolved reference|cannot find|no such module)/i)
       'infrastructure' # An unexplained nonzero exit is not a causal regression.
     end

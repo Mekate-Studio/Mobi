@@ -5,6 +5,8 @@ require_relative 'adapters/compatibility'
 require_relative 'adapters/interop_experiment'
 require_relative 'adapters/direct_roundtrip'
 require_relative 'lib/upgrade_graph'
+require_relative 'lib/direct_resolution'
+require_relative 'lib/build_inputs'
 
 module Maintenance
   class CompatibilityCheck < KotlinCheck
@@ -21,14 +23,25 @@ module Maintenance
       super(source, output, cache, host_file, 'mobile')
       @profile = profile
       @report['profile'] = profile
+      @resolution_only = profile == 'direct-resolution'
+      @build_inputs = %w[direct-build-inputs upstream-build-inputs].include?(profile)
+      @collect_resolution = @resolution_only || @build_inputs
       @report['cells'] = {}
       @report['missing_capabilities'] = Compatibility::UNPROVEN.dup
+      @report['missing_capabilities'] += DirectResolution::GAPS if @collect_resolution
+      @report['missing_capabilities'] += BuildInputs::GAPS if @build_inputs
       @report['bridge_retirement'] = 'defer'
       @direct = profile.start_with?('direct-') && @report['phase'] == 'candidate'
-      assessment = Compatibility.new(source, experimental: @host.fetch('experimental', false))
-      @config = assessment.config
-      @report['candidate_selection'] = assessment.selection
-      @report['missing_capabilities'] << 'release_age' if assessment.selection['age_state'] == 'age_blocked'
+      if profile.start_with?('upstream-')
+        wrappers = KotlinWrappers.new(source)
+        @report['candidate_selection'] = @host.fetch('upstream_selection')
+        expected = @report['phase'] == 'baseline' ? wrappers.pins.fetch('baseline') : @report['candidate_selection'].fetch('version')
+        raise Failure, 'Upstream phase differs from pinned Toolchain' unless @version == expected && BuildInputs::COMPILERS.key?(@version)
+      else
+        assessment = Compatibility.new(source, experimental: @host.fetch('experimental', false))
+        @report['candidate_selection'] = assessment.selection
+      end
+      @report['missing_capabilities'] << 'release_age' if @report['candidate_selection']['age_state'] == 'age_blocked'
       @report['configuration_sha256'] = Maintenance.file_sha(File.join(source, Compatibility::CONFIG))
       @report['di_reachability_scope'] = 'toolchain_module_graph_not_flattened_bridge'
     end
@@ -136,12 +149,28 @@ module Maintenance
           @report['bridge_unavailable'] = true
           @report['bridge_absence_scope'] = 'direct_checks_before_restoration' if @profile == 'direct-roundtrip'
           @report['authored_experiment_sha256'] = Maintenance.digest(@manifest)
-          write_evidence('direct-source-manifest', @manifest) if @profile == 'direct-roundtrip'
+          write_evidence('direct-source-manifest', @manifest) if @profile == 'direct-roundtrip' || @collect_resolution
+        end
+        if @collect_resolution
+          declarations = self.class.declared_inputs(@work, @modules).merge('project.yaml' => File.read(File.join(@work, 'project.yaml'), encoding: 'UTF-8'))
+          write_evidence('resolution-declarations', declarations)
         end
         write_evidence('reachable-modules', InteropExperiment.reachable_modules(@work))
         @report['di_reachable'] = InteropExperiment.reachable_modules(@work).include?('shared-di')
         raise Failure, 'Direct experiment does not reach shared DI' if @direct && !@report['di_reachable']
-        native_setup
+        if @build_inputs
+          native_setup(simulator: false)
+          init = File.join(@env.fetch('GRADLE_USER_HOME'), 'init.d')
+          FileUtils.mkdir_p(init)
+          FileUtils.cp(File.join(@work, 'scripts/maintenance/adapters/delegated_resolution.gradle'), File.join(init, 'mobi-evidence.gradle'))
+        elsif @resolution_only
+          @env.merge!('JAVA_HOME' => @host.fetch('java_home'), 'DEVELOPER_DIR' => @host.fetch('developer_dir'))
+          @report['environment'] = { 'scope' => 'resolution_only', 'simulator' => 'not_created', 'native_execution' => 'not_attempted' }
+        elsif %w[upstream-android-packaging upstream-ios-release upstream-ios-archive].include?(@profile)
+          native_setup(simulator: false)
+        else
+          native_setup
+        end
         @env['OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED'] = 'NO'
         @env['KOTLIN_IOS_BUILDER'] = @direct ? 'kotlin' : 'gradle'
         @report['environment']['bridge'] = @env['KOTLIN_IOS_BUILDER']
@@ -150,11 +179,14 @@ module Maintenance
           raise Failure, 'Executed Toolchain version differs' unless banner.include?('Kotlin Toolchain version ' + @version + ' ')
           write_evidence('effective-settings', KotlinEvidence.settings(cli('settings', 'show', 'settings', '--all-modules'), modules: @modules, version: @version, source: @work))
         end
-        if @profile == 'bridge-review'
+        if @profile == 'bridge-review' || @collect_resolution
           measured('toolchain_resolution') do
             graphs = KotlinEvidence.graphs(cli('dependencies', 'show', 'dependencies', '--all-modules', '--include-tests'), modules: @modules, version: @version)
+            DirectResolution.coverage!(graphs, declarations) if @collect_resolution
             write_evidence('resolved-graphs', graphs)
           end
+        end
+        if @profile == 'bridge-review'
           measured('bridge_resolution') do
             begin
               text = command('bridge-resolution', [File.join(@work, 'gradle-bridge/gradlew'), '--no-daemon', '--console=plain', '-p', File.join(@work, 'gradle-bridge'),
@@ -169,8 +201,9 @@ module Maintenance
             end
           end
         end
-        bridge_compile unless @direct
-        unless @profile == 'bridge-compile'
+        packaging = %w[upstream-android-packaging upstream-ios-release upstream-ios-archive].include?(@profile)
+        bridge_compile unless @direct || @collect_resolution || packaging
+        unless @profile == 'bridge-compile' || @collect_resolution || packaging
           %w[android-test android-build-debug ios-test ios-build-debug].each do |job|
             measured(job) do
               log = command(job, [File.join(@work, 'scripts/ci/run_job.sh'), job])
@@ -178,6 +211,40 @@ module Maintenance
                 native_cases(log, 'native-test-cases', probe: @direct && @profile == 'direct-roundtrip')
               end
             end
+          end
+        end
+        if @profile == 'upstream-android-packaging'
+          measured('android-build-debug') { command('android-build-debug', [File.join(@work, 'scripts/ci/run_job.sh'), 'android-build-debug']) }
+          measured('android_release') { cli('android-release', 'build', '-m', 'android-app', '-p', 'android', '-v', 'release') }
+          measured('android_aab') { command('android-aab', [File.join(@work, 'scripts/ci/build_android_aab.sh')]) }
+          @report['release_scope'] = 'synthetic_android_signing_no_delivery'
+        end
+        if @profile == 'upstream-ios-release'
+          measured('ios_release_simulator') { command('ios-release-simulator', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-build-release']) }
+          @report['release_scope'] = 'unsigned_ios_release_simulator_build'
+        end
+        if @profile == 'upstream-ios-archive'
+          measured('ios_unsigned_archive') do
+            command('ios-unsigned-archive', ['/usr/bin/xcodebuild', '-project', File.join(@work, 'ios-app/module.xcodeproj'), '-scheme', 'app', '-configuration', 'Release', '-destination', 'generic/platform=iOS', '-derivedDataPath', File.join(@work, 'build/archive-derived'), '-archivePath', File.join(@work, 'build/releases/Mobi.xcarchive'), 'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'SWIFT_ENABLE_EXPLICIT_MODULES=NO', 'archive'])
+          end
+          @report['release_scope'] = 'unsigned_ios_device_archive_no_export_or_delivery'
+        end
+        if @build_inputs
+          %w[android-test android-build-debug].each do |job|
+            measured(job) { command(job, [File.join(@work, 'scripts/ci/run_job.sh'), job]) }
+          end
+          %w[iosArm64 iosSimulatorArm64].each do |platform|
+            measured('native_klib_' + platform.downcase) do
+              args = @modules.reject { |name| %w[android-app ios-app].include?(name) }.flat_map { |name| ['-m', name] }
+              cli('klib-' + platform.downcase, 'build', *args, '-p', platform)
+            end
+          end
+          measured('build_input_evidence') do
+            BuildInputs.capture(@work, @cache, @env.fetch('HOME'), @control, compiler_version: BuildInputs::COMPILERS.fetch(@version))
+            %w[compiler-traces selected-plugin-artifacts delegated-graphs].each do |name|
+              write_evidence(name, JSON.parse(File.read(File.join(@control, name + '.json'))))
+            end
+            write_evidence('build-inputs', BuildInputs.read(@control, compiler_version: BuildInputs::COMPILERS.fetch(@version)))
           end
         end
         roundtrip if @direct && @profile == 'direct-roundtrip'
@@ -205,8 +272,13 @@ module Maintenance
             @report['cells'][cell] ||= { 'status' => 'not_attempted', 'evidence_kind' => 'none' }
           end
         end
-        products = %w[build gradle-bridge/shared-kit/build].flat_map { |dir| Dir.glob(File.join(@work, dir, '**', '*')) }.select { |p| File.file?(p) && !File.symlink?(p) && p.match?(/\.apk\z|\.app\/|\.framework\//) }
+        products = %w[build gradle-bridge/shared-kit/build].flat_map { |dir| Dir.glob(File.join(@work, dir, '**', '*')) }.select { |p| File.file?(p) && !File.symlink?(p) && p.match?(/\.(?:apk|aab)\z|\.app\/|\.framework\/|\.xcarchive\//) }
         write_evidence('products', products.sort.to_h { |p| [p.delete_prefix(@work + '/'), Maintenance.file_sha(p)] })
+        if @report['sdk_provisioning']
+          sdk = @env.fetch('ANDROID_HOME')
+          write_evidence('sdk-final-inputs', Dir.glob(File.join(sdk, '**', '{package.xml,source.properties}')).sort.to_h { |p| [p.delete_prefix(sdk + '/'), Maintenance.file_sha(p)] })
+          @report['sdk_provisioning']['final_api_37_present'] = File.file?(File.join(sdk, 'platforms/android-37.0/android.jar'))
+        end
         write_evidence('downloaded-artifacts', { 'cache' => KotlinEvidence.artifacts(@cache), 'home' => KotlinEvidence.artifacts(ENV.fetch('HOME')) })
         @report['source_preservation'] = 'verified'
         verify_source!

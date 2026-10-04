@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "observed_at": "2026-10-04T11:05:51Z",
+  "public_repository": "https://github.com/Mekate-Studio/Mobi",
+  "clone": "fresh_public_remote_single_branch",
+  "source_revision": "349e07e0929033e8feb71269e9555420d3285e35",
+  "source_tree": "8080301c915fb35815692dfc4092ee677162228c",
+  "source_sha256": "7607524b09aec13642bb784e922b3228665d872fed091b8384077af4fcd867b3",
+  "checkout": "clean",
+  "host": "prepared_apple_silicon_macos",
+  "sdk_licenses": "preexisting_operator_acceptance",
+  "license_files": {
+    "android-sdk-license": "c43fa37686457c3f18caa3607945f4ec52a9d1beaaad8117e50dc4e863270c85",
+    "android-sdk-preview-license": "c6cc28fe55c00a86dbe57488393190915403695044e1173c4a28105e2db84407",
+    "android-sdk-arm-dbt-license": "9dce0be88e239ee0d4fad023badcfaf4b8d6c54cedd45139dd463875229a4a15"
+  },
+  "empty_host_proven": false,
+  "production_builder": "gradle",
+  "bridge_retirement": "defer"
+}

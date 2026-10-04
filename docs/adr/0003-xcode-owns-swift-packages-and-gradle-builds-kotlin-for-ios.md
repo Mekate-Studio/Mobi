@@ -1,5 +1,10 @@
 # ADR 0003: Xcode owns Swift packages and Gradle builds Kotlin for iOS
 
+The iOS Gradle/SKIE build and projection portions are superseded for development,
+repository tests and unsigned builds by [ADR 0008](0008-explicit-ios-projections-and-direct-development-builds.md).
+Native package ownership and shared sealed-state decisions remain accepted.
+This record preserves the historical retained-bridge rationale.
+
 - Status: Accepted
 - Date: 2026-04-03
 

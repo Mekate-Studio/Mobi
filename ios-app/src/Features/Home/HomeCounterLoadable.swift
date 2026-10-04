@@ -8,7 +8,7 @@ enum HomeCounterLoadable: Equatable {
     case error(previousValue: Int?, reason: HomeCounterLoadFailureReason)
 
     init(sharedLoadable: CounterLoadable) {
-        switch onEnum(of: sharedLoadable) {
+        switch mobiProjection(of: sharedLoadable) {
         case .initial:
             self = .initial
 
@@ -88,7 +88,7 @@ enum HomeCounterLoadFailureReason: Equatable {
     case unexpected
 
     init(sharedReason: CounterLoadFailureReason) {
-        switch onEnum(of: sharedReason) {
+        switch mobiProjection(of: sharedReason) {
         case .repositoryUnavailable:
             self = .repositoryUnavailable
         case .unexpected:

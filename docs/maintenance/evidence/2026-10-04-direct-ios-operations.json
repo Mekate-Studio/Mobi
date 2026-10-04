@@ -1,0 +1,489 @@
+{
+  "schema": 1,
+  "assessment": "manual_direct_ios_operations",
+  "run_id": "903a35a38d36439bda97b1a43c68b2eb",
+  "state": "checks_passed",
+  "reason": "named_checks_passed",
+  "native_icon_rendition_parity": {
+    "simulator": true,
+    "archive": true
+  },
+  "source_revision": "349e07e0929033e8feb71269e9555420d3285e35",
+  "source_sha256": "7607524b09aec13642bb784e922b3228665d872fed091b8384077af4fcd867b3",
+  "producer_sha256": "4e137252660069cfdd09d905c036bf24a8f763c74d9f10145a7a19c394417ee2",
+  "probe_sha256": "1781e423739cf179a3ccff618c38f99b4d9175e8ceb749060d3be22cdcebb911",
+  "derivation_sha256": "f8c4aa4d8e0e7c2dd993750dfd8a5c22135e1f7c3663422c77feb0f5ced8c371",
+  "phases": [
+    {
+      "phase": "baseline",
+      "status": "passed",
+      "seconds": 1079.39,
+      "evidence_sha256": "22b1e6578976b35695d53b0e15ecc4f6a4f79116375602979643517ecdfec57c",
+      "cells": {
+        "effective_toolchain": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "version",
+            "settings"
+          ]
+        },
+        "nightly_test": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "nightly-test"
+          ]
+        },
+        "ios_release_simulator": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "ios-release-simulator"
+          ]
+        },
+        "simulator_product": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "simulator-plist",
+            "simulator-arch",
+            "simulator-load",
+            "simulator-assets"
+          ]
+        },
+        "ios_unsigned_archive": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "ios-unsigned-archive"
+          ]
+        },
+        "archive_product": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "archive-plist",
+            "archive-arch",
+            "archive-load",
+            "archive-assets"
+          ]
+        }
+      },
+      "environment": {
+        "bridge": "gradle",
+        "test_plan": "Nightly",
+        "macro_validation": "skipped_explicitly",
+        "sdk": "private_copy",
+        "simulator": "owned_device",
+        "java_sha256": "4ddcf3ee5d518bd98d55f00da6747d20dddf2c4d7e555fddb9d26db6362424ce",
+        "simulator_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+        "required_minimum_major": null,
+        "licenses": "copied_host_acceptance",
+        "empty_host_proven": false
+      },
+      "failure": null,
+      "products": {
+        "simulator": {
+          "path": "build/xcode-derived-data-cli-release/Build/Products/Release-iphonesimulator/ios-app.app",
+          "identifier": "studio.mekate.mobi",
+          "minimum": "26.0",
+          "architecture": "arm64",
+          "build_version": [
+            "7",
+            "26.0",
+            "27.0"
+          ],
+          "assets_sha256": "e9c9644a74b8029676f500a90543d84c32b057e345160012fc72d3132fb71efb",
+          "app_icon_entries": 42,
+          "resources_scope": "compiled_native_asset_catalog_and_product_inventory",
+          "signing_scope": "unsigned_no_export_or_delivery",
+          "files_count": 67,
+          "inventory_sha256": "8fbab1bd19fc6e4b271ad17c0455f4541206ea34749465d812cff34613d2cf5d",
+          "native_icon_renditions_sha256": "beaa3ad1c22fb95a7cc829c3ecf38faaa87561cf7cfabb74ebd65e8dcfa68687"
+        },
+        "archive": {
+          "path": "build/releases/Mobi.xcarchive/Products/Applications/ios-app.app",
+          "identifier": "studio.mekate.mobi",
+          "minimum": "26.0",
+          "architecture": "arm64",
+          "build_version": [
+            "2",
+            "26.0",
+            "27.0"
+          ],
+          "assets_sha256": "e9c9644a74b8029676f500a90543d84c32b057e345160012fc72d3132fb71efb",
+          "app_icon_entries": 42,
+          "resources_scope": "compiled_native_asset_catalog_and_product_inventory",
+          "signing_scope": "unsigned_no_export_or_delivery",
+          "files_count": 67,
+          "inventory_sha256": "4632f2532e6da2c61ebd1a5866b1d92645a3cbdde83e2c1c419ae66801a317d9",
+          "native_icon_renditions_sha256": "beaa3ad1c22fb95a7cc829c3ecf38faaa87561cf7cfabb74ebd65e8dcfa68687"
+        }
+      },
+      "commands": [
+        {
+          "check": "host-xcode",
+          "exit": 0,
+          "seconds": 0.179,
+          "log": "host-xcode.log",
+          "sha256": "694b44731d0b415c5b11d844151e466d7f5e200a95627efda377f232f1a6ab77"
+        },
+        {
+          "check": "host-os",
+          "exit": 0,
+          "seconds": 0.175,
+          "log": "host-os.log",
+          "sha256": "4ef10a0fc370704ea84699cf3851e51488598c5f1ab35cb572eb6b96278a8e5c"
+        },
+        {
+          "check": "version",
+          "exit": 0,
+          "seconds": 17.955,
+          "log": "version.log",
+          "sha256": "189357efad5d5d0129257d1daa417b7599f573c67cba509d60ff642f6c68414d",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "settings",
+          "exit": 0,
+          "seconds": 0.949,
+          "log": "settings.log",
+          "sha256": "e9e1d470c2b1b2fa93e0a42944e1d0674b8bd358d524b577ad5a011eb0a124ed",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "nightly-test",
+          "exit": 0,
+          "seconds": 316.193,
+          "log": "nightly-test.log",
+          "sha256": "a8363240bf7c7ba4aab9ad1e5cbe8c719f8606d1190c4b2afe62fead595ce019",
+          "capability": "nightly_test"
+        },
+        {
+          "check": "ios-release-simulator",
+          "exit": 0,
+          "seconds": 351.029,
+          "log": "ios-release-simulator.log",
+          "sha256": "532279bcfc4d0bc5b8a0a1b65b22de4523a22214fa13d529dc4e18dc638060e7",
+          "capability": "ios_release_simulator"
+        },
+        {
+          "check": "simulator-plist",
+          "exit": 0,
+          "seconds": 2.012,
+          "log": "simulator-plist.log",
+          "sha256": "f9d10ae3dcf90e96bea4d16da6ce210f532e7f4c9b9a499ae821bfb4a068bf0d",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-arch",
+          "exit": 0,
+          "seconds": 2.02,
+          "log": "simulator-arch.log",
+          "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-load",
+          "exit": 0,
+          "seconds": 2.014,
+          "log": "simulator-load.log",
+          "sha256": "a819dc36a644847d2a1a8ddf44afaae479530a3f5f08d18a5255483412a6fa39",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-assets",
+          "exit": 0,
+          "seconds": 2.009,
+          "log": "simulator-assets.log",
+          "sha256": "bef24a5ec095b181a067d3d7b3bb4bddcfb3adcf50811f91535c4503ea94c23b",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "ios-unsigned-archive",
+          "exit": 0,
+          "seconds": 349.78,
+          "log": "ios-unsigned-archive.log",
+          "sha256": "f5bf3108a5c8045387bacd31955ae1af5b4d98e45ef56c71d4de50ad739db124",
+          "capability": "ios_unsigned_archive"
+        },
+        {
+          "check": "archive-plist",
+          "exit": 0,
+          "seconds": 2.015,
+          "log": "archive-plist.log",
+          "sha256": "d000213cc0db2d08e3f77f98369336f031c9703cb515623eb3b93e19487bc05f",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-arch",
+          "exit": 0,
+          "seconds": 2.026,
+          "log": "archive-arch.log",
+          "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-load",
+          "exit": 0,
+          "seconds": 2.03,
+          "log": "archive-load.log",
+          "sha256": "3528c2c67f28826e2ff784b02d0e7f916d1d028017e045804d3d322fcdf900b7",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-assets",
+          "exit": 0,
+          "seconds": 2.022,
+          "log": "archive-assets.log",
+          "sha256": "27189bb0470d8a91610e869a186dc051c24529efc85324893a8fa8d7fa87a19f",
+          "capability": "archive_product"
+        }
+      ],
+      "source_preservation": "verified"
+    },
+    {
+      "phase": "candidate",
+      "status": "passed",
+      "seconds": 1251.954,
+      "evidence_sha256": "474a7b05b47e3c1c678ebde7dd177d3fe0bc98a6b54303e53671d7b472adcb75",
+      "cells": {
+        "effective_toolchain": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "version",
+            "settings"
+          ]
+        },
+        "nightly_test": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "nightly-test"
+          ]
+        },
+        "ios_release_simulator": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "ios-release-simulator"
+          ]
+        },
+        "simulator_product": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "simulator-plist",
+            "simulator-arch",
+            "simulator-load",
+            "simulator-assets"
+          ]
+        },
+        "ios_unsigned_archive": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "ios-unsigned-archive"
+          ]
+        },
+        "archive_product": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "archive-plist",
+            "archive-arch",
+            "archive-load",
+            "archive-assets"
+          ]
+        }
+      },
+      "environment": {
+        "bridge": "kotlin",
+        "test_plan": "Nightly",
+        "macro_validation": "skipped_explicitly",
+        "sdk": "private_copy",
+        "simulator": "owned_device",
+        "java_sha256": "4ddcf3ee5d518bd98d55f00da6747d20dddf2c4d7e555fddb9d26db6362424ce",
+        "simulator_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+        "required_minimum_major": null,
+        "licenses": "copied_host_acceptance",
+        "empty_host_proven": false
+      },
+      "failure": null,
+      "products": {
+        "simulator": {
+          "path": "build/xcode-derived-data-cli-release/Build/Products/Release-iphonesimulator/ios-app.app",
+          "identifier": "studio.mekate.mobi",
+          "minimum": "26.0",
+          "architecture": "arm64",
+          "build_version": [
+            "7",
+            "26.0",
+            "27.0"
+          ],
+          "assets_sha256": "e9c9644a74b8029676f500a90543d84c32b057e345160012fc72d3132fb71efb",
+          "app_icon_entries": 42,
+          "resources_scope": "compiled_native_asset_catalog_and_product_inventory",
+          "signing_scope": "unsigned_no_export_or_delivery",
+          "files_count": 57,
+          "inventory_sha256": "26d5804a0126489029ecbf3dd324cd05a69e63bd77b06059bb33f5df23b9274c",
+          "native_icon_renditions_sha256": "beaa3ad1c22fb95a7cc829c3ecf38faaa87561cf7cfabb74ebd65e8dcfa68687"
+        },
+        "archive": {
+          "path": "build/releases/Mobi.xcarchive/Products/Applications/ios-app.app",
+          "identifier": "studio.mekate.mobi",
+          "minimum": "26.0",
+          "architecture": "arm64",
+          "build_version": [
+            "2",
+            "26.0",
+            "27.0"
+          ],
+          "assets_sha256": "e9c9644a74b8029676f500a90543d84c32b057e345160012fc72d3132fb71efb",
+          "app_icon_entries": 42,
+          "resources_scope": "compiled_native_asset_catalog_and_product_inventory",
+          "signing_scope": "unsigned_no_export_or_delivery",
+          "files_count": 57,
+          "inventory_sha256": "58cbdce9e34baa08307c7da323018c510d3418ce6b0127324375b6a9e675e2ca",
+          "native_icon_renditions_sha256": "beaa3ad1c22fb95a7cc829c3ecf38faaa87561cf7cfabb74ebd65e8dcfa68687"
+        }
+      },
+      "commands": [
+        {
+          "check": "host-xcode",
+          "exit": 0,
+          "seconds": 0.284,
+          "log": "host-xcode.log",
+          "sha256": "694b44731d0b415c5b11d844151e466d7f5e200a95627efda377f232f1a6ab77"
+        },
+        {
+          "check": "host-os",
+          "exit": 0,
+          "seconds": 0.176,
+          "log": "host-os.log",
+          "sha256": "4ef10a0fc370704ea84699cf3851e51488598c5f1ab35cb572eb6b96278a8e5c"
+        },
+        {
+          "check": "version",
+          "exit": 0,
+          "seconds": 12.123,
+          "log": "version.log",
+          "sha256": "189357efad5d5d0129257d1daa417b7599f573c67cba509d60ff642f6c68414d",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "settings",
+          "exit": 0,
+          "seconds": 0.942,
+          "log": "settings.log",
+          "sha256": "b7e8f95ffd30d7a06e206b4c097fa0d50ab7ae8586cd1a1eae575361a065b5fa",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "nightly-test",
+          "exit": 0,
+          "seconds": 351.019,
+          "log": "nightly-test.log",
+          "sha256": "eb51cfbb9b929df2bb05d66081c9249974079c1cb71affa3e33296cbd7c1e6a3",
+          "capability": "nightly_test"
+        },
+        {
+          "check": "ios-release-simulator",
+          "exit": 0,
+          "seconds": 424.973,
+          "log": "ios-release-simulator.log",
+          "sha256": "58af9354999555f927ae4b4f3cd8fa1f5023717b9e6837ea7f72e3b48b407112",
+          "capability": "ios_release_simulator"
+        },
+        {
+          "check": "simulator-plist",
+          "exit": 0,
+          "seconds": 1.98,
+          "log": "simulator-plist.log",
+          "sha256": "f9d10ae3dcf90e96bea4d16da6ce210f532e7f4c9b9a499ae821bfb4a068bf0d",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-arch",
+          "exit": 0,
+          "seconds": 1.972,
+          "log": "simulator-arch.log",
+          "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-load",
+          "exit": 0,
+          "seconds": 1.979,
+          "log": "simulator-load.log",
+          "sha256": "c9c9e612c040db6e96f6726e8aa05e12a914040ebab2eaef96bee392cf5bdc18",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-assets",
+          "exit": 0,
+          "seconds": 1.98,
+          "log": "simulator-assets.log",
+          "sha256": "d8e1dbef25e7c7a3ab0528456485f675d9d7ae31e70b8fe439f4aac2267c7b41",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "ios-unsigned-archive",
+          "exit": 0,
+          "seconds": 416.703,
+          "log": "ios-unsigned-archive.log",
+          "sha256": "e9acb5b03d4c1d6f918becfbe3d1745ac7349d3d7f818489347ba2762199f58b",
+          "capability": "ios_unsigned_archive"
+        },
+        {
+          "check": "archive-plist",
+          "exit": 0,
+          "seconds": 1.959,
+          "log": "archive-plist.log",
+          "sha256": "d000213cc0db2d08e3f77f98369336f031c9703cb515623eb3b93e19487bc05f",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-arch",
+          "exit": 0,
+          "seconds": 1.953,
+          "log": "archive-arch.log",
+          "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-load",
+          "exit": 0,
+          "seconds": 1.957,
+          "log": "archive-load.log",
+          "sha256": "954e69c376208d29ed9388ac9fcbb26bc45a7ab34ca25577b75727df655b6abe",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-assets",
+          "exit": 0,
+          "seconds": 1.955,
+          "log": "archive-assets.log",
+          "sha256": "4ec9c0afd1435b3e8193cc4f9304fe3883b5980be15e7160ebb730dc0a67c38a",
+          "capability": "archive_product"
+        }
+      ],
+      "source_preservation": "verified"
+    }
+  ],
+  "missing_capabilities": [
+    "physical_device_execution",
+    "exact_floor_runtime",
+    "signed_export_delivery",
+    "complete_compose_resource_parity",
+    "empty_host_onboarding",
+    "architecture_approval",
+    "retirement_approval"
+  ],
+  "owned_cleanup": "verified",
+  "bridge_retirement": "defer",
+  "adoption_authorized": false,
+  "owned_recovery": "quiescent"
+}

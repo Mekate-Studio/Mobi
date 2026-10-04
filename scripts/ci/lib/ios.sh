@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ci_configure_ios_kotlin_builder() {
-  export KOTLIN_IOS_BUILDER="${KOTLIN_IOS_BUILDER:-gradle}"
+  export KOTLIN_IOS_BUILDER="${KOTLIN_IOS_BUILDER:-kotlin}"
   export SWIFT_ENABLE_EXPLICIT_MODULES="${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
 
   if [[ -n "${GITLAB_CI:-}" ]]; then
@@ -23,15 +23,7 @@ ci_configure_ios_kotlin_builder() {
     fi
   fi
 
-  case "${KOTLIN_IOS_BUILDER}" in
-    kotlin|gradle)
-      ;;
-    *)
-      printf 'Unsupported KOTLIN_IOS_BUILDER: %s\n' "${KOTLIN_IOS_BUILDER}" >&2
-      printf 'Supported values: kotlin, gradle\n' >&2
-      exit 1
-      ;;
-  esac
+  "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" build
 
   printf 'Using iOS Kotlin builder: %s\n' "${KOTLIN_IOS_BUILDER}"
   printf 'Using GRADLE_USER_HOME: %s\n' "${GRADLE_USER_HOME}"
@@ -39,6 +31,7 @@ ci_configure_ios_kotlin_builder() {
 }
 
 ci_prepare_ios_job() {
+  "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" build
   ci_detect_context
   ci_prepare_workspace
   ci_set_java_home
@@ -51,6 +44,7 @@ ci_prepare_ios_job() {
 }
 
 ci_prepare_ios_fastlane_job() {
+  "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" signed-release
   ci_prepare_ios_job
   ci_bundle_install
 }

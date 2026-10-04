@@ -1,0 +1,264 @@
+import groovy.json.JsonOutput
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.artifacts.component.ProjectComponentIdentifier
+import java.security.MessageDigest
+import java.nio.file.Files
+
+// Installed only in an executor-owned Gradle home. Observe actual Tooling API
+// builds; resolving configurations is evidence collection, not an app default.
+def digest = { file ->
+    def md = MessageDigest.getInstance('SHA-256')
+    file.withInputStream { input ->
+        byte[] buffer = new byte[65536]
+        int count
+        while ((count = input.read(buffer)) != -1) { md.update(buffer, 0, count) }
+    }
+    md.digest().encodeHex().toString()
+}
+def ownedProjectRoot = null
+def safe = { value ->
+    def text = value.toString()
+    text = text.replace(System.getProperty('user.home'), '{home}').replace(gradle.gradleUserHomeDir.absolutePath, '{gradle-home}')
+    ownedProjectRoot == null ? text : text.replace(ownedProjectRoot, '{work}')
+}
+def attrs = { attributes -> attributes.keySet().sort { it.name }.collectEntries { key -> [(key.name): safe(attributes.getAttribute(key))] } }
+def component = { id ->
+    // Toolchain's ResolvedAmperDependency uses synthetic localModule IDs for
+    // file inputs. They are not Maven coordinates, even though Gradle exposes
+    // ModuleComponentIdentifier. Preserve opaque identity and actual bytes.
+    if (id instanceof ModuleComponentIdentifier && !(id.group == 'localModule' && id.version == 'unspecified')) { return [kind: 'maven', group: id.group, name: id.module, version: id.version] }
+    if (id instanceof ProjectComponentIdentifier) { return [kind: 'project', id: id.projectPath] }
+    [kind: 'opaque', id: MessageDigest.getInstance('SHA-256').digest(id.displayName.getBytes('UTF-8')).encodeHex().toString()]
+}
+def variant = { item -> [name: safe(item.displayName), attributes: attrs(item.attributes)] }
+def identity = { file ->
+    if (file.isFile()) { return [kind: 'file', sha256: digest(file), bytes: file.length()] }
+    if (!file.isDirectory()) { throw new IllegalStateException('Missing resolved artifact') }
+    def root = file.toPath().toRealPath()
+    def entries = []
+    long bytes = 0
+    def stream = Files.walk(root)
+    try {
+        stream.sorted().forEach { path ->
+            def name = root.relativize(path).toString()
+            if (Files.isSymbolicLink(path)) {
+                def target = path.parent.resolve(Files.readSymbolicLink(path)).normalize()
+                if (!target.startsWith(root)) { throw new IllegalStateException('Artifact symlink escapes bundle') }
+                entries.add([name: name, kind: 'symlink', target: root.relativize(target).toString()])
+            } else if (Files.isRegularFile(path)) {
+                entries.add([name: name, kind: 'file', sha256: digest(path.toFile()), executable: Files.isExecutable(path)])
+                bytes += Files.size(path)
+            } else if (!Files.isDirectory(path)) {
+                throw new IllegalStateException('Unsupported bundle entry')
+            }
+        }
+    } finally { stream.close() }
+    if (entries.isEmpty()) { throw new IllegalStateException('Empty resolved bundle') }
+    def sha = MessageDigest.getInstance('SHA-256').digest(JsonOutput.toJson(entries).getBytes('UTF-8')).encodeHex().toString()
+    [kind: 'directory', sha256: sha, bytes: bytes, entries: entries.size, digest_format: 'sorted_relative_file_hashes_and_symlinks_v1']
+}
+def requiredConfigurations = ['debugCompileClasspath', 'debugRuntimeClasspath', 'debugAnnotationProcessorClasspath', 'kotlinBuildToolsApiClasspath', 'kotlinCompilerClasspath', 'kotlinCompilerPluginClasspath', 'kotlinCompilerPluginClasspathDebug', 'androidJdkImage', 'androidLintTool', 'coreLibraryDesugaring']
+def rowsFor = { project, owner, configs ->
+    configs.sort { it.name }.collect { cfg ->
+        def row = [project: project, owner: owner, configuration: cfg.name, resolvable: cfg.canBeResolved, attributes: attrs(cfg.attributes)]
+        if (!cfg.canBeResolved) { row.state = 'not_resolvable'; return row }
+        if (owner == 'project' && !requiredConfigurations.contains(cfg.name)) {
+            row.state = 'not_collected'; row.reason = 'outside_android_debug_main_scope'; return row
+        }
+        try {
+            def result = cfg.incoming.resolutionResult
+            row.nodes = result.allComponents.collect { node -> [component: component(node.id), variants: node.variants.collect(variant)] }.sort { JsonOutput.toJson(it.component) }
+            row.edges = result.allDependencies.collect { dep ->
+                def edge = [from: component(dep.from.id), requested: safe(dep.requested.displayName)]
+                if (dep instanceof ResolvedDependencyResult) { edge.selected = component(dep.selected.id); edge.variant = variant(dep.resolvedVariant) }
+                else { edge.failure = dep.failure.class.simpleName }
+                edge
+            }.sort { JsonOutput.toJson(it) }
+            def artifacts = cfg.incoming.artifacts
+            row.failures = artifacts.failures.collect { it.class.simpleName }.unique().sort()
+            row.artifacts = artifacts.artifacts.collect { artifact ->
+                [component: component(artifact.id.componentIdentifier), name: artifact.file.name, variant: variant(artifact.variant), identity: identity(artifact.file)]
+            }.sort { JsonOutput.toJson(it.component) + it.name }
+            row.state = row.failures.isEmpty() && !row.edges.any { it.failure } ? 'resolved' : 'incomplete'
+        } catch (Exception error) { row.state = 'incomplete'; row.failure = error.class.simpleName; row.failure_detail = safe(error.message ?: 'no detail') }
+        row
+    }
+}
+def settingsObject
+def collectedRows
+// A private, version-bound observer. Never turn unsupported APIs into false.
+def conditionProjects = []
+def transformEvents = Collections.synchronizedList([])
+def activeParents = new java.util.concurrent.ConcurrentHashMap()
+def activeSteps = new java.util.concurrent.ConcurrentHashMap()
+def plannedCount = new java.util.concurrent.atomic.AtomicInteger()
+def actionCount = new java.util.concurrent.atomic.AtomicInteger()
+def identifiedCount = new java.util.concurrent.atomic.AtomicInteger()
+def observerState = [state: 'incomplete', reason: 'unsupported_gradle_api']
+def listenerManager
+def listener
+def containerIdentity = { clazz ->
+    while (clazz.name.endsWith('_Decorated')) { clazz = clazz.superclass }
+    def file = new File(clazz.protectionDomain.codeSource.location.toURI())
+    def real = file.canonicalPath
+    def roots = [gradle.gradleUserHomeDir.parentFile.canonicalPath, new File(System.getenv('HOME')).canonicalPath]
+    if (!roots.any { real.startsWith(it + File.separator) } || !file.isFile()) {
+        throw new IllegalStateException('Condition class container is outside private storage')
+    }
+    identity(file)
+}
+if (gradle.gradleVersion in ['9.5.0', '9.6.1']) {
+    try {
+        def loader = gradle.class.classLoader
+        def managerType = loader.loadClass('org.gradle.internal.operations.BuildOperationListenerManager')
+        def listenerType = loader.loadClass('org.gradle.internal.operations.BuildOperationListener')
+        def plannedType = loader.loadClass('org.gradle.operations.dependencies.transforms.ExecutePlannedTransformStepBuildOperationType$Details')
+        def actionType = loader.loadClass('org.gradle.operations.dependencies.transforms.ExecuteTransformActionBuildOperationType$Details')
+        def identifyType = loader.loadClass('org.gradle.operations.dependencies.transforms.IdentifyTransformExecutionProgressDetails')
+        listenerManager = gradle.services.get(managerType)
+        listener = [started: { descriptor, event ->
+            try {
+                def id = descriptor.id.toString()
+                def parent = descriptor.parentId == null ? null : activeParents.get(descriptor.parentId.toString())
+                if (plannedType.isInstance(descriptor.details)) {
+                    plannedCount.incrementAndGet()
+                    def details = descriptor.details
+                    def clazz = details.transformActionClass
+                    if (clazz.name.contains('Jetif') || details.transformerName.contains('Jetif')) {
+                        if (transformEvents.size() >= 256) { throw new IllegalStateException('Condition event limit') }
+                        def row = [implementation: clazz.name, transformer: safe(details.transformerName),
+                                   subject: safe(details.subjectName), implementation_identity: containerIdentity(clazz),
+                                   action_count: 0, outcome: 'running',
+                                   input_identity: [state: 'unavailable', reason: 'planned_transform_api_has_no_input_byte_path']]
+                        transformEvents.add(row)
+                        activeSteps.put(id, row)
+                        parent = id
+                    }
+                }
+                if (actionType.isInstance(descriptor.details)) {
+                    actionCount.incrementAndGet()
+                    if (descriptor.displayName.contains('Jetif') && parent == null) {
+                        observerState.state = 'incomplete'; observerState.reason = 'unbound_jetifier_action'
+                    }
+                    if (descriptor.displayName.contains('Jetif') && parent != null && activeSteps.containsKey(parent)) {
+                        def row = activeSteps.get(parent)
+                        synchronized (row) { row.action_count += 1 }
+                    }
+                }
+                if (parent != null) { activeParents.put(id, parent) }
+            } catch (Exception error) {
+                observerState.state = 'incomplete'; observerState.reason = error.class.simpleName
+            }
+        }, progress: { operationId, event ->
+            try {
+                if (!identifyType.isInstance(event.details)) { return }
+                identifiedCount.incrementAndGet()
+                def details = event.details
+                def clazz = details.transformActionClass
+                if (!clazz.name.contains('Jetif')) { return }
+                def id = operationId.toString()
+                if (activeParents.containsKey(id)) {
+                    def existing = activeSteps.get(activeParents.get(id))
+                    if (existing == null || existing.implementation != clazz.name || existing.subject != safe(details.artifactName)) {
+                        observerState.state = 'incomplete'; observerState.reason = 'multiple_transform_identities_share_operation'
+                    }
+                    return
+                }
+                if (transformEvents.size() >= 256) { throw new IllegalStateException('Condition event limit') }
+                def row = [implementation: clazz.name, transformer: clazz.simpleName,
+                           subject: safe(details.artifactName), implementation_identity: containerIdentity(clazz),
+                           action_count: 0, outcome: 'running',
+                           input_identity: [state: 'unavailable', reason: 'identify_transform_api_has_no_input_byte_path']]
+                transformEvents.add(row)
+                activeSteps.put(id, row)
+                activeParents.put(id, id)
+            } catch (Exception error) {
+                observerState.state = 'incomplete'; observerState.reason = error.class.simpleName
+            }
+        }, finished: { descriptor, event ->
+            def id = descriptor.id.toString()
+            def row = activeSteps.remove(id)
+            if (row != null) { row.outcome = event.failure == null ? 'passed' : 'failed' }
+            activeParents.remove(id)
+        }].asType(listenerType)
+        listenerManager.addListener(listener)
+        observerState = [state: 'observed', reason: null]
+    } catch (Exception error) { observerState.reason = error.class.simpleName }
+}
+def optionsFor = { project ->
+    def row = [project: project.path, state: 'incomplete']
+    def stage = 'actual_plugin_services'
+    try {
+        def plugin = project.plugins.find { item ->
+            def type = item.class
+            while (type != null) {
+                if (type.name == 'com.android.build.gradle.internal.plugins.AndroidPluginBaseServices') { return true }
+                type = type.superclass
+            }
+            false
+        }
+        if (plugin == null) { row.reason = 'android_plugin_not_found'; return row }
+        def loader = plugin.class.classLoader
+        def version = loader.loadClass('com.android.Version').getField('ANDROID_GRADLE_PLUGIN_VERSION').get(null)
+        if (version != '9.3.1') { row.reason = 'unsupported_agp_api'; return row }
+        def type = plugin.class
+        def method
+        while (type != null && method == null) {
+            try { method = type.getDeclaredMethod('getProjectServices') }
+            catch (NoSuchMethodException ignored) { type = type.superclass }
+        }
+        if (method == null) { throw new IllegalStateException('Missing actual plugin project services') }
+        method.accessible = true
+        def options = method.invoke(plugin).projectOptions
+        stage = 'effective_boolean_option'
+        def booleanType = loader.loadClass('com.android.build.gradle.options.BooleanOption')
+        def option = booleanType.getField('ENABLE_JETIFIER').get(null)
+        def enabled = options.get(option)
+        if (!(enabled instanceof Boolean)) { throw new IllegalStateException('Nonboolean effective option') }
+        def raw = project.providers.gradleProperty('android.enableJetifier').orNull
+        if (raw != null && !(raw.toLowerCase() in ['true', 'false'])) { throw new IllegalStateException('Invalid explicit option') }
+        stage = 'private_class_containers'
+        row.putAll([state: 'collected', agp_version: version, enabled: enabled,
+                    option_api: 'actual_plugin_project_services_project_options',
+                    explicit_property: [present: raw != null, value: raw == null ? null : raw.toLowerCase() == 'true'],
+                    plugin_identity: containerIdentity(plugin.class), options_identity: containerIdentity(options.class)])
+    } catch (Exception error) { row.reason = error.class.simpleName; row.stage = stage }
+    row
+}
+// Settings buildscript owns the integration plugin and its build-tool graph.
+gradle.settingsEvaluated { settings -> settingsObject = settings }
+gradle.taskGraph.whenReady { graph ->
+    def root = gradle.rootProject
+    if (!root.projectDir.absolutePath.contains('/build/tasks/') || root.projectDir.name != 'gradle-project') { return }
+    ownedProjectRoot = root.projectDir.absolutePath.split('/build/tasks/')[0]
+    conditionProjects = root.allprojects.findAll { project ->
+        project.configurations.findByName('debugCompileClasspath') != null
+    }.sort { it.path }.collect(optionsFor)
+    def rows = rowsFor(':', 'settings', settingsObject.buildscript.configurations)
+    root.allprojects.sort { it.path }.each { project ->
+        rows.addAll(rowsFor(project.path, 'buildscript', project.buildscript.configurations))
+        rows.addAll(rowsFor(project.path, 'project', project.configurations))
+    }
+    collectedRows = rows
+}
+gradle.buildFinished { result ->
+    if (collectedRows == null) { return }
+    def root = gradle.rootProject
+    def rows = collectedRows
+    def output = new File(gradle.gradleUserHomeDir, 'mobi-delegated-evidence')
+    output.mkdirs()
+    def id = UUID.randomUUID().toString()
+    def file = new File(output, id + '.json')
+    if (listener != null) { listenerManager.removeListener(listener) }
+    def conditions = [schema: 1, projects: conditionProjects,
+                      transforms: [state: observerState.state, reason: observerState.reason, gradle: gradle.gradleVersion,
+                                   interval: 'init_script_to_build_finished', observer_api: 'planned_identify_action_v1',
+                                   planned_count: plannedCount.get(), identified_count: identifiedCount.get(), action_count: actionCount.get(),
+                                   events: transformEvents.collect { it }]]
+    file.text = JsonOutput.toJson([schema: 1, gradle: gradle.gradleVersion, generated_task: root.projectDir.parentFile.name,
+                                 build_outcome: result.failure == null ? 'passed' : 'failed', configurations: rows,
+                                 jetifier_conditions: conditions])
+    println('MOBI_DELEGATED_EVIDENCE=' + id)
+    if (rows.any { it.state == 'incomplete' }) { throw new GradleException('Mobi delegated resolution is incomplete') }
+}

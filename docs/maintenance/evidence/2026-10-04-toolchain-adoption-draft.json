@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "state": "draft_unapplied",
+  "adoption_authorized": false,
+  "policy_exception_granted": false,
+  "paths": [
+    {
+      "path": "kotlin",
+      "before_sha256": "d8b5b852e54d4af5d92c6e1d3535ba60ec6485590e6d0dbc3666171e6136e040",
+      "after_sha256": "8e5972c57ee6cb277ea3ec48a7b5ace1f19983e5f4373f3f29752b31082d340b",
+      "mode": "0o755"
+    },
+    {
+      "path": "kotlin.bat",
+      "before_sha256": "41b25b605e371ace9f4c034ef2d9ef0a486add0918e2b63af317174b2f949c38",
+      "after_sha256": "a83763d91ca43d9906e92e90aa6b93caeacc32b202343b61594e94de2d506dd8",
+      "mode": "0o755"
+    },
+    {
+      "path": "android-app/module.yaml",
+      "before_sha256": "da50d4195d72566b83af9b99c39c0cd7f716d56a4a7096e1a3e43ead7df5ec65",
+      "after_sha256": "1361a37a5e4ec8843fb019adff3629fa31eebc597bf197b423854f7457b4671b",
+      "mode": "0o644"
+    },
+    {
+      "path": "maintenance-kotlin-toolchains.json",
+      "before_sha256": "2d772850f78b5ce0844a588e23568eddab03c86092f90220397df2d39b185569",
+      "after_sha256": "ea61b7bdbe2b42e3c5bb7ed0960ffee7843f742836ebc37c0af1353c9f4e2a87",
+      "mode": "0o644"
+    },
+    {
+      "path": "maintenance-compatibility.json",
+      "before_sha256": "e2a93687d2cf60be10cf6f64d5d8228bd7daaa9f1ba542f46e19214a863b2158",
+      "after_sha256": "474ddd275eb473b4b21156ecce31a417d3cd3ce46bf7eb416a41ba5add3006c5",
+      "mode": "0o644"
+    },
+    {
+      "path": "maintenance-plugin-resolution.json",
+      "before_sha256": "c878a0e38e8a913080ea635dd51009e841f5bdc9eb9f88c41822b092a3795da5",
+      "after_sha256": "2ad6780e3b406d4326d04fab37e0de55a04482faaf357d84d3c88e2f0c37924c",
+      "mode": "0o644"
+    },
+    {
+      "path": "scripts/maintenance/adapters/compatibility.rb",
+      "before_sha256": "a9036c23a6789d725cf5e0ba8ed68c70f62c143ececf517447d1b8f3be3a9a56",
+      "after_sha256": "d7dbeb20453d88f916377a780b4abf0e2f9c9b7763e590f56ea1f72cd1b892a5",
+      "mode": "0o644"
+    },
+    {
+      "path": "README.md",
+      "before_sha256": "b4e28400934eb564b52a82ed27a0dedf5f56ec0b4c1789c6d8b246951273100d",
+      "after_sha256": "a058a8b0873ca2472b42d7e2f7949e5096ce2ab3ca9224c2ae6a68a91cd003f2",
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/reference/local-development.md",
+      "before_sha256": "75a17882e897346482ba875bd00e21247b13a47cecc7e283e0f534322ee23933",
+      "after_sha256": "4f74fb9579edc54005145452439b1575817b808a5d05180d518b44b7fdf83339",
+      "mode": "0o644"
+    },
+    {
+      "path": "scripts/maintenance/test_compatibility.rb",
+      "before_sha256": "104f8ca4f361a19a9718ef983458dc4218b068cffb0fbf202e56c210da3e41e6",
+      "after_sha256": "d4761ade640ea83274e812db07e657df1bd4eb24db4fc6b83b0fa4441c1a9a15",
+      "mode": "0o644"
+    },
+    {
+      "path": "scripts/maintenance/test_support_policy.rb",
+      "before_sha256": "bc8a91d6310422bf525bcf787ef4812ca0739c50db98a772f59bc59e01fe7bfb",
+      "after_sha256": "0bfec9cb36779a052480a5d0a983bdc308bc32a5ba2a5cc691fa013774145dea",
+      "mode": "0o644"
+    },
+    {
+      "path": "scripts/maintenance/test_plugin_attribution.rb",
+      "before_sha256": "27d812d4a7b14f373935e3feadb4e3c78de81c97725452f7199d0b5b2b03cde6",
+      "after_sha256": "498a095a1b33499db8658dd77a02eded35081febadfd093e428c9937f9a6328b",
+      "mode": "0o644"
+    }
+  ],
+  "patch_sha256": "3da763cbf03e7e1c52dbd3aaacd236c4650b90df1bacee0ca97f7a48620eb9f5",
+  "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+  "rollback_probe": "exact_bytes_and_modes_restored",
+  "limits": [
+    "risk_overlay_not_implemented",
+    "age_decision_pending",
+    "clean_clone_and_cold_hosted_pending",
+    "fresh_complete_advisories_pending",
+    "device_and_signed_gate_disposition_pending"
+  ],
+  "validation": [
+    "exact_apply_reverse_bytes_and_modes",
+    "candidate_wrapper_compatibility_baseline_agreement",
+    "260_contracts_across_16_suites_split_after_fixture_corrections",
+    "five_pinned_static_analyzers",
+    "23_strict_openspec_items"
+  ],
+  "notes": [
+    "Vendor Windows wrapper CRLF retained; Git reports CRLF additions as trailing whitespace; no whitespace rewriting applied."
+  ],
+  "logs": [
+    {
+      "name": "contracts.log",
+      "sha256": "1b8b54188904c7d0e021e88c88678386f3e531d9814a70225d90502aea7cbca0"
+    },
+    {
+      "name": "contracts-continuation.log",
+      "sha256": "73a2b09d1bd44fb41fb27dac93f15e5073d51138242f08c9f885dbba448b789e"
+    },
+    {
+      "name": "contracts-corrected-continuation.log",
+      "sha256": "740a3616a5fd77b0bc078f8e6c37186d41b3272516f240e5aceb937e2c6c58c9"
+    },
+    {
+      "name": "contracts-final-continuation.log",
+      "sha256": "5f38d82403502cff16aa42c6d383e6a18e027b50fe607eb960e08bfb957e5772"
+    },
+    {
+      "name": "static.log",
+      "sha256": "ece08f70d4b36ed699a58aecdf28e352926ec1f0cbf45ed6765f938628038dc2"
+    },
+    {
+      "name": "static-retry.log",
+      "sha256": "c08a4cb6812fe2a47239a84df40b627b80008184c0533d4b6824b0f6cba13948"
+    }
+  ],
+  "failures_preserved": [
+    "SDK 36 compatibility fixture",
+    "literal 0.12.2 drift fixture",
+    "historical support SDK fixture",
+    "candidate-only plugin-mapping fixture",
+    "scratch static helper optional config assumption",
+    "scratch correction used wrong working directory"
+  ],
+  "static_helper_sha256": "86f35ac8e6d7244ab3407d0ea7c0322fd2d230d09478960197a8c195eb78c9b3"
+}

@@ -51,7 +51,7 @@ module QualityTest
       write('feature/module.yaml', "product: jvm/lib\n")
       write('feature/src/Example.kt', "class Example\n")
       write('ios-app/Dependencies/Package.swift', "// swift-tools-version: 6.0\n")
-      write('.gitignore', "ignored/\n.quality/\n")
+      write('.gitignore', "ignored/\n.quality/\n.maintenance/\n")
       TOOL_NAMES.each do |tool|
         path = File.join(bin, tool)
         File.write(path, "#!#{RUBY}\n" + <<~'SCRIPT')

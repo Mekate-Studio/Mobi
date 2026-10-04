@@ -2,13 +2,14 @@
 
 require_relative '../lib/core'
 require_relative '../lib/kotlin_wrappers'
+require_relative '../lib/build_inputs'
 require 'yaml'
 require 'rbconfig'
 require 'uri'
 
 module Maintenance
   class Compatibility
-    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip].freeze
+    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip direct-resolution direct-build-inputs].freeze
     CONFIG = 'maintenance-compatibility.json'
     CATALOG = 'gradle/libs.versions.toml'
     UNPROVEN = %w[device_execution release_archive signed_packaging cancellation_parity generic_export cold_direct_ci clean_clone_onboarding incremental_direct_build local_bridge_rollback complete_release_interval_review complete_bridge_target_graph advisory_review].freeze
@@ -18,7 +19,7 @@ module Maintenance
       @root = root
       raise Failure, 'Experimental mode must be explicit boolean' unless [true, false].include?(experimental)
       @config = JSON.parse(File.read(File.join(root, CONFIG)))
-      valid = @config['schema'] == 1 && @config['automatic_adoption'] == false && @config['toolchain'] == '0.12.2' &&
+      valid = @config['schema'] == 1 && @config['automatic_adoption'] == false && %w[0.12.2 0.13.0].include?(@config['toolchain']) &&
               @config['minimum_release_age_days'].is_a?(Integer) && @config['minimum_release_age_days'] >= 7
       raise Failure, 'Unsupported compatibility policy' unless valid
       raise Failure, 'Compatibility review timestamp is in the future' if Time.iso8601(@config.fetch('reviewed_at')) > now
@@ -29,6 +30,10 @@ module Maintenance
         unless uri.scheme == 'https' && uri.host && !uri.userinfo && source.fetch('sha256').match?(/\A[0-9a-f]{64}\z/) && Time.iso8601(source.fetch('retrieved_at')) <= now
           raise Failure, 'Invalid compatibility source evidence'
         end
+      end
+      observations = @config.fetch('capability_observations', [])
+      unless observations.is_a?(Array) && observations.all? { |o| o.is_a?(Hash) && o['id'].to_s.match?(/\A[a-z][a-z0-9-]+\z/) && o['version'].to_s.match?(/\A\d+\.\d+\.\d+\z/) && o['state'] == 'documented_not_rehearsed' && o['scope'] == 'swiftpm_objective_c_visible_api_import_into_kotlin' && o['bridge_retirement'] == 'defer' && o['adoption_authorized'] == false && o['missing_capabilities'].is_a?(Array) && o['missing_capabilities'].include?('swiftpm_execution') && o['sources'].is_a?(Array) && !o['sources'].empty? && (o['sources'] - sources.map { |s| s['id'] }).empty? } && observations.map { |o| o['id'] }.uniq.size == observations.size
+        raise Failure, 'Unsupported capability observation; executed claims require a reviewed adapter'
       end
       releases = @config.fetch('candidate').fetch('releases')
       raise Failure, 'Incomplete compatibility tuple' unless releases.keys.sort == %w[kotlin metro skie]
@@ -57,7 +62,7 @@ module Maintenance
       result = { 'schema' => 1, 'state' => 'assessed', 'source_sha256' => Maintenance.digest(source.files),
                  'config_sha256' => Maintenance.file_sha(File.join(root, CONFIG)), 'candidate' => config['candidate'],
                  'newer_releases' => config.fetch('newer_releases', []).map { |r| r.merge('age_state' => Time.now.utc - Time.iso8601(r.fetch('published_at')) >= config['minimum_release_age_days'] * 86_400 ? 'age_eligible_unrehearsed' : 'age_blocked') },
-                 'direct_paths' => config['direct_paths'], 'evidence_kind' => 'reviewed_sources_and_declarations',
+                 'direct_paths' => config['direct_paths'], 'capability_observations' => config.fetch('capability_observations', []), 'evidence_kind' => 'reviewed_sources_and_declarations',
                  'missing_capabilities' => UNPROVEN, 'bridge_retirement' => 'defer', 'adoption_authorized' => false }
       source.verify!
       result
@@ -125,8 +130,8 @@ module Maintenance
       @files += %w[compatibility_check.rb kotlin_check.rb].map { |p| File.join(root, 'scripts/maintenance', p) }
       @plan = { 'schema' => 1, 'id' => 'compatibility-' + profile, 'scope' => 'compatibility_' + profile.tr('-', '_'),
                 'resource_types' => %w[filesystem process-group kotlin-native], 'edits' => edits,
-                'missing_capabilities' => Compatibility::UNPROVEN + (profile == 'bridge-compile' ? %w[native_tests application_builds] : []) + ['retirement_approval'] + (config.selection['age_state'] == 'age_blocked' ? ['release_age'] : []),
-                'checks' => [{ 'id' => profile, 'required' => true, 'timeout_seconds' => profile == 'direct-roundtrip' ? 2400 : 1200,
+                'missing_capabilities' => Compatibility::UNPROVEN + (%w[direct-resolution direct-build-inputs].include?(profile) ? %w[complete_direct_target_graph compiler_plugin_resolution artifact_attribution] : []) + (%w[bridge-compile direct-resolution direct-build-inputs].include?(profile) ? %w[native_tests application_builds] : []) + (profile == 'direct-build-inputs' ? BuildInputs::GAPS : []) + ['retirement_approval'] + (config.selection['age_state'] == 'age_blocked' ? ['release_age'] : []),
+                'checks' => [{ 'id' => profile, 'required' => true, 'timeout_seconds' => %w[direct-roundtrip direct-build-inputs].include?(profile) ? 2400 : 1200,
                                'argv' => [File.realpath(RbConfig.ruby), File.join(root, 'scripts/maintenance/compatibility_check.rb'), '{source}', '{output}', '{cache}', @host_file, profile] }] }
     end
 

@@ -1,0 +1,496 @@
+{
+  "schema": 1,
+  "toolchain": "0.13.0",
+  "automatic_adoption": false,
+  "distribution": {
+    "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.13.0/kotlin-cli-0.13.0-dist.tgz",
+    "sha256": "fa82b9872dcfa04d26c8f800f33d597c99fbffd747a0e9bbce3a9e4424b3a588",
+    "bytes": 416655389,
+    "classpath_member": "extra/android-integration-gradle-plugin.classpath.txt"
+  },
+  "sources": [
+    {
+      "path": "build-sources/amper-distribution/src/lazyClasspaths.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/build-sources/amper-distribution/src/lazyClasspaths.kt",
+      "sha256": "da0f046363414653b952304ed97db3c9f59fce9f2a681b6cbd4282de5d2b4e2c"
+    },
+    {
+      "path": "build-sources/amper-distribution/src/buildUnpackedDist.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/build-sources/amper-distribution/src/buildUnpackedDist.kt",
+      "sha256": "c4c31d1a5c20d8226f072477d06f9dbeafaf15462d7f4624754211e291e04f92"
+    },
+    {
+      "path": "project.yaml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/project.yaml",
+      "sha256": "d3b2ce18cede25e503d6a9be8f0625fbcec8a0f8c19f3450a5126c9c45427306"
+    }
+  ],
+  "files": [
+    {
+      "file": "amper-android-gradle-api-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "1083fd603b0453fd6bcd47d07f513be4c4d44c43058b31d9b8b752ccd8939e69",
+        "bytes": 27329
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/android-integration/amper-android-gradle-api",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/android-integration/amper-android-gradle-api/module.yaml",
+      "source_sha256": "4cb6dfc336283f497faa6545d6c4db6c59cd8abc1ac328c90d9a5e1f0a1f6617",
+      "metadata_member": "META-INF/amper-android-gradle-api.kotlin_module",
+      "metadata_sha256": "c1166c1c28d5ca036c2500d174a4545e72ce1208d3271e7eaf83dd15f55ce4d8"
+    },
+    {
+      "file": "amper-android-gradle-plugin-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "bdefab6eaac981e261f2fc72f0197198831336873289c86770cc6fe67d4752fb",
+        "bytes": 41324
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/android-integration/amper-android-gradle-plugin",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/android-integration/amper-android-gradle-plugin/module.yaml",
+      "source_sha256": "d2bd9b5c1c3dbb10fb5ea00e1f260275cba6ed01d3af7c5778b26bd2596386cf",
+      "metadata_member": "META-INF/amper-android-gradle-plugin.kotlin_module",
+      "metadata_sha256": "cd7ca93c57a6fa93a67fcc6bd583ff21382abbf06e965763b4e3e83d7056eb31"
+    },
+    {
+      "file": "amper-build-info-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "b05aa44a6691d6422be74cfa887f27bc179d508d60b1b560ed3b8bcd67b568c2",
+        "bytes": 2429
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/amper-build-info",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-build-info/module.yaml",
+      "source_sha256": "52e4e27af22016550ad4adcb545f61cc2bfe640805d6f085c1d2639881a01119",
+      "metadata_member": "META-INF/amper-build-info.kotlin_module",
+      "metadata_sha256": "06d262cf732152000d8cb1453e8dc1209b37fa4411e5c4d202265ff0d18ec16d"
+    },
+    {
+      "file": "amper-events-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "1664f2fdf43684daa846cbaab908e7d18561d05d7107b6fc86f10408c40203fc",
+        "bytes": 150464
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/amper-events",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-events/module.yaml",
+      "source_sha256": "c673259025bab3ead9dcdc4413ada121a808a07efbec1a0eeac6fa92e8ce3ad1",
+      "metadata_member": "META-INF/amper-events.kotlin_module",
+      "metadata_sha256": "be5440644ec812a5bb64d4f422dfa6bb90bf201b5953f451488a725e9e9282c2"
+    },
+    {
+      "file": "amper-extensibility-schema-model-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "84c4c3b40b1bd6dea2136202d94486c4432935e24a9899dbd33048ea1fd63fa7",
+        "bytes": 469585
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/extensibility/amper-extensibility-schema-model",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/extensibility/amper-extensibility-schema-model/module.yaml",
+      "source_sha256": "94ad7f2764445097ee14c5b1c26978216570a20eed5832761e8308f7d931ebb5",
+      "metadata_member": "META-INF/amper-extensibility-schema-model.kotlin_module",
+      "metadata_sha256": "87732d3ff5d7bbec8a7391a3c773ac667663fde8fadf5e8bc7b0dcb2a14890d9"
+    },
+    {
+      "file": "amper-problem-reporting-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "bf9f341c28ed9bbe3b753c44c4142bc8d4c3f8ef3d6dfc57e9e9c97a1c294917",
+        "bytes": 26152
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/amper-problem-reporting",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-problem-reporting/module.yaml",
+      "source_sha256": "540554a533cf7b2f95f8bfec8bbea4e087ec0851cc840461e8f725284fb4b9cc",
+      "metadata_member": "META-INF/amper-problem-reporting.kotlin_module",
+      "metadata_sha256": "471689630d43dbc8c90099d8a24f3ebc8c3e2f96f260cc4bd4ea049fb67b655e"
+    },
+    {
+      "file": "amper-swift-pm-resolution-model-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "d60a4f03591631fa3987813db0dc2157d51007a038e8c1f8c94e235fc7e091ce",
+        "bytes": 114420
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/amper-swift-pm-resolution-model",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-swift-pm-resolution-model/module.yaml",
+      "source_sha256": "ccba133196d746df6169bd77554a57bb7abca6489f29030ea5704a85a7d40950",
+      "metadata_member": "META-INF/amper-swift-pm-resolution-model.kotlin_module",
+      "metadata_sha256": "29dd9d9fe7c171da86ca26a0b51d06d7adb36c00adbde990175caff2525c44c5"
+    },
+    {
+      "file": "amper-telemetry-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "a7abbe4af1496c97093a75bf0bcff741af6a271b18cce4042d6e98b81ffd861d",
+        "bytes": 20188
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/amper-telemetry",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-telemetry/module.yaml",
+      "source_sha256": "79a7f9baef8a77e40d002d43c052fcb1e9125082ea68f7f226627e75d99975e9",
+      "metadata_member": "META-INF/amper-telemetry.kotlin_module",
+      "metadata_sha256": "f2b63fafb54167b94b605a18052f10e6f53a15843f2189053a08f3f9c92b1b1c"
+    },
+    {
+      "file": "annotations-26.1.0.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "ebc7aec252ed0c7d2d04c039d7f00e69f7b86b1f493c741d67b3ef31b986b054",
+        "bytes": 31094
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "org.jetbrains",
+        "name": "annotations",
+        "version": "26.1.0"
+      },
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/annotations/26.1.0/annotations-26.1.0.jar",
+      "classifier": null
+    },
+    {
+      "file": "byte-buddy-1.10.9.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "07b9ca6e2f970cb03f4b25651df1f2fce271d491b44e0409827887786f692d4d",
+        "bytes": 3376059
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "net.bytebuddy",
+        "name": "byte-buddy",
+        "version": "1.10.9"
+      },
+      "url": "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy/1.10.9/byte-buddy-1.10.9.jar",
+      "classifier": null
+    },
+    {
+      "file": "byte-buddy-agent-1.10.9.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "fbd052d2d4cd16f707547c468621c6b7fb842c7ec8866d012ecbc6178de1f394",
+        "bytes": 259219
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "net.bytebuddy",
+        "name": "byte-buddy-agent",
+        "version": "1.10.9"
+      },
+      "url": "https://repo.maven.apache.org/maven2/net/bytebuddy/byte-buddy-agent/1.10.9/byte-buddy-agent-1.10.9.jar",
+      "classifier": null
+    },
+    {
+      "file": "concurrency-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "5b8637f06643b935f3fb7e748e60bbb702d6d903ef8141ba3c7443d092005c28",
+        "bytes": 54937
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/libraries/concurrency",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/concurrency/module.yaml",
+      "source_sha256": "b937734f0899b5f2294ca8e7ea660e5934f4000cb010a9be01c0e4c114ff2f56",
+      "metadata_member": "META-INF/concurrency.kotlin_module",
+      "metadata_sha256": "8bb2e59012952ef386a2f5b09073807dcb0ad1638211777f2f6b1e3ce60d59a8"
+    },
+    {
+      "file": "core-intellij-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "949bf23c67eb7d16c04bfe63c92edd5031e44cbca836f0e0849087e70bf46f7a",
+        "bytes": 15865
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/core-intellij",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/core-intellij/module.yaml",
+      "source_sha256": "14834a554e813eec95e8624c816f73c4972b3c9b210503361e6a7b63351cddda",
+      "metadata_member": "META-INF/core-intellij.kotlin_module",
+      "metadata_sha256": "06d262cf732152000d8cb1453e8dc1209b37fa4411e5c4d202265ff0d18ec16d"
+    },
+    {
+      "file": "core-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "670ce1d0469afd97b1307cd60fb43256fffa7d1ff001abcb5f61d5575939a679",
+        "bytes": 104183
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/core",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/core/module.yaml",
+      "source_sha256": "9d77fb7b5438146d21b1177016b9ab26e1bef6d8a2052cd0ce391135261e315b",
+      "metadata_member": "META-INF/core.kotlin_module",
+      "metadata_sha256": "f2162073d0b2b4b08221455efc6d2cd16fab34a666334d55deca737c309c93b0"
+    },
+    {
+      "file": "frontend-api-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "94aff54b6fe6e4f5634ee9299840ecffe814b99c5437e8a1168245a83be0c3d6",
+        "bytes": 676055
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/frontend-api",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/frontend-api/module.yaml",
+      "source_sha256": "ac4df1bd75f07f30ef572be5ae62a992bde53929f2391ca1af6864f433d604af",
+      "metadata_member": "META-INF/frontend-api.kotlin_module",
+      "metadata_sha256": "dd72ee399a40c001b9eff53a73a0fee69a5db50d6129d02a5e5a171ddb4d5727"
+    },
+    {
+      "file": "kotlin-compiler-embeddable-2.2.21.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "9588fa696ac5507af764fd5660df6894185e12704ec1bc3f5cb772af4987f295",
+        "bytes": 56908512
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "org.jetbrains.kotlin",
+        "name": "kotlin-compiler-embeddable",
+        "version": "2.2.21"
+      },
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.2.21/kotlin-compiler-embeddable-2.2.21.jar",
+      "classifier": null
+    },
+    {
+      "file": "kotlin-daemon-embeddable-2.2.21.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "91c0673c22e44b054ae0314d323860ebe1f3aff3f0ebc74fff82c4733dde09be",
+        "bytes": 347987
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "org.jetbrains.kotlin",
+        "name": "kotlin-daemon-embeddable",
+        "version": "2.2.21"
+      },
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-embeddable/2.2.21/kotlin-daemon-embeddable-2.2.21.jar",
+      "classifier": null
+    },
+    {
+      "file": "kotlin-gradle-plugin-2.2.10.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "12e99741802f8e981341eda3f501f399d1a3dcada212da29b8d02cbfe9a073bf",
+        "bytes": 23185614
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "org.jetbrains.kotlin",
+        "name": "kotlin-gradle-plugin",
+        "version": "2.2.10"
+      },
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.2.10/kotlin-gradle-plugin-2.2.10.jar",
+      "classifier": null
+    },
+    {
+      "file": "kotlin-reflect-2.3.20-RC2.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "0bb2e05067985a17c56906a9e30a4a7d8e0fad015ce9bf21a066a3cf0d24763d",
+        "bytes": 3631432
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "org.jetbrains.kotlin",
+        "name": "kotlin-reflect",
+        "version": "2.3.20-RC2"
+      },
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-reflect/2.3.20-RC2/kotlin-reflect-2.3.20-RC2.jar",
+      "classifier": null
+    },
+    {
+      "file": "kotlin-script-runtime-2.2.21.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "2b1519b427b514d1536c1b425674b03fe914af637924028e9959c6625442df51",
+        "bytes": 44769
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "org.jetbrains.kotlin",
+        "name": "kotlin-script-runtime",
+        "version": "2.2.21"
+      },
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-script-runtime/2.2.21/kotlin-script-runtime-2.2.21.jar",
+      "classifier": null
+    },
+    {
+      "file": "kotlin-stdlib-2.4.0.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+        "bytes": 1841929
+      },
+      "kind": "maven_reference",
+      "component": {
+        "group": "org.jetbrains.kotlin",
+        "name": "kotlin-stdlib",
+        "version": "2.4.0"
+      },
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.4.0/kotlin-stdlib-2.4.0.jar",
+      "classifier": null
+    },
+    {
+      "file": "maven-central-configuration-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "7c3acd1f39260cfaa95005ba3b9f2b627529c3dc3644f445d05bb3ed4ed0189d",
+        "bytes": 2805
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/libraries/maven-central-configuration",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/maven-central-configuration/module.yaml",
+      "source_sha256": "b7f6faee4a326851e6ae6ef67b4dd94113a8a051a81041cc6dc255af9b02ae0b",
+      "metadata_member": "META-INF/maven-central-configuration.kotlin_module",
+      "metadata_sha256": "06d262cf732152000d8cb1453e8dc1209b37fa4411e5c4d202265ff0d18ec16d"
+    },
+    {
+      "file": "maven-plugin-xml-parser-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "ec731e35f8e098924aac27845f5e458ab6bb8acfa320d177acdb43940fa4b900",
+        "bytes": 78483
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/libraries/maven-plugin-xml-parser",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/maven-plugin-xml-parser/module.yaml",
+      "source_sha256": "359ebbcd6c1695307b3b33a30511e75b1388f6f77b39f305821f3dbe14d35055",
+      "metadata_member": "META-INF/maven-plugin-xml-parser.kotlin_module",
+      "metadata_sha256": "38474e193cb9ce104dd6da19f0cbd223a16ca70118dc7890d981c311cf1f8246"
+    },
+    {
+      "file": "nio-filechannels-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "664d454b9a5ee14c8b66deca56351f463e5b390b1fb5cb5e043aa8faeffa0d14",
+        "bytes": 3607
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/libraries/nio-filechannels",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/nio-filechannels/module.yaml",
+      "source_sha256": "a95a1648d0a58121865e20e08ac5a01357a46ed692ae93607ed29bc2b5eb982c",
+      "metadata_member": "META-INF/nio-filechannels.kotlin_module",
+      "metadata_sha256": "48a78cbbd14824ed45fd12f50257cc0a267070ca70a43e297378a15cc642ca0e"
+    },
+    {
+      "file": "parserutil-stub-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "45ec15911d3408c767aacfe2156312ff409e44fbc80cf4ed3ed9b112a1842440",
+        "bytes": 32074
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/frontend/plain/parserutil-stub",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/frontend/plain/parserutil-stub/module.yaml",
+      "source_sha256": "2176efb8beb7d6ed810433e1c328328e6bcc510e6653633172676d06d31c0418",
+      "metadata_member": "META-INF/parserutil-stub.kotlin_module",
+      "metadata_sha256": "06d262cf732152000d8cb1453e8dc1209b37fa4411e5c4d202265ff0d18ec16d"
+    },
+    {
+      "file": "schema-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "38fa4f2eaac560a4dfa61f36d7ce94e5545c8b5f0695e41a69b294bfb56caa57",
+        "bytes": 1528767
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/frontend/schema",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/frontend/schema/module.yaml",
+      "source_sha256": "b63e07bdc46f1425fd023d54ecf6671fa3d17e2216ac6189479256f27683d007",
+      "metadata_member": "META-INF/schema.kotlin_module",
+      "metadata_sha256": "43023e76876de76bcf65611c66035091c907faf6547a071469a42ac491403328"
+    },
+    {
+      "file": "serialization-extended-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "64685db31ef75614257cbce3c3b3cdf118229372a9335b1d42ab0e99b8d55d27",
+        "bytes": 3689
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/libraries/serialization-extended",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/serialization-extended/module.yaml",
+      "source_sha256": "fddbb830831b79607a43b7fc0b61a6e51b93109550282fa76874009a6a005be7",
+      "metadata_member": "META-INF/serialization-extended.kotlin_module",
+      "metadata_sha256": "5f2ae0f65d7a4528297046e6b8691b761dfecbb59612c272e1369f35cefae2f0"
+    },
+    {
+      "file": "stdlib-extended-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "67eddea965c7918cf4babb0c63dbf95cafac630f0a294a14fb112e41983c8b59",
+        "bytes": 33593
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/libraries/stdlib-extended",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/stdlib-extended/module.yaml",
+      "source_sha256": "e1670c89ebd2de2021f3f712ae36f248c1c3444a8c0555500a709e1c3f4a7851",
+      "metadata_member": "META-INF/stdlib-extended.kotlin_module",
+      "metadata_sha256": "0d7477c0db34a08b17169ba119bc0b078e7b12833be2064e7bf27869bd04cd41"
+    },
+    {
+      "file": "system-info-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "c7ba99cda04643cbb3c273a7853ba58c070d80d602488aa8fcbde8d2f6985038",
+        "bytes": 13287
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/libraries/system-info",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/system-info/module.yaml",
+      "source_sha256": "1f50c7e3c2cd007708ae334dc88ea95e87b5799299a5b79347f1e7514b9741d9",
+      "metadata_member": "META-INF/system-info.kotlin_module",
+      "metadata_sha256": "943402111b1ca6ee9304bbc606a576ba489c03ef95f65036aebe8bc6212c53eb"
+    },
+    {
+      "file": "telemetry-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "55543ad93aee06bc5f180e2705cedd4943701d1e0cd57967762a6a6cdf88e5d7",
+        "bytes": 9583
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/libraries/telemetry",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/telemetry/module.yaml",
+      "source_sha256": "07a41289a40311b069ce097bb1bd47d9421500567ea656818ccb86277703fb28",
+      "metadata_member": "META-INF/telemetry.kotlin_module",
+      "metadata_sha256": "20f99858839331e7cdee0454158dd30cec9278f03e2549bb3a8d4a677fd869cf"
+    },
+    {
+      "file": "toml-psi-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "9e8583ae9e7bad0fe43b0791efd4c060f2b807123abe1186fe79de4897939f64",
+        "bytes": 98312
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/frontend/plain/toml-psi",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/frontend/plain/toml-psi/module.yaml",
+      "source_sha256": "a83e577af42b271f81e6736993e69b60c91cd72676c5e2df1063981e5bb854fc",
+      "metadata_member": "META-INF/toml-psi.kotlin_module",
+      "metadata_sha256": "fac964c79439cf743bdf594e626e2733d908f4fa614ffb2b4633cfee02cf20a7"
+    },
+    {
+      "file": "yaml-psi-jvm.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "c471b945dd2a3a7426412c5494ef44ccedb72b2b379d1f5fce37da72e76b38b5",
+        "bytes": 129928
+      },
+      "kind": "source_module_correspondence",
+      "module": "sources/frontend/plain/yaml-psi",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/frontend/plain/yaml-psi/module.yaml",
+      "source_sha256": "5603957b1cd1653192ec2bba9bfe23f7c3fde043d97886de9d51d5e8e95b7203",
+      "metadata_member": "META-INF/yaml-psi.kotlin_module",
+      "metadata_sha256": "aee4341d81c46b2bf3f3eb7ec0ab027b288186df241679f4935a55cd022736d2"
+    }
+  ]
+}

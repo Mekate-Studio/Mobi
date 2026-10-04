@@ -60,7 +60,7 @@ jobs:
     timeout-minutes: 60
     env:
       IOS_TEST_PLAN: Nightly
-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/cache@v6
@@ -130,7 +130,7 @@ jobs:
     runs-on: macos-26
     timeout-minutes: 60
     env:
-      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'gradle' }}
+      KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/cache@v6
