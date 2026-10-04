@@ -175,7 +175,7 @@ module Maintenance
         elsif @resolution_only
           @env.merge!('JAVA_HOME' => @host.fetch('java_home'), 'DEVELOPER_DIR' => @host.fetch('developer_dir'))
           @report['environment'] = { 'scope' => 'resolution_only', 'simulator' => 'not_created', 'native_execution' => 'not_attempted' }
-        elsif %w[upstream-android-packaging upstream-ios-release upstream-ios-archive].include?(@profile)
+        elsif %w[upstream-android-packaging upstream-ios-release upstream-ios-archive direct-ios-release direct-ios-archive].include?(@profile)
           native_setup(simulator: false)
         else
           native_setup
@@ -210,7 +210,7 @@ module Maintenance
             end
           end
         end
-        packaging = %w[upstream-android-packaging upstream-ios-release upstream-ios-archive].include?(@profile)
+        packaging = %w[upstream-android-packaging upstream-ios-release upstream-ios-archive direct-ios-release direct-ios-archive].include?(@profile)
         bridge_compile unless @direct || @collect_resolution || packaging
         unless @profile == 'bridge-compile' || @collect_resolution || packaging
           %w[android-test android-build-debug ios-test ios-build-debug].each do |job|
@@ -228,11 +228,11 @@ module Maintenance
           measured('android_aab') { command('android-aab', [File.join(@work, 'scripts/ci/build_android_aab.sh')]) }
           @report['release_scope'] = 'synthetic_android_signing_no_delivery'
         end
-        if @profile == 'upstream-ios-release'
+        if %w[upstream-ios-release direct-ios-release].include?(@profile)
           measured('ios_release_simulator') { command('ios-release-simulator', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-build-release']) }
           @report['release_scope'] = 'unsigned_ios_release_simulator_build'
         end
-        if @profile == 'upstream-ios-archive'
+        if %w[upstream-ios-archive direct-ios-archive].include?(@profile)
           measured('ios_unsigned_archive') do
             command('ios-unsigned-archive', ['/usr/bin/xcodebuild', '-project', File.join(@work, 'ios-app/module.xcodeproj'), '-scheme', 'app', '-configuration', 'Release', '-destination', 'generic/platform=iOS', '-derivedDataPath', File.join(@work, 'build/archive-derived'), '-archivePath', File.join(@work, 'build/releases/Mobi.xcarchive'), 'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'SWIFT_ENABLE_EXPLICIT_MODULES=NO', 'archive'])
           end

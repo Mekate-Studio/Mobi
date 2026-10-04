@@ -9,6 +9,6 @@
 
 - [x] 2.1 Pass maintenance contracts and static checks with removed inputs unavailable.
 - [ ] 2.2 Pass normal native gate and relevant unsigned builds; inspect native consumers/resources.
-- [ ] 2.3 Prove full byte/mode recovery and rebuild restored retained consumers in an owned copy.
-- [ ] 2.4 Validate clean clone/bootstrap and refresh required risk evidence without extending expiry.
+- [x] 2.3 Prove full byte/mode recovery and rebuild restored retained consumers in an owned copy.
+- [x] 2.4 Validate clean clone/bootstrap and refresh required risk evidence without extending expiry.
 - [ ] 2.5 Pass normal pre-commit; create and attach PR; collect exact hosted PR/Nightly evidence and record open gates.

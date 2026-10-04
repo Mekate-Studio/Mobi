@@ -9,7 +9,7 @@ require 'uri'
 
 module Maintenance
   class Compatibility
-    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip direct-resolution direct-build-inputs direct-mobile].freeze
+    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip direct-resolution direct-build-inputs direct-mobile direct-ios-release direct-ios-archive].freeze
     CONFIG = 'maintenance-compatibility.json'
     CATALOG = 'gradle/libs.versions.toml'
     UNPROVEN = %w[device_execution release_archive signed_packaging cancellation_parity generic_export cold_direct_ci clean_clone_onboarding incremental_direct_build local_bridge_rollback complete_release_interval_review complete_bridge_target_graph advisory_review].freeze
@@ -95,7 +95,10 @@ module Maintenance
     def edits(source, profile)
       raise Failure, 'Unknown compatibility profile' unless PROFILES.include?(profile)
       verify_baseline!(source)
-      if !source.files.key?(CATALOG) && !%w[direct-mobile direct-resolution direct-build-inputs].include?(profile)
+      if source.files.key?(CATALOG) && %w[direct-ios-release direct-ios-archive].include?(profile)
+        raise Failure, 'Direct unsigned profiles require the adopted bridge-free source'
+      end
+      if !source.files.key?(CATALOG) && !%w[direct-mobile direct-resolution direct-build-inputs direct-ios-release direct-ios-archive].include?(profile)
         raise Failure, 'Historical bridge/transform profile is unavailable on direct source; restore the complete published retained revision in an isolated copy'
       end
       return [] if profile.start_with?('direct-')
@@ -134,6 +137,7 @@ module Maintenance
       host = { 'schema' => 1, 'ruby' => File.realpath(RbConfig.ruby), 'profile' => profile, 'target_policy' => 'apple-silicon',
                'java_home' => File.realpath(java.strip), 'developer_dir' => File.realpath(xcode.strip), 'android_sdk' => File.realpath(sdk) }
       host['experimental'] = true if experimental
+      host['macro_validation'] = 'NO' if %w[direct-ios-release direct-ios-archive].include?(profile)
       inputs = File.join(root, '.maintenance', 'kotlin-inputs')
       raise Failure, 'Symlinked compatibility host-input store' if File.symlink?(File.dirname(inputs)) || File.symlink?(inputs)
       FileUtils.mkdir_p(inputs)

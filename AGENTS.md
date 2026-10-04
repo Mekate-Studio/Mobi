@@ -19,7 +19,7 @@ Use it to demonstrate:
 - GitHub is the public hosting and onboarding path.
 - Thin CI is preferred.
 - Repo-owned scripts should carry operational behavior instead of bloating workflow YAML.
-- The Gradle bridge is a current transitional constraint, not the long-term ideal.
+- The hand-maintained iOS Gradle bridge is retired; preserve Toolchain delegated Android Gradle/AGP bootstrap.
 - Public Android and iOS identity stays on `studio.mekate.mobi`.
 - Do not reintroduce private repo relationships, internal-only naming, or hidden support assumptions.
 

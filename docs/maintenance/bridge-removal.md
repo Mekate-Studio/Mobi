@@ -1,6 +1,6 @@
 # Physical iOS Gradle bridge removal
 
-Status: implementation and validation in progress; no merge claim.
+Status and final execution receipts: [validation record](bridge-removal-validation.md). Merge remains the maintainer’s decision.
 
 The maintainer explicitly requested physical removal after merging PR #35.
 This change is based on `2cc75fd6df31a3470fc9248847b37e7c649ddd53` and preserves
@@ -25,8 +25,10 @@ catalog/parser and transform/restoration contracts use explicitly scoped
 nonfunctional sentinels; they are never native validation inputs.
 
 Current compatibility baseline verification uses direct module Metro declarations.
-Bridge and old transform profiles refuse on current source with complete-revision
-recovery guidance. Direct mobile/resolution/build-input profiles use the adopted
+Generic Kotlin/support rehearsals select the builder from the complete source and
+record a direct scope when the bridge is absent. Bridge and old transform profiles
+refuse on current source with complete-revision
+recovery guidance. Direct mobile/resolution/build-input and unsigned iOS Release/archive profiles use the adopted
 content with bridge inputs absent. Scheduled watch has a separate direct scope
 and does not discover retired SKIE releases. Workflow cache keys omit removed
 inputs; conservative unknown-path build classification remains fail-open.
@@ -50,10 +52,18 @@ Keep unrelated caller source/index and saved stashes intact.
 
 ## Evidence and open gates
 
-New removal-source contracts, static/native/unsigned execution, hosted PR/Nightly,
-clean-clone/bootstrap and rebuilt recovery receipts are pending. Earlier green
+The [local receipt](evidence/2026-10-04-bridge-removal-local.json) records 289
+contracts, five analyzers, all four native jobs, paired unsigned simulator Release
+and ARM64 device archives, product inspection, independent plugin bootstrap and
+rebuilt retained-content recovery. It preserves source-bound producer distinctions.
+The prepared-host local Git clone also passed all 38 Android/shared tests with
+fresh wrapper/generated-Gradle caches and removed inputs absent. Its revision and
+limits remain explicit; it does not prove empty-host/license onboarding.
+
+The [validation record](bridge-removal-validation.md) records the final normal
+hook and hosted PR/Nightly outcomes separately. Earlier green default-integration
 runs validate their recorded source, not this removal. Physical-device,
 exact-minimum runtime, broad resource/lifecycle coverage, empty-host/license
-onboarding and signed/export remain separate unmeasured scopes. Current native
-consumer/resource preservation must be source-reviewed and product-inspected.
-Swift export assessment is a separate follow-on after removal review/merge.
+onboarding, hosted unsigned device archive and signed/export remain separate
+unmeasured scopes. Swift export assessment is a separate follow-on after removal
+review/merge.

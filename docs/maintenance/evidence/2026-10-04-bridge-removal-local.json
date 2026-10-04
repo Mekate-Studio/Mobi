@@ -1,0 +1,1062 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-10-04T20:09:22.497800+00:00",
+  "scope": "physical_bridge_removal_development_tests_unsigned",
+  "state": "local_execution_passed_final_hook_and_hosted_pending",
+  "base_revision": "2cc75fd6df31a3470fc9248847b37e7c649ddd53",
+  "initial_implementation_revision": "2536f81a51aa9422720249230c1ee028a17d62b7",
+  "authorization": "Maintainer explicit physical-removal request after merging PR 35",
+  "native_gate_initial": {
+    "index_sha256": "d7fe8d917ffa0463b69386cf3dfbc125c188064935b9e010df9454b317cfba72",
+    "inputs_sha256": "5685bb88cb9b232da9686d0011a599511c4ac41c62a2c35d476bcdacde95c858",
+    "completed": [
+      {
+        "job": "android-test",
+        "seconds": 149.535
+      },
+      {
+        "job": "ios-test",
+        "seconds": 399.18
+      },
+      {
+        "job": "android-build-debug",
+        "seconds": 31.346
+      },
+      {
+        "job": "ios-build-debug",
+        "seconds": 59.365
+      }
+    ]
+  },
+  "native_gate_initial_log_sha256": "16655034732b3a2b61383c4b6be65f630ff0102d517a21950a5eac81e7090ffd",
+  "android_tests": 38,
+  "swift_original_cases": [
+    "HomeFeatureTests/shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent()",
+    "HomeFeatureTests/shouldHaveInitialSharedStateWhenTaskIsSent()",
+    "HomeFeatureTests/shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent()",
+    "NearbyVehicleMapFeatureTests/shouldBlockReducedAccuracyLocation()",
+    "NearbyVehicleMapFeatureTests/shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads()",
+    "NearbyVehicleMapFeatureTests/shouldHaveResolvingRiderLocationWhenTaskIsSent()",
+    "NearbyVehicleMapFeatureTests/shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable()",
+    "NearbyVehicleMapFeatureTests/shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved()",
+    "NearbyVehicleMapFeatureTests/shouldMapLoadedSharedStateIntoProviderNeutralMapScene()",
+    "NearbyVehicleMapFeatureTests/shouldPreserveBlockingOverlaySeparatelyFromMapContent()",
+    "NearbyVehicleMapFeatureTests/shouldRequestVisibleRefreshWhenRefreshIsDue()",
+    "NearbyVehicleMapFeatureTests/shouldWireDeniedPermissionIntoBlockingOverlay()"
+  ],
+  "contracts": {
+    "suites": 18,
+    "checks": 289,
+    "state": "passed",
+    "log_sha256": "b848138c8820c673fee6367937835a9116d6d621ce326faad9ee43d5c6a5927d"
+  },
+  "static_analyzers": 5,
+  "native_preservation": {
+    "schema": 1,
+    "base_revision": "2cc75fd6df31a3470fc9248847b37e7c649ddd53",
+    "state": "identical_bytes_and_executable_modes",
+    "paths": 124,
+    "manifest_sha256": "a044a5039374167ebdc71e8fd6c1c0668c4122086af37572d7834c000ec6f31c",
+    "tracked_native_inputs": [
+      {
+        "path": "android-app/.gitignore",
+        "sha256": "5b46eb48d96e8571e8c93e4ef4f6ffbe6807b6d7350664a36a064e1167a32718",
+        "executable": false
+      },
+      {
+        "path": "android-app/keystore.properties.example",
+        "sha256": "06530b32edb7173eee115a5fc8bb9833c00453033027e8eb5427e77ac20e75b0",
+        "executable": false
+      },
+      {
+        "path": "android-app/module.yaml",
+        "sha256": "1361a37a5e4ec8843fb019adff3629fa31eebc597bf197b423854f7457b4671b",
+        "executable": false
+      },
+      {
+        "path": "android-app/proguard-rules.pro",
+        "sha256": "4f7271d40584f1c48ef5f9c12076333dbb8b1f1ac463efa230db47f7968a8fed",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/AndroidAppGraph.kt",
+        "sha256": "39f6837d78da2f943d5d1c40a445c985b2e49b203736313336a88186db17e5ab",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/AndroidManifest.xml",
+        "sha256": "46d0f2a6e189af72ae648a7fb710ba9f4e13112d485a63644a4a6f7c5327fafb",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/AppShell.kt",
+        "sha256": "07472f193f613cc55bcee6d8bf90e292dc6d9eec64fd78b22bb6f18c1ab3dbf2",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/MainActivity.kt",
+        "sha256": "bc4276156ad35ee7e7ac56f6145d75335b30a2bc0292cabef8b1495bfc62bed5",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/home/HomePresenter.kt",
+        "sha256": "66aa04a52b910014a3ec588804b7df882dc07cc751732a91b6e109c61b6ffe86",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/home/HomePresenterStateProducer.kt",
+        "sha256": "366679228f855e1bb117e22b0464ce3077e0c6bbb7f3faee95fe089c43ddf2e7",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/home/HomeScreen.kt",
+        "sha256": "964629ff4631c3bcdd2b72160f47d88ba88e739d823499c75b5431a692e411b1",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/home/HomeUiFactory.kt",
+        "sha256": "822c201eccdc2969cbc919ec9f38c45526ddd8993e33d07f71c4c4e571743528",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/nearbyvehiclemap/AndroidNearbyVehicleLocationResolver.kt",
+        "sha256": "2ca0ff387eb2f0da15dbc027f7ad0713f859f42c381de9d81a12d73002b4bcf3",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/nearbyvehiclemap/NearbyVehicleMapBasemapConfig.kt",
+        "sha256": "48b00e409a7c8d3ec176fb4028e261c3e72dc77000d6e039170a482565128aad",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/nearbyvehiclemap/NearbyVehicleMapPresentation.kt",
+        "sha256": "97b381e94d122e191d5378f6194ae2a053300398d400130ef53e12b3a8c10ffd",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/nearbyvehiclemap/NearbyVehicleMapPresenter.kt",
+        "sha256": "ac39e7afafcf4ee103cb4881dbc056a9d61b7be3222882d01efbd5132d043f4a",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/nearbyvehiclemap/NearbyVehicleMapPresenterStateProducer.kt",
+        "sha256": "d1fbb2c6f13423929182b08c8eb65f3ec87ded5b8e4437ab87727e2139789eaa",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/nearbyvehiclemap/NearbyVehicleMapRenderer.kt",
+        "sha256": "701427e0ecd0ffb19f179792b0944cedbac3bd662cf747dfde2e8a1dc09e746c",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/nearbyvehiclemap/NearbyVehicleMapScreen.kt",
+        "sha256": "f176f897511d9bb4860bfe89a001ac978a104992b4ffbe4f3f886727afec6057",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/nearbyvehiclemap/NearbyVehicleMapUiFactory.kt",
+        "sha256": "75874b894facc86b4847b3ed25482e13c3e4c6ebd82c44e0ef4310274ad830bf",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/drawable/ic_launcher_background.xml",
+        "sha256": "2e865816056809989b22b192d49ed0cfbcccc20994b44231d0f1d0ec3e712e65",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-anydpi-v26/ic_launcher.xml",
+        "sha256": "bf9bea0548472a623eff58a42bba318b23cfdba6fd587f10e5ee06e035ebc330",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+        "sha256": "bf9bea0548472a623eff58a42bba318b23cfdba6fd587f10e5ee06e035ebc330",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-hdpi/ic_launcher.png",
+        "sha256": "b383dc9cb647b41bf1b8b032ec5a665d17c8f61f01f947dae452c66c15a47f59",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-hdpi/ic_launcher_foreground.png",
+        "sha256": "2a463df8be70c802ad9d9e2e9f9113c090584a150c4770d1d0d99e7ab3e01f42",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-hdpi/ic_launcher_round.png",
+        "sha256": "b383dc9cb647b41bf1b8b032ec5a665d17c8f61f01f947dae452c66c15a47f59",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-mdpi/ic_launcher.png",
+        "sha256": "b5cf0285a25aeddd89c38ea1c23278a5935ae084657f86ac1d18f40dae4c9af9",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-mdpi/ic_launcher_foreground.png",
+        "sha256": "569d108c7ba47592136f71c1c70e1557a7f33dbf345773f8673cdc2558e23b0d",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-mdpi/ic_launcher_round.png",
+        "sha256": "b5cf0285a25aeddd89c38ea1c23278a5935ae084657f86ac1d18f40dae4c9af9",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xhdpi/ic_launcher.png",
+        "sha256": "275c2d88d839dfec1b40f2a30527c74c10ea0a0a2ae372b8be2b9112f08c613f",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xhdpi/ic_launcher_foreground.png",
+        "sha256": "d1db0ff50fc9f140dd28c35fec8c5782c197c8fff46649ee7bb300df7fa8eaec",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xhdpi/ic_launcher_round.png",
+        "sha256": "275c2d88d839dfec1b40f2a30527c74c10ea0a0a2ae372b8be2b9112f08c613f",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xxhdpi/ic_launcher.png",
+        "sha256": "dbb188d443553b2adb249eac8437ffb96677f1c7cd792bc7318455ad91c18f5a",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+        "sha256": "12b4a65610c50a389151e98f686d5d435940b7ec23aec0d9eedb7c7162826d4f",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xxhdpi/ic_launcher_round.png",
+        "sha256": "dbb188d443553b2adb249eac8437ffb96677f1c7cd792bc7318455ad91c18f5a",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xxxhdpi/ic_launcher.png",
+        "sha256": "c2909ab69d3131ee92f994fa4d0900e06bf6b759a6c5f7e0f49a73c573f13962",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+        "sha256": "664c447f80000fdcc46e6f2e330681c50c683730e2113d2919721894376911e6",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/mipmap-xxxhdpi/ic_launcher_round.png",
+        "sha256": "c2909ab69d3131ee92f994fa4d0900e06bf6b759a6c5f7e0f49a73c573f13962",
+        "executable": false
+      },
+      {
+        "path": "android-app/src/res/values/strings.xml",
+        "sha256": "97626ebbcbc3fdb267d8a823d2efee8bf95c3b0247fe7d8559d1f752437a3a3b",
+        "executable": false
+      },
+      {
+        "path": "android-app/test/home/HomePresenterStateProducerTest.kt",
+        "sha256": "c387c55c29133aed977bb1c0ace46e127076e79a1cad809314513cd0c7757e93",
+        "executable": false
+      },
+      {
+        "path": "android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterStateProducerTest.kt",
+        "sha256": "68d3ff5d99f7a27d38440469fb8f6544360c3cc9b2ac88850a73d42a01474840",
+        "executable": false
+      },
+      {
+        "path": "ios-app/Dependencies/.swiftpm/xcode/xcuserdata/pragmatickeoz.xcuserdatad/xcschemes/xcschememanagement.plist",
+        "sha256": "72fd8664c4e464ea4c2e56295abfd01be423a8678eae7a7fcbd9852f18c25e21",
+        "executable": false
+      },
+      {
+        "path": "ios-app/Dependencies/Package.swift",
+        "sha256": "46297889641416c0dc5c5030474b3bb0fb7969c9cf6206b4f34026a320ac4b68",
+        "executable": false
+      },
+      {
+        "path": "ios-app/Dependencies/Sources/MobiIOSDependencies/MobiIOSDependencies.swift",
+        "sha256": "f8fae7635cb7f11d04576027ec76dba870b20723848f6087b1c3c2a72a4b9f50",
+        "executable": false
+      },
+      {
+        "path": "ios-app/module.xcodeproj/project.pbxproj",
+        "sha256": "301e6eed3efbdcdf9148a66b2c52d2cc5ae8ab942e620692f01e492c2d872043",
+        "executable": false
+      },
+      {
+        "path": "ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+        "sha256": "ff2dac137208211bbd825f9218f3b125b5668eb366e91745c27541594eb139b7",
+        "executable": false
+      },
+      {
+        "path": "ios-app/module.xcodeproj/xcshareddata/xcschemes/app.xcscheme",
+        "sha256": "ae9bbdf0b9ada4a5b8c6aa921b62c487debbb1c80d4a539bd059fa6e80b45503",
+        "executable": false
+      },
+      {
+        "path": "ios-app/module.yaml",
+        "sha256": "d1a0aeea0f71d6b7785eb9bcd6c3967ecae649603fe57fc676f6406ba5ce2961",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/AppServices.swift",
+        "sha256": "e2847e3ebc3f7b1f1ba24d4de7a4973da3c65e8495984b30fd4f18b34ab8e26c",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/Contents.json",
+        "sha256": "c56cd95b869aa808ba822213cbaa82ec99ec44474ed9170363661b9f2d9aa5a5",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-1024.png",
+        "sha256": "ec8b6e231402a7add29bd5c3caee334a900c48500e30ee268a34b282d68f5aaa",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-20.png",
+        "sha256": "0f4e914bea4569719f043054e056d00661c7552d702895632f0eecff5130ce8d",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-20@2x-ipad.png",
+        "sha256": "28be824d91dd552e0be40af414b63738cd77568350f04fc464acb188a493b9a2",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-20@2x.png",
+        "sha256": "28be824d91dd552e0be40af414b63738cd77568350f04fc464acb188a493b9a2",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-20@3x.png",
+        "sha256": "df4ff4718af82a96cea3517e44f8595d967c6e07d2fc91bb55b8f2ac9602b526",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-29.png",
+        "sha256": "625a7ed84a4576a02f43cbbb00cbb54c61327e9bbb359f52377b7d56ca4c4280",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-29@2x-ipad.png",
+        "sha256": "5be6ee9702c251ae8e2cc42e6ed213d75f1ee4fc19f1408421d6cfe7ea217008",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-29@2x.png",
+        "sha256": "5be6ee9702c251ae8e2cc42e6ed213d75f1ee4fc19f1408421d6cfe7ea217008",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-29@3x.png",
+        "sha256": "e99fe9bf90ba74b73bc416c473b603e9003c8bb844961d9e001135054daafe37",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-40.png",
+        "sha256": "28be824d91dd552e0be40af414b63738cd77568350f04fc464acb188a493b9a2",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-40@2x-ipad.png",
+        "sha256": "2da5c897cc336659d962c6fb92ff1e05ae21018d52df03d6e094888e3fd9f582",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-40@2x.png",
+        "sha256": "2da5c897cc336659d962c6fb92ff1e05ae21018d52df03d6e094888e3fd9f582",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-40@3x.png",
+        "sha256": "a37a090dbedc9c888841cab9c8f9e7f96e79c519e00a4fde2666a0216080f4c4",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-60@2x.png",
+        "sha256": "a37a090dbedc9c888841cab9c8f9e7f96e79c519e00a4fde2666a0216080f4c4",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-60@3x.png",
+        "sha256": "6ec0df5bd4876fe38e0aea33b26bd338df5bc2703a3ebbaf4a2d9962c58654e0",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-76.png",
+        "sha256": "108ddbc039a0b8007d4b3df259b0cd36925aea93b5c8ea11f10d7350f2185181",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-76@2x.png",
+        "sha256": "1cb99e431181e4d815e7333ede15eef3e4789a212429c18bdd53e26cdd422477",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/AppIcon.appiconset/icon-83.5@2x.png",
+        "sha256": "0b3dc136ca0ce7adc199e9dd3b6280ccae6194adbc953afc0cde8cf68bcc6280",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Assets.xcassets/Contents.json",
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeCounterLoadable.swift",
+        "sha256": "004b4973312480f9c068750aeadfa033f2f51e784069b2d8fbc0f08bb7f81912",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeFeature+Action.swift",
+        "sha256": "a214bb7eb9729078075131b29ab6376bbdb2a6863be89957916d0933052bf43b",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeFeature+State.swift",
+        "sha256": "7ba930ab40c2877eac34be371db00839cfbc05cb053c227cd4bf23196e736071",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeFeature.swift",
+        "sha256": "54ae267bf81a27ad6922901aee0948c209f0a6391a25c474debea7b6017f3d2b",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeFeatureClient.swift",
+        "sha256": "a1ac23560b871aba0e5541e138cedfd72d566b7fc9b935fdda627a22cee7315b",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeHeroCard.swift",
+        "sha256": "423399ffcf00b2c5642926066cf7d1d065094bad5093b96d1973b98fe66fe2d1",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomePrimaryActionButton.swift",
+        "sha256": "e0e9523c2fcfb5abcb6ba2356f59f6e2bc0f1275a0f4c24ec5634bb87f967827",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeScreenContent.swift",
+        "sha256": "27e36201519845b2b0acdca6625afdce91ec6578d43856cd315815f09eeb21a2",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeView.swift",
+        "sha256": "e0895d763cf4b555a8836e79fd65cfe00b800e8662add33c6ab2ac4a0c0dd174",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/SharedHomeDemoView.swift",
+        "sha256": "434ee6d2ba2833214b86f171cb655b1a9a17706b3f6a01214c91f71f7ce240d4",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapBasemapConfig.swift",
+        "sha256": "1e9af2add58363e7d969928f141542a099a7124da32eb3c8edab703590ef25f4",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+Action.swift",
+        "sha256": "4aa3320f9b65ec3a3e35be90d8c0a2e105928deb55ce3356fbbf2331ba436f77",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift",
+        "sha256": "f958d772334162a7cddaf97c84a8344cfcfc6523c6a248254f6bca74e98d5d59",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature.swift",
+        "sha256": "de4c3df5b29afeb239bccd786a297bfaca7bc29b73b7db77e8eb4995700144b3",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeatureClient.swift",
+        "sha256": "20b379e7840bbd46839b7a70b3fc2ae27dc69ca9219c0380a7ded61b3fad1430",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapLocationClient.swift",
+        "sha256": "79ed764a7368126163c5683026d3376a3004a14b060c35a5e485b653a38ae68b",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapRenderer.swift",
+        "sha256": "3ec610816b2dff232583ada91ce7467916609bf483999fc7ef5c26b04ac4e020",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapView.swift",
+        "sha256": "7c923397aa66c65617a4fd1246724efdabab0f4ad17f9ad06550c23b539dfdfa",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Info.plist",
+        "sha256": "730d507f19294c2b93d7144294499a32f2bef2035a7fba67f51851cd7ab25f64",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/MobiInteropProjection.swift",
+        "sha256": "ef2fa0411f794f4c69d1f0a7f8199fd7e0a89b59fce437ac8bacb67e63f261a4",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/iosApp.swift",
+        "sha256": "d6e95a8ef356ed79ac0f273d04b75bcf2555f4a059c41bd4e9ca74b103fa8f3b",
+        "executable": false
+      },
+      {
+        "path": "ios-app/tests/Features/Home/HomeFeatureTests.swift",
+        "sha256": "4c1d495af71783132f83127ed3316341fbde83b4896b74f3c5388d1d4a9b53f9",
+        "executable": false
+      },
+      {
+        "path": "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift",
+        "sha256": "63e14f0bb8fd06de628f7ee9cd9e3b8c26bdf6cf6f3c91907a34022d467e268e",
+        "executable": false
+      },
+      {
+        "path": "ios-app/tests/Plans/Nightly.xctestplan",
+        "sha256": "d6a77541d4c81c22d4ddd328c5333016f32f339713a970e35800bdad77d8cc27",
+        "executable": false
+      },
+      {
+        "path": "ios-app/tests/Plans/PullRequest.xctestplan",
+        "sha256": "d4ccdb7bac8988079c4e25ed585b4a30d8bcb509dfd663a34ac393c3ce5cba85",
+        "executable": false
+      },
+      {
+        "path": "shared-core/module.yaml",
+        "sha256": "758e36e750b7a4248f42cf309c2db3a7726289f15678b86b44bf41c2cd9f21d6",
+        "executable": false
+      },
+      {
+        "path": "shared-core/src/CounterRepository.kt",
+        "sha256": "b03338fbc314995e7a5d60569496f9d575dd5b576e60a52bb7ff18d122b5050b",
+        "executable": false
+      },
+      {
+        "path": "shared-core/src/NearbyFleetRepository.kt",
+        "sha256": "b114d8eecdced8561c7b9449e125a94b2ef6b95ade5ed635bfd0cc117189e47a",
+        "executable": false
+      },
+      {
+        "path": "shared-core/src/NearbyVehicleModels.kt",
+        "sha256": "1c521928f5036e25036d6b4bceeed518ecf1d6b1826eb48f7b4fea52af96f4f6",
+        "executable": false
+      },
+      {
+        "path": "shared-core/src@android/AndroidManifest.xml",
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      {
+        "path": "shared-core/test/FakeCounterRepositoryTest.kt",
+        "sha256": "e63ee1b0a83862a3f219d3795cbaeb3e2ca35a7f46e3df2a3d1be99b25ef10cf",
+        "executable": false
+      },
+      {
+        "path": "shared-core/test/NearbyFleetRepositoryTest.kt",
+        "sha256": "33bb553efb01a689a64d36f731e11b70d90e4c7be662a05dd43d99d5cb1c762d",
+        "executable": false
+      },
+      {
+        "path": "shared-di/module.yaml",
+        "sha256": "83a637f8dbef4d79b4deae4e6e9edfcd1f8bb030dd1e97b791d54a880ae9b0ba",
+        "executable": false
+      },
+      {
+        "path": "shared-di/src/MobiInteropProjection.kt",
+        "sha256": "e1538fe8b4cc077bbf9335b4ceaaf7c708e7897b712ade81c7f93db103c38ffe",
+        "executable": false
+      },
+      {
+        "path": "shared-di/src/SharedDependencies.kt",
+        "sha256": "400281b210650472e7eed3b667636a6f7f6033329714e0580ea13dd9bf00d376",
+        "executable": false
+      },
+      {
+        "path": "shared-di/src@android/AndroidManifest.xml",
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      {
+        "path": "shared-di/test/SharedDependenciesTest.kt",
+        "sha256": "459db01b1df35a7a28e40f4ef09d56ce609946ee918a66e5573d48637a4986f2",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-home/module.yaml",
+        "sha256": "f4c3a538616b6e01251ebe575b8a47ecb301ec1a2045c7432a00bbb6fea72bca",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-home/src/CounterLoadFailureReason.kt",
+        "sha256": "3a772a8ceb4d9efd1875f14f2b4267eb728d4ca09516d842512173acfb44492b",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-home/src/CounterLoadable.kt",
+        "sha256": "e35a34da9b52d8fd964f16c491d4060c31ed9dc303a273d6a3faba574f9793c6",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-home/src/HomeFeatureEvent.kt",
+        "sha256": "0ea8682ef722025b04d31fdec6f9a6409485e2591230773177de220fab1f85f7",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-home/src/HomeFeatureService.kt",
+        "sha256": "4acc15de222dbf3c9e5183b36341baa2ebfcffc0f6e46830faf47bfe35c10349",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-home/src/HomeFeatureState.kt",
+        "sha256": "4e60fbcdbee1b6234a2e0ab11f3e7b0fde16e5de39e198cacb8217d4001d0bd6",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-home/src@android/AndroidManifest.xml",
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-home/test/HomeFeatureServiceTest.kt",
+        "sha256": "0d0098ef60f328c162fef59b752abd92d91fd729bf2d0c8d468b764460dc2831",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-nearby-vehicle-map/module.yaml",
+        "sha256": "f4c3a538616b6e01251ebe575b8a47ecb301ec1a2045c7432a00bbb6fea72bca",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureService.kt",
+        "sha256": "3ca38753dee2c9e0eb21e570dc1df3801764a6441f569a9f970af24e8f114b1b",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureState.kt",
+        "sha256": "2a2476b2be236596b877ff323a8791b9d60642e8cc94bb759300b3d91bb40040",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFreshnessPolicy.kt",
+        "sha256": "7f171c74d9739ef238ec5d609b513136055e820d17801fae21d8f6712f220237",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-nearby-vehicle-map/src@android/AndroidManifest.xml",
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      {
+        "path": "shared-feature-nearby-vehicle-map/test/NearbyVehicleMapFeatureServiceTest.kt",
+        "sha256": "e0a37eb92c7755e23ffb1bb31ce8994539a6c60511aa70b2deb37e5188f20cf7",
+        "executable": false
+      },
+      {
+        "path": "shared-ui-home/module.yaml",
+        "sha256": "115ccae80f0bc3f35744bc93448bec863a597d2176d9e17679a3ae6e91302eeb",
+        "executable": false
+      },
+      {
+        "path": "shared-ui-home/src/HomeContent.kt",
+        "sha256": "d2e975c3256f508a289444b2bc55f41347701687cdec23abea7a8b90b0ae1d4f",
+        "executable": false
+      },
+      {
+        "path": "shared-ui-home/src@android/AndroidManifest.xml",
+        "sha256": "c2ac8df0c81cacbed2ad5723a5999bd77c1f10fa32854b8c31c2b17bfd9f35b1",
+        "executable": false
+      },
+      {
+        "path": "shared-ui-home/src@ios/SharedHomeViewControllerFactory.kt",
+        "sha256": "2001ba6268e37aeb25b314a6ff57b30357d6bdb2c0091d024d93b60a8e668bbd",
+        "executable": false
+      }
+    ],
+    "claims": [
+      "native_consumers_preserved",
+      "visitor_projection_API_preserved",
+      "native_packages_and_resources_preserved"
+    ],
+    "runtime_coverage": "repository_tests_and_unsigned_products_only"
+  },
+  "retained_content_recovery": {
+    "schema": 1,
+    "revision": "349e07e0929033e8feb71269e9555420d3285e35",
+    "byte_mode_restoration": "passed",
+    "tracked_paths": 570,
+    "source_manifest_sha256": "e0e9174a2358c77266bc4c96d99790d17c09bffe6cff7a4c67062f89aa15631a",
+    "native_gate": {
+      "index_sha256": "340abef68a28807411ac76ab28d32ca95a43fa9e4931d1d8897d1113ae7d3721",
+      "inputs_sha256": "7607524b09aec13642bb784e922b3228665d872fed091b8384077af4fcd867b3",
+      "completed": [
+        {
+          "job": "android-test",
+          "seconds": 110.848
+        },
+        {
+          "job": "ios-test",
+          "seconds": 282.966
+        },
+        {
+          "job": "android-build-debug",
+          "seconds": 34.16
+        },
+        {
+          "job": "ios-build-debug",
+          "seconds": 74.338
+        }
+      ]
+    },
+    "owned_snapshot_cleanup": "passed_by_normal_gate",
+    "log_sha256": "dabb8b6d5ffc69c767143a08d702a5063954161aa3f78718e1b9e9eb7317c2ec"
+  },
+  "unsigned_profiles": {
+    "release": {
+      "state": "checks_passed",
+      "report_sha256": "32b0a83e73e7d53d41da2249611479ad1d230392e98c184a1286556b0dbb5043",
+      "source_sha256": "02bfbcf502d93ad1f6c995a1faf8401b1136d89a0d56f91362983c5b91f0698b",
+      "phases": [
+        {
+          "phase": "baseline",
+          "cells": {
+            "effective_toolchain": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "version",
+                "settings"
+              ]
+            },
+            "ios_release_simulator": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "ios-release-simulator"
+              ]
+            },
+            "native_library_compile": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "framework_link": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "android-test": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "android-build-debug": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios-test": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios-build-debug": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            }
+          },
+          "source_preservation": "verified_by_report_replay"
+        },
+        {
+          "phase": "candidate",
+          "cells": {
+            "effective_toolchain": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "version",
+                "settings"
+              ]
+            },
+            "ios_release_simulator": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "ios-release-simulator"
+              ]
+            },
+            "native_library_compile": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "framework_link": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "android-test": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "android-build-debug": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios-test": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios-build-debug": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            }
+          },
+          "source_preservation": "verified_by_report_replay"
+        }
+      ],
+      "recovery": "quiescent",
+      "cleanup": "cleaned"
+    },
+    "archive": {
+      "state": "checks_passed",
+      "report_sha256": "f70222018102f9d78b8799e09ba4a77f749693e6d7561b3af9326dba0ace1474",
+      "source_sha256": "02bfbcf502d93ad1f6c995a1faf8401b1136d89a0d56f91362983c5b91f0698b",
+      "phases": [
+        {
+          "phase": "baseline",
+          "cells": {
+            "effective_toolchain": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "version",
+                "settings"
+              ]
+            },
+            "ios_unsigned_archive": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "ios-unsigned-archive"
+              ]
+            },
+            "native_library_compile": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "framework_link": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "android-test": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "android-build-debug": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios-test": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios-build-debug": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            }
+          },
+          "source_preservation": "verified_by_report_replay"
+        },
+        {
+          "phase": "candidate",
+          "cells": {
+            "effective_toolchain": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "version",
+                "settings"
+              ]
+            },
+            "ios_unsigned_archive": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "ios-unsigned-archive"
+              ]
+            },
+            "native_library_compile": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "framework_link": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "android-test": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "android-build-debug": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios-test": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios-build-debug": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            }
+          },
+          "source_preservation": "verified_by_report_replay"
+        }
+      ],
+      "recovery": "quiescent",
+      "cleanup": "cleaned"
+    }
+  },
+  "product_inspections": [
+    {
+      "run_id": "bc8acdb06b277b000baf57839ae93d76",
+      "phase": "baseline",
+      "scope": "simulator_release",
+      "bundle_id": "studio.mekate.mobi",
+      "minimum_os": "26.0",
+      "architecture": "arm64",
+      "binary_sha256": "bc98b7239fb1eefc492dabc26cda67fddd0e6515988f70164f72ba3704bc9570",
+      "static_framework_sha256": "fa97c112cb8ae3889af3778cf841ef9e59bdfc657b369ff8cbb90afb4b39a5b3",
+      "visitor_protocol_names_in_linked_product": [
+        "MobiCounterVisitor",
+        "MobiCounterFailureVisitor",
+        "MobiRiderLocationVisitor",
+        "MobiSnapshotVisitor",
+        "MobiOverlayVisitor",
+        "MobiRiderReasonVisitor"
+      ],
+      "native_assets_sha256": "e9c9644a74b8029676f500a90543d84c32b057e345160012fc72d3132fb71efb",
+      "native_icons": [
+        "AppIcon60x60@2x.png",
+        "AppIcon76x76@2x~ipad.png"
+      ],
+      "signed_delivery": "not_exercised"
+    },
+    {
+      "run_id": "bc8acdb06b277b000baf57839ae93d76",
+      "phase": "candidate",
+      "scope": "simulator_release",
+      "bundle_id": "studio.mekate.mobi",
+      "minimum_os": "26.0",
+      "architecture": "arm64",
+      "binary_sha256": "726c9300ee159e6761e882429fbddb64f3c801f2b2ed2a41485f835d16a1796b",
+      "static_framework_sha256": "d05c1e84243c281bf4e7e59bb807e6029cf1902dc969740f6f2dd4ab4b1aa5bc",
+      "visitor_protocol_names_in_linked_product": [
+        "MobiCounterVisitor",
+        "MobiCounterFailureVisitor",
+        "MobiRiderLocationVisitor",
+        "MobiSnapshotVisitor",
+        "MobiOverlayVisitor",
+        "MobiRiderReasonVisitor"
+      ],
+      "native_assets_sha256": "e9c9644a74b8029676f500a90543d84c32b057e345160012fc72d3132fb71efb",
+      "native_icons": [
+        "AppIcon60x60@2x.png",
+        "AppIcon76x76@2x~ipad.png"
+      ],
+      "signed_delivery": "not_exercised"
+    },
+    {
+      "run_id": "67ebdf535d10de37ea6a373737e22116",
+      "phase": "baseline",
+      "scope": "device_archive",
+      "bundle_id": "studio.mekate.mobi",
+      "minimum_os": "26.0",
+      "architecture": "arm64",
+      "binary_sha256": "8d7d0b0056e4f54c704b68eaeddf07cc95753a1c22a9c7560a6a0d18965d7095",
+      "static_framework_sha256": "2d0068a3c3ccfb98979606e0ed9ef4b1a2f8dadd670cadb5a32188aa6331dc9a",
+      "visitor_protocol_names_in_linked_product": [
+        "MobiCounterVisitor",
+        "MobiCounterFailureVisitor",
+        "MobiRiderLocationVisitor",
+        "MobiSnapshotVisitor",
+        "MobiOverlayVisitor",
+        "MobiRiderReasonVisitor"
+      ],
+      "native_assets_sha256": "e9c9644a74b8029676f500a90543d84c32b057e345160012fc72d3132fb71efb",
+      "native_icons": [
+        "AppIcon60x60@2x.png",
+        "AppIcon76x76@2x~ipad.png"
+      ],
+      "signed_delivery": "not_exercised"
+    },
+    {
+      "run_id": "67ebdf535d10de37ea6a373737e22116",
+      "phase": "candidate",
+      "scope": "device_archive",
+      "bundle_id": "studio.mekate.mobi",
+      "minimum_os": "26.0",
+      "architecture": "arm64",
+      "binary_sha256": "9ed22d613dd83f3647f0f8413115df3a590c7d3aeb5c787abdf188591d4572fa",
+      "static_framework_sha256": "c4f24a0ccb03f90578e477b448654ef0e3eb98ab12949f9eeaf41cc92428eedb",
+      "visitor_protocol_names_in_linked_product": [
+        "MobiCounterVisitor",
+        "MobiCounterFailureVisitor",
+        "MobiRiderLocationVisitor",
+        "MobiSnapshotVisitor",
+        "MobiOverlayVisitor",
+        "MobiRiderReasonVisitor"
+      ],
+      "native_assets_sha256": "e9c9644a74b8029676f500a90543d84c32b057e345160012fc72d3132fb71efb",
+      "native_icons": [
+        "AppIcon60x60@2x.png",
+        "AppIcon76x76@2x~ipad.png"
+      ],
+      "signed_delivery": "not_exercised"
+    }
+  ],
+  "plugin_bootstrap": {
+    "run_id": "b830960fe21081a15db4cca29607b0e5",
+    "state": "checks_passed",
+    "scope": "independent_bootstrap_reusing_historical_artifact_roots",
+    "report_sha256": "35d6e82a044247f50080e65f661ae7282f276f95724c252b22457d8690e2ae71",
+    "cleanup": "cleaned",
+    "replaces_historical_risk_producers": false
+  },
+  "clean_clone": {
+    "revision": "2536f81a51aa9422720249230c1ee028a17d62b7",
+    "transport": "local_git_clone_no_local_optimization",
+    "prepared_host": true,
+    "initial_ignored_caches": "absent",
+    "wrapper_download_observed": true,
+    "android_tests": 38,
+    "tracked_source": "unchanged",
+    "bridge_and_root_gradle_inputs": "absent",
+    "owned_gradle_shutdown": "passed",
+    "log_sha256": "1c8aa4112225e69adf48faa9f56016c36844ccdcd400ebf59052b0994da1336e",
+    "empty_host_license_onboarding": "unproven"
+  },
+  "hosted_builder_variable": {
+    "builder_variable": "absent_uses_workflow_kotlin_default"
+  },
+  "risk": {
+    "state": "accepted_risk_for_scoped_manual_use",
+    "query_count": 549,
+    "findings": 17,
+    "distinct_ids": 10,
+    "expires_at": "2026-11-03T05:48:38Z",
+    "measured_input_source": "retained_verified_producers_not_new_integrated_selection",
+    "remediation_verified": false
+  },
+  "remaining_gates_at_capture": [
+    "final_commit_hook",
+    "hosted_pr",
+    "hosted_nightly",
+    "hosted_unsigned_device_archive",
+    "physical_device_runtime",
+    "exact_minimum_runtime",
+    "broad_compose_resources_and_lifecycle",
+    "empty_host_license_onboarding",
+    "signed_export_delivery"
+  ]
+}

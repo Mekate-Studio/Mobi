@@ -105,7 +105,7 @@ module Maintenance
       end
       @env.merge!('ANDROID_HOME' => target, 'ANDROID_SDK_ROOT' => target, 'JAVA_HOME' => @host.fetch('java_home'),
                   'DEVELOPER_DIR' => @host.fetch('developer_dir'), 'CI_PROJECT_DIR' => @work,
-                  'MOBI_VALIDATION' => '1', 'KOTLIN_IOS_BUILDER' => 'gradle', 'IOS_TEST_PLAN' => 'PullRequest',
+                  'MOBI_VALIDATION' => '1', 'KOTLIN_IOS_BUILDER' => File.directory?(File.join(@work, 'gradle-bridge')) ? 'gradle' : 'kotlin', 'IOS_TEST_PLAN' => 'PullRequest',
                   'SKIP_MACRO_VALIDATION' => @host.fetch('macro_validation', 'YES'), 'SWIFT_ENABLE_EXPLICIT_MODULES' => 'NO')
       state = @native.state
       state.merge!('developer_dir' => @host.fetch('developer_dir'), 'java_home' => @host.fetch('java_home'))
@@ -119,14 +119,14 @@ module Maintenance
       major = @host['candidate_ios_minimum_major'] if @report['phase'] == 'candidate'
       major = @host.fetch('required_ios_major', major)
       unless simulator
-        @report['environment'] = { 'bridge' => 'gradle', 'sdk' => 'private_copy', 'simulator' => 'not_created', 'native_execution' => 'compiler_only', 'macro_validation' => @env['SKIP_MACRO_VALIDATION'] == 'NO' ? 'enabled' : 'skipped_explicitly' }
+        @report['environment'] = { 'bridge' => @env['KOTLIN_IOS_BUILDER'], 'sdk' => 'private_copy', 'simulator' => 'not_created', 'native_execution' => 'compiler_only', 'macro_validation' => @env['SKIP_MACRO_VALIDATION'] == 'NO' ? 'enabled' : 'skipped_explicitly' }
         @report['setup_stage'] = 'complete'
         return
       end
       @report['setup_stage'] = 'simulator_creation'
       id = @native.create_simulator!(@host.fetch('developer_dir'), major: major)
       @env['IOS_SIMULATOR_DESTINATION'] = 'platform=iOS Simulator,id=' + id
-      @report['environment'] = { 'bridge' => 'gradle', 'test_plan' => 'PullRequest', 'macro_validation' => @env['SKIP_MACRO_VALIDATION'] == 'NO' ? 'enabled' : 'skipped_explicitly', 'sdk' => 'private_copy', 'simulator' => 'owned_device', 'java_sha256' => Maintenance.file_sha(File.join(@host['java_home'], 'bin/java')) }
+      @report['environment'] = { 'bridge' => @env['KOTLIN_IOS_BUILDER'], 'test_plan' => 'PullRequest', 'macro_validation' => @env['SKIP_MACRO_VALIDATION'] == 'NO' ? 'enabled' : 'skipped_explicitly', 'sdk' => 'private_copy', 'simulator' => 'owned_device', 'java_sha256' => Maintenance.file_sha(File.join(@host['java_home'], 'bin/java')) }
       @report['environment']['simulator_runtime'] = @native.state.fetch('runtime')
       @report['environment']['required_minimum_major'] = major
       @report['setup_stage'] = 'complete'

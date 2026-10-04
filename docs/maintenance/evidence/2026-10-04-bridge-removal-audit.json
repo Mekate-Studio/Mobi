@@ -67,5 +67,8 @@
       "mode": "0o644"
     }
   ],
-  "state": "audit_in_progress"
+  "state": "audited_removed_inputs_independent_bootstrap_validated",
+  "active_callers": "direct_baseline_with_explicit_historical_profile_refusals",
+  "android_delegated_bootstrap": "preserved_and_rebuilt_without_root_wrapper_jar",
+  "historical_templates": "declaration_contracts_only_never_native_build_inputs"
 }
