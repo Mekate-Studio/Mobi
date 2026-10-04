@@ -1,0 +1,51 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
+import org.gradle.api.attributes.Usage
+import org.gradle.api.attributes.Category
+import org.gradle.api.attributes.LibraryElements
+
+repositories { mavenCentral() }
+def roots = new JsonSlurper().parse(file('roots.json'))
+def component = { id ->
+    id instanceof ModuleComponentIdentifier ? [kind: 'maven', group: id.group, name: id.module, version: id.version] : [kind: 'project', id: 'root']
+}
+def variant = { v -> [name: v.displayName, attributes: v.attributes.keySet().sort { it.name }.collectEntries { key -> [(key.name): v.attributes.getAttribute(key).toString()] }] }
+def configs = roots.withIndex().collect { root, index ->
+    def cfg = configurations.create('plugin' + index) {
+        canBeResolved = true; canBeConsumed = false
+        attributes {
+            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, Usage.JAVA_RUNTIME))
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.LIBRARY))
+            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements, LibraryElements.JAR))
+        }
+    }
+    dependencies.add(cfg.name, root.group + ':' + root.name + ':' + root.version)
+    cfg
+}
+tasks.register('resolvePlugins') {
+    doLast {
+        def rows = configs.withIndex().collect { cfg, index ->
+            def result = cfg.incoming.resolutionResult
+            def artifacts = cfg.incoming.artifacts
+            [requested: roots[index], failures: artifacts.failures.collect { it.class.simpleName }.unique().sort(),
+             nodes: result.allComponents.collect { n -> [component: component(n.id), variants: n.variants.collect(variant)] }.sort { JsonOutput.toJson(it.component) },
+             edges: result.allDependencies.collect { d ->
+                 def e = [from: component(d.from.id), requested: d.requested.displayName]
+                 if (d instanceof ResolvedDependencyResult) { e.selected = component(d.selected.id); e.variant = variant(d.resolvedVariant) }
+                 else { e.failure = d.failure.class.simpleName }
+                 e
+             }.sort { JsonOutput.toJson(it) },
+             artifacts: artifacts.artifacts.collect { a ->
+                 if (!a.file.isFile()) { throw new GradleException('Expected a plugin file') }
+                 [component: component(a.id.componentIdentifier), name: a.file.name, variant: variant(a.variant),
+                  identity: [kind: 'file', sha256: MessageDigest.getInstance('SHA-256').digest(a.file.bytes).encodeHex().toString(), bytes: a.file.length()]]
+             }.sort { JsonOutput.toJson(it.component) + it.name }]
+        }
+        def packet = [schema: 1, state: rows.every { it.failures.isEmpty() && !it.edges.any { e -> e.failure } } ? 'resolved' : 'incomplete', gradle: gradle.gradleVersion, roots: rows]
+        file('resolver.json').text = JsonOutput.toJson(packet)
+        if (packet.state != 'resolved') { throw new GradleException('Plugin resolution incomplete') }
+    }
+}

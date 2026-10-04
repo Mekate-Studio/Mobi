@@ -82,6 +82,18 @@ module KotlinRehearsalTest
     end
   end
 
+  test('experimental age override is explicit and preserves future and unreviewed refusals') do
+    wrapper_fixture do |_root, wrappers|
+      published = Time.iso8601(wrappers.pins['versions']['0.12.2']['published_at'])
+      selection = wrappers.selection('0.12.2', now: published + 86_400, experimental: true)
+      assert(selection['mode'] == 'experimental' && selection['age_state'] == 'age_blocked' && !selection['adoption_authorized'])
+      assert(Time.iso8601(selection['eligible_at']) == published + 7 * 86_400)
+      reject(/future/) { wrappers.selection('0.12.2', now: published - 1, experimental: true) }
+      reject(/Unreviewed/) { wrappers.selection('9.9.9', experimental: true) }
+      reject(/boolean/) { wrappers.selection('0.12.2', experimental: 'true') }
+    end
+  end
+
   test('LF-normalized wrappers yield a stable UTF-8 plan and only declared candidate edits') do
     wrapper_fixture do |root, _wrappers|
       source = Maintenance::Source.new(root)
@@ -266,6 +278,51 @@ module KotlinRehearsalTest
         Process.kill('KILL', pid) rescue Errno::ESRCH
         Process.wait(pid) rescue Errno::ECHILD
       end
+    end
+  end
+
+  test('detached native compiler binaries in an owned cache are observed and stopped') do
+    resource_fixture do |handler, workspace|
+      binary = File.join(workspace, 'cache/konan/dependencies/fixture/bin/clang++')
+      FileUtils.mkdir_p(File.dirname(binary))
+      c_file = File.join(File.dirname(binary), 'child.c')
+      File.write(c_file, "#include <unistd.h>\nint main(void) { sleep(600); return 0; }\n")
+      _log, status = Open3.capture2e('/usr/bin/cc', c_file, '-o', binary)
+      raise 'Cannot build owned native fixture' unless status.success?
+      pid = Process.spawn(binary, '60', pgroup: true, out: File::NULL, err: File::NULL)
+      begin
+        wait_for { handler.native_children.any? { |current| current['pid'] == pid } }
+        handler.observe!
+        records = JSON.parse(File.read(File.join(handler.control, 'observed-native-children.json')))
+        assert(records.any? { |record| record['pid'] == pid && record.dig('ownership_proof', 'scope') == 'private_binary' })
+        handler.stop!; Process.wait(pid)
+        assert(handler.quiescent?)
+      ensure
+        Process.kill('KILL', pid) rescue Errno::ESRCH
+        Process.wait(pid) rescue Errno::ECHILD
+      end
+    end
+  end
+
+  test('native ownership refuses unrelated binaries, UIDs and escaped cache symlinks') do
+    resource_fixture do |handler, workspace|
+      binary = File.join(workspace, 'cache/konan/dependencies/fixture/bin/clang++')
+      FileUtils.mkdir_p(File.dirname(binary)); File.symlink('/bin/sleep', binary)
+      identity = { 'uid' => Process.uid, 'command' => binary + ' 60' }
+      assert(handler.native_child_proof(identity).nil?)
+      assert(handler.native_child_proof(identity.merge('command' => '/bin/sleep 60 ' + workspace + '/')).nil?)
+      assert(handler.native_child_proof(identity.merge('uid' => Process.uid + 1)).nil?)
+    end
+  end
+
+  test('native child PID reuse is refused before sending a signal') do
+    resource_fixture do |handler, workspace|
+      binary = File.join(workspace, 'cache/konan/dependencies/fixture/bin/clang++')
+      FileUtils.mkdir_p(File.dirname(binary)); FileUtils.cp('/bin/sleep', binary)
+      owner = { 'pid' => Process.pid, 'uid' => Process.uid, 'pgid' => Process.getpgrp, 'start' => 'old', 'command' => binary + ' 60' }
+      owner['ownership_proof'] = handler.native_child_proof(owner)
+      handler.define_singleton_method(:native_children) { [owner] }
+      reject(/identity changed; no signal/) { handler.stop_native_children! }
     end
   end
 

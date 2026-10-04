@@ -77,10 +77,15 @@ module Maintenance
 
     def self.maven_queries(bridge, toolchain)
       validate!(bridge)
+      pairs = bridge['configurations'].flat_map { |row| Array(row['nodes']).map { |node| node['component'] } }.select { |c| c['kind'] == 'maven' }.map { |c| [c['group'] + ':' + c['name'], c['version']] }
+      toolchain_queries(toolchain, pairs: pairs)
+    end
+
+    def self.toolchain_queries(toolchain, pairs: [])
       unless toolchain['format'] == 'toolchain-pretty-graph-v1' && toolchain['graphs'].is_a?(Array) && !toolchain['graphs'].empty?
         raise Failure, 'Missing Toolchain query input'
       end
-      pairs = bridge['configurations'].flat_map { |row| Array(row['nodes']).map { |node| node['component'] } }.select { |c| c['kind'] == 'maven' }.map { |c| [c['group'] + ':' + c['name'], c['version']] }
+      pairs = pairs.dup
       normalizations = []
       constraints = 0
       toolchain['graphs'].each do |graph|

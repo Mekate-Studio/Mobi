@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "reviewed_at": "2026-10-02T15:09:31.038902+00:00",
+  "reviewed_at": "2026-10-03T11:10:06.990536+00:00",
   "toolchain": "0.12.2",
   "baseline": {
     "kotlin": "2.4.20",
@@ -196,6 +196,18 @@
       "url": "https://api.github.com/advisories/GHSA-rcgg-9c38-7xpx",
       "retrieved_at": "2026-10-02T15:02:36.249275+00:00",
       "sha256": "5b9ce6b2d4f533c36fbec89d9312617a3b87278a7dd09cf032c31c66b5f25172"
+    },
+    {
+      "id": "toolchain-013-release",
+      "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/tags/v0.13.0",
+      "sha256": "9c88125b3ebd84e853da6086a27fda5f86ecc5ed5d054a501eb445155d9eebf4",
+      "retrieved_at": "2026-10-03T10:41:54.663533+00:00"
+    },
+    {
+      "id": "toolchain-013-swiftpm",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/docs/src/user-guide/dependencies.md",
+      "sha256": "3f3492c2fd18f4fb950ca3c7b0600038c067c9fe72544c2ed6f5b9072b496b39",
+      "retrieved_at": "2026-10-03T10:42:46.789028+00:00"
     }
   ],
   "direct_paths": {
@@ -218,5 +230,32 @@
       ]
     }
   },
-  "newer_releases": []
+  "newer_releases": [],
+  "capability_observations": [
+    {
+      "id": "toolchain-013-swiftpm",
+      "version": "0.13.0",
+      "state": "documented_not_rehearsed",
+      "scope": "swiftpm_objective_c_visible_api_import_into_kotlin",
+      "sources": [
+        "toolchain-013-release",
+        "toolchain-013-swiftpm"
+      ],
+      "potential_applicability": [
+        "native_dependency_import",
+        "transitive_swiftpm_dependency_metadata"
+      ],
+      "missing_capabilities": [
+        "swiftpm_execution",
+        "kotlin_framework_swiftpm_distribution",
+        "xcode_app_and_test_target_parity",
+        "swift_sealed_state_adapters",
+        "native_tests",
+        "clean_clone_onboarding",
+        "release_packaging"
+      ],
+      "bridge_retirement": "defer",
+      "adoption_authorized": false
+    }
+  ]
 }

@@ -87,7 +87,7 @@ module Maintenance
       @report[name] = { 'file' => name + '.json', 'sha256' => Maintenance.file_sha(file) }
     end
 
-    def native_setup
+    def native_setup(simulator: true)
       @report['setup_stage'] = 'android_sdk_copy'
       sdk = @host.fetch('android_sdk'); target = File.join(@output, 'android-sdk')
       # APFS clone keeps the phase writable and independent without duplicating
@@ -97,10 +97,19 @@ module Maintenance
         FileUtils.remove_entry_secure(target) if File.exist?(target)
         FileUtils.cp_r(sdk, target)
       end
+      if @host['cold_candidate_compile_sdk'] && @report['phase'] == 'candidate'
+        raise Failure, 'Unsupported private SDK provisioning rehearsal' unless @host['cold_candidate_compile_sdk'] == 37 && File.realpath(target) == File.expand_path(target)
+        removed = Dir.glob(File.join(target, '{platforms,build-tools}', '*')).select { |path| File.basename(path).match?(/\A(?:android-)?37(?:\.\d+)*\z/) }
+        removed.each { |path| raise Failure, 'Symlinked private SDK input' if File.symlink?(path); FileUtils.remove_entry_secure(path) }
+        @report['sdk_provisioning'] = { 'initial_api_37' => 'removed_from_private_copy', 'removed_packages' => removed.map { |p| p.delete_prefix(target + '/') }, 'licenses' => 'copied_host_acceptance', 'empty_host_proven' => false }
+      end
       @env.merge!('ANDROID_HOME' => target, 'ANDROID_SDK_ROOT' => target, 'JAVA_HOME' => @host.fetch('java_home'),
                   'DEVELOPER_DIR' => @host.fetch('developer_dir'), 'CI_PROJECT_DIR' => @work,
                   'MOBI_VALIDATION' => '1', 'KOTLIN_IOS_BUILDER' => 'gradle', 'IOS_TEST_PLAN' => 'PullRequest',
-                  'SKIP_MACRO_VALIDATION' => 'YES', 'SWIFT_ENABLE_EXPLICIT_MODULES' => 'NO')
+                  'SKIP_MACRO_VALIDATION' => @host.fetch('macro_validation', 'YES'), 'SWIFT_ENABLE_EXPLICIT_MODULES' => 'NO')
+      state = @native.state
+      state.merge!('developer_dir' => @host.fetch('developer_dir'), 'java_home' => @host.fetch('java_home'))
+      @native.save(state)
       @report['setup_stage'] = 'gradle_configuration'
       FileUtils.mkdir_p(@env['GRADLE_USER_HOME'])
       File.write(File.join(@env['GRADLE_USER_HOME'], 'gradle.properties'), "org.gradle.daemon=false\norg.gradle.daemon.idletimeout=1000\nkotlin.compiler.execution.strategy=in-process\norg.gradle.jvmargs=-Xmx4g #{@native.tag}\n")
@@ -108,10 +117,16 @@ module Maintenance
       sdk_files = Dir.glob(File.join(target, '**', '{package.xml,source.properties}')).sort.to_h { |file| [file.delete_prefix(target + '/'), Maintenance.file_sha(file)] }
       write_evidence('sdk-inputs', sdk_files)
       major = @host['candidate_ios_minimum_major'] if @report['phase'] == 'candidate'
+      major = @host.fetch('required_ios_major', major)
+      unless simulator
+        @report['environment'] = { 'bridge' => 'gradle', 'sdk' => 'private_copy', 'simulator' => 'not_created', 'native_execution' => 'compiler_only', 'macro_validation' => @env['SKIP_MACRO_VALIDATION'] == 'NO' ? 'enabled' : 'skipped_explicitly' }
+        @report['setup_stage'] = 'complete'
+        return
+      end
       @report['setup_stage'] = 'simulator_creation'
       id = @native.create_simulator!(@host.fetch('developer_dir'), major: major)
       @env['IOS_SIMULATOR_DESTINATION'] = 'platform=iOS Simulator,id=' + id
-      @report['environment'] = { 'bridge' => 'gradle', 'test_plan' => 'PullRequest', 'macro_validation' => 'skipped_explicitly', 'sdk' => 'private_copy', 'simulator' => 'owned_device', 'java_sha256' => Maintenance.file_sha(File.join(@host['java_home'], 'bin/java')) }
+      @report['environment'] = { 'bridge' => 'gradle', 'test_plan' => 'PullRequest', 'macro_validation' => @env['SKIP_MACRO_VALIDATION'] == 'NO' ? 'enabled' : 'skipped_explicitly', 'sdk' => 'private_copy', 'simulator' => 'owned_device', 'java_sha256' => Maintenance.file_sha(File.join(@host['java_home'], 'bin/java')) }
       @report['environment']['simulator_runtime'] = @native.state.fetch('runtime')
       @report['environment']['required_minimum_major'] = major
       @report['setup_stage'] = 'complete'

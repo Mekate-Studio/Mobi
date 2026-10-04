@@ -145,6 +145,84 @@ module Maintenance
         observations << current unless observations.any? { |previous| %w[pid uid start].all? { |key| previous[key] == current[key] } }
       end
       RunStore.atomic(path, observations)
+      path = File.join(@control, 'observed-native-children.json')
+      raise Failure, 'Symlinked native child observation file' if File.symlink?(path)
+      observations = File.file?(path) ? JSON.parse(File.read(path)) : []
+      native_children.each do |current|
+        observations << current unless observations.any? { |previous| %w[pid uid start].all? { |key| previous[key] == current[key] } }
+      end
+      RunStore.atomic(path, observations)
+    end
+
+    def native_binaries(data)
+      work = data.fetch('workspace'); names = %w[clang clang++ ld ld.lld ld64.lld java]
+      Dir.glob(File.join(work, '{cache,home}', '**', 'bin', '*')).select { |p| names.include?(File.basename(p)) }
+    end
+
+    def native_child_proof(identity, binaries: nil)
+      return nil unless identity && identity['uid'] == Process.uid
+      data = state; work = data.fetch('workspace'); command = identity.fetch('command')
+      private_bins = binaries || native_binaries(data)
+      developer = data['developer_dir']
+      xcode_bins = developer ? %w[swift swiftc swift-driver swift-frontend clang clang++ ld].map { |name| File.join(developer, 'Toolchains/XcodeDefault.xctoolchain/usr/bin', name) } : []
+      host_java = data['java_home'] && File.join(data['java_home'], 'bin/java')
+      executables = private_bins + xcode_bins + [host_java, '/bin/sh'].compact
+      binary = executables.find { |p| command.start_with?(p + ' ') && File.file?(p) }
+      return nil unless binary
+      real = File.realpath(binary)
+      private_binary = private_bins.include?(binary) && real.start_with?(work + '/')
+      project = File.join(work, 'output/project')
+      xcode_child = xcode_bins.include?(binary) && real.start_with?(developer + '/') && command.include?(project + '/')
+      wrapper = File.join(project, 'gradle-bridge/gradle/wrapper/gradle-wrapper.jar')
+      java_wrapper = binary == host_java && command.include?(' -jar ' + wrapper + ' ') && File.file?(wrapper)
+      build_script = binary == '/bin/sh' && ['/bin/sh -c ', '/bin/sh '].any? { |prefix| command.start_with?(prefix + project + '/build/') }
+      return nil unless private_binary || xcode_child || java_wrapper || build_script
+      stat = File.stat(real)
+      fingerprint = [real, stat.dev, stat.ino, stat.size, stat.mtime.to_r, stat.ctime.to_r]
+      @native_binary_hashes ||= {}
+      digest = @native_binary_hashes[fingerprint] ||= Maintenance.file_sha(real)
+      { 'kind' => 'owned_native_build_child', 'binary_sha256' => digest,
+        'scope' => private_binary ? 'private_binary' : java_wrapper ? 'private_wrapper' : build_script ? 'private_build_script' : 'xcode_private_project' }
+    end
+
+    def native_children
+      data = state
+      text, status = Open3.capture2({ 'LC_ALL' => 'C' }, '/bin/ps', '-ww', '-axo', 'pid=,command=', unsetenv_others: true)
+      raise Failure, 'Native child inspection unavailable' unless status.success?
+      binaries = native_binaries(data)
+      text.lines.filter_map do |line|
+        pid, command = line.strip.split(/\s+/, 2)
+        next unless command && command.include?(data['workspace'] + '/')
+        current = ProcessGroup.identity(pid.to_i); proof = native_child_proof(current, binaries: binaries)
+        current.merge('ownership_proof' => proof) if proof
+      end
+    end
+
+    def stop_native_children!
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 15
+      loop do
+        owners = native_children
+        break if owners.empty?
+        raise Failure, 'Owned native children did not stop; retain workspace' if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+        RunStore.atomic(File.join(@control, 'native-child-stop-intent.json'), owners)
+        owners.each do |owner|
+          raise Failure, 'Owned native children did not stop; retain workspace' if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+          current = ProcessGroup.identity(owner['pid'])
+          next unless current
+          same = ->(live) { live && %w[pid uid pgid start].all? { |key| live[key] == owner[key] } && native_child_proof(live) == owner['ownership_proof'] }
+          raise Failure, 'Native child identity changed; no signal sent' unless same.call(current)
+          Process.kill('TERM', owner['pid'])
+          child_deadline = [Process.clock_gettime(Process::CLOCK_MONOTONIC) + 2, deadline].min
+          sleep 0.05 while ProcessGroup.identity(owner['pid']) && Process.clock_gettime(Process::CLOCK_MONOTONIC) < child_deadline
+          current = ProcessGroup.identity(owner['pid'])
+          if current
+            raise Failure, 'Native child identity changed during termination' unless same.call(current)
+            Process.kill('KILL', owner['pid'])
+          end
+        rescue Errno::ESRCH
+          next
+        end
+      end
     end
 
     def simctl(*args)
@@ -218,6 +296,7 @@ module Maintenance
       # The coordinator stops the process group first so no new JVM/device can
       # be created after this final ownership scan.
       stop_jvms!
+      stop_native_children!
       found = verify_devices!(devices)
       raise Failure, 'Simulator creation is unconfirmed; retain resources for inspection' if state['simulator'] == 'creation_planned' && found.none? { |device| device['name'] == state['device_name'] }
       RunStore.atomic(File.join(@control, 'observed-simulators.json'), found) unless found.empty?
@@ -232,7 +311,7 @@ module Maintenance
 
     def quiescent?
       return false if state['simulator'] == 'creation_planned'
-      jvms.empty? && verify_devices!(devices).empty?
+      jvms.empty? && native_children.empty? && verify_devices!(devices).empty?
     end
   end
 end
