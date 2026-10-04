@@ -310,7 +310,7 @@
   "source_files": [
     {
       "path": ".github/workflows/mobile-ci.yml",
-      "sha256": "2a37cb48228a8849d7e7fbab48a4aa9967aee6d5df26e09bc1171d06b0f3c648",
+      "sha256": "97725cde0ac449ac29ed73449359067b9fb5441b45aaf68f5b5c7b4cd8b67d4d",
       "executable": false
     },
     {
@@ -320,12 +320,12 @@
     },
     {
       "path": ".github/workflows/nightly-mobile-candidate.yml",
-      "sha256": "7a7fa2139e73e3361f30cac9a9ea5f216d52e609c69efc155df3602a09900740",
+      "sha256": "de63681251ecd6254aa48daf8f68a2b138dbb6930ff9284261956f3f48be4881",
       "executable": false
     },
     {
       "path": "README.md",
-      "sha256": "585e665ef1dce188cdbda2e47eadfd57639e7f090aa84a664e70964e49eac0c6",
+      "sha256": "bd1bfb71f7f30ccc64deb1c31a6205292c20871102d62e117587444fdfc5ede7",
       "executable": false
     },
     {
@@ -335,12 +335,42 @@
     },
     {
       "path": "docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md",
-      "sha256": "3670c4c2341130332cfcdb0a0614374e4a6bdc23219b093a67ff6f73624c4186",
+      "sha256": "2ae49237c5343d55840c14d4be0db0583309ace7b2b5a91334802a4a3bf282e7",
       "executable": false
     },
     {
       "path": "docs/adr/README.md",
       "sha256": "491df452ce76e78bb041af3c5d4b532e67574c18d7053239c78d0c561fa9fdb1",
+      "executable": false
+    },
+    {
+      "path": "docs/maintenance/README.md",
+      "sha256": "494f68e8cb2cd891e7adbc1a2169b98e796ee58c50d3992507176a2d9f87b34d",
+      "executable": false
+    },
+    {
+      "path": "docs/maintenance/bridge-removal.md",
+      "sha256": "9ce9d1f51e885e6c4639906a7e4d7eba875de2b5f88f78a12b7e5f3d1c088c3b",
+      "executable": false
+    },
+    {
+      "path": "docs/maintenance/bridge-retirement-path.md",
+      "sha256": "9f62894ae2bb5875294eb62d09e59c9867c21c76b92cb86ef2b4f825b8577c70",
+      "executable": false
+    },
+    {
+      "path": "docs/maintenance/compatibility-runner.md",
+      "sha256": "81c866d6c8112c181b6251317011941e9935d33d82569aae9d64c2766a2ac5ed",
+      "executable": false
+    },
+    {
+      "path": "docs/maintenance/compatibility-watch.md",
+      "sha256": "889c18643ce420cc9bb14af52e0bf529601b023213f867ae6eb3fc4b29d81b0e",
+      "executable": false
+    },
+    {
+      "path": "docs/maintenance/direct-default-integration.md",
+      "sha256": "6bbcf560035928f575dd8ba84b29426a296bd152819d1c3df43ef0052a21b2f4",
       "executable": false
     },
     {
@@ -350,12 +380,12 @@
     },
     {
       "path": "docs/reference/ios-gradle-bridge.md",
-      "sha256": "f6079b497fe284b0be9062160ef12b82f14a265d6d54d18e450526cb3afaae7a",
+      "sha256": "2f026e720d4390be7e8ebd89fac6ff345f2f7ca5d854a999c5decdb03b797524",
       "executable": false
     },
     {
       "path": "docs/reference/local-development.md",
-      "sha256": "fff9e42229cc0336b06f50945a08fa61afca28f984b66e1454f38d33e06c4e09",
+      "sha256": "e2a53584cbb05f3e98477ba1a52161d570cf24656d349cdad6ec949c4190eab2",
       "executable": false
     },
     {
@@ -429,13 +459,108 @@
       "executable": false
     },
     {
+      "path": "renovate.json",
+      "sha256": "ee5d64501ebbdd8d3638e95bcd9b65a51a1556a6959010977943df9baa5f1a56",
+      "executable": false
+    },
+    {
+      "path": "scripts/ci/apply_android_version.sh",
+      "sha256": "ada3ea05b82bca99a40f9b27ee022edbd19bb7a9102d9c9f09c172bc12121506",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/build_android_aab.sh",
+      "sha256": "78c63d5c3533e2fdc0c493ebcde83c1d1e5475743100adba2de2aa17facede71",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/check_skie_kotlin_compatibility.sh",
+      "sha256": "fb3cd655442d35476099f64090e20518df0a4180ddc0b55e782e830f41c65ce4",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/classify_changes.sh",
+      "sha256": "a20864f6c289178399a34f156b1f4236eeba736d523189ea1c7e97e6deac9e98",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/ensure_android_debug_signing_files.sh",
+      "sha256": "85a6cc6b4e0117ddf3aaae7909ba2f7a4efafebb526fd80ae60202b759c2eebe",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/ensure_android_gradle_distribution.sh",
+      "sha256": "315e003ca4af118c8c2337f3946a80ddc6412a9f3e267c6bf836862c1ead2512",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/install_quality_tools.sh",
+      "sha256": "fa42535a80cd4e4d2532ea7e1a242caa38bf0d98ad94668be51c2ea6b8805d1b",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/lib.sh",
+      "sha256": "50ad9c789ae8c7a46169a984fcb76ec4d21c36cad1aef4eaf0ba8fb0f3796c63",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/lib/android.sh",
+      "sha256": "e727282fe561a3dc9b9ed74d98718fcdcd300ba078d0bc6ffa74d1328369cf56",
+      "executable": false
+    },
+    {
+      "path": "scripts/ci/lib/android_generated_gradle.sh",
+      "sha256": "e3f60de2a09cf584fa734f564c91bf5853aaae054baf878159434f2dba6625de",
+      "executable": false
+    },
+    {
+      "path": "scripts/ci/lib/common.sh",
+      "sha256": "70c2242aabb8c664fa61f707cea980a54ca019aa90b6e6a211b35e3429a5e7ae",
+      "executable": false
+    },
+    {
+      "path": "scripts/ci/lib/context.sh",
+      "sha256": "e4e49ee9e8874b29bf08d7a9ea0d3f079c9ee7d02f473cc39019e52e286c00f8",
+      "executable": false
+    },
+    {
+      "path": "scripts/ci/lib/env.sh",
+      "sha256": "807dfc79a1bdb025764364df310272bdad309d27b6ad48ea281ef84fc296948c",
+      "executable": false
+    },
+    {
       "path": "scripts/ci/lib/ios.sh",
       "sha256": "4a8dff51d35fbb0acc585d316f721eb9965b9f28bdb4350861de27b9c9818838",
       "executable": false
     },
     {
+      "path": "scripts/ci/lib/xcode.sh",
+      "sha256": "05270a0c83613cca28118ed969483da5ffe742d65da74745f432861fc58b7a28",
+      "executable": false
+    },
+    {
+      "path": "scripts/ci/print_recent_logs.sh",
+      "sha256": "a5202e6ebb5ffd7846677fcb802194ed4224edeeaed42309a4f2fea3cc06bef3",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/run_android_tests.sh",
+      "sha256": "c3cdf0247fd4152c30718a6c25e56991255be9d5be1c9bd2d2398143858d9c68",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/run_fastlane_with_kotlin_logs.sh",
+      "sha256": "f54881cec01dc18305e0f7a51c0cb059e94bd9d8ea21d81ebb6b84a4beb8949d",
+      "executable": true
+    },
+    {
       "path": "scripts/ci/run_job.sh",
       "sha256": "57f1456ba83fba0b8cd9016ee1ada526df073c790fcc837d42bb9a1e87988d1e",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/run_kotlin_with_logs.sh",
+      "sha256": "4468f03926df47c0e174d1b64881e953ed3ec9eaa06a73c5fdf5a824315fa2a8",
       "executable": true
     },
     {
@@ -449,14 +574,129 @@
       "executable": true
     },
     {
+      "path": "scripts/ci/test_classify_changes.sh",
+      "sha256": "9caaecc6f4472ba8b69aa629cd7a574e1ffaba9c2a1a73008cbf3c1a96b5ec50",
+      "executable": true
+    },
+    {
       "path": "scripts/ci/test_ios_builder.rb",
       "sha256": "1e0cbd1312ba69b3de93d3302c7987fc4fca725efd3709a47e3158930b80097d",
+      "executable": false
+    },
+    {
+      "path": "scripts/ci/test_modules.rb",
+      "sha256": "f508b9e6cca2c7c258d9ebc88fb55a9203da3c9d2f8652f44ebd1189bf0a87aa",
       "executable": false
     },
     {
       "path": "scripts/ci/validate_ios_builder.sh",
       "sha256": "aec42733a8bc519d45ab8e9557d5da99ef40fccebdc9a2c3af579ad91e5bc3e2",
       "executable": true
+    },
+    {
+      "path": "scripts/ci/write_android_signing_files.sh",
+      "sha256": "f8da8ba2c74303420e71e9350f07892510066286ac7826de8eea82b9cf34b8d1",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/write_app_store_connect_api_key.sh",
+      "sha256": "8bc0bb1cbd283111c7395d629119ad6780dd84746a3e353670a966c483c77a22",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/write_candidate_manifest.sh",
+      "sha256": "b44c19bd9ebdca8bd97ed507a433f79442331e8ce32225d7b93db3b43ba899c5",
+      "executable": true
+    },
+    {
+      "path": "scripts/ci/write_google_play_key.sh",
+      "sha256": "9d0350a825f83302992fd95606b083849c87ec8447700e008f7151e4f8c9006b",
+      "executable": true
+    },
+    {
+      "path": "scripts/codex/install_add_mobile_feature_skill.sh",
+      "sha256": "fa8c6d9c2e676c7e25e25814f58a14775974a093a358fc16a5de51b2d872b658",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/android_build_debug.sh",
+      "sha256": "2f5c314bcbdcc8af79a35a048ad485e78b7a73d8b9f891acf701a5181a108231",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/android_common.sh",
+      "sha256": "66e0aaeff66d48fe394a93e41128bf55c8a94f50e976edefb60c9bc129ef918d",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/android_emulators.sh",
+      "sha256": "62544f1b76df329155c047fc97ed75c631ce1fb1cf7f20e992f16ef1dda2a866",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/android_run.sh",
+      "sha256": "458c702d09ff00c4b68545c01d658a43a53335f676a3951118327c3d34d02cc1",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/android_run_wait_for_debugger.sh",
+      "sha256": "d4a9c516b5c4e4857555005f782cae4b6aadb6610c5a890c23abde90f9787ba6",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/android_start_emulator.sh",
+      "sha256": "d27c42ca16cadf042b405572eee8bf583f3afcb3b3e05af4d03820809b93fe1b",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/android_test.sh",
+      "sha256": "ec5331b65ce062b22f152301efd6cbb0e50d017b5ba62fce083c3dbda48a19cc",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/check.sh",
+      "sha256": "aa65a5d8d75f36d9d641b9d3a3a440ad7c46c244afad5107f177db550b5fffe3",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/common.sh",
+      "sha256": "f60e3f0dbcb360af93b9d26727cc75d5fcfddabe7b5836de51e5c7674b4b9bed",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/dependency_updates.sh",
+      "sha256": "5e70129c4cb68b4f9ec389996b8bdce97f496e7dfc6b3fda4eadc038fd4a16ab",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/doctor.sh",
+      "sha256": "423083ffcf5c3bd5ab8b947f48dbfeacf7ef08753c766f3c3ff38797cbc5b9c9",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/format.sh",
+      "sha256": "1eade3ee1b433c7e57bc6856ea2f6f21a0b3d0faa7b890da7e1926d783ebd606",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/ios_build_debug.sh",
+      "sha256": "8f8ab07220c24e0e6a96efa82c88e78b268bc308ce92926ec7b2f6477e23d77c",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/ios_open.sh",
+      "sha256": "9e51d68e399436333126ddb7707ac7fdc4ec80c0ce6cf1ce08d3393461cb5571",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/lint.sh",
+      "sha256": "e043dd1d7971def94dcca69cf5648110fb06c30512164efb9bf0a8e88e4da37d",
+      "executable": true
+    },
+    {
+      "path": "scripts/dev/quality.rb",
+      "sha256": "7952dceb6719917dfb8c018b1f47bd520e8c263bf7987f56acc5a057ac0c3baa",
+      "executable": false
     },
     {
       "path": "scripts/dev/test_contracts.rb",
@@ -466,6 +706,11 @@
     {
       "path": "scripts/dev/test_quality.rb",
       "sha256": "542be68d95ba77d953e20fe1d5c2c525983f4e0c29e15305c668b0399591e7de",
+      "executable": false
+    },
+    {
+      "path": "scripts/dev/test_quality_real.rb",
+      "sha256": "a121815ae8dc4db24819583738de25d905f9c195f44e856bc581ad11421ed86e",
       "executable": false
     },
     {
@@ -479,13 +724,148 @@
       "executable": false
     },
     {
+      "path": "scripts/maintenance/adapters/bridge_resolution.gradle",
+      "sha256": "681990e98f479bd0f27cd61ce932142136b93a5b6c241cf0659f1efe3c78c42f",
+      "executable": false
+    },
+    {
       "path": "scripts/maintenance/adapters/compatibility.rb",
-      "sha256": "d7dbeb20453d88f916377a780b4abf0e2f9c9b7763e590f56ea1f72cd1b892a5",
+      "sha256": "0eea52c7b0dee2cf14230b0c5d8b7bff369ff5548a54fd61c276eadd81800ef5",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/delegated_resolution.gradle",
+      "sha256": "3a1b35044e44d7c0d029bb5e039e4052b703a792eb02583ee8cb2a230034bbf4",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/direct_roundtrip.rb",
+      "sha256": "6ccd67c443fea9dabfdb0fed227f5e3bfee3e283cc404bc302e80b1f8b1ad403",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/elixir.rb",
+      "sha256": "1adbc0c83b3ccc95c7cf4e5bb0d91e92492c5f670eebcb45c5331b0f5ba84d56",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/interop_experiment.rb",
+      "sha256": "d5cff4d4d13be4f6a8a5381de5e2a3e455e8fcf10f71e98fa23f533f679af55c",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/kotlin.rb",
+      "sha256": "88499da0ca48c53c94a35c7ffd774117b15adaac68765063f333966f66222843",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/kotlin_rehearsal.rb",
+      "sha256": "2fd5ddf3369ee1538efc834a36798ad2a3f49703efc4ebff504b8e2b6d40fd37",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/kotlin_resources.rb",
+      "sha256": "323e21461f01d1d55002fac0e1df6f041169fa06acfbf535d7b1dec340555874",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/kotlin_targets.rb",
+      "sha256": "1182716f890637e72c70af03dd5de4c9daa1cb1dae09806d24cd56ffd433dbf8",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/kotlin_watch.rb",
+      "sha256": "dc865cd5b935f347e1a8065bfa067a3732429d723d143935d189828968a0aded",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/mobile_support.rb",
+      "sha256": "d14482749ddec84c4cb67da5617811497fadb62c1599b7c0a37e008599cc8947",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/plugin_attribution.rb",
+      "sha256": "4497feb81851e8ed7645fd178e01a9197c4764694da00fb1e88323a448503473",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/plugin_resolution.gradle",
+      "sha256": "e38797d347336609c6e37a605bc8c294ae6d0653872d533af9fb020c6915e229",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/adapters/upstream_remediation.rb",
+      "sha256": "a7aa022b825e8978087632ed053e0773ebae3eee490bb6afe8033c181e88f8f8",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/android_runtime_check.rb",
+      "sha256": "c259518aea56231d6665d24124fdd70050529b98622defede131de1fd9736a5e",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/android_runtime_probe.rb",
+      "sha256": "877eeacd3b73bbd05c743d5cbca9573ec164005882a46a55d2836f23d880c70b",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/compatibility_check.rb",
+      "sha256": "a7b2854d7f06ceda5693c6dd7aebb09db7e3ccca9eb087e9dd16e4d716fcffb9",
       "executable": false
     },
     {
       "path": "scripts/maintenance/dependencies.rb",
-      "sha256": "a025e5ef4eba429fd9c72c0607bc9aeef291a559aa3d9023325e934b920f3a8d",
+      "sha256": "6da6b092c702f07d1425af9b3930d1ef4ba3cc02eae48cdb7069ceea9b1e1211",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/execution_cli.rb",
+      "sha256": "453ac2be889ac9ac98742ae4e81051b476f19835f277adcc3ab9e7054d968e07",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/executor/check.rb",
+      "sha256": "09bc492af90cd826e947d79476ae2c626bb9a68c5a4fee3026580738c969353e",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/executor/common.rb",
+      "sha256": "dafd92b9732df5379859673344583fa0575d4624be2d2e00abe12f0db7468973",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/executor/elixir.rb",
+      "sha256": "d16975675469cbcd62331cfdd3b4897f4ad82e7294ee6270f5707926a77fbf91",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/executor/kotlin.rb",
+      "sha256": "00946540de7f8ad45e864325999a7d083b76e278ba7019dcab76ec9295dcb981",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/historical-bridge/README.md",
+      "sha256": "4d63344fc8a779fb523c5ecb10c5bf5e86ae4f232bfefef708879638ad41612b",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/historical-bridge/catalog.toml.template",
+      "sha256": "6f3369d743c6801008b3c3e5cba323a7cbdcfa8edbecdefa30cc17b3cf34377f",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/historical-bridge/targets.gradle.kts.template",
+      "sha256": "b0f9a603667778c4db23fa0a2fdaa30b58c0b3036cdbc0041030ff6d854b3ba3",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/interop/MobiInteropProjection.kt.template",
+      "sha256": "e83d0f5d69f95479203058546d023b34d04cf9f37d103c2fda1b98de38c9ef64",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/fixtures/interop/MobiInteropProjection.swift.template",
+      "sha256": "aa1a45dbdf6f24b4c0b77f01572b11b707ec9896c94d42118fd57e924dc321a8",
       "executable": false
     },
     {
@@ -494,8 +874,103 @@
       "executable": false
     },
     {
+      "path": "scripts/maintenance/fixtures/renovate-44.93.5.jsonl",
+      "sha256": "cdc8d42cdf76ed9b3ad7bf4ef455bfc182c17aae6cfc6d82308ca6189829d721",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/install_tools.sh",
+      "sha256": "1e1df8e9a345316a0c9791c1102bf3b21efc6f2b4258f0618ac585405abf9518",
+      "executable": true
+    },
+    {
+      "path": "scripts/maintenance/kotlin_check.rb",
+      "sha256": "5c3a80c4d3e098764c4a1a221fd119e0f62c46c9228776f7912debd820b67871",
+      "executable": false
+    },
+    {
       "path": "scripts/maintenance/lib/advisory_review.rb",
       "sha256": "6f58f7bbe0ab3456fc8bc438f13c2ca6bd200a05609df7e321c3405cf2e21cbc",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/build_inputs.rb",
+      "sha256": "9bbabf2c10af307b6501c43c20230afaa1537fb053b8276dc38dbed5461e75eb",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/bundled_attribution.rb",
+      "sha256": "a09e8e25e3ba7b387b0fbcadf229efd8c07b101f19595b90035bee8ae215e3d4",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/bundled_inputs.rb",
+      "sha256": "be0f925a64db1bedfe3e31ac0cedbfd5855202008f118889e22b069ecbdc989f",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/compatibility_report.rb",
+      "sha256": "98b41d91ed1a55ca499d83c9fd518afa6c17c0b575ead8a04770e51d12b2b81c",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/core.rb",
+      "sha256": "3ff8ba920a07973e28e62272e952314868a6aae6225cc99659f8707b2064c028",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/direct_resolution.rb",
+      "sha256": "99f4dbc96c0ec15d42cefc8410ea868b59e7aaa080f840a7a4851a76f78346d0",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/executor.rb",
+      "sha256": "6e7b988602caa2b1a27b227f98ea0fbff84dfe31f40b7f47a70d1bb24d8edbcd",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/jetifier_conditions.rb",
+      "sha256": "ae6ce3cb54ded153ed97b6163d68fcdb80a21eb730cc6884051d89089671b395",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/kotlin_evidence.rb",
+      "sha256": "abcf2dd5754a329f5dcf5cc02791f4b2927d7b3252f29d671b391926768edd3b",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/kotlin_wrappers.rb",
+      "sha256": "decb290f7a9232ed794a1329d04a84c3e750bf521e62e0bdf7c27f2844b7467a",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/maintenance.rb",
+      "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/plugin_attribution.rb",
+      "sha256": "54ba04e2e4425f6262bf03735516ee41cf041ce8d1a6d87e900e884a2769bf37",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/policy.rb",
+      "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/process_group.rb",
+      "sha256": "378133febaf2bd9432119ada0947be8119dcea7b9e9b552c2358eadad8b51c90",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/recovery.rb",
+      "sha256": "bf81138efc57878ae98759bf25252aa6df97847786f7b84bd8999a254b520ae9",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/resource_handlers.rb",
+      "sha256": "8d30b88bd1a0c1e8f25972dff989dd0f4bdab8e37c6d7fe363b7a3ae55a21e93",
       "executable": false
     },
     {
@@ -504,13 +979,73 @@
       "executable": false
     },
     {
+      "path": "scripts/maintenance/lib/roundtrip_evidence.rb",
+      "sha256": "b00f3416206b3d2ba9ddd431a9b14eb3bb5fbc2ae0430d757084ff01c7c028f4",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/run_store.rb",
+      "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/support_policy.rb",
+      "sha256": "9a64240fba1af2f6a0724e8b8f5babfad5aa80fcf1b9b23e60a1467a52744c3e",
+      "executable": false
+    },
+    {
       "path": "scripts/maintenance/lib/toolchain_risk_review.rb",
       "sha256": "4e4dd7f6ab9a46bbe51be5d64cd7067705a4c513dd5850a8e57a2b4271da996b",
       "executable": false
     },
     {
+      "path": "scripts/maintenance/lib/tools.rb",
+      "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/upgrade_graph.rb",
+      "sha256": "98f81c579f866858bfad46df5edc3e0db63882bbc1689df7778c2fb73ed91660",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/watch.rb",
+      "sha256": "194050afeeb45914008929b33e89e058b98a8671634d0949ee07fe41f98a7151",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/lib/watch_history.rb",
+      "sha256": "26e07b4ef76698e486e9e4eb4ea0b8d460ce7812b5c6ce71046d1109140fc005",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/plugin_check.rb",
+      "sha256": "482d449526f0793ecf6b2e29ddd120ff8b08f68af2e424f9fafdf98fe06e7219",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/resolve_presets.mjs",
+      "sha256": "706f1fe139717f3445e96b9759a096b2efe3c21c04c7d24910ae3e6db874afdc",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/test_adoption_gates.rb",
+      "sha256": "456f78211ab8f37ab432ecfbc3fbecbd0ab74e271780a0e78e0dd12e116c4179",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/test_build_inputs.rb",
+      "sha256": "42ba0380cf503cb38870e357b6e45af3a30759d68ac9f85a84af64f8cb312d73",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/test_bundled_attribution.rb",
+      "sha256": "daff2e25500698295a9a0992eee19ebc69be1c0bdb8f961e3988cd24a23a75b1",
+      "executable": false
+    },
+    {
       "path": "scripts/maintenance/test_compatibility.rb",
-      "sha256": "d6b6bbb75b40c15da45eb1b1e7ff3c50d34164ede2ecf4d0d15fe29108172f34",
+      "sha256": "3abb0aca13376c8e4c0d9714dc213218b7ceb95d923ce619887d9e324c0375db",
       "executable": false
     },
     {
@@ -521,6 +1056,26 @@
     {
       "path": "scripts/maintenance/test_direct_roundtrip.rb",
       "sha256": "96c693d6cd226ea2f6d67705cd4e5237f59a67465ad30280007abd9745d7618d",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/test_executor.rb",
+      "sha256": "735889c218266637f0aef5162e698519bf739cae7cfb46533829552fb1d5641a",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/test_inventory.rb",
+      "sha256": "fd7686e2dadc67cce2ea422dffc0468b519411a16ed5c8cb6f13dab81a9e032d",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/test_jetifier_conditions.rb",
+      "sha256": "c96f6355ed0fac2b3ff967ddca84229fd1061363b9e55a65dc07d6bc35237184",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/test_kotlin_rehearsal.rb",
+      "sha256": "ef9be87b1cec06b41a07276fb3d2472bf6b2783d1474f9316fea50c42cc5ebb1",
       "executable": false
     },
     {
@@ -539,12 +1094,57 @@
       "executable": false
     },
     {
+      "path": "scripts/maintenance/test_upgrade_graph.rb",
+      "sha256": "27827a1357b01aaf48e49a2b59ea8b69003e61133c25487fe83a8b0524b5df56",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/test_watch.rb",
+      "sha256": "957dbc0ace778111cd5d7f3d25fa8480c3881400617abcb3315c077ab549ef04",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/tools/package-lock.json",
+      "sha256": "23eaf18fa5a14af84337fe91b86adaa0ad10c1457ab66119aaf03a5fff5596a1",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/tools/package.json",
+      "sha256": "add8b714de77c903488947b1f00d5df4f9b42aec02a491eb7c9135e0038a560c",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/update_bundler_lockfile.rb",
+      "sha256": "aab72909a3720494ed16accce5d33ce83bfc91102d74227cf89496642dfbb43b",
+      "executable": true
+    },
+    {
+      "path": "scripts/maintenance/update_kotlin_toolchain_dependencies.rb",
+      "sha256": "09756d40fd7039171220314cc97057762179438dca76b6aa4584968cd68f92b2",
+      "executable": true
+    },
+    {
+      "path": "scripts/maintenance/watch_cli.rb",
+      "sha256": "051ac8ff435b2311256f56358a20dbfd0726966fe4247de04f4a71df65a004fb",
+      "executable": false
+    },
+    {
+      "path": "scripts/maintenance/worker.rb",
+      "sha256": "790b8720eb98b2dee0d46078e4154953e51345a558be17000aeb324df94fb3a2",
+      "executable": false
+    },
+    {
+      "path": "scripts/quality_tools.rb",
+      "sha256": "e641942e308bde26964454b3da8e134aeebd117e5f3e63a3e565986bc3c16123",
+      "executable": false
+    },
+    {
       "path": "shared-di/src/MobiInteropProjection.kt",
       "sha256": "e1538fe8b4cc077bbf9335b4ceaaf7c708e7897b712ade81c7f93db103c38ffe",
       "executable": false
     }
   ],
-  "source_binding_sha256": "a140640cf0a01e4c42790ad03ae99cb3ba19643ccafe1c82febfcac5970af73a",
+  "source_binding_sha256": "9182852f2db5c4f88cf5a463d0f7b8085868b8fb719610f758547a6ba355c896",
   "applied_patch_sha256": "d9596aadf1bc8e580f13d2e4fe8de7b201bd1bbe0b63fa6d387cc23f20759fc5",
   "producers": {
     "store": "upstream-remediation",
@@ -561,7 +1161,7 @@
     "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/tags/v0.13.0",
     "status": 200,
     "retrieved_at": "2026-10-04T16:19:09Z",
-    "body": "{\n  \"url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/400239551\",\n  \"assets_url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/400239551/assets\",\n  \"upload_url\": \"https://uploads.github.com/repos/JetBrains/kotlin-toolchain/releases/400239551/assets{?name,label}\",\n  \"html_url\": \"https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.13.0\",\n  \"id\": 400239551,\n  \"author\": {\n    \"login\": \"joffrey-bion\",\n    \"id\": 1913296,\n    \"node_id\": \"MDQ6VXNlcjE5MTMyOTY=\",\n    \"avatar_url\": \"https://avatars.githubusercontent.com/u/1913296?v=4\",\n    \"gravatar_id\": \"\",\n    \"url\": \"https://api.github.com/users/joffrey-bion\",\n    \"html_url\": \"https://github.com/joffrey-bion\",\n    \"followers_url\": \"https://api.github.com/users/joffrey-bion/followers\",\n    \"following_url\": \"https://api.github.com/users/joffrey-bion/following{/other_user}\",\n    \"gists_url\": \"https://api.github.com/users/joffrey-bion/gists{/gist_id}\",\n    \"starred_url\": \"https://api.github.com/users/joffrey-bion/starred{/owner}{/repo}\",\n    \"subscriptions_url\": \"https://api.github.com/users/joffrey-bion/subscriptions\",\n    \"organizations_url\": \"https://api.github.com/users/joffrey-bion/orgs\",\n    \"repos_url\": \"https://api.github.com/users/joffrey-bion/repos\",\n    \"events_url\": \"https://api.github.com/users/joffrey-bion/events{/privacy}\",\n    \"received_events_url\": \"https://api.github.com/users/joffrey-bion/received_events\",\n    \"type\": \"User\",\n    \"user_view_type\": \"public\",\n    \"site_admin\": false\n  },\n  \"node_id\": \"RE_kwDOSaggTs4X2yu_\",\n  \"tag_name\": \"v0.13.0\",\n  \"target_commitish\": \"main\",\n  \"name\": \"0.13.0\",\n  \"draft\": false,\n  \"immutable\": true,\n  \"prerelease\": false,\n  \"created_at\": \"2026-10-01T00:33:56Z\",\n  \"updated_at\": \"2026-10-01T15:25:02Z\",\n  \"published_at\": \"2026-10-01T06:36:56Z\",\n  \"assets\": [\n\n  ],\n  \"tarball_url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/tarball/v0.13.0\",\n  \"zipball_url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/zipball/v0.13.0\",\n  \"body\": \"**Full Changelog**: https://github.com/JetBrains/kotlin-toolchain/compare/v0.12.2...v0.13.0\\r\\n\\r\\nStay tuned for our release blog post, which will present the highlights.\\r\\n\\r\\n### Breaking changes\\r\\n\\r\\n* [KTC-5543](https://youtrack.jetbrains.com/issue/KTC-5543) — Rename AMPER_BUILD_DIR env var to KOTLIN_TOOLCHAIN_BUILD_DIR\\r\\n* [KTC-5733](https://youtrack.jetbrains.com/issue/KTC-5733) — Update default Kotlin version to 2.4.20\\r\\n* [KTC-5853](https://youtrack.jetbrains.com/issue/KTC-5853) — Don't hardcode the namespace for Android libraries\\r\\n* [KTC-5856](https://youtrack.jetbrains.com/issue/KTC-5856) — Fail build with clear diagnostic when namespace or applicationId is missing in module.yaml \\r\\n* [KTC-5952](https://youtrack.jetbrains.com/issue/KTC-5952) — Update default Compose version to 1.12.1\\r\\n* [KTC-5953](https://youtrack.jetbrains.com/issue/KTC-5953) — Update default Ktor version to 3.6.0\\r\\n* [KTC-5954](https://youtrack.jetbrains.com/issue/KTC-5954) — Update default Spring Boot version to 4.1.1\\r\\n* [KTC-5955](https://youtrack.jetbrains.com/issue/KTC-5955) — Update default KSP version to 2.3.12\\r\\n* [KTC-5956](https://youtrack.jetbrains.com/issue/KTC-5956) — Update default kotlinx.rpc version to 0.10.4\\r\\n* [KTC-5957](https://youtrack.jetbrains.com/issue/KTC-5957) — Update default Lombok version to 1.18.48\\r\\n* [KTC-5972](https://youtrack.jetbrains.com/issue/KTC-5972) — Rename the 'amper' module layout to 'default'\\r\\n\\r\\n### New features\\r\\n\\r\\n* [KTC-679](https://youtrack.jetbrains.com/issue/KTC-679) — Check and/or provision Xcode components automatically\\r\\n* [KTC-3585](https://youtrack.jetbrains.com/issue/KTC-3585) — Support consuming Compose Resources from published libraries\\r\\n* [KTC-4627](https://youtrack.jetbrains.com/issue/KTC-4627) — Support JUnit tags for test filtering\\r\\n* [KTC-5422](https://youtrack.jetbrains.com/issue/KTC-5422) — Support Kotlin Native compiler caches in Kotlin Toolchain\\r\\n* [KTC-5478](https://youtrack.jetbrains.com/issue/KTC-5478) — Support KMP wizard with Kotlin Toolchain CLI\\r\\n* [KTC-5549](https://youtrack.jetbrains.com/issue/KTC-5549) — SwiftPM Initial Support\\r\\n* [KTC-5576](https://youtrack.jetbrains.com/issue/KTC-5576) — Add testing of wasm modules\\r\\n* [KTC-5698](https://youtrack.jetbrains.com/issue/KTC-5698) — Support publication of composeResources as a part of KMP library publication\\r\\n* [KTC-5784](https://youtrack.jetbrains.com/issue/KTC-5784) — Reproducible JARs on clean rebuild\\r\\n* [KTC-5787](https://youtrack.jetbrains.com/issue/KTC-5787) — Support `settings.kotlin.explicitApi` property and ignore it for test sources\\r\\n* [KTC-5832](https://youtrack.jetbrains.com/issue/KTC-5832) — SwiftPM metadata is not published with kmp library\\r\\n* [KTC-5897](https://youtrack.jetbrains.com/issue/KTC-5897) — Support explicit Android ABI filtering for application packaging\\r\\n* [KTC-5915](https://youtrack.jetbrains.com/issue/KTC-5915) — Allow using dependencies from version catalog in `mavenPlugins(.dependencies)`\\r\\n\\r\\n### Cosmetics\\r\\n\\r\\n* [KTC-610](https://youtrack.jetbrains.com/issue/KTC-610) — Add a skin to the Android emulator created by Kotlin Toolchain\\r\\n* [KTC-5820](https://youtrack.jetbrains.com/issue/KTC-5820) — SwiftPM import: Suppress verbose errors about unsupported modules from swift package \\r\\n* [KTC-5883](https://youtrack.jetbrains.com/issue/KTC-5883) — Add a user-friendly error for dumpSwiftPMDependencyResolution\\r\\n\\r\\n### Usability improvements\\r\\n\\r\\n* [KTC-609](https://youtrack.jetbrains.com/issue/KTC-609) — Kotlin Toolchain installs Android SDK with non-canonical name (Amper-33)\\r\\n* [KTC-4232](https://youtrack.jetbrains.com/issue/KTC-4232) — Unify test output for different platforms in `pretty` (default) format\\r\\n* [KTC-4240](https://youtrack.jetbrains.com/issue/KTC-4240) — Compiler warnings are shown as error logs (and in stderr) for native compilations\\r\\n* [KTC-4720](https://youtrack.jetbrains.com/issue/KTC-4720) — Running ios app fails with \\\"Found no destinations for the scheme 'app' and action build\\\"\\r\\n* [KTC-4791](https://youtrack.jetbrains.com/issue/KTC-4791) — Compiler warnings are shown as error logs (and in stderr) for JS and Wasm compilations\\r\\n* [KTC-4801](https://youtrack.jetbrains.com/issue/KTC-4801) — Always print the full stacktrace of Internal errors\\r\\n* [KTC-5233](https://youtrack.jetbrains.com/issue/KTC-5233) — Warning from Kotlin native compiler about using Unsafe API\\r\\n* [KTC-5479](https://youtrack.jetbrains.com/issue/KTC-5479) — iOS: dependency Compose resources not bundled unless `compose: enabled` on the app module (MissingResourceException at runtime)\\r\\n* [KTC-5695](https://youtrack.jetbrains.com/issue/KTC-5695) — Supported way to accept the Android SDK license without sdkmanager\\r\\n* [KTC-5777](https://youtrack.jetbrains.com/issue/KTC-5777) — `kotlin run --module` with a non-app module should fail more clearly\\r\\n* [KTC-5785](https://youtrack.jetbrains.com/issue/KTC-5785) — Prompt for single module selection in `show settings/dependencies` instead of multiple\\r\\n* [KTC-5816](https://youtrack.jetbrains.com/issue/KTC-5816) — Hide '+zcm' is not a recognized feature error message\\r\\n* [KTC-5821](https://youtrack.jetbrains.com/issue/KTC-5821) — Report progress of downloading tools, sdks, etc in the CLI\\r\\n* [KTC-5824](https://youtrack.jetbrains.com/issue/KTC-5824) — Improve Compose Hot Reload discoverability in the CLI\\r\\n* [KTC-5830](https://youtrack.jetbrains.com/issue/KTC-5830) — Unable to consume kmp library published to maven local with default settings\\r\\n* [KTC-5879](https://youtrack.jetbrains.com/issue/KTC-5879) — If kotlin clean fails with Internal Error then stacktrace is unavailable\\r\\n* [KTC-5979](https://youtrack.jetbrains.com/issue/KTC-5979) — Make `languageVersion` and `apiVersion` strings instead of enums\\r\\n\\r\\n### Fixed bugs\\r\\n\\r\\n* [KTC-4789](https://youtrack.jetbrains.com/issue/KTC-4789) — js/wasmjs linking failure \\r\\n* [KTC-5434](https://youtrack.jetbrains.com/issue/KTC-5434) — Kotlin Toolchain generated AAR manifests missing `<uses-sdk>` cause spurious WRITE_EXTERNAL_STORAGE permission\\r\\n* [KTC-5602](https://youtrack.jetbrains.com/issue/KTC-5602) — KSP fails with Room when building via Kotlin Toolchain \\r\\n* [KTC-5645](https://youtrack.jetbrains.com/issue/KTC-5645) — CLI hangs forever when a KSP task fails\\r\\n* [KTC-5651](https://youtrack.jetbrains.com/issue/KTC-5651) — Rename: update Xcode project in templates\\r\\n* [KTC-5686](https://youtrack.jetbrains.com/issue/KTC-5686) — Executable JAR is broken with `settings.spring: enabled`\\r\\n* [KTC-5765](https://youtrack.jetbrains.com/issue/KTC-5765) — IOException: Resource deadlock would occur\\r\\n* [KTC-5770](https://youtrack.jetbrains.com/issue/KTC-5770) — Ctrl+C on WASM APP throws IllegalStateException: Shutdown in progress\\r\\n* [KTC-5776](https://youtrack.jetbrains.com/issue/KTC-5776) — Compose 1.12.0 doesn't work (new skiko artifacts)\\r\\n* [KTC-5778](https://youtrack.jetbrains.com/issue/KTC-5778) — 100% cache miss on executable jar creation\\r\\n* [KTC-5779](https://youtrack.jetbrains.com/issue/KTC-5779) — Dependency classifier is ignored if dependency is published with Gradle module metadata\\r\\n* [KTC-5790](https://youtrack.jetbrains.com/issue/KTC-5790) — Dependency resolution step hangs in IDE\\r\\n* [KTC-5795](https://youtrack.jetbrains.com/issue/KTC-5795) — Incremental build does not restore deleted output .class files — kotlin run reports successful compilation but fails with ClassNotFoundException\\r\\n* [KTC-5797](https://youtrack.jetbrains.com/issue/KTC-5797) — kmp/lib: settings.kotlin.serialization adds kotlinx-serialization-core to the POM once per fragment  \\r\\n* [KTC-5845](https://youtrack.jetbrains.com/issue/KTC-5845) — Do not require to set `description` module property for publishing to Maven Central if `description` property in POM is already set\\r\\n* [KTC-5850](https://youtrack.jetbrains.com/issue/KTC-5850) — K/Wasm: Process page errors during browser testing\\r\\n* [KTC-5860](https://youtrack.jetbrains.com/issue/KTC-5860) — Compose Hot Reload prints a lot of empty lines during the reload\\r\\n* [KTC-5866](https://youtrack.jetbrains.com/issue/KTC-5866) — Sporadic failures of Room: \\\"Failed to delete old native lib ... sqlitejdbc.dll\\\"\\r\\n* [KTC-5869](https://youtrack.jetbrains.com/issue/KTC-5869) — Android run fails with internal error: AdbCommandRejectedException\\r\\n* [KTC-5875](https://youtrack.jetbrains.com/issue/KTC-5875) — WasmJS and WasmWASI expose types from non-exported transitive dependencies\\r\\n* [KTC-5885](https://youtrack.jetbrains.com/issue/KTC-5885) — Deprecated -Xwasm and -Xir-produce-klib-file flags are used for Wasm targets\\r\\n* [KTC-5896](https://youtrack.jetbrains.com/issue/KTC-5896) — Dependency resolution sometimes produces a graph that includes the same library of two different versions\\r\\n* [KTC-5921](https://youtrack.jetbrains.com/issue/KTC-5921) — `kotlin run` hangs indefinitely for Android application on clean cache on Windows\\r\\n* [KTC-5926](https://youtrack.jetbrains.com/issue/KTC-5926) — Simulator window not opening with Xcode 27.0+\\r\\n* [KTC-5933](https://youtrack.jetbrains.com/issue/KTC-5933) — Android library packages composeResources twice in (assets/ and inside the bundled jar)\\r\\n* [KTC-5935](https://youtrack.jetbrains.com/issue/KTC-5935) — Android AAR silently drops Compose resource overrides from refined fragments\\r\\n* [KTC-5938](https://youtrack.jetbrains.com/issue/KTC-5938) — ClassCastException while editing swift package dependency\\r\\n* [KTC-5940](https://youtrack.jetbrains.com/issue/KTC-5940) — Common tests run for few random targets with KTC 0.13.0\\r\\n* [KTC-5950](https://youtrack.jetbrains.com/issue/KTC-5950) — Hot reload fails with IllegalArgumentException in @DevelopmentEntryPoint preview in kmp/lib modules\\r\\n* [KTC-5960](https://youtrack.jetbrains.com/issue/KTC-5960) — Android namespace fallback doesn't respect artifactId fallback\\r\\n* [KTC-5973](https://youtrack.jetbrains.com/issue/KTC-5973) — Wrapper errors can lead to corrupted CLI distribution cache\\r\\n\\r\\n### IDE Improvements\\r\\n\\r\\nThese changes are available in the [Kotlin Toolchain plugin](https://plugins.jetbrains.com/plugin/31850-kotlin-toolchain) for IntelliJ IDEA 2026.2.3.\\r\\n\\r\\n#### New features\\r\\n\\r\\n* [KTC-5590](https://youtrack.jetbrains.com/issue/KTC-5590) — Debug Android unit tests\\r\\n* [KTC-5742](https://youtrack.jetbrains.com/issue/KTC-5742) — Track local packages in IDE and rerun cinterops when manifests or sources change\\r\\n\\r\\n#### Cosmetics\\r\\n\\r\\n* [KTC-5914](https://youtrack.jetbrains.com/issue/KTC-5914) — Generated run configurations have verbose prefix \\\"Module \\\"\\r\\n\\r\\n#### Usability improvements\\r\\n\\r\\n* [KTC-951](https://youtrack.jetbrains.com/issue/KTC-951) — The default android-app run configuration is not helpful if Android SDK is absent\\r\\n* [KTC-5512](https://youtrack.jetbrains.com/issue/KTC-5512) — IDE automatically comments out inserted `//`-paths\\r\\n* [KTC-5812](https://youtrack.jetbrains.com/issue/KTC-5812) — Improve Compose Hot Reload discoverability in the IDE\\r\\n* [KTC-5909](https://youtrack.jetbrains.com/issue/KTC-5909) — Create run configurations earlier during the sync\\r\\n* [KTC-5910](https://youtrack.jetbrains.com/issue/KTC-5910) — Create run configurations for iOS and Android apps if the KMP plugin is absent\\r\\n\\r\\n#### Fixed bugs\\r\\n\\r\\n* [KTC-5710](https://youtrack.jetbrains.com/issue/KTC-5710) — Auto-sync does not work in Android Studio\\r\\n* [KTC-5716](https://youtrack.jetbrains.com/issue/KTC-5716) — Cannot run parameterized test method with a nested class as parameter type\\r\\n* [KTC-5764](https://youtrack.jetbrains.com/issue/KTC-5764) — Android live edit infinity update in AS Rabbit\\r\\n* [KTC-5774](https://youtrack.jetbrains.com/issue/KTC-5774) — Pasting Gradle-style dependencies doesn't add $ for catalog libs\\r\\n* [KTC-5786](https://youtrack.jetbrains.com/issue/KTC-5786) — Pasting Gradle-style dependencies only works after '- '\\r\\n* [KTC-5813](https://youtrack.jetbrains.com/issue/KTC-5813) — Odd file tree when traversing from Gradle to KTC project\\r\\n* [KTC-5828](https://youtrack.jetbrains.com/issue/KTC-5828) — Open new KTC project from IDE wizard - androidApp run configuration is broken: Cannot obtain the package\\r\\n* [KTC-5849](https://youtrack.jetbrains.com/issue/KTC-5849) — WasmJS main run gutter is missing when Kotlin Multiplatform IDEA plugin is disabled\\r\\n* [KTC-5903](https://youtrack.jetbrains.com/issue/KTC-5903) — The Kotlin Toolchain IDE plugin is broken in IDEA 2026.2.3\",\n  \"reactions\": {\n    \"url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/400239551/reactions\",\n    \"total_count\": 11,\n    \"+1\": 0,\n    \"-1\": 0,\n    \"laugh\": 0,\n    \"hooray\": 5,\n    \"confused\": 0,\n    \"heart\": 0,\n    \"rocket\": 6,\n    \"eyes\": 0\n  }\n}\n",
+    "body": "{\n  \"url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/400239551\",\n  \"assets_url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/400239551/assets\",\n  \"upload_url\": \"https://uploads.github.com/repos/JetBrains/kotlin-toolchain/releases/400239551/assets{?name,label}\",\n  \"html_url\": \"https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.13.0\",\n  \"id\": 400239551,\n  \"author\": {\n    \"login\": \"joffrey-bion\",\n    \"id\": 1913296,\n    \"node_id\": \"MDQ6VXNlcjE5MTMyOTY=\",\n    \"avatar_url\": \"https://avatars.githubusercontent.com/u/1913296?v=4\",\n    \"gravatar_id\": \"\",\n    \"url\": \"https://api.github.com/users/joffrey-bion\",\n    \"html_url\": \"https://github.com/joffrey-bion\",\n    \"followers_url\": \"https://api.github.com/users/joffrey-bion/followers\",\n    \"following_url\": \"https://api.github.com/users/joffrey-bion/following{/other_user}\",\n    \"gists_url\": \"https://api.github.com/users/joffrey-bion/gists{/gist_id}\",\n    \"starred_url\": \"https://api.github.com/users/joffrey-bion/starred{/owner}{/repo}\",\n    \"subscriptions_url\": \"https://api.github.com/users/joffrey-bion/subscriptions\",\n    \"organizations_url\": \"https://api.github.com/users/joffrey-bion/orgs\",\n    \"repos_url\": \"https://api.github.com/users/joffrey-bion/repos\",\n    \"events_url\": \"https://api.github.com/users/joffrey-bion/events{/privacy}\",\n    \"received_events_url\": \"https://api.github.com/users/joffrey-bion/received_events\",\n    \"type\": \"User\",\n    \"user_view_type\": \"public\",\n    \"site_admin\": false\n  },\n  \"node_id\": \"RE_kwDOSaggTs4X2yu_\",\n  \"tag_name\": \"v0.13.0\",\n  \"target_commitish\": \"main\",\n  \"name\": \"0.13.0\",\n  \"draft\": false,\n  \"immutable\": true,\n  \"prerelease\": false,\n  \"created_at\": \"2026-10-01T00:33:56Z\",\n  \"updated_at\": \"2026-10-01T15:25:02Z\",\n  \"published_at\": \"2026-10-01T06:36:56Z\",\n  \"assets\": [\n\n  ],\n  \"tarball_url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/tarball/v0.13.0\",\n  \"zipball_url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/zipball/v0.13.0\",\n  \"body\": \"**Full Changelog**: https://github.com/JetBrains/kotlin-toolchain/compare/v0.12.2...v0.13.0\\r\\n\\r\\nStay tuned for our release blog post, which will present the highlights.\\r\\n\\r\\n### Breaking changes\\r\\n\\r\\n* [KTC-5543](https://youtrack.jetbrains.com/issue/KTC-5543) \u2014 Rename AMPER_BUILD_DIR env var to KOTLIN_TOOLCHAIN_BUILD_DIR\\r\\n* [KTC-5733](https://youtrack.jetbrains.com/issue/KTC-5733) \u2014 Update default Kotlin version to 2.4.20\\r\\n* [KTC-5853](https://youtrack.jetbrains.com/issue/KTC-5853) \u2014 Don't hardcode the namespace for Android libraries\\r\\n* [KTC-5856](https://youtrack.jetbrains.com/issue/KTC-5856) \u2014 Fail build with clear diagnostic when namespace or applicationId is missing in module.yaml \\r\\n* [KTC-5952](https://youtrack.jetbrains.com/issue/KTC-5952) \u2014 Update default Compose version to 1.12.1\\r\\n* [KTC-5953](https://youtrack.jetbrains.com/issue/KTC-5953) \u2014 Update default Ktor version to 3.6.0\\r\\n* [KTC-5954](https://youtrack.jetbrains.com/issue/KTC-5954) \u2014 Update default Spring Boot version to 4.1.1\\r\\n* [KTC-5955](https://youtrack.jetbrains.com/issue/KTC-5955) \u2014 Update default KSP version to 2.3.12\\r\\n* [KTC-5956](https://youtrack.jetbrains.com/issue/KTC-5956) \u2014 Update default kotlinx.rpc version to 0.10.4\\r\\n* [KTC-5957](https://youtrack.jetbrains.com/issue/KTC-5957) \u2014 Update default Lombok version to 1.18.48\\r\\n* [KTC-5972](https://youtrack.jetbrains.com/issue/KTC-5972) \u2014 Rename the 'amper' module layout to 'default'\\r\\n\\r\\n### New features\\r\\n\\r\\n* [KTC-679](https://youtrack.jetbrains.com/issue/KTC-679) \u2014 Check and/or provision Xcode components automatically\\r\\n* [KTC-3585](https://youtrack.jetbrains.com/issue/KTC-3585) \u2014 Support consuming Compose Resources from published libraries\\r\\n* [KTC-4627](https://youtrack.jetbrains.com/issue/KTC-4627) \u2014 Support JUnit tags for test filtering\\r\\n* [KTC-5422](https://youtrack.jetbrains.com/issue/KTC-5422) \u2014 Support Kotlin Native compiler caches in Kotlin Toolchain\\r\\n* [KTC-5478](https://youtrack.jetbrains.com/issue/KTC-5478) \u2014 Support KMP wizard with Kotlin Toolchain CLI\\r\\n* [KTC-5549](https://youtrack.jetbrains.com/issue/KTC-5549) \u2014 SwiftPM Initial Support\\r\\n* [KTC-5576](https://youtrack.jetbrains.com/issue/KTC-5576) \u2014 Add testing of wasm modules\\r\\n* [KTC-5698](https://youtrack.jetbrains.com/issue/KTC-5698) \u2014 Support publication of composeResources as a part of KMP library publication\\r\\n* [KTC-5784](https://youtrack.jetbrains.com/issue/KTC-5784) \u2014 Reproducible JARs on clean rebuild\\r\\n* [KTC-5787](https://youtrack.jetbrains.com/issue/KTC-5787) \u2014 Support `settings.kotlin.explicitApi` property and ignore it for test sources\\r\\n* [KTC-5832](https://youtrack.jetbrains.com/issue/KTC-5832) \u2014 SwiftPM metadata is not published with kmp library\\r\\n* [KTC-5897](https://youtrack.jetbrains.com/issue/KTC-5897) \u2014 Support explicit Android ABI filtering for application packaging\\r\\n* [KTC-5915](https://youtrack.jetbrains.com/issue/KTC-5915) \u2014 Allow using dependencies from version catalog in `mavenPlugins(.dependencies)`\\r\\n\\r\\n### Cosmetics\\r\\n\\r\\n* [KTC-610](https://youtrack.jetbrains.com/issue/KTC-610) \u2014 Add a skin to the Android emulator created by Kotlin Toolchain\\r\\n* [KTC-5820](https://youtrack.jetbrains.com/issue/KTC-5820) \u2014 SwiftPM import: Suppress verbose errors about unsupported modules from swift package \\r\\n* [KTC-5883](https://youtrack.jetbrains.com/issue/KTC-5883) \u2014 Add a user-friendly error for dumpSwiftPMDependencyResolution\\r\\n\\r\\n### Usability improvements\\r\\n\\r\\n* [KTC-609](https://youtrack.jetbrains.com/issue/KTC-609) \u2014 Kotlin Toolchain installs Android SDK with non-canonical name (Amper-33)\\r\\n* [KTC-4232](https://youtrack.jetbrains.com/issue/KTC-4232) \u2014 Unify test output for different platforms in `pretty` (default) format\\r\\n* [KTC-4240](https://youtrack.jetbrains.com/issue/KTC-4240) \u2014 Compiler warnings are shown as error logs (and in stderr) for native compilations\\r\\n* [KTC-4720](https://youtrack.jetbrains.com/issue/KTC-4720) \u2014 Running ios app fails with \\\"Found no destinations for the scheme 'app' and action build\\\"\\r\\n* [KTC-4791](https://youtrack.jetbrains.com/issue/KTC-4791) \u2014 Compiler warnings are shown as error logs (and in stderr) for JS and Wasm compilations\\r\\n* [KTC-4801](https://youtrack.jetbrains.com/issue/KTC-4801) \u2014 Always print the full stacktrace of Internal errors\\r\\n* [KTC-5233](https://youtrack.jetbrains.com/issue/KTC-5233) \u2014 Warning from Kotlin native compiler about using Unsafe API\\r\\n* [KTC-5479](https://youtrack.jetbrains.com/issue/KTC-5479) \u2014 iOS: dependency Compose resources not bundled unless `compose: enabled` on the app module (MissingResourceException at runtime)\\r\\n* [KTC-5695](https://youtrack.jetbrains.com/issue/KTC-5695) \u2014 Supported way to accept the Android SDK license without sdkmanager\\r\\n* [KTC-5777](https://youtrack.jetbrains.com/issue/KTC-5777) \u2014 `kotlin run --module` with a non-app module should fail more clearly\\r\\n* [KTC-5785](https://youtrack.jetbrains.com/issue/KTC-5785) \u2014 Prompt for single module selection in `show settings/dependencies` instead of multiple\\r\\n* [KTC-5816](https://youtrack.jetbrains.com/issue/KTC-5816) \u2014 Hide '+zcm' is not a recognized feature error message\\r\\n* [KTC-5821](https://youtrack.jetbrains.com/issue/KTC-5821) \u2014 Report progress of downloading tools, sdks, etc in the CLI\\r\\n* [KTC-5824](https://youtrack.jetbrains.com/issue/KTC-5824) \u2014 Improve Compose Hot Reload discoverability in the CLI\\r\\n* [KTC-5830](https://youtrack.jetbrains.com/issue/KTC-5830) \u2014 Unable to consume kmp library published to maven local with default settings\\r\\n* [KTC-5879](https://youtrack.jetbrains.com/issue/KTC-5879) \u2014 If kotlin clean fails with Internal Error then stacktrace is unavailable\\r\\n* [KTC-5979](https://youtrack.jetbrains.com/issue/KTC-5979) \u2014 Make `languageVersion` and `apiVersion` strings instead of enums\\r\\n\\r\\n### Fixed bugs\\r\\n\\r\\n* [KTC-4789](https://youtrack.jetbrains.com/issue/KTC-4789) \u2014 js/wasmjs linking failure \\r\\n* [KTC-5434](https://youtrack.jetbrains.com/issue/KTC-5434) \u2014 Kotlin Toolchain generated AAR manifests missing `<uses-sdk>` cause spurious WRITE_EXTERNAL_STORAGE permission\\r\\n* [KTC-5602](https://youtrack.jetbrains.com/issue/KTC-5602) \u2014 KSP fails with Room when building via Kotlin Toolchain \\r\\n* [KTC-5645](https://youtrack.jetbrains.com/issue/KTC-5645) \u2014 CLI hangs forever when a KSP task fails\\r\\n* [KTC-5651](https://youtrack.jetbrains.com/issue/KTC-5651) \u2014 Rename: update Xcode project in templates\\r\\n* [KTC-5686](https://youtrack.jetbrains.com/issue/KTC-5686) \u2014 Executable JAR is broken with `settings.spring: enabled`\\r\\n* [KTC-5765](https://youtrack.jetbrains.com/issue/KTC-5765) \u2014 IOException: Resource deadlock would occur\\r\\n* [KTC-5770](https://youtrack.jetbrains.com/issue/KTC-5770) \u2014 Ctrl+C on WASM APP throws IllegalStateException: Shutdown in progress\\r\\n* [KTC-5776](https://youtrack.jetbrains.com/issue/KTC-5776) \u2014 Compose 1.12.0 doesn't work (new skiko artifacts)\\r\\n* [KTC-5778](https://youtrack.jetbrains.com/issue/KTC-5778) \u2014 100% cache miss on executable jar creation\\r\\n* [KTC-5779](https://youtrack.jetbrains.com/issue/KTC-5779) \u2014 Dependency classifier is ignored if dependency is published with Gradle module metadata\\r\\n* [KTC-5790](https://youtrack.jetbrains.com/issue/KTC-5790) \u2014 Dependency resolution step hangs in IDE\\r\\n* [KTC-5795](https://youtrack.jetbrains.com/issue/KTC-5795) \u2014 Incremental build does not restore deleted output .class files \u2014 kotlin run reports successful compilation but fails with ClassNotFoundException\\r\\n* [KTC-5797](https://youtrack.jetbrains.com/issue/KTC-5797) \u2014 kmp/lib: settings.kotlin.serialization adds kotlinx-serialization-core to the POM once per fragment  \\r\\n* [KTC-5845](https://youtrack.jetbrains.com/issue/KTC-5845) \u2014 Do not require to set `description` module property for publishing to Maven Central if `description` property in POM is already set\\r\\n* [KTC-5850](https://youtrack.jetbrains.com/issue/KTC-5850) \u2014 K/Wasm: Process page errors during browser testing\\r\\n* [KTC-5860](https://youtrack.jetbrains.com/issue/KTC-5860) \u2014 Compose Hot Reload prints a lot of empty lines during the reload\\r\\n* [KTC-5866](https://youtrack.jetbrains.com/issue/KTC-5866) \u2014 Sporadic failures of Room: \\\"Failed to delete old native lib ... sqlitejdbc.dll\\\"\\r\\n* [KTC-5869](https://youtrack.jetbrains.com/issue/KTC-5869) \u2014 Android run fails with internal error: AdbCommandRejectedException\\r\\n* [KTC-5875](https://youtrack.jetbrains.com/issue/KTC-5875) \u2014 WasmJS and WasmWASI expose types from non-exported transitive dependencies\\r\\n* [KTC-5885](https://youtrack.jetbrains.com/issue/KTC-5885) \u2014 Deprecated -Xwasm and -Xir-produce-klib-file flags are used for Wasm targets\\r\\n* [KTC-5896](https://youtrack.jetbrains.com/issue/KTC-5896) \u2014 Dependency resolution sometimes produces a graph that includes the same library of two different versions\\r\\n* [KTC-5921](https://youtrack.jetbrains.com/issue/KTC-5921) \u2014 `kotlin run` hangs indefinitely for Android application on clean cache on Windows\\r\\n* [KTC-5926](https://youtrack.jetbrains.com/issue/KTC-5926) \u2014 Simulator window not opening with Xcode 27.0+\\r\\n* [KTC-5933](https://youtrack.jetbrains.com/issue/KTC-5933) \u2014 Android library packages composeResources twice in (assets/ and inside the bundled jar)\\r\\n* [KTC-5935](https://youtrack.jetbrains.com/issue/KTC-5935) \u2014 Android AAR silently drops Compose resource overrides from refined fragments\\r\\n* [KTC-5938](https://youtrack.jetbrains.com/issue/KTC-5938) \u2014 ClassCastException while editing swift package dependency\\r\\n* [KTC-5940](https://youtrack.jetbrains.com/issue/KTC-5940) \u2014 Common tests run for few random targets with KTC 0.13.0\\r\\n* [KTC-5950](https://youtrack.jetbrains.com/issue/KTC-5950) \u2014 Hot reload fails with IllegalArgumentException in @DevelopmentEntryPoint preview in kmp/lib modules\\r\\n* [KTC-5960](https://youtrack.jetbrains.com/issue/KTC-5960) \u2014 Android namespace fallback doesn't respect artifactId fallback\\r\\n* [KTC-5973](https://youtrack.jetbrains.com/issue/KTC-5973) \u2014 Wrapper errors can lead to corrupted CLI distribution cache\\r\\n\\r\\n### IDE Improvements\\r\\n\\r\\nThese changes are available in the [Kotlin Toolchain plugin](https://plugins.jetbrains.com/plugin/31850-kotlin-toolchain) for IntelliJ IDEA 2026.2.3.\\r\\n\\r\\n#### New features\\r\\n\\r\\n* [KTC-5590](https://youtrack.jetbrains.com/issue/KTC-5590) \u2014 Debug Android unit tests\\r\\n* [KTC-5742](https://youtrack.jetbrains.com/issue/KTC-5742) \u2014 Track local packages in IDE and rerun cinterops when manifests or sources change\\r\\n\\r\\n#### Cosmetics\\r\\n\\r\\n* [KTC-5914](https://youtrack.jetbrains.com/issue/KTC-5914) \u2014 Generated run configurations have verbose prefix \\\"Module \\\"\\r\\n\\r\\n#### Usability improvements\\r\\n\\r\\n* [KTC-951](https://youtrack.jetbrains.com/issue/KTC-951) \u2014 The default android-app run configuration is not helpful if Android SDK is absent\\r\\n* [KTC-5512](https://youtrack.jetbrains.com/issue/KTC-5512) \u2014 IDE automatically comments out inserted `//`-paths\\r\\n* [KTC-5812](https://youtrack.jetbrains.com/issue/KTC-5812) \u2014 Improve Compose Hot Reload discoverability in the IDE\\r\\n* [KTC-5909](https://youtrack.jetbrains.com/issue/KTC-5909) \u2014 Create run configurations earlier during the sync\\r\\n* [KTC-5910](https://youtrack.jetbrains.com/issue/KTC-5910) \u2014 Create run configurations for iOS and Android apps if the KMP plugin is absent\\r\\n\\r\\n#### Fixed bugs\\r\\n\\r\\n* [KTC-5710](https://youtrack.jetbrains.com/issue/KTC-5710) \u2014 Auto-sync does not work in Android Studio\\r\\n* [KTC-5716](https://youtrack.jetbrains.com/issue/KTC-5716) \u2014 Cannot run parameterized test method with a nested class as parameter type\\r\\n* [KTC-5764](https://youtrack.jetbrains.com/issue/KTC-5764) \u2014 Android live edit infinity update in AS Rabbit\\r\\n* [KTC-5774](https://youtrack.jetbrains.com/issue/KTC-5774) \u2014 Pasting Gradle-style dependencies doesn't add $ for catalog libs\\r\\n* [KTC-5786](https://youtrack.jetbrains.com/issue/KTC-5786) \u2014 Pasting Gradle-style dependencies only works after '- '\\r\\n* [KTC-5813](https://youtrack.jetbrains.com/issue/KTC-5813) \u2014 Odd file tree when traversing from Gradle to KTC project\\r\\n* [KTC-5828](https://youtrack.jetbrains.com/issue/KTC-5828) \u2014 Open new KTC project from IDE wizard - androidApp run configuration is broken: Cannot obtain the package\\r\\n* [KTC-5849](https://youtrack.jetbrains.com/issue/KTC-5849) \u2014 WasmJS main run gutter is missing when Kotlin Multiplatform IDEA plugin is disabled\\r\\n* [KTC-5903](https://youtrack.jetbrains.com/issue/KTC-5903) \u2014 The Kotlin Toolchain IDE plugin is broken in IDEA 2026.2.3\",\n  \"reactions\": {\n    \"url\": \"https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/400239551/reactions\",\n    \"total_count\": 11,\n    \"+1\": 0,\n    \"-1\": 0,\n    \"laugh\": 0,\n    \"hooray\": 5,\n    \"confused\": 0,\n    \"heart\": 0,\n    \"rocket\": 6,\n    \"eyes\": 0\n  }\n}\n",
     "response_sha256": "e8b521d9b08bb1e526503a17f6f3c8ec827ab256b3ed1d3fa9e6b6d94fd3529c"
   },
   "reason": "Explicit maintainer decision to adopt with inherited risks and prioritize independent bridge assessment, conditional on passing compatibility",
@@ -582,5 +1182,259 @@
     "integrated_compatibility": "passed_for_development_tests_unsigned_products",
     "historical_compatibility_run_unchanged": true,
     "native_gate_source_sha256": "a7485c06858ebaee18334bdd9f63a9c0b4e0dca1649d6656521828d511e50f55"
+  },
+  "physical_removal_transition": {
+    "approved": true,
+    "approved_at": "2026-10-04T19:17:58.286668+00:00",
+    "approval_reference": "Maintainer explicit request after PR 35 merge to physically remove the transitional iOS Gradle bridge in this separate chat",
+    "base_revision": "2cc75fd6df31a3470fc9248847b37e7c649ddd53",
+    "scope": [
+      "public_source_development_builds",
+      "repository_tests",
+      "unsigned_ios_builds"
+    ],
+    "credentialed_release_delivery": "held",
+    "source_binding_sha256": "9182852f2db5c4f88cf5a463d0f7b8085868b8fb719610f758547a6ba355c896",
+    "historical_source_files": [
+      {
+        "path": ".github/workflows/mobile-ci.yml",
+        "sha256": "2a37cb48228a8849d7e7fbab48a4aa9967aee6d5df26e09bc1171d06b0f3c648",
+        "executable": false
+      },
+      {
+        "path": ".github/workflows/mobile-release.yml",
+        "sha256": "bf096faaa3f4a84b65449350bc671439cf3f011363e1e5d91d18b7a98a4d3fc7",
+        "executable": false
+      },
+      {
+        "path": ".github/workflows/nightly-mobile-candidate.yml",
+        "sha256": "7a7fa2139e73e3361f30cac9a9ea5f216d52e609c69efc155df3602a09900740",
+        "executable": false
+      },
+      {
+        "path": "README.md",
+        "sha256": "585e665ef1dce188cdbda2e47eadfd57639e7f090aa84a664e70964e49eac0c6",
+        "executable": false
+      },
+      {
+        "path": "android-app/module.yaml",
+        "sha256": "1361a37a5e4ec8843fb019adff3629fa31eebc597bf197b423854f7457b4671b",
+        "executable": false
+      },
+      {
+        "path": "docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md",
+        "sha256": "3670c4c2341130332cfcdb0a0614374e4a6bdc23219b093a67ff6f73624c4186",
+        "executable": false
+      },
+      {
+        "path": "docs/adr/README.md",
+        "sha256": "491df452ce76e78bb041af3c5d4b532e67574c18d7053239c78d0c561fa9fdb1",
+        "executable": false
+      },
+      {
+        "path": "docs/reference/how-to-add-a-feature.md",
+        "sha256": "973084b3027d636728a63bb66cb7bad92aec112eb3449e26c8e7c32118f79dfb",
+        "executable": false
+      },
+      {
+        "path": "docs/reference/ios-gradle-bridge.md",
+        "sha256": "f6079b497fe284b0be9062160ef12b82f14a265d6d54d18e450526cb3afaae7a",
+        "executable": false
+      },
+      {
+        "path": "docs/reference/local-development.md",
+        "sha256": "fff9e42229cc0336b06f50945a08fa61afca28f984b66e1454f38d33e06c4e09",
+        "executable": false
+      },
+      {
+        "path": "docs/reference/mobile-architecture.md",
+        "sha256": "67ec0c4cb492be10c11e9d2d7a5e84c488692829868fa3e94c9fd5969ff1b20d",
+        "executable": false
+      },
+      {
+        "path": "fastlane/Fastfile",
+        "sha256": "14938c0be34137321ed1af51648f7ae25914561611ae37b249eeb5ad9b73f739",
+        "executable": false
+      },
+      {
+        "path": "ios-app/module.xcodeproj/project.pbxproj",
+        "sha256": "301e6eed3efbdcdf9148a66b2c52d2cc5ae8ab942e620692f01e492c2d872043",
+        "executable": false
+      },
+      {
+        "path": "ios-app/module.yaml",
+        "sha256": "d1a0aeea0f71d6b7785eb9bcd6c3967ecae649603fe57fc676f6406ba5ce2961",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/Home/HomeCounterLoadable.swift",
+        "sha256": "004b4973312480f9c068750aeadfa033f2f51e784069b2d8fbc0f08bb7f81912",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift",
+        "sha256": "f958d772334162a7cddaf97c84a8344cfcfc6523c6a248254f6bca74e98d5d59",
+        "executable": false
+      },
+      {
+        "path": "ios-app/src/MobiInteropProjection.swift",
+        "sha256": "ef2fa0411f794f4c69d1f0a7f8199fd7e0a89b59fce437ac8bacb67e63f261a4",
+        "executable": false
+      },
+      {
+        "path": "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift",
+        "sha256": "63e14f0bb8fd06de628f7ee9cd9e3b8c26bdf6cf6f3c91907a34022d467e268e",
+        "executable": false
+      },
+      {
+        "path": "kotlin",
+        "sha256": "8e5972c57ee6cb277ea3ec48a7b5ace1f19983e5f4373f3f29752b31082d340b",
+        "executable": true
+      },
+      {
+        "path": "kotlin.bat",
+        "sha256": "7d5ab19b9eb293c9485ac6de256630d4fdc450da0c61a686b02cdf8735de4856",
+        "executable": true
+      },
+      {
+        "path": "maintenance-compatibility.json",
+        "sha256": "474ddd275eb473b4b21156ecce31a417d3cd3ce46bf7eb416a41ba5add3006c5",
+        "executable": false
+      },
+      {
+        "path": "maintenance-kotlin-toolchains.json",
+        "sha256": "ea61b7bdbe2b42e3c5bb7ed0960ffee7843f742836ebc37c0af1353c9f4e2a87",
+        "executable": false
+      },
+      {
+        "path": "maintenance-plugin-resolution.json",
+        "sha256": "2ad6780e3b406d4326d04fab37e0de55a04482faaf357d84d3c88e2f0c37924c",
+        "executable": false
+      },
+      {
+        "path": "maintenance-policy.json",
+        "sha256": "173344eecf6edcde8373853e27c86065b4f8bf09ef8c9c29733f0c326e4bd4a5",
+        "executable": false
+      },
+      {
+        "path": "scripts/ci/lib/ios.sh",
+        "sha256": "4a8dff51d35fbb0acc585d316f721eb9965b9f28bdb4350861de27b9c9818838",
+        "executable": false
+      },
+      {
+        "path": "scripts/ci/run_job.sh",
+        "sha256": "57f1456ba83fba0b8cd9016ee1ada526df073c790fcc837d42bb9a1e87988d1e",
+        "executable": true
+      },
+      {
+        "path": "scripts/ci/run_xcode_tests_with_logs.sh",
+        "sha256": "abf226c2f051cf4ed77d10e1735c9d85511633faed1b14183c6b0183b8457d20",
+        "executable": true
+      },
+      {
+        "path": "scripts/ci/run_xcodebuild_with_logs.sh",
+        "sha256": "6fc27931801cabdab73525429f284d1829534aad0ee875997d9d7ada4fa7d769",
+        "executable": true
+      },
+      {
+        "path": "scripts/ci/test_ios_builder.rb",
+        "sha256": "1e0cbd1312ba69b3de93d3302c7987fc4fca725efd3709a47e3158930b80097d",
+        "executable": false
+      },
+      {
+        "path": "scripts/ci/validate_ios_builder.sh",
+        "sha256": "aec42733a8bc519d45ab8e9557d5da99ef40fccebdc9a2c3af579ad91e5bc3e2",
+        "executable": true
+      },
+      {
+        "path": "scripts/dev/test_contracts.rb",
+        "sha256": "2b79ca38c4827d1a912f64ca2f889391de2448d15d3864e39695be1f3373a49d",
+        "executable": false
+      },
+      {
+        "path": "scripts/dev/test_quality.rb",
+        "sha256": "542be68d95ba77d953e20fe1d5c2c525983f4e0c29e15305c668b0399591e7de",
+        "executable": false
+      },
+      {
+        "path": "scripts/dev/test_validate.rb",
+        "sha256": "e538cb11fc1da198ef6c8a9246d3e1f0df3314982bfaf8cd955cf200464cbea9",
+        "executable": false
+      },
+      {
+        "path": "scripts/dev/validate.rb",
+        "sha256": "d0d549c7f6d597da9eaaac07d40758c0e1d01ed6f0dfb07833f40b6048b9220e",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/adapters/compatibility.rb",
+        "sha256": "d7dbeb20453d88f916377a780b4abf0e2f9c9b7763e590f56ea1f72cd1b892a5",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/dependencies.rb",
+        "sha256": "a025e5ef4eba429fd9c72c0607bc9aeef291a559aa3d9023325e934b920f3a8d",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/fixtures/interop/RetainedKotlinBuildPhase.pbxproj.template",
+        "sha256": "389dc8653c66b0cc081fdd736cc366a0bcbdafc5a669e13c7dbd27f4f6b8bbe2",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/lib/advisory_review.rb",
+        "sha256": "6f58f7bbe0ab3456fc8bc438f13c2ca6bd200a05609df7e321c3405cf2e21cbc",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/lib/risk_acceptance.rb",
+        "sha256": "55e13089cb8d356ec9cc9d33bc58a961250c7ecb71800346556492ab6c6958dd",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/lib/toolchain_risk_review.rb",
+        "sha256": "4e4dd7f6ab9a46bbe51be5d64cd7067705a4c513dd5850a8e57a2b4271da996b",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/test_compatibility.rb",
+        "sha256": "d6b6bbb75b40c15da45eb1b1e7ff3c50d34164ede2ecf4d0d15fe29108172f34",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/test_direct_resolution.rb",
+        "sha256": "3fcf3e4d4d31be2a2c91d93c8f810893a5e3c7d2bcc2c9cd90fe8f1804cb5594",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/test_direct_roundtrip.rb",
+        "sha256": "96c693d6cd226ea2f6d67705cd4e5237f59a67465ad30280007abd9745d7618d",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/test_plugin_attribution.rb",
+        "sha256": "498a095a1b33499db8658dd77a02eded35081febadfd093e428c9937f9a6328b",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/test_risk_acceptance.rb",
+        "sha256": "8632847491761d9b165a9bdeb36de600dfc738c694dfdec5385c8a9a9fc29ecc",
+        "executable": false
+      },
+      {
+        "path": "scripts/maintenance/test_support_policy.rb",
+        "sha256": "0bfec9cb36779a052480a5d0a983bdc308bc32a5ba2a5cc691fa013774145dea",
+        "executable": false
+      },
+      {
+        "path": "shared-di/src/MobiInteropProjection.kt",
+        "sha256": "e1538fe8b4cc077bbf9335b4ceaaf7c708e7897b712ade81c7f93db103c38ffe",
+        "executable": false
+      }
+    ],
+    "historical_source_binding_sha256": "a140640cf0a01e4c42790ad03ae99cb3ba19643ccafe1c82febfcac5970af73a",
+    "risk_expiry_unchanged": "2026-11-03T05:48:38Z",
+    "compatibility": "pending_removal_source_validation",
+    "historical_producers_unchanged": true
   }
 }

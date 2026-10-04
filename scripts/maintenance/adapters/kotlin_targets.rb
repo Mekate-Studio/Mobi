@@ -33,7 +33,7 @@ module Maintenance
       replacements = MODULES.to_h { |name| [name + '/module.yaml', [[PLATFORMS, PLATFORMS.sub(', iosX64', '')]]] }
       # Keep exact, reviewed blocks: a new source mapping needs a fresh review.
       block = X64_SOURCE_SET.lines.map { |line| line.strip.empty? ? line : '        ' + line }.join
-      replacements[BRIDGE] = [["    iosX64()\n", ''], [block, '']]
+      replacements[BRIDGE] = [["    iosX64()\n", ''], [block, '']] if source.files.key?(BRIDGE)
       replacements.map do |path, changes|
         content = File.read(File.join(source.root, path), encoding: 'UTF-8')
         before = source.files.fetch(path).fetch('sha256')

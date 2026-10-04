@@ -65,7 +65,16 @@ module Maintenance
             packaging = { 'upstream-android-packaging' => %w[android-build-debug android_release android_aab],
                           'upstream-ios-release' => ['ios_release_simulator'], 'upstream-ios-archive' => ['ios_unsigned_archive'],
                           'upstream-packaging' => %w[android-build-debug android_release android_aab ios_release_simulator ios_unsigned_archive] }
-            direct = %w[direct-facade direct-roundtrip direct-resolution direct-build-inputs].include?(step['check']) && step['phase'] == 'candidate'
+            source_manifest = evidence['source-manifest'] && JSON.parse(File.read(File.join(control, evidence.fetch('source-manifest').fetch('file'))))
+            adopted_direct = evidence['baseline_kind'] == 'adopted_direct'
+            if adopted_direct && (!source_manifest || source_manifest.keys.any? { |path| path.start_with?('gradle-bridge/') || path == Compatibility::CATALOG })
+              raise Failure, 'Adopted direct baseline requires a bridge-free source manifest'
+            end
+            raise Failure, 'Direct mobile profile requires a bridge-free source manifest' if step['check'] == 'direct-mobile' && !adopted_direct
+            if adopted_direct
+              raise Failure, 'Direct source evidence lost bridge absence' unless evidence['bridge_unavailable'] && evidence.dig('environment', 'bridge') == 'kotlin'
+            end
+            direct = adopted_direct || %w[direct-facade direct-roundtrip direct-resolution direct-build-inputs].include?(step['check']) && step['phase'] == 'candidate'
             required += %w[native_library_compile framework_link] unless direct || resolution_only || build_proof || packaging.key?(step['check']) && step['check'] != 'upstream-packaging'
             required += ['toolchain_resolution'] if resolution_only || build_proof
             required += %w[android-test android-build-debug native_klib_iosarm64 native_klib_iossimulatorarm64 build_input_evidence] if build_proof
@@ -91,7 +100,7 @@ module Maintenance
                 raise Failure, 'Build input evidence overclaims native or advisory capabilities'
               end
               direct_resolution[step['phase']] = DirectResolution.verify!(control, evidence)
-              if step['check'] == 'upstream-build-inputs' && (evidence['bridge_unavailable'] || evidence.dig('environment', 'bridge') != 'gradle')
+              if step['check'] == 'upstream-build-inputs' && !adopted_direct && (evidence['bridge_unavailable'] || evidence.dig('environment', 'bridge') != 'gradle')
                 raise Failure, 'Upstream retained-bridge profile changed the bridge path'
               end
               declarations = JSON.parse(File.read(File.join(control, evidence.fetch('resolution-declarations').fetch('file'))))

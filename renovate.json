@@ -65,12 +65,6 @@
       "groupName": "ruby tooling"
     },
     {
-      "matchManagers": [
-        "gradle"
-      ],
-      "groupName": "gradle and kotlin catalog"
-    },
-    {
       "description": "Keep TCA and its direct Dependencies package aligned.",
       "matchManagers": [
         "swift"
@@ -99,7 +93,7 @@
       ]
     },
     {
-      "description": "Keep Metro runtime, compiler, and Gradle bridge plugin versions synchronized.",
+      "description": "Keep Metro runtime and compiler versions synchronized.",
       "matchDatasources": [
         "maven"
       ],
@@ -121,7 +115,7 @@
       "allowedVersions": "<=1.4.5"
     },
     {
-      "description": "Keep Kotlin dependencies within the explicitly reviewed bridge compiler/SKIE compatibility interval; further upgrades require a new assessment.",
+      "description": "Keep Kotlin dependencies within the explicitly reviewed Toolchain compiler compatibility interval; further upgrades require a new assessment.",
       "matchDatasources": [
         "maven"
       ],
@@ -132,7 +126,7 @@
       "allowedVersions": "<=2.4.20"
     },
     {
-      "description": "Keep Kotlin coroutines versions synchronized between Kotlin Toolchain modules and the Gradle bridge catalog.",
+      "description": "Keep Kotlin coroutines versions synchronized across Kotlin Toolchain modules.",
       "matchDatasources": [
         "maven"
       ],

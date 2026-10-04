@@ -1,5 +1,13 @@
 # Compatibility matrix runner
 
+Current source uses `rehearse-compatibility direct-mobile` for native checks and
+`direct-resolution`/`direct-build-inputs` for scoped attribution. These profiles
+use the adopted content on both phases with bridge inputs absent. Historical
+bridge and facade-transform profiles refuse on current source; restore a complete
+published retained revision in an isolated copy to use the historical recipes
+below. See [physical removal and recovery](bridge-removal.md).
+
+
 For a separately reviewed, published stable candidate, `rehearse-compatibility`
 accepts explicit `--experimental` before the trailing `--store NAME`. This
 allows isolated technical assessment before the seven-day threshold, records

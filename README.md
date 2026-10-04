@@ -30,7 +30,7 @@ architecture itself and the documentation around it.
 ## Clean-Clone Quickstart
 
 The reviewed baseline is Kotlin Toolchain 0.13.0. iOS development requires an
-Apple Silicon Mac; shared Kotlin and the bridge target `iosArm64` devices and
+Apple Silicon Mac; shared Kotlin targets `iosArm64` devices and
 `iosSimulatorArm64` simulators. Intel iOS simulators are outside Mobi's support
 policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile SDK is API 37; target SDK
 remains API 36. These floors follow a configurable policy of one stable major
@@ -97,8 +97,8 @@ The approved direct development default uses Kotlin Toolchain for iOS developmen
 and unsigned builds, with explicit typed Swift projections. Gradle/unknown
 iOS builder overrides refuse; rollback restores complete content first.
 Credentialed iOS archive/export/TestFlight lanes are held pending separate
-signed-delivery evidence and authorization. The retained bridge files are
-preserved for content rollback. See the [accepted decision](docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+signed-delivery evidence and authorization. The bridge has a separate removal change; complete published Git revisions
+preserve content rollback. See the [accepted decision](docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md).
 
 ## Repository Shape
 
@@ -166,8 +166,7 @@ The current tool split is:
 ## Dependency Maintenance
 
 Renovate is the repository's dependency update orchestrator. The checked-in
-[`renovate.json`](renovate.json) covers GitHub Actions, Bundler, the Gradle
-version catalog used by the iOS bridge, and custom Kotlin Toolchain
+[`renovate.json`](renovate.json) covers GitHub Actions, Bundler, custom Kotlin Toolchain
 `module.yaml` Maven coordinates that generic Gradle tooling does not see.
 Native iOS dependencies
 such as TCA, Point-Free Dependencies, and MapLibre are declared in
@@ -175,21 +174,15 @@ such as TCA, Point-Free Dependencies, and MapLibre are declared in
 Renovate can manage them through its native Swift Package Manager support.
 Enable the Renovate GitHub App for hosted pull requests, or point a
 self-hosted Renovate runner at this repository.
-Metro and Kotlin coroutines updates are grouped across Kotlin Toolchain modules
-and the Gradle bridge catalog because the bridge must stay aligned with the
-shared Kotlin dependency surface used by the app modules.
-The retained bridge uses Kotlin 2.4.20, Metro 1.4.5 and SKIE 0.10.15; bridge
-Compose remains 1.9.0. Renovate ceilings are bounded at Metro <=1.4.5 and bridge
-Kotlin <=2.4.20 after the [reviewed adoption](docs/maintenance/bridge-adoption-review.md).
-Toolchain 0.13.0 supplies Kotlin 2.4.20 and Compose 1.12.1 independently. The
-[compatibility assessment](docs/maintenance/kotlin-compatibility.md) keeps this
-upgrade separate from proving an equivalent direct Kotlin Toolchain path.
-The existing scheduled compatibility workflow uses the repository-owned
-[isolated watch](docs/maintenance/compatibility-watch.md). It records evidence
-without changing production dependencies or granting adoption permission.
-Physical bridge deletion still requires its own review after default integration
-and applicable native, interop, onboarding and release gates. Preserved bridge
-pins remain rollback inputs; they are not the active iOS builder on the adopted source.
+Metro runtime/compiler and Kotlin coroutines updates are grouped across Kotlin
+Toolchain modules. Reviewed ceilings remain Metro <=1.4.5 and Kotlin <=2.4.20.
+Toolchain 0.13.0 supplies Kotlin 2.4.20 and Compose 1.12.1. Android builds can
+still delegate to generated Gradle/AGP projects; the hand-maintained iOS bridge
+is removed separately. The scheduled compatibility watch measures the current
+direct mobile baseline and reports bounded release discovery and missing
+capabilities without adoption permission. Historical bridge receipts and
+contract fixtures retain their original scope. See the
+[removal and recovery record](docs/maintenance/bridge-removal.md).
 
 Install the pinned discovery tools once, then record a local inventory:
 
@@ -198,17 +191,17 @@ Install the pinned discovery tools once, then record a local inventory:
 just deps > /tmp/mobi-inventory.json
 ```
 
-For manual compatibility assessment and isolated bridge rehearsal:
+For manual compatibility assessment and isolated direct rehearsal:
 
 ```bash
 ./scripts/dev/dependency_updates.sh assess-compatibility
 ./scripts/dev/dependency_updates.sh prepare-kotlin
-./scripts/dev/dependency_updates.sh rehearse-compatibility bridge-compile --store compatibility
+./scripts/dev/dependency_updates.sh rehearse-compatibility direct-mobile --store compatibility
 ```
 
 The [compatibility runner guide](docs/maintenance/compatibility-runner.md) separates
 compile/link, full mobile and direct-path evidence, with review and cleanup steps.
-The existing scheduled caller remains unchanged pending its dedicated integration.
+The scheduled caller uses the current direct baseline; historical watch scope is separate.
 
 The `just deps` command uses verified Node/Renovate pins for isolated native
 extraction. It records declarations, locked packages and missing resolved graphs;

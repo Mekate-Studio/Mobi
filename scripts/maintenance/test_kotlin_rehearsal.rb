@@ -125,7 +125,7 @@ module KotlinRehearsalTest
     end
     bridge = Maintenance::KotlinTargets::BRIDGE
     FileUtils.mkdir_p(File.dirname(File.join(root, bridge)))
-    FileUtils.cp(File.join(ROOT, bridge), File.join(root, bridge))
+    FileUtils.cp(File.join(ROOT, 'scripts/maintenance/fixtures/historical-bridge/targets.gradle.kts.template'), File.join(root, bridge))
     path = File.join(root, bridge)
     content = File.read(path)
     unless content.include?('iosX64()')

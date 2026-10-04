@@ -1,5 +1,10 @@
 # Approved direct iOS default integration
 
+Current follow-up: physical bridge removal was explicitly authorized after PR #35
+merged. The [separate removal record](bridge-removal.md) binds that authorization
+and new validation. Older deletion exclusions below retain their historical scope.
+
+
 On 2026-10-04 the maintainer approved applying the reviewed typed Kotlin/Swift
 boundary and direct iOS default for development, repository tests and unsigned
 builds. The approval covers the explicit API and preservation of current async

@@ -72,3 +72,12 @@ accepted. Bridge files remain rollback inputs; physical deletion is a later gate
 - [Default proposal review](../maintenance/direct-default-proposal-review.md)
 
 - [Applied integration](../maintenance/direct-default-integration.md)
+
+## Physical removal follow-up
+
+After PR #35 merged, the maintainer explicitly authorized a separate physical
+bridge-removal patch in the same development/test/unsigned scope. The
+[removal record](../maintenance/bridge-removal.md) carries its source binding,
+new execution evidence and full-revision recovery. Earlier retained-file and
+deletion exclusions above describe the original default integration decision.
+Signed delivery and the original risk expiry remain unchanged.

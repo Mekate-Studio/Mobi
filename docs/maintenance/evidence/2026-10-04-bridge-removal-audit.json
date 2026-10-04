@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "base_revision": "2cc75fd6df31a3470fc9248847b37e7c649ddd53",
+  "retained_consumer_revision": "349e07e0929033e8feb71269e9555420d3285e35",
+  "authorization": "Maintainer explicitly requested physical bridge removal in separate chat after merging PR 35",
+  "scope": [
+    "development",
+    "repository_tests",
+    "unsigned_builds"
+  ],
+  "credentialed_delivery": "held",
+  "risk_expiry": "2026-11-03T05:48:38Z",
+  "inputs": [
+    {
+      "path": "gradle-bridge/README.md",
+      "sha256": "2b453f8f48aa046146915e7d47142fd2a1b7c046c96f84db73057459cbf5834d",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle-bridge/build.gradle.kts",
+      "sha256": "a487463586a47cb2f87113dd4be00e1a97df08e51513f542212261741539f760",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle-bridge/gradle.properties",
+      "sha256": "4157e306352410ced68886268fa088797314a43ec46111aa4bf9b46d42377454",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle-bridge/gradle/wrapper/gradle-wrapper.jar",
+      "sha256": "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle-bridge/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "c94d41b634a5e0ff8a2f812023697b1337eebac18e9962610356a1793f72896d",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle-bridge/gradlew",
+      "sha256": "a5a5c199ba02189ae8c46a334223371a20599d9c298ef65e7540ede4a3f72d59",
+      "mode": "0o755"
+    },
+    {
+      "path": "gradle-bridge/gradlew.bat",
+      "sha256": "d539676c48b596afda64c963ec8f7ee56c7b3fe7e3b81d1dbe2d1a1e3dd9e9f8",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle-bridge/settings.gradle.kts",
+      "sha256": "5178e9f28068c20b61dad0b748e5af535009206f85f6f2280ef2432985c75e49",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle-bridge/shared-kit/build.gradle.kts",
+      "sha256": "b0f9a603667778c4db23fa0a2fdaa30b58c0b3036cdbc0041030ff6d854b3ba3",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "sha256": "6f3369d743c6801008b3c3e5cba323a7cbdcfa8edbecdefa30cc17b3cf34377f",
+      "mode": "0o644"
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.jar",
+      "sha256": "d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd",
+      "mode": "0o644"
+    }
+  ],
+  "state": "audit_in_progress"
+}

@@ -21,6 +21,15 @@ module CompatibilityTest
   def self.fixture
     Dir.mktmpdir('mobi-compatibility-contract-') do |root|
       Maintenance::Source.new(ROOT).copy_to(root)
+      # Historical declaration/transform contracts only; never used for native execution.
+      unless File.exist?(File.join(root, 'gradle/libs.versions.toml'))
+        FileUtils.mkdir_p(File.join(root, 'gradle'))
+        FileUtils.cp(File.join(ROOT, 'scripts/maintenance/fixtures/historical-bridge/catalog.toml.template'), File.join(root, 'gradle/libs.versions.toml'))
+        FileUtils.mkdir_p(File.join(root, 'gradle-bridge'))
+        File.write(File.join(root, 'gradle-bridge/gradlew'), "#!/bin/sh\nexit 97 # nonfunctional historical contract sentinel\n")
+        File.chmod(0o755, File.join(root, 'gradle-bridge/gradlew'))
+        %w[README.contract settings.contract properties.contract build.contract].each { |name| File.write(File.join(root, 'gradle-bridge', name), 'historical contract sentinel') }
+      end
       _, status = Open3.capture2e('/usr/bin/git', 'init', '-q', root)
       assert(status.success?)
       yield root
@@ -107,8 +116,9 @@ end
   end
 
   test('reviewed tuple creates isolated coupled edits without changing caller pins') do
-    source = Maintenance::Source.new(ROOT)
-    adapter = Maintenance::Compatibility.new(ROOT)
+    fixture do |root|
+    source = Maintenance::Source.new(root)
+    adapter = Maintenance::Compatibility.new(root)
     edits = adapter.edits(source, 'bridge-mobile')
     assert(adapter.edits(source, 'bridge-review') == edits)
     assert(edits.size == 6)
@@ -119,6 +129,7 @@ end
     end
     assert(edits.find { |e| e['path'].end_with?('.toml') }['content'].include?('compose = "1.9.0"'))
     source.verify!
+    end
   end
 
   test('baseline drift and unmatched Metro compiler/runtime refuse candidate edits') do
@@ -171,6 +182,19 @@ end
     assert(result['direct_paths'].values.all? { |p| p['status'] == 'missing' })
     assert(result['evidence_kind'] == 'reviewed_sources_and_declarations')
     assert(result['bridge_retirement'] == 'defer' && result['adoption_authorized'] == false)
+  end
+
+  test('current direct source validates Metro and refuses historical execution before native setup') do
+    source = Maintenance::Source.new(ROOT)
+    adapter = Maintenance::Compatibility.new(ROOT)
+    assert(!source.files.key?(Maintenance::Compatibility::CATALOG))
+    %w[direct-mobile direct-resolution direct-build-inputs].each { |profile| assert(adapter.edits(source, profile).empty?) }
+    %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip].each do |profile|
+      reject(/Historical bridge\/transform profile/) { adapter.edits(source, profile) }
+    end
+    result = adapter.assessment(source)
+    assert(result['candidate']['releases'].keys.sort == %w[kotlin metro])
+    assert(result['baseline_scope'] == 'adopted_direct_development_tests_unsigned')
   end
 
   test('direct copy keeps native tests, schemes and targets while removing its bridge') do
