@@ -78,6 +78,12 @@ The [slice-9 validation](ninth-slice-validation.md) records a real paired run,
 retained failures, cleanup and exact review-only patches. No new watch schedule
 or mutating adoption command is introduced.
 
+## Direct resolution review
+
+The manual [direct-resolution profile](direct-resolution-review.md) collects paired
+Toolchain graphs and fingerprints without native jobs. Its exact-input OSV lookup
+retains provider failures and findings separately from full graph coverage.
+
 ## Direct experiments
 
 The manual [direct-roundtrip profile](direct-roundtrip.md) extends the existing
@@ -88,7 +94,7 @@ independent device/release/onboarding/hosted gates.
 
 The SKIE prerequisite assessment requires a supported standalone pipeline for compiler configuration, Swift generation and framework processing. Its Gradle plugin has more responsibilities than providing a compiler coordinate. The Swift export assessment requires standalone Toolchain emission and Xcode embedding; Alpha Kotlin documentation with a Gradle task does not prove that integration. Both paths can stop at a source-bound `missing` prerequisite without claiming a reproduced compiler failure.
 
-The measured earlier direct experiment retained Metro 1.1.1. Direct profiles inherit the reviewed current baseline; a new run now uses Metro 1.4.5, which has no direct native measurement yet. Follow the [retirement path](bridge-retirement-path.md) instead of inheriting the older simulator pass.
+The measured earlier direct experiment retained Metro 1.1.1. Direct profiles inherit the reviewed current baseline; a new run now uses Metro 1.4.5, whose [bounded local round trip](direct-current-assessment.md) now passes. Complete direct graph/advisory and retirement gates remain open. Follow the [retirement path](bridge-retirement-path.md) instead of inheriting the older simulator pass.
 
 The typed-facade experiment adds an explicit visitor at the DI boundary and equivalent Swift case projections. Kotlin `when` expressions and typed visitor methods retain sealed-domain exhaustiveness; payloads remain their existing typed Kotlin values. No string tags or unchecked type casts are introduced. The existing Swift adapters retain their switches; one Kotlin enum switch uses the explicit projection. Explicit enum constant aliases retain native consumer spelling, and distinct visitor method names avoid Objective-C selector collisions. These are experiment templates, not production APIs. Any adoption requires architecture review and additional parity evidence.
 
@@ -105,3 +111,20 @@ Expected authored inputs remain guarded before and after each command. Unexpecte
 Device execution, archive/export, cancellation/lifecycle equivalence, generic export, cold direct CI and incremental direct builds remain separate gaps. The manual `bridge-review` profile adds complete measured bridge target graphs; the slice-9 packet supplies dated interval and mapped Maven advisory review with explicit coverage limits. Older profiles do not acquire that evidence retroactively. Bridge retirement remains deferred and adoption authorization remains false. Local framework or simulator success cannot remove these gates.
 
 Slice 8 consolidates the existing compatibility workflow around this evaluator’s reviewed compile/link profile. See the [watch guide](compatibility-watch.md) for bounded release discovery, semantic comparison, history and recovery. A watch observation never authorizes adoption.
+
+## Selected compiler and delegated Android inputs
+
+The manual [direct-build-inputs profile](direct-build-input-proof.md) adds selected
+compiler invocation/path/fingerprint proof and required delegated settings,
+debug-main and compiler/build-tool graphs. It runs Android jobs and ARM KLIB
+compilations, creates no simulator and does not repeat Swift app/release checks.
+Its [current assessment](direct-build-input-assessment.md) passes bounded
+execution, but 17 named build-tool advisory matches require review. Uncollected
+configurations, plugin-coordinate attribution and independent retirement gates
+remain explicit. No workflow schedule or production builder is changed.
+
+After a passing `direct-build-inputs` pair, the manual
+[compiler attribution command](compiler-plugin-attribution.md) uses the same
+owned executor and an independent resolver to join selected plugin fingerprints.
+Its `plugin-report` and `review-advisories` commands retain the original compiler
+source binding separately from the fresh resolver run.

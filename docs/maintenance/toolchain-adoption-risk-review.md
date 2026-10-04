@@ -2,7 +2,7 @@
 
 Date: 2026-10-04. Maintainer direction: **proceed toward Toolchain adoption, then prioritize independent iOS bridge retirement**. The instruction acknowledges persistent vulnerabilities; it does not establish that fixes are impossible. Fixed library versions exist, while the inspected Toolchain releases do not select a complete supported remediation cohort.
 
-Following explicit maintainer approval, Toolchain **0.13.0** and Android compile SDK **37** are applied locally. The adopted retained-bridge path passed Android/iOS tests and debug builds. The independent bridge-unavailable round trip also passed, including incremental propagation and exact bridge restoration. The scoped manual risk review returns `accepted_risk_for_scoped_manual_use`; this remains uncommitted local integration, without hosted or signed-delivery proof.
+Following explicit maintainer approval, Toolchain **0.13.0** and Android compile SDK **37** are applied locally. The adopted retained-bridge path passed Android/iOS tests and debug builds. The independent bridge-unavailable round trip also passed, including incremental propagation and exact bridge restoration. The scoped manual risk review returns `accepted_risk_for_scoped_manual_use`; the local adoption is committed as `171e893`, after the normal retained-bridge native gate passed. Hosted and signed-delivery proof remain separate.
 
 The approved residual-risk window ends **2026-11-03T05:48:38Z**. The one-release early-age exception preserves the real seven-day threshold of **2026-10-08T06:36:56Z**. Exact scope, source bindings, controls and approval are in [maintenance-toolchain-risk-acceptance.json](../../maintenance-toolchain-risk-acceptance.json). All seventeen findings remain visible; no remediation is claimed. The generic security policy is unchanged. This follow-up supersedes the preferred direction in the earlier [security packet](toolchain-security-decision.md), whose evidence and limits remain intact.
 
@@ -51,7 +51,7 @@ The [OpenSpec proposal](../../openspec/changes/toolchain-adoption-risk-review/pr
 
 After explicitly approved adoption is applied and validated, prioritize fresh direct-roundtrip and build-input collection against the adopted tuple with the hand-maintained iOS bridge unavailable. Preserve Xcode app/test targets, adapters, plugin/API behavior, resources, relevant runtime/device coverage, public onboarding, hosted CI and release packaging. Initial SwiftPM support is unexecuted here. Android Toolchain builds may still use delegated Gradle/AGP, so bridge retirement must not be presented as remediation of these build-tool findings without new selected-input evidence.
 
-A reversible direct-default switch precedes a separately reviewed physical deletion. Commit, push, signed delivery and publishing remain separate authorizations. The maintenance core and dormant Elixir/Phoenix adapters stay independent, with no private infrastructure, mandatory AI service or Go application prerequisite.
+A reversible direct-default switch precedes a separately reviewed physical deletion. The maintainer subsequently authorized the local commit series and a pull request for hosted validation. Signed delivery and bridge-transition approval remain separate. The maintenance core and dormant Elixir/Phoenix adapters stay independent, with no private infrastructure, mandatory AI service or Go application prerequisite.
 
 ## Approved local integration follow-up
 
@@ -87,3 +87,10 @@ gates remain unmeasured and are not cleared by this local exception. Current
 production iOS consumption remains the Gradle bridge; the direct candidate is
 an isolated architecture experiment. The [retirement path](bridge-retirement-path.md)
 records the remaining independent capability gates.
+
+The subsequent [fresh direct-input assessment](direct-adopted-toolchain-assessment.md)
+also passed selected ARM library/compiler/plugin checks and refreshed 549 advisory
+queries against the bridge-unavailable tuple. It retains the same seventeen
+findings and the unmeasured dependency/native/operational surfaces.
+
+The [commit-series integration record](toolchain-adoption-integration.md) records the exact local commits and the hosted validation follow-up. Historical receipts retain their original source snapshots.

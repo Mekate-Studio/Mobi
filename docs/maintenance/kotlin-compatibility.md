@@ -315,3 +315,67 @@ pins. The rollback is to restore the last proven bridge configuration and
 revalidate its jobs; after physical removal restore those files from the
 reviewed prior revision. Do not reuse the old migration guide's suggestion to
 delete the bridge as a general rollback recipe.
+
+## Current direct-tuple follow-up on 2026-10-02
+
+The [Metro 1.4.5 assessment](direct-current-assessment.md) passed the baseline, initial/incremental direct and restored-bridge stages. Only bounded local capabilities close. Direct graph/advisory, API/lifecycle/generic, device/release, onboarding/hosted and transition approval remain open. Historical tables/receipts retain their earlier tuples.
+
+## Direct resolution follow-up on 2026-10-02
+
+The [current direct resolution assessment](direct-resolution-assessment.md)
+records 92 roots in each phase across seven modules and all declared Android/ARM
+iOS main/test compile/runtime scopes. Its 305 exact candidate Maven queries had
+no OSV matches. Compiler/plugin selection, delegated Android graphs and artifact
+attribution remain missing; overall advisory review and bridge retirement stay
+deferred. Native cells were not attempted in this graph-only profile.
+
+## Selected build-input follow-up on 2026-10-03
+
+The [build-input assessment](direct-build-input-assessment.md) passes paired
+Android test/debug and ARM KLIB jobs on the current direct tuple. Each phase
+records 37 compiler invocations, two selected plugin artifact hashes, and 273
+selected delegated Maven pairs across required Android scopes. Gradle 9.5.0,
+AGP 9.3.1 and Kotlin Gradle plugin 2.2.10 are measured from delegated producers.
+
+The combined 576-query review finds 17 advisory matches across 10 build-tool
+dependencies, with identical baseline/candidate query sets. Package selection
+is proven; vulnerable-function exposure remains under review. Compiler-plugin
+coordinate attribution and uncollected delegated configurations remain gaps.
+Historical graph-only and native receipts retain their original scope; current
+advisory triage and bridge retirement remain deferred.
+
+## Toolchain 0.13.0 SwiftPM observation
+
+| Capability | Evidence | Mobi status |
+| --- | --- | --- |
+| Objective-C-visible SwiftPM package APIs imported into Apple Kotlin modules | Released versioned dependency guide | Documented, unexecuted |
+| Transitive SwiftPM dependency metadata for published Kotlin libraries | Released versioned dependency guide | Documented, unexecuted; local paths restrict publication |
+| Kotlin framework distribution/export into Mobi's Swift shell | No equivalent Mobi execution from the announcement | Open |
+| Equivalent Xcode app/test targets, state adapters, native tests and release packaging through a bridge-free SwiftPM path | Independent retirement gates | Open at 0.13.0 |
+
+See [the source-bound scope assessment](toolchain-swiftpm-assessment.md). The retained-bridge upstream remediation rehearsal is independent of SwiftPM and bridge retirement.
+
+## Toolchain 0.13.0 upstream rehearsal on 2026-10-03
+
+| Track | Verified result | Remaining decision gates |
+| --- | --- | --- |
+| Retained-bridge build inputs | Kotlin 2.4.20, Compose 1.12.1, candidate compile SDK 37; 38 Android tests, debug APK and five ARM device/simulator KLIBs pass | Release age, retained-bridge native app/test execution, minimum-OS runtime and clean-clone/CI SDK provisioning |
+| Advisory remediation | 183 bundled files have unique baseline artifact byte references; fresh expanded lookup retains 16 baseline finding IDs | 32 files unassigned; absent KAPT finding is not a proven fix; attribution and risk review remain open |
+| SwiftPM and bridge retirement | SwiftPM scope recorded as documented, unexecuted | Independent import, native-consumer and retirement capability evidence |
+
+The [complete assessment](upstream-toolchain-assessment.md) preserves both failed attempts, authorized Xcode host setup, passing final execution and cleanup. Production remains Toolchain 0.12.2; this experimental rehearsal does not authorize adoption.
+
+The subsequent [bundled-file assessment](bundled-input-assessment.md) accounts for all 215 measured files: 183 baseline byte references, nine independent Maven matches and 23 registered source-module correspondences. Its fresh 547-query lookup restores KAPT and retains all 17 baseline IDs. Top-level file identity is accounted for; security review, source reproducibility, shaded-code and adoption/retirement gates remain open.
+
+## Retained-bridge adoption gates on 2026-10-03
+
+| Capability | Baseline 0.12.2 / candidate 0.13.0 | Remaining scope |
+| --- | --- | --- |
+| Original native app/test path | Both pass 12 Swift cases and Debug Xcode builds with macro validation enabled | Exact iOS 26.0 and physical-device execution |
+| Android minimum-runtime smoke | Both install/launch and show Mobi on API 36; minimum/target 36 retained | Full feature, permission-flow and signed-release behavior |
+| Release packaging | Both produce release APK/AAB, optimized ARM simulator app and unsigned ARM device archive | Signing/export/delivery |
+| SDK 37 provisioning | Candidate provisions missing private packages using copied host licenses | Empty-host onboarding and cold hosted execution |
+| Selected compiler plugins | Fresh per-version resolver joins all 37 retained compiler invocations per phase | Shaded code, Native bundle and unmeasured test/compiler inputs |
+| Advisory/age decision | Expanded 549-query lookup still reports 17 IDs; candidate age-blocked until 2026-10-08T06:36:56Z | Owner/condition review and final age/risk decision |
+
+See the [adoption assessment](toolchain-adoption-assessment.md) for exact run/source identities, preserved failures and cleanup. These retained-bridge passes supply no bridge-unavailable direct-path evidence; production remains unchanged.
