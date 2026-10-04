@@ -395,7 +395,7 @@
     },
     {
       "path": "docs/reference/mobile-architecture.md",
-      "sha256": "67ec0c4cb492be10c11e9d2d7a5e84c488692829868fa3e94c9fd5969ff1b20d",
+      "sha256": "11a632bcb1f35f3be64a12214ae18348398c55b36736c9b2a3b7079841cdbb6d",
       "executable": false
     },
     {
@@ -1149,7 +1149,7 @@
       "executable": false
     }
   ],
-  "source_binding_sha256": "bc2306605d4a33f4276205ff3cb330c2356b08e290f84bf00748082802600eef",
+  "source_binding_sha256": "11b30cda10a56611e3ab38f87c1fcf54a12e14429cac6aa66587336c4fd90607",
   "applied_patch_sha256": "d9596aadf1bc8e580f13d2e4fe8de7b201bd1bbe0b63fa6d387cc23f20759fc5",
   "producers": {
     "store": "upstream-remediation",
@@ -1199,7 +1199,7 @@
       "unsigned_ios_builds"
     ],
     "credentialed_release_delivery": "held",
-    "source_binding_sha256": "bc2306605d4a33f4276205ff3cb330c2356b08e290f84bf00748082802600eef",
+    "source_binding_sha256": "11b30cda10a56611e3ab38f87c1fcf54a12e14429cac6aa66587336c4fd90607",
     "historical_source_files": [
       {
         "path": ".github/workflows/mobile-ci.yml",
@@ -1439,12 +1439,13 @@
     ],
     "historical_source_binding_sha256": "a140640cf0a01e4c42790ad03ae99cb3ba19643ccafe1c82febfcac5970af73a",
     "risk_expiry_unchanged": "2026-11-03T05:48:38Z",
-    "compatibility": "local_scoped_evidence_passed_final_hook_pending",
+    "compatibility": "passed_for_current_operational_source",
     "historical_producers_unchanged": true,
     "local_receipt": "docs/maintenance/evidence/2026-10-04-bridge-removal-local.json",
     "mutable_execution_records_excluded_from_source_binding": [
       "docs/maintenance/evidence/",
       "docs/maintenance/bridge-removal-validation.md"
-    ]
+    ],
+    "operational_source_sha256": "0bfced8893b3caaa209921ba015ecf3be644daa459776c4a4688c5431fb0270f"
   }
 }

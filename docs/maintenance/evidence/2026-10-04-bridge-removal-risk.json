@@ -319,6 +319,6 @@
   "bridge_retirement": "defer",
   "query_count": 549,
   "provider_scope": "candidate_named_resolved_maven_packages_only",
-  "decision_sha256": "ecd519152ef7deeb410e3532c966af6a7cd9dc353973adb88844d7c5dbbffc62",
+  "decision_sha256": "b9d1c54e8f688dd071d916216952b618c9ff03bb88479fa05729aa0c3b51d53e",
   "measured_input_source": "retained_verified_producers_not_new_integrated_selection"
 }
