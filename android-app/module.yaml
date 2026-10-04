@@ -26,7 +26,7 @@ settings:
     namespace: studio.mekate.mobi
     applicationId: studio.mekate.mobi
     minSdk: 36
-    compileSdk: 36
+    compileSdk: 37
     targetSdk: 36
     signing:
       enabled: true

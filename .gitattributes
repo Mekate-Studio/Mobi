@@ -1,0 +1,2 @@
+# Preserve byte-bound historical patch receipts, including vendor CRLF preimages.
+docs/maintenance/evidence/*.patch -text -whitespace

@@ -1,10 +1,8 @@
 {
   "schema": 1,
-  "reviewed_on": "2026-10-03",
-  "baseline": "0.12.2",
-  "candidates": [
-    "0.13.0"
-  ],
+  "reviewed_on": "2026-10-04",
+  "baseline": "0.13.0",
+  "candidates": [],
   "versions": {
     "0.11.1": {
       "release_url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.11.1",

@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "scope": "release_owner_declarations_and_existing_advisory_records_only",
+  "adoption_authorized": false,
+  "policy_exception_granted": false,
+  "full_selected_input_query_refresh": false,
+  "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+  "historical_advisory_source_sha256": "40893d8814122dd0a4a9e5750f8d71548235fadc8c4b276ace97c027cb579d90",
+  "packets": [
+    {
+      "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases?per_page=100",
+      "retrieved_at": "2026-10-04T05:18:00.761026+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/libs.versions.toml",
+      "retrieved_at": "2026-10-04T05:18:00.760976+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/maven-metadata.xml",
+      "retrieved_at": "2026-10-04T05:18:00.760758+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.3.3/builder-9.3.3.pom",
+      "retrieved_at": "2026-10-04T05:18:00.761057+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.4.1/builder-9.4.1.pom",
+      "retrieved_at": "2026-10-04T05:18:00.763100+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.3.3/gradle-9.3.3.pom",
+      "retrieved_at": "2026-10-04T05:18:00.765122+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.4.1/gradle-9.4.1.pom",
+      "retrieved_at": "2026-10-04T05:18:00.774119+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-2363-cqg2-863c",
+      "retrieved_at": "2026-10-04T05:18:00.776072+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-3677-xxcr-wjqv",
+      "retrieved_at": "2026-10-04T05:18:00.772398+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-574f-3g2m-x479",
+      "retrieved_at": "2026-10-04T05:18:00.773807+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-7hhh-6rmp-j9qf",
+      "retrieved_at": "2026-10-04T05:18:00.775810+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-7r82-7xv7-xcpj",
+      "retrieved_at": "2026-10-04T05:18:00.777149+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-9pwp-9qqc-pr26",
+      "retrieved_at": "2026-10-04T05:18:00.782497+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-c3fc-8qff-9hwx",
+      "retrieved_at": "2026-10-04T05:18:00.787456+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-cmp6-m4wj-q63q",
+      "retrieved_at": "2026-10-04T05:18:00.786422+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-j288-q9x7-2f5v",
+      "retrieved_at": "2026-10-04T05:18:00.792026+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-p6pp-m3f8-5c89",
+      "retrieved_at": "2026-10-04T05:18:00.789203+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-qp49-qgx5-5m26",
+      "retrieved_at": "2026-10-04T05:18:00.789082+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-r7wm-3cxj-wff9",
+      "retrieved_at": "2026-10-04T05:18:00.796221+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-r937-wjx7-w2jp",
+      "retrieved_at": "2026-10-04T05:18:00.797433+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-rcgg-9c38-7xpx",
+      "retrieved_at": "2026-10-04T05:18:00.799540+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-vqf4-7m7x-wgfc",
+      "retrieved_at": "2026-10-04T05:18:00.799868+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-wg6q-6289-32hp",
+      "retrieved_at": "2026-10-04T05:18:00.800649+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-xx22-p4ch-683r",
+      "retrieved_at": "2026-10-04T05:18:00.800951+00:00",
+      "status": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "body": ""
+    }
+  ]
+}

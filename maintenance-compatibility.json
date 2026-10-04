@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "reviewed_at": "2026-10-03T11:10:06.990536+00:00",
-  "toolchain": "0.12.2",
+  "toolchain": "0.13.0",
   "baseline": {
     "kotlin": "2.4.20",
     "metro": "1.4.5",

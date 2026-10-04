@@ -1,0 +1,6797 @@
+{
+  "schema": 1,
+  "assessment": "selected_compiler_and_delegated_android_build_inputs",
+  "date": "2026-10-03",
+  "run_id": "9c17d97f1070e64cbe7dad16149610da",
+  "store": "runs-direct-build-inputs",
+  "binding": {
+    "source_sha256": "d53589373d8177e04b93f91899162e4e146b721076388884aa5b2b38331e07ff",
+    "capture_mode": "working_snapshot",
+    "git": {
+      "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+      "index_sha256": "4bde9550c9915bad7f911c76491599d7f452e5e2acd3f3e705f42e6dd9890dd5"
+    },
+    "adapter": "compatibility-direct-build-inputs",
+    "adapter_schema": 1,
+    "plan_sha256": "290d354228e1983ee347cc952e062adea460b2cd293113922203b8e23da17118",
+    "patch_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "tools_sha256": "e9411c57cf2fa5013aa853306226cd54ab2dfd461b09534d4a3baea0ad9c581e",
+    "execution_files": [
+      {
+        "name": "executor.rb",
+        "sha256": "6e7b988602caa2b1a27b227f98ea0fbff84dfe31f40b7f47a70d1bb24d8edbcd"
+      },
+      {
+        "name": "worker.rb",
+        "sha256": "790b8720eb98b2dee0d46078e4154953e51345a558be17000aeb324df94fb3a2"
+      },
+      {
+        "name": "core.rb",
+        "sha256": "3ff8ba920a07973e28e62272e952314868a6aae6225cc99659f8707b2064c028"
+      },
+      {
+        "name": "run_store.rb",
+        "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc"
+      },
+      {
+        "name": "process_group.rb",
+        "sha256": "378133febaf2bd9432119ada0947be8119dcea7b9e9b552c2358eadad8b51c90"
+      },
+      {
+        "name": "resource_handlers.rb",
+        "sha256": "8d30b88bd1a0c1e8f25972dff989dd0f4bdab8e37c6d7fe363b7a3ae55a21e93"
+      },
+      {
+        "name": "ruby",
+        "sha256": "80e70b56c0332ab44deffc20c2b816f85bb1239b7e8ce6a12942373deadf072e"
+      },
+      {
+        "name": "ps",
+        "sha256": "a06fe087161557f1f8c030672eaedcd90bc6a8e92b8f2d44e07cffedc3349205"
+      },
+      {
+        "name": "git",
+        "sha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2"
+      },
+      {
+        "name": "compatibility.rb",
+        "sha256": "f81577d30909ca8e92ba491544a24cc98d439ba99791a3b3143dd1864f2be772"
+      },
+      {
+        "name": "1d80988321fe8c1523f9a085165719b07f876c6175625ca5e5246e6c1b4b1a3c.json",
+        "sha256": "6f560b3880663d10d91b6151fd783d0892ec8de6eeeee3801189da9375a2178b"
+      },
+      {
+        "name": "maintenance-compatibility.json",
+        "sha256": "565dfc2db290745041c299c3f5568cbc55ad43c3eb12bc996d3757606fc30c81"
+      },
+      {
+        "name": "maintenance-kotlin-toolchains.json",
+        "sha256": "0ff446be520eecdf815bcbb280b59f484f9e1403eb82f71c1ea0ad55935f1da3"
+      },
+      {
+        "name": "java",
+        "sha256": "4ddcf3ee5d518bd98d55f00da6747d20dddf2c4d7e555fddb9d26db6362424ce"
+      },
+      {
+        "name": "advisory_review.rb",
+        "sha256": "7c71d36327dc3954b7077c227366407feaa59702417c4c92284a3eb4654718a0"
+      },
+      {
+        "name": "build_inputs.rb",
+        "sha256": "2c801dfdeebc91bcb5e99a090bddb9e949547e922803d33953fef77be6fa6976"
+      },
+      {
+        "name": "compatibility_report.rb",
+        "sha256": "a5209c43aed7b7cdba5e0e4d3d2d0b5ab46d34b79168526957598c120a867318"
+      },
+      {
+        "name": "direct_resolution.rb",
+        "sha256": "a6bb27fd5da0e17657f19e395dbb9b4e8b49338d7588dcfaeb546fd68dab0b60"
+      },
+      {
+        "name": "kotlin_evidence.rb",
+        "sha256": "29f9b7aab47650f276f2179fa11b265348e6b4fd8e67c15dcc60584e5bfedc56"
+      },
+      {
+        "name": "kotlin_wrappers.rb",
+        "sha256": "fce20dc01ef44441cccdb53c75c94b7f70d4542f9725c006d31b7119d9faa666"
+      },
+      {
+        "name": "maintenance.rb",
+        "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3"
+      },
+      {
+        "name": "policy.rb",
+        "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965"
+      },
+      {
+        "name": "recovery.rb",
+        "sha256": "bf81138efc57878ae98759bf25252aa6df97847786f7b84bd8999a254b520ae9"
+      },
+      {
+        "name": "roundtrip_evidence.rb",
+        "sha256": "b00f3416206b3d2ba9ddd431a9b14eb3bb5fbc2ae0430d757084ff01c7c028f4"
+      },
+      {
+        "name": "support_policy.rb",
+        "sha256": "9a64240fba1af2f6a0724e8b8f5babfad5aa80fcf1b9b23e60a1467a52744c3e"
+      },
+      {
+        "name": "tools.rb",
+        "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8"
+      },
+      {
+        "name": "upgrade_graph.rb",
+        "sha256": "98f81c579f866858bfad46df5edc3e0db63882bbc1689df7778c2fb73ed91660"
+      },
+      {
+        "name": "watch.rb",
+        "sha256": "4614f11415bd8005ac67538b5bc258d7a82b84ea3280ab54026727a1062e1d85"
+      },
+      {
+        "name": "watch_history.rb",
+        "sha256": "26e07b4ef76698e486e9e4eb4ea0b8d460ce7812b5c6ce71046d1109140fc005"
+      },
+      {
+        "name": "bridge_resolution.gradle",
+        "sha256": "681990e98f479bd0f27cd61ce932142136b93a5b6c241cf0659f1efe3c78c42f"
+      },
+      {
+        "name": "delegated_resolution.gradle",
+        "sha256": "5e45fd545613cf558d17d8fda4bb92baef68bfc1ad1f61660cc5954ef859f692"
+      },
+      {
+        "name": "direct_roundtrip.rb",
+        "sha256": "6ccd67c443fea9dabfdb0fed227f5e3bfee3e283cc404bc302e80b1f8b1ad403"
+      },
+      {
+        "name": "elixir.rb",
+        "sha256": "1adbc0c83b3ccc95c7cf4e5bb0d91e92492c5f670eebcb45c5331b0f5ba84d56"
+      },
+      {
+        "name": "interop_experiment.rb",
+        "sha256": "d5cff4d4d13be4f6a8a5381de5e2a3e455e8fcf10f71e98fa23f533f679af55c"
+      },
+      {
+        "name": "kotlin.rb",
+        "sha256": "087ec8c26eb601cc39baf973b6dbbe24bae9340cd918d509c68d823f82fec1cd"
+      },
+      {
+        "name": "kotlin_rehearsal.rb",
+        "sha256": "57c92f98ba544006896b3fcc7d4118dae711be3cdc075a976e963ecb14e1f507"
+      },
+      {
+        "name": "kotlin_resources.rb",
+        "sha256": "aff6499274071f49a0d8f58a15dd3af678f09f1478e53230854c0b030a748f3b"
+      },
+      {
+        "name": "kotlin_targets.rb",
+        "sha256": "9c9fb2fcefae650787d8e81689c43a9c2a17d54dd1483e3e42ec336b9063857f"
+      },
+      {
+        "name": "kotlin_watch.rb",
+        "sha256": "490a63099c143e7c06a802eff6901889a36ebcdbcd444f381ec6c87672250f23"
+      },
+      {
+        "name": "mobile_support.rb",
+        "sha256": "d14482749ddec84c4cb67da5617811497fadb62c1599b7c0a37e008599cc8947"
+      },
+      {
+        "name": "MobiInteropProjection.kt.template",
+        "sha256": "e83d0f5d69f95479203058546d023b34d04cf9f37d103c2fda1b98de38c9ef64"
+      },
+      {
+        "name": "MobiInteropProjection.swift.template",
+        "sha256": "aa1a45dbdf6f24b4c0b77f01572b11b707ec9896c94d42118fd57e924dc321a8"
+      },
+      {
+        "name": "compatibility_check.rb",
+        "sha256": "b0887575baee01dcbdc6cbc8f9e8624208ef8cdaa023ecb2513f038967c66f0d"
+      },
+      {
+        "name": "kotlin_check.rb",
+        "sha256": "4fc495e159a63c77e9429b8ec1203751a0385818af4d5e9c8e6ad29b65923764"
+      },
+      {
+        "name": "maintenance-execution-policy.json",
+        "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b"
+      },
+      {
+        "name": "execution_cli.rb",
+        "sha256": "8662450460958bf9ecce969f728ccf1d18063ec737723caf3ef5091de592f3db"
+      },
+      {
+        "name": "dependencies.rb",
+        "sha256": "bbbdfd17a4b6e8caf5a3b8a526988a38142dac1dbb0d8a76a6da59d3651e9c9b"
+      }
+    ],
+    "runtime": {
+      "ruby": "4.0.6",
+      "platform": "arm64-darwin27"
+    },
+    "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+  },
+  "started_at": "2026-10-03T05:18:03Z",
+  "ended_at": "2026-10-03T05:32:31Z",
+  "state": "checks_passed",
+  "result_sha256": "1fd43915d3987dc723c82cf82cf64f15b668ced56eea4d4a22e4b09e71cb58b6",
+  "verified_report_sha256": "6f228b79604cfda51c566c5ea265537f605cc260c135073d38f6406d308c277d",
+  "tuple": {
+    "toolchain": "0.12.2",
+    "effective_kotlin": "2.4.10",
+    "metro": "1.4.5",
+    "retained_bridge_kotlin": "2.4.20",
+    "retained_bridge_skie": "0.10.15",
+    "production_ios_builder": "gradle",
+    "targets": [
+      "android",
+      "iosArm64",
+      "iosSimulatorArm64"
+    ]
+  },
+  "phases": {
+    "baseline": {
+      "outcome": "passed",
+      "evidence_sha256": "f474aa464db89c0f660c9c48fa3c4c14cb67909a0f43d2db83c049912e9c7bb6",
+      "bridge_unavailable": false,
+      "source_preservation": "verified",
+      "cells": {
+        "effective_toolchain": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "version",
+            "settings"
+          ]
+        },
+        "toolchain_resolution": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "dependencies"
+          ]
+        },
+        "android-test": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "android-test"
+          ]
+        },
+        "android-build-debug": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "android-build-debug"
+          ]
+        },
+        "native_klib_iosarm64": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "klib-iosarm64"
+          ]
+        },
+        "native_klib_iossimulatorarm64": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "klib-iossimulatorarm64"
+          ]
+        },
+        "build_input_evidence": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": []
+        },
+        "native_library_compile": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "framework_link": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "ios-test": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "ios-build-debug": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        }
+      },
+      "android_successful_tests": 38,
+      "graph_roots": 92,
+      "compiler_invocations": [
+        {
+          "module": "shared-core",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "98bcf40a7d5018de",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "772b9e4f62f2443761a9f3b0d67ae1585f18c21a46c815c906b7fefce4b3aa2f"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "99c0e90cfbd2521c",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "caa5b288c26e02e580ace60bad771de06331c6d2ef3f77fbb2298481fca2f1e6"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "8457e3b87cd19a8f",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "2cecd61ab51fdf45685c25840ab1cc4ee092f737722ab70fed78820bc81b32f2"
+        },
+        {
+          "module": "shared-di",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "3578be06e75de05d",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "b8619f79c5fb9e0fba95043192bd86f617b6763b4c95e063b2a2a4763e993088"
+        },
+        {
+          "module": "shared-ui-home",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "cf1144e3db10b47e",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "4c8cefbb2ba29953f30b3b91092d572b06be565916fc0dc8fc27032eef241999"
+        },
+        {
+          "module": "android-app",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "f5817e1c66312547",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar",
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "883328464b4941ee99d8e40043d848130716a4f1687af26c712b67b196266da9"
+        },
+        {
+          "module": "android-app",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "89bd25a744997d4a",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar",
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "77e9af6462ea9fcafeccc86c200a851a84b01bce67d12a15905bb8dd7706666e"
+        },
+        {
+          "module": "shared-core",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "8112383a1ecd538b",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "7ffe992f9d958cc34b893a65d02fffa1a83f1d2124dff9f39543a6d3818aae1f"
+        },
+        {
+          "module": "shared-di",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "0aab6ea575d42466",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "19050d52fa95768a303e530be9a28b43f36f3a430e50aaa978518e20d9e31d9f"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "a19d969f8c306269",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "0c0183237844619d193c6b54db447fc3ed27eaa5d6477cc9123b89b29c71b56f"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "16b3e3b1ba04c4c3",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "5cb911be743479a6465a33b8d6018c96c4c73537fef1f54ccd8858b6b358b3e4"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "eddbec7d6f285844",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "4cabdf862f34afac7c8e95efebf150df62c4b663f49df6a198e5ddad9bc03ab0"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "6be5bf9111e3adfe",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "e997b8478794ee1c041f833959f24fba10b0c5ab565a4109b8ba364c8099f043"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "1280912dbe57051b",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "4557e08c9707a7413cf2d06ec6dc641841a815ebee6a036f9f44a65772dbe22e"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "6500abdc567208a2",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "3182526d789a27de7ce633da621abeeb8a96d7a4e1cd4c19c80e40a8db944970"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "48986dbaa38b98c7",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "3998eee3ceca36342b7068baaac82442fbb240d6b27dad56f580fbf1e97ecb9f"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "97b0857ffc8b1b12",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "ef83bafbe75a65fe51178b50d4571414529d31e5ed985d254fb0dddd70bb051d"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "903333132218f6b7",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "5d17463d4417abdbc35e07b5d58abc341b098cb2377a8926c35789c5e2ece56a"
+        },
+        {
+          "module": "shared-ui-home",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "910d683f6aae9665",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "963db05c8a54286fd39f2e71fc2edfc3cf6b2fd5e8f0111e9e1663aacba33a5c"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "46912816a3ad1752",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "a4d730691f64f319304ba274fb8ea0ed78d20cec18eab3d69ace653e40e4cf7e"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "e806b2ceea2e6003",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "1bf78af6aad12ffccb271bbade9cb76a27396f3495d3b6c6729128da01ed2b73"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "3875fc1b27f28d1f",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "d02de172e78ed563b1ce8345680ee3d59f37b3a1cef79538fdb55eb81a01e917"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "4330acd329ef4c1a",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "3df58e7da0bbf420107112d498f0d09c6eb5812e89b24191158310d2b91ee50e"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "c0f0062ba5dc80e2",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "73f85bc6d67a5a0a977eb03fd92d7f283771a3aca15bfe058c36d5fad507ac42"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "97c0ec662261afba",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "3a6bdb039e18fb6643a682d188c41d0db79c8b888e3b22f6f8df081376da4d34"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "2fd7c9c346ca51b8",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "c46a117de2548aaaa4a2de696b7ee0efff3776223af22f3083de990484f8a776"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "4d2b18c8e439bc92",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "25bffef489d3d350053e65b40f690b46c5bf667af0e1b7664aa27ebf7d1cf1a5"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "7e7e3a40538dd590",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "ebb694dede10dfbed9c768eb6b1ccfc1f132ddc7c09a6ff317ed1c614558cc09"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "bdd12bd5847ada53",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "909e40be4c5825df1dcfa5b615a30368db8d156fbcf53fcbe5a91a903e430228"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "de5f363bb5253a18",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "635d0b7cd2d96707e40369229f6c985fc224e30f559ab2c0e8d473d6a1b053e1"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "40b8f0ef51d4201d",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "206253076c3adca3ef58fc8ead7be74706cb35c7f8c32a784d2852abc09069c4"
+        },
+        {
+          "module": "shared-ui-home",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "f905744283c71748",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "5cd098128fe493bfaeceffc24fde5426c63d8e63f5910d42afc97fba23bb2b38"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "d219377e6f27bcb5",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "7e01becd4328aeb31f8970adaa58745b030d65015aa2933bc62eddc89dbb635b"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "c0ecd030b242c82a",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "5b6de99757062bcd797c461e16b208ea1afb6c0cf2754b5cb051ae6c1d883951"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "02cdef14e62e9561",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "ab6a6e314d4db4bb089cf26fab7e76f43fd49b85428d6d279cea5aa4ed4674d6"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "59c680bc718f1b53",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "83c88555da53c55b6341a26cf53ddf64592c989cdb40f99c9fc7b180f257dda2"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "db34fd9a47c8ac9c",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "7f042d9567fab573e3df7559f595af20fdd59b9b6c7da0728167264d4d48daee"
+        }
+      ],
+      "selected_plugin_artifacts": {
+        "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar": {
+          "sha256": "e94246f0f3af1f7e8b34d4238f5c95187abf69cb940bf96d239d4a731ebb824e",
+          "bytes": 5966028
+        },
+        "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar": {
+          "sha256": "07edff96c6196c5354caa275b748616794cc8883af02e380d091d221f02bdc80",
+          "bytes": 949238
+        }
+      },
+      "delegated_builds": 2,
+      "delegated_configuration_entries": 1828,
+      "delegated_configuration_states": {
+        "resolved": 136,
+        "not_collected": 612,
+        "not_resolvable": 1080
+      },
+      "delegated_gradle_versions": [
+        "9.5.0"
+      ],
+      "delegated_query_count": 273,
+      "build_input_summary_sha256": "5a7ece695055596a451d4d3b06a64602f7730e0364b2883392c320a55053158e",
+      "producer_sha256": {
+        "traces": "78e2199c4279d94b550634b062a4fed243e996af0254924ad325c301f596733d",
+        "artifacts": "e34397565b2fe31a87d07fd21c44591016f62292e1fe85780a5b7c0dc78f6bd9",
+        "delegated": "b5fced4109e0da469a4273deaf4bb628568e5f88f8670f7ecb02d4eb004fa43d"
+      },
+      "missing_capabilities": [
+        "compiler_plugin_coordinate_attribution",
+        "native_test_compiler_inputs",
+        "native_bundle_internals",
+        "shaded_code",
+        "delegated_unrehearsed_configurations"
+      ]
+    },
+    "candidate": {
+      "outcome": "passed",
+      "evidence_sha256": "7831936f46c5164661e37368d24998db8a88ec7620082e06595056a45687cab2",
+      "bridge_unavailable": true,
+      "source_preservation": "verified",
+      "cells": {
+        "effective_toolchain": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "version",
+            "settings"
+          ]
+        },
+        "toolchain_resolution": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "dependencies"
+          ]
+        },
+        "android-test": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "android-test"
+          ]
+        },
+        "android-build-debug": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "android-build-debug"
+          ]
+        },
+        "native_klib_iosarm64": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "klib-iosarm64"
+          ]
+        },
+        "native_klib_iossimulatorarm64": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "klib-iossimulatorarm64"
+          ]
+        },
+        "build_input_evidence": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": []
+        },
+        "native_library_compile": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "framework_link": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "ios-test": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "ios-build-debug": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        }
+      },
+      "android_successful_tests": 38,
+      "graph_roots": 92,
+      "compiler_invocations": [
+        {
+          "module": "shared-core",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "c94aaa08e4f7f53f",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "487e0dcb2048e20a0402b620433fb3460c3f6c848aaf5b32a9c56d5679f07c7d"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "79b54b174c6a20a0",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "e1bd2466dba3beabe4e022db12c5e1b96a914b519d82161dd23db24830c7c1e0"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "fc42623c6c2c5742",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "1bca6ca9e548a6c84de9c58b88f46ca281c98c3c9b9865706983cd29a6c6d680"
+        },
+        {
+          "module": "shared-di",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "e6cad6b23e38a8a3",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "08c1b948ac852aad19179fc7211924dd0eeab178ceb2a6c75e2ea23fd7c474bd"
+        },
+        {
+          "module": "shared-ui-home",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "89daccbec6bdbc9a",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "ec17f7d3c934b66385d09ddcead965f33d291eeb8bb20a13a1d09cd33c69506a"
+        },
+        {
+          "module": "android-app",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "e919af0c3ef4b670",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar",
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "15dc470e6af3360a9ee9c695891fd83c68a2ed4fa395079ac094fba401aa6929"
+        },
+        {
+          "module": "android-app",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "9e1a0d27a406a44c",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar",
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "404b1508890a42dd9ec9f653a7d919ad589107dd182cca2de5ba2131a4a1522d"
+        },
+        {
+          "module": "shared-core",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "8c99834288740adc",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "00564623b445b19a7e00d4fd50968a9e3724193caa64e54d557ece2fdfb241b4"
+        },
+        {
+          "module": "shared-di",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "4db78a973fc1c010",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "ff191411e7c2d004ceb11bcaa64671cd7f46106a2b30ad1b4bb92dd5c2290c4f"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "def56a9b81662449",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "89abc256361572a4b9f377d03a70dd7c7d03ebdc734a884062ad5b567f44ccf1"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "android",
+          "producer": "kotlin-compilation",
+          "version": "2.4.10",
+          "span_id": "d25cd3bd428d8a9e",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "65cc5cc45431e653e1ef72f6df3575885bdb990d51cf6571e111adfb664b83c0"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "6e961a32ca81dc7c",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "4cabdf862f34afac7c8e95efebf150df62c4b663f49df6a198e5ddad9bc03ab0"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "7808d722d5949bce",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "4557e08c9707a7413cf2d06ec6dc641841a815ebee6a036f9f44a65772dbe22e"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "eeb23316d3378976",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "e997b8478794ee1c041f833959f24fba10b0c5ab565a4109b8ba364c8099f043"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "e75bf5f7161b44fb",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "3182526d789a27de7ce633da621abeeb8a96d7a4e1cd4c19c80e40a8db944970"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "f85b61a253aafdb9",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "3998eee3ceca36342b7068baaac82442fbb240d6b27dad56f580fbf1e97ecb9f"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "6a49323d89a4730f",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "5d17463d4417abdbc35e07b5d58abc341b098cb2377a8926c35789c5e2ece56a"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "529bdab9a5aa5cbf",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "afbb74f75d3d2dcc04dfad86bf7823561c77a21a103931118e2cb99a3b8b7434"
+        },
+        {
+          "module": "shared-ui-home",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "0bfd6612476af2b8",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "963db05c8a54286fd39f2e71fc2edfc3cf6b2fd5e8f0111e9e1663aacba33a5c"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "a9df0aff27a054f8",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "a4d730691f64f319304ba274fb8ea0ed78d20cec18eab3d69ace653e40e4cf7e"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "f6552454b7a40ccc",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "1bf78af6aad12ffccb271bbade9cb76a27396f3495d3b6c6729128da01ed2b73"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "c99ca2200e87013b",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "d02de172e78ed563b1ce8345680ee3d59f37b3a1cef79538fdb55eb81a01e917"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "d84da88caedcb593",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "3df58e7da0bbf420107112d498f0d09c6eb5812e89b24191158310d2b91ee50e"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "65d55ec926aea8da",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "73f85bc6d67a5a0a977eb03fd92d7f283771a3aca15bfe058c36d5fad507ac42"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "10dd221de6c12527",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "3a6bdb039e18fb6643a682d188c41d0db79c8b888e3b22f6f8df081376da4d34"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "20f150f7ee0bca72",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "c46a117de2548aaaa4a2de696b7ee0efff3776223af22f3083de990484f8a776"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "0fb1dcca81b8116a",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "25bffef489d3d350053e65b40f690b46c5bf667af0e1b7664aa27ebf7d1cf1a5"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "e4f4e521204c6f2e",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "ebb694dede10dfbed9c768eb6b1ccfc1f132ddc7c09a6ff317ed1c614558cc09"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "fa99b284165ffaf1",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "909e40be4c5825df1dcfa5b615a30368db8d156fbcf53fcbe5a91a903e430228"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "8acc8ff21a1738e1",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "c587ca75929620e3514ad3648952aa4912ec53c2a70f91875143d2645232e323"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "d2cf9284a661a05c",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "635d0b7cd2d96707e40369229f6c985fc224e30f559ab2c0e8d473d6a1b053e1"
+        },
+        {
+          "module": "shared-ui-home",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "10c7332ec06e3723",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar"
+          ],
+          "arguments_sha256": "5cd098128fe493bfaeceffc24fde5426c63d8e63f5910d42afc97fba23bb2b38"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "0704f1fe94b864a8",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "7e01becd4328aeb31f8970adaa58745b030d65015aa2933bc62eddc89dbb635b"
+        },
+        {
+          "module": "shared-core",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "c3aca575499e5db9",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "5b6de99757062bcd797c461e16b208ea1afb6c0cf2754b5cb051ae6c1d883951"
+        },
+        {
+          "module": "shared-feature-home",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "c0be918d3d58414b",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "ab6a6e314d4db4bb089cf26fab7e76f43fd49b85428d6d279cea5aa4ed4674d6"
+        },
+        {
+          "module": "shared-feature-nearby-vehicle-map",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "9313b64c133358d4",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "83c88555da53c55b6341a26cf53ddf64592c989cdb40f99c9fc7b180f257dda2"
+        },
+        {
+          "module": "shared-di",
+          "platform": "iosSimulatorArm64",
+          "producer": "konanc",
+          "version": "2.4.10",
+          "span_id": "d586be3d2c8ad897",
+          "plugins": [
+            "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar"
+          ],
+          "arguments_sha256": "7f042d9567fab573e3df7559f595af20fdd59b9b6c7da0728167264d4d48daee"
+        }
+      ],
+      "selected_plugin_artifacts": {
+        "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar": {
+          "sha256": "e94246f0f3af1f7e8b34d4238f5c95187abf69cb940bf96d239d4a731ebb824e",
+          "bytes": 5966028
+        },
+        "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar": {
+          "sha256": "07edff96c6196c5354caa275b748616794cc8883af02e380d091d221f02bdc80",
+          "bytes": 949238
+        }
+      },
+      "delegated_builds": 2,
+      "delegated_configuration_entries": 1828,
+      "delegated_configuration_states": {
+        "resolved": 136,
+        "not_collected": 612,
+        "not_resolvable": 1080
+      },
+      "delegated_gradle_versions": [
+        "9.5.0"
+      ],
+      "delegated_query_count": 273,
+      "build_input_summary_sha256": "eb30c2731efcf8fa048c4d4c8e3814993904fec26ec1165e1d5da335c36da596",
+      "producer_sha256": {
+        "traces": "0b97ad3833aa9abfa5e0850c5faa32ae3797c77ab717259ca17f24c115a96b1e",
+        "artifacts": "e34397565b2fe31a87d07fd21c44591016f62292e1fe85780a5b7c0dc78f6bd9",
+        "delegated": "b2ec8e5571bc867a7451792dc81204dd75f83cdc78789f0c3c2c69accef255df"
+      },
+      "missing_capabilities": [
+        "compiler_plugin_coordinate_attribution",
+        "native_test_compiler_inputs",
+        "native_bundle_internals",
+        "shaded_code",
+        "delegated_unrehearsed_configurations"
+      ]
+    }
+  },
+  "queries_equal_across_phases": true,
+  "candidate_advisory_queries": [
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity"
+      },
+      "version": "1.13.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity"
+      },
+      "version": "1.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity-compose"
+      },
+      "version": "1.13.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity-compose"
+      },
+      "version": "1.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity-ktx"
+      },
+      "version": "1.13.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity-ktx"
+      },
+      "version": "1.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation"
+      },
+      "version": "1.9.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation-experimental"
+      },
+      "version": "1.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation-iosarm64"
+      },
+      "version": "1.9.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation-iossimulatorarm64"
+      },
+      "version": "1.9.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation-jvm"
+      },
+      "version": "1.9.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.arch.core:core-common"
+      },
+      "version": "2.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.arch.core:core-runtime"
+      },
+      "version": "2.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.autofill:autofill"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection-iosarm64"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection-iossimulatorarm64"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection-jvm"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection-ktx"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.animation:animation"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.animation:animation-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.animation:animation-core"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.animation:animation-core-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.foundation:foundation"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.foundation:foundation-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.foundation:foundation-layout"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.foundation:foundation-layout-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.material3:material3"
+      },
+      "version": "1.5.0-alpha17"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.material3:material3-android"
+      },
+      "version": "1.5.0-alpha17"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.material:material-ripple"
+      },
+      "version": "1.11.0-rc01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.material:material-ripple-android"
+      },
+      "version": "1.11.0-rc01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-annotation"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-annotation-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-annotation-iosarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-annotation-iossimulatorarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-iosarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-iossimulatorarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-retain"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-retain-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-retain-iosarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-retain-iossimulatorarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-saveable"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-saveable-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-saveable-iosarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-saveable-iossimulatorarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-geometry"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-geometry-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-graphics"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-graphics-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-text"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-text-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-unit"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-unit-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-util"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-util-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.concurrent:concurrent-futures"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core"
+      },
+      "version": "1.16.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core"
+      },
+      "version": "1.18.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core-ktx"
+      },
+      "version": "1.16.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core-ktx"
+      },
+      "version": "1.18.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core-viewtree"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.customview:customview"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.customview:customview-poolingcontainer"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.databinding:databinding-common"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.databinding:databinding-compiler-common"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.documentfile:documentfile"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.dynamicanimation:dynamicanimation"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.emoji2:emoji2"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.fragment:fragment"
+      },
+      "version": "1.8.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-path"
+      },
+      "version": "1.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-shapes"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-shapes-android"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-shapes-iosarm64"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-shapes-iossimulatorarm64"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.interpolator:interpolator"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.legacy:legacy-support-core-utils"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-java8"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-java8"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-jvm"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-jvm"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata-core"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata-core"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata-core-ktx"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata-core-ktx"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-process"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-process"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-ktx"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-ktx"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-ktx-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-ktx-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-compose"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-compose-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-ktx"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-ktx"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.loader:loader"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.localbroadcastmanager:localbroadcastmanager"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent"
+      },
+      "version": "1.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-android"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-compose"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-compose-android"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-iosarm64"
+      },
+      "version": "1.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-iossimulatorarm64"
+      },
+      "version": "1.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.print:print"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.profileinstaller:profileinstaller"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-android"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-compose"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-compose-android"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-compose-iosarm64"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-compose-iossimulatorarm64"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-iosarm64"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-iossimulatorarm64"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-ktx"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.startup:startup-runtime"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.tracing:tracing"
+      },
+      "version": "1.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.transition:transition"
+      },
+      "version": "1.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.versionedparcelable:versionedparcelable"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.viewpager:viewpager"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.window:window"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.window:window-core"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.window:window-core-android"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.databinding:baseLibrary"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.analytics-library:crash"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.analytics-library:protos"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.analytics-library:shared"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.analytics-library:tracker"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build.jetifier:jetifier-core"
+      },
+      "version": "1.0.0-beta10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build.jetifier:jetifier-processor"
+      },
+      "version": "1.0.0-beta10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:aapt2-proto"
+      },
+      "version": "9.3.1-15703166"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:aaptcompiler"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:apksig"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:apkzlib"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:builder"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:builder-model"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:builder-test-api"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:bundletool"
+      },
+      "version": "1.18.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:gradle"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:gradle-api"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:gradle-common-api"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:gradle-settings-api"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.build:manifest-merger"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.ddms:ddmlib"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.external.com-intellij:intellij-core"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.external.com-intellij:kotlin-compiler"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.external.org-jetbrains:uast"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.layoutlib:layoutlib-api"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.lint:lint"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.lint:lint-api"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.lint:lint-checks"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.lint:lint-gradle"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.lint:lint-model"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.lint:lint-typedef-remover"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools.utp:gradle-work-action-api"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools:annotations"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools:common"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools:dvlib"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools:play-sdk-proto"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools:repository"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools:sdk-common"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android.tools:sdklib"
+      },
+      "version": "32.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android:signflinger"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.android:zipflinger"
+      },
+      "version": "9.3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.fasterxml.jackson.core:jackson-core"
+      },
+      "version": "2.21.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.fasterxml.jackson:jackson-bom"
+      },
+      "version": "2.21.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.fasterxml:aalto-xml"
+      },
+      "version": "1.3.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.github.ben-manes.caffeine:caffeine"
+      },
+      "version": "3.2.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.android.gms:strict-version-matcher-plugin"
+      },
+      "version": "1.2.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.auto.value:auto-value-annotations"
+      },
+      "version": "1.6.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.code.findbugs:jsr305"
+      },
+      "version": "3.0.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.code.gson:gson"
+      },
+      "version": "2.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.code.gson:gson"
+      },
+      "version": "2.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.crypto.tink:tink"
+      },
+      "version": "1.7.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.dagger:dagger"
+      },
+      "version": "2.28.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.errorprone:error_prone_annotations"
+      },
+      "version": "2.36.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.errorprone:error_prone_annotations"
+      },
+      "version": "2.43.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.flatbuffers:flatbuffers-java"
+      },
+      "version": "1.12.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.gms:google-services"
+      },
+      "version": "4.4.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.guava:failureaccess"
+      },
+      "version": "1.0.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.guava:failureaccess"
+      },
+      "version": "1.0.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.guava:guava"
+      },
+      "version": "33.4.0-jre"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.guava:guava"
+      },
+      "version": "33.5.0-jre"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.guava:listenablefuture"
+      },
+      "version": "1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.guava:listenablefuture"
+      },
+      "version": "9999.0-empty-to-avoid-conflict-with-guava"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.j2objc:j2objc-annotations"
+      },
+      "version": "3.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.j2objc:j2objc-annotations"
+      },
+      "version": "3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.jimfs:jimfs"
+      },
+      "version": "1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.protobuf:protobuf-java"
+      },
+      "version": "3.25.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.protobuf:protobuf-java-util"
+      },
+      "version": "3.25.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.googlecode.juniversalchardet:juniversalchardet"
+      },
+      "version": "1.0.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.h2database:h2-mvstore"
+      },
+      "version": "2.3.232"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jakewharton.timber:timber"
+      },
+      "version": "5.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:core"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:core-impl"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:diagnostic"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:diagnostic-telemetry"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:eel"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:extensions"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:plugin-system-parser-impl"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:syntax"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-base"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-base-multiplatform"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-class-loader"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-coroutines"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-diff"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-ex"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-jdom"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-multiplatform"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-progress"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-rt"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-rt-java8"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jetbrains.intellij.platform:util-xml-dom"
+      },
+      "version": "261.26222.65"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-backstack"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-backstack-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-foundation"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-foundation-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-retained"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-retained-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-navigation"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-navigation-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-presenter"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-presenter-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-screen"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-screen-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-ui"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-ui-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-sharedelements"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-sharedelements-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.squareup.okhttp3:okhttp"
+      },
+      "version": "4.12.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.squareup.okio:okio"
+      },
+      "version": "3.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.squareup.okio:okio-jvm"
+      },
+      "version": "3.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.squareup:javapoet"
+      },
+      "version": "1.13.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.squareup:javawriter"
+      },
+      "version": "2.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.sun.istack:istack-commons-runtime"
+      },
+      "version": "3.0.8"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.sun.xml.fastinfoset:FastInfoset"
+      },
+      "version": "1.2.16"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "commons-codec:commons-codec"
+      },
+      "version": "1.17.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "commons-codec:commons-codec"
+      },
+      "version": "1.18.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "commons-io:commons-io"
+      },
+      "version": "2.16.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "commons-io:commons-io"
+      },
+      "version": "2.18.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "commons-logging:commons-logging"
+      },
+      "version": "1.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dev.zacsweers.metro:runtime"
+      },
+      "version": "1.4.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dev.zacsweers.metro:runtime-iosarm64"
+      },
+      "version": "1.4.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dev.zacsweers.metro:runtime-iossimulatorarm64"
+      },
+      "version": "1.4.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dev.zacsweers.metro:runtime-jvm"
+      },
+      "version": "1.4.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dk.brics:automaton"
+      },
+      "version": "1.12-4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.github.pdvrieze.xmlutil:core"
+      },
+      "version": "0.86.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.github.pdvrieze.xmlutil:core-jvm"
+      },
+      "version": "0.86.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.github.pdvrieze.xmlutil:serialization-jvm"
+      },
+      "version": "0.86.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-client-auth-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-client-core"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-client-core-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-client-encoding-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-client-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-events"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-events-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-http"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-http-cio"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-http-cio-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-http-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-io"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-io-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-network"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-network-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-serialization"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-serialization-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-sse"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-sse-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-utils"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-utils-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-websocket-serialization"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-websocket-serialization-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-websockets"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.ktor:ktor-websockets-jvm"
+      },
+      "version": "3.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.netty:netty-buffer"
+      },
+      "version": "4.2.0.RC2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.netty:netty-common"
+      },
+      "version": "4.2.0.RC2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry.semconv:opentelemetry-semconv"
+      },
+      "version": "1.30.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-api"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-common"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-context"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-exporter-common"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-exporter-logging-otlp"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-exporter-otlp-common"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-extension-kotlin"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-sdk"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-sdk-common"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-sdk-logs"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-sdk-metrics"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "io.opentelemetry:opentelemetry-sdk-trace"
+      },
+      "version": "1.60.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "jakarta.activation:jakarta.activation-api"
+      },
+      "version": "1.2.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "jakarta.xml.bind:jakarta.xml.bind-api"
+      },
+      "version": "2.3.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "javax.inject:javax.inject"
+      },
+      "version": "1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "jaxen:jaxen"
+      },
+      "version": "1.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "junit:junit"
+      },
+      "version": "4.13.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "net.java.dev.jna:jna"
+      },
+      "version": "5.18.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "net.java.dev.jna:jna"
+      },
+      "version": "5.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "net.java.dev.jna:jna-platform"
+      },
+      "version": "5.18.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "net.java.dev.jna:jna-platform"
+      },
+      "version": "5.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "net.jcip:jcip-annotations"
+      },
+      "version": "1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "net.sf.jopt-simple:jopt-simple"
+      },
+      "version": "4.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "net.sf.kxml:kxml2"
+      },
+      "version": "2.3.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apache.commons:commons-compress"
+      },
+      "version": "1.27.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apache.commons:commons-lang3"
+      },
+      "version": "3.16.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apache.commons:commons-lang3"
+      },
+      "version": "3.18.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apache.httpcomponents:httpclient"
+      },
+      "version": "4.5.14"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apache.httpcomponents:httpclient"
+      },
+      "version": "4.5.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apache.httpcomponents:httpcore"
+      },
+      "version": "4.4.16"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apache.httpcomponents:httpmime"
+      },
+      "version": "4.5.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apache.maven:maven-artifact"
+      },
+      "version": "3.9.16"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apiguardian:apiguardian-api"
+      },
+      "version": "1.1.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.bitbucket.b_c:jose4j"
+      },
+      "version": "0.9.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.bouncycastle:bcpkix-jdk18on"
+      },
+      "version": "1.79"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.bouncycastle:bcprov-jdk18on"
+      },
+      "version": "1.79"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.bouncycastle:bcutil-jdk18on"
+      },
+      "version": "1.79"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.checkerframework:checker-qual"
+      },
+      "version": "2.5.8"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.checkerframework:checker-qual"
+      },
+      "version": "3.43.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.codehaus.groovy:groovy"
+      },
+      "version": "3.0.22"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.codehaus.plexus:plexus-utils"
+      },
+      "version": "3.6.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.codehaus.woodstox:stax2-api"
+      },
+      "version": "4.2.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.glassfish.jaxb:jaxb-runtime"
+      },
+      "version": "2.3.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.glassfish.jaxb:txw2"
+      },
+      "version": "2.3.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.hamcrest:hamcrest-core"
+      },
+      "version": "1.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jdom:jdom2"
+      },
+      "version": "2.0.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper.android.settings.plugin:org.jetbrains.amper.android.settings.plugin.gradle.plugin"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:amper-android-gradle-api"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:amper-android-sdk-detector"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:amper-build-info"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:amper-extensibility-schema-model"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:amper-problem-reporting"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:amper-swift-pm-resolution-model"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:amper-telemetry"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:concurrency"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:core"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:core-intellij"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:frontend-api"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:maven-central-configuration"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:maven-plugin-xml-parser"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:nio-filechannels"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:parserutil-stub"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:schema"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:serialization-extended"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:stdlib-extended"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:system-info"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:telemetry"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:toml-psi"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.amper:yaml-psi"
+      },
+      "version": "0.12.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-common"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-common"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose-uikitarm64"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose-uikitsimarm64"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.navigationevent:navigationevent-compose"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.savedstate:savedstate"
+      },
+      "version": "1.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.savedstate:savedstate-compose"
+      },
+      "version": "1.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.savedstate:savedstate-compose-uikitarm64"
+      },
+      "version": "1.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.savedstate:savedstate-compose-uikitsimarm64"
+      },
+      "version": "1.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-core"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-core-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-core-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.annotation-internal:annotation"
+      },
+      "version": "1.10.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.collection-internal:collection"
+      },
+      "version": "1.10.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.components:components-resources"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.components:components-resources-android"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.components:components-resources-iosArm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.components:components-resources-iosSimulatorArm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-layout"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-layout-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-layout-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material3:material3"
+      },
+      "version": "1.11.0-alpha07"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material3:material3-iosarm64"
+      },
+      "version": "1.11.0-alpha07"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material3:material3-iossimulatorarm64"
+      },
+      "version": "1.11.0-alpha07"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material:material-ripple"
+      },
+      "version": "1.11.0-beta03"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material:material-ripple-iosarm64"
+      },
+      "version": "1.11.0-beta03"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material:material-ripple-iossimulatorarm64"
+      },
+      "version": "1.11.0-beta03"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-saveable"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-saveable-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-saveable-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-backhandler"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-backhandler-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-backhandler-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-geometry"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-geometry-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-geometry-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-graphics"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-graphics-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-graphics-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-text"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-text-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-text-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-uikit"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-uikit-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-uikit-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-unit"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-unit-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-unit-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-util"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-util-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-util-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.intellij.deps.fastutil:intellij-deps-fastutil"
+      },
+      "version": "8.5.18-jb1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.intellij.deps.kotlinx:kotlinx-coroutines-core-jvm"
+      },
+      "version": "1.10.2-intellij-1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.intellij.deps.kotlinx:kotlinx-coroutines-debug"
+      },
+      "version": "1.10.2-intellij-1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:abi-tools-api"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:fus-statistics-gradle-plugin"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-bom"
+      },
+      "version": "2.2.21"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-bom"
+      },
+      "version": "2.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-build-statistics"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-build-tools-api"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-build-tools-impl"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-compiler-embeddable"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-compiler-runner"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-daemon-client"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-daemon-client"
+      },
+      "version": "2.2.21"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-daemon-embeddable"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-gradle-plugin-annotations"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-gradle-plugin-api"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-gradle-plugin-idea"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-gradle-plugin-idea-proto"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-gradle-plugin-model"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-gradle-plugins-bom"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-klib-commonizer-api"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-native-utils"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-reflect"
+      },
+      "version": "1.6.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-reflect"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-reflect"
+      },
+      "version": "2.3.20"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-script-runtime"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-scripting-common"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-scripting-compiler-impl-embeddable"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-scripting-jvm"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib"
+      },
+      "version": "2.3.20"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-common"
+      },
+      "version": "2.3.20"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-common"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
+      },
+      "version": "2.2.21"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+      },
+      "version": "2.2.21"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-test"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-test-annotations-common"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-test-junit"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-test-junit5"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-tooling-core"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-util-io"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-util-klib"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-util-klib-metadata"
+      },
+      "version": "2.2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu"
+      },
+      "version": "0.32.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu"
+      },
+      "version": "0.33.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu-iosarm64"
+      },
+      "version": "0.32.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu-iossimulatorarm64"
+      },
+      "version": "0.32.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu-jvm"
+      },
+      "version": "0.33.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm"
+      },
+      "version": "0.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-android"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-bom"
+      },
+      "version": "1.10.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-bom"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-bom"
+      },
+      "version": "1.9.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+      },
+      "version": "1.10.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+      },
+      "version": "1.9.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-iosarm64"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-iossimulatorarm64"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
+      },
+      "version": "1.10.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
+      },
+      "version": "1.8.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
+      },
+      "version": "1.9.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j"
+      },
+      "version": "1.10.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-test"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-test-iosarm64"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-test-iossimulatorarm64"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-datetime"
+      },
+      "version": "0.7.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-datetime-iosarm64"
+      },
+      "version": "0.7.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-datetime-iossimulatorarm64"
+      },
+      "version": "0.7.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-io-bytestring"
+      },
+      "version": "0.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm"
+      },
+      "version": "0.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-io-core"
+      },
+      "version": "0.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-io-core-jvm"
+      },
+      "version": "0.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-bom"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-bom"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-cbor-jvm"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core-iosarm64"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core-iossimulatorarm64"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.runtime:jbr-api"
+      },
+      "version": "1.9.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.skiko:skiko"
+      },
+      "version": "0.144.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.skiko:skiko-iosarm64"
+      },
+      "version": "0.144.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.skiko:skiko-iossimulatorarm64"
+      },
+      "version": "0.144.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains:annotations"
+      },
+      "version": "13.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains:annotations"
+      },
+      "version": "23.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jspecify:jspecify"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.jupiter:junit-jupiter-api"
+      },
+      "version": "5.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.jupiter:junit-jupiter-engine"
+      },
+      "version": "5.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.platform:junit-platform-commons"
+      },
+      "version": "1.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.platform:junit-platform-engine"
+      },
+      "version": "1.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.platform:junit-platform-launcher"
+      },
+      "version": "1.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit:junit-bom"
+      },
+      "version": "5.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jvnet.staxex:stax-ex"
+      },
+      "version": "1.8.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.lz4:lz4-java"
+      },
+      "version": "1.8.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.maplibre.gl:android-sdk"
+      },
+      "version": "13.3.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.maplibre.gl:android-sdk-geojson"
+      },
+      "version": "6.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.maplibre.gl:android-sdk-turf"
+      },
+      "version": "6.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.maplibre.gl:maplibre-android-gestures"
+      },
+      "version": "0.0.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.opentest4j:opentest4j"
+      },
+      "version": "1.3.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.ow2.asm:asm"
+      },
+      "version": "9.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.ow2.asm:asm-analysis"
+      },
+      "version": "9.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.ow2.asm:asm-commons"
+      },
+      "version": "9.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.ow2.asm:asm-tree"
+      },
+      "version": "9.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.ow2.asm:asm-util"
+      },
+      "version": "9.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.slf4j:log4j-over-slf4j"
+      },
+      "version": "1.7.36"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.slf4j:slf4j-api"
+      },
+      "version": "2.0.17"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.tensorflow:tensorflow-lite-metadata"
+      },
+      "version": "0.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "oro:oro"
+      },
+      "version": "2.0.8"
+    }
+  ],
+  "direct_advisories": {
+    "state": "triage_required",
+    "scope": "candidate_named_resolved_maven_packages_only",
+    "query_count": 576,
+    "finding_ids": [
+      "GHSA-2363-cqg2-863c",
+      "GHSA-3677-xxcr-wjqv",
+      "GHSA-574f-3g2m-x479",
+      "GHSA-7hhh-6rmp-j9qf",
+      "GHSA-7r82-7xv7-xcpj",
+      "GHSA-9pwp-9qqc-pr26",
+      "GHSA-c3fc-8qff-9hwx",
+      "GHSA-cmp6-m4wj-q63q",
+      "GHSA-j288-q9x7-2f5v",
+      "GHSA-p6pp-m3f8-5c89",
+      "GHSA-qp49-qgx5-5m26",
+      "GHSA-r7wm-3cxj-wff9",
+      "GHSA-r937-wjx7-w2jp",
+      "GHSA-rcgg-9c38-7xpx",
+      "GHSA-vqf4-7m7x-wgfc",
+      "GHSA-wg6q-6289-32hp",
+      "GHSA-xx22-p4ch-683r"
+    ],
+    "matches": [
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "com.fasterxml.jackson.core:jackson-core"
+          },
+          "version": "2.21.1"
+        },
+        "id": "GHSA-7hhh-6rmp-j9qf",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "com.fasterxml.jackson.core:jackson-core"
+          },
+          "version": "2.21.1"
+        },
+        "id": "GHSA-p6pp-m3f8-5c89",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "com.fasterxml.jackson.core:jackson-core"
+          },
+          "version": "2.21.1"
+        },
+        "id": "GHSA-r7wm-3cxj-wff9",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "io.opentelemetry:opentelemetry-api"
+          },
+          "version": "1.60.1"
+        },
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.apache.commons:commons-lang3"
+          },
+          "version": "3.16.0"
+        },
+        "id": "GHSA-j288-q9x7-2f5v",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.apache.httpcomponents:httpclient"
+          },
+          "version": "4.5.6"
+        },
+        "id": "GHSA-7r82-7xv7-xcpj",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bitbucket.b_c:jose4j"
+          },
+          "version": "0.9.5"
+        },
+        "id": "GHSA-3677-xxcr-wjqv",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcpkix-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-wg6q-6289-32hp",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcprov-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-574f-3g2m-x479",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcprov-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-9pwp-9qqc-pr26",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcprov-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-c3fc-8qff-9hwx",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcprov-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-qp49-qgx5-5m26",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.jdom:jdom2"
+          },
+          "version": "2.0.6"
+        },
+        "id": "GHSA-2363-cqg2-863c",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+          },
+          "version": "2.2.10"
+        },
+        "id": "GHSA-r937-wjx7-w2jp",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.lz4:lz4-java"
+          },
+          "version": "1.8.0"
+        },
+        "id": "GHSA-cmp6-m4wj-q63q",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.lz4:lz4-java"
+          },
+          "version": "1.8.0"
+        },
+        "id": "GHSA-vqf4-7m7x-wgfc",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.lz4:lz4-java"
+          },
+          "version": "1.8.0"
+        },
+        "id": "GHSA-xx22-p4ch-683r",
+        "triage": "required"
+      }
+    ],
+    "reasons": [],
+    "receipt_sha256": "9aa1b3be165822ef146cc6576d5c7c686c849035ee76ba9f33b155516f0cf28d",
+    "dependency_surface": "incomplete",
+    "missing_capabilities": [
+      "compiler_plugin_resolution",
+      "artifact_attribution",
+      "complete_direct_target_graph",
+      "advisory_review"
+    ],
+    "adoption_authorized": false
+  },
+  "advisory_batches": [
+    {
+      "query_count": 100,
+      "status": 200,
+      "retrieved_at": "2026-10-03T05:33:13Z",
+      "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686"
+    },
+    {
+      "query_count": 100,
+      "status": 200,
+      "retrieved_at": "2026-10-03T05:33:14Z",
+      "response_sha256": "23be1de482c6c52d4c8aed58adeecc59e4391dc56872fbd8384818e4acd45121"
+    },
+    {
+      "query_count": 100,
+      "status": 200,
+      "retrieved_at": "2026-10-03T05:33:15Z",
+      "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686"
+    },
+    {
+      "query_count": 100,
+      "status": 200,
+      "retrieved_at": "2026-10-03T05:33:15Z",
+      "response_sha256": "ebcead837a71519c0226d91969a3b00c7aecd1bd44074068781c835732365853"
+    },
+    {
+      "query_count": 100,
+      "status": 200,
+      "retrieved_at": "2026-10-03T05:33:16Z",
+      "response_sha256": "11949a38391c2901ee564cd925b8dd68e77aa909b14139fe5ab71338001bede3"
+    },
+    {
+      "query_count": 76,
+      "status": 200,
+      "retrieved_at": "2026-10-03T05:33:16Z",
+      "response_sha256": "6f692954f89432d781d1a3925460834a48d0c50204036e169a71ab8bcede0c9e"
+    }
+  ],
+  "advisory_records": [
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-2363-cqg2-863c",
+      "retrieved_at": "2026-10-03T05:33:17Z",
+      "response_sha256": "83d346c2455a147eca4a6d9f560dd112255ab4293b01cb29cab6b3b7d03e1086"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-3677-xxcr-wjqv",
+      "retrieved_at": "2026-10-03T05:33:17Z",
+      "response_sha256": "b2e54265a24003ca429b8ab54b04bdc323f68461cc284475088d4dd21d11bcf5"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-574f-3g2m-x479",
+      "retrieved_at": "2026-10-03T05:33:17Z",
+      "response_sha256": "562f9967995585ffa1298d76642910911c9bfcd48dd85f841bc2a6b9f14e72bc"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-7hhh-6rmp-j9qf",
+      "retrieved_at": "2026-10-03T05:33:18Z",
+      "response_sha256": "74c81f4eb671ad6d393272d327f87e6607577b40f84b34e378d3ee4793168f35"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-7r82-7xv7-xcpj",
+      "retrieved_at": "2026-10-03T05:33:18Z",
+      "response_sha256": "24cd878ab04cd49ebd53fe1197adbc5cd323db7695caa2bda2bb62da267ff5ac"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-9pwp-9qqc-pr26",
+      "retrieved_at": "2026-10-03T05:33:18Z",
+      "response_sha256": "96fc10e4f66c0fc416458f3b14a8a504cd69974adcd8c0f14c6006ccfed0503f"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-c3fc-8qff-9hwx",
+      "retrieved_at": "2026-10-03T05:33:19Z",
+      "response_sha256": "e75d2a4b71d3a6932128f249303475a2647405d3e464a55accf001b2a231f7df"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-cmp6-m4wj-q63q",
+      "retrieved_at": "2026-10-03T05:33:19Z",
+      "response_sha256": "6119e90a24255b8c6e9be9fb7fe148fee1a7207953e6fa8c10b88f4c175d840e"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-j288-q9x7-2f5v",
+      "retrieved_at": "2026-10-03T05:33:20Z",
+      "response_sha256": "5dafc9303ee7b342c98b0ed8e6217e020a5207e2fb3f3166c3e29ce81d8c08f4"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-p6pp-m3f8-5c89",
+      "retrieved_at": "2026-10-03T05:33:20Z",
+      "response_sha256": "781de115f0697bff9b928a70b7355bc307a69907c4cf96f1698713e1439a9aa7"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-qp49-qgx5-5m26",
+      "retrieved_at": "2026-10-03T05:33:20Z",
+      "response_sha256": "174ec3fb8781343fbe4ca79db322a7169eb65386e827182172cae28b4c0c58af"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-r7wm-3cxj-wff9",
+      "retrieved_at": "2026-10-03T05:33:21Z",
+      "response_sha256": "d50987dfbbbd87949fb658d48e8f4f0feee087bb38d94d081b4bc4cdbda0de26"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-r937-wjx7-w2jp",
+      "retrieved_at": "2026-10-03T05:33:21Z",
+      "response_sha256": "489dee8dd862364365105e7a9d457baf9618b685e44d9667004a7191d05be281"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-rcgg-9c38-7xpx",
+      "retrieved_at": "2026-10-03T05:33:21Z",
+      "response_sha256": "4a75bacd3583d5bdda54ecc46b6a3128b874bcf4b831f1bc4bbac0a8fa82b569"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-vqf4-7m7x-wgfc",
+      "retrieved_at": "2026-10-03T05:33:22Z",
+      "response_sha256": "3d10b2eaf0ae670218045ac66de1fc7f170142b7819cd8227e34225695849a59"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-wg6q-6289-32hp",
+      "retrieved_at": "2026-10-03T05:33:22Z",
+      "response_sha256": "f703c9bf7a61fe11d4ceab7740f8155d8b95cd092dd8436d684b9a64c5107ff4"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-xx22-p4ch-683r",
+      "retrieved_at": "2026-10-03T05:33:22Z",
+      "response_sha256": "100f39af47e0404cb7a6f6004c552d58724992f66b1c1d3877df3ea67b6687c1"
+    }
+  ],
+  "finding_review": [
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "com.fasterxml.jackson.core:jackson-core"
+        },
+        "version": "2.21.1"
+      },
+      "id": "GHSA-7hhh-6rmp-j9qf",
+      "summary": "jackson-core: UTF8DataInputJsonParser._reportInvalidToken() missing maxErrorTokenLength limit -> unbounded StringBuilder growth (DoS)",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "2.19.0"
+              },
+              {
+                "fixed": "2.21.7"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "2.22.0"
+              },
+              {
+                "fixed": "2.22.3"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "2.8.0"
+              },
+              {
+                "fixed": "2.18.11"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-7hhh-6rmp-j9qf",
+      "record_sha256": "74c81f4eb671ad6d393272d327f87e6607577b40f84b34e378d3ee4793168f35",
+      "severity": "HIGH",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "com.fasterxml.jackson.core:jackson-core"
+        },
+        "version": "2.21.1"
+      },
+      "id": "GHSA-p6pp-m3f8-5c89",
+      "summary": " jackson-core: ReDoS: quadratic backtracking in NumberInput.PATTERN_FLOAT via looksLikeValidNumber()",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "2.17.0"
+              },
+              {
+                "fixed": "2.18.11"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "2.19.0"
+              },
+              {
+                "fixed": "2.21.7"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "2.22.0"
+              },
+              {
+                "fixed": "2.22.3"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-p6pp-m3f8-5c89",
+      "record_sha256": "781de115f0697bff9b928a70b7355bc307a69907c4cf96f1698713e1439a9aa7",
+      "severity": "HIGH",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "com.fasterxml.jackson.core:jackson-core"
+        },
+        "version": "2.21.1"
+      },
+      "id": "GHSA-r7wm-3cxj-wff9",
+      "summary": "jackson-core: Async parser maxNumberLength bypass via chunked digit accumulation (incomplete fix for GHSA-72hv-8253-57qq)",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "2.18.8"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "2.19.0"
+              },
+              {
+                "fixed": "2.21.4"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-r7wm-3cxj-wff9",
+      "record_sha256": "d50987dfbbbd87949fb658d48e8f4f0feee087bb38d94d081b4bc4cdbda0de26",
+      "severity": "HIGH",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "io.opentelemetry:opentelemetry-api"
+        },
+        "version": "1.60.1"
+      },
+      "id": "GHSA-rcgg-9c38-7xpx",
+      "summary": "OpenTelemetry Java SDK has Unbounded Memory Allocation in W3C Baggage Propagation",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.62.0"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-rcgg-9c38-7xpx",
+      "record_sha256": "4a75bacd3583d5bdda54ecc46b6a3128b874bcf4b831f1bc4bbac0a8fa82b569",
+      "severity": "MODERATE",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.apache.commons:commons-lang3"
+        },
+        "version": "3.16.0"
+      },
+      "id": "GHSA-j288-q9x7-2f5v",
+      "summary": "Apache Commons Lang is vulnerable to Uncontrolled Recursion when processing long inputs",
+      "selected_scopes": [
+        [
+          ":android-app",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-core",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-di",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-home",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-nearby-vehicle-map",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-ui-home",
+          "project",
+          "androidLintTool"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "3.0"
+              },
+              {
+                "fixed": "3.18.0"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-j288-q9x7-2f5v",
+      "record_sha256": "5dafc9303ee7b342c98b0ed8e6217e020a5207e2fb3f3166c3e29ce81d8c08f4",
+      "severity": "MODERATE",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.apache.httpcomponents:httpclient"
+        },
+        "version": "4.5.6"
+      },
+      "id": "GHSA-7r82-7xv7-xcpj",
+      "summary": "Cross-site scripting in Apache HttpClient",
+      "selected_scopes": [
+        [
+          ":android-app",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-core",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-di",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-home",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-nearby-vehicle-map",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-ui-home",
+          "project",
+          "androidLintTool"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "4.5.13"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "5.0.0"
+              },
+              {
+                "fixed": "5.0.3"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-7r82-7xv7-xcpj",
+      "record_sha256": "24cd878ab04cd49ebd53fe1197adbc5cd323db7695caa2bda2bb62da267ff5ac",
+      "severity": "MODERATE",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bitbucket.b_c:jose4j"
+        },
+        "version": "0.9.5"
+      },
+      "id": "GHSA-3677-xxcr-wjqv",
+      "summary": "jose4j is vulnerable to DoS via compressed JWE content",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "0.9.6"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-3677-xxcr-wjqv",
+      "record_sha256": "b2e54265a24003ca429b8ab54b04bdc323f68461cc284475088d4dd21d11bcf5",
+      "severity": "HIGH",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcpkix-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "id": "GHSA-wg6q-6289-32hp",
+      "summary": "Bouncy Castle Crypto Package For Java: Use of a Broken or Risky Cryptographic Algorithm vulnerability in bcpkix modules",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ],
+        [
+          ":android-app",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-core",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-di",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-home",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-nearby-vehicle-map",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-ui-home",
+          "project",
+          "androidLintTool"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "1.49"
+              },
+              {
+                "fixed": "1.84"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-wg6q-6289-32hp",
+      "record_sha256": "f703c9bf7a61fe11d4ceab7740f8155d8b95cd092dd8436d684b9a64c5107ff4",
+      "severity": "MODERATE",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcprov-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "id": "GHSA-574f-3g2m-x479",
+      "summary": "Bouncy Castle for Java GOST 28147 CTR mode reuses keystream after 255 blocks",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ],
+        [
+          ":android-app",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-core",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-di",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-home",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-nearby-vehicle-map",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-ui-home",
+          "project",
+          "androidLintTool"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "1.59"
+              },
+              {
+                "fixed": "1.80.2"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "1.81.0"
+              },
+              {
+                "fixed": "1.81.1"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "1.82"
+              },
+              {
+                "fixed": "1.84"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-574f-3g2m-x479",
+      "record_sha256": "562f9967995585ffa1298d76642910911c9bfcd48dd85f841bc2a6b9f14e72bc",
+      "severity": "CRITICAL",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcprov-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "id": "GHSA-9pwp-9qqc-pr26",
+      "summary": "Bouncy Castle: Name Constraints bypass via trailing dot in rfc822Name and URI",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ],
+        [
+          ":android-app",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-core",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-di",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-home",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-nearby-vehicle-map",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-ui-home",
+          "project",
+          "androidLintTool"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.85"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-9pwp-9qqc-pr26",
+      "record_sha256": "96fc10e4f66c0fc416458f3b14a8a504cd69974adcd8c0f14c6006ccfed0503f",
+      "severity": "CRITICAL",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcprov-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "id": "GHSA-c3fc-8qff-9hwx",
+      "summary": "Bouncy Castle has an LDAP injection",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ],
+        [
+          ":android-app",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-core",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-di",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-home",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-nearby-vehicle-map",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-ui-home",
+          "project",
+          "androidLintTool"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "1.74"
+              },
+              {
+                "fixed": "1.84"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-c3fc-8qff-9hwx",
+      "record_sha256": "e75d2a4b71d3a6932128f249303475a2647405d3e464a55accf001b2a231f7df",
+      "severity": "MODERATE",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcprov-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "id": "GHSA-qp49-qgx5-5m26",
+      "summary": "Bouncy Castle: Lazy ASN.1 sequence forcing resets nesting-depth guard",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ],
+        [
+          ":android-app",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-core",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-di",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-home",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-feature-nearby-vehicle-map",
+          "project",
+          "androidLintTool"
+        ],
+        [
+          ":shared-ui-home",
+          "project",
+          "androidLintTool"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.85"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-qp49-qgx5-5m26",
+      "record_sha256": "174ec3fb8781343fbe4ca79db322a7169eb65386e827182172cae28b4c0c58af",
+      "severity": "HIGH",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jdom:jdom2"
+        },
+        "version": "2.0.6"
+      },
+      "id": "GHSA-2363-cqg2-863c",
+      "summary": "XML External Entity (XXE) Injection in JDOM",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "2.0.6.1"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-2363-cqg2-863c",
+      "record_sha256": "83d346c2455a147eca4a6d9f560dd112255ab4293b01cb29cab6b3b7d03e1086",
+      "severity": "HIGH",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+        },
+        "version": "2.2.10"
+      },
+      "id": "GHSA-r937-wjx7-w2jp",
+      "summary": "JetBrains Kotlin: Unsafe Deserialization in Kotlin Build Cache Enables Code Execution",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "2.4.20-Beta1"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-r937-wjx7-w2jp",
+      "record_sha256": "489dee8dd862364365105e7a9d457baf9618b685e44d9667004a7191d05be281",
+      "severity": "MODERATE",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.lz4:lz4-java"
+        },
+        "version": "1.8.0"
+      },
+      "id": "GHSA-cmp6-m4wj-q63q",
+      "summary": "yawkat LZ4 Java has a possible information leak in Java safe decompressor",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "last_affected": "1.8.1"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-cmp6-m4wj-q63q",
+      "record_sha256": "6119e90a24255b8c6e9be9fb7fe148fee1a7207953e6fa8c10b88f4c175d840e",
+      "severity": "HIGH",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.lz4:lz4-java"
+        },
+        "version": "1.8.0"
+      },
+      "id": "GHSA-vqf4-7m7x-wgfc",
+      "summary": "LZ4 Java Compression has Out-of-bounds memory operations which can cause DoS",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "fixed": "1.8.1"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-vqf4-7m7x-wgfc",
+      "record_sha256": "3d10b2eaf0ae670218045ac66de1fc7f170142b7819cd8227e34225695849a59",
+      "severity": "HIGH",
+      "triage": "required"
+    },
+    {
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.lz4:lz4-java"
+        },
+        "version": "1.8.0"
+      },
+      "id": "GHSA-xx22-p4ch-683r",
+      "summary": "LZ4 Java: Native XXHash implementations can crash the JVM when passed invalid byte array ranges",
+      "selected_scopes": [
+        [
+          ":",
+          "settings",
+          "classpath"
+        ]
+      ],
+      "matched_package_ranges": [
+        [
+          {
+            "type": "ECOSYSTEM",
+            "events": [
+              {
+                "introduced": "0"
+              },
+              {
+                "last_affected": "1.8.1"
+              }
+            ]
+          }
+        ]
+      ],
+      "record_url": "https://api.osv.dev/v1/vulns/GHSA-xx22-p4ch-683r",
+      "record_sha256": "100f39af47e0404cb7a6f6004c552d58724992f66b1c1d3877df3ea67b6687c1",
+      "severity": "MODERATE",
+      "triage": "required"
+    }
+  ],
+  "kapt_bounded_observation": {
+    "baseline": {
+      "kapt_cache_files": 0,
+      "kapt_compiler_arguments": 0
+    },
+    "candidate": {
+      "kapt_cache_files": 0,
+      "kapt_compiler_arguments": 0
+    }
+  },
+  "module_advisory_intersection": {
+    "module_query_count": 305,
+    "module_matches": 0
+  },
+  "caller_preservation": {
+    "source_sha256": "d53589373d8177e04b93f91899162e4e146b721076388884aa5b2b38331e07ff",
+    "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+    "index_sha256": "d0ef6341226b83b20ea689001873988137917ce26c733e6734fc2049e3418df3",
+    "preservation": "verified",
+    "verified_at": "2026-10-03T05:36:32Z"
+  },
+  "recovery": {
+    "schema": 1,
+    "operation": "recover",
+    "run_id": "9c17d97f1070e64cbe7dad16149610da",
+    "state": "quiescent",
+    "hold": false,
+    "processes": [
+      {
+        "check": "baseline-direct-build-inputs",
+        "state": "absent"
+      },
+      {
+        "check": "candidate-direct-build-inputs",
+        "state": "absent"
+      }
+    ],
+    "recorded_outcome": "checks_passed",
+    "resume_allowed": false,
+    "adoption_authorized": false
+  },
+  "cleanup": {
+    "schema": 1,
+    "operation": "cleanup",
+    "run_id": "9c17d97f1070e64cbe7dad16149610da",
+    "state": "cleaned",
+    "eligible": true,
+    "retention_due_at": "2026-10-10T05:32:31Z",
+    "paths": [
+      "work/baseline",
+      "work/candidate"
+    ],
+    "evidence_retained": true,
+    "recorded_outcome": "checks_passed",
+    "adoption_authorized": false
+  },
+  "report_verified_after_cleanup": true,
+  "checks": {
+    "contracts": 222,
+    "contract_failures": 0,
+    "static": "passed",
+    "strict_openspec_items": 17,
+    "strict_openspec_failures": 0
+  },
+  "upstream_sources": [
+    {
+      "path": "sources/amper-cli/src/org/jetbrains/amper/cli/telemetry/TelemetryEnvironment.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/cli/telemetry/TelemetryEnvironment.kt",
+      "sha256": "ecac6e6b1f1dc7c8875e009e40129d71a206431cfb782214c68c071075c20aa7",
+      "retrieved_at": "2026-10-03T04:34:04.659103+00:00"
+    },
+    {
+      "path": "sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinArtifactsDownloader.kt",
+      "sha256": "e05e05e7eaf728ccd2d43d3cdc9acef525793e8e8ada155786e1c55e37eb1f2f",
+      "retrieved_at": "2026-10-03T04:34:04.686771+00:00"
+    },
+    {
+      "path": "sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinCompilerArgs.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinCompilerArgs.kt",
+      "sha256": "8c1e475a3b1d471470cd41211b594337a2ec8fe7333c055858eb4966a35d2b7b",
+      "retrieved_at": "2026-10-03T04:34:04.793793+00:00"
+    },
+    {
+      "path": "sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinCompilerPlugins.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinCompilerPlugins.kt",
+      "sha256": "a666760e34c3c7457f7d7c72bd5602dee5248c992cce148f454648ab1ca34791",
+      "retrieved_at": "2026-10-03T04:34:04.785610+00:00"
+    },
+    {
+      "path": "sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinNativeCompiler.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/compilation/KotlinNativeCompiler.kt",
+      "sha256": "659a7bc8fe71bb0a2bbad32358f34be69ec7c3388eb43fa8a50a23c2a3eda08b",
+      "retrieved_at": "2026-10-03T04:34:04.816862+00:00"
+    },
+    {
+      "path": "sources/amper-cli/src/org/jetbrains/amper/tasks/android/AndroidDelegatedGradleTask.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/tasks/android/AndroidDelegatedGradleTask.kt",
+      "sha256": "9e2eb5af1c41b20bbe9b6ef7dfb548f90a848258fc2ba7eda48d0c8d9a5e954f",
+      "retrieved_at": "2026-10-03T04:34:05.477210+00:00"
+    },
+    {
+      "path": "sources/amper-cli/src/org/jetbrains/amper/tasks/jvm/JvmCompileTask.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-cli/src/org/jetbrains/amper/tasks/jvm/JvmCompileTask.kt",
+      "sha256": "fc7c3e923f48b99e9dc83cdc17b191c95f42371400d9128c7b47c4b8791643d3",
+      "retrieved_at": "2026-10-03T04:34:06.500512+00:00"
+    },
+    {
+      "path": "sources/android-integration/amper-android-runner/src/org.jetbrains.amper.android/Runner.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/android-integration/amper-android-runner/src/org.jetbrains.amper.android/Runner.kt",
+      "sha256": "db1e37ff765992b100fe3f9112b29ba5e1d3af24f805a155ab8a88e9320d33b3",
+      "retrieved_at": "2026-10-03T04:34:53.192277+00:00"
+    },
+    {
+      "path": "sources/amper-telemetry/src/org/jetbrains/amper/telemetry/TelemetrySetup.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-telemetry/src/org/jetbrains/amper/telemetry/TelemetrySetup.kt",
+      "sha256": "d27d5645825abc301acc57b33b332fc9793d0f1dd4493abd022b72e7d4fe753c",
+      "retrieved_at": "2026-10-03T04:34:53.549620+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v9.5.0/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/configurations/DefaultConfiguration.java",
+      "sha256": "a4ef692466278b8a03247dcd9451324e9ffc96b380e0ebedfcd9e5ee140057b2",
+      "retrieved_at": "2026-10-03T04:58:08.833228+00:00"
+    },
+    {
+      "path": "sources/android-integration/amper-android-gradle-plugin/src/org/jetbrains/amper/android/gradle/ResolvedAmperDependency.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/android-integration/amper-android-gradle-plugin/src/org/jetbrains/amper/android/gradle/ResolvedAmperDependency.kt",
+      "sha256": "216cd56f509250251930eef8b2e0eeeb6325f8291ad794d01b110a4388720b0c",
+      "retrieved_at": "2026-10-03T04:34:08.342996+00:00"
+    },
+    {
+      "path": "sources/android-integration/amper-android-gradle-plugin/src/org/jetbrains/amper/android/gradle/plugin.kt",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/android-integration/amper-android-gradle-plugin/src/org/jetbrains/amper/android/gradle/plugin.kt",
+      "sha256": "9afc167694bec6bbd4e922c7fe40db061438a93d88bcc2fb5baabd3f300b27a3",
+      "retrieved_at": "2026-10-03T04:34:08.417774+00:00"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-r937-wjx7-w2jp",
+      "sha256": "2a2fb6a4870dcc7cac68522a663247ca5d5038cd192ce3479507fc810dbdc37d",
+      "captured_by": "2026-10-03T05:27:28.028630+00:00"
+    },
+    {
+      "url": "https://api.github.com/repos/JetBrains/kotlin/commits/bf51df665b458fda7c3eaf436c4d88dc119d7ec6",
+      "sha256": "a070145d324f795180c42147c3fc283d12697e991d1bd287b0dffcdfb9e79870",
+      "captured_by": "2026-10-03T05:27:28.028630+00:00"
+    }
+  ],
+  "earlier_attempts": [
+    {
+      "run_id": "c44c44df1028e4af0c965db22d9e422c",
+      "state": "inconclusive",
+      "reason": "check_infrastructure_failure",
+      "source_sha256": "36a46a28977d99990bd0074ca1e80fceccca489e4d3a2a35cb043c36022f04f4",
+      "result_sha256": "81f9aa83138a8a6dc7c55d726d15e65d7b13cf56e1a5b172f0bfd3b3d419c25e",
+      "candidate_attempted": false,
+      "description": "Unlocked resolution in buildFinished was rejected by Gradle.",
+      "cleanup_state": "cleaned"
+    },
+    {
+      "run_id": "f194a835401e3bd4664f994e5cae3ea2",
+      "state": "inconclusive",
+      "reason": "check_infrastructure_failure",
+      "source_sha256": "dbe351e39682266e8cb7ae69cdfb7ac1fb0010cf4cbca407b4634ad90eaa21d5",
+      "result_sha256": "860f1fe133348e80e455f680132feaf4d0bf4d06412ffafeca7aec3bf641076c",
+      "candidate_attempted": false,
+      "description": "Broad observer scope attempted unused generated test configurations; the observer refused incomplete artifacts.",
+      "cleanup_state": "cleaned"
+    },
+    {
+      "run_id": "ae560f550900561d792396e310e56809",
+      "state": "refused",
+      "reason": "check_input_or_evidence_drift",
+      "source_sha256": "401a2e5da0a94bb446c14d1c60ab245e584c36fdeca8487881b0bccb2d7eb3cc",
+      "result_sha256": "255dae560dc7340f8edf98d5f85951d020f18c6e07cbfb4014279a805cd2ed99",
+      "candidate_attempted": false,
+      "description": "Android and both ARM KLIB jobs passed; parser refused the real joined Native target argument. Corrected before the passing pair.",
+      "cleanup_state": "cleaned"
+    }
+  ],
+  "missing_capabilities": [
+    "device_execution",
+    "release_archive",
+    "signed_packaging",
+    "cancellation_parity",
+    "generic_export",
+    "cold_direct_ci",
+    "clean_clone_onboarding",
+    "incremental_direct_build",
+    "local_bridge_rollback",
+    "complete_release_interval_review",
+    "complete_bridge_target_graph",
+    "advisory_review",
+    "complete_direct_target_graph",
+    "compiler_plugin_resolution",
+    "artifact_attribution",
+    "native_tests",
+    "application_builds",
+    "compiler_plugin_coordinate_attribution",
+    "native_test_compiler_inputs",
+    "native_bundle_internals",
+    "shaded_code",
+    "delegated_unrehearsed_configurations",
+    "retirement_approval"
+  ],
+  "bridge_retirement": "defer",
+  "adoption_authorized": false
+}

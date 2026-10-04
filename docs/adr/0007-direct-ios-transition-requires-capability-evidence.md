@@ -5,7 +5,7 @@
 
 ## Context
 
-ADRs 0003 and 0006 remain accepted. Xcode owns the native application, tests and Swift packages; the retained Gradle bridge supplies Kotlin frameworks and SKIE sealed-state projections. Kotlin Toolchain 0.12.2 is the current workspace tool. The passing slice-7 typed-facade experiment established bounded simulator compatibility with its hand-maintained bridge unavailable, but left incremental, rollback, release, lifecycle and onboarding evidence open.
+ADRs 0003 and 0006 remain accepted. Xcode owns the native application, tests and Swift packages; the retained Gradle bridge supplies Kotlin frameworks and SKIE sealed-state projections. Kotlin Toolchain 0.13.0 is the current workspace tool under a bounded maintainer risk/age decision. Historical 0.12.2 measurements retain their original scope. The passing slice-7 typed-facade experiment established bounded simulator compatibility with its hand-maintained bridge unavailable, but left incremental, rollback, release, lifecycle and onboarding evidence open.
 
 The typed facade preserves feature-local sealed Kotlin truth, Kotlin exhaustive visitors, typed payloads/reasons and native Swift enum adapters. It adds an explicit projection surface at the shared DI boundary. This is an architectural tradeoff requiring review: compiling a generated facade does not establish that it is the preferred public API or that future sealed-case changes are handled correctly across all consumers.
 

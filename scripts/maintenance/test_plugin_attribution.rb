@@ -32,7 +32,8 @@ module PluginAttributionTest
     input, = fixture
     config = input['config']
     reject { Maintenance::PluginAttribution.phase_mapping(config, '0.13.0') }
-    candidate = JSON.parse(File.read(File.expand_path('../../maintenance-plugin-resolution.json', __dir__))).fetch('candidate_mappings').fetch('0.13.0')
+    reviewed = JSON.parse(File.read(File.expand_path('../../maintenance-plugin-resolution.json', __dir__)))
+    candidate = Maintenance::PluginAttribution.phase_mapping(reviewed, '0.13.0')
     config['gradle'] = candidate['gradle']
     config['candidate_mappings'] = { '0.13.0' => candidate }
     selected = Maintenance::PluginAttribution.phase_mapping(config, '0.13.0')

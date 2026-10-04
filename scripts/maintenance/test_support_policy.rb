@@ -33,7 +33,7 @@ module SupportPolicyTest
       end
       # Keep this historical mismatch independent of adopted current declarations.
       android = File.join(root, adapter::ANDROID)
-      File.write(android, File.read(android).sub(/^    minSdk: \d+$/, '    minSdk: 23'))
+      File.write(android, File.read(android).sub(/^    minSdk: \d+$/, '    minSdk: 23').sub(/^    compileSdk: \d+$/, '    compileSdk: 36'))
       package = File.join(root, adapter::PACKAGE)
       File.write(package, File.read(package).sub(/\.iOS\((?:\.v\d+|"[\d.]+")\)/, '.iOS(.v16)'))
       project = File.join(root, adapter::XCODE)

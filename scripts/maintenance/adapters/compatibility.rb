@@ -19,7 +19,7 @@ module Maintenance
       @root = root
       raise Failure, 'Experimental mode must be explicit boolean' unless [true, false].include?(experimental)
       @config = JSON.parse(File.read(File.join(root, CONFIG)))
-      valid = @config['schema'] == 1 && @config['automatic_adoption'] == false && @config['toolchain'] == '0.12.2' &&
+      valid = @config['schema'] == 1 && @config['automatic_adoption'] == false && %w[0.12.2 0.13.0].include?(@config['toolchain']) &&
               @config['minimum_release_age_days'].is_a?(Integer) && @config['minimum_release_age_days'] >= 7
       raise Failure, 'Unsupported compatibility policy' unless valid
       raise Failure, 'Compatibility review timestamp is in the future' if Time.iso8601(@config.fetch('reviewed_at')) > now

@@ -1,0 +1,237 @@
+{
+  "schema": 1,
+  "state": "proposed_not_active",
+  "maintainer_direction": "adoption_then_independent_bridge_retirement",
+  "approved": false,
+  "toolchain": "0.13.0",
+  "distribution_sha256": "fa82b9872dcfa04d26c8f800f33d597c99fbffd747a0e9bbce3a9e4424b3a588",
+  "adoption_patch_sha256": "3da763cbf03e7e1c52dbd3aaacd236c4650b90df1bacee0ca97f7a48620eb9f5",
+  "historical_artifact_source_sha256": "40893d8814122dd0a4a9e5750f8d71548235fadc8c4b276ace97c027cb579d90",
+  "artifact_binding_scope": "historical_verified_library_bytes_and_candidate_joins_revalidate_at_decision",
+  "proposed_maximum_duration_days": 30,
+  "starts_at": null,
+  "expires_at": null,
+  "age_exception": {
+    "approved": false,
+    "eligible_at": "2026-10-08T06:36:56Z",
+    "decision": "pending_explicit_timing_choice"
+  },
+  "allowed_operations": [
+    "public_source_development_builds",
+    "repository_tests",
+    "isolated_compatibility_assessment"
+  ],
+  "excluded_operations": [
+    "credentialed_release_delivery",
+    "bridge_default_switch",
+    "physical_bridge_deletion"
+  ],
+  "findings": [
+    {
+      "id": "GHSA-2363-cqg2-863c",
+      "severity": "HIGH",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "org.jdom",
+            "name": "jdom2",
+            "version": "2.0.6"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "1345f11ba606d15603d6740551a8c21947c0215640770ec67271fe78bea97cf5",
+            "bytes": 304924
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-3677-xxcr-wjqv",
+      "severity": "HIGH",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "org.bitbucket.b_c",
+            "name": "jose4j",
+            "version": "0.9.5"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "808fb3166f3e67dad9811c331029ab1681242fd52b735bc3f33f281167fcc72e",
+            "bytes": 298683
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-574f-3g2m-x479",
+      "severity": "CRITICAL",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "org.bouncycastle",
+            "name": "bcprov-jdk18on",
+            "version": "1.79"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+            "bytes": 8575537
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-7hhh-6rmp-j9qf",
+      "severity": "HIGH",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "com.fasterxml.jackson.core",
+            "name": "jackson-core",
+            "version": "2.21.1"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "1edd5f2e49dca5f8e4519957c24b7b3050bd1c7ee883920da33cff031ff1f7c0",
+            "bytes": 594806
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-9pwp-9qqc-pr26",
+      "severity": "CRITICAL",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "org.bouncycastle",
+            "name": "bcprov-jdk18on",
+            "version": "1.79"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+            "bytes": 8575537
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-cmp6-m4wj-q63q",
+      "severity": "HIGH",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "org.lz4",
+            "name": "lz4-java",
+            "version": "1.8.0"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef",
+            "bytes": 682804
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-p6pp-m3f8-5c89",
+      "severity": "HIGH",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "com.fasterxml.jackson.core",
+            "name": "jackson-core",
+            "version": "2.21.1"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "1edd5f2e49dca5f8e4519957c24b7b3050bd1c7ee883920da33cff031ff1f7c0",
+            "bytes": 594806
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-qp49-qgx5-5m26",
+      "severity": "HIGH",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "org.bouncycastle",
+            "name": "bcprov-jdk18on",
+            "version": "1.79"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+            "bytes": 8575537
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-r7wm-3cxj-wff9",
+      "severity": "HIGH",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "com.fasterxml.jackson.core",
+            "name": "jackson-core",
+            "version": "2.21.1"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "1edd5f2e49dca5f8e4519957c24b7b3050bd1c7ee883920da33cff031ff1f7c0",
+            "bytes": 594806
+          }
+        }
+      ]
+    },
+    {
+      "id": "GHSA-vqf4-7m7x-wgfc",
+      "severity": "HIGH",
+      "artifacts": [
+        {
+          "component": {
+            "kind": "maven",
+            "group": "org.lz4",
+            "name": "lz4-java",
+            "version": "1.8.0"
+          },
+          "identity": {
+            "kind": "file",
+            "sha256": "d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef",
+            "bytes": 682804
+          }
+        }
+      ]
+    }
+  ],
+  "other_findings": "seven Moderate findings remain review-visible",
+  "unknown_severity": "requires_triage",
+  "evidence_max_age_hours": 24,
+  "remediation_verified": false,
+  "adoption_authorized": false,
+  "controls": [
+    "Owned disposable rehearsal copies and guarded cleanup",
+    "No credentialed release or machine-wide setup implied",
+    "Preserve advisory findings and refuse new IDs or changed artifact bytes",
+    "Review expiry and drift before each new manual adoption decision"
+  ],
+  "limits": [
+    "Consumer reachability unmeasured",
+    "Control list is proposed and not complete exposure mitigation",
+    "Incomplete attribution and runtime/hosted/signed coverage cannot be cleared by this decision"
+  ]
+}

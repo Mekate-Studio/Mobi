@@ -1,0 +1,4005 @@
+{
+  "schema": 1,
+  "assessment": "retained_compiler_fingerprint_attribution",
+  "run": {
+    "schema": 1,
+    "run_id": "4fe1d2f29b3ac1c5e1b0135fac5e6a7f",
+    "state": "checks_passed",
+    "reason": "named_checks_passed",
+    "started_at": "2026-10-03T09:43:19Z",
+    "ended_at": "2026-10-03T09:43:36Z",
+    "binding": {
+      "source_sha256": "c7690024d37028d853fa7a88bc6631edd597daad07716e1dce6c2cae32a42957",
+      "capture_mode": "working_snapshot",
+      "git": {
+        "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+        "index_sha256": "4bde9550c9915bad7f911c76491599d7f452e5e2acd3f3e705f42e6dd9890dd5"
+      },
+      "adapter": "plugin-attribution",
+      "adapter_schema": 1,
+      "plan_sha256": "74b0855673b4d6b7f5e21cbcde6410ce9bdb8542a7bc4370665164ade4c7249c",
+      "patch_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "tools_sha256": "331a12f95d8b6b6659aa9e84d11ce91fbae3d540531f43b8cd4c2bdf8867c06b",
+      "execution_files": [
+        {
+          "name": "executor.rb",
+          "sha256": "6e7b988602caa2b1a27b227f98ea0fbff84dfe31f40b7f47a70d1bb24d8edbcd"
+        },
+        {
+          "name": "worker.rb",
+          "sha256": "790b8720eb98b2dee0d46078e4154953e51345a558be17000aeb324df94fb3a2"
+        },
+        {
+          "name": "core.rb",
+          "sha256": "3ff8ba920a07973e28e62272e952314868a6aae6225cc99659f8707b2064c028"
+        },
+        {
+          "name": "run_store.rb",
+          "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc"
+        },
+        {
+          "name": "process_group.rb",
+          "sha256": "378133febaf2bd9432119ada0947be8119dcea7b9e9b552c2358eadad8b51c90"
+        },
+        {
+          "name": "resource_handlers.rb",
+          "sha256": "8d30b88bd1a0c1e8f25972dff989dd0f4bdab8e37c6d7fe363b7a3ae55a21e93"
+        },
+        {
+          "name": "ruby",
+          "sha256": "80e70b56c0332ab44deffc20c2b816f85bb1239b7e8ce6a12942373deadf072e"
+        },
+        {
+          "name": "ps",
+          "sha256": "a06fe087161557f1f8c030672eaedcd90bc6a8e92b8f2d44e07cffedc3349205"
+        },
+        {
+          "name": "git",
+          "sha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2"
+        },
+        {
+          "name": "plugin_attribution.rb",
+          "sha256": "c77debedbfee14e8598d66c91cc4b422853bd896a81df9d8c2747c249d56a857"
+        },
+        {
+          "name": "b9196590683c4429bdb84600d236c834abae23a919931b402fe7b16099464eb9.json",
+          "sha256": "3d5704cdb90b4f37581ae943077de2c806a565fbbbc3e449212013d43b64fcb0"
+        },
+        {
+          "name": "abd79d035e5e75666cfb32d0b7a85e3076f100763502830e1b979ce67e3b31d3.json",
+          "sha256": "3f9562593260cfc4554ce6935b01312de9b07528a4dc1d225b76326656a9e8a3"
+        },
+        {
+          "name": "java",
+          "sha256": "4ddcf3ee5d518bd98d55f00da6747d20dddf2c4d7e555fddb9d26db6362424ce"
+        },
+        {
+          "name": "maintenance-plugin-resolution.json",
+          "sha256": "7331b88e745c629854e95ab9b8d3b786170be733f4bea5cd29d2e77ecce20b0a"
+        },
+        {
+          "name": "kotlin_resources.rb",
+          "sha256": "aff6499274071f49a0d8f58a15dd3af678f09f1478e53230854c0b030a748f3b"
+        },
+        {
+          "name": "advisory_review.rb",
+          "sha256": "7c71d36327dc3954b7077c227366407feaa59702417c4c92284a3eb4654718a0"
+        },
+        {
+          "name": "build_inputs.rb",
+          "sha256": "2c801dfdeebc91bcb5e99a090bddb9e949547e922803d33953fef77be6fa6976"
+        },
+        {
+          "name": "compatibility_report.rb",
+          "sha256": "a5209c43aed7b7cdba5e0e4d3d2d0b5ab46d34b79168526957598c120a867318"
+        },
+        {
+          "name": "direct_resolution.rb",
+          "sha256": "a6bb27fd5da0e17657f19e395dbb9b4e8b49338d7588dcfaeb546fd68dab0b60"
+        },
+        {
+          "name": "kotlin_evidence.rb",
+          "sha256": "29f9b7aab47650f276f2179fa11b265348e6b4fd8e67c15dcc60584e5bfedc56"
+        },
+        {
+          "name": "kotlin_wrappers.rb",
+          "sha256": "fce20dc01ef44441cccdb53c75c94b7f70d4542f9725c006d31b7119d9faa666"
+        },
+        {
+          "name": "maintenance.rb",
+          "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3"
+        },
+        {
+          "name": "plugin_attribution.rb",
+          "sha256": "b302e664d7d4031e4795bd925734e4dec9b9529929f5f68dfdbc38c72ab8349d"
+        },
+        {
+          "name": "policy.rb",
+          "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965"
+        },
+        {
+          "name": "recovery.rb",
+          "sha256": "bf81138efc57878ae98759bf25252aa6df97847786f7b84bd8999a254b520ae9"
+        },
+        {
+          "name": "roundtrip_evidence.rb",
+          "sha256": "b00f3416206b3d2ba9ddd431a9b14eb3bb5fbc2ae0430d757084ff01c7c028f4"
+        },
+        {
+          "name": "support_policy.rb",
+          "sha256": "9a64240fba1af2f6a0724e8b8f5babfad5aa80fcf1b9b23e60a1467a52744c3e"
+        },
+        {
+          "name": "tools.rb",
+          "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8"
+        },
+        {
+          "name": "upgrade_graph.rb",
+          "sha256": "98f81c579f866858bfad46df5edc3e0db63882bbc1689df7778c2fb73ed91660"
+        },
+        {
+          "name": "watch.rb",
+          "sha256": "4614f11415bd8005ac67538b5bc258d7a82b84ea3280ab54026727a1062e1d85"
+        },
+        {
+          "name": "watch_history.rb",
+          "sha256": "26e07b4ef76698e486e9e4eb4ea0b8d460ce7812b5c6ce71046d1109140fc005"
+        },
+        {
+          "name": "plugin_check.rb",
+          "sha256": "26afbd727a7c5e4b55ea68c3093bd7c714e91f83d3cc3a1d3570c5975af7e709"
+        },
+        {
+          "name": "plugin_resolution.gradle",
+          "sha256": "e38797d347336609c6e37a605bc8c294ae6d0653872d533af9fb020c6915e229"
+        },
+        {
+          "name": "gradlew",
+          "sha256": "a5a5c199ba02189ae8c46a334223371a20599d9c298ef65e7540ede4a3f72d59"
+        },
+        {
+          "name": "gradle-wrapper.jar",
+          "sha256": "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7"
+        },
+        {
+          "name": "gradle-wrapper.properties",
+          "sha256": "c94d41b634a5e0ff8a2f812023697b1337eebac18e9962610356a1793f72896d"
+        },
+        {
+          "name": "maintenance-execution-policy.json",
+          "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b"
+        },
+        {
+          "name": "execution_cli.rb",
+          "sha256": "c3be80dddcf96ddfda1e105b5e778e0e33bc57cf1a960f0d25f162bf10889178"
+        },
+        {
+          "name": "dependencies.rb",
+          "sha256": "a1c866d2c8f49265d0d47242e9d27cfb8b06094b61e9d4b35dc8a3ca03e3fbf8"
+        }
+      ],
+      "runtime": {
+        "ruby": "4.0.6",
+        "platform": "arm64-darwin27"
+      },
+      "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+    },
+    "steps": [
+      {
+        "check": "plugin-attribution",
+        "phase": "baseline",
+        "status": "passed",
+        "exit": 0,
+        "seconds": 7.742,
+        "argv": [
+          "ruby",
+          "plugin_check.rb",
+          "{source}",
+          "{output}",
+          "{cache}",
+          "b9196590683c4429bdb84600d236c834abae23a919931b402fe7b16099464eb9.json",
+          "abd79d035e5e75666cfb32d0b7a85e3076f100763502830e1b979ce67e3b31d3.json"
+        ],
+        "working_directory": "work/baseline/source",
+        "environment_names": [
+          "GIT_CONFIG_GLOBAL",
+          "GIT_CONFIG_NOSYSTEM",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "MOBI_PHASE",
+          "MOBI_RESOURCE_NONCE",
+          "MOBI_RESULT_PATH",
+          "PATH",
+          "TMPDIR"
+        ],
+        "output_sha256": {
+          "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "check.json": "7e4e6afcfbf7ed654f1b29d42956e85c24fcb08ec1a4836ebe4e79358ce83888"
+        }
+      },
+      {
+        "check": "plugin-attribution",
+        "phase": "candidate",
+        "status": "passed",
+        "exit": 0,
+        "seconds": 8.251,
+        "argv": [
+          "ruby",
+          "plugin_check.rb",
+          "{source}",
+          "{output}",
+          "{cache}",
+          "b9196590683c4429bdb84600d236c834abae23a919931b402fe7b16099464eb9.json",
+          "abd79d035e5e75666cfb32d0b7a85e3076f100763502830e1b979ce67e3b31d3.json"
+        ],
+        "working_directory": "work/candidate/source",
+        "environment_names": [
+          "GIT_CONFIG_GLOBAL",
+          "GIT_CONFIG_NOSYSTEM",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "MOBI_PHASE",
+          "MOBI_RESOURCE_NONCE",
+          "MOBI_RESULT_PATH",
+          "PATH",
+          "TMPDIR"
+        ],
+        "output_sha256": {
+          "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "check.json": "d8c07c28b1727384f4b8f436b468a4345e8827506f6d5538c7fc33ee1d2dab65"
+        }
+      }
+    ],
+    "attempts": [
+      {
+        "id": "baseline-plugin-attribution",
+        "state": "stopped",
+        "process_exit": 0,
+        "output_sha256": {
+          "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "check.json": "7e4e6afcfbf7ed654f1b29d42956e85c24fcb08ec1a4836ebe4e79358ce83888",
+          "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "id": "candidate-plugin-attribution",
+        "state": "stopped",
+        "process_exit": 0,
+        "output_sha256": {
+          "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "check.json": "d8c07c28b1727384f4b8f436b468a4345e8827506f6d5538c7fc33ee1d2dab65",
+          "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "scope": "retained_paired_compiler_inputs",
+    "missing_capabilities": [
+      "shaded_code",
+      "native_bundle_internals",
+      "native_test_compiler_inputs",
+      "complete_direct_target_graph",
+      "artifact_attribution",
+      "advisory_review"
+    ],
+    "adoption_authorized": false,
+    "resources": "retained_for_review",
+    "cleanup": "not_requested",
+    "history_bytes": 1264,
+    "history_sha256": "a35ccbdd594725e014d7dc1d46de14b2328bbed3b36bcd853d27b35a88534c28"
+  },
+  "original_binding": {
+    "source_sha256": "d53589373d8177e04b93f91899162e4e146b721076388884aa5b2b38331e07ff",
+    "capture_mode": "working_snapshot",
+    "git": {
+      "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+      "index_sha256": "4bde9550c9915bad7f911c76491599d7f452e5e2acd3f3e705f42e6dd9890dd5"
+    },
+    "adapter": "compatibility-direct-build-inputs",
+    "adapter_schema": 1,
+    "plan_sha256": "290d354228e1983ee347cc952e062adea460b2cd293113922203b8e23da17118",
+    "patch_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "tools_sha256": "e9411c57cf2fa5013aa853306226cd54ab2dfd461b09534d4a3baea0ad9c581e",
+    "execution_files": [
+      {
+        "name": "executor.rb",
+        "sha256": "6e7b988602caa2b1a27b227f98ea0fbff84dfe31f40b7f47a70d1bb24d8edbcd"
+      },
+      {
+        "name": "worker.rb",
+        "sha256": "790b8720eb98b2dee0d46078e4154953e51345a558be17000aeb324df94fb3a2"
+      },
+      {
+        "name": "core.rb",
+        "sha256": "3ff8ba920a07973e28e62272e952314868a6aae6225cc99659f8707b2064c028"
+      },
+      {
+        "name": "run_store.rb",
+        "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc"
+      },
+      {
+        "name": "process_group.rb",
+        "sha256": "378133febaf2bd9432119ada0947be8119dcea7b9e9b552c2358eadad8b51c90"
+      },
+      {
+        "name": "resource_handlers.rb",
+        "sha256": "8d30b88bd1a0c1e8f25972dff989dd0f4bdab8e37c6d7fe363b7a3ae55a21e93"
+      },
+      {
+        "name": "ruby",
+        "sha256": "80e70b56c0332ab44deffc20c2b816f85bb1239b7e8ce6a12942373deadf072e"
+      },
+      {
+        "name": "ps",
+        "sha256": "a06fe087161557f1f8c030672eaedcd90bc6a8e92b8f2d44e07cffedc3349205"
+      },
+      {
+        "name": "git",
+        "sha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2"
+      },
+      {
+        "name": "compatibility.rb",
+        "sha256": "f81577d30909ca8e92ba491544a24cc98d439ba99791a3b3143dd1864f2be772"
+      },
+      {
+        "name": "1d80988321fe8c1523f9a085165719b07f876c6175625ca5e5246e6c1b4b1a3c.json",
+        "sha256": "6f560b3880663d10d91b6151fd783d0892ec8de6eeeee3801189da9375a2178b"
+      },
+      {
+        "name": "maintenance-compatibility.json",
+        "sha256": "565dfc2db290745041c299c3f5568cbc55ad43c3eb12bc996d3757606fc30c81"
+      },
+      {
+        "name": "maintenance-kotlin-toolchains.json",
+        "sha256": "0ff446be520eecdf815bcbb280b59f484f9e1403eb82f71c1ea0ad55935f1da3"
+      },
+      {
+        "name": "java",
+        "sha256": "4ddcf3ee5d518bd98d55f00da6747d20dddf2c4d7e555fddb9d26db6362424ce"
+      },
+      {
+        "name": "advisory_review.rb",
+        "sha256": "7c71d36327dc3954b7077c227366407feaa59702417c4c92284a3eb4654718a0"
+      },
+      {
+        "name": "build_inputs.rb",
+        "sha256": "2c801dfdeebc91bcb5e99a090bddb9e949547e922803d33953fef77be6fa6976"
+      },
+      {
+        "name": "compatibility_report.rb",
+        "sha256": "a5209c43aed7b7cdba5e0e4d3d2d0b5ab46d34b79168526957598c120a867318"
+      },
+      {
+        "name": "direct_resolution.rb",
+        "sha256": "a6bb27fd5da0e17657f19e395dbb9b4e8b49338d7588dcfaeb546fd68dab0b60"
+      },
+      {
+        "name": "kotlin_evidence.rb",
+        "sha256": "29f9b7aab47650f276f2179fa11b265348e6b4fd8e67c15dcc60584e5bfedc56"
+      },
+      {
+        "name": "kotlin_wrappers.rb",
+        "sha256": "fce20dc01ef44441cccdb53c75c94b7f70d4542f9725c006d31b7119d9faa666"
+      },
+      {
+        "name": "maintenance.rb",
+        "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3"
+      },
+      {
+        "name": "policy.rb",
+        "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965"
+      },
+      {
+        "name": "recovery.rb",
+        "sha256": "bf81138efc57878ae98759bf25252aa6df97847786f7b84bd8999a254b520ae9"
+      },
+      {
+        "name": "roundtrip_evidence.rb",
+        "sha256": "b00f3416206b3d2ba9ddd431a9b14eb3bb5fbc2ae0430d757084ff01c7c028f4"
+      },
+      {
+        "name": "support_policy.rb",
+        "sha256": "9a64240fba1af2f6a0724e8b8f5babfad5aa80fcf1b9b23e60a1467a52744c3e"
+      },
+      {
+        "name": "tools.rb",
+        "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8"
+      },
+      {
+        "name": "upgrade_graph.rb",
+        "sha256": "98f81c579f866858bfad46df5edc3e0db63882bbc1689df7778c2fb73ed91660"
+      },
+      {
+        "name": "watch.rb",
+        "sha256": "4614f11415bd8005ac67538b5bc258d7a82b84ea3280ab54026727a1062e1d85"
+      },
+      {
+        "name": "watch_history.rb",
+        "sha256": "26e07b4ef76698e486e9e4eb4ea0b8d460ce7812b5c6ce71046d1109140fc005"
+      },
+      {
+        "name": "bridge_resolution.gradle",
+        "sha256": "681990e98f479bd0f27cd61ce932142136b93a5b6c241cf0659f1efe3c78c42f"
+      },
+      {
+        "name": "delegated_resolution.gradle",
+        "sha256": "5e45fd545613cf558d17d8fda4bb92baef68bfc1ad1f61660cc5954ef859f692"
+      },
+      {
+        "name": "direct_roundtrip.rb",
+        "sha256": "6ccd67c443fea9dabfdb0fed227f5e3bfee3e283cc404bc302e80b1f8b1ad403"
+      },
+      {
+        "name": "elixir.rb",
+        "sha256": "1adbc0c83b3ccc95c7cf4e5bb0d91e92492c5f670eebcb45c5331b0f5ba84d56"
+      },
+      {
+        "name": "interop_experiment.rb",
+        "sha256": "d5cff4d4d13be4f6a8a5381de5e2a3e455e8fcf10f71e98fa23f533f679af55c"
+      },
+      {
+        "name": "kotlin.rb",
+        "sha256": "087ec8c26eb601cc39baf973b6dbbe24bae9340cd918d509c68d823f82fec1cd"
+      },
+      {
+        "name": "kotlin_rehearsal.rb",
+        "sha256": "57c92f98ba544006896b3fcc7d4118dae711be3cdc075a976e963ecb14e1f507"
+      },
+      {
+        "name": "kotlin_resources.rb",
+        "sha256": "aff6499274071f49a0d8f58a15dd3af678f09f1478e53230854c0b030a748f3b"
+      },
+      {
+        "name": "kotlin_targets.rb",
+        "sha256": "9c9fb2fcefae650787d8e81689c43a9c2a17d54dd1483e3e42ec336b9063857f"
+      },
+      {
+        "name": "kotlin_watch.rb",
+        "sha256": "490a63099c143e7c06a802eff6901889a36ebcdbcd444f381ec6c87672250f23"
+      },
+      {
+        "name": "mobile_support.rb",
+        "sha256": "d14482749ddec84c4cb67da5617811497fadb62c1599b7c0a37e008599cc8947"
+      },
+      {
+        "name": "MobiInteropProjection.kt.template",
+        "sha256": "e83d0f5d69f95479203058546d023b34d04cf9f37d103c2fda1b98de38c9ef64"
+      },
+      {
+        "name": "MobiInteropProjection.swift.template",
+        "sha256": "aa1a45dbdf6f24b4c0b77f01572b11b707ec9896c94d42118fd57e924dc321a8"
+      },
+      {
+        "name": "compatibility_check.rb",
+        "sha256": "b0887575baee01dcbdc6cbc8f9e8624208ef8cdaa023ecb2513f038967c66f0d"
+      },
+      {
+        "name": "kotlin_check.rb",
+        "sha256": "4fc495e159a63c77e9429b8ec1203751a0385818af4d5e9c8e6ad29b65923764"
+      },
+      {
+        "name": "maintenance-execution-policy.json",
+        "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b"
+      },
+      {
+        "name": "execution_cli.rb",
+        "sha256": "8662450460958bf9ecce969f728ccf1d18063ec737723caf3ef5091de592f3db"
+      },
+      {
+        "name": "dependencies.rb",
+        "sha256": "bbbdfd17a4b6e8caf5a3b8a526988a38142dac1dbb0d8a76a6da59d3651e9c9b"
+      }
+    ],
+    "runtime": {
+      "ruby": "4.0.6",
+      "platform": "arm64-darwin27"
+    },
+    "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+  },
+  "phases": {
+    "baseline": {
+      "attribution": {
+        "schema": 1,
+        "state": "attributed",
+        "method": "independent_resolver_exact_compiler_fingerprint_join",
+        "phase": "baseline",
+        "original_run_id": "9c17d97f1070e64cbe7dad16149610da",
+        "original_result_sha256": "1fd43915d3987dc723c82cf82cf64f15b668ced56eea4d4a22e4b09e71cb58b6",
+        "input_sha256": "b9196590683c4429bdb84600d236c834abae23a919931b402fe7b16099464eb9",
+        "graph_sha256": "1cd02924f973c99a9f495d049fa5b200ea1fd4d78a2cd7d1717810b40871d6c3",
+        "attributions": {
+          "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar": {
+            "component": {
+              "kind": "maven",
+              "group": "dev.zacsweers.metro",
+              "name": "compiler",
+              "version": "1.4.5"
+            },
+            "variant": {
+              "name": "dev.zacsweers.metro:compiler:1.4.5 variant runtimeElements",
+              "attributes": {
+                "artifactType": "jar",
+                "org.gradle.category": "library",
+                "org.gradle.dependency.bundling": "external",
+                "org.gradle.jvm.environment": "standard-jvm",
+                "org.gradle.jvm.version": "21",
+                "org.gradle.libraryelements": "jar",
+                "org.gradle.status": "release",
+                "org.gradle.usage": "java-runtime",
+                "org.jetbrains.kotlin.platform.type": "jvm"
+              }
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "e94246f0f3af1f7e8b34d4238f5c95187abf69cb940bf96d239d4a731ebb824e",
+              "bytes": 5966028
+            }
+          },
+          "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar": {
+            "component": {
+              "kind": "maven",
+              "group": "org.jetbrains.kotlin",
+              "name": "kotlin-compose-compiler-plugin-embeddable",
+              "version": "2.4.10"
+            },
+            "variant": {
+              "name": "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable:2.4.10 configuration default",
+              "attributes": {
+                "artifactType": "jar",
+                "org.gradle.status": "release"
+              }
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "07edff96c6196c5354caa275b748616794cc8883af02e380d091d221f02bdc80",
+              "bytes": 949238
+            }
+          }
+        },
+        "excluded_artifacts": [],
+        "queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "dev.zacsweers.metro:compiler"
+            },
+            "version": "1.4.5"
+          },
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable"
+            },
+            "version": "2.4.10"
+          }
+        ],
+        "missing_capabilities": [
+          "shaded_code",
+          "native_bundle_internals",
+          "native_test_compiler_inputs",
+          "complete_direct_target_graph",
+          "artifact_attribution",
+          "advisory_review"
+        ],
+        "adoption_authorized": false
+      },
+      "resolver": {
+        "schema": 1,
+        "state": "resolved",
+        "gradle": "9.6.1",
+        "roots": [
+          {
+            "requested": {
+              "kind": "maven",
+              "group": "dev.zacsweers.metro",
+              "name": "compiler",
+              "version": "1.4.5"
+            },
+            "failures": [],
+            "nodes": [
+              {
+                "component": {
+                  "kind": "maven",
+                  "group": "dev.zacsweers.metro",
+                  "name": "compiler",
+                  "version": "1.4.5"
+                },
+                "variants": [
+                  {
+                    "name": "runtimeElements",
+                    "attributes": {
+                      "org.gradle.category": "library",
+                      "org.gradle.dependency.bundling": "external",
+                      "org.gradle.jvm.environment": "standard-jvm",
+                      "org.gradle.jvm.version": "21",
+                      "org.gradle.libraryelements": "jar",
+                      "org.gradle.status": "release",
+                      "org.gradle.usage": "java-runtime",
+                      "org.jetbrains.kotlin.platform.type": "jvm"
+                    }
+                  }
+                ]
+              },
+              {
+                "component": {
+                  "kind": "project",
+                  "id": "root"
+                },
+                "variants": [
+                  {
+                    "name": "plugin0",
+                    "attributes": {
+                      "org.gradle.category": "library",
+                      "org.gradle.libraryelements": "jar",
+                      "org.gradle.usage": "java-runtime"
+                    }
+                  }
+                ]
+              }
+            ],
+            "edges": [
+              {
+                "from": {
+                  "kind": "project",
+                  "id": "root"
+                },
+                "requested": "dev.zacsweers.metro:compiler:1.4.5",
+                "selected": {
+                  "kind": "maven",
+                  "group": "dev.zacsweers.metro",
+                  "name": "compiler",
+                  "version": "1.4.5"
+                },
+                "variant": {
+                  "name": "runtimeElements",
+                  "attributes": {
+                    "org.gradle.category": "library",
+                    "org.gradle.dependency.bundling": "external",
+                    "org.gradle.jvm.environment": "standard-jvm",
+                    "org.gradle.jvm.version": "21",
+                    "org.gradle.libraryelements": "jar",
+                    "org.gradle.status": "release",
+                    "org.gradle.usage": "java-runtime",
+                    "org.jetbrains.kotlin.platform.type": "jvm"
+                  }
+                }
+              }
+            ],
+            "artifacts": [
+              {
+                "component": {
+                  "kind": "maven",
+                  "group": "dev.zacsweers.metro",
+                  "name": "compiler",
+                  "version": "1.4.5"
+                },
+                "name": "compiler-1.4.5.jar",
+                "variant": {
+                  "name": "dev.zacsweers.metro:compiler:1.4.5 variant runtimeElements",
+                  "attributes": {
+                    "artifactType": "jar",
+                    "org.gradle.category": "library",
+                    "org.gradle.dependency.bundling": "external",
+                    "org.gradle.jvm.environment": "standard-jvm",
+                    "org.gradle.jvm.version": "21",
+                    "org.gradle.libraryelements": "jar",
+                    "org.gradle.status": "release",
+                    "org.gradle.usage": "java-runtime",
+                    "org.jetbrains.kotlin.platform.type": "jvm"
+                  }
+                },
+                "identity": {
+                  "kind": "file",
+                  "sha256": "e94246f0f3af1f7e8b34d4238f5c95187abf69cb940bf96d239d4a731ebb824e",
+                  "bytes": 5966028
+                }
+              }
+            ]
+          },
+          {
+            "requested": {
+              "group": "org.jetbrains.kotlin",
+              "name": "kotlin-compose-compiler-plugin-embeddable",
+              "kind": "maven",
+              "version": "2.4.10"
+            },
+            "failures": [],
+            "nodes": [
+              {
+                "component": {
+                  "kind": "maven",
+                  "group": "org.jetbrains.kotlin",
+                  "name": "kotlin-compose-compiler-plugin-embeddable",
+                  "version": "2.4.10"
+                },
+                "variants": [
+                  {
+                    "name": "default",
+                    "attributes": {
+                      "org.gradle.status": "release"
+                    }
+                  }
+                ]
+              },
+              {
+                "component": {
+                  "kind": "project",
+                  "id": "root"
+                },
+                "variants": [
+                  {
+                    "name": "plugin1",
+                    "attributes": {
+                      "org.gradle.category": "library",
+                      "org.gradle.libraryelements": "jar",
+                      "org.gradle.usage": "java-runtime"
+                    }
+                  }
+                ]
+              }
+            ],
+            "edges": [
+              {
+                "from": {
+                  "kind": "project",
+                  "id": "root"
+                },
+                "requested": "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable:2.4.10",
+                "selected": {
+                  "kind": "maven",
+                  "group": "org.jetbrains.kotlin",
+                  "name": "kotlin-compose-compiler-plugin-embeddable",
+                  "version": "2.4.10"
+                },
+                "variant": {
+                  "name": "default",
+                  "attributes": {
+                    "org.gradle.status": "release"
+                  }
+                }
+              }
+            ],
+            "artifacts": [
+              {
+                "component": {
+                  "kind": "maven",
+                  "group": "org.jetbrains.kotlin",
+                  "name": "kotlin-compose-compiler-plugin-embeddable",
+                  "version": "2.4.10"
+                },
+                "name": "kotlin-compose-compiler-plugin-embeddable-2.4.10.jar",
+                "variant": {
+                  "name": "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable:2.4.10 configuration default",
+                  "attributes": {
+                    "artifactType": "jar",
+                    "org.gradle.status": "release"
+                  }
+                },
+                "identity": {
+                  "kind": "file",
+                  "sha256": "07edff96c6196c5354caa275b748616794cc8883af02e380d091d221f02bdc80",
+                  "bytes": 949238
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "compiler_producer_sha256": {
+        "traces": "78e2199c4279d94b550634b062a4fed243e996af0254924ad325c301f596733d",
+        "artifacts": "e34397565b2fe31a87d07fd21c44591016f62292e1fe85780a5b7c0dc78f6bd9",
+        "delegated": "b5fced4109e0da469a4273deaf4bb628568e5f88f8670f7ecb02d4eb004fa43d"
+      },
+      "compiler_invocation_count": 37
+    },
+    "candidate": {
+      "attribution": {
+        "schema": 1,
+        "state": "attributed",
+        "method": "independent_resolver_exact_compiler_fingerprint_join",
+        "phase": "candidate",
+        "original_run_id": "9c17d97f1070e64cbe7dad16149610da",
+        "original_result_sha256": "1fd43915d3987dc723c82cf82cf64f15b668ced56eea4d4a22e4b09e71cb58b6",
+        "input_sha256": "b9196590683c4429bdb84600d236c834abae23a919931b402fe7b16099464eb9",
+        "graph_sha256": "1cd02924f973c99a9f495d049fa5b200ea1fd4d78a2cd7d1717810b40871d6c3",
+        "attributions": {
+          "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar": {
+            "component": {
+              "kind": "maven",
+              "group": "dev.zacsweers.metro",
+              "name": "compiler",
+              "version": "1.4.5"
+            },
+            "variant": {
+              "name": "dev.zacsweers.metro:compiler:1.4.5 variant runtimeElements",
+              "attributes": {
+                "artifactType": "jar",
+                "org.gradle.category": "library",
+                "org.gradle.dependency.bundling": "external",
+                "org.gradle.jvm.environment": "standard-jvm",
+                "org.gradle.jvm.version": "21",
+                "org.gradle.libraryelements": "jar",
+                "org.gradle.status": "release",
+                "org.gradle.usage": "java-runtime",
+                "org.jetbrains.kotlin.platform.type": "jvm"
+              }
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "e94246f0f3af1f7e8b34d4238f5c95187abf69cb940bf96d239d4a731ebb824e",
+              "bytes": 5966028
+            }
+          },
+          "{home}/Library/Caches/JetBrains/Kotlin/.m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.10/kotlin-compose-compiler-plugin-embeddable-2.4.10.jar": {
+            "component": {
+              "kind": "maven",
+              "group": "org.jetbrains.kotlin",
+              "name": "kotlin-compose-compiler-plugin-embeddable",
+              "version": "2.4.10"
+            },
+            "variant": {
+              "name": "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable:2.4.10 configuration default",
+              "attributes": {
+                "artifactType": "jar",
+                "org.gradle.status": "release"
+              }
+            },
+            "identity": {
+              "kind": "file",
+              "sha256": "07edff96c6196c5354caa275b748616794cc8883af02e380d091d221f02bdc80",
+              "bytes": 949238
+            }
+          }
+        },
+        "excluded_artifacts": [],
+        "queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "dev.zacsweers.metro:compiler"
+            },
+            "version": "1.4.5"
+          },
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable"
+            },
+            "version": "2.4.10"
+          }
+        ],
+        "missing_capabilities": [
+          "shaded_code",
+          "native_bundle_internals",
+          "native_test_compiler_inputs",
+          "complete_direct_target_graph",
+          "artifact_attribution",
+          "advisory_review"
+        ],
+        "adoption_authorized": false
+      },
+      "resolver": {
+        "schema": 1,
+        "state": "resolved",
+        "gradle": "9.6.1",
+        "roots": [
+          {
+            "requested": {
+              "kind": "maven",
+              "group": "dev.zacsweers.metro",
+              "name": "compiler",
+              "version": "1.4.5"
+            },
+            "failures": [],
+            "nodes": [
+              {
+                "component": {
+                  "kind": "maven",
+                  "group": "dev.zacsweers.metro",
+                  "name": "compiler",
+                  "version": "1.4.5"
+                },
+                "variants": [
+                  {
+                    "name": "runtimeElements",
+                    "attributes": {
+                      "org.gradle.category": "library",
+                      "org.gradle.dependency.bundling": "external",
+                      "org.gradle.jvm.environment": "standard-jvm",
+                      "org.gradle.jvm.version": "21",
+                      "org.gradle.libraryelements": "jar",
+                      "org.gradle.status": "release",
+                      "org.gradle.usage": "java-runtime",
+                      "org.jetbrains.kotlin.platform.type": "jvm"
+                    }
+                  }
+                ]
+              },
+              {
+                "component": {
+                  "kind": "project",
+                  "id": "root"
+                },
+                "variants": [
+                  {
+                    "name": "plugin0",
+                    "attributes": {
+                      "org.gradle.category": "library",
+                      "org.gradle.libraryelements": "jar",
+                      "org.gradle.usage": "java-runtime"
+                    }
+                  }
+                ]
+              }
+            ],
+            "edges": [
+              {
+                "from": {
+                  "kind": "project",
+                  "id": "root"
+                },
+                "requested": "dev.zacsweers.metro:compiler:1.4.5",
+                "selected": {
+                  "kind": "maven",
+                  "group": "dev.zacsweers.metro",
+                  "name": "compiler",
+                  "version": "1.4.5"
+                },
+                "variant": {
+                  "name": "runtimeElements",
+                  "attributes": {
+                    "org.gradle.category": "library",
+                    "org.gradle.dependency.bundling": "external",
+                    "org.gradle.jvm.environment": "standard-jvm",
+                    "org.gradle.jvm.version": "21",
+                    "org.gradle.libraryelements": "jar",
+                    "org.gradle.status": "release",
+                    "org.gradle.usage": "java-runtime",
+                    "org.jetbrains.kotlin.platform.type": "jvm"
+                  }
+                }
+              }
+            ],
+            "artifacts": [
+              {
+                "component": {
+                  "kind": "maven",
+                  "group": "dev.zacsweers.metro",
+                  "name": "compiler",
+                  "version": "1.4.5"
+                },
+                "name": "compiler-1.4.5.jar",
+                "variant": {
+                  "name": "dev.zacsweers.metro:compiler:1.4.5 variant runtimeElements",
+                  "attributes": {
+                    "artifactType": "jar",
+                    "org.gradle.category": "library",
+                    "org.gradle.dependency.bundling": "external",
+                    "org.gradle.jvm.environment": "standard-jvm",
+                    "org.gradle.jvm.version": "21",
+                    "org.gradle.libraryelements": "jar",
+                    "org.gradle.status": "release",
+                    "org.gradle.usage": "java-runtime",
+                    "org.jetbrains.kotlin.platform.type": "jvm"
+                  }
+                },
+                "identity": {
+                  "kind": "file",
+                  "sha256": "e94246f0f3af1f7e8b34d4238f5c95187abf69cb940bf96d239d4a731ebb824e",
+                  "bytes": 5966028
+                }
+              }
+            ]
+          },
+          {
+            "requested": {
+              "group": "org.jetbrains.kotlin",
+              "name": "kotlin-compose-compiler-plugin-embeddable",
+              "kind": "maven",
+              "version": "2.4.10"
+            },
+            "failures": [],
+            "nodes": [
+              {
+                "component": {
+                  "kind": "maven",
+                  "group": "org.jetbrains.kotlin",
+                  "name": "kotlin-compose-compiler-plugin-embeddable",
+                  "version": "2.4.10"
+                },
+                "variants": [
+                  {
+                    "name": "default",
+                    "attributes": {
+                      "org.gradle.status": "release"
+                    }
+                  }
+                ]
+              },
+              {
+                "component": {
+                  "kind": "project",
+                  "id": "root"
+                },
+                "variants": [
+                  {
+                    "name": "plugin1",
+                    "attributes": {
+                      "org.gradle.category": "library",
+                      "org.gradle.libraryelements": "jar",
+                      "org.gradle.usage": "java-runtime"
+                    }
+                  }
+                ]
+              }
+            ],
+            "edges": [
+              {
+                "from": {
+                  "kind": "project",
+                  "id": "root"
+                },
+                "requested": "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable:2.4.10",
+                "selected": {
+                  "kind": "maven",
+                  "group": "org.jetbrains.kotlin",
+                  "name": "kotlin-compose-compiler-plugin-embeddable",
+                  "version": "2.4.10"
+                },
+                "variant": {
+                  "name": "default",
+                  "attributes": {
+                    "org.gradle.status": "release"
+                  }
+                }
+              }
+            ],
+            "artifacts": [
+              {
+                "component": {
+                  "kind": "maven",
+                  "group": "org.jetbrains.kotlin",
+                  "name": "kotlin-compose-compiler-plugin-embeddable",
+                  "version": "2.4.10"
+                },
+                "name": "kotlin-compose-compiler-plugin-embeddable-2.4.10.jar",
+                "variant": {
+                  "name": "org.jetbrains.kotlin:kotlin-compose-compiler-plugin-embeddable:2.4.10 configuration default",
+                  "attributes": {
+                    "artifactType": "jar",
+                    "org.gradle.status": "release"
+                  }
+                },
+                "identity": {
+                  "kind": "file",
+                  "sha256": "07edff96c6196c5354caa275b748616794cc8883af02e380d091d221f02bdc80",
+                  "bytes": 949238
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "compiler_producer_sha256": {
+        "traces": "0b97ad3833aa9abfa5e0850c5faa32ae3797c77ab717259ca17f24c115a96b1e",
+        "artifacts": "e34397565b2fe31a87d07fd21c44591016f62292e1fe85780a5b7c0dc78f6bd9",
+        "delegated": "b2ec8e5571bc867a7451792dc81204dd75f83cdc78789f0c3c2c69accef255df"
+      },
+      "compiler_invocation_count": 37
+    }
+  },
+  "advisories": {
+    "state": "triage_required",
+    "scope": "candidate_named_resolved_maven_packages_only",
+    "query_count": 578,
+    "finding_ids": [
+      "GHSA-2363-cqg2-863c",
+      "GHSA-3677-xxcr-wjqv",
+      "GHSA-574f-3g2m-x479",
+      "GHSA-7hhh-6rmp-j9qf",
+      "GHSA-7r82-7xv7-xcpj",
+      "GHSA-9pwp-9qqc-pr26",
+      "GHSA-c3fc-8qff-9hwx",
+      "GHSA-cmp6-m4wj-q63q",
+      "GHSA-j288-q9x7-2f5v",
+      "GHSA-p6pp-m3f8-5c89",
+      "GHSA-qp49-qgx5-5m26",
+      "GHSA-r7wm-3cxj-wff9",
+      "GHSA-r937-wjx7-w2jp",
+      "GHSA-rcgg-9c38-7xpx",
+      "GHSA-vqf4-7m7x-wgfc",
+      "GHSA-wg6q-6289-32hp",
+      "GHSA-xx22-p4ch-683r"
+    ],
+    "matches": [
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "com.fasterxml.jackson.core:jackson-core"
+          },
+          "version": "2.21.1"
+        },
+        "id": "GHSA-7hhh-6rmp-j9qf",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "com.fasterxml.jackson.core:jackson-core"
+          },
+          "version": "2.21.1"
+        },
+        "id": "GHSA-p6pp-m3f8-5c89",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "com.fasterxml.jackson.core:jackson-core"
+          },
+          "version": "2.21.1"
+        },
+        "id": "GHSA-r7wm-3cxj-wff9",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "io.opentelemetry:opentelemetry-api"
+          },
+          "version": "1.60.1"
+        },
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.apache.commons:commons-lang3"
+          },
+          "version": "3.16.0"
+        },
+        "id": "GHSA-j288-q9x7-2f5v",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.apache.httpcomponents:httpclient"
+          },
+          "version": "4.5.6"
+        },
+        "id": "GHSA-7r82-7xv7-xcpj",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bitbucket.b_c:jose4j"
+          },
+          "version": "0.9.5"
+        },
+        "id": "GHSA-3677-xxcr-wjqv",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcpkix-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-wg6q-6289-32hp",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcprov-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-574f-3g2m-x479",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcprov-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-9pwp-9qqc-pr26",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcprov-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-c3fc-8qff-9hwx",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.bouncycastle:bcprov-jdk18on"
+          },
+          "version": "1.79"
+        },
+        "id": "GHSA-qp49-qgx5-5m26",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.jdom:jdom2"
+          },
+          "version": "2.0.6"
+        },
+        "id": "GHSA-2363-cqg2-863c",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+          },
+          "version": "2.2.10"
+        },
+        "id": "GHSA-r937-wjx7-w2jp",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.lz4:lz4-java"
+          },
+          "version": "1.8.0"
+        },
+        "id": "GHSA-cmp6-m4wj-q63q",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.lz4:lz4-java"
+          },
+          "version": "1.8.0"
+        },
+        "id": "GHSA-vqf4-7m7x-wgfc",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "org.lz4:lz4-java"
+          },
+          "version": "1.8.0"
+        },
+        "id": "GHSA-xx22-p4ch-683r",
+        "triage": "required"
+      }
+    ],
+    "reasons": [],
+    "receipt_sha256": "d82c7b57ee0f416f67841c1aa7daa69aca0ec32dfddac2ae2fb52386f8a5fd11",
+    "dependency_surface": "incomplete",
+    "missing_capabilities": [
+      "compiler_plugin_resolution",
+      "artifact_attribution",
+      "complete_direct_target_graph",
+      "advisory_review"
+    ],
+    "adoption_authorized": false
+  },
+  "advisory_packets": [
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:44:59Z",
+      "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686"
+    },
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:00Z",
+      "response_sha256": "23be1de482c6c52d4c8aed58adeecc59e4391dc56872fbd8384818e4acd45121"
+    },
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:00Z",
+      "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686"
+    },
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:01Z",
+      "response_sha256": "2f8adadcd00a5daed06d9da72447f6f5c87edfff2734c8d02a520b196abe796d"
+    },
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:01Z",
+      "response_sha256": "3d5c0767c5e238b1dbfda42bb4c1a9c754ab0b70c908cbc583bd03101d3ab4fb"
+    },
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:02Z",
+      "response_sha256": "d11d8a2cf61adbaf656564224d7c72e7272c25bbcac7226f8641ed0300a86113"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-2363-cqg2-863c",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:02Z",
+      "response_sha256": "ce3308038fdc6cc554eac0ff2950c93d3bb38cfb2e23bc4bc1231965dc4283cb"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-3677-xxcr-wjqv",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:03Z",
+      "response_sha256": "d1e5dd43ddd83ef29d03d6cde831de2b3ea39410829bf3d12d06b6df7e3fa025"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-574f-3g2m-x479",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:03Z",
+      "response_sha256": "7e743605b480ce03baa67d7108bb919332653ca289f1513f84dd3059d24a94b5"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-7hhh-6rmp-j9qf",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:03Z",
+      "response_sha256": "96107c18f5f163a8bed85184440d1307b2c963de3e775f046dd4fdf5daaed755"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-7r82-7xv7-xcpj",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:04Z",
+      "response_sha256": "28f3e7ed02d14dd2729ea740ecbca4b7be6680739d259e8180f7690d59266120"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-9pwp-9qqc-pr26",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:04Z",
+      "response_sha256": "19d77e850bf279022cbc254c23b160f164744a0f3aca3a71619a5ba68ed6a3f3"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-c3fc-8qff-9hwx",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:04Z",
+      "response_sha256": "37137006db3231f3b5f9a55b21f00a133889e5e5ca911a7661f15dab4617464d"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-cmp6-m4wj-q63q",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:05Z",
+      "response_sha256": "7ffacf8cfb876fcd01b78a8b7b9681741f2e3eebc23559a25ea1d5a1eefb8fd2"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-j288-q9x7-2f5v",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:05Z",
+      "response_sha256": "5dafc9303ee7b342c98b0ed8e6217e020a5207e2fb3f3166c3e29ce81d8c08f4"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-p6pp-m3f8-5c89",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:06Z",
+      "response_sha256": "d03f3c0d525bd7a4729334d1dc781a3a47c4db609f2fe94e5e76a8f89f3effe6"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-qp49-qgx5-5m26",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:06Z",
+      "response_sha256": "174ec3fb8781343fbe4ca79db322a7169eb65386e827182172cae28b4c0c58af"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-r7wm-3cxj-wff9",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:06Z",
+      "response_sha256": "d50987dfbbbd87949fb658d48e8f4f0feee087bb38d94d081b4bc4cdbda0de26"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-r937-wjx7-w2jp",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:07Z",
+      "response_sha256": "9e4b384ceab8f70cefd3d4025b3803f2caee07a0d1c07a3d99396e04efcfa8d0"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-rcgg-9c38-7xpx",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:07Z",
+      "response_sha256": "fc12ab412dcfb7a81381a7f724f5b99e10fffe52978f36df7f7ad8fd08ef6186"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-vqf4-7m7x-wgfc",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:07Z",
+      "response_sha256": "2123c399a864aded71aa4afb36cbe06a4153e3a06cce04826ed88b7e052b46c2"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-wg6q-6289-32hp",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:08Z",
+      "response_sha256": "bbce8198e1965bb00e82fd278a14d311e0d29568910dda089a95c77fc0148036"
+    },
+    {
+      "url": "https://api.osv.dev/v1/vulns/GHSA-xx22-p4ch-683r",
+      "status": 200,
+      "retrieved_at": "2026-10-03T09:45:08Z",
+      "response_sha256": "7b366474d2acd558f4e665f2c928da24ad2cde5b6a7d29f51783497f621857c2"
+    }
+  ],
+  "upstream_sources": [
+    {
+      "id": "mapping",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/frontend/schema/src/org/jetbrains/amper/frontend/kotlin/CompilerPluginConfig.kt",
+      "sha256": "ac74722ff980ffa76f76c89ae9376ffd6cdfa60eb907bd424d2b6bd153143730",
+      "retrieved_at": "2026-10-03T09:30:09.735429+00:00"
+    },
+    {
+      "id": "latest",
+      "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/latest",
+      "sha256": "9c88125b3ebd84e853da6086a27fda5f86ecc5ed5d054a501eb445155d9eebf4",
+      "retrieved_at": "2026-10-03T09:30:10.134420+00:00"
+    },
+    {
+      "id": "gradle-sha",
+      "url": "https://services.gradle.org/distributions/gradle-9.6.1-bin.zip.sha256",
+      "sha256": "896bed90c4c17e0a4c779683aeba2a63f3df10cedc31244e391850feee597925",
+      "retrieved_at": "2026-10-03T09:30:10.522587+00:00"
+    },
+    {
+      "id": "bc-ctr-fix",
+      "url": "https://api.github.com/repos/bcgit/bc-java/commits/b42574345414e4b7c8051b16fa1fafe01c29871f",
+      "sha256": "3ee546c65b4e4cdae44fa09d8b25d47a77d18824cc42e05a2f1b2bccd815b9a1",
+      "retrieved_at": "2026-10-03T09:36:49.502006+00:00"
+    },
+    {
+      "id": "bc-name-fix",
+      "url": "https://api.github.com/repos/bcgit/bc-java/commits/2c28b253a44681fbbc562561eab6ad383d2ae558",
+      "sha256": "586cdcafa14e1fa60b5adf732bfd563ef84ee551fa6654389b22ba6e9264fa54",
+      "retrieved_at": "2026-10-03T09:36:50.002368+00:00"
+    },
+    {
+      "id": "tree-13",
+      "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/git/trees/v0.13.0?recursive=1",
+      "sha256": "3e39b5f0de4db107fb8dc21f939ad76f9e2a73fd006b257610cd09d13c446086",
+      "retrieved_at": "2026-10-03T09:38:15.487525+00:00"
+    },
+    {
+      "id": "v0.12.2-libs.versions.toml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/libs.versions.toml",
+      "sha256": "d3e0c06fa3cd3c9be4352b44f4f94fef452b59cadc205659a24558ea52072322",
+      "retrieved_at": "2026-10-03T09:38:36.654274+00:00"
+    },
+    {
+      "id": "v0.12.2-sources-android-integration-amper-android-gradle-plugin-module.yaml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/android-integration/amper-android-gradle-plugin/module.yaml",
+      "sha256": "b3b4e4800274fa3115a26536e2973145ef054c978b11361d034a867dc418eb62",
+      "retrieved_at": "2026-10-03T09:38:37.031248+00:00"
+    },
+    {
+      "id": "v0.12.2-sources-amper-telemetry-module.yaml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/amper-telemetry/module.yaml",
+      "sha256": "1dc0e8633d35eb58e326b2ee8b29c6f56c911fdbb90acdc7241ea1e63a5beab9",
+      "retrieved_at": "2026-10-03T09:38:37.391796+00:00"
+    },
+    {
+      "id": "v0.12.2-sources-libraries-telemetry-module.yaml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.12.2/sources/libraries/telemetry/module.yaml",
+      "sha256": "07a41289a40311b069ce097bb1bd47d9421500567ea656818ccb86277703fb28",
+      "retrieved_at": "2026-10-03T09:38:37.747405+00:00"
+    },
+    {
+      "id": "v0.13.0-libs.versions.toml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/libs.versions.toml",
+      "sha256": "ae2cb4194ab3329025f6dc37f114888858fdc47d29f7d21eb7e6a989793a404f",
+      "retrieved_at": "2026-10-03T09:38:38.096185+00:00"
+    },
+    {
+      "id": "v0.13.0-sources-android-integration-amper-android-gradle-plugin-module.yaml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/android-integration/amper-android-gradle-plugin/module.yaml",
+      "sha256": "d2bd9b5c1c3dbb10fb5ea00e1f260275cba6ed01d3af7c5778b26bd2596386cf",
+      "retrieved_at": "2026-10-03T09:38:38.484334+00:00"
+    },
+    {
+      "id": "v0.13.0-sources-amper-telemetry-module.yaml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/amper-telemetry/module.yaml",
+      "sha256": "79a7f9baef8a77e40d002d43c052fcb1e9125082ea68f7f226627e75d99975e9",
+      "retrieved_at": "2026-10-03T09:38:38.832382+00:00"
+    },
+    {
+      "id": "v0.13.0-sources-libraries-telemetry-module.yaml",
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin-toolchain/v0.13.0/sources/libraries/telemetry/module.yaml",
+      "sha256": "07a41289a40311b069ce097bb1bd47d9421500567ea656818ccb86277703fb28",
+      "retrieved_at": "2026-10-03T09:38:39.250478+00:00"
+    },
+    {
+      "id": "GHSA-7hhh-6rmp-j9qf-fix",
+      "url": "https://api.github.com/repos/FasterXML/jackson-core/commits/211cf2c5d91abbec38067f37efc1363cd4e88ee3",
+      "sha256": "831902dd880acc8aa26e5ec6e9167c25945fa589780b484f65406ea49bba3c12",
+      "retrieved_at": "2026-10-03T09:43:48.759941+00:00"
+    },
+    {
+      "id": "GHSA-p6pp-m3f8-5c89-fix",
+      "url": "https://api.github.com/repos/FasterXML/jackson-core/commits/731e794f62623aa0d86ced52490166be903fbb1d",
+      "sha256": "2994a9df5662c8d3f7167711fbfead57de5b312d7a7a899172a4f6feb812dee4",
+      "retrieved_at": "2026-10-03T09:43:48.731052+00:00"
+    },
+    {
+      "id": "GHSA-r7wm-3cxj-wff9-fix",
+      "url": "https://api.github.com/repos/FasterXML/jackson-core/commits/050b429804dce2a7e08f0be1b0b4c3d040fdb9cd",
+      "sha256": "9f581247d31cf0873553066b634aeaaf86b2efa4a978a7a998498dabc2d54685",
+      "retrieved_at": "2026-10-03T09:43:48.771316+00:00"
+    },
+    {
+      "id": "GHSA-rcgg-9c38-7xpx-fix",
+      "url": "https://api.github.com/repos/open-telemetry/opentelemetry-java/commits/03837d3c1763bc35464aea1078671e2ef2336a5f",
+      "sha256": "e9db8e31f0230b09c38d880cd7687d536b4d73071fdae8d3fa796168164dc703",
+      "retrieved_at": "2026-10-03T09:43:48.751219+00:00"
+    },
+    {
+      "id": "GHSA-j288-q9x7-2f5v-fix",
+      "url": "https://api.github.com/repos/apache/commons-lang/commits/b424803abdb2bec818e4fbcb251ce031c22aca53",
+      "sha256": "b688f3d4a767d3abdb86d74dc92c9f025aeab8cb6739cba0f7ea436ecf286e1a",
+      "retrieved_at": "2026-10-03T09:43:49.161921+00:00"
+    },
+    {
+      "id": "GHSA-wg6q-6289-32hp-fix",
+      "url": "https://api.github.com/repos/bcgit/bc-java/commits/656bae0dbd9b1521f840521ff786e78749fe3057",
+      "sha256": "ce145c9abe3565214fce681fb119bb4c56cb322f9ef7835b92ab46262bf3f40c",
+      "retrieved_at": "2026-10-03T09:43:49.247694+00:00"
+    },
+    {
+      "id": "GHSA-574f-3g2m-x479-fix",
+      "url": "https://api.github.com/repos/bcgit/bc-java/commits/b42574345414e4b7c8051b16fa1fafe01c29871f",
+      "sha256": "3ee546c65b4e4cdae44fa09d8b25d47a77d18824cc42e05a2f1b2bccd815b9a1",
+      "retrieved_at": "2026-10-03T09:43:49.240548+00:00"
+    },
+    {
+      "id": "GHSA-9pwp-9qqc-pr26-fix",
+      "url": "https://api.github.com/repos/bcgit/bc-java/commits/2c28b253a44681fbbc562561eab6ad383d2ae558",
+      "sha256": "586cdcafa14e1fa60b5adf732bfd563ef84ee551fa6654389b22ba6e9264fa54",
+      "retrieved_at": "2026-10-03T09:43:49.263589+00:00"
+    },
+    {
+      "id": "GHSA-c3fc-8qff-9hwx-fix",
+      "url": "https://api.github.com/repos/bcgit/bc-java/commits/d20cdb8430e09224114fec0179a71859929fcbde",
+      "sha256": "7d43eb8337a4fa1ff1a79b98180246745bb8a0e83f08ca167d15c0350fd9ca70",
+      "retrieved_at": "2026-10-03T09:43:49.574485+00:00"
+    },
+    {
+      "id": "GHSA-qp49-qgx5-5m26-fix",
+      "url": "https://api.github.com/repos/bcgit/bc-java/commits/77454da9b3dcaaa2991412d1c3c1a6e1a338ff84",
+      "sha256": "34e622174ad47d62388840c9b53f330ad254c54a1946ca8138048a13219ca116",
+      "retrieved_at": "2026-10-03T09:43:49.679665+00:00"
+    },
+    {
+      "id": "GHSA-2363-cqg2-863c-fix",
+      "url": "https://api.github.com/repos/hunterhacker/jdom/commits/dd4f3c2fc7893edd914954c73eb577f925a7d361",
+      "sha256": "b7e51926263f0ee68a66ca746b51d54e14d8ab0f64eb59395f45835e9eb66489",
+      "retrieved_at": "2026-10-03T09:43:49.766124+00:00"
+    },
+    {
+      "id": "GHSA-r937-wjx7-w2jp-fix",
+      "url": "https://api.github.com/repos/JetBrains/kotlin/commits/bf51df665b458fda7c3eaf436c4d88dc119d7ec6",
+      "sha256": "a070145d324f795180c42147c3fc283d12697e991d1bd287b0dffcdfb9e79870",
+      "retrieved_at": "2026-10-03T09:43:49.787816+00:00"
+    },
+    {
+      "id": "GHSA-cmp6-m4wj-q63q-fix",
+      "url": "https://api.github.com/repos/yawkat/lz4-java/commits/33d180cb70c4d93c80fb0dc3ab3002f457e93840",
+      "sha256": "5a2e53c5503d5c367f84efa283df5426ffac077c092e36041a5508f70387ff90",
+      "retrieved_at": "2026-10-03T09:43:50.071161+00:00"
+    },
+    {
+      "id": "GHSA-xx22-p4ch-683r-fix",
+      "url": "https://api.github.com/repos/yawkat/lz4-java/commits/dbd86d04b8dd716e1c2bc626be54189997d910da",
+      "sha256": "94d4c42db3666c5282d52b98ef6a9dd1af8530abfbe614a87d97a144f52fc8c3",
+      "retrieved_at": "2026-10-03T09:43:50.149111+00:00"
+    }
+  ],
+  "recovery": {
+    "schema": 1,
+    "operation": "recover",
+    "run_id": "4fe1d2f29b3ac1c5e1b0135fac5e6a7f",
+    "state": "quiescent",
+    "hold": false,
+    "processes": [
+      {
+        "check": "baseline-plugin-attribution",
+        "state": "absent"
+      },
+      {
+        "check": "candidate-plugin-attribution",
+        "state": "absent"
+      }
+    ],
+    "recorded_outcome": "checks_passed",
+    "resume_allowed": false,
+    "adoption_authorized": false
+  },
+  "cleanup": {
+    "schema": 1,
+    "operation": "cleanup",
+    "run_id": "4fe1d2f29b3ac1c5e1b0135fac5e6a7f",
+    "state": "cleaned",
+    "eligible": true,
+    "retention_due_at": "2026-10-10T09:43:36Z",
+    "paths": [
+      "work/baseline",
+      "work/candidate"
+    ],
+    "evidence_retained": true,
+    "recorded_outcome": "checks_passed",
+    "adoption_authorized": false
+  },
+  "caller_preservation": "verified_before_documentation_publication",
+  "post_cleanup_report": "checks_passed",
+  "bridge_retirement": "defer",
+  "adoption_authorized": false,
+  "advisory_ownership": [
+    {
+      "id": "GHSA-7hhh-6rmp-j9qf",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "com.fasterxml.jackson.core:jackson-core"
+        },
+        "version": "2.21.1"
+      },
+      "fixes": [
+        {
+          "fixed": "2.21.7"
+        },
+        {
+          "fixed": "2.22.3"
+        },
+        {
+          "fixed": "2.18.11"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "schema",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "amper-telemetry",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "io.opentelemetry",
+              "name": "opentelemetry-exporter-logging-otlp",
+              "version": "1.60.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.fasterxml.jackson.core",
+              "name": "jackson-core",
+              "version": "2.21.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-p6pp-m3f8-5c89",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "com.fasterxml.jackson.core:jackson-core"
+        },
+        "version": "2.21.1"
+      },
+      "fixes": [
+        {
+          "fixed": "2.18.11"
+        },
+        {
+          "fixed": "2.21.7"
+        },
+        {
+          "fixed": "2.22.3"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "schema",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "amper-telemetry",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "io.opentelemetry",
+              "name": "opentelemetry-exporter-logging-otlp",
+              "version": "1.60.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.fasterxml.jackson.core",
+              "name": "jackson-core",
+              "version": "2.21.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-r7wm-3cxj-wff9",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "com.fasterxml.jackson.core:jackson-core"
+        },
+        "version": "2.21.1"
+      },
+      "fixes": [
+        {
+          "fixed": "2.18.8"
+        },
+        {
+          "fixed": "2.21.4"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "schema",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "amper-telemetry",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "io.opentelemetry",
+              "name": "opentelemetry-exporter-logging-otlp",
+              "version": "1.60.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.fasterxml.jackson.core",
+              "name": "jackson-core",
+              "version": "2.21.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-rcgg-9c38-7xpx",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "io.opentelemetry:opentelemetry-api"
+        },
+        "version": "1.60.1"
+      },
+      "fixes": [
+        {
+          "fixed": "1.62.0"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "schema",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "telemetry",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "io.opentelemetry",
+              "name": "opentelemetry-api",
+              "version": "1.60.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-j288-q9x7-2f5v",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.apache.commons:commons-lang3"
+        },
+        "version": "3.16.0"
+      },
+      "fixes": [
+        {
+          "fixed": "3.18.0"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":android-app"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-compress",
+              "version": "1.27.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-lang3",
+              "version": "3.16.0"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-core"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-compress",
+              "version": "1.27.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-lang3",
+              "version": "3.16.0"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-di"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-compress",
+              "version": "1.27.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-lang3",
+              "version": "3.16.0"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-compress",
+              "version": "1.27.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-lang3",
+              "version": "3.16.0"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-nearby-vehicle-map"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-compress",
+              "version": "1.27.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-lang3",
+              "version": "3.16.0"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-ui-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-compress",
+              "version": "1.27.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.commons",
+              "name": "commons-lang3",
+              "version": "3.16.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-7r82-7xv7-xcpj",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.apache.httpcomponents:httpclient"
+        },
+        "version": "4.5.6"
+      },
+      "fixes": [
+        {
+          "fixed": "4.5.13"
+        },
+        {
+          "fixed": "5.0.3"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":android-app"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdklib",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpmime",
+              "version": "4.5.6"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpclient",
+              "version": "4.5.6"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-core"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdklib",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpmime",
+              "version": "4.5.6"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpclient",
+              "version": "4.5.6"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-di"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdklib",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpmime",
+              "version": "4.5.6"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpclient",
+              "version": "4.5.6"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdklib",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpmime",
+              "version": "4.5.6"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpclient",
+              "version": "4.5.6"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-nearby-vehicle-map"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdklib",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpmime",
+              "version": "4.5.6"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpclient",
+              "version": "4.5.6"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-ui-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdklib",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpmime",
+              "version": "4.5.6"
+            },
+            {
+              "kind": "maven",
+              "group": "org.apache.httpcomponents",
+              "name": "httpclient",
+              "version": "4.5.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-3677-xxcr-wjqv",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bitbucket.b_c:jose4j"
+        },
+        "version": "0.9.5"
+      },
+      "fixes": [
+        {
+          "fixed": "0.9.6"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "gradle",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "bundletool",
+              "version": "1.18.3"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bitbucket.b_c",
+              "name": "jose4j",
+              "version": "0.9.5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-wg6q-6289-32hp",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcpkix-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "fixes": [
+        {
+          "fixed": "1.84"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "gradle",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "builder",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcpkix-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":android-app"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcpkix-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-core"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcpkix-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-di"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcpkix-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcpkix-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-nearby-vehicle-map"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcpkix-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-ui-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcpkix-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-574f-3g2m-x479",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcprov-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "fixes": [
+        {
+          "fixed": "1.80.2"
+        },
+        {
+          "fixed": "1.81.1"
+        },
+        {
+          "fixed": "1.84"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "gradle",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "builder",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":android-app"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-core"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-di"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-nearby-vehicle-map"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-ui-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-9pwp-9qqc-pr26",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcprov-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "fixes": [
+        {
+          "fixed": "1.85"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "gradle",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "builder",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":android-app"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-core"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-di"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-nearby-vehicle-map"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-ui-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-c3fc-8qff-9hwx",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcprov-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "fixes": [
+        {
+          "fixed": "1.84"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "gradle",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "builder",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":android-app"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-core"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-di"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-nearby-vehicle-map"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-ui-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-qp49-qgx5-5m26",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.bouncycastle:bcprov-jdk18on"
+        },
+        "version": "1.79"
+      },
+      "fixes": [
+        {
+          "fixed": "1.85"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "gradle",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "builder",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":android-app"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-core"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-di"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-feature-nearby-vehicle-map"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        },
+        {
+          "owner": "project",
+          "configuration": "androidLintTool",
+          "chain": [
+            {
+              "kind": "project",
+              "id": ":shared-ui-home"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint-gradle",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.lint",
+              "name": "lint",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools",
+              "name": "sdk-common",
+              "version": "32.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.bouncycastle",
+              "name": "bcprov-jdk18on",
+              "version": "1.79"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-2363-cqg2-863c",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jdom:jdom2"
+        },
+        "version": "2.0.6"
+      },
+      "fixes": [
+        {
+          "fixed": "2.0.6.1"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "gradle",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build.jetifier",
+              "name": "jetifier-processor",
+              "version": "1.0.0-beta10"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jdom",
+              "name": "jdom2",
+              "version": "2.0.6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-r937-wjx7-w2jp",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+        },
+        "version": "2.2.10"
+      },
+      "fixes": [
+        {
+          "fixed": "2.4.20-Beta1"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.android.tools.build",
+              "name": "gradle",
+              "version": "9.3.1"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.kotlin",
+              "name": "kotlin-gradle-plugin",
+              "version": "2.2.10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-cmp6-m4wj-q63q",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.lz4:lz4-java"
+        },
+        "version": "1.8.0"
+      },
+      "fixes": [
+        {
+          "last_affected": "1.8.1"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "frontend-api",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.jetbrains.intellij.platform",
+              "name": "util",
+              "version": "261.26222.65"
+            },
+            {
+              "kind": "maven",
+              "group": "org.lz4",
+              "name": "lz4-java",
+              "version": "1.8.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-vqf4-7m7x-wgfc",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.lz4:lz4-java"
+        },
+        "version": "1.8.0"
+      },
+      "fixes": [
+        {
+          "fixed": "1.8.1"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "frontend-api",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.jetbrains.intellij.platform",
+              "name": "util",
+              "version": "261.26222.65"
+            },
+            {
+              "kind": "maven",
+              "group": "org.lz4",
+              "name": "lz4-java",
+              "version": "1.8.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GHSA-xx22-p4ch-683r",
+      "query": {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.lz4:lz4-java"
+        },
+        "version": "1.8.0"
+      },
+      "fixes": [
+        {
+          "last_affected": "1.8.1"
+        }
+      ],
+      "origins": [
+        {
+          "owner": "settings",
+          "configuration": "classpath",
+          "chain": [
+            {
+              "kind": "opaque",
+              "id": "4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper.android.settings.plugin",
+              "name": "org.jetbrains.amper.android.settings.plugin.gradle.plugin",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "org.jetbrains.amper",
+              "name": "frontend-api",
+              "version": "0.12.2"
+            },
+            {
+              "kind": "maven",
+              "group": "com.jetbrains.intellij.platform",
+              "name": "util",
+              "version": "261.26222.65"
+            },
+            {
+              "kind": "maven",
+              "group": "org.lz4",
+              "name": "lz4-java",
+              "version": "1.8.0"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

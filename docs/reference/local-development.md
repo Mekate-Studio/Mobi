@@ -19,6 +19,25 @@ Set a writable Kotlin Toolchain cache before running build commands:
 export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
 ```
 
+## Android SDK provisioning
+
+The pinned Toolchain 0.13.0 and Compose 1.12.1 require application compile SDK
+37. Android minimum and target remain API 36. With Android SDK command-line
+tools available, point `ANDROID_HOME` to a writable SDK directory and run:
+
+```bash
+sdkmanager --sdk_root="$ANDROID_HOME" --licenses
+sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-37.0" "build-tools;37.0.0" "platform-tools"
+```
+
+Review the license terms and accept them explicitly. These commands are setup
+steps; repository smoke jobs do not grant license acceptance. CI must use an SDK
+whose terms have been accepted by its operator; do not infer that missing
+packages or licenses exist on a cold runner. The Toolchain can provision missing
+packages in a writable SDK after prerequisites are met. Verify with the ordinary
+Android smoke jobs and retain cold-run receipts before claiming hosted parity.
+A private SDK with copied host licenses is insufficient empty-host evidence.
+
 ## IDE flow without Gradle sync
 
 Because this repository uses Kotlin Toolchain instead of Gradle as the project
@@ -94,7 +113,7 @@ bridge is in use.
 `KOTLIN_IOS_BUILDER=kotlin` is kept as an experimental direct integration path,
 but it is not the default: equivalent native app/test, SKIE-backed sealed-state,
 clean-clone and packaging behavior has not been proven with the bridge unavailable.
-The reviewed Toolchain 0.12.2 targets Apple Silicon iOS simulators and ARM devices.
+The reviewed Toolchain 0.13.0 targets Apple Silicon iOS simulators and ARM devices.
 A separate native test target is not itself a demonstrated direct-path blocker.
 See the [compatibility matrix](../maintenance/kotlin-compatibility.md) and
 [minimum-OS policy](../maintenance/mobile-support-policy.md).

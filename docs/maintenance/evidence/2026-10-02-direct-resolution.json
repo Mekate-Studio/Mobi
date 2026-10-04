@@ -1,0 +1,2911 @@
+{
+  "schema": 1,
+  "date": "2026-10-02",
+  "profile": "direct-resolution",
+  "run_id": "5f3dbe7bd5c6433eb5d93ce558db52fc",
+  "state": "checks_passed",
+  "started_at": "2026-10-02T19:59:39Z",
+  "ended_at": "2026-10-02T20:00:45Z",
+  "binding": {
+    "source_sha256": "c5899fb2eca78ec4a4b86f071b437d71cc0e1e95f6bdb74d4ecf125970ec3745",
+    "capture_mode": "working_snapshot",
+    "git": {
+      "head": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+      "index_sha256": "4bde9550c9915bad7f911c76491599d7f452e5e2acd3f3e705f42e6dd9890dd5"
+    },
+    "adapter": "compatibility-direct-resolution",
+    "adapter_schema": 1,
+    "plan_sha256": "8269a3139444da5cdc62f2de5a4fb85b0f76429a730b305118ef68914ab63878",
+    "patch_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "tools_sha256": "97b70440a9bb6b261def5dd0974d4da6da2c36ff02a6db416ad6ff1241a2dfa3",
+    "execution_files": [
+      {
+        "name": "executor.rb",
+        "sha256": "6e7b988602caa2b1a27b227f98ea0fbff84dfe31f40b7f47a70d1bb24d8edbcd"
+      },
+      {
+        "name": "worker.rb",
+        "sha256": "790b8720eb98b2dee0d46078e4154953e51345a558be17000aeb324df94fb3a2"
+      },
+      {
+        "name": "core.rb",
+        "sha256": "3ff8ba920a07973e28e62272e952314868a6aae6225cc99659f8707b2064c028"
+      },
+      {
+        "name": "run_store.rb",
+        "sha256": "7454f1d5e869ec9aef759b27090004166e27be199dfe4fabccda1e102298c8cc"
+      },
+      {
+        "name": "process_group.rb",
+        "sha256": "378133febaf2bd9432119ada0947be8119dcea7b9e9b552c2358eadad8b51c90"
+      },
+      {
+        "name": "resource_handlers.rb",
+        "sha256": "8d30b88bd1a0c1e8f25972dff989dd0f4bdab8e37c6d7fe363b7a3ae55a21e93"
+      },
+      {
+        "name": "ruby",
+        "sha256": "80e70b56c0332ab44deffc20c2b816f85bb1239b7e8ce6a12942373deadf072e"
+      },
+      {
+        "name": "ps",
+        "sha256": "a06fe087161557f1f8c030672eaedcd90bc6a8e92b8f2d44e07cffedc3349205"
+      },
+      {
+        "name": "git",
+        "sha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2"
+      },
+      {
+        "name": "compatibility.rb",
+        "sha256": "ee82bcff6ea285fb03dbe1f6e49a4be5c84688bc895a9d8f996d84816ada44a1"
+      },
+      {
+        "name": "61e98c8ec07265f41ac83bbc0c79f0a34f466d48bd082de6c60e9525101d5f7e.json",
+        "sha256": "85ee0b3953251a59f343c2ab611819075dd7ec1c1c2a97c546a7340dec3abfb2"
+      },
+      {
+        "name": "maintenance-compatibility.json",
+        "sha256": "565dfc2db290745041c299c3f5568cbc55ad43c3eb12bc996d3757606fc30c81"
+      },
+      {
+        "name": "maintenance-kotlin-toolchains.json",
+        "sha256": "0ff446be520eecdf815bcbb280b59f484f9e1403eb82f71c1ea0ad55935f1da3"
+      },
+      {
+        "name": "java",
+        "sha256": "4ddcf3ee5d518bd98d55f00da6747d20dddf2c4d7e555fddb9d26db6362424ce"
+      },
+      {
+        "name": "advisory_review.rb",
+        "sha256": "7c71d36327dc3954b7077c227366407feaa59702417c4c92284a3eb4654718a0"
+      },
+      {
+        "name": "compatibility_report.rb",
+        "sha256": "0cb00e70b97e9b5eaa71dc9067f985d913238ca6e6ef6d0960df09acfa4d4b29"
+      },
+      {
+        "name": "direct_resolution.rb",
+        "sha256": "a6bb27fd5da0e17657f19e395dbb9b4e8b49338d7588dcfaeb546fd68dab0b60"
+      },
+      {
+        "name": "kotlin_evidence.rb",
+        "sha256": "29f9b7aab47650f276f2179fa11b265348e6b4fd8e67c15dcc60584e5bfedc56"
+      },
+      {
+        "name": "kotlin_wrappers.rb",
+        "sha256": "fce20dc01ef44441cccdb53c75c94b7f70d4542f9725c006d31b7119d9faa666"
+      },
+      {
+        "name": "maintenance.rb",
+        "sha256": "332febf7375f80f1bff8bd254b08fff4fc794656b83f8cf9aa8cc08c1f3684b3"
+      },
+      {
+        "name": "policy.rb",
+        "sha256": "08ca4c2a765c560f548971805e0e9da92a9e7e9e0bf2a92dea24750ec58f2965"
+      },
+      {
+        "name": "recovery.rb",
+        "sha256": "bf81138efc57878ae98759bf25252aa6df97847786f7b84bd8999a254b520ae9"
+      },
+      {
+        "name": "roundtrip_evidence.rb",
+        "sha256": "b00f3416206b3d2ba9ddd431a9b14eb3bb5fbc2ae0430d757084ff01c7c028f4"
+      },
+      {
+        "name": "support_policy.rb",
+        "sha256": "9a64240fba1af2f6a0724e8b8f5babfad5aa80fcf1b9b23e60a1467a52744c3e"
+      },
+      {
+        "name": "tools.rb",
+        "sha256": "824d0bf2c2c8a2115102ea4f0069459426f1f2823999c8607a0d9c1e8b1d1fa8"
+      },
+      {
+        "name": "upgrade_graph.rb",
+        "sha256": "98f81c579f866858bfad46df5edc3e0db63882bbc1689df7778c2fb73ed91660"
+      },
+      {
+        "name": "watch.rb",
+        "sha256": "4614f11415bd8005ac67538b5bc258d7a82b84ea3280ab54026727a1062e1d85"
+      },
+      {
+        "name": "watch_history.rb",
+        "sha256": "26e07b4ef76698e486e9e4eb4ea0b8d460ce7812b5c6ce71046d1109140fc005"
+      },
+      {
+        "name": "bridge_resolution.gradle",
+        "sha256": "681990e98f479bd0f27cd61ce932142136b93a5b6c241cf0659f1efe3c78c42f"
+      },
+      {
+        "name": "direct_roundtrip.rb",
+        "sha256": "6ccd67c443fea9dabfdb0fed227f5e3bfee3e283cc404bc302e80b1f8b1ad403"
+      },
+      {
+        "name": "elixir.rb",
+        "sha256": "1adbc0c83b3ccc95c7cf4e5bb0d91e92492c5f670eebcb45c5331b0f5ba84d56"
+      },
+      {
+        "name": "interop_experiment.rb",
+        "sha256": "d5cff4d4d13be4f6a8a5381de5e2a3e455e8fcf10f71e98fa23f533f679af55c"
+      },
+      {
+        "name": "kotlin.rb",
+        "sha256": "087ec8c26eb601cc39baf973b6dbbe24bae9340cd918d509c68d823f82fec1cd"
+      },
+      {
+        "name": "kotlin_rehearsal.rb",
+        "sha256": "57c92f98ba544006896b3fcc7d4118dae711be3cdc075a976e963ecb14e1f507"
+      },
+      {
+        "name": "kotlin_resources.rb",
+        "sha256": "aff6499274071f49a0d8f58a15dd3af678f09f1478e53230854c0b030a748f3b"
+      },
+      {
+        "name": "kotlin_targets.rb",
+        "sha256": "9c9fb2fcefae650787d8e81689c43a9c2a17d54dd1483e3e42ec336b9063857f"
+      },
+      {
+        "name": "kotlin_watch.rb",
+        "sha256": "490a63099c143e7c06a802eff6901889a36ebcdbcd444f381ec6c87672250f23"
+      },
+      {
+        "name": "mobile_support.rb",
+        "sha256": "d14482749ddec84c4cb67da5617811497fadb62c1599b7c0a37e008599cc8947"
+      },
+      {
+        "name": "MobiInteropProjection.kt.template",
+        "sha256": "e83d0f5d69f95479203058546d023b34d04cf9f37d103c2fda1b98de38c9ef64"
+      },
+      {
+        "name": "MobiInteropProjection.swift.template",
+        "sha256": "aa1a45dbdf6f24b4c0b77f01572b11b707ec9896c94d42118fd57e924dc321a8"
+      },
+      {
+        "name": "compatibility_check.rb",
+        "sha256": "7b4f62b78295e18dc6e67a6a319b84d200e2c0cc50b11275d7d897279a448feb"
+      },
+      {
+        "name": "kotlin_check.rb",
+        "sha256": "5cfc6ee0af7d6abcf396156643218196261911a314ddb0b5486567367a8ab440"
+      },
+      {
+        "name": "maintenance-execution-policy.json",
+        "sha256": "79c28ae7d78738a4962aca1e7eab81678f2a9c08b4047c3b8c9e5b8f4b1b236b"
+      },
+      {
+        "name": "execution_cli.rb",
+        "sha256": "d6fb9d9a5a09d65975d170423531bf92da1133adc4ef94c0c797ce6cc0897dc0"
+      },
+      {
+        "name": "dependencies.rb",
+        "sha256": "61264fb86d18566de24c212b6374e4d2ac8f2561b014494f5b21daef75eb5df4"
+      }
+    ],
+    "runtime": {
+      "ruby": "4.0.6",
+      "platform": "arm64-darwin27"
+    },
+    "policy_sha256": "3d3ccbc844e276dbdead974c01eb1a6f8d2380991f29bb5f0fed3d213932c90a"
+  },
+  "result_sha256": "7a17cdf39f2d167a2788876f7121f346955eb3595b07fef67d5a555dce82a4c5",
+  "report_file_sha256": "47b1d4a4ccb578900713e1f57ef31038d9131b2ee0e92a90c02d6981cb98b813",
+  "tuple": {
+    "toolchain": "0.12.2",
+    "effective_kotlin": "2.4.10",
+    "effective_compose": "1.11.1",
+    "declared_metro_runtime_compiler": "1.4.5",
+    "retained_bridge_kotlin": "2.4.20",
+    "retained_bridge_skie": "0.10.15",
+    "production_builder": "gradle"
+  },
+  "phases": [
+    {
+      "phase": "baseline",
+      "outcome": "passed",
+      "evidence_sha256": "1df5f78ab7260f27979b94ce26c71c4323a1ff1fa23f07c122e402c2726c65c1",
+      "candidate_selection": {
+        "mode": "normal",
+        "age_state": "age_eligible",
+        "assessed_at": "2026-10-02T19:59:40Z",
+        "eligible_at": "2026-10-02T17:59:28Z",
+        "adoption_authorized": false
+      },
+      "cells": {
+        "effective_toolchain": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "version",
+            "settings"
+          ]
+        },
+        "toolchain_resolution": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "dependencies"
+          ]
+        },
+        "native_library_compile": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "framework_link": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "android-test": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "android-build-debug": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "ios-test": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "ios-build-debug": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        }
+      },
+      "bridge_unavailable": false,
+      "di_reachable": false,
+      "source_preservation": "verified",
+      "resolution": {
+        "scope": "declared_module_main_test_compile_runtime_platform_roots",
+        "modules": [
+          "android-app",
+          "ios-app",
+          "shared-core",
+          "shared-di",
+          "shared-feature-home",
+          "shared-feature-nearby-vehicle-map",
+          "shared-ui-home"
+        ],
+        "roots": 92,
+        "graph_sha256": "453a23fc56a77e8ca113313f5e2ac8275d9cd97ce812b2cb4242343d0f25a935",
+        "fingerprints_sha256": "0b29cd962de288f2fbf1217cb51a54e5cc6dac8183b6ace8cb70ca7470a26c72",
+        "fingerprint_count": 1788,
+        "artifact_attribution": "unproven",
+        "missing_capabilities": [
+          "native_tests",
+          "application_builds",
+          "complete_direct_target_graph",
+          "compiler_plugin_resolution",
+          "artifact_attribution"
+        ],
+        "adoption_authorized": false
+      },
+      "query_count": 305,
+      "queries_sha256": "20a800e0e3248ff78ee614b9b5cf0a75da5a5b76f05df018c779da3929edc77a",
+      "constraint_nodes_excluded": 214,
+      "normalizations": [
+        {
+          "package": "androidx.autofill:autofill",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.customview:customview",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.documentfile:documentfile",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.dynamicanimation:dynamicanimation",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.interpolator:interpolator",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.legacy:legacy-support-core-utils",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.loader:loader",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.localbroadcastmanager:localbroadcastmanager",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.print:print",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.versionedparcelable:versionedparcelable",
+          "label_version": "1.1.1@aar",
+          "query_version": "1.1.1"
+        },
+        {
+          "package": "androidx.viewpager:viewpager",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        }
+      ],
+      "command_receipts": [
+        {
+          "check": "version",
+          "exit": 0,
+          "seconds": 6.525,
+          "log": "version.log",
+          "sha256": "6a887b1f3dbcebe6d1f360520162020bec98365e4be9b38b1ae94ea374033b0b",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "settings",
+          "exit": 0,
+          "seconds": 0.894,
+          "log": "settings.log",
+          "sha256": "31509cde5688137ff3f66cb3f1b6bd7a2f83263149fa2d5cf0b737aa066296b1",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "dependencies",
+          "exit": 0,
+          "seconds": 24.536,
+          "log": "dependencies.log",
+          "sha256": "5480f081fcbbac144d44ebf7bf7b07f9bfb4a37a4be70bd29e039be2309faaa3",
+          "capability": "toolchain_resolution"
+        }
+      ],
+      "references": {
+        "source-manifest": {
+          "file": "source-manifest.json",
+          "sha256": "63741e7a8af05a910da27234d80615ce0566fb51b73bed7ecc306b5c6e00b3a4"
+        },
+        "declared-inputs": {
+          "file": "declared-inputs.json",
+          "sha256": "acd5f13bda51bbd92139f392fc1aa53906174ae3c483e1f2fa32d8d2789242a4"
+        },
+        "resolution-declarations": {
+          "file": "resolution-declarations.json",
+          "sha256": "a6d0953a743b3a6bb422c14bb66375bf5f3f6a44535f327318ecea6630f46085"
+        },
+        "reachable-modules": {
+          "file": "reachable-modules.json",
+          "sha256": "e064c6ce719423e3898df193634841dee898d40dd41f3c0e48bac0bede02c7a7"
+        },
+        "effective-settings": {
+          "file": "effective-settings.json",
+          "sha256": "8e5d6dc3b1db0f1da2d0283798a55ff21fef167295b0492b2dc00b6cfb9fe1d2"
+        },
+        "resolved-graphs": {
+          "file": "resolved-graphs.json",
+          "sha256": "45227d771a631a1cc81e32e9697216fcc8c9b359727c109a50d8fcd7a1a335e4"
+        },
+        "products": {
+          "file": "products.json",
+          "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+        },
+        "downloaded-artifacts": {
+          "file": "downloaded-artifacts.json",
+          "sha256": "0e03dc1210fd297fc6e61ca26d17a22fd2dc53742b70b102dcf4a18d40ebbade"
+        }
+      }
+    },
+    {
+      "phase": "candidate",
+      "outcome": "passed",
+      "evidence_sha256": "fc5e0196fc136ced472b33e371c20cff163303c9dd8c5c0fa044ff5e00e3436e",
+      "candidate_selection": {
+        "mode": "normal",
+        "age_state": "age_eligible",
+        "assessed_at": "2026-10-02T20:00:13Z",
+        "eligible_at": "2026-10-02T17:59:28Z",
+        "adoption_authorized": false
+      },
+      "cells": {
+        "effective_toolchain": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "version",
+            "settings"
+          ]
+        },
+        "toolchain_resolution": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "dependencies"
+          ]
+        },
+        "native_library_compile": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "framework_link": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "android-test": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "android-build-debug": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "ios-test": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        },
+        "ios-build-debug": {
+          "status": "not_attempted",
+          "evidence_kind": "none"
+        }
+      },
+      "bridge_unavailable": true,
+      "di_reachable": true,
+      "source_preservation": "verified",
+      "resolution": {
+        "scope": "declared_module_main_test_compile_runtime_platform_roots",
+        "modules": [
+          "android-app",
+          "ios-app",
+          "shared-core",
+          "shared-di",
+          "shared-feature-home",
+          "shared-feature-nearby-vehicle-map",
+          "shared-ui-home"
+        ],
+        "roots": 92,
+        "graph_sha256": "1ccb473a79f47735fa07a9bee1d0dc65e1629e3922f58942dda1a36df497daa3",
+        "fingerprints_sha256": "98e150789702655f7a5d8ebdc01ff691de1489c8279f7f912bdb96f93e29f6ce",
+        "fingerprint_count": 1758,
+        "artifact_attribution": "unproven",
+        "missing_capabilities": [
+          "native_tests",
+          "application_builds",
+          "complete_direct_target_graph",
+          "compiler_plugin_resolution",
+          "artifact_attribution"
+        ],
+        "adoption_authorized": false
+      },
+      "query_count": 305,
+      "queries_sha256": "20a800e0e3248ff78ee614b9b5cf0a75da5a5b76f05df018c779da3929edc77a",
+      "constraint_nodes_excluded": 214,
+      "normalizations": [
+        {
+          "package": "androidx.autofill:autofill",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.customview:customview",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.documentfile:documentfile",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.dynamicanimation:dynamicanimation",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.interpolator:interpolator",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.legacy:legacy-support-core-utils",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.loader:loader",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.localbroadcastmanager:localbroadcastmanager",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.print:print",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        },
+        {
+          "package": "androidx.versionedparcelable:versionedparcelable",
+          "label_version": "1.1.1@aar",
+          "query_version": "1.1.1"
+        },
+        {
+          "package": "androidx.viewpager:viewpager",
+          "label_version": "1.0.0@aar",
+          "query_version": "1.0.0"
+        }
+      ],
+      "command_receipts": [
+        {
+          "check": "version",
+          "exit": 0,
+          "seconds": 6.477,
+          "log": "version.log",
+          "sha256": "6a887b1f3dbcebe6d1f360520162020bec98365e4be9b38b1ae94ea374033b0b",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "settings",
+          "exit": 0,
+          "seconds": 0.902,
+          "log": "settings.log",
+          "sha256": "5d6cbbe29a85c3ddb3ac9aa0bf5998de71ee96564d6550c5e03cc6b6e78d9cda",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "dependencies",
+          "exit": 0,
+          "seconds": 23.213,
+          "log": "dependencies.log",
+          "sha256": "eef30b28a05bebfeb58ccdb82071f83456eb8fa1587b06b1c3c6a61b5d153eed",
+          "capability": "toolchain_resolution"
+        }
+      ],
+      "references": {
+        "source-manifest": {
+          "file": "source-manifest.json",
+          "sha256": "63741e7a8af05a910da27234d80615ce0566fb51b73bed7ecc306b5c6e00b3a4"
+        },
+        "declared-inputs": {
+          "file": "declared-inputs.json",
+          "sha256": "acd5f13bda51bbd92139f392fc1aa53906174ae3c483e1f2fa32d8d2789242a4"
+        },
+        "experiment-transformations": {
+          "file": "experiment-transformations.json",
+          "sha256": "ab52e5fc0bc0e78b844075bd80ee2ae6d46389db2f9ab79cb52f73e4be346e08"
+        },
+        "direct-source-manifest": {
+          "file": "direct-source-manifest.json",
+          "sha256": "931bfb4b5a4dc1028a1f7e06ed9df391aa31649665516b5c4e5bf20c9a027507"
+        },
+        "resolution-declarations": {
+          "file": "resolution-declarations.json",
+          "sha256": "b3df6c797bcbc54abe7b12dcf89522fae427f5c628a3032a9860c448a3fb2d3f"
+        },
+        "reachable-modules": {
+          "file": "reachable-modules.json",
+          "sha256": "747bfcd776a1421c44b81ce465e2072558ed7ace3c3923729cf50272318b695a"
+        },
+        "effective-settings": {
+          "file": "effective-settings.json",
+          "sha256": "8e5d6dc3b1db0f1da2d0283798a55ff21fef167295b0492b2dc00b6cfb9fe1d2"
+        },
+        "resolved-graphs": {
+          "file": "resolved-graphs.json",
+          "sha256": "23b066cc6905c42e62241d4b8f90260d7ca02cb5b9d430939ebbd41322841fc1"
+        },
+        "products": {
+          "file": "products.json",
+          "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+        },
+        "downloaded-artifacts": {
+          "file": "downloaded-artifacts.json",
+          "sha256": "034adea9639b33d546a38715d91c08b66ee67d7001c3498207e9953ffe4d2e07"
+        }
+      }
+    }
+  ],
+  "advisories": {
+    "state": "provider_complete",
+    "scope": "candidate_named_resolved_maven_packages_only",
+    "query_count": 305,
+    "finding_ids": [],
+    "matches": [],
+    "reasons": [],
+    "receipt_sha256": "049363460c9774890da811b8acfaccf486f216217c4a41518be87470f6391444",
+    "dependency_surface": "incomplete",
+    "missing_capabilities": [
+      "compiler_plugin_resolution",
+      "artifact_attribution",
+      "complete_direct_target_graph",
+      "advisory_review"
+    ],
+    "adoption_authorized": false
+  },
+  "candidate_queries": [
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity"
+      },
+      "version": "1.13.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity"
+      },
+      "version": "1.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity-compose"
+      },
+      "version": "1.13.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity-compose"
+      },
+      "version": "1.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity-ktx"
+      },
+      "version": "1.13.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.activity:activity-ktx"
+      },
+      "version": "1.8.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation"
+      },
+      "version": "1.9.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation-experimental"
+      },
+      "version": "1.4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation-iosarm64"
+      },
+      "version": "1.9.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation-iossimulatorarm64"
+      },
+      "version": "1.9.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.annotation:annotation-jvm"
+      },
+      "version": "1.9.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.arch.core:core-common"
+      },
+      "version": "2.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.arch.core:core-runtime"
+      },
+      "version": "2.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.autofill:autofill"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection-iosarm64"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection-iossimulatorarm64"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection-jvm"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.collection:collection-ktx"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.animation:animation"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.animation:animation-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.animation:animation-core"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.animation:animation-core-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.foundation:foundation"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.foundation:foundation-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.foundation:foundation-layout"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.foundation:foundation-layout-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.material3:material3"
+      },
+      "version": "1.5.0-alpha17"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.material3:material3-android"
+      },
+      "version": "1.5.0-alpha17"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.material:material-ripple"
+      },
+      "version": "1.11.0-rc01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.material:material-ripple-android"
+      },
+      "version": "1.11.0-rc01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-annotation"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-annotation-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-annotation-iosarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-annotation-iossimulatorarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-iosarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-iossimulatorarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-retain"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-retain-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-retain-iosarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-retain-iossimulatorarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-saveable"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-saveable-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-saveable-iosarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.runtime:runtime-saveable-iossimulatorarm64"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-geometry"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-geometry-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-graphics"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-graphics-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-text"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-text-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-unit"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-unit-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-util"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.compose.ui:ui-util-android"
+      },
+      "version": "1.11.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.concurrent:concurrent-futures"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core"
+      },
+      "version": "1.16.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core"
+      },
+      "version": "1.18.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core-ktx"
+      },
+      "version": "1.16.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core-ktx"
+      },
+      "version": "1.18.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.core:core-viewtree"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.customview:customview"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.customview:customview-poolingcontainer"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.documentfile:documentfile"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.dynamicanimation:dynamicanimation"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.emoji2:emoji2"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.fragment:fragment"
+      },
+      "version": "1.8.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-path"
+      },
+      "version": "1.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-shapes"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-shapes-android"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-shapes-iosarm64"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.graphics:graphics-shapes-iossimulatorarm64"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.interpolator:interpolator"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.legacy:legacy-support-core-utils"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-java8"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-java8"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-jvm"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-common-jvm"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata-core"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata-core"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata-core-ktx"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-livedata-core-ktx"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-process"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-process"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-compose-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-ktx"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-ktx"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-ktx-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-runtime-ktx-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-compose"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-compose-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-ktx"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-ktx"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate-android"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate-android"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate-iosarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.lifecycle:lifecycle-viewmodel-savedstate-iossimulatorarm64"
+      },
+      "version": "2.9.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.loader:loader"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.localbroadcastmanager:localbroadcastmanager"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent"
+      },
+      "version": "1.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-android"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-compose"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-compose-android"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-iosarm64"
+      },
+      "version": "1.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.navigationevent:navigationevent-iossimulatorarm64"
+      },
+      "version": "1.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.print:print"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.profileinstaller:profileinstaller"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-android"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-compose"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-compose-android"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-compose-iosarm64"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-compose-iossimulatorarm64"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-iosarm64"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-iossimulatorarm64"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.savedstate:savedstate-ktx"
+      },
+      "version": "1.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.startup:startup-runtime"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.tracing:tracing"
+      },
+      "version": "1.2.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.transition:transition"
+      },
+      "version": "1.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.versionedparcelable:versionedparcelable"
+      },
+      "version": "1.1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.viewpager:viewpager"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.window:window"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.window:window-core"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "androidx.window:window-core-android"
+      },
+      "version": "1.5.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.code.gson:gson"
+      },
+      "version": "2.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.google.guava:listenablefuture"
+      },
+      "version": "1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.jakewharton.timber:timber"
+      },
+      "version": "5.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-backstack"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-backstack-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-foundation"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-foundation-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-retained"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-retained-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-navigation"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-navigation-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-presenter"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-presenter-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-screen"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-screen-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-ui"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-runtime-ui-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-sharedelements"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.slack.circuit:circuit-sharedelements-android"
+      },
+      "version": "0.34.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.squareup.okhttp3:okhttp"
+      },
+      "version": "4.12.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.squareup.okio:okio"
+      },
+      "version": "3.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "com.squareup.okio:okio-jvm"
+      },
+      "version": "3.6.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dev.zacsweers.metro:runtime"
+      },
+      "version": "1.4.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dev.zacsweers.metro:runtime-iosarm64"
+      },
+      "version": "1.4.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dev.zacsweers.metro:runtime-iossimulatorarm64"
+      },
+      "version": "1.4.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "dev.zacsweers.metro:runtime-jvm"
+      },
+      "version": "1.4.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "junit:junit"
+      },
+      "version": "4.13.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.apiguardian:apiguardian-api"
+      },
+      "version": "1.1.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.hamcrest:hamcrest-core"
+      },
+      "version": "1.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-common"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-common"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose-uikitarm64"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose-uikitsimarm64"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate"
+      },
+      "version": "2.11.0-beta01"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate"
+      },
+      "version": "2.9.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.navigationevent:navigationevent-compose"
+      },
+      "version": "1.1.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.savedstate:savedstate"
+      },
+      "version": "1.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.savedstate:savedstate-compose"
+      },
+      "version": "1.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.savedstate:savedstate-compose-uikitarm64"
+      },
+      "version": "1.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.androidx.savedstate:savedstate-compose-uikitsimarm64"
+      },
+      "version": "1.3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-core"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-core-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-core-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.animation:animation-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.annotation-internal:annotation"
+      },
+      "version": "1.10.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.collection-internal:collection"
+      },
+      "version": "1.10.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.components:components-resources"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.components:components-resources-android"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.components:components-resources-iosArm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.components:components-resources-iosSimulatorArm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-layout"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-layout-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.foundation:foundation-layout-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material3:material3"
+      },
+      "version": "1.11.0-alpha07"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material3:material3-iosarm64"
+      },
+      "version": "1.11.0-alpha07"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material3:material3-iossimulatorarm64"
+      },
+      "version": "1.11.0-alpha07"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material:material-ripple"
+      },
+      "version": "1.11.0-beta03"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material:material-ripple-iosarm64"
+      },
+      "version": "1.11.0-beta03"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.material:material-ripple-iossimulatorarm64"
+      },
+      "version": "1.11.0-beta03"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-saveable"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-saveable-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.runtime:runtime-saveable-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-backhandler"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-backhandler-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-backhandler-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-geometry"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-geometry-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-geometry-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-graphics"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-graphics-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-graphics-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-text"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-text-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-text-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-uikit"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-uikit-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-uikit-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-unit"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-unit-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-unit-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-util"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-util-iosarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.compose.ui:ui-util-iossimulatorarm64"
+      },
+      "version": "1.11.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-bom"
+      },
+      "version": "2.4.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-common"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-test"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-test-annotations-common"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-test-junit"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlin:kotlin-test-junit5"
+      },
+      "version": "2.4.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu"
+      },
+      "version": "0.32.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu"
+      },
+      "version": "0.33.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu-iosarm64"
+      },
+      "version": "0.32.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu-iossimulatorarm64"
+      },
+      "version": "0.32.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:atomicfu-jvm"
+      },
+      "version": "0.33.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-android"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-bom"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-iosarm64"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-iossimulatorarm64"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-test"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-test-iosarm64"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-test-iossimulatorarm64"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
+      },
+      "version": "1.11.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-datetime"
+      },
+      "version": "0.7.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-datetime-iosarm64"
+      },
+      "version": "0.7.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-datetime-iossimulatorarm64"
+      },
+      "version": "0.7.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-bom"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core-iosarm64"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core-iossimulatorarm64"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
+      },
+      "version": "1.7.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.skiko:skiko"
+      },
+      "version": "0.144.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.skiko:skiko-iosarm64"
+      },
+      "version": "0.144.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains.skiko:skiko-iossimulatorarm64"
+      },
+      "version": "0.144.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jetbrains:annotations"
+      },
+      "version": "23.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.jspecify:jspecify"
+      },
+      "version": "1.0.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.jupiter:junit-jupiter-api"
+      },
+      "version": "5.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.jupiter:junit-jupiter-engine"
+      },
+      "version": "5.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.platform:junit-platform-commons"
+      },
+      "version": "1.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.platform:junit-platform-engine"
+      },
+      "version": "1.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit.platform:junit-platform-launcher"
+      },
+      "version": "1.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.junit:junit-bom"
+      },
+      "version": "5.10.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.maplibre.gl:android-sdk"
+      },
+      "version": "13.3.0"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.maplibre.gl:android-sdk-geojson"
+      },
+      "version": "6.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.maplibre.gl:android-sdk-turf"
+      },
+      "version": "6.0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.maplibre.gl:maplibre-android-gestures"
+      },
+      "version": "0.0.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Maven",
+        "name": "org.opentest4j:opentest4j"
+      },
+      "version": "1.3.0"
+    }
+  ],
+  "provider_packets": [
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-02T20:01:13Z",
+      "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686",
+      "query_count": 100
+    },
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-02T20:01:14Z",
+      "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686",
+      "query_count": 100
+    },
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-02T20:01:14Z",
+      "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686",
+      "query_count": 100
+    },
+    {
+      "url": "https://api.osv.dev/v1/querybatch",
+      "status": 200,
+      "retrieved_at": "2026-10-02T20:01:15Z",
+      "response_sha256": "75f196f26b823bd31225287828f28e3ce63dda93cce61d54965a97dd460b3faf",
+      "query_count": 5
+    }
+  ],
+  "primary_sources": [
+    {
+      "id": "osv-batch",
+      "url": "https://google.github.io/osv.dev/post-v1-querybatch/",
+      "retrieved_at": "2026-10-02T19:57:26.489406+00:00",
+      "sha256": "b307c46461aba6fd3efb7f6282656dc376260253847bf9b3df92ecc9615d8f57",
+      "bytes": 30406
+    },
+    {
+      "id": "osv-record",
+      "url": "https://google.github.io/osv.dev/get-v1-vulns/",
+      "retrieved_at": "2026-10-02T19:57:26.494285+00:00",
+      "sha256": "b602254afdfffbdc21608d4aaeacd46e08282987fced22fc7e118af79c668379",
+      "bytes": 19961
+    }
+  ],
+  "retained_failure": {
+    "run_id": "cf044818b83600ed08891797fb6c0984",
+    "state": "refused",
+    "source_sha256": "7d8a297fd4ad4728c743dc1533b297ac3d8796b59c265a1d370077b4d8434cea",
+    "result_sha256": "7f462a91420b4cdf7f8362e3539294683ac4e493e640c5596b3b21897084e189",
+    "cause": "worker_passed_declaration_set_without_project_yaml",
+    "candidate_attempted": false,
+    "recovery": "quiescent",
+    "cleanup": "cleaned"
+  },
+  "recovery": {
+    "schema": 1,
+    "operation": "recover",
+    "run_id": "5f3dbe7bd5c6433eb5d93ce558db52fc",
+    "state": "quiescent",
+    "hold": false,
+    "processes": [
+      {
+        "check": "baseline-direct-resolution",
+        "state": "absent"
+      },
+      {
+        "check": "candidate-direct-resolution",
+        "state": "absent"
+      }
+    ],
+    "recorded_outcome": "checks_passed",
+    "resume_allowed": false,
+    "adoption_authorized": false
+  },
+  "cleanup": {
+    "schema": 1,
+    "operation": "cleanup",
+    "run_id": "5f3dbe7bd5c6433eb5d93ce558db52fc",
+    "state": "cleaned",
+    "eligible": true,
+    "retention_due_at": "2026-10-09T20:00:45Z",
+    "paths": [
+      "work/baseline",
+      "work/candidate"
+    ],
+    "evidence_retained": true,
+    "recorded_outcome": "checks_passed",
+    "adoption_authorized": false
+  },
+  "caller_preservation": {
+    "state": "verified",
+    "identity_sha256": "c5899fb2eca78ec4a4b86f071b437d71cc0e1e95f6bdb74d4ecf125970ec3745"
+  },
+  "validation": {
+    "repository_contract_count": 214,
+    "full_suite_before_worker_fix": 213,
+    "direct_resolution_contracts_after_worker_fix": 10,
+    "strict_openspec_items": 16,
+    "static": "passed",
+    "existing_compatibility_contracts_after_fix": 20
+  },
+  "missing_capabilities": [
+    "device_execution",
+    "release_archive",
+    "signed_packaging",
+    "cancellation_parity",
+    "generic_export",
+    "cold_direct_ci",
+    "clean_clone_onboarding",
+    "incremental_direct_build",
+    "local_bridge_rollback",
+    "complete_release_interval_review",
+    "complete_bridge_target_graph",
+    "advisory_review",
+    "complete_direct_target_graph",
+    "compiler_plugin_resolution",
+    "artifact_attribution",
+    "native_tests",
+    "application_builds",
+    "retirement_approval"
+  ],
+  "bridge_retirement": "defer",
+  "adoption_authorized": false
+}

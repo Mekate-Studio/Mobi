@@ -77,6 +77,12 @@ if $PROGRAM_NAME == __FILE__
       result, code = Maintenance::ExecutionCLI.call(root, command, ARGV)
       puts JSON.pretty_generate(result)
       exit code
+    when 'review-toolchain-risk'
+      raise Maintenance::Failure, 'Usage: review-toolchain-risk' unless ARGV.empty?
+      require_relative 'lib/toolchain_risk_review'
+      result = Maintenance::ToolchainRiskReview.review(root)
+      puts JSON.pretty_generate(result)
+      exit(result['state'] == 'accepted_risk_for_scoped_manual_use' ? 0 : 2)
     when 'evaluate'
       raise Maintenance::Failure, 'Usage: evaluate <inventory.json> <evidence.json>' unless ARGV.size == 2
       inventory, evidence = ARGV.map { |path| JSON.parse(File.read(path)) }
@@ -86,7 +92,7 @@ if $PROGRAM_NAME == __FILE__
       puts JSON.pretty_generate(result)
       exit(result['state'] == 'checks_passed' ? 0 : 2)
     else
-      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|assess-support|assess-compatibility|watch-compatibility [--previous FILE] [--output DIR]|compatibility-watch-history|verify|evaluate <inventory.json> <evidence.json>|prepare-kotlin|rehearse-kotlin <version> <inputs|mobile> [current|apple-silicon]|rehearse-support <inputs|mobile>|rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade|direct-roundtrip|direct-resolution|direct-build-inputs>|rehearse-upstream [--experimental] [--compile-sdk 37] [--profile build-inputs|mobile|android-packaging|ios-release|ios-archive]|compatibility-report RUN_ID|rehearse-plugin-attribution BUILD_RUN_ID|plugin-report RUN_ID|review-advisories RUN_ID|attribute-bundled RUN_ID|bundled-report RUN_ID|review-bundled-advisories RUN_ID|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]] (execution commands accept trailing --store NAME)'
+      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|assess-support|assess-compatibility|watch-compatibility [--previous FILE] [--output DIR]|compatibility-watch-history|verify|evaluate <inventory.json> <evidence.json>|prepare-kotlin|rehearse-kotlin <version> <inputs|mobile> [current|apple-silicon]|rehearse-support <inputs|mobile>|rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade|direct-roundtrip|direct-resolution|direct-build-inputs>|rehearse-upstream [--experimental] [--compile-sdk 37] [--profile build-inputs|mobile|android-packaging|ios-release|ios-archive]|compatibility-report RUN_ID|rehearse-plugin-attribution BUILD_RUN_ID|plugin-report RUN_ID|review-advisories RUN_ID|review-toolchain-risk|attribute-bundled RUN_ID|bundled-report RUN_ID|review-bundled-advisories RUN_ID|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]] (execution commands accept trailing --store NAME)'
     end
   rescue StandardError, Interrupt => error
     warn JSON.generate('schema' => 1, 'state' => 'failed', 'message' => error.message)

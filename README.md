@@ -29,14 +29,18 @@ architecture itself and the documentation around it.
 
 ## Clean-Clone Quickstart
 
-The reviewed baseline is Kotlin Toolchain 0.12.2. iOS development requires an
+The reviewed baseline is Kotlin Toolchain 0.13.0. iOS development requires an
 Apple Silicon Mac; shared Kotlin and the bridge target `iosArm64` devices and
 `iosSimulatorArm64` simulators. Intel iOS simulators are outside Mobi's support
-policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile/target SDK
-remain API 36. These floors follow a configurable policy of one stable major
+policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile SDK is API 37; target SDK
+remains API 36. These floors follow a configurable policy of one stable major
 behind the latest reviewed stable release. See the
 [mobile support workflow](docs/maintenance/mobile-support-policy.md) and
 [adoption evidence](docs/maintenance/support-policy-validation.md).
+
+Install Android platform API 37 and build tools 37.0.0, and review/accept the
+Android SDK license explicitly before running Android jobs. See the
+[local SDK setup](docs/reference/local-development.md#android-sdk-provisioning).
 
 Install Ruby dependencies:
 
@@ -173,7 +177,7 @@ shared Kotlin dependency surface used by the app modules.
 The retained bridge uses Kotlin 2.4.20, Metro 1.4.5 and SKIE 0.10.15; bridge
 Compose remains 1.9.0. Renovate ceilings are bounded at Metro <=1.4.5 and bridge
 Kotlin <=2.4.20 after the [reviewed adoption](docs/maintenance/bridge-adoption-review.md).
-Toolchain 0.12.2 supplies Kotlin 2.4.10 independently. The
+Toolchain 0.13.0 supplies Kotlin 2.4.20 and Compose 1.12.1 independently. The
 [compatibility assessment](docs/maintenance/kotlin-compatibility.md) keeps this
 upgrade separate from proving an equivalent direct Kotlin Toolchain path.
 The existing scheduled compatibility workflow uses the repository-owned

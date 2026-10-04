@@ -157,7 +157,7 @@ which broke `@Reducer` and `@ObservableState` expansion from the CLI. The
 repo's iOS CI and Fastlane entrypoints therefore disable explicit Swift modules
 by default while also letting Xcode choose the simulator architectures itself.
 The experimental direct Kotlin Toolchain iOS path is not the default yet.
-Mobi uses Toolchain 0.12.2 with ARM device/simulator targets and keeps its Xcode
+Mobi uses Toolchain 0.13.0 with ARM device/simulator targets and keeps its Xcode
 app and native test targets. The versioned integration selects one marked app
 target; that does not establish a prohibition on a separate test target.
 Mobi still relies on SKIE in the Gradle bridge for sealed-state Swift ergonomics.
@@ -229,7 +229,7 @@ Concretely:
   embeds the shared Compose entry point in a SwiftUI tab.
 - [`shared-ui-home/src/HomeContent.kt`](../../shared-ui-home/src/HomeContent.kt)
   exposes `SharedHomeScreen` for the optional shared Compose rendering path.
-- [`shared-ui-home/src@ios/ViewController.kt`](../../shared-ui-home/src@ios/ViewController.kt)
+- [`shared-ui-home/src@ios/SharedHomeViewControllerFactory.kt`](../../shared-ui-home/src@ios/SharedHomeViewControllerFactory.kt)
   exports an iOS view-controller factory for that shared Compose screen.
 
 ## Current nearby vehicle map flow

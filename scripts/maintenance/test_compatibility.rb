@@ -49,6 +49,8 @@ module CompatibilityTest
 
   test('compile SDK remediation is isolated and preserves minimum target and namespace declarations') do
     fixture do |root|
+      sdk_file = File.join(root, "android-app/module.yaml")
+      File.write(sdk_file, File.read(sdk_file).sub("compileSdk: 37", "compileSdk: 36"))
       source = Maintenance::Source.new(root)
       edits = Maintenance::UpstreamRemediationRehearsal.sdk_edits(source, 37)
       assert(edits.map { |e| e['path'] } == ['android-app/module.yaml'])
@@ -186,7 +188,7 @@ module CompatibilityTest
   test('unknown profile and wrong Toolchain refuse assessment') do
     reject(/Unknown compatibility profile/) { Maintenance::Compatibility.new(ROOT).edits(Maintenance::Source.new(ROOT), 'guess') }
     fixture do |root|
-      file = File.join(root, 'kotlin'); File.write(file, File.read(file).sub('kotlin_cli_version=0.12.2', 'kotlin_cli_version=0.12.1'))
+      file = File.join(root, 'kotlin'); File.write(file, File.read(file).sub(/^kotlin_cli_version=.+$/, 'kotlin_cli_version=0.12.1'))
       reject(/Toolchain differs/) { Maintenance::Compatibility.new(root).assessment }
     end
   end
