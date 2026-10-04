@@ -75,7 +75,7 @@ receipt = store.lock(id, create: false) do
       raw_output = read.call('nightly-raw-output')
       raise Maintenance::Failure, 'Raw Xcode origin differs' unless raw_output['log'] == 'nightly-test-raw.log' && raw_output['command'] == 'nightly-test' && raw_output['origin'] == 'build/logs/xcodebuild-ios-tests.log'
       verify.call(File.join(control, raw_output['log']), raw_output.fetch('sha256'))
-      actual = File.read(File.join(control, raw_output['log'])).scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
+      actual = File.read(File.join(control, raw_output['log']), encoding: 'UTF-8').scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
       raise Maintenance::Failure, 'Nightly cases differ from original identities' unless actual == cases && cases == golden
       %w[simulator archive].each do |kind|
         product = read.call(kind + '-product')

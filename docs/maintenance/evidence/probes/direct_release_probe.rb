@@ -82,7 +82,7 @@ module Maintenance
           captured = File.join(@control, 'nightly-test-raw.log')
           File.binwrite(captured, File.binread(raw))
           write_evidence('nightly-raw-output', { 'log' => 'nightly-test-raw.log', 'sha256' => Maintenance.file_sha(captured), 'command' => 'nightly-test', 'origin' => 'build/logs/xcodebuild-ios-tests.log' })
-          native_cases(File.read(captured), 'nightly-native-test-cases')
+          native_cases(File.read(captured, encoding: 'UTF-8'), 'nightly-native-test-cases')
         end
         measured('ios_release_simulator') { command('ios-release-simulator', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-build-release']) }
         measured('simulator_product') do
