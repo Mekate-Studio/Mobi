@@ -14,12 +14,16 @@
 
 - [ ] 3.1 Complete SDK/license onboarding and operational gate review; refresh full selected/bundled/plugin evidence within 24 hours and finalize exact source/patch identities.
 - [x] 3.2 Apply only approved content after verifying preimages/index/unrelated preservation and validate the integrated retained-bridge path.
-- [ ] 3.3 With separate authorization, commit/push exact content and collect cold hosted evidence; preserve physical/runtime and signed-delivery limitations.
+- [x] 3.3 With separate authorization, commit/push exact content and collect cold hosted evidence; preserve physical/runtime and signed-delivery limitations.
 
 ## 4. Priority bridge assessment
 
 - [x] 4.1 Run fresh bridge-unavailable direct-roundtrip/build-input checks against the integrated tuple and refresh its independent advisory inventory.
-- [ ] 4.2 Review typed interop/plugin/native/operational gaps and prepare the smallest direct-default proposal with rollback.
+- [x] 4.2 Review typed interop/plugin/native/operational gaps and prepare the smallest direct-default proposal with rollback.
 - [ ] 4.3 Obtain separate approval for a validated default transition, followed by a distinct physical-removal review.
 
-The risk/age approvals are scoped to local development/tests/isolated assessment. Local native compatibility passed, including bridge-unavailable incremental execution and exact bridge restoration. Cold hosted, empty-host/license onboarding, exact-floor/physical runtime, signed delivery and remaining dependency-surface coverage stay open. The maintainer authorized the commit series and pull-request hosted checks. Local adoption is committed as `171e893`; hosted validation is pending, so task 3.3 remains open. No release-ready claim is made.
+The risk/age approvals are scoped to local development/tests/isolated assessment. Local native compatibility passed, including bridge-unavailable incremental execution and exact bridge restoration. The maintainer authorized the commit series and pull-request hosted checks. The three commits are published through PR #35 at head `349e07e`. All seven checks, including the Pull request gate, passed in Mobile CI run `37193455667`; the tested merge tree equals the reviewed head tree. The separate operational assessment also passed local and hosted Nightly and unsigned Release/archive/product pairs, with owned cleanup, provider artifact digests and replay verified. Task 3.1 retains empty-host/license and wider operational/dependency gaps. Exact-floor/physical runtime and signed delivery remain unmeasured. No release-ready claim is made.
+
+Default transition approved on 2026-10-04; application/evidence are tracked in
+`adopt-direct-ios-default`. Task 4.3 remains open for the distinct physical-removal
+review; no deletion is authorized.

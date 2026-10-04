@@ -1,0 +1,704 @@
+{
+  "schema": 1,
+  "state": "hosted_retained_bridge_validation_passed",
+  "recorded_at": "2026-10-04T10:10:56.359575+00:00",
+  "pull_request": "https://github.com/Mekate-Studio/Mobi/pull/35",
+  "workflow_run": "https://github.com/Mekate-Studio/Mobi/actions/runs/37193455667",
+  "head_sha": "349e07e0929033e8feb71269e9555420d3285e35",
+  "base_sha": "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+  "merge_sha": "5cfd3ab3328610167f57a2cca7b5624df82fe142",
+  "tree_sha": "8080301c915fb35815692dfc4092ee677162228c",
+  "merge_tree_matches_head": true,
+  "merge_parents": [
+    "ba8270fabed862ae52a09e918e9803390d0fd8cb",
+    "349e07e0929033e8feb71269e9555420d3285e35"
+  ],
+  "github_cli_status_projection": {
+    "conclusion": "success",
+    "headSha": "349e07e0929033e8feb71269e9555420d3285e35",
+    "jobs": [
+      {
+        "completedAt": "2026-10-04T09:51:00Z",
+        "conclusion": "success",
+        "databaseId": 111410307611,
+        "name": "Classify changes",
+        "startedAt": "2026-10-04T09:50:57Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-04T09:50:58Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-04T09:50:57Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:50:59Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-10-04T09:50:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:50:59Z",
+            "conclusion": "success",
+            "name": "Verify changed-path policy",
+            "number": 3,
+            "startedAt": "2026-10-04T09:50:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:50:59Z",
+            "conclusion": "success",
+            "name": "Select validation jobs",
+            "number": 4,
+            "startedAt": "2026-10-04T09:50:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:50:59Z",
+            "conclusion": "success",
+            "name": "Summarize selection",
+            "number": 5,
+            "startedAt": "2026-10-04T09:50:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:50:59Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 10,
+            "startedAt": "2026-10-04T09:50:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:50:59Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-04T09:50:59Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37193455667/job/111410307611"
+      },
+      {
+        "completedAt": "2026-10-04T09:55:11Z",
+        "conclusion": "success",
+        "databaseId": 111410324018,
+        "name": "Android and shared host tests",
+        "startedAt": "2026-10-04T09:51:08Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-04T09:51:11Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-04T09:51:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:13Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-10-04T09:51:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:39Z",
+            "conclusion": "success",
+            "name": "Run actions/cache@v6",
+            "number": 3,
+            "startedAt": "2026-10-04T09:51:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:40Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-java@v5",
+            "number": 4,
+            "startedAt": "2026-10-04T09:51:39Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:44Z",
+            "conclusion": "success",
+            "name": "Run ruby/setup-ruby@v1",
+            "number": 5,
+            "startedAt": "2026-10-04T09:51:40Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:52Z",
+            "conclusion": "success",
+            "name": "Run android-actions/setup-android@v4",
+            "number": 6,
+            "startedAt": "2026-10-04T09:51:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:31Z",
+            "conclusion": "success",
+            "name": "Run Android and shared tests",
+            "number": 7,
+            "startedAt": "2026-10-04T09:51:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:31Z",
+            "conclusion": "skipped",
+            "name": "Upload failure diagnostics",
+            "number": 8,
+            "startedAt": "2026-10-04T09:54:31Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:31Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-java@v5",
+            "number": 14,
+            "startedAt": "2026-10-04T09:54:31Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:55:07Z",
+            "conclusion": "success",
+            "name": "Post Run actions/cache@v6",
+            "number": 15,
+            "startedAt": "2026-10-04T09:54:31Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:55:08Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 16,
+            "startedAt": "2026-10-04T09:55:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:55:08Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 17,
+            "startedAt": "2026-10-04T09:55:08Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37193455667/job/111410324018"
+      },
+      {
+        "completedAt": "2026-10-04T10:05:15Z",
+        "conclusion": "success",
+        "databaseId": 111410324019,
+        "name": "iOS PullRequest plan",
+        "startedAt": "2026-10-04T09:51:09Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-04T09:51:11Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-04T09:51:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:14Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-10-04T09:51:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:14Z",
+            "conclusion": "success",
+            "name": "Run actions/cache@v6",
+            "number": 3,
+            "startedAt": "2026-10-04T09:51:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:15Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-java@v5",
+            "number": 4,
+            "startedAt": "2026-10-04T09:51:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:18Z",
+            "conclusion": "success",
+            "name": "Run ruby/setup-ruby@v1",
+            "number": 5,
+            "startedAt": "2026-10-04T09:51:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:04:48Z",
+            "conclusion": "success",
+            "name": "Run iOS pull-request tests",
+            "number": 6,
+            "startedAt": "2026-10-04T09:51:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:04:48Z",
+            "conclusion": "skipped",
+            "name": "Upload failure diagnostics",
+            "number": 7,
+            "startedAt": "2026-10-04T10:04:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:04:49Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-java@v5",
+            "number": 12,
+            "startedAt": "2026-10-04T10:04:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:05:08Z",
+            "conclusion": "success",
+            "name": "Post Run actions/cache@v6",
+            "number": 13,
+            "startedAt": "2026-10-04T10:04:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:05:08Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 14,
+            "startedAt": "2026-10-04T10:05:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:05:13Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-04T10:05:08Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37193455667/job/111410324019"
+      },
+      {
+        "completedAt": "2026-10-04T10:00:30Z",
+        "conclusion": "success",
+        "databaseId": 111410324055,
+        "name": "iOS debug build",
+        "startedAt": "2026-10-04T09:51:09Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-04T09:51:12Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-04T09:51:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:14Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-10-04T09:51:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:15Z",
+            "conclusion": "success",
+            "name": "Run actions/cache@v6",
+            "number": 3,
+            "startedAt": "2026-10-04T09:51:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:16Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-java@v5",
+            "number": 4,
+            "startedAt": "2026-10-04T09:51:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:20Z",
+            "conclusion": "success",
+            "name": "Run ruby/setup-ruby@v1",
+            "number": 5,
+            "startedAt": "2026-10-04T09:51:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:00:05Z",
+            "conclusion": "success",
+            "name": "Build iOS debug",
+            "number": 6,
+            "startedAt": "2026-10-04T09:51:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:00:06Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-java@v5",
+            "number": 10,
+            "startedAt": "2026-10-04T10:00:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:00:24Z",
+            "conclusion": "success",
+            "name": "Post Run actions/cache@v6",
+            "number": 11,
+            "startedAt": "2026-10-04T10:00:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:00:25Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 12,
+            "startedAt": "2026-10-04T10:00:24Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:00:29Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 13,
+            "startedAt": "2026-10-04T10:00:25Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37193455667/job/111410324055"
+      },
+      {
+        "completedAt": "2026-10-04T09:54:55Z",
+        "conclusion": "success",
+        "databaseId": 111410324075,
+        "name": "Quality checks",
+        "startedAt": "2026-10-04T09:51:08Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-04T09:51:10Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-04T09:51:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:12Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-10-04T09:51:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:21Z",
+            "conclusion": "success",
+            "name": "Run actions/cache@v6",
+            "number": 3,
+            "startedAt": "2026-10-04T09:51:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:25Z",
+            "conclusion": "success",
+            "name": "Install or verify pinned quality tools",
+            "number": 4,
+            "startedAt": "2026-10-04T09:51:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:33Z",
+            "conclusion": "success",
+            "name": "Test quality contracts",
+            "number": 5,
+            "startedAt": "2026-10-04T09:51:25Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:48Z",
+            "conclusion": "success",
+            "name": "Run quality checks",
+            "number": 6,
+            "startedAt": "2026-10-04T09:54:33Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:49Z",
+            "conclusion": "success",
+            "name": "Post Run actions/cache@v6",
+            "number": 11,
+            "startedAt": "2026-10-04T09:54:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:50Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 12,
+            "startedAt": "2026-10-04T09:54:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:52Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 13,
+            "startedAt": "2026-10-04T09:54:50Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37193455667/job/111410324075"
+      },
+      {
+        "completedAt": "2026-10-04T09:56:18Z",
+        "conclusion": "success",
+        "databaseId": 111410324179,
+        "name": "Android debug build",
+        "startedAt": "2026-10-04T09:51:07Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-04T09:51:10Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-04T09:51:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:12Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-10-04T09:51:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:39Z",
+            "conclusion": "success",
+            "name": "Run actions/cache@v6",
+            "number": 3,
+            "startedAt": "2026-10-04T09:51:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:39Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-java@v5",
+            "number": 4,
+            "startedAt": "2026-10-04T09:51:39Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:43Z",
+            "conclusion": "success",
+            "name": "Run ruby/setup-ruby@v1",
+            "number": 5,
+            "startedAt": "2026-10-04T09:51:39Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:51:51Z",
+            "conclusion": "success",
+            "name": "Run android-actions/setup-android@v4",
+            "number": 6,
+            "startedAt": "2026-10-04T09:51:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:54:59Z",
+            "conclusion": "success",
+            "name": "Build Android debug",
+            "number": 7,
+            "startedAt": "2026-10-04T09:51:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:55:00Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-java@v5",
+            "number": 12,
+            "startedAt": "2026-10-04T09:54:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:56:12Z",
+            "conclusion": "success",
+            "name": "Post Run actions/cache@v6",
+            "number": 13,
+            "startedAt": "2026-10-04T09:55:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:56:13Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 14,
+            "startedAt": "2026-10-04T09:56:12Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T09:56:17Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-04T09:56:13Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37193455667/job/111410324179"
+      },
+      {
+        "completedAt": "2026-10-04T10:05:21Z",
+        "conclusion": "success",
+        "databaseId": 111412607945,
+        "name": "Pull request gate",
+        "startedAt": "2026-10-04T10:05:18Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-04T10:05:20Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-04T10:05:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:05:20Z",
+            "conclusion": "success",
+            "name": "Require selected jobs to pass",
+            "number": 2,
+            "startedAt": "2026-10-04T10:05:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-04T10:05:20Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 3,
+            "startedAt": "2026-10-04T10:05:20Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37193455667/job/111412607945"
+      }
+    ],
+    "status": "completed"
+  },
+  "cli_rendered_log": {
+    "sha256": "7b07e28dd03b9889291211717277585c7b416c85958a8559df2401a3bf874cbc",
+    "bytes": 1374033,
+    "command": [
+      "gh",
+      "run",
+      "view",
+      "37193455667",
+      "--repo",
+      "Mekate-Studio/Mobi",
+      "--log"
+    ],
+    "raw_log_retained_locally": true
+  },
+  "measured_log_results": {
+    "android_tests": 38,
+    "android_suite_counts": [
+      12,
+      9,
+      2,
+      5,
+      10
+    ],
+    "swift_cases": [
+      "HomeFeatureTests/shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent()",
+      "HomeFeatureTests/shouldHaveInitialSharedStateWhenTaskIsSent()",
+      "HomeFeatureTests/shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent()",
+      "NearbyVehicleMapFeatureTests/shouldBlockReducedAccuracyLocation()",
+      "NearbyVehicleMapFeatureTests/shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads()",
+      "NearbyVehicleMapFeatureTests/shouldHaveResolvingRiderLocationWhenTaskIsSent()",
+      "NearbyVehicleMapFeatureTests/shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable()",
+      "NearbyVehicleMapFeatureTests/shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved()",
+      "NearbyVehicleMapFeatureTests/shouldMapLoadedSharedStateIntoProviderNeutralMapScene()",
+      "NearbyVehicleMapFeatureTests/shouldPreserveBlockingOverlaySeparatelyFromMapContent()",
+      "NearbyVehicleMapFeatureTests/shouldRequestVisibleRefreshWhenRefreshIsDue()",
+      "NearbyVehicleMapFeatureTests/shouldWireDeniedPermissionIntoBlockingOverlay()"
+    ],
+    "maintenance_contracts": 272,
+    "maintenance_suites": 17,
+    "suite_counts": [
+      35,
+      27,
+      24,
+      28,
+      28,
+      13,
+      25,
+      15,
+      10,
+      8,
+      12,
+      12,
+      8,
+      6,
+      3,
+      6,
+      12
+    ],
+    "cache_observations": [
+      {
+        "job": "Android and shared host tests",
+        "state": "restored"
+      },
+      {
+        "job": "iOS PullRequest plan",
+        "state": "miss"
+      },
+      {
+        "job": "iOS debug build",
+        "state": "miss"
+      },
+      {
+        "job": "Quality checks",
+        "state": "restored"
+      },
+      {
+        "job": "Android debug build",
+        "state": "restored"
+      }
+    ]
+  },
+  "risk_review": {
+    "state": "accepted_risk_for_scoped_manual_use",
+    "reasons": [],
+    "decision_sha256": "039567731ae996083ffaf8dc16101c9d72fbb1e8bdc5534efd0b5c5622fa7003",
+    "query_count": 549,
+    "finding_count": 17,
+    "expires_at": "2026-11-03T05:48:38Z",
+    "age_state": "age_blocked_with_explicit_exception",
+    "remediation_verified": false
+  },
+  "bridge_retirement": "defer",
+  "release_authorized": false,
+  "limits": [
+    "Hosted retained-bridge PR validation only; direct candidate is a separate local assessment",
+    "iOS jobs reported CI cache misses; Android/quality caches were restored",
+    "Cache misses do not establish empty-host/license onboarding or complete provenance of preinstalled host tools",
+    "Exact-floor and physical-device runtime, complete dependency-surface coverage and signed delivery remain unmeasured",
+    "No PR merge, direct-default switch or physical bridge deletion was performed"
+  ]
+}

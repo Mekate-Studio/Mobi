@@ -1,0 +1,115 @@
+# frozen_string_literal: true
+
+# Read-only replay of the separate manual operational producer.
+require 'json'
+require 'digest'
+root = File.realpath(ARGV.fetch(0))
+id = ARGV.fetch(1)
+require File.join(root, 'scripts/maintenance/lib/recovery')
+source = Maintenance::Source.new(root)
+store = Maintenance::RunStore.new(File.join(root, '.maintenance/runs-ios-operations'))
+probe = File.join(__dir__, 'direct_release_probe.rb')
+golden = JSON.parse(File.read(File.join(__dir__, 'MobiInteropParity.original-cases.json')))
+required = %w[effective_toolchain nightly_test ios_release_simulator simulator_product ios_unsigned_archive archive_product]
+asset_warning = /\Aobjc\[\d+\]: Class OS_at_encoder is implemented in both \/usr\/lib\/libate\.dylib \(0x[0-9a-f]+\) and \/[^\n]+\/assetutil \(0x[0-9a-f]+\)\. This may cause spurious casting failures and mysterious crashes\. One of the duplicates must be removed or renamed\.\n/
+verify = lambda do |file, sha|
+  raise Maintenance::Failure, 'Missing or changed raw producer evidence' unless File.file?(file) && !File.symlink?(file) && Maintenance.file_sha(file) == sha
+end
+receipt = store.lock(id, create: false) do
+  journal = store.load(id)
+  result_file = store.path(id, '.result.json')
+  result = JSON.parse(File.read(result_file))
+  raise Maintenance::Failure, 'Manual result binding mismatch' unless result['run_id'] == id && result['state'] == journal['state'] && result['ended_at'] == journal['ended_at'] && result['binding'] == journal['binding'] && result['adoption_authorized'] == false && result.dig('binding', 'adapter') == 'manual-ios-operations'
+  raise Maintenance::Failure, 'Source snapshot changed' unless result.dig('binding', 'source_sha256') == Maintenance.digest(source.files)
+  binding = result.fetch('binding')
+  raise Maintenance::Failure, 'Manual probe identity changed' unless binding.fetch('execution_files').count { |entry| entry['name'] == 'direct_release_probe.rb' && entry['sha256'] == Maintenance.file_sha(probe) } == 1
+  if result['state'] == 'checks_passed'
+    raise Maintenance::Failure, 'Successful result lacks complete pair' unless result.fetch('steps').map { |step| step['phase'] }.sort == %w[baseline candidate]
+  end
+  phases = result.fetch('steps').map do |step|
+    record = journal.fetch('steps').find { |entry| entry['id'] == step['phase'] + '-manual-ios-operations' }
+    raise Maintenance::Failure, 'Missing stopped manual journal step' unless record && record['state'] == 'stopped' && record['process_exit'] == step['exit'] && step['check'] == 'manual-ios-operations'
+    control = store.safe_path(journal, record.fetch('path'))
+    hashes = step.fetch('output_sha256')
+    raise Maintenance::Failure, 'Incomplete output binding' unless hashes.keys.sort == %w[check.json stderr.log stdout.log]
+    hashes.each do |name, sha|
+      raise Maintenance::Failure, 'Journal output mismatch' unless record.fetch('output_sha256')[name] == sha
+      verify.call(File.join(control, name), sha)
+    end
+    check = JSON.parse(File.read(File.join(control, 'check.json')))
+    raise Maintenance::Failure, 'Check binding mismatch' unless check['check'] == step['check'] && check['phase'] == step['phase'] && check['status'] == step['status'] && check['schema'] == 1
+    verify.call(File.join(control, 'evidence.json'), check.fetch('evidence_sha256'))
+    evidence = JSON.parse(File.read(File.join(control, 'evidence.json')))
+    raise Maintenance::Failure, 'Manual evidence identity mismatch' unless evidence['phase'] == step['phase'] && evidence['profile'] == 'manual-ios-operations' && evidence['manual_assessment'] == true && evidence['adoption_authorized'] == false && evidence['bridge_retirement'] == 'defer'
+    evidence.fetch('commands').each do |command|
+      raise Maintenance::Failure, 'Invalid command log path' unless command.fetch('log').match?(/\A[a-z][a-z0-9_-]*\.log\z/)
+      verify.call(File.join(control, command['log']), command.fetch('sha256'))
+    end
+    evidence.values.select { |value| value.is_a?(Hash) && value.key?('file') }.each do |ref|
+      raise Maintenance::Failure, 'Invalid evidence path' unless ref['file'].match?(/\A[a-z][a-z0-9-]*\.json\z/)
+      verify.call(File.join(control, ref['file']), ref.fetch('sha256'))
+    end
+    read = ->(name) { JSON.parse(File.read(File.join(control, evidence.fetch(name).fetch('file')))) }
+    raise Maintenance::Failure, 'Phase source differs from captured producer' unless read.call('source-manifest') == source.files
+    if evidence['bridge_unavailable']
+      expected = JSON.parse(JSON.generate(source.files))
+      read.call('experiment-transformations').each do |change|
+        path = change.fetch('path')
+        raise Maintenance::Failure, 'Transformation preimage mismatch' unless expected.dig(path, 'sha256') == change['before_sha256']
+        if change['after_sha256']
+          raise Maintenance::Failure, 'Transformation content mismatch' unless Digest::SHA256.hexdigest(change.fetch('content')) == change['after_sha256']
+          expected[path] = { 'sha256' => change['after_sha256'], 'executable' => expected.dig(path, 'executable') || false }
+        else
+          expected.delete(path)
+        end
+      end
+      raise Maintenance::Failure, 'Direct source or bridge absence mismatch' unless read.call('direct-source-manifest') == expected && expected.keys.none? { |path| path.start_with?('gradle-bridge/') }
+    end
+    products = {}
+    if step['status'] == 'passed'
+      raise Maintenance::Failure, 'Passing manual evidence lacks required cells' unless step['exit'] == 0 && required.all? { |cell| evidence.fetch('cells').dig(cell, 'status') == 'passed' } && evidence['source_preservation'] == 'verified'
+      env = evidence.fetch('environment')
+      builder = step['phase'] == 'candidate' ? 'kotlin' : 'gradle'
+      raise Maintenance::Failure, 'Operational environment overclaims scope' unless env['bridge'] == builder && env['test_plan'] == 'Nightly' && env['licenses'] == 'copied_host_acceptance' && env['empty_host_proven'] == false && (builder != 'kotlin' || evidence['bridge_unavailable'] == true && evidence['di_reachable'] == true)
+      cases = read.call('nightly-native-test-cases')
+      actual = File.read(File.join(control, 'nightly-test.log')).scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
+      raise Maintenance::Failure, 'Nightly cases differ from original identities' unless actual == cases && cases == golden
+      %w[simulator archive].each do |kind|
+        product = read.call(kind + '-product')
+        raw_info = JSON.parse(File.read(File.join(control, kind + '-plist.log')))
+        raw_arch = File.read(File.join(control, kind + '-arch.log')).strip
+        raw_load = File.read(File.join(control, kind + '-load.log')).scan(/cmd LC_BUILD_VERSION\s+cmdsize \d+\s+platform (\d+)\s+minos ([\d.]+)\s+sdk ([\d.]+)/)
+        raw_asset_text = File.read(File.join(control, kind + '-assets.log'))
+        warning = raw_asset_text[asset_warning]
+        if warning
+          expected_warning = { 'product' => kind, 'warning' => 'duplicate_OS_at_encoder_in_host_assetutil', 'sha256' => Digest::SHA256.hexdigest(warning) }
+          raise Maintenance::Failure, 'Known asset tool warning was not retained' unless read.call('asset-tool-warnings').include?(expected_warning)
+        end
+        raw_assets = JSON.parse(raw_asset_text.sub(asset_warning, ''))
+        raise Maintenance::Failure, 'Product facts differ from raw commands' unless product['identifier'] == raw_info['CFBundleIdentifier'] && product['minimum'] == raw_info['MinimumOSVersion'] && product['architecture'] == raw_arch && product['build_version'] == raw_load.first && product['app_icon_entries'] == raw_assets.count { |entry| entry['Name'].to_s.include?('AppIcon') }
+        raise Maintenance::Failure, 'Product facts do not meet bounded assessment' unless product['identifier'] == 'studio.mekate.mobi' && product['minimum'] == '26.0' && product['architecture'] == 'arm64' && raw_load.size == 1 && raw_load.first[0] == (kind == 'simulator' ? '7' : '2') && Gem::Version.new(raw_load.first[1]) == Gem::Version.new('26.0') && product['app_icon_entries'].positive? && product.fetch('files').fetch('Assets.car') == product['assets_sha256'] && product['signing_scope'] == 'unsigned_no_export_or_delivery'
+        renditions = raw_assets.select { |entry| entry['Name'].to_s.include?('AppIcon') }.map { |entry| entry.select { |key, _| %w[Name RenditionName Idiom Scale DisplayGamut Colorspace PixelWidth PixelHeight SHA1Digest].include?(key) }.sort.to_h }.sort_by { |entry| JSON.generate(entry) }
+        # Preserve assetutil's vendor field as an opaque payload identity; newer
+        # tools emit 64 hex characters despite its historical SHA1Digest name.
+        raise Maintenance::Failure, 'Native icon rendition lacks payload identity' unless renditions.all? { |entry| entry.fetch('SHA1Digest').match?(/\A[0-9A-Fa-f]{40}(?:[0-9A-Fa-f]{24})?\z/) }
+        products[kind] = product.reject { |key, _| key == 'files' }.merge('files_count' => product.fetch('files').size, 'inventory_sha256' => Maintenance.digest(product['files']), 'native_icon_renditions_sha256' => Maintenance.digest(renditions))
+      end
+    end
+    { 'phase' => step['phase'], 'status' => step['status'], 'seconds' => step['seconds'], 'evidence_sha256' => check['evidence_sha256'],
+      'cells' => evidence['cells'], 'environment' => evidence['environment'], 'failure' => evidence['failure'], 'products' => products,
+      'commands' => evidence['commands'], 'source_preservation' => evidence['source_preservation'] }
+  end
+  resources = journal.fetch('resources').select { |resource| resource['disposable'] }
+  raise Maintenance::Failure, 'Owned copies have not been cleaned' unless !resources.empty? && resources.all? { |resource| resource['state'] == 'removed' && !File.exist?(store.safe_path(journal, resource['path'])) }
+  parity = result['state'] == 'checks_passed' ? %w[simulator archive].to_h { |kind| [kind, phases.map { |phase| phase.fetch('products').fetch(kind).fetch('native_icon_renditions_sha256') }.uniq.size == 1] } : {}
+  raise Maintenance::Failure, 'Native icon rendition content differs across paths' unless parity.values.all?
+  { 'schema' => 1, 'assessment' => 'manual_direct_ios_operations', 'run_id' => id, 'state' => result['state'], 'reason' => result['reason'], 'native_icon_rendition_parity' => parity,
+    'source_revision' => binding.dig('git', 'head'), 'source_sha256' => binding['source_sha256'], 'producer_sha256' => Maintenance.file_sha(result_file),
+    'probe_sha256' => Maintenance.file_sha(probe), 'derivation_sha256' => Maintenance.file_sha(__FILE__), 'phases' => phases,
+    'missing_capabilities' => result['missing_capabilities'], 'owned_cleanup' => 'verified', 'bridge_retirement' => 'defer', 'adoption_authorized' => false }
+end
+recovery = Maintenance::Recovery.new(store).recover(id)
+raise Maintenance::Failure, 'Owned resources are not quiescent' unless recovery['state'] == 'quiescent'
+source.verify!
+receipt['owned_recovery'] = recovery['state']
+puts JSON.pretty_generate(receipt)

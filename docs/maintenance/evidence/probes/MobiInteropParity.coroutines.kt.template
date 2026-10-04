@@ -1,0 +1,70 @@
+package studio.mekate.mobi.di
+
+import kotlinx.coroutines.CompletableDeferred
+import studio.mekate.mobi.core.CounterRepository
+import studio.mekate.mobi.core.CounterRepositoryException
+import studio.mekate.mobi.feature.home.CounterLoadable
+import studio.mekate.mobi.feature.home.HomeFeatureService
+import studio.mekate.mobi.feature.home.HomeFeatureState
+import kotlin.coroutines.cancellation.CancellationException
+
+// Assessment-only types. They do not add a generic production feature-state API.
+class MobiInteropPayload(val label: String, val count: Int)
+
+class MobiInteropBox<T : Any>(val value: T)
+
+object MobiInteropParity {
+    fun box(payload: MobiInteropPayload): MobiInteropBox<MobiInteropPayload> = MobiInteropBox(payload)
+
+    fun loadedState(value: Int): HomeFeatureState = HomeFeatureState(CounterLoadable.Loaded(value))
+
+    fun successService(): HomeFeatureService = HomeFeatureService(
+        object : CounterRepository {
+            override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int = currentCounterValue + 1
+        },
+    )
+
+    fun repositoryFailureService(): HomeFeatureService = HomeFeatureService(
+        object : CounterRepository {
+            override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int = throw CounterRepositoryException()
+        },
+    )
+
+    fun unexpectedFailureService(): HomeFeatureService = HomeFeatureService(
+        object : CounterRepository {
+            override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int = error("owned assessment failure")
+        },
+    )
+
+    fun cancellationService(): HomeFeatureService = HomeFeatureService(
+        object : CounterRepository {
+            override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int = throw CancellationException("owned assessment cancellation")
+        },
+    )
+}
+
+class MobiInteropLifetime {
+    private var pending: CompletableDeferred<String>? = null
+    var started: Int = 0
+        private set
+    var completed: Int = 0
+        private set
+    val isWaiting: Boolean get() = pending != null
+
+    suspend fun waitForValue(): String {
+        check(pending == null)
+        val current = CompletableDeferred<String>()
+        pending = current
+        started += 1
+        try {
+            return current.await()
+        } finally {
+            pending = null
+            completed += 1
+        }
+    }
+
+    fun resume(value: String) {
+        pending?.complete(value)
+    }
+}

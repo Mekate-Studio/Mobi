@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "assessment": "manual_direct_ios_operations",
+  "run_id": "1d655ee51fe09525415d31cd579dc10f",
+  "state": "inconclusive",
+  "reason": "check_infrastructure_failure",
+  "source_revision": "349e07e0929033e8feb71269e9555420d3285e35",
+  "source_sha256": "7607524b09aec13642bb784e922b3228665d872fed091b8384077af4fcd867b3",
+  "producer_sha256": "e62cf5d2946b300394030e9cb4a037be3aef6c521e5751befc3a4a7f73697461",
+  "probe_sha256": "e41d9e3781fe69ef744551d2d62d95cf3e57d643e4af92319c72d1be5e4beda9",
+  "derivation_sha256": "7025cd030d692b2543407207a09525f945e207a1ba1605742a4f7f09ff387e9d",
+  "phases": [
+    {
+      "phase": "baseline",
+      "status": "infrastructure",
+      "seconds": 1270.185,
+      "evidence_sha256": "afeb37393664801710153d75206cbaf284b4eb1f30d8d4f64476f756f998115e",
+      "cells": {
+        "effective_toolchain": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "version",
+            "settings"
+          ]
+        },
+        "nightly_test": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "nightly-test"
+          ]
+        },
+        "ios_release_simulator": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "ios-release-simulator"
+          ]
+        },
+        "simulator_product": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "simulator-plist",
+            "simulator-arch",
+            "simulator-load",
+            "simulator-assets"
+          ]
+        },
+        "ios_unsigned_archive": {
+          "status": "passed",
+          "evidence_kind": "local_execution",
+          "commands": [
+            "ios-unsigned-archive"
+          ]
+        },
+        "archive_product": {
+          "status": "infrastructure",
+          "evidence_kind": "local_execution"
+        }
+      },
+      "environment": {
+        "bridge": "gradle",
+        "test_plan": "Nightly",
+        "macro_validation": "skipped_explicitly",
+        "sdk": "private_copy",
+        "simulator": "owned_device",
+        "java_sha256": "4ddcf3ee5d518bd98d55f00da6747d20dddf2c4d7e555fddb9d26db6362424ce",
+        "simulator_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+        "required_minimum_major": null,
+        "licenses": "copied_host_acceptance",
+        "empty_host_proven": false
+      },
+      "failure": "JSON::ParserError",
+      "products": {},
+      "commands": [
+        {
+          "check": "host-xcode",
+          "exit": 0,
+          "seconds": 0.39,
+          "log": "host-xcode.log",
+          "sha256": "694b44731d0b415c5b11d844151e466d7f5e200a95627efda377f232f1a6ab77"
+        },
+        {
+          "check": "host-os",
+          "exit": 0,
+          "seconds": 0.188,
+          "log": "host-os.log",
+          "sha256": "4ef10a0fc370704ea84699cf3851e51488598c5f1ab35cb572eb6b96278a8e5c"
+        },
+        {
+          "check": "version",
+          "exit": 0,
+          "seconds": 14.05,
+          "log": "version.log",
+          "sha256": "189357efad5d5d0129257d1daa417b7599f573c67cba509d60ff642f6c68414d",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "settings",
+          "exit": 0,
+          "seconds": 0.929,
+          "log": "settings.log",
+          "sha256": "eee03c1dd880dc8df3643e4a98c8dc1bba260ed819d3a7f02dde48f12b12d6a8",
+          "capability": "effective_toolchain"
+        },
+        {
+          "check": "nightly-test",
+          "exit": 0,
+          "seconds": 300.715,
+          "log": "nightly-test.log",
+          "sha256": "09c81471b5281521e80c6443efbc2cdb1ddf0d6c55388fb35562bc3f3cef945c",
+          "capability": "nightly_test"
+        },
+        {
+          "check": "ios-release-simulator",
+          "exit": 0,
+          "seconds": 444.749,
+          "log": "ios-release-simulator.log",
+          "sha256": "c3dca2925cd9e8d453cd90c9ffe0ad6354083c94cd819f3ef8d2d98aae0473ee",
+          "capability": "ios_release_simulator"
+        },
+        {
+          "check": "simulator-plist",
+          "exit": 0,
+          "seconds": 2.095,
+          "log": "simulator-plist.log",
+          "sha256": "f9d10ae3dcf90e96bea4d16da6ce210f532e7f4c9b9a499ae821bfb4a068bf0d",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-arch",
+          "exit": 0,
+          "seconds": 2.883,
+          "log": "simulator-arch.log",
+          "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-load",
+          "exit": 0,
+          "seconds": 5.015,
+          "log": "simulator-load.log",
+          "sha256": "58ade4c12909a0be236d79f5c8ca454bfb7b1ded9d8a574b5e729a01b03fc508",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "simulator-assets",
+          "exit": 0,
+          "seconds": 5.692,
+          "log": "simulator-assets.log",
+          "sha256": "be8beba85e8e58dd8f3f3a6cc37ee8131965ad64873035bcffac2895210ed0b3",
+          "capability": "simulator_product"
+        },
+        {
+          "check": "ios-unsigned-archive",
+          "exit": 0,
+          "seconds": 455.633,
+          "log": "ios-unsigned-archive.log",
+          "sha256": "147de5b179fcfa97cde6eed22c00638e67526a572aa7e2d6363debd0d6ac171d",
+          "capability": "ios_unsigned_archive"
+        },
+        {
+          "check": "archive-plist",
+          "exit": 0,
+          "seconds": 1.996,
+          "log": "archive-plist.log",
+          "sha256": "d000213cc0db2d08e3f77f98369336f031c9703cb515623eb3b93e19487bc05f",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-arch",
+          "exit": 0,
+          "seconds": 2.013,
+          "log": "archive-arch.log",
+          "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-load",
+          "exit": 0,
+          "seconds": 1.991,
+          "log": "archive-load.log",
+          "sha256": "929e031e939b55b2dce38bafb4b815ca5c84947ff67e1610154e5bf613627778",
+          "capability": "archive_product"
+        },
+        {
+          "check": "archive-assets",
+          "exit": 0,
+          "seconds": 2.044,
+          "log": "archive-assets.log",
+          "sha256": "ba23a4a530741d4a429fcf9cec5b9824791f2ec39d6ce854a8838b8af43df1a4",
+          "capability": "archive_product"
+        }
+      ],
+      "source_preservation": "verified"
+    }
+  ],
+  "missing_capabilities": [
+    "physical_device_execution",
+    "exact_floor_runtime",
+    "signed_export_delivery",
+    "complete_compose_resource_parity",
+    "empty_host_onboarding",
+    "architecture_approval",
+    "retirement_approval"
+  ],
+  "owned_cleanup": "verified",
+  "bridge_retirement": "defer",
+  "adoption_authorized": false,
+  "owned_recovery": "quiescent"
+}

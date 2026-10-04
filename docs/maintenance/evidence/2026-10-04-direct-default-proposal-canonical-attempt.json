@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "state": "superseded_failed_draft",
+  "base_revision": "349e07e0929033e8feb71269e9555420d3285e35",
+  "candidate_source_sha256": "c2535290124f1c84cbadc0128a0e0aa7467bfecdbeedc26c9379525b71e044df",
+  "patch_sha256": "690e5318ebe8603823b13fab9e645caad3c19a8bf70e0d0991942361489c7ff6",
+  "patch": "2026-10-04-direct-default-proposal.canonical-attempt.patch",
+  "native_gate": {
+    "state": "failed_before_swift_compilation",
+    "android_tests": 38,
+    "reason": "Xcode still normalizes the physically resolved /private/var source path back to /var",
+    "owned_snapshot_cleanup": "completed"
+  },
+  "contracts": {
+    "state": "passed",
+    "suites": 18
+  },
+  "logs": {
+    "candidate-check-final.log": {
+      "sha256": "ea8ffb63785f1ddfec1328341d5e02972b0ba97cb0b79ae4a3a9db4e18a4b571",
+      "public_raw_log": false
+    },
+    "contracts-final.log": {
+      "sha256": "b9ea7701bdae3ef44ebc809f398ec658185cbd8e500f584ba2d1647f473cd40e",
+      "public_raw_log": false
+    }
+  },
+  "production_applied": false,
+  "adoption_authorized": false
+}

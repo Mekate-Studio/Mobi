@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "github_run_id": 37201067843,
+  "github_run_url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37201067843",
+  "revision": "3450c1c2e11b4143b07d8e7d4c625a18d74e39db",
+  "workflow_conclusion": "failure",
+  "assessment_outcome": "unverifiable_without_producer_artifact",
+  "assessment_exit": 23,
+  "producer_id_observed_in_upload_path": "4fecff0563224c5f162383f8199d805a",
+  "native_cells": "unverified",
+  "candidate_attempted": "unverified",
+  "owned_recovery": "unverified",
+  "owned_cleanup": "unverified",
+  "failure_scope": "finalization_nonzero_and_artifact_upload_rejected_generated_cache_colon_path",
+  "provider_artifacts": 0,
+  "provider_log_sha256": "3a755af4644e5b6e35f33d8346d82834db3e03b069f91cafcc4727d32f194e37",
+  "probe_sha256": "de2f75799d190f54a83941c37058d68c9d2e8be96ed7603cf9773b79fcb5ef96",
+  "derivation_sha256": "fa2095b0ea384a2997fa6119a59d8f5e687185c327fdf27130bfbb0ae1ab1065",
+  "setup_steps": [
+    {
+      "name": "Set up job",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/checkout@v7",
+      "conclusion": "success"
+    },
+    {
+      "name": "Install and verify repository-locked tools without a repository cache restore",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/setup-java@v5",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run android-actions/setup-android@v4",
+      "conclusion": "success"
+    },
+    {
+      "name": "Prepare reviewed Kotlin distributions",
+      "conclusion": "success"
+    }
+  ],
+  "producer_relabelled": false,
+  "bridge_retirement": "defer",
+  "adoption_authorized": false
+}

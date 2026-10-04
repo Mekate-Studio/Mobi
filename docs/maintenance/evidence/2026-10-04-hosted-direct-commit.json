@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "assessment_revision": "31db83fe9295b7c906724c4e8373f789e6be6e34",
+  "base_revision": "349e07e0929033e8feb71269e9555420d3285e35",
+  "normal_commit_hook": "passed",
+  "static_analyzers": [
+    "ktfmt",
+    "detekt",
+    "swift-format",
+    "SwiftLint",
+    "ShellCheck"
+  ],
+  "validation": {
+    "index_sha256": "f1ecbc0b2e8f8cfdce017d296232b41c306ef3d51ec49022547f9088949e4eaa",
+    "inputs_sha256": "4502f9f0750839a9571561c9cd6f30ce41a0c876db649cd77af7e9ab0551ba5e",
+    "completed": [
+      {
+        "job": "android-test",
+        "seconds": 139.817
+      },
+      {
+        "job": "ios-test",
+        "seconds": 265.932
+      },
+      {
+        "job": "android-build-debug",
+        "seconds": 42.434
+      },
+      {
+        "job": "ios-build-debug",
+        "seconds": 80.88
+      }
+    ]
+  },
+  "raw_log_sha256": "2db18e5b9b6f51eefb9993f1e35b4d66a8812a2d26ec629922334266749b59cb",
+  "production_builder": "gradle",
+  "bridge_retirement": "defer"
+}

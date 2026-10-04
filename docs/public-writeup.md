@@ -57,7 +57,6 @@ The core design is simple:
 In this repository, that maps to:
 
 - [`.github/workflows/mobile-ci.yml`](../.github/workflows/mobile-ci.yml)
-- [`.gitlab-ci.yml`](../.gitlab-ci.yml)
 - [`scripts/ci/run_job.sh`](../scripts/ci/run_job.sh)
 - [`scripts/ci/lib/`](../scripts/ci/lib)
 - [`fastlane/Fastfile`](../fastlane/Fastfile)

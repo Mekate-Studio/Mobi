@@ -134,6 +134,19 @@ module DirectResolutionTest
     reject { Maintenance::AdvisoryReview.verify!(changed, report) }
     assert(Maintenance::AdvisoryReview.verify!(receipt, report, now: Time.now.utc + 86_401)['state'] == 'incomplete')
   end
+  test('stale findings remain bound and incomplete so provider refresh can proceed') do
+    receipt = Maintenance::AdvisoryReview.collect(report, transport: transport(results: [{ 'vulns' => [{ 'id' => 'GHSA-test', 'modified' => '2026-10-02T00:00:00Z' }] }]))
+    now = Time.now.utc + 86_401
+    summary = Maintenance::AdvisoryReview.verify!(receipt, report, now: now)
+    assert(summary['state'] == 'incomplete' && summary['reasons'] == ['stale_provider'])
+    assert(summary['finding_ids'] == ['GHSA-test'] && !summary['adoption_authorized'])
+    changed = Marshal.load(Marshal.dump(receipt))
+    changed['records'] << changed['records'].first
+    reject { Maintenance::AdvisoryReview.verify!(changed, report, now: now) }
+    changed = Marshal.load(Marshal.dump(receipt))
+    changed['records'].first['url'] = Maintenance::AdvisoryReview::API + 'vulns/GHSA-unexpected'
+    reject { Maintenance::AdvisoryReview.verify!(changed, report, now: now) }
+  end
   test('baseline advisory receipt cannot be relabeled as a candidate lookup') do
     pair = report
     pair['direct_resolution']['baseline'] = { 'advisory_queries' => { 'queries' => [{ 'package' => { 'ecosystem' => 'Maven', 'name' => 'example:baseline' }, 'version' => '1.0.0' }] } }

@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "state": "superseded_failed_draft",
+  "scope": "isolated_default_review",
+  "base_revision": "349e07e0929033e8feb71269e9555420d3285e35",
+  "candidate_source_sha256": "9e1a3628e82f8981454f2c6c6699515113125e56a9b527967fa58eed6125a40f",
+  "patch_sha256": "59c2a1f2d758e18c9a0304284b1035d6c4d8be1fc700d5b927f8506c0662e341",
+  "patch": "2026-10-04-direct-default-proposal.initial.patch",
+  "native_gate": {
+    "state": "failed_before_swift_compilation",
+    "android_tests": 38,
+    "reason": "Toolchain could not resolve logical /var temporary module path against the physically resolved project root",
+    "other_jobs": "not_completed",
+    "owned_snapshot_cleanup": "completed"
+  },
+  "contract_attempts": {
+    "sandbox": "owned-process inspection unavailable; not compatibility evidence",
+    "reviewed": "historical direct-roundtrip transform expected retained inputs; 5 failures"
+  },
+  "logs": {
+    "candidate-check.log": {
+      "sha256": "b8a3b5e91b85fa3236e780478bb9f9869a694919f7a9fb39be62f8a79aa33683",
+      "public_raw_log": false
+    },
+    "contracts-initial.log": {
+      "sha256": "41e10d12ae631133ce9237819980d59cd6e80a1303d325623ace9183c72ff1c6",
+      "public_raw_log": false
+    },
+    "contracts-reviewed.log": {
+      "sha256": "727e26a2ec855e9e99f1f564fc3b80221354b346f3f0f669196857d315c5386c",
+      "public_raw_log": false
+    }
+  },
+  "production_applied": false,
+  "adoption_authorized": false
+}

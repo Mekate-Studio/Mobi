@@ -15,6 +15,7 @@ Current ADRs:
 Proposed, without changing the accepted decisions:
 
 - [ADR 0007: Direct iOS transition requires measured capability evidence](0007-direct-ios-transition-requires-capability-evidence.md)
+- [ADR 0008: Explicit iOS projections and direct development builds](0008-explicit-ios-projections-and-direct-development-builds.md)
 
 Use a new ADR when a decision changes one of these:
 

@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "github_run_id": 37198289492,
+  "github_run_url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37198289492",
+  "revision": "31db83fe9295b7c906724c4e8373f789e6be6e34",
+  "workflow_conclusion": "failure",
+  "assessment_outcome": "incomplete",
+  "failure_scope": "case_collector_formatted_stdout",
+  "candidate_attempted": false,
+  "actual_formatted_cases": 12,
+  "normal_case_identities_match": true,
+  "artifact": {
+    "id": 11302077911,
+    "name": "direct-operations-evidence",
+    "digest": "sha256:891f84bcd6f65a6167baef69591cc4d0d450e3e0795f619d3ae2d1f6a29d23ee",
+    "size_in_bytes": 189938
+  },
+  "foreign_hash_replay": {
+    "schema": 1,
+    "verification": "foreign_host_read_only_hash_replay",
+    "producer": {
+      "schema": 1,
+      "assessment": "manual_direct_ios_operations",
+      "run_id": "7c98fd708cd0859427ebde1a4fa7bafd",
+      "state": "incomplete",
+      "reason": "check_prerequisite_missing",
+      "source_revision": "31db83fe9295b7c906724c4e8373f789e6be6e34",
+      "source_sha256": "4502f9f0750839a9571561c9cd6f30ce41a0c876db649cd77af7e9ab0551ba5e",
+      "producer_sha256": "0837197effeffecf90282bf60df9cd45563f49b00817d7dd6debe78192978ff3",
+      "probe_sha256": "e41d9e3781fe69ef744551d2d62d95cf3e57d643e4af92319c72d1be5e4beda9",
+      "derivation_sha256": "7025cd030d692b2543407207a09525f945e207a1ba1605742a4f7f09ff387e9d",
+      "phases": [
+        {
+          "phase": "baseline",
+          "status": "missing",
+          "seconds": 885.485,
+          "evidence_sha256": "70dceb3f43cf988ca053e78bd80142d55cc64840d8216d46e144d1375f022e97",
+          "cells": {
+            "effective_toolchain": {
+              "status": "passed",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "version",
+                "settings"
+              ]
+            },
+            "nightly_test": {
+              "status": "missing",
+              "evidence_kind": "local_execution",
+              "commands": [
+                "nightly-test"
+              ]
+            },
+            "ios_release_simulator": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "simulator_product": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "ios_unsigned_archive": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            },
+            "archive_product": {
+              "status": "not_attempted",
+              "evidence_kind": "none"
+            }
+          },
+          "environment": {
+            "bridge": "gradle",
+            "test_plan": "Nightly",
+            "macro_validation": "skipped_explicitly",
+            "sdk": "private_copy",
+            "simulator": "owned_device",
+            "java_sha256": "9be1d0a740ff6502df1a762145e62860f5de4b7e17658d9cb9498da3acf9d16c",
+            "simulator_runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+            "required_minimum_major": null,
+            "licenses": "copied_host_acceptance",
+            "empty_host_proven": false
+          },
+          "failure": null,
+          "products": {
+          },
+          "commands": [
+            {
+              "check": "host-xcode",
+              "exit": 0,
+              "seconds": 0.349,
+              "log": "host-xcode.log",
+              "sha256": "18730ed2ae28a2c9cf0c2d5db549033a4f07089331391a7133b7b32187454fa9"
+            },
+            {
+              "check": "host-os",
+              "exit": 0,
+              "seconds": 0.372,
+              "log": "host-os.log",
+              "sha256": "cd5d6399b3785b04ceaae75045a9ca9f80f0bbc3526eff9d0c36b170ed1ec348"
+            },
+            {
+              "check": "version",
+              "exit": 0,
+              "seconds": 16.142,
+              "log": "version.log",
+              "sha256": "189357efad5d5d0129257d1daa417b7599f573c67cba509d60ff642f6c68414d",
+              "capability": "effective_toolchain"
+            },
+            {
+              "check": "settings",
+              "exit": 0,
+              "seconds": 2.882,
+              "log": "settings.log",
+              "sha256": "26f276f810e65f10c5f8c76d52087f2bcdeaaa1d17312e977e55681b97355fa4",
+              "capability": "effective_toolchain"
+            },
+            {
+              "check": "nightly-test",
+              "exit": 0,
+              "seconds": 792.743,
+              "log": "nightly-test.log",
+              "sha256": "02f561a0ad134f7d28d83cc7553657e2623707aa480efdf88d040a83dca38d98",
+              "capability": "nightly_test"
+            }
+          ],
+          "source_preservation": "verified"
+        }
+      ],
+      "missing_capabilities": [
+        "physical_device_execution",
+        "exact_floor_runtime",
+        "signed_export_delivery",
+        "complete_compose_resource_parity",
+        "empty_host_onboarding",
+        "architecture_approval",
+        "retirement_approval"
+      ],
+      "owned_cleanup": "verified",
+      "bridge_retirement": "defer",
+      "adoption_authorized": false,
+      "owned_recovery": "quiescent"
+    },
+    "artifact_receipt_sha256": "babfd4fb0d797799e8991215733fa95682c21b8bc71a73d3aeed6bb07ed4a0e8",
+    "derivation_sha256": "f6cfcadde1ccc5f4c6f0c52dda747f0084ba069f6068b4f90f3f0681a530b9da",
+    "owned_store_rebound": false,
+    "physical_device_or_empty_host_proven": false,
+    "bridge_retirement": "defer"
+  },
+  "ownership": "foreign_host_read_only_no_rebinding",
+  "downloaded_zip_digest_verified": true
+}

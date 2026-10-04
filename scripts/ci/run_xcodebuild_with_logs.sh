@@ -10,6 +10,7 @@ if [[ -z "${configuration}" ]]; then
 fi
 
 project_root="$(cd "$(dirname "$0")/../.." && pwd)"
+"${project_root}/scripts/ci/validate_ios_builder.sh" build
 configuration_slug="$(printf '%s' "${configuration}" | tr '[:upper:]' '[:lower:]')"
 log_dir="${project_root}/build/logs"
 derived_data_dir="${project_root}/build/xcode-derived-data-cli-${configuration_slug}"
@@ -20,7 +21,7 @@ project_path="${project_root}/ios-app/module.xcodeproj"
 
 mkdir -p "${log_dir}" "${derived_data_dir}"
 
-echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-gradle}"
+echo "Using KOTLIN_IOS_BUILDER=${KOTLIN_IOS_BUILDER:-kotlin}"
 echo "Using GRADLE_USER_HOME=${GRADLE_USER_HOME:-${project_root}/.gradle-user-home}"
 echo "Using SWIFT_ENABLE_EXPLICIT_MODULES=${SWIFT_ENABLE_EXPLICIT_MODULES:-NO}"
 echo "Using IOS_SIMULATOR_ARCHS=${IOS_SIMULATOR_ARCHS:-$(uname -m)}"

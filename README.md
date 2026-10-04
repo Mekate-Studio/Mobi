@@ -93,8 +93,12 @@ entry points:
 - [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
 - [Quality And Dependency Maintenance Audit](docs/maintenance/README.md)
 
-The Gradle bridge material is intentionally documented as a transitional
-constraint in the current repository shape, not as the long-term ideal.
+The approved direct development default uses Kotlin Toolchain for iOS development, tests
+and unsigned builds, with explicit typed Swift projections. Gradle/unknown
+iOS builder overrides refuse; rollback restores complete content first.
+Credentialed iOS archive/export/TestFlight lanes are held pending separate
+signed-delivery evidence and authorization. The retained bridge files are
+preserved for content rollback. See the [accepted decision](docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md).
 
 ## Repository Shape
 
@@ -183,8 +187,9 @@ upgrade separate from proving an equivalent direct Kotlin Toolchain path.
 The existing scheduled compatibility workflow uses the repository-owned
 [isolated watch](docs/maintenance/compatibility-watch.md). It records evidence
 without changing production dependencies or granting adoption permission.
-Bridge retirement still requires native app/test, interop, onboarding and
-release evidence with the bridge unavailable.
+Physical bridge deletion still requires its own review after default integration
+and applicable native, interop, onboarding and release gates. Preserved bridge
+pins remain rollback inputs; they are not the active iOS builder on the adopted source.
 
 Install the pinned discovery tools once, then record a local inventory:
 

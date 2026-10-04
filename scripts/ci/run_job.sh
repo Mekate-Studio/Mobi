@@ -69,12 +69,14 @@ case "${job_name}" in
     ./scripts/ci/run_xcodebuild_with_logs.sh Release "$@"
     ;;
   ios-archive-release)
+    "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" signed-release
     trap ci_cleanup_app_store_connect_key EXIT
     ci_prepare_ios_fastlane_job
     cd "${CI_PROJECT_DIR}"
     bundle exec fastlane ios buildRelease "$@"
     ;;
   ios-testflight)
+    "${CI_PROJECT_DIR}/scripts/ci/validate_ios_builder.sh" signed-release
     trap ci_cleanup_app_store_connect_key EXIT
     ci_prepare_ios_testflight_job
     cd "${CI_PROJECT_DIR}"

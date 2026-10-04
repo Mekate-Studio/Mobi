@@ -1,0 +1,97 @@
+# frozen_string_literal: true
+
+# Foreign-host evidence is read as data; never reopen/rebind its owned RunStore.
+require 'json'
+require 'digest'
+artifact = File.realpath(ARGV.fetch(0))
+checkout = File.realpath(ARGV.fetch(1))
+expected_head = ARGV.fetch(2)
+require File.join(checkout, 'scripts/maintenance/lib/core')
+source = Maintenance::Source.new(checkout)
+summary = File.join(artifact, 'direct-operations-summary')
+data = File.join(artifact, 'runs-ios-operations')
+receipt = JSON.parse(File.read(File.join(summary, 'receipt.json')))
+id = receipt.fetch('run_id')
+raise Maintenance::Failure, 'Invalid foreign producer ID' unless id.match?(/\A[0-9a-f]{32}\z/)
+result_file = File.join(data, id + '.result.json')
+result = JSON.parse(File.read(result_file))
+journal = JSON.parse(File.read(File.join(data, id + '.json')))
+verify = lambda do |path, sha|
+  raise Maintenance::Failure, 'Changed foreign evidence' unless File.file?(path) && !File.symlink?(path) && Maintenance.file_sha(path) == sha
+end
+verify.call(result_file, receipt.fetch('producer_sha256'))
+raise Maintenance::Failure, 'Foreign result/journal binding differs' unless result['run_id'] == id && result['binding'] == journal['binding'] && result['state'] == journal['state'] && result['ended_at'] == journal['ended_at'] && result['state'] == receipt['state'] && result['adoption_authorized'] == false
+raise Maintenance::Failure, 'Foreign source/revision differs' unless result.dig('binding', 'git', 'head') == expected_head && result.dig('binding', 'source_sha256') == Maintenance.digest(source.files) && receipt['source_sha256'] == Maintenance.digest(source.files)
+probe = File.join(checkout, 'docs/maintenance/evidence/probes/direct_release_probe.rb')
+raise Maintenance::Failure, 'Foreign probe differs from published revision' unless receipt['probe_sha256'] == Maintenance.file_sha(probe) && result.dig('binding', 'execution_files').count { |entry| entry['name'] == 'direct_release_probe.rb' && entry['sha256'] == Maintenance.file_sha(probe) } == 1
+verifier = File.join(checkout, 'docs/maintenance/evidence/probes/verify_direct_release.rb')
+raise Maintenance::Failure, 'Foreign derivation differs from published revision' unless receipt['derivation_sha256'] == Maintenance.file_sha(verifier)
+if result['state'] == 'checks_passed'
+  raise Maintenance::Failure, 'Foreign result lacks complete pair' unless result['steps'].map { |step| step['phase'] }.sort == %w[baseline candidate]
+end
+result.fetch('steps').each do |step|
+  phase = step.fetch('phase')
+  raise Maintenance::Failure, 'Invalid foreign phase' unless %w[baseline candidate].include?(phase) && step['check'] == 'manual-ios-operations'
+  key = phase + '-manual-ios-operations'
+  record = journal.fetch('steps').find { |entry| entry['id'] == key }
+  raise Maintenance::Failure, 'Foreign journal step differs' unless record && record['path'] == 'steps/' + key && record['state'] == 'stopped' && record['process_exit'] == step['exit']
+  control = File.join(data, id, 'steps', key)
+  raise Maintenance::Failure, 'Incomplete foreign raw outputs' unless step.fetch('output_sha256').keys.sort == %w[check.json stderr.log stdout.log]
+  step['output_sha256'].each do |name, sha|
+    raise Maintenance::Failure, 'Foreign journal hash differs' unless record.fetch('output_sha256')[name] == sha
+    verify.call(File.join(control, name), sha)
+  end
+  check = JSON.parse(File.read(File.join(control, 'check.json')))
+  raise Maintenance::Failure, 'Foreign check differs' unless check['check'] == step['check'] && check['phase'] == phase && check['status'] == step['status']
+  verify.call(File.join(control, 'evidence.json'), check.fetch('evidence_sha256'))
+  evidence = JSON.parse(File.read(File.join(control, 'evidence.json')))
+  raise Maintenance::Failure, 'Foreign phase receipt differs' unless receipt.fetch('phases').any? { |entry| entry['phase'] == phase && entry['status'] == step['status'] && entry['evidence_sha256'] == check['evidence_sha256'] && entry['cells'] == evidence['cells'] && entry['environment'] == evidence['environment'] }
+  evidence.fetch('commands').each do |command|
+    raise Maintenance::Failure, 'Invalid foreign command path' unless command.fetch('log').match?(/\A[a-z][a-z0-9_-]*\.log\z/)
+    verify.call(File.join(control, command['log']), command.fetch('sha256'))
+  end
+  evidence.values.select { |value| value.is_a?(Hash) && value.key?('file') }.each do |ref|
+    raise Maintenance::Failure, 'Invalid foreign reference path' unless ref['file'].match?(/\A[a-z][a-z0-9-]*\.json\z/)
+    verify.call(File.join(control, ref['file']), ref.fetch('sha256'))
+  end
+  original = JSON.parse(File.read(File.join(control, 'source-manifest.json')))
+  raise Maintenance::Failure, 'Foreign source capture differs' unless original == source.files
+  if phase == 'candidate' && step['status'] == 'passed'
+    expected = JSON.parse(JSON.generate(original))
+    JSON.parse(File.read(File.join(control, 'experiment-transformations.json'))).each do |change|
+      path = change.fetch('path')
+      raise Maintenance::Failure, 'Foreign transformation preimage differs' unless expected.dig(path, 'sha256') == change['before_sha256']
+      if change['after_sha256']
+        raise Maintenance::Failure, 'Foreign transformation content differs' unless Digest::SHA256.hexdigest(change.fetch('content')) == change['after_sha256']
+        expected[path] = { 'sha256' => change['after_sha256'], 'executable' => expected.dig(path, 'executable') || false }
+      else
+        expected.delete(path)
+      end
+    end
+    raise Maintenance::Failure, 'Foreign direct bridge absence differs' unless JSON.parse(File.read(File.join(control, 'direct-source-manifest.json'))) == expected && expected.keys.none? { |path| path.start_with?('gradle-bridge/') } && evidence['bridge_unavailable'] == true && evidence['di_reachable'] == true
+  end
+  next unless step['status'] == 'passed'
+  required = %w[effective_toolchain nightly_test ios_release_simulator simulator_product ios_unsigned_archive archive_product]
+  raise Maintenance::Failure, 'Foreign successful phase lacks required operations' unless step['exit'] == 0 && required.all? { |cell| evidence.fetch('cells').dig(cell, 'status') == 'passed' } && evidence['source_preservation'] == 'verified' && evidence.dig('environment', 'bridge') == (phase == 'candidate' ? 'kotlin' : 'gradle')
+  golden = JSON.parse(File.read(File.join(checkout, 'docs/maintenance/evidence/probes/MobiInteropParity.original-cases.json')))
+  cases = File.read(File.join(control, 'nightly-test.log')).scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
+  raise Maintenance::Failure, 'Foreign actual Nightly cases differ' unless cases == golden && cases == JSON.parse(File.read(File.join(control, 'nightly-native-test-cases.json')))
+  phase_receipt = receipt.fetch('phases').find { |entry| entry['phase'] == phase }
+  %w[simulator archive].each do |kind|
+    product = JSON.parse(File.read(File.join(control, kind + '-product.json')))
+    bounded = product.reject { |key, _| key == 'files' }.merge('files_count' => product.fetch('files').size, 'inventory_sha256' => Maintenance.digest(product['files']))
+    raise Maintenance::Failure, 'Foreign product receipt differs' unless phase_receipt.fetch('products').fetch(kind) == bounded
+    info = JSON.parse(File.read(File.join(control, kind + '-plist.log')))
+    arch = File.read(File.join(control, kind + '-arch.log')).strip
+    build = File.read(File.join(control, kind + '-load.log')).scan(/cmd LC_BUILD_VERSION\s+cmdsize \d+\s+platform (\d+)\s+minos ([\d.]+)\s+sdk ([\d.]+)/)
+    raise Maintenance::Failure, 'Foreign raw product facts differ' unless product['identifier'] == info['CFBundleIdentifier'] && product['minimum'] == info['MinimumOSVersion'] && product['architecture'] == arch && product['build_version'] == build.first
+    raise Maintenance::Failure, 'Foreign product does not meet bounded inspection' unless info['CFBundleIdentifier'] == 'studio.mekate.mobi' && info['MinimumOSVersion'] == '26.0' && arch == 'arm64' && build.size == 1 && build.first[0] == (kind == 'simulator' ? '7' : '2') && Gem::Version.new(build.first[1]) == Gem::Version.new('26.0') && product['app_icon_entries'].positive? && product.fetch('files').fetch('Assets.car') == product['assets_sha256'] && product['signing_scope'] == 'unsigned_no_export_or_delivery'
+  end
+end
+recovery = JSON.parse(File.read(File.join(summary, 'recovery.json')))
+cleanup = JSON.parse(File.read(File.join(summary, 'cleanup.json')))
+raise Maintenance::Failure, 'Foreign recovery/cleanup does not establish recorded quiescence' unless recovery['run_id'] == id && recovery['state'] == 'quiescent' && cleanup['run_id'] == id && cleanup['state'] == 'cleaned' && receipt['owned_recovery'] == 'quiescent' && receipt['owned_cleanup'] == 'verified' && journal.fetch('resources').select { |resource| resource['disposable'] }.all? { |resource| resource['state'] == 'removed' }
+source.verify!
+puts JSON.pretty_generate({ 'schema' => 1, 'verification' => 'foreign_host_read_only_hash_replay', 'producer' => receipt,
+  'artifact_receipt_sha256' => Maintenance.file_sha(File.join(summary, 'receipt.json')), 'derivation_sha256' => Maintenance.file_sha(__FILE__),
+  'owned_store_rebound' => false, 'physical_device_or_empty_host_proven' => false, 'bridge_retirement' => 'defer' })

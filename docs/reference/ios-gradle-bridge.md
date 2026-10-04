@@ -1,10 +1,20 @@
 # iOS Gradle Bridge Migration
 
+This is the retained-integration reference and historical migration guide.
+With the approved direct development default, development/test/unsigned iOS callers use
+Kotlin Toolchain and explicit typed projections. The examples below apply to
+restored retained content, not to selecting Gradle on the new facade. Rollback
+requires restoring the complete reviewed source patch and cleaning owned build
+products before rebuilding. Bridge files remain preserved; credentialed iOS
+delivery is held pending separate evidence and authorization. See the
+[accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+
+
 For the 2026-09-19 source audit and proposed upgrade/retirement gates, read the
 [Kotlin compatibility matrix](../maintenance/kotlin-compatibility.md). It
 revisits the target-count explanation, current Swift export capabilities and
 SKIE compatibility below. Historical build claims in this guide are not fresh
-validation of the current checkout. The existing bridge remains the default.
+validation of the current checkout. The historical source used the bridge default; ADR 0008 records the current direct development default.
 
 This document describes a temporary migration path for this repository when the
 native iOS application needs a more traditional Xcode plus Gradle integration,

@@ -123,7 +123,18 @@ module Precommit
       expected = tracked_manifest(@root, paths)
       completed = []
       unless @plan.fetch('jobs').empty?
-        copy = Dir.mktmpdir('mobi-validation-')
+        # Xcode rewrites /private/var source roots to /var even when the input
+        # path is canonical; Toolchain compares that path with its physical
+        # module root. Keep owned snapshots under the ignored repository store.
+        storage = File.join(File.realpath(@root), '.maintenance', 'validation-workspaces')
+        if File.symlink?(File.dirname(storage)) || File.symlink?(storage)
+          raise Quality::Failure, 'Validation storage must not be symlinked'
+        end
+        _, status = Open3.capture2('git', 'check-ignore', '--quiet', '--no-index', File.join(storage, 'snapshot'))
+        raise Quality::Failure, 'Validation storage must be explicitly ignored' unless status.success?
+
+        FileUtils.mkdir_p(storage)
+        copy = Dir.mktmpdir('mobi-validation-', storage)
         begin
           puts "[validation] workspace=#{copy}"
           paths.each do |path|
@@ -136,7 +147,7 @@ module Precommit
           verify_caller!
           env = ENV_KEYS.to_h { |key| [key, ENV[key]] }.reject { |_key, value| value.nil? }
           env.merge!('MOBI_VALIDATION' => '1', 'CI_PROJECT_DIR' => copy,
-                     'KOTLIN_IOS_BUILDER' => 'gradle', 'IOS_TEST_PLAN' => 'PullRequest',
+                     'KOTLIN_IOS_BUILDER' => 'kotlin', 'IOS_TEST_PLAN' => 'PullRequest',
                      'KOTLIN_CLI_BOOTSTRAP_CACHE_DIR' => File.join(copy, '.kotlin-cache'),
                      'GRADLE_USER_HOME' => File.join(copy, '.gradle-user-home'))
           FileUtils.mkdir_p(env.fetch('GRADLE_USER_HOME'))

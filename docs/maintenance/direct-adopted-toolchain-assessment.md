@@ -1,5 +1,10 @@
 # Direct path after Toolchain adoption
 
+Current follow-up: the maintainer approved the direct development/test/unsigned
+default on 2026-10-04. [Applied integration](direct-default-integration.md) records
+current validation separately. Retained-bridge/default exclusions below describe
+the historical decisions; credentialed delivery and physical deletion stay held.
+
 Date: 2026-10-04. The bounded direct round trip, fresh build-input pair and
 compiler-plugin attribution passed against locally adopted Toolchain **0.13.0**,
 Kotlin **2.4.20** and Metro **1.4.5**. Bridge retirement remains deferred.
@@ -49,3 +54,5 @@ reviewed reversible default switch comes before a separately approved physical
 removal. Removing the hand-maintained iOS bridge leaves the measured delegated
 Android settings inputs unchanged and cannot be described as fixing their
 vulnerabilities.
+
+The subsequent [bounded interop fixture pair](direct-interop-behavior-assessment.md) passes with identical typed state/generic and real async failure/cancellation/continuation checks in both paths. Its local follow-up record preserves the original fixture failure and complete cleanup/replay. The [separate operational assessment](direct-release-onboarding-assessment.md) also passed local and hosted Nightly and unsigned Release/archive/product pairs, with owned cleanup, provider artifact digests and read-only replay. These later records close only their named claims; architecture, wider platform/resource/onboarding, signing and default/removal decisions stay separate.

@@ -94,7 +94,9 @@ module Maintenance
         raise Failure, 'Unexpected advisory batch' unless batches[index]
         data, errors = packet(entry, API + 'querybatch', { 'queries' => batches[index] }, now)
         reasons.concat(errors)
-        next unless errors.empty?
+        # Stale but intact responses still bind their finding records. Preserve
+        # the stale reason so callers can refresh them without accepting them.
+        next unless (errors - ['stale_provider']).empty?
         rows = data['results']
         unless rows.is_a?(Array) && rows.size == batches[index].size
           reasons << 'response_cardinality_mismatch'; next

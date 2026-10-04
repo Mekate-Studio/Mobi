@@ -9,7 +9,7 @@ module DirectRoundtripTest
   def self.assert(value, message = 'assertion failed'); CompatibilityTest.assert(value, message); end
   def self.reject(pattern, &block); CompatibilityTest.reject(pattern, &block); end
   def self.fixture
-    CompatibilityTest.fixture do |root|
+    CompatibilityTest.retained_fixture do |root|
       experiment = Maintenance::DirectRoundtrip.new(root, File.join(root, 'scripts/maintenance/fixtures/interop'))
       yield root, experiment
     end

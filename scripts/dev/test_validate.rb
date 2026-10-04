@@ -14,6 +14,7 @@ module ValidationTest
   end
 
   def self.base(f, action = '')
+    f.write('.gitignore', File.read(File.join(f.root, '.gitignore')) + ".maintenance/\n")
     f.write('project.yaml', "modules: [feature, android-app]\n")
     f.write('android-app/module.yaml', "product: android/app\nsettings:\n  android:\n    versionCode: 42\n    versionName: reviewed\n")
     f.write('android-app/src/HomePresenter.kt', "class HomePresenter\n")
@@ -85,6 +86,43 @@ module ValidationTest
     assert(f.calls.empty? && jobs(log).empty?, 'plan executed work')
     ok, output = f.run('./scripts/dev/check.sh')
     assert(ok && jobs(log).empty? && f.calls.size == 5, output)
+  end
+
+  test('native snapshots use ignored repository storage despite a symlinked TMPDIR') do |f|
+    log = base(f)
+    Dir.mktmpdir('mobi-temp-path-contract-') do |parent|
+      real = File.realpath(parent)
+      target = File.join(real, 'target'); Dir.mkdir(target)
+      alias_path = File.join(real, 'alias'); File.symlink(target, alias_path)
+      ok, output = f.run('./scripts/dev/check.sh', extra_env: { 'TMPDIR' => alias_path })
+      assert(ok, output)
+      records = jobs(log)
+      storage = File.join(File.realpath(f.root), '.maintenance', 'validation-workspaces')
+      assert(records.size == 1 && records.first['env']['CI_PROJECT_DIR'].start_with?(storage + '/'), 'snapshot escaped repository storage')
+      assert(!records.first['env']['CI_PROJECT_DIR'].start_with?(alias_path + '/'), 'logical TMPDIR was passed to Xcode')
+      assert(!Dir.exist?(records.first['cwd']), 'canonical snapshot leaked')
+    end
+  end
+
+  test('symlinked validation storage refuses without changing unrelated files') do |f|
+    base(f)
+    Dir.mktmpdir('mobi-validation-storage-contract-') do |outside|
+      sentinel = File.join(outside, 'sentinel'); File.write(sentinel, 'untouched')
+      FileUtils.mkdir_p(File.join(f.root, '.maintenance'))
+      File.symlink(outside, File.join(f.root, '.maintenance', 'validation-workspaces'))
+      ok, output = f.run('./scripts/dev/check.sh')
+      assert(!ok && output.include?('Validation storage must not be symlinked'), output)
+      assert(File.read(sentinel) == 'untouched', 'storage refusal changed an unrelated file')
+    end
+  end
+
+  test('nonignored validation storage refuses before creating a snapshot') do |f|
+    base(f)
+    f.write('.gitignore', "ignored/\n.quality/\n")
+    f.stage
+    ok, output = f.run('./scripts/dev/check.sh')
+    assert(!ok && output.include?('Validation storage must be explicitly ignored'), output)
+    assert(!Dir.exist?(File.join(f.root, '.maintenance')), 'refusal created untracked storage')
   end
 
   test('full validation executes every selected job exactly once') do |f|

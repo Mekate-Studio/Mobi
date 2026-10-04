@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "revision": "dd9437ea86fb0f6711a8f496f925b9a7fd5f41bc",
+  "normal_commit_hook": "passed",
+  "validation": {
+    "index_sha256": "a5ceda7bd4be342507c3eafa7a92140fa329f8acfe6abd82618ecc3e9017af2a",
+    "inputs_sha256": "b156012485ff6e0c558ceb768e22298d22b9acf9ab1f3c3e1dce6e6f512df3b3",
+    "completed": [
+      {
+        "job": "android-test",
+        "seconds": 101.446
+      },
+      {
+        "job": "ios-test",
+        "seconds": 220.903
+      },
+      {
+        "job": "android-build-debug",
+        "seconds": 28.363
+      },
+      {
+        "job": "ios-build-debug",
+        "seconds": 59.834
+      }
+    ]
+  },
+  "source_runtime_bindings_unchanged": 18,
+  "scope": "manual_hosted_summary_retention_and_guarded_owned_recovery",
+  "producer_probe_unchanged": true
+}

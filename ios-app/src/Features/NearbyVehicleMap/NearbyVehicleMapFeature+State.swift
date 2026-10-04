@@ -30,7 +30,7 @@ extension NearbyVehicleMapFeature {
                 return "Preparing the rider-centered nearby vehicle map."
             }
 
-            switch onEnum(of: sharedState.riderLocationState) {
+            switch mobiProjection(of: sharedState.riderLocationState) {
             case .resolving:
                 return "Grant while-in-use location access to center discovery around the rider."
             case .available:
@@ -48,7 +48,7 @@ extension NearbyVehicleMapFeature {
 
         var canInteractWithVehicles: Bool {
             guard riderLocation != nil, let sharedState else { return false }
-            guard case .blockingFailure = onEnum(of: sharedState.mapOverlayState) else {
+            guard case .blockingFailure = mobiProjection(of: sharedState.mapOverlayState) else {
                 return true
             }
             return false
@@ -69,7 +69,7 @@ extension NearbyVehicleMapFeature {
         var overlay: NearbyVehicleMapOverlay {
             guard let sharedState else { return .none }
 
-            switch onEnum(of: sharedState.mapOverlayState) {
+            switch mobiProjection(of: sharedState.mapOverlayState) {
             case .none:
                 return .none
             case .refreshingIndicator:
@@ -84,7 +84,7 @@ extension NearbyVehicleMapFeature {
         var canRequestRefresh: Bool {
             guard riderLocation != nil, let sharedState else { return false }
 
-            switch onEnum(of: sharedState.snapshotState) {
+            switch mobiProjection(of: sharedState.snapshotState) {
             case .loading, .refreshing:
                 return false
             case .initial, .loaded, .failedWithSnapshot, .failedWithoutSnapshot:
@@ -95,7 +95,7 @@ extension NearbyVehicleMapFeature {
         private var currentSnapshot: FleetSnapshot? {
             guard let sharedState else { return nil }
 
-            switch onEnum(of: sharedState.snapshotState) {
+            switch mobiProjection(of: sharedState.snapshotState) {
             case .initial, .loading:
                 return nil
             case let .loaded(state):
@@ -119,7 +119,7 @@ extension NearbyVehicleMapFeature {
         private var riderLocation: RiderLocation? {
             guard let sharedState else { return nil }
 
-            switch onEnum(of: sharedState.riderLocationState) {
+            switch mobiProjection(of: sharedState.riderLocationState) {
             case .resolving, .denied, .blocked:
                 return nil
             case let .available(state):
@@ -132,7 +132,7 @@ extension NearbyVehicleMapFeature {
         }
 
         private func blockedLocationMessage(_ reason: RiderLocationBlockedReason) -> String {
-            switch reason {
+            switch mobiProjection(of: reason) {
             case .accessDenied:
                 "Precise location access is required before nearby vehicles can be positioned relative to the rider."
             case .accessRestricted:

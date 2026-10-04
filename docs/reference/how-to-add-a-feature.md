@@ -107,7 +107,7 @@ Use this table when deciding where a new file should land.
 
 | Concern | Own it here | Current reference |
 | --- | --- | --- |
-| Domain models, repository contracts, data access, API and persistence adapters | `shared-core/` | `CounterRepository.kt`, `PlatformContext.kt` |
+| Domain models, repository contracts, data access, API and persistence adapters | `shared-core/` | `CounterRepository.kt`, `NearbyFleetRepository.kt` |
 | Shared feature rules, typed async state, feature orchestration | `shared-feature-*/` | `HomeFeatureState.kt`, `CounterLoadable.kt`, `HomeFeatureService.kt` |
 | Shared Kotlin dependency graph and construction helpers | `shared-di/` | `SharedDependencies.kt` |
 | Optional reusable shared Compose screen | `shared-ui-*/` | `HomeContent.kt` |
@@ -185,7 +185,7 @@ Typical additions:
 Good examples:
 
 - [`CounterRepository.kt`](../../shared-core/src/CounterRepository.kt)
-- [`PlatformContext.kt`](../../shared-core/src/PlatformContext.kt)
+- [`NearbyFleetRepository.kt`](../../shared-core/src/NearbyFleetRepository.kt)
 
 This layer should not know anything about Circuit, TCA, Compose screens, or
 SwiftUI views.
@@ -289,6 +289,15 @@ iOS owns:
 - SwiftUI views and composition
 
 Shared Kotlin should feed feature behavior, but should not expose TCA types.
+
+For direct iOS content, expose sealed states/reasons through typed visitors in
+`shared-di/src/MobiInteropProjection.kt` and native Swift enums/adapters in
+`ios-app/src/MobiInteropProjection.swift`. Use `mobiProjection(of:)` at native
+consumer switches. A new case needs an exhaustive Kotlin dispatch branch,
+protocol method, Swift enum/adapter and native consumer tests. Keep concrete
+payloads, typed failure reasons and explicit feature factories; do not hide a
+missing case behind a string tag, `else` or native default branch. See the
+[accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
 
 ### 6. Decide whether shared Compose UI is worth it
 

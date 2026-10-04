@@ -1,6 +1,8 @@
 # Quality and dependency maintenance
 
-Current local follow-up: [Toolchain 0.13.0 adoption with bounded risk/age acceptance](toolchain-adoption-risk-review.md) and the independent [direct-path assessment against the adopted tuple](direct-adopted-toolchain-assessment.md). Local native compatibility passed; the Gradle iOS bridge remains current while the remaining retirement gates stay open. These follow-ups are uncommitted and have no new hosted validation.
+The [direct-default proposal review](direct-default-proposal-review.md) records the next API, cancellation, caller and rollback decision as an isolated unapplied patch. Its proposed scope holds credentialed iOS delivery; production and the existing risk expiry remain unchanged.
+
+Current adoption: [Toolchain 0.13.0 with bounded risk/age acceptance](toolchain-adoption-risk-review.md) is committed and published through PR #35. Its [hosted integration record](toolchain-adoption-integration.md) verifies all seven PR checks. Independent direct evidence includes the [adopted-tuple input assessment](direct-adopted-toolchain-assessment.md), [typed/async fixture assessment](direct-interop-behavior-assessment.md) and [release/onboarding assessment](direct-release-onboarding-assessment.md). The operational local and hosted pairs passed; their follow-up review records remain uncommitted drafts. The Gradle iOS bridge stays current while the remaining retirement gates stay open.
 
 Status: slices 1–8 integrated. Slice 7 was committed and pushed as `9d25553`;
 its [measured results](seventh-slice-validation.md) keep bridge upgrades separate
@@ -159,3 +161,5 @@ passing joins, fresh provider evidence and remaining retirement gates.
 - [Toolchain security decision packet, refreshed fix leads and adoption requirements](toolchain-security-decision.md)
 
 - [Adoption direction, exact draft and bounded residual-risk proposal](toolchain-adoption-risk-review.md)
+
+- [Approved direct iOS default integration](direct-default-integration.md)

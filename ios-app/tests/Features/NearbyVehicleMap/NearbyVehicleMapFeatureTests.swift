@@ -381,7 +381,7 @@ private enum NearbyVehicleMapFeatureTestFactory {
     }
 
     static func currentSnapshot(from state: NearbyVehicleSnapshotState) -> FleetSnapshot? {
-        switch onEnum(of: state) {
+        switch mobiProjection(of: state) {
         case .initial, .loading:
             nil
         case let .loaded(state):

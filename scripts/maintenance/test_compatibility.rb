@@ -26,6 +26,30 @@ module CompatibilityTest
       yield root
     end
   end
+# Only the historical integration-transform contracts need retained inputs.
+# Native tests execute the real direct candidate, not this synthetic fixture.
+def self.retained_fixture
+  fixture do |root|
+    project = File.join(root, Maintenance::InteropExperiment::PROJECT)
+    content = File.read(project)
+    if content.include?('name = "Validate Kotlin Builder";')
+      old = File.read(File.join(ROOT, 'scripts/maintenance/fixtures/interop/RetainedKotlinBuildPhase.pbxproj.template'))
+      current = /\t\tA93CF46588F1B180AC5404FB \/\* Build Kotlin \*\/ = \{.*?\n\t\t\};\n/m
+      raise 'Unexpected direct phase in contract fixture' unless content.scan(current).size == 1
+      content = content.sub(current, old).sub('A93CF46588F1B180AC5404FB /* Build Kotlin */,', 'A93CF46588F1B180AC5404FB /* Build Kotlin Framework */,')
+      content = content.sub(/\t\tE04D202610040001001664A3 \/\* Validate Kotlin Builder \*\/ = \{.*?\n\t\t\};\n/m, '')
+      content = content.sub(/\t\t\t\tE04D202610040001001664A3 \/\* Validate Kotlin Builder \*\/,\n/, '')
+      File.write(project, content)
+      manifest = File.join(root, 'ios-app/module.yaml')
+      File.write(manifest, File.read(manifest).sub("  - ../shared-di\n", ''))
+      %w[shared-di/src/MobiInteropProjection.kt ios-app/src/MobiInteropProjection.swift].each { |path| File.unlink(File.join(root, path)) }
+      state = File.join(root, 'ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift')
+      File.write(state, File.read(state).sub('switch mobiProjection(of: reason) {', 'switch reason {'))
+    end
+    yield root
+  end
+end
+
   def self.config(root)
     file = File.join(root, Maintenance::Compatibility::CONFIG)
     data = JSON.parse(File.read(file)); yield data
@@ -150,7 +174,7 @@ module CompatibilityTest
   end
 
   test('direct copy keeps native tests, schemes and targets while removing its bridge') do
-    fixture do |root|
+    retained_fixture do |root|
       source = Maintenance::Source.new(root)
       tests = source.files.select { |path, _| path.start_with?('ios-app/tests/') || path.end_with?('.xcscheme', '.xctestplan') }
       assert(tests.keys.count { |path| path.start_with?('ios-app/tests/') } >= 2)
@@ -170,14 +194,14 @@ module CompatibilityTest
   end
 
   test('stale products refuse a direct experiment') do
-    fixture do |root|
+    retained_fixture do |root|
       FileUtils.mkdir_p(File.join(root, 'build/stale.framework'))
       reject(/stale build products/) { Maintenance::InteropExperiment.new(root, '').prepare! }
     end
   end
 
   test('unrecognized native integration layout refuses instead of deleting targets') do
-    fixture do |root|
+    retained_fixture do |root|
       file = File.join(root, Maintenance::InteropExperiment::PROJECT)
       File.write(file, File.read(file).gsub('KOTLIN_IOS_BUILDER', 'UNKNOWN_BUILDER'))
       reject(/integration phase/) { Maintenance::InteropExperiment.new(root, '').prepare! }
