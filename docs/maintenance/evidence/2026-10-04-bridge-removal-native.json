@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "revision": "3e1b7c40ca87f50e60683a22bbfce1e41827c82f",
+  "state": "passed",
+  "normal_precommit_hook": true,
+  "native_gate": {
+    "index_sha256": "787a9a03bde97282386d7d002b6e9bf21ee5b0d390596caf0ce5da14ccbd57bf",
+    "inputs_sha256": "f0b46e8fd0d2639f97418f01a0125cce6a791497bfa9a3b8b3f9cabfd1f5d43d",
+    "completed": [
+      {
+        "job": "android-test",
+        "seconds": 114.48
+      },
+      {
+        "job": "ios-test",
+        "seconds": 308.73
+      },
+      {
+        "job": "android-build-debug",
+        "seconds": 28.346
+      },
+      {
+        "job": "ios-build-debug",
+        "seconds": 62.269
+      }
+    ]
+  },
+  "android_tests": 38,
+  "swift_original_cases": [
+    "HomeFeatureTests/shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent()",
+    "HomeFeatureTests/shouldHaveInitialSharedStateWhenTaskIsSent()",
+    "HomeFeatureTests/shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent()",
+    "NearbyVehicleMapFeatureTests/shouldBlockReducedAccuracyLocation()",
+    "NearbyVehicleMapFeatureTests/shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads()",
+    "NearbyVehicleMapFeatureTests/shouldHaveResolvingRiderLocationWhenTaskIsSent()",
+    "NearbyVehicleMapFeatureTests/shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable()",
+    "NearbyVehicleMapFeatureTests/shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved()",
+    "NearbyVehicleMapFeatureTests/shouldMapLoadedSharedStateIntoProviderNeutralMapScene()",
+    "NearbyVehicleMapFeatureTests/shouldPreserveBlockingOverlaySeparatelyFromMapContent()",
+    "NearbyVehicleMapFeatureTests/shouldRequestVisibleRefreshWhenRefreshIsDue()",
+    "NearbyVehicleMapFeatureTests/shouldWireDeniedPermissionIntoBlockingOverlay()"
+  ],
+  "log_sha256": "c70e1905141afa9084315c32aa405a5885b949ee2d1432b55f0d5d0372df6ab1",
+  "operational_source_sha256": "0bfced8893b3caaa209921ba015ecf3be644daa459776c4a4688c5431fb0270f",
+  "operational_paths": 302,
+  "operational_source_matches_both_unsigned_profiles": true,
+  "fingerprint_exclusions": [
+    "docs/",
+    "openspec/",
+    "Markdown documentation",
+    "maintenance-toolchain-risk-acceptance.json"
+  ],
+  "risk_decision_sha256": "ecd519152ef7deeb410e3532c966af6a7cd9dc353973adb88844d7c5dbbffc62",
+  "owned_snapshot_cleanup": "passed",
+  "documentation_revision": "448568cb518f0f884e92e4f6b7701d7c93e078a2",
+  "documentation_revision_operational_bytes_unchanged": true,
+  "documentation_revision_native_gate": {
+    "index_sha256": "a22ffbdd7ce47c2fa5c35b6b501468f2b96340808d1c1b3b9ce6660765c69194",
+    "inputs_sha256": "dbaf4b52223b71a8c046071b7c49760dbf8d13d5868abbc6242e930fccdd3dee",
+    "completed": [
+      {
+        "job": "android-test",
+        "seconds": 114.726
+      },
+      {
+        "job": "ios-test",
+        "seconds": 315.122
+      },
+      {
+        "job": "android-build-debug",
+        "seconds": 28.625
+      },
+      {
+        "job": "ios-build-debug",
+        "seconds": 61.962
+      }
+    ]
+  },
+  "documentation_commit_log_sha256": "1be0670f624c72e7547048e422afc7b34ea5dba021b84cf636e4213318aa2dbc"
+}
