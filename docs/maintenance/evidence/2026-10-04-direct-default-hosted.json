@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "scope": "approved_direct_default_hosted_pr_integration",
+  "state": "passed",
+  "head_revision": "31eef2e8be364fc0269ba29eed2149b0e4a3e737",
+  "tested_merge_revision": "11fe99bbe87cf47db3e02e2b7e9ce227eb9da1a4",
+  "head_and_merge_tree": "7332a798bccdaddb6aa83bed99d4746dd68fee06",
+  "head_and_merge_tree_identical": true,
+  "run_id": 37219277941,
+  "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37219277941",
+  "event": "pull_request",
+  "checks": [
+    {
+      "databaseId": 111486122219,
+      "name": "Classify changes",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 111486152678,
+      "name": "iOS PullRequest plan",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 111486152691,
+      "name": "Quality checks",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 111486152709,
+      "name": "Android and shared host tests",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 111486152719,
+      "name": "iOS debug build",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 111486152728,
+      "name": "Android debug build",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 111488916339,
+      "name": "Pull request gate",
+      "conclusion": "success"
+    }
+  ],
+  "android_tests": 38,
+  "swift_original_cases": [
+    "HomeFeatureTests/shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent()",
+    "HomeFeatureTests/shouldHaveInitialSharedStateWhenTaskIsSent()",
+    "HomeFeatureTests/shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent()",
+    "NearbyVehicleMapFeatureTests/shouldBlockReducedAccuracyLocation()",
+    "NearbyVehicleMapFeatureTests/shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads()",
+    "NearbyVehicleMapFeatureTests/shouldHaveResolvingRiderLocationWhenTaskIsSent()",
+    "NearbyVehicleMapFeatureTests/shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable()",
+    "NearbyVehicleMapFeatureTests/shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved()",
+    "NearbyVehicleMapFeatureTests/shouldMapLoadedSharedStateIntoProviderNeutralMapScene()",
+    "NearbyVehicleMapFeatureTests/shouldPreserveBlockingOverlaySeparatelyFromMapContent()",
+    "NearbyVehicleMapFeatureTests/shouldRequestVisibleRefreshWhenRefreshIsDue()",
+    "NearbyVehicleMapFeatureTests/shouldWireDeniedPermissionIntoBlockingOverlay()"
+  ],
+  "test_plan": "PullRequest",
+  "builder": "kotlin",
+  "contracts": {
+    "suites": 18,
+    "count": 288
+  },
+  "static": {
+    "checks": 5,
+    "timing": {
+      "ktlint": 2.166,
+      "detekt": 2.488,
+      "swiftformat": 0.239,
+      "swiftlint": 2.289,
+      "shellcheck": 2.246,
+      "total_seconds": 11.362
+    }
+  },
+  "logs": {
+    "hosted-android-tests.log": {
+      "sha256": "c04b9426daa19e1d68f560f60bf96f0e4338fd48ccb44ed03899b5c5680d7895",
+      "public_raw_log": false
+    },
+    "hosted-quality.log": {
+      "sha256": "bd232543470297f0fd582de6e6d2686c4cf24f9d68f671dbd8f45e8beaae2773",
+      "public_raw_log": false
+    },
+    "hosted-ios-debug.log": {
+      "sha256": "583f35b9e5a70c078742258e39c332cc238294fd8ab2b6b76aebe109feab04e5",
+      "public_raw_log": false
+    },
+    "hosted-ios-tests.log": {
+      "sha256": "a5a2f78cf6a42dfe304a486f91165f114b92a05bc34b7298fd41f20148c03af1",
+      "public_raw_log": false
+    }
+  },
+  "unmeasured": [
+    "hosted_unsigned_device_archive",
+    "physical_and_exact_floor_runtime",
+    "broad_compose_resources",
+    "empty_host_license_onboarding",
+    "signed_export_delivery",
+    "physical_bridge_deletion"
+  ],
+  "nightly": {
+    "state": "passed",
+    "run_id": 37219514909,
+    "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37219514909",
+    "head_revision": "31eef2e8be364fc0269ba29eed2149b0e4a3e737",
+    "event": "workflow_dispatch",
+    "checks": [
+      {
+        "databaseId": 111486827502,
+        "name": "iOS release-configuration candidate",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 111486827653,
+        "name": "iOS Nightly plan",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 111486827658,
+        "name": "Android release-configuration candidate",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 111486827675,
+        "name": "Android and shared host tests",
+        "conclusion": "success"
+      },
+      {
+        "databaseId": 111490687010,
+        "name": "Certify exact source SHA",
+        "conclusion": "success"
+      }
+    ],
+    "swift_original_cases": [
+      "HomeFeatureTests/shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent()",
+      "HomeFeatureTests/shouldHaveInitialSharedStateWhenTaskIsSent()",
+      "HomeFeatureTests/shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent()",
+      "NearbyVehicleMapFeatureTests/shouldBlockReducedAccuracyLocation()",
+      "NearbyVehicleMapFeatureTests/shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads()",
+      "NearbyVehicleMapFeatureTests/shouldHaveResolvingRiderLocationWhenTaskIsSent()",
+      "NearbyVehicleMapFeatureTests/shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable()",
+      "NearbyVehicleMapFeatureTests/shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved()",
+      "NearbyVehicleMapFeatureTests/shouldMapLoadedSharedStateIntoProviderNeutralMapScene()",
+      "NearbyVehicleMapFeatureTests/shouldPreserveBlockingOverlaySeparatelyFromMapContent()",
+      "NearbyVehicleMapFeatureTests/shouldRequestVisibleRefreshWhenRefreshIsDue()",
+      "NearbyVehicleMapFeatureTests/shouldWireDeniedPermissionIntoBlockingOverlay()"
+    ],
+    "test_plan": "Nightly",
+    "ios_release": "unsigned_simulator_build_passed_no_export_or_upload",
+    "unsigned_scope_evidence": "Successful execution of the exact-revision repo wrapper with explicit NO signing arguments; formatter omits raw invocation. Product inspection remains local.",
+    "unsigned_wrapper_sha256": "6fc27931801cabdab73525429f284d1829534aad0ee875997d9d7ada4fa7d769",
+    "logs": {
+      "hosted-nightly-ios-tests.log": {
+        "sha256": "fe521e18363bdc02a5f4e46f815cc35c7dc112e7c031d2dc2e9c9b3530af2bad",
+        "public_raw_log": false
+      },
+      "hosted-nightly-ios-release.log": {
+        "sha256": "fcd1da0bf3585a9ca48a6a40e6dc2b1412f5dec2db549f605817abacc6be8440",
+        "public_raw_log": false
+      }
+    }
+  },
+  "recorded_at": "2026-10-04T17:47:21Z"
+}

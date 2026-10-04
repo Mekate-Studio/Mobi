@@ -48,11 +48,20 @@ leave native runtime bytes and modes unchanged. The refreshed risk report retain
 549 queries and seventeen findings; exact artifact scope and original dates
 remain unchanged. Retained producers are not a new integrated dependency scan.
 
-Exact-revision hosted integration is pending publication of this approved source.
-Earlier candidate and hosted operational receipts do not validate the applied
-preflight/default source. Physical-device, exact-floor runtime, broad Compose
-resources, empty-host/license onboarding and signed/export scope remain separate
-gates.
+The approved runtime is published as `31eef2e`. [Hosted PR run 37219277941](https://github.com/Mekate-Studio/Mobi/actions/runs/37219277941)
+passed all seven required checks. Its tested merge `11fe99b` and head share tree
+`7332a798bccdaddb6aa83bed99d4746dd68fee06`. Completed logs verify 288 contracts,
+five static analyzers, 38 Android tests, all twelve original Swift cases and
+direct Kotlin debug build selection. [Hosted Nightly run 37219514909](https://github.com/Mekate-Studio/Mobi/actions/runs/37219514909)
+passed all five checks on the same runtime revision, including the twelve Nightly
+cases and unsigned simulator Release. The [hosted receipt](evidence/2026-10-04-direct-default-hosted.json)
+binds run/check identities, cases and log hashes; these are hosted execution facts,
+not physical bridge-removal or signed-delivery permission.
+
+Physical-device, exact-floor runtime, broad Compose resources, empty-host/license
+onboarding and signed/export scope remain separate gates. The device archive and
+product inspection above are local evidence; a hosted unsigned device archive
+for this new preflight/default remains unmeasured.
 
 ## Rollback
 

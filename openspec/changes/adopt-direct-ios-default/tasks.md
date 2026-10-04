@@ -16,4 +16,4 @@
 
 ## 4. Hosted integration
 
-- [ ] 4.1 Publish approved integration and collect exact-revision hosted PR checks without treating earlier candidate runs as current evidence.
+- [x] 4.1 Publish approved integration and collect exact-revision hosted PR checks without treating earlier candidate runs as current evidence.
