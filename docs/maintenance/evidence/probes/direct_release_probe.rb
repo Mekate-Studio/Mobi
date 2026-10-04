@@ -11,6 +11,7 @@ module Maintenance
     PROFILE = 'manual-ios-operations'
     CELLS = %w[effective_toolchain nightly_test ios_release_simulator simulator_product ios_unsigned_archive archive_product].freeze
     LIMITS = %w[physical_device_execution exact_floor_runtime signed_export_delivery complete_compose_resource_parity empty_host_onboarding architecture_approval retirement_approval].freeze
+    ASSET_WARNING = /\Aobjc\[\d+\]: Class OS_at_encoder is implemented in both \/usr\/lib\/libate\.dylib \(0x[0-9a-f]+\) and \/[^\n]+\/assetutil \(0x[0-9a-f]+\)\. This may cause spurious casting failures and mysterious crashes\. One of the duplicates must be removed or renamed\.\n/
 
     def initialize(*args)
       super(*args, 'direct-facade')
@@ -32,7 +33,14 @@ module Maintenance
       raise Failure, 'Product platform or binary minimum differs' unless builds.size == 1 && builds[0][0] == expected_platform && Gem::Version.new(builds[0][1]) == Gem::Version.new('26.0')
       assets = File.join(app, 'Assets.car')
       raise Failure, 'Compiled assets are missing' unless File.file?(assets) && File.size(assets).positive?
-      assets_info = JSON.parse(command(kind + '-assets', ['/usr/bin/xcrun', '--sdk', kind == 'simulator' ? 'iphonesimulator' : 'iphoneos', 'assetutil', '--info', assets]))
+      assets_text = command(kind + '-assets', ['/usr/bin/xcrun', '--sdk', kind == 'simulator' ? 'iphonesimulator' : 'iphoneos', 'assetutil', '--info', assets])
+      warning = assets_text[ASSET_WARNING]
+      if warning
+        @asset_warnings ||= []
+        @asset_warnings << { 'product' => kind, 'warning' => 'duplicate_OS_at_encoder_in_host_assetutil', 'sha256' => Digest::SHA256.hexdigest(warning) }
+        write_evidence('asset-tool-warnings', @asset_warnings)
+      end
+      assets_info = JSON.parse(assets_text.sub(ASSET_WARNING, ''))
       icons = assets_info.select { |entry| entry['Name'].to_s.include?('AppIcon') }
       raise Failure, 'Compiled app icon entries are missing' if icons.empty?
       files = Dir.glob(File.join(app, '**', '*')).select { |file| File.file?(file) && !File.symlink?(file) }
@@ -68,8 +76,13 @@ module Maintenance
           write_evidence('effective-settings', KotlinEvidence.settings(cli('settings', 'show', 'settings', '--all-modules'), modules: @modules, version: @version, source: @work))
         end
         measured('nightly_test') do
-          text = command('nightly-test', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-test'])
-          native_cases(text, 'nightly-native-test-cases')
+          command('nightly-test', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-test'])
+          raw = File.join(@work, 'build/logs/xcodebuild-ios-tests.log')
+          raise Failure, 'Raw Xcode test log is missing' unless File.file?(raw) && !File.symlink?(raw)
+          captured = File.join(@control, 'nightly-test-raw.log')
+          File.binwrite(captured, File.binread(raw))
+          write_evidence('nightly-raw-output', { 'log' => 'nightly-test-raw.log', 'sha256' => Maintenance.file_sha(captured), 'command' => 'nightly-test', 'origin' => 'build/logs/xcodebuild-ios-tests.log' })
+          native_cases(File.read(captured), 'nightly-native-test-cases')
         end
         measured('ios_release_simulator') { command('ios-release-simulator', [File.join(@work, 'scripts/ci/run_job.sh'), 'ios-build-release']) }
         measured('simulator_product') do
@@ -78,7 +91,7 @@ module Maintenance
           product('simulator', apps.first)
         end
         measured('ios_unsigned_archive') do
-          command('ios-unsigned-archive', ['/usr/bin/xcodebuild', '-project', File.join(@work, 'ios-app/module.xcodeproj'), '-scheme', 'app', '-configuration', 'Release', '-destination', 'generic/platform=iOS', '-derivedDataPath', File.join(@work, 'build/archive-derived'), '-archivePath', File.join(@work, 'build/releases/Mobi.xcarchive'), '-skipMacroValidation', 'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'SWIFT_ENABLE_EXPLICIT_MODULES=NO', 'ARCHS=arm64', 'archive'])
+          command('ios-unsigned-archive', ['/usr/bin/xcodebuild', '-project', File.join(@work, 'ios-app/module.xcodeproj'), '-scheme', 'app', '-configuration', 'Release', '-destination', 'generic/platform=iOS', '-derivedDataPath', File.join(@work, 'build/xcode-derived-data-cli-release'), '-archivePath', File.join(@work, 'build/releases/Mobi.xcarchive'), '-skipMacroValidation', 'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'SWIFT_ENABLE_EXPLICIT_MODULES=NO', 'ARCHS=arm64', 'archive'])
         end
         measured('archive_product') do
           apps = Dir.glob(File.join(@work, 'build/releases/Mobi.xcarchive/Products/Applications/*.app'))
@@ -120,7 +133,7 @@ if mode == 'run'
   plan = { 'schema' => 1, 'id' => 'manual-ios-operations', 'scope' => 'paired_unsigned_ios_operations',
     'resource_types' => %w[filesystem process-group kotlin-native], 'edits' => [],
     'missing_capabilities' => Maintenance::DirectReleaseProbe::LIMITS,
-    'checks' => [{ 'id' => Maintenance::DirectReleaseProbe::PROFILE, 'required' => true, 'timeout_seconds' => 1300,
+    'checks' => [{ 'id' => Maintenance::DirectReleaseProbe::PROFILE, 'required' => true, 'timeout_seconds' => 1800,
       'argv' => [File.realpath(RbConfig.ruby), probe, '{source}', '{output}', '{cache}', original.host_file] }] }
   adapter.define_singleton_method(:plan) { plan }
   adapter.define_singleton_method(:code_files) { original.code_files + [probe] }

@@ -11,6 +11,7 @@ store = Maintenance::RunStore.new(File.join(root, '.maintenance/runs-ios-operati
 probe = File.join(__dir__, 'direct_release_probe.rb')
 golden = JSON.parse(File.read(File.join(__dir__, 'MobiInteropParity.original-cases.json')))
 required = %w[effective_toolchain nightly_test ios_release_simulator simulator_product ios_unsigned_archive archive_product]
+asset_warning = /\Aobjc\[\d+\]: Class OS_at_encoder is implemented in both \/usr\/lib\/libate\.dylib \(0x[0-9a-f]+\) and \/[^\n]+\/assetutil \(0x[0-9a-f]+\)\. This may cause spurious casting failures and mysterious crashes\. One of the duplicates must be removed or renamed\.\n/
 verify = lambda do |file, sha|
   raise Maintenance::Failure, 'Missing or changed raw producer evidence' unless File.file?(file) && !File.symlink?(file) && Maintenance.file_sha(file) == sha
 end
@@ -71,14 +72,23 @@ receipt = store.lock(id, create: false) do
       builder = step['phase'] == 'candidate' ? 'kotlin' : 'gradle'
       raise Maintenance::Failure, 'Operational environment overclaims scope' unless env['bridge'] == builder && env['test_plan'] == 'Nightly' && env['licenses'] == 'copied_host_acceptance' && env['empty_host_proven'] == false && (builder != 'kotlin' || evidence['bridge_unavailable'] == true && evidence['di_reachable'] == true)
       cases = read.call('nightly-native-test-cases')
-      actual = File.read(File.join(control, 'nightly-test.log')).scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
+      raw_output = read.call('nightly-raw-output')
+      raise Maintenance::Failure, 'Raw Xcode origin differs' unless raw_output['log'] == 'nightly-test-raw.log' && raw_output['command'] == 'nightly-test' && raw_output['origin'] == 'build/logs/xcodebuild-ios-tests.log'
+      verify.call(File.join(control, raw_output['log']), raw_output.fetch('sha256'))
+      actual = File.read(File.join(control, raw_output['log'])).scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
       raise Maintenance::Failure, 'Nightly cases differ from original identities' unless actual == cases && cases == golden
       %w[simulator archive].each do |kind|
         product = read.call(kind + '-product')
         raw_info = JSON.parse(File.read(File.join(control, kind + '-plist.log')))
         raw_arch = File.read(File.join(control, kind + '-arch.log')).strip
         raw_load = File.read(File.join(control, kind + '-load.log')).scan(/cmd LC_BUILD_VERSION\s+cmdsize \d+\s+platform (\d+)\s+minos ([\d.]+)\s+sdk ([\d.]+)/)
-        raw_assets = JSON.parse(File.read(File.join(control, kind + '-assets.log')))
+        raw_asset_text = File.read(File.join(control, kind + '-assets.log'))
+        warning = raw_asset_text[asset_warning]
+        if warning
+          expected_warning = { 'product' => kind, 'warning' => 'duplicate_OS_at_encoder_in_host_assetutil', 'sha256' => Digest::SHA256.hexdigest(warning) }
+          raise Maintenance::Failure, 'Known asset tool warning was not retained' unless read.call('asset-tool-warnings').include?(expected_warning)
+        end
+        raw_assets = JSON.parse(raw_asset_text.sub(asset_warning, ''))
         raise Maintenance::Failure, 'Product facts differ from raw commands' unless product['identifier'] == raw_info['CFBundleIdentifier'] && product['minimum'] == raw_info['MinimumOSVersion'] && product['architecture'] == raw_arch && product['build_version'] == raw_load.first && product['app_icon_entries'] == raw_assets.count { |entry| entry['Name'].to_s.include?('AppIcon') }
         raise Maintenance::Failure, 'Product facts do not meet bounded assessment' unless product['identifier'] == 'studio.mekate.mobi' && product['minimum'] == '26.0' && product['architecture'] == 'arm64' && raw_load.size == 1 && raw_load.first[0] == (kind == 'simulator' ? '7' : '2') && Gem::Version.new(raw_load.first[1]) == Gem::Version.new('26.0') && product['app_icon_entries'].positive? && product.fetch('files').fetch('Assets.car') == product['assets_sha256'] && product['signing_scope'] == 'unsigned_no_export_or_delivery'
         products[kind] = product.reject { |key, _| key == 'files' }.merge('files_count' => product.fetch('files').size, 'inventory_sha256' => Maintenance.digest(product['files']))
