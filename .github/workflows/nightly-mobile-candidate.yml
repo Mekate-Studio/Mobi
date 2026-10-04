@@ -30,7 +30,7 @@ jobs:
             .kotlin-cache
             .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-nightly-host-tests-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'scripts/ci/**') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-nightly-host-tests-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '**/module.yaml', 'scripts/ci/**') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-nightly-host-tests-
       - uses: actions/setup-java@v5
@@ -69,7 +69,7 @@ jobs:
             .kotlin-cache
             .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-nightly-ios-tests-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'ios-app/**', 'shared-*/**', 'scripts/ci/**') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-nightly-ios-tests-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '**/module.yaml', 'ios-app/**', 'shared-*/**', 'scripts/ci/**') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-nightly-ios-tests-
       - uses: actions/setup-java@v5
@@ -104,7 +104,7 @@ jobs:
             .kotlin-cache
             .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-nightly-android-build-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'android-app/**', 'shared-*/**', 'scripts/ci/**') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-nightly-android-build-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '**/module.yaml', 'android-app/**', 'shared-*/**', 'scripts/ci/**') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-nightly-android-build-
       - uses: actions/setup-java@v5
@@ -139,7 +139,7 @@ jobs:
             .kotlin-cache
             .kotlin-user-home/Library/Caches/JetBrains/Kotlin/.m2.cache
             .gradle-user-home
-          key: ${{ runner.os }}-${{ runner.arch }}-nightly-ios-build-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', 'gradle/**', 'gradle-bridge/**', '**/module.yaml', 'ios-app/**', 'shared-*/**', 'scripts/ci/**') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-nightly-ios-build-${{ hashFiles('project.yaml', 'kotlin', 'Gemfile.lock', '.ruby-version', '**/module.yaml', 'ios-app/**', 'shared-*/**', 'scripts/ci/**') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-nightly-ios-build-
       - uses: actions/setup-java@v5

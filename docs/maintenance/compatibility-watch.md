@@ -51,12 +51,13 @@ release interval, dependency graph, vulnerability audit or semantic migration
 assessment**. The watch does not refresh OS release policy or direct-integration
 documentation; those require the separate support and compatibility assessments.
 
-Only the reviewed `bridge-compile` profile executes. It runs the unchanged
-baseline before the candidate, verifies effective Kotlin settings, KLIB compilation
-and framework linking, and reads the common source-bound result. Direct-path
-prerequisite states come from reviewed configuration. Native app/test, device,
-release, clean-clone, lifecycle, incremental and retirement requirements remain
-missing capabilities in this narrow observation.
+The current direct source uses `direct-mobile`, executing both phases on the
+adopted direct content with all four repository native jobs. Its scope identity
+is `kotlin-direct-mobile-v1`; historical `kotlin-bridge-compile-v1` observations
+cannot serve as its baseline. Discovery omits retired SKIE. Historical retained
+source can still execute its explicitly scoped bridge profile after complete
+content recovery. Release discovery remains bounded and does not authorize
+updates or claim a full advisory review.
 
 | Output | Meaning |
 | --- | --- |

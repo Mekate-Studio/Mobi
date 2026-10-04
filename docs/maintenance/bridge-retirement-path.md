@@ -1,5 +1,10 @@
 # Path to retiring the hand-maintained iOS Gradle bridge
 
+Current follow-up: physical bridge removal was explicitly authorized after PR #35
+merged. The [separate removal record](bridge-removal.md) binds that authorization
+and new validation. Older deletion exclusions below retain their historical scope.
+
+
 Current follow-up: the maintainer approved the direct development/test/unsigned
 default on 2026-10-04. [Applied integration](direct-default-integration.md) records
 current validation separately. Retained-bridge/default exclusions below describe

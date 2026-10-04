@@ -89,7 +89,7 @@ module Maintenance
       tools
       environment
       row('resolved:kotlin-toolchain-targets', 'incomplete', 'Effective Android/Native/Compose/stdlib/plugin variants, edges and artifacts require versioned Toolchain introspection; declarations are insufficient')
-      row('resolved:gradle-bridge-targets', 'incomplete', 'Bridge compiler/plugin/native resolved variants and artifact digests have not been captured')
+      row('resolved:gradle-bridge-targets', 'incomplete', 'Bridge compiler/plugin/native resolved variants and artifact digests have not been captured') if @files.key?('gradle/libs.versions.toml')
       row('advisories:all-resolved-inputs', 'incomplete', 'No advisory lookup is performed by extraction; use fresh exact-input evidence', required: false)
       { 'adapter' => 'kotlin', 'modules' => @module_names, 'components' => @components.sort_by { |c| [c['source'], c['name'].to_s, c['kind']] }, 'coverage' => @coverage, 'resolved_inputs' => @resolved_inputs }
     end

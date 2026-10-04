@@ -11,7 +11,8 @@ require_relative 'lib/build_inputs'
 module Maintenance
   class CompatibilityCheck < KotlinCheck
     def self.declared_inputs(work, modules)
-      paths = [Compatibility::CONFIG, Compatibility::CATALOG, 'kotlin', 'kotlin.bat'] + modules.map { |name| name + '/module.yaml' }
+      paths = [Compatibility::CONFIG, 'kotlin', 'kotlin.bat'] + modules.map { |name| name + '/module.yaml' }
+      paths << Compatibility::CATALOG if File.file?(File.join(work, Compatibility::CATALOG))
       paths.to_h do |path|
         content = File.read(File.join(work, path), encoding: 'UTF-8')
         raise Failure, 'Declared compatibility input is not UTF-8' unless content.valid_encoding?
@@ -32,6 +33,9 @@ module Maintenance
       @report['missing_capabilities'] += BuildInputs::GAPS if @build_inputs
       @report['bridge_retirement'] = 'defer'
       @direct = profile.start_with?('direct-') && @report['phase'] == 'candidate'
+      @adopted_direct = !File.exist?(File.join(source, 'gradle-bridge'))
+      @report['baseline_kind'] = 'adopted_direct' if @adopted_direct
+      @direct = true if @adopted_direct
       if profile.start_with?('upstream-')
         wrappers = KotlinWrappers.new(source)
         @report['candidate_selection'] = @host.fetch('upstream_selection')
@@ -140,7 +144,7 @@ module Maintenance
       outcome = catch(:outcome) do
         write_evidence('source-manifest', @manifest)
         write_evidence('declared-inputs', self.class.declared_inputs(@work, @modules))
-        if @direct
+        if @direct && !@adopted_direct
           experiment_class = @profile == 'direct-roundtrip' ? DirectRoundtrip : InteropExperiment
           @experiment = experiment_class.new(@work, File.join(@work, 'scripts/maintenance/fixtures/interop'))
           changes = @experiment.prepare!
@@ -150,6 +154,11 @@ module Maintenance
           @report['bridge_absence_scope'] = 'direct_checks_before_restoration' if @profile == 'direct-roundtrip'
           @report['authored_experiment_sha256'] = Maintenance.digest(@manifest)
           write_evidence('direct-source-manifest', @manifest) if @profile == 'direct-roundtrip' || @collect_resolution
+        end
+        if @adopted_direct
+          raise Failure, 'Adopted direct source unexpectedly contains bridge inputs' if File.exist?(File.join(@work, 'gradle-bridge')) || File.exist?(File.join(@work, Compatibility::CATALOG))
+          @report['bridge_unavailable'] = true
+          write_evidence('direct-source-manifest', @manifest) if @collect_resolution
         end
         if @collect_resolution
           declarations = self.class.declared_inputs(@work, @modules).merge('project.yaml' => File.read(File.join(@work, 'project.yaml'), encoding: 'UTF-8'))

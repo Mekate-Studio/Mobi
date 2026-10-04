@@ -1,8 +1,12 @@
 # Quality and dependency maintenance
 
-The [direct-default proposal review](direct-default-proposal-review.md) records the next API, cancellation, caller and rollback decision as an isolated unapplied patch. Its proposed scope holds credentialed iOS delivery; production and the existing risk expiry remain unchanged.
+Current baseline: [approved direct iOS development/test/unsigned integration](direct-default-integration.md)
+is merged through PR #35. A separately authorized [physical bridge removal](bridge-removal.md)
+is in progress. Signed delivery remains held and risk acceptance retains its original expiry.
+Historical assessments and proposal receipts below describe their original snapshots;
+they do not override the current direct default or validate this removal source.
 
-Current adoption: [Toolchain 0.13.0 with bounded risk/age acceptance](toolchain-adoption-risk-review.md) is committed and published through PR #35. Its [hosted integration record](toolchain-adoption-integration.md) verifies all seven PR checks. Independent direct evidence includes the [adopted-tuple input assessment](direct-adopted-toolchain-assessment.md), [typed/async fixture assessment](direct-interop-behavior-assessment.md) and [release/onboarding assessment](direct-release-onboarding-assessment.md). The operational local and hosted pairs passed; their follow-up review records remain uncommitted drafts. The Gradle iOS bridge stays current while the remaining retirement gates stay open.
+## Historical maintenance slices
 
 Status: slices 1–8 integrated. Slice 7 was committed and pushed as `9d25553`;
 its [measured results](seventh-slice-validation.md) keep bridge upgrades separate
@@ -31,7 +35,7 @@ passed 204 contracts and all four native pre-commit jobs. Its measurement receip
 
 Mobi's maintenance workflow starts with reproducible pre-commit checks and uses
 isolated evidence to assess Kotlin Toolchain upgrades. Upgrading the current iOS bridge and retiring it are separate decisions.
-Bridge retirement is **deferred** pending the remaining native, clean-clone and release evidence.
+Applicable removal validation and broader production/runtime gates are recorded separately in the current removal record.
 
 The [Apple Silicon target assessment](apple-silicon-assessment.md) evaluates
 Toolchain 0.12.2 with upstream-supported iOS architectures. It keeps the bridge

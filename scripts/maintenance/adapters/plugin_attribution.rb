@@ -28,7 +28,7 @@ module Maintenance
       @files = [__FILE__, input, host_file, File.join(host['java_home'], 'bin/java'), File.join(root, 'maintenance-plugin-resolution.json')]
       @files << File.join(root, 'scripts/maintenance/adapters/kotlin_resources.rb')
       @files += Dir.glob(File.join(root, 'scripts/maintenance/lib/*.rb'))
-      @files += %w[scripts/maintenance/plugin_check.rb scripts/maintenance/adapters/plugin_resolution.gradle gradle-bridge/gradlew gradle-bridge/gradle/wrapper/gradle-wrapper.jar gradle-bridge/gradle/wrapper/gradle-wrapper.properties].map { |p| File.join(root, p) }
+      @files += %w[scripts/maintenance/plugin_check.rb scripts/maintenance/adapters/plugin_resolution.gradle].map { |p| File.join(root, p) }
       @plan = { 'schema' => 1, 'id' => 'plugin-attribution', 'scope' => 'retained_paired_compiler_inputs', 'edits' => [],
                 'resource_types' => %w[filesystem process-group kotlin-native], 'missing_capabilities' => PluginAttribution::GAPS,
                 'checks' => [{ 'id' => 'plugin-attribution', 'required' => true, 'timeout_seconds' => 600,

@@ -9,7 +9,7 @@ require 'uri'
 
 module Maintenance
   class Compatibility
-    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip direct-resolution direct-build-inputs].freeze
+    PROFILES = %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip direct-resolution direct-build-inputs direct-mobile].freeze
     CONFIG = 'maintenance-compatibility.json'
     CATALOG = 'gradle/libs.versions.toml'
     UNPROVEN = %w[device_execution release_archive signed_packaging cancellation_parity generic_export cold_direct_ci clean_clone_onboarding incremental_direct_build local_bridge_rollback complete_release_interval_review complete_bridge_target_graph advisory_review].freeze
@@ -45,6 +45,9 @@ module Maintenance
         raise Failure, 'Compatibility release publication is in the future' if published > now
         thresholds << published + @config['minimum_release_age_days'] * 86_400
       end
+      unless File.file?(File.join(root, CATALOG))
+        thresholds = releases.reject { |key, _| key == 'skie' }.values.map { |release| Time.iso8601(release.fetch('published_at')) + @config['minimum_release_age_days'] * 86_400 }
+      end
       eligible_at = thresholds.max
       blocked = now < eligible_at
       raise Failure, 'Compatibility candidate is age-blocked' if blocked && !experimental
@@ -65,13 +68,25 @@ module Maintenance
                  'direct_paths' => config['direct_paths'], 'capability_observations' => config.fetch('capability_observations', []), 'evidence_kind' => 'reviewed_sources_and_declarations',
                  'missing_capabilities' => UNPROVEN, 'bridge_retirement' => 'defer', 'adoption_authorized' => false }
       source.verify!
+      unless source.files.key?(CATALOG)
+        result['historical_retained_candidate'] = result['candidate']
+        result['candidate'] = { 'releases' => config['candidate']['releases'].reject { |key, _| key == 'skie' } }
+        result['baseline_scope'] = 'adopted_direct_development_tests_unsigned'
+      end
       result
     end
 
     def verify_baseline!(source)
-      catalog = File.read(File.join(source.root, CATALOG))
-      config.fetch('baseline').each do |key, version|
-        raise Failure, 'Bridge baseline differs from reviewed tuple' unless catalog.scan(/^#{Regexp.escape(key)} = "([^"]+)"$/).flatten == [version]
+      if source.files.key?(CATALOG)
+        catalog = File.read(File.join(source.root, CATALOG))
+        config.fetch('baseline').each do |key, version|
+          raise Failure, 'Bridge baseline differs from reviewed tuple' unless catalog.scan(/^#{Regexp.escape(key)} = "([^"]+)"$/).flatten == [version]
+        end
+      else
+        paths = source.files.keys.select { |p| p.end_with?('/module.yaml') }
+        declarations = paths.flat_map { |p| File.read(File.join(source.root, p)).scan(/dev\.zacsweers\.metro:(?:runtime|compiler):([^\s]+)/).flatten }
+        raise Failure, 'Direct Metro baseline differs from reviewed tuple' unless !declarations.empty? && declarations.uniq == [config.fetch('baseline').fetch('metro')]
+        raise Failure, 'Unexpected retained bridge on direct source' if File.exist?(File.join(source.root, 'gradle-bridge'))
       end
       version = File.read(File.join(source.root, 'kotlin'))[/^kotlin_cli_version=(.+)$/, 1]
       raise Failure, 'Toolchain differs from compatibility assessment' unless version == config['toolchain']
@@ -80,6 +95,9 @@ module Maintenance
     def edits(source, profile)
       raise Failure, 'Unknown compatibility profile' unless PROFILES.include?(profile)
       verify_baseline!(source)
+      if !source.files.key?(CATALOG) && !%w[direct-mobile direct-resolution direct-build-inputs].include?(profile)
+        raise Failure, 'Historical bridge/transform profile is unavailable on direct source; restore the complete published retained revision in an isolated copy'
+      end
       return [] if profile.start_with?('direct-')
       paths = [CATALOG] + source.files.keys.select { |p| p.end_with?('/module.yaml') && File.read(File.join(source.root, p)).include?('dev.zacsweers.metro:') }
       paths.map do |path|

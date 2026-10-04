@@ -106,7 +106,7 @@ Xcode runs a repo-owned builder preflight before its managed Kotlin phase.
 Gradle and unknown selectors refuse; remove a stale Gradle override to build
 direct content. To return to the retained integration, restore the complete
 reviewed content patch, clean only owned generated products and revalidate the
-restored native consumers before selecting Gradle. Preserved bridge files alone
+restored native consumers before selecting Gradle. A restored bridge directory alone
 do not make this source interchangeable with SKIE content.
 
 Credentialed iOS archive/export/TestFlight lanes are held before signing or API
@@ -198,7 +198,7 @@ without invoking Kotlin Toolchain. Current supported inputs are:
 
 Tracked source is accounted for even when matched by Git ignores. Untracked
 ignored files are excluded. Untracked outputs under `build/`, each declared
-module's `build/`, the bridge's build/cache directories, root Kotlin/Gradle/Amper
+module's `build/`, historical bridge fixture products, root Kotlin/Gradle/Amper
 caches and `ios-app/Dependencies/.build/` are also excluded from manual analysis.
 These paths are generated build or downloaded package output, not authored
 source. **Nonignored** output still blocks commit mode: add a reviewed ignore

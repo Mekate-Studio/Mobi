@@ -12,9 +12,9 @@ module Maintenance
       @fetcher, @now, @token = fetcher, now, token
     end
 
-    def discover(config)
+    def discover(config, direct: false)
       pins = { 'toolchain' => config['toolchain'] }.merge(config['candidate']['releases'].transform_values { |r| r['version'] })
-      REPOSITORIES.to_h do |name, repository|
+      REPOSITORIES.reject { |name, _| direct && name == 'skie' }.to_h do |name, repository|
         url = 'https://api.github.com/repos/' + repository + '/releases?per_page=30'
         source = { 'url' => url, 'retrieved_at' => @now.iso8601 }
         begin
@@ -72,7 +72,8 @@ module Maintenance
     def native(source)
       @probe_stage = 'prerequisites'
       store = RunStore.new(File.join(@root, '.maintenance', 'runs-compatibility-watch'))
-      adapter = CompatibilityRehearsal.new(@root, source: source, profile: 'bridge-compile')
+      profile = source.files.key?(Compatibility::CATALOG) ? 'bridge-compile' : 'direct-mobile'
+      adapter = CompatibilityRehearsal.new(@root, source: source, profile: profile)
       policy_path = File.join(@root, 'maintenance-execution-policy.json')
       executor = Executor.new(source: source, adapter: adapter, store: store, policy: JSON.parse(File.read(policy_path)), input_files: [__FILE__, policy_path, File.join(@root, 'scripts/maintenance/lib/watch.rb')])
       @probe_stage = 'execution'
@@ -95,7 +96,8 @@ module Maintenance
     def run
       source = Source.new(@root); adapter = Compatibility.new(@root, now: @now)
       assessment = adapter.assessment(source)
-      releases = KotlinReleaseWatch.new(fetcher: @fetcher, now: @now, token: @token).discover(adapter.config)
+      direct = !source.files.key?(Compatibility::CATALOG)
+      releases = KotlinReleaseWatch.new(fetcher: @fetcher, now: @now, token: @token).discover(adapter.config, direct: direct)
       RunStore.atomic(File.join(@output, 'discovery.json'), releases)
       begin
         native_report, injected_cleanup = @probe ? @probe.call(source) : native(source)
@@ -117,7 +119,7 @@ module Maintenance
       gaps << 'watch_history_provider' unless %w[local found initial].include?(@history)
       state = native_report['state']
       state = 'incomplete' if gaps.any? { |gap| %w[release_provider_coverage watch_native_result watch_history_provider watch_cleanup].include?(gap) }
-      scope = { 'adapter' => 'kotlin-bridge-compile-v1', 'channel' => @scope, 'toolchain' => adapter.config['toolchain'],
+      scope = { 'adapter' => direct ? 'kotlin-direct-mobile-v1' : 'kotlin-bridge-compile-v1', 'channel' => @scope, 'toolchain' => adapter.config['toolchain'],
                 'baseline' => adapter.config['baseline'], 'candidate' => adapter.config['candidate'],
                 'probe_inputs_sha256' => Maintenance.digest(source.files.reject { |path, _| path.start_with?('docs/', 'openspec/') || %w[README.md AGENTS.md LICENSE LICENSE.md].include?(path) }),
                 'minimum_release_age_days' => adapter.config['minimum_release_age_days'] }

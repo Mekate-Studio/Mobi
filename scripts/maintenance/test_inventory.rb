@@ -46,6 +46,12 @@ module InventoryTest
     Maintenance::Policy.new(policy, now: NOW).evaluate(inventory, evidence)
   end
 
+  def self.current_native(source)
+    native = Maintenance::NativeExtraction.parse(File.join(ROOT, 'scripts/maintenance/fixtures/renovate-44.93.5.jsonl'))
+    native['managers'].each_value { |entries| entries.select! { |entry| source.files.key?(entry['file']) } }
+    native
+  end
+
   test('real Renovate fixture retains all expected native manager groups and compiler plugins') do
     native = Maintenance::NativeExtraction.parse(File.join(ROOT, 'scripts/maintenance/fixtures/renovate-44.93.5.jsonl'))
     assert(native['managers'].keys.sort == %w[bundler dockerfile github-actions gradle gradle-wrapper regex ruby-version swift].sort)
@@ -151,7 +157,7 @@ module InventoryTest
   end
   test('Kotlin supplementation covers seven modules, plugins, three lock ecosystems and tool/environment gaps') do
     source = Maintenance::Source.new(ROOT)
-    native = Maintenance::NativeExtraction.parse(File.join(ROOT, 'scripts/maintenance/fixtures/renovate-44.93.5.jsonl'))
+    native = current_native(source)
     config = JSON.parse(File.read(File.join(ROOT, 'renovate.json')))
     # Deliberate fixture ceiling, independent of the repository's adopted policy.
     config.fetch('packageRules').each { |r| r['allowedVersions'] = '<1.2.0' if r['allowedVersions'] && r.fetch('matchPackageNames', []).include?('/^dev\\.zacsweers\\.metro:/') }
@@ -167,7 +173,7 @@ module InventoryTest
   end
   test('missing native manager is a named gap, not no dependencies') do
     source = Maintenance::Source.new(ROOT)
-    native = Maintenance::NativeExtraction.parse(File.join(ROOT, 'scripts/maintenance/fixtures/renovate-44.93.5.jsonl'))
+    native = current_native(source)
     native['managers'].delete('swift')
     result = Maintenance::Kotlin.new(ROOT, source.files, native, JSON.parse(File.read(File.join(ROOT, 'renovate.json')))).inventory
     assert(result['coverage'].any? { |r| r['id'] == 'missing-manager:swift' && r['state'] == 'incomplete' })
@@ -310,10 +316,10 @@ module InventoryTest
 
   test('omitted native files and separate Xcode declarations remain visible') do
     source = Maintenance::Source.new(ROOT)
-    native = Maintenance::NativeExtraction.parse(File.join(ROOT, 'scripts/maintenance/fixtures/renovate-44.93.5.jsonl'))
-    native['managers']['gradle'].reject! { |entry| entry['file'] == 'gradle/libs.versions.toml' }
+    native = current_native(source)
+    native['managers']['bundler'].reject! { |entry| entry['file'] == 'Gemfile' }
     result = Maintenance::Kotlin.new(ROOT, source.files, native, {}).inventory
-    assert(result['coverage'].any? { |row| row['id'] == 'missing-native-file:gradle/libs.versions.toml' && row['state'] == 'incomplete' })
+    assert(result['coverage'].any? { |row| row['id'] == 'missing-native-file:Gemfile' && row['state'] == 'incomplete' })
     assert(result['components'].any? { |component| component['name'].include?('swift-perception') && component['source'].end_with?('project.pbxproj') })
     gems = result['resolved_inputs'].find { |input| input['id'].start_with?('rubygems:') }['packages']
     assert(gems.size == 99 && gems.find { |gem| gem['name'] == 'fastlane' }['relationship'] == 'direct')
