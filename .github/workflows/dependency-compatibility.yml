@@ -12,6 +12,10 @@ concurrency:
 
 jobs:
   direct_operations:
+    strategy:
+      fail-fast: false
+      matrix:
+        slice: [nightly, release, archive]
     runs-on: macos-26
     timeout-minutes: 60
     steps:
@@ -29,15 +33,15 @@ jobs:
       - name: Prepare reviewed Kotlin distributions
         run: ./scripts/dev/dependency_updates.sh prepare-kotlin
       - name: Assess paired unsigned operations with owned recovery
-        run: ./docs/maintenance/evidence/probes/run_direct_operations.sh
+        run: ./docs/maintenance/evidence/probes/run_direct_operations.sh "${{ matrix.slice }}"
       - name: Retain bounded summary and raw producer evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: direct-operations-evidence
+          name: direct-operations-evidence-${{ matrix.slice }}
           path: |
             .maintenance/direct-operations-summary
-            .maintenance/runs-ios-operations
+            .maintenance/runs-ios-${{ matrix.slice }}
           retention-days: 90
           if-no-files-found: error
           include-hidden-files: true

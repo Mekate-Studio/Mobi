@@ -5,12 +5,17 @@ require 'json'
 require 'digest'
 root = File.realpath(ARGV.fetch(0))
 id = ARGV.fetch(1)
+slice = ARGV[2] || 'operations'
+cells = %w[effective_toolchain nightly_test ios_release_simulator simulator_product ios_unsigned_archive archive_product]
+slices = { 'operations' => cells, 'nightly' => %w[effective_toolchain nightly_test], 'release' => %w[effective_toolchain ios_release_simulator simulator_product], 'archive' => %w[effective_toolchain ios_unsigned_archive archive_product] }
+raise 'Unknown manual operational slice' unless slices.key?(slice)
+profile = 'manual-ios-' + slice
 require File.join(root, 'scripts/maintenance/lib/recovery')
 source = Maintenance::Source.new(root)
-store = Maintenance::RunStore.new(File.join(root, '.maintenance/runs-ios-operations'))
+store = Maintenance::RunStore.new(File.join(root, '.maintenance/runs-ios-' + slice))
 probe = File.join(__dir__, 'direct_release_probe.rb')
 golden = JSON.parse(File.read(File.join(__dir__, 'MobiInteropParity.original-cases.json')))
-required = %w[effective_toolchain nightly_test ios_release_simulator simulator_product ios_unsigned_archive archive_product]
+required = slices.fetch(slice)
 asset_warning = /\Aobjc\[\d+\]: Class OS_at_encoder is implemented in both \/usr\/lib\/libate\.dylib \(0x[0-9a-f]+\) and \/[^\n]+\/assetutil \(0x[0-9a-f]+\)\. This may cause spurious casting failures and mysterious crashes\. One of the duplicates must be removed or renamed\.\n/
 verify = lambda do |file, sha|
   raise Maintenance::Failure, 'Missing or changed raw producer evidence' unless File.file?(file) && !File.symlink?(file) && Maintenance.file_sha(file) == sha
@@ -19,7 +24,7 @@ receipt = store.lock(id, create: false) do
   journal = store.load(id)
   result_file = store.path(id, '.result.json')
   result = JSON.parse(File.read(result_file))
-  raise Maintenance::Failure, 'Manual result binding mismatch' unless result['run_id'] == id && result['state'] == journal['state'] && result['ended_at'] == journal['ended_at'] && result['binding'] == journal['binding'] && result['adoption_authorized'] == false && result.dig('binding', 'adapter') == 'manual-ios-operations'
+  raise Maintenance::Failure, 'Manual result binding mismatch' unless result['run_id'] == id && result['state'] == journal['state'] && result['ended_at'] == journal['ended_at'] && result['binding'] == journal['binding'] && result['adoption_authorized'] == false && result.dig('binding', 'adapter') == profile && ((cells - required) - result.fetch('missing_capabilities')).empty?
   raise Maintenance::Failure, 'Source snapshot changed' unless result.dig('binding', 'source_sha256') == Maintenance.digest(source.files)
   binding = result.fetch('binding')
   raise Maintenance::Failure, 'Manual probe identity changed' unless binding.fetch('execution_files').count { |entry| entry['name'] == 'direct_release_probe.rb' && entry['sha256'] == Maintenance.file_sha(probe) } == 1
@@ -27,8 +32,8 @@ receipt = store.lock(id, create: false) do
     raise Maintenance::Failure, 'Successful result lacks complete pair' unless result.fetch('steps').map { |step| step['phase'] }.sort == %w[baseline candidate]
   end
   phases = result.fetch('steps').map do |step|
-    record = journal.fetch('steps').find { |entry| entry['id'] == step['phase'] + '-manual-ios-operations' }
-    raise Maintenance::Failure, 'Missing stopped manual journal step' unless record && record['state'] == 'stopped' && record['process_exit'] == step['exit'] && step['check'] == 'manual-ios-operations'
+    record = journal.fetch('steps').find { |entry| entry['id'] == step['phase'] + '-' + profile }
+    raise Maintenance::Failure, 'Missing stopped manual journal step' unless record && record['state'] == 'stopped' && record['process_exit'] == step['exit'] && step['check'] == profile
     control = store.safe_path(journal, record.fetch('path'))
     hashes = step.fetch('output_sha256')
     raise Maintenance::Failure, 'Incomplete output binding' unless hashes.keys.sort == %w[check.json stderr.log stdout.log]
@@ -40,7 +45,7 @@ receipt = store.lock(id, create: false) do
     raise Maintenance::Failure, 'Check binding mismatch' unless check['check'] == step['check'] && check['phase'] == step['phase'] && check['status'] == step['status'] && check['schema'] == 1
     verify.call(File.join(control, 'evidence.json'), check.fetch('evidence_sha256'))
     evidence = JSON.parse(File.read(File.join(control, 'evidence.json')))
-    raise Maintenance::Failure, 'Manual evidence identity mismatch' unless evidence['phase'] == step['phase'] && evidence['profile'] == 'manual-ios-operations' && evidence['manual_assessment'] == true && evidence['adoption_authorized'] == false && evidence['bridge_retirement'] == 'defer'
+    raise Maintenance::Failure, 'Manual evidence identity mismatch' unless evidence['phase'] == step['phase'] && evidence['profile'] == profile && evidence['slice'] == slice && evidence['required_cells'] == required && evidence['manual_assessment'] == true && evidence['adoption_authorized'] == false && evidence['bridge_retirement'] == 'defer'
     evidence.fetch('commands').each do |command|
       raise Maintenance::Failure, 'Invalid command log path' unless command.fetch('log').match?(/\A[a-z][a-z0-9_-]*\.log\z/)
       verify.call(File.join(control, command['log']), command.fetch('sha256'))
@@ -67,17 +72,20 @@ receipt = store.lock(id, create: false) do
     end
     products = {}
     if step['status'] == 'passed'
-      raise Maintenance::Failure, 'Passing manual evidence lacks required cells' unless step['exit'] == 0 && required.all? { |cell| evidence.fetch('cells').dig(cell, 'status') == 'passed' } && evidence['source_preservation'] == 'verified'
+      raise Maintenance::Failure, 'Passing manual evidence lacks required cells' unless step['exit'] == 0 && required.all? { |cell| evidence.fetch('cells').dig(cell, 'status') == 'passed' } && (cells - required).all? { |cell| evidence.fetch('cells').dig(cell, 'status') == 'not_attempted' } && evidence['source_preservation'] == 'verified'
       env = evidence.fetch('environment')
       builder = step['phase'] == 'candidate' ? 'kotlin' : 'gradle'
-      raise Maintenance::Failure, 'Operational environment overclaims scope' unless env['bridge'] == builder && env['test_plan'] == 'Nightly' && env['licenses'] == 'copied_host_acceptance' && env['empty_host_proven'] == false && (builder != 'kotlin' || evidence['bridge_unavailable'] == true && evidence['di_reachable'] == true)
+      raise Maintenance::Failure, 'Operational environment overclaims scope' unless env['bridge'] == builder && env['test_plan'] == (required.include?('nightly_test') ? 'Nightly' : 'not_attempted') && env['licenses'] == 'copied_host_acceptance' && env['empty_host_proven'] == false && (builder != 'kotlin' || evidence['bridge_unavailable'] == true && evidence['di_reachable'] == true)
+      if required.include?('nightly_test')
       cases = read.call('nightly-native-test-cases')
       raw_output = read.call('nightly-raw-output')
       raise Maintenance::Failure, 'Raw Xcode origin differs' unless raw_output['log'] == 'nightly-test-raw.log' && raw_output['command'] == 'nightly-test' && raw_output['origin'] == 'build/logs/xcodebuild-ios-tests.log'
       verify.call(File.join(control, raw_output['log']), raw_output.fetch('sha256'))
       actual = File.read(File.join(control, raw_output['log']), encoding: 'UTF-8').scan(/^Test case '([^']+)' passed on /).flatten.uniq.sort
       raise Maintenance::Failure, 'Nightly cases differ from original identities' unless actual == cases && cases == golden
+      end
       %w[simulator archive].each do |kind|
+        next unless required.include?(kind == 'simulator' ? 'simulator_product' : 'archive_product')
         product = read.call(kind + '-product')
         raw_info = JSON.parse(File.read(File.join(control, kind + '-plist.log')))
         raw_arch = File.read(File.join(control, kind + '-arch.log')).strip
@@ -100,7 +108,7 @@ receipt = store.lock(id, create: false) do
   end
   resources = journal.fetch('resources').select { |resource| resource['disposable'] }
   raise Maintenance::Failure, 'Owned copies have not been cleaned' unless !resources.empty? && resources.all? { |resource| resource['state'] == 'removed' && !File.exist?(store.safe_path(journal, resource['path'])) }
-  { 'schema' => 1, 'assessment' => 'manual_direct_ios_operations', 'run_id' => id, 'state' => result['state'], 'reason' => result['reason'],
+  { 'schema' => 1, 'assessment' => 'manual_direct_ios_operations', 'slice' => slice, 'required_cells' => required, 'run_id' => id, 'state' => result['state'], 'reason' => result['reason'],
     'source_revision' => binding.dig('git', 'head'), 'source_sha256' => binding['source_sha256'], 'producer_sha256' => Maintenance.file_sha(result_file),
     'probe_sha256' => Maintenance.file_sha(probe), 'derivation_sha256' => Maintenance.file_sha(__FILE__), 'phases' => phases,
     'missing_capabilities' => result['missing_capabilities'], 'owned_cleanup' => 'verified', 'bridge_retirement' => 'defer', 'adoption_authorized' => false }

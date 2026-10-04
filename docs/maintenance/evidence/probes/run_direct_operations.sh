@@ -4,6 +4,11 @@ set -euo pipefail
 
 project_root="$(cd "$(dirname "$0")/../../../.." && pwd)"
 cd "${project_root}"
+slice="${1:-operations}"
+case "${slice}" in
+  operations|nightly|release|archive) ;;
+  *) printf 'Unknown manual operational slice: %s\n' "${slice}" >&2; exit 1 ;;
+esac
 probe_dir="${project_root}/docs/maintenance/evidence/probes"
 output_dir="${project_root}/.maintenance/direct-operations-summary"
 mkdir -p "${output_dir}"
@@ -19,16 +24,16 @@ quality_ruby="$(/usr/bin/ruby -r ./scripts/quality_tools.rb -e 'tools = PinnedQu
 ' "${output_dir}/setup.json"
 
 set +e
-"${quality_ruby}" "${probe_dir}/direct_release_probe.rb" run "${project_root}" >"${output_dir}/coordinator.log" 2>&1
+"${quality_ruby}" "${probe_dir}/direct_release_probe.rb" run "${project_root}" "${slice}" >"${output_dir}/coordinator.log" 2>&1
 assessment_exit=$?
 set -e
 
 run_id="$("${quality_ruby}" -r json -e '
-  paths = Dir.glob(".maintenance/runs-ios-operations/*.result.json")
+  paths = Dir.glob(".maintenance/runs-ios-" + ARGV.fetch(0) + "/*.result.json")
   raise "Expected one complete manual producer" unless paths.size == 1
   puts JSON.parse(File.read(paths.first)).fetch("run_id")
-')"
-./scripts/dev/dependency_updates.sh recover "${run_id}" --store ios-operations >"${output_dir}/recovery.json"
-./scripts/dev/dependency_updates.sh cleanup "${run_id}" --apply --discard --store ios-operations >"${output_dir}/cleanup.json"
-"${quality_ruby}" "${probe_dir}/verify_direct_release.rb" "${project_root}" "${run_id}" >"${output_dir}/receipt.json"
+' "${slice}")"
+./scripts/dev/dependency_updates.sh recover "${run_id}" --store "ios-${slice}" >"${output_dir}/recovery.json"
+./scripts/dev/dependency_updates.sh cleanup "${run_id}" --apply --discard --store "ios-${slice}" >"${output_dir}/cleanup.json"
+"${quality_ruby}" "${probe_dir}/verify_direct_release.rb" "${project_root}" "${run_id}" "${slice}" >"${output_dir}/receipt.json"
 exit "${assessment_exit}"

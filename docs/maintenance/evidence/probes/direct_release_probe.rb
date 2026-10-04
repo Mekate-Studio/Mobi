@@ -10,13 +10,27 @@ module Maintenance
   class DirectReleaseProbe < CompatibilityCheck
     PROFILE = 'manual-ios-operations'
     CELLS = %w[effective_toolchain nightly_test ios_release_simulator simulator_product ios_unsigned_archive archive_product].freeze
+    SLICES = { 'operations' => CELLS, 'nightly' => %w[effective_toolchain nightly_test],
+      'release' => %w[effective_toolchain ios_release_simulator simulator_product],
+      'archive' => %w[effective_toolchain ios_unsigned_archive archive_product] }.freeze
     LIMITS = %w[physical_device_execution exact_floor_runtime signed_export_delivery complete_compose_resource_parity empty_host_onboarding architecture_approval retirement_approval].freeze
     ASSET_WARNING = /\Aobjc\[\d+\]: Class OS_at_encoder is implemented in both \/usr\/lib\/libate\.dylib \(0x[0-9a-f]+\) and \/[^\n]+\/assetutil \(0x[0-9a-f]+\)\. This may cause spurious casting failures and mysterious crashes\. One of the duplicates must be removed or renamed\.\n/
 
-    def initialize(*args)
-      super(*args, 'direct-facade')
-      @profile = PROFILE
-      @report.merge!('profile' => PROFILE, 'missing_capabilities' => LIMITS, 'manual_assessment' => true)
+    def initialize(source, output, cache, host_file, slice = 'operations')
+      raise Failure, 'Unknown manual operational slice' unless SLICES.key?(slice)
+      super(source, output, cache, host_file, 'direct-facade')
+      @slice, @required = slice, SLICES.fetch(slice)
+      @profile = 'manual-ios-' + slice
+      @report.merge!('profile' => @profile, 'slice' => slice, 'required_cells' => @required,
+        'missing_capabilities' => LIMITS + (CELLS - @required), 'manual_assessment' => true)
+    end
+
+    def measured(name, &block)
+      super(name, &block) if @required.include?(name)
+    end
+
+    def native_setup(simulator: true)
+      super(simulator: @required.include?('nightly_test'))
     end
 
     def product(kind, app)
@@ -67,7 +81,7 @@ module Maintenance
         raise Failure, 'Direct DI is unreachable' if @direct && !@report['di_reachable']
         native_setup
         @env.merge!('OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED' => 'NO', 'KOTLIN_IOS_BUILDER' => @direct ? 'kotlin' : 'gradle', 'IOS_TEST_PLAN' => 'Nightly')
-        @report['environment'].merge!('bridge' => @env['KOTLIN_IOS_BUILDER'], 'test_plan' => 'Nightly', 'licenses' => 'copied_host_acceptance', 'empty_host_proven' => false)
+        @report['environment'].merge!('bridge' => @env['KOTLIN_IOS_BUILDER'], 'test_plan' => @required.include?('nightly_test') ? 'Nightly' : 'not_attempted', 'licenses' => 'copied_host_acceptance', 'empty_host_proven' => false)
         command('host-xcode', ['/usr/bin/xcodebuild', '-version'])
         command('host-os', ['/usr/bin/sw_vers'])
         measured('effective_toolchain') do
@@ -126,18 +140,21 @@ module Maintenance
 end
 
 if mode == 'run'
+  slice = ARGV[1] || 'operations'
+  raise Maintenance::Failure, 'Unknown manual operational slice' unless Maintenance::DirectReleaseProbe::SLICES.key?(slice)
   source = Maintenance::Source.new(root)
   original = Maintenance::CompatibilityRehearsal.new(root, source: source, profile: 'direct-facade')
   adapter = Object.new
   probe = File.realpath(__FILE__)
-  plan = { 'schema' => 1, 'id' => 'manual-ios-operations', 'scope' => 'paired_unsigned_ios_operations',
+  profile = 'manual-ios-' + slice
+  plan = { 'schema' => 1, 'id' => profile, 'scope' => 'paired_unsigned_ios_' + slice,
     'resource_types' => %w[filesystem process-group kotlin-native], 'edits' => [],
-    'missing_capabilities' => Maintenance::DirectReleaseProbe::LIMITS,
-    'checks' => [{ 'id' => Maintenance::DirectReleaseProbe::PROFILE, 'required' => true, 'timeout_seconds' => 1800,
-      'argv' => [File.realpath(RbConfig.ruby), probe, '{source}', '{output}', '{cache}', original.host_file] }] }
+    'missing_capabilities' => Maintenance::DirectReleaseProbe::LIMITS + (Maintenance::DirectReleaseProbe::CELLS - Maintenance::DirectReleaseProbe::SLICES.fetch(slice)),
+    'checks' => [{ 'id' => profile, 'required' => true, 'timeout_seconds' => 1800,
+      'argv' => [File.realpath(RbConfig.ruby), probe, '{source}', '{output}', '{cache}', original.host_file, slice] }] }
   adapter.define_singleton_method(:plan) { plan }
   adapter.define_singleton_method(:code_files) { original.code_files + [probe] }
-  store = Maintenance::RunStore.new(File.join(root, '.maintenance/runs-ios-operations'))
+  store = Maintenance::RunStore.new(File.join(root, '.maintenance/runs-ios-' + slice))
   policy_file = File.join(root, 'maintenance-execution-policy.json')
   result = Maintenance::Executor.new(source: source, adapter: adapter, store: store, policy: JSON.parse(File.read(policy_file)), input_files: [policy_file]).run
   puts JSON.pretty_generate(result)
@@ -147,7 +164,7 @@ else
   status = check.run
   status = 'refused' if check.report['evidence_failure']
   evidence = File.join(File.dirname(ENV.fetch('MOBI_RESULT_PATH')), 'evidence.json')
-  Maintenance::RunStore.atomic(ENV.fetch('MOBI_RESULT_PATH'), { 'schema' => 1, 'check' => Maintenance::DirectReleaseProbe::PROFILE,
+  Maintenance::RunStore.atomic(ENV.fetch('MOBI_RESULT_PATH'), { 'schema' => 1, 'check' => check.report.fetch('profile'),
     'phase' => ENV.fetch('MOBI_PHASE'), 'status' => status, 'evidence_sha256' => Maintenance.file_sha(evidence) })
   exit(status == 'passed' ? 0 : 1)
 end
