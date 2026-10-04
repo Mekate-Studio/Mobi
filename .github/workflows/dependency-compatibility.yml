@@ -41,7 +41,9 @@ jobs:
           name: direct-operations-evidence-${{ matrix.slice }}
           path: |
             .maintenance/direct-operations-summary
-            .maintenance/runs-ios-${{ matrix.slice }}
+            .maintenance/runs-ios-${{ matrix.slice }}/*.json
+            .maintenance/runs-ios-${{ matrix.slice }}/*.jsonl
+            .maintenance/runs-ios-${{ matrix.slice }}/*/steps/**
           retention-days: 90
           if-no-files-found: error
           include-hidden-files: true
