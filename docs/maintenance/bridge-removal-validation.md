@@ -14,6 +14,8 @@ passed Android/shared tests. Independent plugin bootstrap passed both phases,
 replay and owned cleanup. Full recovery rebuilt all four native jobs from retained
 revision `349e07e0929033e8feb71269e9555420d3285e35`, preserving 570 tracked paths.
 
+The [hosted receipt](evidence/2026-10-04-bridge-removal-hosted.json) records passing PR run 37233143062 and Nightly run 37231981662, including all job identities, twelve original Swift cases, artifact digests and source bindings.
+
 [PR #36](https://github.com/Mekate-Studio/Mobi/pull/36) records the final hosted
 PR run, its exact source revision and job outcomes before being marked ready.
 [Nightly run 37231981662](https://github.com/Mekate-Studio/Mobi/actions/runs/37231981662)

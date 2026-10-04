@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "state": "hosted_pr_and_nightly_passed",
+  "runs": [
+    {
+      "kind": "pr",
+      "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37233143062",
+      "head_revision": "b8a1837c0524f7cd4076581a78c484bff1726465",
+      "state": "success",
+      "jobs": [
+        {
+          "databaseId": 111526897451,
+          "name": "Classify changes",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37233143062/job/111526897451"
+        },
+        {
+          "databaseId": 111526928073,
+          "name": "iOS debug build",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37233143062/job/111526928073"
+        },
+        {
+          "databaseId": 111526928076,
+          "name": "Android debug build",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37233143062/job/111526928076"
+        },
+        {
+          "databaseId": 111526928088,
+          "name": "iOS PullRequest plan",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37233143062/job/111526928088"
+        },
+        {
+          "databaseId": 111526928129,
+          "name": "Android and shared host tests",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37233143062/job/111526928129"
+        },
+        {
+          "databaseId": 111526928159,
+          "name": "Quality checks",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37233143062/job/111526928159"
+        },
+        {
+          "databaseId": 111530382906,
+          "name": "Pull request gate",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37233143062/job/111530382906"
+        }
+      ],
+      "full_log_sha256": "31adfb81b9590b9e46d53e56c064162d78c0749ee8b4d6122dfa880bcc488278",
+      "swift_original_cases": [
+        "[HomeFeatureTests] shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent",
+        "[HomeFeatureTests] shouldHaveInitialSharedStateWhenTaskIsSent",
+        "[HomeFeatureTests] shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent",
+        "[NearbyVehicleMapFeatureTests] shouldBlockReducedAccuracyLocation",
+        "[NearbyVehicleMapFeatureTests] shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads",
+        "[NearbyVehicleMapFeatureTests] shouldHaveResolvingRiderLocationWhenTaskIsSent",
+        "[NearbyVehicleMapFeatureTests] shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable",
+        "[NearbyVehicleMapFeatureTests] shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved",
+        "[NearbyVehicleMapFeatureTests] shouldMapLoadedSharedStateIntoProviderNeutralMapScene",
+        "[NearbyVehicleMapFeatureTests] shouldPreserveBlockingOverlaySeparatelyFromMapContent",
+        "[NearbyVehicleMapFeatureTests] shouldRequestVisibleRefreshWhenRefreshIsDue",
+        "[NearbyVehicleMapFeatureTests] shouldWireDeniedPermissionIntoBlockingOverlay"
+      ],
+      "ios_builder": "kotlin",
+      "builder_verified_in_log": true
+    },
+    {
+      "kind": "nightly",
+      "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37231981662",
+      "head_revision": "3e1b7c40ca87f50e60683a22bbfce1e41827c82f",
+      "state": "success",
+      "jobs": [
+        {
+          "databaseId": 111523484023,
+          "name": "iOS release-configuration candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37231981662/job/111523484023"
+        },
+        {
+          "databaseId": 111523484126,
+          "name": "iOS Nightly plan",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37231981662/job/111523484126"
+        },
+        {
+          "databaseId": 111523484185,
+          "name": "Android release-configuration candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37231981662/job/111523484185"
+        },
+        {
+          "databaseId": 111523484219,
+          "name": "Android and shared host tests",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37231981662/job/111523484219"
+        },
+        {
+          "databaseId": 111529969866,
+          "name": "Certify exact source SHA",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/37231981662/job/111529969866"
+        }
+      ],
+      "full_log_sha256": "63d90ddfeb4a38cf9fb4c7425cf2bdb61d1f781f45c4b9291642f64c30d07684",
+      "swift_original_cases": [
+        "[HomeFeatureTests] shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent",
+        "[HomeFeatureTests] shouldHaveInitialSharedStateWhenTaskIsSent",
+        "[HomeFeatureTests] shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent",
+        "[NearbyVehicleMapFeatureTests] shouldBlockReducedAccuracyLocation",
+        "[NearbyVehicleMapFeatureTests] shouldEmitEmptyVehicleMarkersBeforeSnapshotLoads",
+        "[NearbyVehicleMapFeatureTests] shouldHaveResolvingRiderLocationWhenTaskIsSent",
+        "[NearbyVehicleMapFeatureTests] shouldKeepLastRiderLocationWhenLiveLocationBecomesTemporarilyUnavailable",
+        "[NearbyVehicleMapFeatureTests] shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved",
+        "[NearbyVehicleMapFeatureTests] shouldMapLoadedSharedStateIntoProviderNeutralMapScene",
+        "[NearbyVehicleMapFeatureTests] shouldPreserveBlockingOverlaySeparatelyFromMapContent",
+        "[NearbyVehicleMapFeatureTests] shouldRequestVisibleRefreshWhenRefreshIsDue",
+        "[NearbyVehicleMapFeatureTests] shouldWireDeniedPermissionIntoBlockingOverlay"
+      ],
+      "ios_builder": "kotlin",
+      "builder_verified_in_log": true
+    }
+  ],
+  "operational_source_sha256": "0bfced8893b3caaa209921ba015ecf3be644daa459776c4a4688c5431fb0270f",
+  "operational_paths": 302,
+  "pr_merge_revision": "6fa148f9329610352e36387afb3479abe4e69814",
+  "pr_merge_tree_matches_head": true,
+  "nightly_artifacts": [
+    {
+      "digest": "sha256:77f959f1e7e8336935de9c566c466e0f8617862c90f5f108a7ad7247b8e7e73d",
+      "expired": false,
+      "name": "candidate-manifest-3e1b7c40ca87f50e60683a22bbfce1e41827c82f",
+      "size_in_bytes": 459
+    },
+    {
+      "digest": "sha256:8678967244b08b1311e6081908db2ee5af58f950c47501ab81be521d9035f9bc",
+      "expired": false,
+      "name": "nightly-android-test-results-3e1b7c40ca87f50e60683a22bbfce1e41827c82f",
+      "size_in_bytes": 23987869
+    },
+    {
+      "digest": "sha256:158f3c948f534d1700affa6ec71061780f673c58f35c1e8e12e982b5a4307cbe",
+      "expired": false,
+      "name": "nightly-ios-test-results-3e1b7c40ca87f50e60683a22bbfce1e41827c82f",
+      "size_in_bytes": 533544
+    },
+    {
+      "digest": "sha256:3d219918b7c3f7da9772e729decffe6d3d642959c020cafa2d6c3ac2227ad51f",
+      "expired": false,
+      "name": "android-candidate-3e1b7c40ca87f50e60683a22bbfce1e41827c82f",
+      "size_in_bytes": 19730965
+    },
+    {
+      "digest": "sha256:6e0bded0aab09528d4e6e09e00a0cf17c022a917279aff87119a4e6a7b71b65f",
+      "expired": false,
+      "name": "ios-candidate-3e1b7c40ca87f50e60683a22bbfce1e41827c82f",
+      "size_in_bytes": 18583615
+    }
+  ],
+  "receipt_followup": "Final evidence-only source revision requires a successful PR gate recorded in PR #36 before readiness.",
+  "open_scopes": [
+    "physical_device",
+    "exact_floor_runtime",
+    "broad_compose_resources_lifecycle",
+    "empty_host_license_onboarding",
+    "hosted_unsigned_device_archive",
+    "signed_export_delivery"
+  ],
+  "risk_expiry": "2026-11-03T05:48:38Z"
+}
