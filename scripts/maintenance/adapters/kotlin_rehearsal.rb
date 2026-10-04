@@ -71,7 +71,8 @@ module Maintenance
         missing += %w[linux_execution cold_hosted_execution device_release_packaging]
       end
       missing += %w[native_tests native_builds compiler_artifacts] if profile == 'inputs'
-      @plan = { 'schema' => 1, 'id' => 'kotlin-toolchain-' + profile, 'scope' => 'retained_bridge_toolchain_' + profile,
+      source_scope = source.files.key?(KotlinTargets::BRIDGE) ? 'retained_bridge_toolchain_' : 'direct_toolchain_'
+      @plan = { 'schema' => 1, 'id' => 'kotlin-toolchain-' + profile, 'scope' => source_scope + profile,
                 'resource_types' => %w[filesystem process-group] + (profile == 'mobile' ? ['kotlin-native'] : []),
                 'missing_capabilities' => missing, 'edits' => edits,
                 'checks' => [{ 'id' => 'toolchain-' + profile, 'required' => true, 'timeout_seconds' => profile == 'mobile' ? 1200 : 300,

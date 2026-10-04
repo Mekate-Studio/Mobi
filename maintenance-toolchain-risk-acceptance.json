@@ -324,6 +324,11 @@
       "executable": false
     },
     {
+      "path": "AGENTS.md",
+      "sha256": "c60ada58b2a8c27a8bed8cb8223beb95189cad143e50afd7716da6cf1f7fa2d6",
+      "executable": false
+    },
+    {
       "path": "README.md",
       "sha256": "bd1bfb71f7f30ccc64deb1c31a6205292c20871102d62e117587444fdfc5ede7",
       "executable": false
@@ -350,7 +355,7 @@
     },
     {
       "path": "docs/maintenance/bridge-removal.md",
-      "sha256": "9ce9d1f51e885e6c4639906a7e4d7eba875de2b5f88f78a12b7e5f3d1c088c3b",
+      "sha256": "be07d1f1581448e3bd232f7d26ca506185f7795b98f3dfd3a95f8d9f7c91e0c7",
       "executable": false
     },
     {
@@ -360,7 +365,7 @@
     },
     {
       "path": "docs/maintenance/compatibility-runner.md",
-      "sha256": "81c866d6c8112c181b6251317011941e9935d33d82569aae9d64c2766a2ac5ed",
+      "sha256": "6b8a34e407413153885770f81f636ceca80cf1221c92eacbddccf6470be4dc4c",
       "executable": false
     },
     {
@@ -730,7 +735,7 @@
     },
     {
       "path": "scripts/maintenance/adapters/compatibility.rb",
-      "sha256": "0eea52c7b0dee2cf14230b0c5d8b7bff369ff5548a54fd61c276eadd81800ef5",
+      "sha256": "7ca350cc03ced55f05e9584fe41331688ef014c0d93931ce90282f5275b100cf",
       "executable": false
     },
     {
@@ -760,7 +765,7 @@
     },
     {
       "path": "scripts/maintenance/adapters/kotlin_rehearsal.rb",
-      "sha256": "2fd5ddf3369ee1538efc834a36798ad2a3f49703efc4ebff504b8e2b6d40fd37",
+      "sha256": "7948d5e2f9f963223cc91dda19b08a8c8fa54940528f6100dffc01a4e1c6d601",
       "executable": false
     },
     {
@@ -810,17 +815,17 @@
     },
     {
       "path": "scripts/maintenance/compatibility_check.rb",
-      "sha256": "a7b2854d7f06ceda5693c6dd7aebb09db7e3ccca9eb087e9dd16e4d716fcffb9",
+      "sha256": "7914515c36dfaf1b6a1990a8d1d443b06c0fed602c88373dc468d33e6b7123c7",
       "executable": false
     },
     {
       "path": "scripts/maintenance/dependencies.rb",
-      "sha256": "6da6b092c702f07d1425af9b3930d1ef4ba3cc02eae48cdb7069ceea9b1e1211",
+      "sha256": "07b4239c2ecfafd39660a3fd0c467e87238d548626689a42670716d5fc03d19d",
       "executable": false
     },
     {
       "path": "scripts/maintenance/execution_cli.rb",
-      "sha256": "453ac2be889ac9ac98742ae4e81051b476f19835f277adcc3ab9e7054d968e07",
+      "sha256": "8bb1286a546a291f54200c403517c4a85a35a567cd124fc642926709a006a83c",
       "executable": false
     },
     {
@@ -885,7 +890,7 @@
     },
     {
       "path": "scripts/maintenance/kotlin_check.rb",
-      "sha256": "5c3a80c4d3e098764c4a1a221fd119e0f62c46c9228776f7912debd820b67871",
+      "sha256": "e57814252db36f5b91cf14aef2d2aa16591ec6c10c56a30b46f680682053a443",
       "executable": false
     },
     {
@@ -910,7 +915,7 @@
     },
     {
       "path": "scripts/maintenance/lib/compatibility_report.rb",
-      "sha256": "98b41d91ed1a55ca499d83c9fd518afa6c17c0b575ead8a04770e51d12b2b81c",
+      "sha256": "0b17350018b427692aa2767d5da1354d4636b64923a29a2c890138832910ccd7",
       "executable": false
     },
     {
@@ -1045,7 +1050,7 @@
     },
     {
       "path": "scripts/maintenance/test_compatibility.rb",
-      "sha256": "3abb0aca13376c8e4c0d9714dc213218b7ceb95d923ce619887d9e324c0375db",
+      "sha256": "b89f37e1057ba9150b6a61b8d10f913da1c65af3fbee9f76b43d2615864656b2",
       "executable": false
     },
     {
@@ -1144,7 +1149,7 @@
       "executable": false
     }
   ],
-  "source_binding_sha256": "9182852f2db5c4f88cf5a463d0f7b8085868b8fb719610f758547a6ba355c896",
+  "source_binding_sha256": "bc2306605d4a33f4276205ff3cb330c2356b08e290f84bf00748082802600eef",
   "applied_patch_sha256": "d9596aadf1bc8e580f13d2e4fe8de7b201bd1bbe0b63fa6d387cc23f20759fc5",
   "producers": {
     "store": "upstream-remediation",
@@ -1194,7 +1199,7 @@
       "unsigned_ios_builds"
     ],
     "credentialed_release_delivery": "held",
-    "source_binding_sha256": "9182852f2db5c4f88cf5a463d0f7b8085868b8fb719610f758547a6ba355c896",
+    "source_binding_sha256": "bc2306605d4a33f4276205ff3cb330c2356b08e290f84bf00748082802600eef",
     "historical_source_files": [
       {
         "path": ".github/workflows/mobile-ci.yml",
@@ -1434,7 +1439,12 @@
     ],
     "historical_source_binding_sha256": "a140640cf0a01e4c42790ad03ae99cb3ba19643ccafe1c82febfcac5970af73a",
     "risk_expiry_unchanged": "2026-11-03T05:48:38Z",
-    "compatibility": "pending_removal_source_validation",
-    "historical_producers_unchanged": true
+    "compatibility": "local_scoped_evidence_passed_final_hook_pending",
+    "historical_producers_unchanged": true,
+    "local_receipt": "docs/maintenance/evidence/2026-10-04-bridge-removal-local.json",
+    "mutable_execution_records_excluded_from_source_binding": [
+      "docs/maintenance/evidence/",
+      "docs/maintenance/bridge-removal-validation.md"
+    ]
   }
 }

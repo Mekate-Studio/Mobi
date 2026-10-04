@@ -188,7 +188,7 @@ end
     source = Maintenance::Source.new(ROOT)
     adapter = Maintenance::Compatibility.new(ROOT)
     assert(!source.files.key?(Maintenance::Compatibility::CATALOG))
-    %w[direct-mobile direct-resolution direct-build-inputs].each { |profile| assert(adapter.edits(source, profile).empty?) }
+    %w[direct-mobile direct-resolution direct-build-inputs direct-ios-release direct-ios-archive].each { |profile| assert(adapter.edits(source, profile).empty?) }
     %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip].each do |profile|
       reject(/Historical bridge\/transform profile/) { adapter.edits(source, profile) }
     end

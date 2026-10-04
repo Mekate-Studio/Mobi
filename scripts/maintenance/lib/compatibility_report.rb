@@ -63,6 +63,7 @@ module Maintenance
             resolution_only = step['check'] == 'direct-resolution'
             build_proof = %w[direct-build-inputs upstream-build-inputs].include?(step['check'])
             packaging = { 'upstream-android-packaging' => %w[android-build-debug android_release android_aab],
+                          'direct-ios-release' => ['ios_release_simulator'], 'direct-ios-archive' => ['ios_unsigned_archive'],
                           'upstream-ios-release' => ['ios_release_simulator'], 'upstream-ios-archive' => ['ios_unsigned_archive'],
                           'upstream-packaging' => %w[android-build-debug android_release android_aab ios_release_simulator ios_unsigned_archive] }
             source_manifest = evidence['source-manifest'] && JSON.parse(File.read(File.join(control, evidence.fetch('source-manifest').fetch('file'))))

@@ -1,7 +1,8 @@
 # Compatibility matrix runner
 
 Current source uses `rehearse-compatibility direct-mobile` for native checks and
-`direct-resolution`/`direct-build-inputs` for scoped attribution. These profiles
+`direct-resolution`/`direct-build-inputs` for scoped attribution, and
+`direct-ios-release`/`direct-ios-archive` for unsigned operational builds. These profiles
 use the adopted content on both phases with bridge inputs absent. Historical
 bridge and facade-transform profiles refuse on current source; restore a complete
 published retained revision in an isolated copy to use the historical recipes

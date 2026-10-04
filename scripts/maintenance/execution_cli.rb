@@ -85,7 +85,7 @@ module Maintenance
         require_relative 'adapters/compatibility'
         raise Failure, 'Experimental flag must appear once' if args.count('--experimental') > 1
         experimental = args.delete('--experimental')
-        raise Failure, 'Usage: rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade|direct-roundtrip|direct-resolution|direct-build-inputs|direct-mobile> [--experimental] [--store NAME]' unless args.size == 1
+        raise Failure, 'Usage: rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade|direct-roundtrip|direct-resolution|direct-build-inputs|direct-mobile|direct-ios-release|direct-ios-archive> [--experimental] [--store NAME]' unless args.size == 1
         source = Source.new(root)
         adapter = CompatibilityRehearsal.new(root, source: source, profile: args.first, experimental: !experimental.nil?)
         policy_path = File.join(root, 'maintenance-execution-policy.json')
