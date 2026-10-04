@@ -173,8 +173,9 @@ and adds no automatic task cancellation or stale-response policy.
 A repo-owned preflight rejects incompatible builder selectors before the managed
 Toolchain phase. Credentialed iOS archive/export/upload entry points are held
 pending separate delivery evidence and authorization; development, tests and
-unsigned assessment remain available. The bridge files are preserved for
-complete content rollback. See the
+unsigned assessment remain available. Physical bridge removal preserves complete
+published Git revisions for content recovery; see the
+[removal and recovery record](../maintenance/bridge-removal.md). See the
 [accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md)
 and [compatibility matrix](../maintenance/kotlin-compatibility.md).
 
@@ -518,9 +519,9 @@ The recommended implementation order is:
 4. Add iOS presentation wiring with TCA around the same feature contracts.
 5. Keep shared Compose UI only where the reuse remains clearly worth it.
 
-For the temporary case where iOS needs a traditional Xcode plus Gradle bridge
-before the Kotlin Toolchain iOS path is ready for this repo, use the dedicated
-rollout guide:
+The historical Xcode/Gradle migration guide documents the earlier architecture.
+Current development uses the direct Toolchain path; returning to SKIE requires
+complete source recovery from the published retained revision:
 
 - [iOS Gradle Bridge Migration](ios-gradle-bridge.md)
 
