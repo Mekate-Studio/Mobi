@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "scope": "opt-in-local-app-pilot",
+  "accountable_maintainer": "Jorge Castro",
+  "profile": "coroutine-swift5",
+  "repository_policy": "main-confined",
+  "consumer_language_mode": "6",
+  "support_language_mode": "5",
+  "language_modes_scope": "installed compiler; no historical compiler or stable binary ABI qualification",
+  "native_pins": {
+    "swift-syntax": {"version": "603.0.2", "revision": "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1"},
+    "swift-perception": {"version": "2.0.10", "revision": "25ac73741c3436605d61eceb5207e896973918e7"}
+  },
+  "production_selection": "pending",
+  "dependency_risk_disposition": "review_required"
+}

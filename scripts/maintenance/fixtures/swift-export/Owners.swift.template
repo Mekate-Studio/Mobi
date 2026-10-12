@@ -1,0 +1,43 @@
+import Foundation
+import KotlinModules
+import MobiIOSDependencies
+import MobiNearbyFacadeProbe
+
+@MainActor final class HomeStoreOwner {
+    let store: StoreOf<HomeFeature>
+    let access: NativeHomeAccess
+    let relay: CancellationRelay
+    init(service: HomeFeatureService, supervisor: DrainSupervisor, admission: AdmissionPool, clock: any FacadePollingDriver = SystemPollDriver(), relay: CancellationRelay = CancellationRelay()) {
+        let access = NativeHomeAccess(service: service, supervisor: supervisor, admission: admission, clock: clock)
+        let client = HomeFeatureClient(access: access, relay: relay)
+        let store = Store(initialState: HomeFeature.State()) { HomeFeature().dependency(\.homeFeatureClient, client) }
+        self.access = access; self.store = store; self.relay = relay
+        relay.sink = { [weak store] request in _ = store?.send(.cancelled(request)) }
+    }
+    func retire() { store.send(.retire) }
+}
+@MainActor final class NearbyStoreFactory {
+    let hub: ExportedKotlinPackages.studio.mekate.mobi.nearbyfacadeprobe.NearbyHub
+    let supervisor: DrainSupervisor
+    let admission: AdmissionPool
+    init(policy: Int32, supervisor: DrainSupervisor, admission: AdmissionPool) { hub = .init(policy: policy); self.supervisor = supervisor; self.admission = admission }
+    func makeOwner(clock: any FacadePollingDriver = SystemPollDriver(), relay: CancellationRelay = CancellationRelay(), entryGate: OneShotEntryGate? = nil) -> NearbyStoreOwner {
+        let access = NativeNearbyAccess(hub: hub, supervisor: supervisor, admission: admission, clock: clock)
+        var preparedClient = NearbyVehicleMapFeatureClient(access: access, relay: relay, nowMillis: { 1000 })
+        if let entryGate {
+            let base = preparedClient.refresh
+            preparedClient.refresh = { state, now in try await entryGate.wait(); return try await base(state, now) }
+        }
+        let client = preparedClient
+        let store = Store(initialState: NearbyVehicleMapFeature.State()) { NearbyVehicleMapFeature().dependency(\.nearbyVehicleMapFeatureClient, client) }
+        relay.sink = { [weak store] request in _ = store?.send(.cancelled(request)) }
+        return NearbyStoreOwner(store: store, access: access, relay: relay)
+    }
+}
+@MainActor final class NearbyStoreOwner {
+    let store: StoreOf<NearbyVehicleMapFeature>
+    let access: NativeNearbyAccess
+    let relay: CancellationRelay
+    init(store: StoreOf<NearbyVehicleMapFeature>, access: NativeNearbyAccess, relay: CancellationRelay) { self.store = store; self.access = access; self.relay = relay }
+    func retire() { store.send(.retire) }
+}

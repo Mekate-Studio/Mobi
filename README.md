@@ -217,6 +217,12 @@ explains source freshness, candidate rehearsal and per-project configuration.
 The [executor guide](docs/maintenance/executor-guide.md) demonstrates independent
 Kotlin/Elixir rehearsal fixtures and safe cleanup before real native rehearsal.
 
+The optional [Swift export candidate](docs/maintenance/swift-export-candidate.md)
+keeps both Swift 5 support-module options available to Swift 6 consumers, with
+explicit input profiles, isolated generation and independent adoption review.
+The [opt-in real-app pilot](docs/maintenance/swift-export-app-pilot.md) adds an
+isolated generated app configuration with source-bound experimental settings.
+
 ## Current Example Surface
 
 The current sample app exposes three visible flows on both platforms:

@@ -1,0 +1,23 @@
+import Foundation
+
+// The harness supplies descriptor values. There is no app/production fallback.
+struct CandidateRuntimeSettings: Decodable, Sendable {
+    let repositoryPolicy: String
+    let enumVariant: String
+    let parentReservations: Int
+    let composeJobsPerOwner: Int32
+    let pollingNanoseconds: UInt64
+    let backoffNanoseconds: UInt64
+    let shutdownObservationNanoseconds: UInt64
+    static let current: Self = {
+        guard let value = ProcessInfo.processInfo.environment["MOBI_CANDIDATE_SETTINGS"],
+              let data = value.data(using: .utf8),
+              let settings = try? JSONDecoder().decode(Self.self, from: data),
+              ["main-confined", "shared-operation-mutex"].contains(settings.repositoryPolicy),
+              settings.parentReservations > 0, settings.composeJobsPerOwner > 0,
+              settings.pollingNanoseconds > 0, settings.backoffNanoseconds > 0,
+              settings.shutdownObservationNanoseconds > 0
+        else { fatalError("Explicit candidate runtime settings required") }
+        return settings
+    }()
+}

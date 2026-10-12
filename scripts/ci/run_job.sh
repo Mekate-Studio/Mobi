@@ -16,6 +16,14 @@ fi
 shift || true
 
 case "${job_name}" in
+  ios-swift-export-pilot)
+    cd "${CI_PROJECT_DIR}"
+    if [[ -z "${MOBI_SWIFT_EXPORT_RUBY:-}" || ! -x "${MOBI_SWIFT_EXPORT_RUBY}" ]]; then
+      printf 'Set MOBI_SWIFT_EXPORT_RUBY to the reviewed Ruby installation with xcodeproj 1.28.1.\n' >&2
+      exit 23
+    fi
+    exec "${MOBI_SWIFT_EXPORT_RUBY}" scripts/maintenance/swift_export_pilot.rb "$@"
+    ;;
   quality-contracts)
     cd "${CI_PROJECT_DIR}"
     exec /usr/bin/ruby scripts/quality_tools.rb run contracts
@@ -116,6 +124,7 @@ case "${job_name}" in
       android-build-release \
       android-build-release-candidate \
       android-test \
+      ios-swift-export-pilot \
       ios-build-debug \
       ios-test \
       ios-build-release \

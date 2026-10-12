@@ -1,0 +1,58 @@
+import Foundation
+import KotlinModules
+import MobiIOSDependencies
+import MobiRouteProbe
+
+// Isolated port: one Home service feeds native owners and the Compose route.
+// The app-lifetime supervisor is injected, while Nearby resolves once per cohort.
+@MainActor final class AppServices {
+    let homeFeatureService: HomeFeatureService
+    let sharedHomeViewControllerFactory: SharedHomeViewControllerFactory
+    let nearbyFactory: NearbyStoreFactory
+    let supervisor: DrainSupervisor
+    let composeSupervisor: ComposeDrainSupervisor
+    let admission: AdmissionPool
+    init(homeFeatureService: HomeFeatureService, nearbyPolicy: Int32, supervisor: DrainSupervisor, composeSupervisor: ComposeDrainSupervisor, admission: AdmissionPool) {
+        self.homeFeatureService = homeFeatureService; self.supervisor = supervisor; self.composeSupervisor = composeSupervisor; self.admission = admission
+        sharedHomeViewControllerFactory = SharedHomeViewControllerFactory(service: homeFeatureService)
+        nearbyFactory = NearbyStoreFactory(policy: nearbyPolicy, supervisor: supervisor, admission: admission)
+    }
+    func makeHomeOwner() -> HomeStoreOwner { HomeStoreOwner(service: homeFeatureService, supervisor: supervisor, admission: admission) }
+    func makeNearbyOwner() -> NearbyStoreOwner { nearbyFactory.makeOwner() }
+    func makeSharedHomeOwner() throws -> AdmittedComposeOwner {
+        let reservation = try admission.reserve(.composeRoute)
+        composeOwnersCreated += 1
+        return AdmittedComposeOwner(owner: RouteProbe.HomeRouteOwner(service: homeFeatureService, maxJobs: CandidateRuntimeSettings.current.composeJobsPerOwner), reservation: reservation, supervisor: composeSupervisor)
+    }
+    private(set) var composeOwnersCreated = 0
+}
+@MainActor final class AppLifetime {
+    let supervisor = DrainSupervisor()
+    let composeSupervisor = ComposeDrainSupervisor()
+    let admission: AdmissionPool
+    let shutdown: ShutdownCoordinator
+    init(capacity: Int = CandidateRuntimeSettings.current.parentReservations) {
+        let pool = AdmissionPool(capacity: capacity); admission = pool
+        shutdown = ShutdownCoordinator(pool: pool, native: supervisor, compose: composeSupervisor)
+    }
+}
+@MainActor final class AdmittedComposeOwner {
+    let owner: RouteProbe.HomeRouteOwner
+    private let reservation: AdmissionReservation
+    private let supervisor: ComposeDrainSupervisor
+    private var retired = false
+    private var drainID: UUID?
+    init(owner: RouteProbe.HomeRouteOwner, reservation: AdmissionReservation, supervisor: ComposeDrainSupervisor) {
+        self.owner = owner; self.reservation = reservation; self.supervisor = supervisor
+    }
+    func retire() -> UUID? {
+        guard !retired else { return drainID }; retired = true
+        owner.retire()
+        if owner.isDrained { reservation.release() }
+        else {
+            let reservation = reservation
+            drainID = supervisor.adopt(owner, onCompletion: { reservation.release() })
+        }
+        return drainID
+    }
+}

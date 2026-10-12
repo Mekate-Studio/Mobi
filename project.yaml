@@ -6,3 +6,5 @@ modules:
   - shared-feature-home
   - shared-feature-nearby-vehicle-map
   - shared-ui-home
+  - shared-ios-export
+  - shared-ios-export-compose

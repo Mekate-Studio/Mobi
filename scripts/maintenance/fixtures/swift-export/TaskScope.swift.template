@@ -1,0 +1,18 @@
+import Foundation
+
+enum TaskScopeProbe { @TaskLocal static var marker: UUID? }
+@MainActor final class WeakProbe<Object: AnyObject> {
+    private weak let reference: Object?
+    init(_ object: Object?) { reference = object }
+    var released: Bool { reference == nil }
+}
+
+// Pause only the first native-client call, before Kotlin request admission.
+@MainActor final class OneShotEntryGate {
+    private let clock = ManualPollDriver()
+    private var used = false
+    var pending: Int { clock.pending }
+    func wait() async throws {
+        if !used { used = true; try await clock.wait() }
+    }
+}
