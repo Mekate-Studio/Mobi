@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'tool_identity'
+
 # Fresh public-source producer; never accepts assessment binary seeds.
 require 'json'
 require 'digest'
@@ -12,7 +14,7 @@ r={'schema'=>1,'check'=>'kotlin-cold','phase'=>phase,'status'=>'infrastructure',
 inputs=JSON.parse(File.read(File.join(output,'candidate-inputs.json')));java=inputs.fetch('java_home');resources=Maintenance::KotlinResources.new(File.dirname(control),nonce)
 shared=File.join(cache,'toolchain');jvm_home=File.join(cache,'jvm-user');bootstrap=File.join(cache,'bootstrap');konan=File.join(cache,'konan');gradle=File.join(cache,'gradle')
 options=resources.tag+' -Duser.home='+jvm_home+' -Djava.io.tmpdir='+ENV.fetch('TMPDIR')
-env=ENV.to_h.merge('JAVA_HOME'=>java,'PATH'=>java+'/bin:/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>'/Applications/Xcode.app/Contents/Developer','KONAN_DATA_DIR'=>konan,'GRADLE_USER_HOME'=>gradle,'KOTLIN_CLI_BOOTSTRAP_CACHE_DIR'=>bootstrap,'KOTLIN_CLI_JAVA_HOME'=>java,'JAVA_OPTS'=>options,'KOTLIN_CLI_JAVA_OPTIONS'=>options,'KOTLIN_CLI_NO_WELCOME_BANNER'=>'1')
+env=ENV.to_h.merge('JAVA_HOME'=>java,'PATH'=>java+'/bin:/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>Maintenance::SwiftExport::ToolIdentity.developer_dir,'KONAN_DATA_DIR'=>konan,'GRADLE_USER_HOME'=>gradle,'KOTLIN_CLI_BOOTSTRAP_CACHE_DIR'=>bootstrap,'KOTLIN_CLI_JAVA_HOME'=>java,'JAVA_OPTS'=>options,'KOTLIN_CLI_JAVA_OPTIONS'=>options,'KOTLIN_CLI_NO_WELCOME_BANNER'=>'1')
 command=lambda do |name,argv,seconds=600|
  log=File.join(control,name+'.log');status=nil;pid=nil;started=Process.clock_gettime(Process::CLOCK_MONOTONIC)
  begin

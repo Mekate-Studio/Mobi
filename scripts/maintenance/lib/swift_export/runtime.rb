@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'tool_identity'
+
 # Owned simulator and actual UIKit/SwiftUI/Compose lifecycle controls.
 require 'json'
 require 'digest'
@@ -9,7 +11,7 @@ require 'rbconfig'
 require_relative '../../adapters/kotlin_resources'
 source,output,cache,base=ARGV.map { |p| File.realpath(p) };control=File.dirname(ENV.fetch('MOBI_RESULT_PATH'));phase=ENV.fetch('MOBI_PHASE')
 resources=Maintenance::KotlinResources.new(File.dirname(control),ENV.fetch('MOBI_RESOURCE_NONCE'))
-env=ENV.to_h.merge('PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>'/Applications/Xcode.app/Contents/Developer')
+env=ENV.to_h.merge('PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>Maintenance::SwiftExport::ToolIdentity.developer_dir)
 r={'schema'=>1,'check'=>'denial-retry-host','phase'=>phase,'status'=>'infrastructure','commands'=>[],'variants'=>{},'adoption_authorized'=>false}
 command=lambda do |name,argv|
   log=File.join(control,name+'.log');start=Process.clock_gettime(Process::CLOCK_MONOTONIC)

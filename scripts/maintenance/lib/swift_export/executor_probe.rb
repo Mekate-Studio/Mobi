@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
+require_relative 'tool_identity'
+
 require 'json'
 require 'digest'
 require 'fileutils'
 require 'timeout'
 source,output,cache,base=ARGV.map { |p| File.realpath(p) };phase=ENV.fetch('MOBI_PHASE');control=File.dirname(ENV.fetch('MOBI_RESULT_PATH'))
 r={'schema'=>1,'check'=>'executor-backoff','phase'=>phase,'status'=>'infrastructure','commands'=>[],'controls'=>[],'adoption_authorized'=>false}
-env=ENV.to_h.merge('DEVELOPER_DIR'=>'/Applications/Xcode.app/Contents/Developer','PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin')
+env=ENV.to_h.merge('DEVELOPER_DIR'=>Maintenance::SwiftExport::ToolIdentity.developer_dir,'PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin')
 command=lambda do |name,argv,negative=false,extra={}|
  log=File.join(control,name+'.log');status=File.open(log,'w') { |f| pid=Process.spawn(env.merge(extra),*argv,unsetenv_others:true,chdir:source,out:f,err:[:child,:out],in:File::NULL);Timeout.timeout(60) { Process.wait2(pid).last } };text=File.read(log,encoding:'UTF-8').scrub
  r['commands']<<{'name'=>name,'argv'=>argv,'exit'=>status.exitstatus,'signaled'=>status.signaled?,'signal'=>status.termsig,'log_sha256'=>Digest::SHA256.file(log).hexdigest};puts phase+'/'+name+': '+(status.exitstatus || 'signal-'+status.termsig.to_s).to_s;$stdout.flush

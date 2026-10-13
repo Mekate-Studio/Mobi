@@ -1,0 +1,49 @@
+name: Native Swift-export qualification
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: swift-export-native-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native:
+    name: Native cold and guarded replay
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'swift-export-native')
+    runs-on: macos-26
+    timeout-minutes: 95
+    env:
+      BUNDLE_PATH: ${{ github.workspace }}/.maintenance/bundle
+      BUNDLE_APP_CONFIG: ${{ github.workspace }}/.maintenance/bundle-config
+      BUNDLE_FROZEN: "true"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "26"
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.0.6"
+      - name: Qualify native-only pilot
+        run: MOBI_SWIFT_EXPORT_RUBY="$(ruby -rrbconfig -e 'puts RbConfig.ruby')" ./scripts/ci/run_job.sh ios-swift-export-native-qualification
+      - name: Retain qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-swift-export-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .maintenance/native-hosted-qualification/report.json
+            .maintenance/native-hosted-qualification/evidence.tar.gz
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 90

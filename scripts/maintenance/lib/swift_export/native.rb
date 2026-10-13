@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'tool_identity'
+
 # Xcode/SwiftPM own native source, macros and binary artifact resolution.
 require 'json'
 require 'digest'
@@ -10,7 +12,7 @@ require_relative '../../adapters/kotlin_resources'
 source,output,cache,base=ARGV.map { |p| File.realpath(p) }
 control=File.dirname(ENV.fetch('MOBI_RESULT_PATH'));phase=ENV.fetch('MOBI_PHASE')
 r={'schema'=>1,'check'=>'native-cold','phase'=>phase,'status'=>'infrastructure','commands'=>[],'native_product_seeds'=>0,'adoption_authorized'=>false}
-env=ENV.to_h.merge('PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>'/Applications/Xcode.app/Contents/Developer')
+env=ENV.to_h.merge('PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>Maintenance::SwiftExport::ToolIdentity.developer_dir)
 command=lambda do |name,argv,cwd=source|
  log=File.join(control,name+'.log');start=Process.clock_gettime(Process::CLOCK_MONOTONIC)
  status=File.open(log,'w') { |f| pid=Process.spawn(env,*argv,chdir:cwd,unsetenv_others:true,out:f,err:[:child,:out],in:File::NULL);Process.wait2(pid).last }

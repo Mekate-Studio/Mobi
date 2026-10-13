@@ -4,6 +4,7 @@ require_relative 'assemble'
 require_relative 'origin'
 require_relative '../recovery'
 require 'rbconfig'
+require_relative '../swift_export/tool_identity'
 
 source, output, cache, delivery, origin_store, origin_id, profile, policy, gem_path, tools_json = ARGV
 phase = ENV.fetch('MOBI_PHASE'); control = File.dirname(ENV.fetch('MOBI_RESULT_PATH'))
@@ -18,6 +19,7 @@ begin
   graph = Maintenance::SwiftExport::Delivery.validate(delivery)
   raise Maintenance::Failure, 'Replay profile/policy differs' unless graph['profile'] == profile && graph['repository_policy'] == policy
   tools = JSON.parse(tools_json)
+  ENV['DEVELOPER_DIR'] = Maintenance::SwiftExport::ToolIdentity.developer_dir(tools.fetch('developer_dir'))
   raise Maintenance::Failure, 'Replay compiler tuple differs' unless graph['tool_tuple'] == tools.reject { |k, _| k == 'locations' } && tools['locations'].all? { |p, sha| Maintenance.file_sha(p) == sha }
   retained = File.join(output, 'delivery-source')
   Maintenance::SwiftExport::Assemble.copy(delivery, retained)

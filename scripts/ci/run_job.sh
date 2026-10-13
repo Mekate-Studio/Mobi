@@ -16,6 +16,19 @@ fi
 shift || true
 
 case "${job_name}" in
+  ios-swift-export-native-qualification)
+    cd "${CI_PROJECT_DIR}"
+    if [[ -z "${MOBI_SWIFT_EXPORT_RUBY:-}" || ! -x "${MOBI_SWIFT_EXPORT_RUBY}" ]]; then
+      printf 'Set MOBI_SWIFT_EXPORT_RUBY to Ruby 4.0.6 with locked xcodeproj 1.28.1.\n' >&2
+      exit 23
+    fi
+    export BUNDLE_PATH="${CI_PROJECT_DIR}/.maintenance/bundle"
+    export BUNDLE_APP_CONFIG="${CI_PROJECT_DIR}/.maintenance/bundle-config"
+    export BUNDLE_FROZEN=true
+    pilot_bundle="$(dirname "${MOBI_SWIFT_EXPORT_RUBY}")/bundle"
+    "${MOBI_SWIFT_EXPORT_RUBY}" "${pilot_bundle}" install --jobs 4
+    exec "${MOBI_SWIFT_EXPORT_RUBY}" "${pilot_bundle}" exec "${MOBI_SWIFT_EXPORT_RUBY}" scripts/maintenance/qualify_swift_export_native.rb "$@"
+    ;;
   ios-swift-export-pilot)
     cd "${CI_PROJECT_DIR}"
     if [[ -z "${MOBI_SWIFT_EXPORT_RUBY:-}" || ! -x "${MOBI_SWIFT_EXPORT_RUBY}" ]]; then
@@ -125,6 +138,7 @@ case "${job_name}" in
       android-build-release-candidate \
       android-test \
       ios-swift-export-pilot \
+      ios-swift-export-native-qualification \
       ios-build-debug \
       ios-test \
       ios-build-release \

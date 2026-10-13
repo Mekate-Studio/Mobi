@@ -7,6 +7,7 @@ gem 'xcodeproj', '= 1.28.1'
 require 'xcodeproj'
 require_relative '../../adapters/kotlin_resources'
 require_relative '../core'
+require_relative '../swift_export/tool_identity'
 
 source, output, cache, base = ARGV
 phase = ENV.fetch('MOBI_PHASE')
@@ -46,8 +47,10 @@ begin
   scheme = Xcodeproj::XCScheme.new
   scheme.add_build_target(app); scheme.add_test_target(tests); scheme.add_test_target(ui); scheme.set_launch_target(app)
   scheme.save_as(project.path, 'SwiftExportPilot', true)
-  resources.register_xcode_project!(project.path.to_s, developer_dir: '/Applications/Xcode.app/Contents/Developer')
-  device = resources.create_simulator!('/Applications/Xcode.app/Contents/Developer', major: 26)
+  developer = Maintenance::SwiftExport::ToolIdentity.developer_dir
+  ENV['DEVELOPER_DIR'] = developer
+  resources.register_xcode_project!(project.path.to_s, developer_dir: developer)
+  device = resources.create_simulator!(developer, major: 26)
   report['simulator_runtime'] = resources.state['runtime']
   report['test_scopes'] = ['real_app_UI_navigation_background_foreground', 'real_app_test_host_clients_and_separate_cohorts', 'typed_native_noncooperative_cleanup_stub']
   argv = ['/usr/bin/xcodebuild', '-project', project.path.to_s, '-scheme', 'SwiftExportPilot', '-configuration', 'Debug',

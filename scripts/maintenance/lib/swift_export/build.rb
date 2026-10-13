@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'tool_identity'
+
 # Native consumer products are compiler-specific. Retained delivery is sources/archive.
 require 'json'
 require 'digest'
@@ -11,7 +13,7 @@ require_relative 'packaging'
 source,output,cache,base=ARGV.map { |p| File.realpath(p) }
 control=File.dirname(ENV.fetch('MOBI_RESULT_PATH'));phase=ENV.fetch('MOBI_PHASE')
 r={'schema'=>1,'check'=>'scene-package','phase'=>phase,'status'=>'infrastructure','adoption_authorized'=>false,'commands'=>[],'supported_toolchain_export'=>'not_established','consumer_runtime'=>'not_run'}
-env=ENV.to_h.merge('PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>'/Applications/Xcode.app/Contents/Developer')
+env=ENV.to_h.merge('PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>Maintenance::SwiftExport::ToolIdentity.developer_dir)
 command=lambda do |name,argv,cwd=source|
  log=File.join(control,name+'.log');start=Process.clock_gettime(Process::CLOCK_MONOTONIC)
  status=File.open(log,'w') { |f| pid=Process.spawn(env,*argv,chdir:cwd,unsetenv_others:true,out:f,err:[:child,:out],in:File::NULL);Process.wait2(pid).last }

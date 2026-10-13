@@ -7,6 +7,7 @@ require_relative 'descriptor'
 require_relative 'review'
 require_relative '../../adapters/kotlin_resources'
 require 'rbconfig'
+require_relative '../swift_export/tool_identity'
 
 source, output, cache, profile, policy, compose, java, gem_path, tools_json, settings_path, action, experimental = ARGV
 phase = ENV.fetch('MOBI_PHASE')
@@ -30,6 +31,7 @@ begin
   data = descriptor.data
   data['pilot_action'] = action
   tools = JSON.parse(tools_json)
+  ENV['DEVELOPER_DIR'] = Maintenance::SwiftExport::ToolIdentity.developer_dir(tools.fetch('developer_dir'))
   raise Maintenance::Failure, 'Tool bytes changed' unless tools['locations'].all? { |p, sha| Maintenance.file_sha(p) == sha }
   report['tool_tuple'] = tools.reject { |k, _| k == 'locations' }
   report['effective_input_identity'] = Maintenance.digest([inspection['identity'], report['tool_tuple'], phase == 'candidate' ? 'reordered' : 'original'])

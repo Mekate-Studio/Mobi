@@ -1,6 +1,8 @@
 # Swift export pilot cohort audit
 
-Status: source audit of draft pilot wiring; runtime overlap qualification pending.
+Status: source audit of pilot wiring; bounded local runtime overlap controls passed.
+See the [pilot evidence](swift-export-app-pilot-evidence.md) and the separate
+[native-first qualification stage](swift-export-native-qualification.md).
 Accountable maintainer: Jorge Castro. Initial pilot: `coroutine-swift5` and
 `main-confined`; production policy remains unselected.
 
@@ -23,7 +25,8 @@ The actual simulated Nearby implementation delays before selecting a template
 and incrementing `nextSnapshotIndex`. Under Main, suspended requests can overlap,
 but its index read/increment/return section has no suspension and is sequential
 on Main. This is a source observation, not proof for future repository changes.
-Cancellation and overlapping owner refreshes still require measured controls.
+Local cancellation and overlapping-owner controls passed for the recorded
+source/tool tuple. They do not qualify future repository changes or other hosts.
 
 The mutex alternative holds one hub mutex across delegate suspension and return
 on Default. Per-owner locks cannot replace it. A noncooperative delegate can
