@@ -40,7 +40,7 @@ they do not qualify a 500 ms app budget.
 | Fresh-clone native cold original/reordered app phases | Passed; run `c8af5ccc8f3c492a566db30f5dd3b477`, 9 tests per phase, zero failures/skips on iOS Simulator 26.5 |
 | Fresh-clone post-cleanup guarded replay | Passed; run `7049ce54df450950561b1d77a16358f4`, 9 tests per consumer phase, zero failures/skips on iOS Simulator 26.5 |
 | Normal hosted Android/iOS tests, debug builds, quality and aggregate PR gate | Passed on the same commit; [run 38289075242](https://github.com/Mekate-Studio/Mobi/actions/runs/38289075242) |
-| Dedicated Swift-export pilot on hosted runners | Pending; normal hosted jobs use the direct default |
+| Dedicated Swift-export pilot on hosted runners | Passed on `00814c8`; [run 38444261023](https://github.com/Mekate-Studio/Mobi/actions/runs/38444261023), 9 tests in each cold/replay phase on iOS Simulator 27.0; receipts independently verified |
 | Physical device and minimum runtime | Pending; the existing pilot recipe targets the arm64 simulator |
 | Fresh authenticated advisories and risk dispositions | Pending |
 | Signed release and production default | Separate qualification and review |
@@ -74,11 +74,11 @@ The final local report is `final-report.json` in that store; the published sourc
 manifest, inspection, explicit settings, phase summaries, recovery and cleanup
 receipts are kept alongside it.
 
-The next missing execution boundary is the dedicated native-only pilot on a
-hosted runner. Its repo-owned setup must declare compatible Xcode/SDK, Ruby and
-JDK inputs, derive experimental settings from the runner's own inspection, and
-retain failure evidence as well as successful cold/replay receipts. Ordinary
-direct-app hosted checks do not exercise this exporter or its alternate app.
+The dedicated native-only pilot evaluates the hosted-runner execution boundary.
+Its repo-owned setup declares compatible Xcode/SDK, Ruby and JDK inputs, derives
+experimental settings from the runner's own inspection, and retains failure
+evidence as well as successful cold/replay receipts. Ordinary direct-app hosted
+checks do not exercise this exporter or its alternate app.
 
 The opt-in `Native Swift-export qualification` workflow checks out the PR head
 when the `swift-export-native` label is present. Its repo-owned entry is
@@ -108,8 +108,7 @@ An incompatible host, incomplete tests or cleanup
 refusal cannot produce a passed report. Failed disposable work is retained on
 the runner, and the report discloses that it is excluded from the artifact.
 Changed helper inputs require fresh receipts; the local receipts above qualify
-the earlier commit only. Hosted status remains pending until the actual report
-and test/cleanup evidence have been inspected.
+the earlier commit only. The inspected hosted result is recorded below.
 
 The first executed hosted attempt at `d3e8ebf`,
 [run 38421602488](https://github.com/Mekate-Studio/Mobi/actions/runs/38421602488),
@@ -131,7 +130,7 @@ developer preferences, suppress warnings or accept dependency risk. Missing,
 duplicate or changed locks and escaping approval paths refuse before approval.
 The actual approval records and their hash are retained in step diagnostics.
 Historical local runs do not establish this new macro-enablement control;
-fresh hosted execution must validate the changed helper inputs.
+the latest hosted execution below validates the changed helper inputs.
 
 The macro-fix attempt at `49ee375`,
 [run 38427585849](https://github.com/Mekate-Studio/Mobi/actions/runs/38427585849),
@@ -153,7 +152,55 @@ all functional assertion waits, phase/outer deadlines and experimental app
 settings stay unchanged. This is not an approved app-latency threshold.
 Partial-bundle summary failures are now phase retention findings; they preserve
 earlier passed evidence and the original execution reason. These changed
-inputs require another complete cold/replay hosted run.
+inputs were evaluated by the complete hosted run below.
+
+## Inspected hosted result
+
+[Run 38444261023](https://github.com/Mekate-Studio/Mobi/actions/runs/38444261023)
+passed on committed source `00814c8f4389e04e025ebdc420d42f3dd71bf399`.
+Its complete 808-file hash/mode inventory matches the independently captured
+published commit inventory and remained unchanged during execution. The selected
+native input identity is
+`89058d0ac9018f9ce73431fd1ff405d6e86e5056538c60ac07a707cd960c81b9`;
+the retained source-manifest file hash is
+`954b2e00e3f06f62e3efc6a655d6394cae2000931c34c93ffe57b92fc0f89c71`.
+The compiler tuple identity is
+`cd164717723457c4aa68f1184a11f85d7c02c8fe1b30c648f4172290ae5800cf`,
+with Swift 6.4, Xcode 27.0 build 27A266a, Simulator SDK/runtime 27.0, JDK 26
+and Ruby 4.0.6 on the preview runner image.
+
+| Execution | RunStore receipt | Inspected test result |
+| --- | --- | --- |
+| Cold original/reordered | `2ac1ef5606c6fedcc06fb310553f1955` | 9 passed per phase; zero failures, skips or expected failures |
+| Guarded original-archive replay, both consumer phases | `85db07cb95d2f7d3889978c1812b9f98` | 9 passed per phase; zero failures, skips or expected failures |
+
+Independent verification checked immutable result/journal bindings, every
+retained attempt output hash, all four check receipts and the 354-member
+inventory, file modes and hashes of each cold delivery. The original delivery
+identity is `7b3919c5c3f19c257823649b8886b864a889a4824d7c28b2a74792bcf2000e56`;
+the reordered delivery identity is
+`3dc556cdb35e0014ce467263cb1772e8b6a20f737d2f2d6229dc90f6745c11d7`.
+Both cold phases verified the four exact macro approvals with validation
+enabled and the skip preference false. All four retained XCTest bundles were
+independently reread with Apple's result reader and matched the retained
+passing summaries, including the composite UI test.
+
+Both runs reached positive quiescence and `cleaned`; their disposable work was
+removed and no work remains retained on the runner. Replay verified the removed
+original workspace and its passed origin binding before consuming the retained
+original delivery in both phases. This does not regenerate the reordered
+Kotlin archive during replay. Settings remain experimental and every check
+retains `review_required` with `adoption_authorized: false`.
+
+The source-bound verdict is `checks_passed_review_required`.
+[Ordinary CI 38444261139](https://github.com/Mekate-Studio/Mobi/actions/runs/38444261139)
+also passed all seven jobs on that code commit. The hosted artifact contains
+the report and mode-preserving archive for 90 days. Its downloaded evidence
+and independent verification record are kept locally under ignored
+`.maintenance/hosted-native-38444261023/`. Subsequent documentation updates
+record this result; they do not change the tested producer or pilot inputs.
+The explicit request label was removed after inspection, so a later requested
+qualification must opt in again.
 
 ## Boundaries for later app integration
 
