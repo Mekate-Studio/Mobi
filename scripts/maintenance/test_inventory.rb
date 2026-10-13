@@ -155,14 +155,15 @@ module InventoryTest
       reject(/identity changed/) { Maintenance::Tools.new(root) }
     end
   end
-  test('Kotlin supplementation covers seven modules, plugins, three lock ecosystems and tool/environment gaps') do
+  test('Kotlin supplementation covers declared modules, plugins, three lock ecosystems and tool/environment gaps') do
     source = Maintenance::Source.new(ROOT)
     native = current_native(source)
     config = JSON.parse(File.read(File.join(ROOT, 'renovate.json')))
     # Deliberate fixture ceiling, independent of the repository's adopted policy.
     config.fetch('packageRules').each { |r| r['allowedVersions'] = '<1.2.0' if r['allowedVersions'] && r.fetch('matchPackageNames', []).include?('/^dev\\.zacsweers\\.metro:/') }
     result = Maintenance::Kotlin.new(ROOT, source.files, native, config).inventory
-    assert(result['modules'].size == 7)
+    declared = YAML.safe_load(File.read(File.join(ROOT, 'project.yaml'))).fetch('modules')
+    assert(result['modules'].size == declared.size)
     assert(result['resolved_inputs'].map { |r| r['id'].split(':').first }.sort == %w[npm rubygems swift])
     assert(result['resolved_inputs'].find { |r| r['id'].start_with?('swift:') }['packages'].size == 15)
     assert(result['components'].any? { |c| c['name'] == 'Kotlin Toolchain' && c['artifact_sha256'].size == 64 })

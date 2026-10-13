@@ -1,0 +1,108 @@
+import Foundation
+import KotlinModules
+import MobiFacadeProbe
+import MobiNearbyFacadeProbe
+
+@MainActor final class TransportQualification {
+    private typealias Home = ExportedKotlinPackages.studio.mekate.mobi.facadeprobe
+    private typealias Nearby = ExportedKotlinPackages.studio.mekate.mobi.nearbyfacadeprobe
+    private let point = NativeCoordinate(latitude: 55.6761, longitude: 12.5683)
+    private func record(_ label: String, _ condition: Bool) {
+        precondition(condition, label)
+        print("TRANSPORT_CHECK=\(label)"); fflush(nil)
+    }
+    private func rejected(_ expected: NativeNearbyError, _ body: () throws -> Void) throws {
+        do { try body(); throw ProbeFailure(message: "Expected typed rejection") }
+        catch let error as NativeNearbyError { precondition(error == expected) }
+    }
+    private func until(_ body: () -> Bool) async throws {
+        let end = ContinuousClock.now.advanced(by: .seconds(10))
+        while !body() {
+            guard ContinuousClock.now < end else { throw ProbeFailure(message: "Transport completion timeout") }
+            try await Task.sleep(for: .milliseconds(2))
+        }
+    }
+    func run() async throws {
+        let lifetime = AppLifetime(capacity: CandidateRuntimeSettings.current.parentReservations)
+        let session = Home.ControlledHomeSession()
+        do {
+            let legacy = Home.LegacyHomeFacade(service: session.service)
+            legacy.retire(); _ = legacy.initialValue(); _ = legacy.loadingValue(current: 7)
+            record("legacy_retired_business_reads_counterexample", legacy.metrics().initialReads == 1 && legacy.metrics().loadingReads == 1)
+            let closed = Home.HomeFacade(service: session.service)
+            closed.retire(); closed.retire()
+            record("closed_facade_business_refusal_cleanup_idempotent", closed.initialValue() == nil && closed.loadingValue(current: 7) == nil && closed.beginRefresh(current: 7) == 0 && closed.metrics().retireTransitions == 1)
+        }
+        let home = NativeHomeAccess(service: session.service, supervisor: lifetime.supervisor, admission: lifetime.admission)
+        let relay = CancellationRelay()
+        let safe = ExecutorHomeClient(raw: HomeFeatureClient(access: home, relay: relay))
+        _ = try await Task.detached { try await safe.initial() }.value
+        _ = try await Task.detached { try await safe.loading(7) }.value
+        await Task.detached { await safe.retire() }.value
+        record("actual_foreign_async_home_calls_hop_before_raw_access", home.metrics().initialReads == 1 && home.metrics().loadingReads == 1 && home.metrics().retireTransitions == 1)
+        do { _ = try home.initialValue(); throw ProbeFailure(message: "Retired native read") }
+        catch NativeFacadeError.retired {}
+        record("native_retirement_typed_refusal", home.metrics().initialReads == 1)
+        let policy: Int32 = CandidateRuntimeSettings.current.repositoryPolicy == "main-confined" ? 0 : 1
+        let wire = Nearby.WireContractProbe()
+        var mismatches = 0
+        for tag: Int32 in 0..<5 {
+            precondition(wire.stableBlocked(tag: tag) == tag)
+            if wire.legacyBlocked(tag: tag) != tag { mismatches += 1 }
+        }
+        for tag: Int32 in 0..<3 {
+            precondition(wire.stableFailure(tag: tag) == tag)
+            if wire.legacyFailure(tag: tag) != tag { mismatches += 1 }
+        }
+        record("stable_named_tags_actual_enum_variant", mismatches == (CandidateRuntimeSettings.current.enumVariant == "reordered" ? 6 : 0))
+        let hub = Nearby.NearbyHub(policy: policy)
+        let a = NativeNearbyAccess(hub: hub, supervisor: lifetime.supervisor, admission: lifetime.admission)
+        let b = NativeNearbyAccess(hub: hub, supervisor: lifetime.supervisor, admission: lifetime.admission)
+        let initial = try a.initial(), available = try a.available(initial, point)
+        for reason in NativeLocationBlocked.allCases {
+            let value = try a.blocked(initial, reason)
+            precondition(value.location == (reason == .accessDenied ? .denied : .blocked(reason)))
+            try a.release(value)
+        }
+        try rejected(.invalidWire) { try NativeNearbyAccess.validateSchema(99) }
+        try rejected(.invalidWire) { _ = try NativeNearbyAccess.decodeBlockedTag(99) }
+        try rejected(.invalidWire) { _ = try NativeNearbyAccess.decodeFailureTag(-1) }
+        record("unknown_schema_tags_and_named_blocked_values", a.metrics().states == 2)
+        try rejected(.wrongOwner) { _ = try b.loading(available) }
+        let result = try await a.refresh(available, now: 1000)
+        precondition(a.pendingCount() == 1 && a.metrics().requests == 0)
+        try a.adoptResult(result)
+        try rejected(.invalidWire) { try a.adoptResult(result) }
+        try a.release(result)
+        try rejected(.released) { try a.release(result) }
+        a.discardUnclaimed(result); a.releaseOwned(result)
+        record("result_consume_adopt_release_exactly_once_wrong_owner_refused", a.pendingCount() == 0 && lifetime.admission.metrics().active == 0)
+        a.rejectNextResultSchema = true
+        do { _ = try await a.refresh(available, now: 2000); throw ProbeFailure(message: "Expected invalid result copy") }
+        catch NativeNearbyError.invalidWire {}
+        record("copy_failure_after_consume_releases_capability_and_lease", a.metrics().states == 2 && a.metrics().requests == 0 && a.pendingCount() == 0 && lifetime.admission.metrics().active == 0)
+        let nearbySafe = ExecutorNearbyClient(raw: NearbyVehicleMapFeatureClient(access: b, relay: relay))
+        let native = try await Task.detached { try await nearbySafe.initial() }.value
+        await Task.detached { await nearbySafe.release(native) }.value
+        record("actual_foreign_nearby_copy_and_release_hop", b.metrics().states == 0)
+        hub.configure(outcome: 4)
+        let task = Task { try await a.refresh(available, now: 3000) }
+        try await until { hub.metrics().active == 1 }
+        task.cancel()
+        do { _ = try await task.value; throw ProbeFailure(message: "Cancelled caller returned value") }
+        catch is CancellationError {}
+        record("noncooperative_caller_ack_keeps_actual_drain_and_lease", a.metrics().requests == 1 && lifetime.supervisor.metrics().active == 1 && lifetime.admission.metrics().active == 1)
+        lifetime.shutdown.closeAdmission(); a.retire(); b.retire()
+        let observation = try await lifetime.shutdown.awaitDrain(softDeadline: .nanoseconds(Int64(CandidateRuntimeSettings.current.shutdownObservationNanoseconds)))
+        record("soft_shutdown_reports_still_draining_without_freeing", observation.state == .stillDraining && observation.reservations == 1)
+        let waiter = Task { try await lifetime.shutdown.awaitDrain(softDeadline: .seconds(10)) }
+        waiter.cancel()
+        do { _ = try await waiter.value; throw ProbeFailure(message: "Cancelled waiter returned") }
+        catch is CancellationError {}
+        record("waiter_cancellation_does_not_cancel_cleanup", lifetime.supervisor.metrics().active == 1 && lifetime.admission.metrics().active == 1)
+        hub.releaseGate()
+        try await until { lifetime.admission.metrics().active == 0 && lifetime.supervisor.metrics().active == 0 }
+        let completed = try await lifetime.shutdown.awaitDrain(softDeadline: .zero)
+        record("real_backend_completion_releases_once_terminal_close", completed.state == .completed && !lifetime.admission.metrics().open && a.metrics().requests == 0)
+    }
+}

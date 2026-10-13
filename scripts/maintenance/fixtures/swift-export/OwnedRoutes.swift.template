@@ -1,0 +1,190 @@
+import SwiftUI
+import UIKit
+import CoreLocation
+import KotlinModules
+import MobiRouteProbe
+import MobiIOSDependencies
+
+typealias RouteProbe = ExportedKotlinPackages.studio.mekate.mobi.routeprobe
+@MainActor final class HomeObservation {
+    weak var owner: HomeStoreOwner?
+    weak var coordinator: AnyObject?
+    weak var controller: UIViewController?
+    let access: WeakProbe<NativeHomeAccess>
+    let store: WeakProbe<StoreOf<HomeFeature>>
+    let identity: UUID = UUID()
+    var removed = false
+    var retired = false
+    var releasedOwner = false
+    init(_ owner: HomeStoreOwner) { self.owner = owner; access = WeakProbe(owner.access); store = WeakProbe(owner.store) }
+    var nativeReleased: Bool { owner == nil && releasedOwner && access.released && store.released }
+}
+@MainActor final class NearbyObservation {
+    weak var owner: NearbyStoreOwner?
+    weak var coordinator: AnyObject?
+    weak var controller: UIViewController?
+    let access: WeakProbe<NativeNearbyAccess>
+    let store: WeakProbe<StoreOf<NearbyVehicleMapFeature>>
+    let identity = UUID()
+    var removed = false
+    var retired = false
+    var releasedOwner = false
+    var statesAtRetire: Int32 = -1
+    init(_ owner: NearbyStoreOwner) { self.owner = owner; access = WeakProbe(owner.access); store = WeakProbe(owner.store) }
+    var nativeReleased: Bool { owner == nil && releasedOwner && access.released && store.released }
+}
+@MainActor final class SharedObservation {
+    let identity = UUID()
+    weak var owner: RouteProbe.HomeRouteOwner?
+    weak var admitted: AdmittedComposeOwner?
+    weak var coordinator: AnyObject?
+    weak var controller: UIViewController?
+    var removed = false
+    var retiredDrained = false
+    var retired = false
+    var drainID: UUID?
+    var admissionFailure: AdmissionError?
+    var attempts = 0
+    var admittedCount = 0
+    weak var retryButton: RetryButton?
+    init(_ owner: RouteProbe.HomeRouteOwner?) { self.owner = owner }
+}
+@MainActor final class RootObserver {
+    var homes: [HomeObservation] = []
+    var nearby: [NearbyObservation] = []
+    var shared: [SharedObservation] = []
+    var home: HomeStoreOwner? { homes.last?.owner }
+    var near: NearbyStoreOwner? { nearby.last?.owner }
+}
+
+@MainActor final class SyntheticNearbyInput {
+    private var completion: ((NearbyVehicleMapFeature.LocationResolutionResult) -> Void)?
+    private let tickClock = ManualPollDriver()
+    private var closed = false
+    private(set) var requests = 0
+    func request(_ deliver: @escaping (NearbyVehicleMapFeature.LocationResolutionResult) -> Void) { requests += 1; completion = deliver }
+    func precise() { completion?(.precise(latitude: 55.6761, longitude: 12.5683)) }
+    func nextTick() async -> Int64? { if closed { return nil }; do { try await tickClock.wait() } catch {}; return nil }
+    func close() { closed = true; completion = nil; tickClock.advance() }
+}
+
+struct OwnedNativeHomeRoute: UIViewControllerRepresentable {
+    weak var services: AppServices?
+    let observer: RootObserver
+    @MainActor final class Coordinator {
+        var owner: HomeStoreOwner?
+        let observation: HomeObservation
+        init(services: AppServices, observer: RootObserver) {
+            owner = services.makeHomeOwner(); observation = HomeObservation(owner!)
+            observation.coordinator = self; observer.homes.append(observation)
+        }
+    }
+    func makeCoordinator() -> Coordinator { Coordinator(services: services!, observer: observer) }
+    func makeUIViewController(context: Context) -> UIViewController {
+        let controller = UIHostingController(rootView: AnyView(HomeView(store: context.coordinator.owner!.store)))
+        context.coordinator.observation.controller = controller; return controller
+    }
+    func updateUIViewController(_: UIViewController, context _: Context) {}
+    static func dismantleUIViewController(_ controller: UIViewController, coordinator: Coordinator) {
+        guard let owner = coordinator.owner else { return }
+        owner.retire(); coordinator.observation.retired = owner.store.state.retired
+        coordinator.owner = nil
+        coordinator.observation.releasedOwner = true
+        (controller as? UIHostingController<AnyView>)?.rootView = AnyView(EmptyView())
+        coordinator.observation.removed = true
+    }
+}
+struct OwnedNearbyRoute: UIViewControllerRepresentable {
+    weak var services: AppServices?
+    let observer: RootObserver
+    let input: SyntheticNearbyInput
+    @MainActor final class Coordinator {
+        var owner: NearbyStoreOwner?
+        let observation: NearbyObservation
+        let input: SyntheticNearbyInput
+        init(services: AppServices, observer: RootObserver, input: SyntheticNearbyInput) {
+            owner = services.makeNearbyOwner(); observation = NearbyObservation(owner!); self.input = input
+            observation.coordinator = self; observer.nearby.append(observation)
+        }
+    }
+    func makeCoordinator() -> Coordinator { Coordinator(services: services!, observer: observer, input: input) }
+    func makeUIViewController(context: Context) -> UIViewController {
+        let controller = UIHostingController(rootView: AnyView(NearbyVehicleMapView(store: context.coordinator.owner!.store,
+            resolveLocation: { input.request($0) }, nextVisibleTick: { await input.nextTick() },
+            styleURL: Bundle.main.url(forResource: "offline-style", withExtension: "json")!)))
+        context.coordinator.observation.controller = controller; return controller
+    }
+    func updateUIViewController(_: UIViewController, context _: Context) {}
+    static func dismantleUIViewController(_ controller: UIViewController, coordinator: Coordinator) {
+        guard let owner = coordinator.owner else { return }
+        owner.retire(); coordinator.input.close()
+        coordinator.observation.retired = owner.store.state.retired
+        coordinator.observation.statesAtRetire = owner.access.metrics().states
+        coordinator.owner = nil
+        coordinator.observation.releasedOwner = true
+        (controller as? UIHostingController<AnyView>)?.rootView = AnyView(EmptyView())
+        coordinator.observation.removed = true
+    }
+}
+struct SharedHomeDemoView: UIViewControllerRepresentable {
+    weak var services: AppServices?
+    let observer: RootObserver
+    @MainActor final class Coordinator {
+        weak var services: AppServices?
+        weak var controller: RouteContainerController?
+        var admitted: AdmittedComposeOwner?
+        let observation: SharedObservation
+        private var disposed = false
+        init(services: AppServices, observer: RootObserver) {
+            self.services = services; observation = SharedObservation(nil)
+            observation.coordinator = self; observer.shared.append(observation)
+        }
+        func retry() {
+            guard !disposed, admitted == nil, observation.admissionFailure != .closed,
+                  let services, let controller else { return }
+            observation.attempts += 1
+            do {
+                let admitted = try services.makeSharedHomeOwner()
+                self.admitted = admitted
+                observation.owner = admitted.owner; observation.admitted = admitted
+                observation.admittedCount += 1; observation.admissionFailure = nil; observation.retryButton = nil
+                controller.show(admitted.owner.createViewController())
+            } catch let error as AdmissionError {
+                showDenial(error)
+            } catch {
+                preconditionFailure("Factory only returns declared admission errors")
+            }
+        }
+        func reconcileClosed() {
+            guard !disposed, admitted == nil, let services, !services.admission.metrics().open,
+                  observation.admissionFailure != .closed else { return }
+            showDenial(.closed)
+        }
+        private func showDenial(_ error: AdmissionError) {
+            guard let controller else { return }
+            observation.admissionFailure = error
+            let fallback = DenialViewController(failure: error) { [weak self] in self?.retry() }
+            controller.show(fallback); observation.retryButton = fallback.retryButton
+        }
+        func dispose() {
+            guard !disposed else { return }; disposed = true
+            if let admitted {
+                observation.drainID = admitted.retire()
+                observation.retired = !admitted.owner.isOpen; observation.retiredDrained = admitted.owner.isDrained
+            } else {
+                observation.retired = true // fallback owns no Kotlin work to retire
+            }
+            admitted = nil; controller?.clear(); observation.retryButton = nil; observation.removed = true
+        }
+    }
+    func makeCoordinator() -> Coordinator { Coordinator(services: services!, observer: observer) }
+    func makeUIViewController(context: Context) -> UIViewController {
+        let controller = RouteContainerController()
+        context.coordinator.controller = controller; context.coordinator.observation.controller = controller
+        context.coordinator.retry(); return controller
+    }
+    func updateUIViewController(_: UIViewController, context: Context) { context.coordinator.reconcileClosed() }
+    static func dismantleUIViewController(_ controller: UIViewController, coordinator: Coordinator) {
+        coordinator.dispose()
+    }
+}
