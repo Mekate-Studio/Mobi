@@ -2,6 +2,10 @@ import XCTest
 
 @MainActor final class PilotUITests: XCTestCase {
     func testRealNavigationRetryAndBackgroundForeground() {
+        // The composite scenario has up to 90 seconds of bounded assertion
+        // waits plus XCUI launch/idle/background instrumentation overhead.
+        // This harness ceiling does not change those functional wait limits.
+        executionTimeAllowance = 180
         let app = XCUIApplication(bundleIdentifier: "studio.mekate.mobi")
         addUIInterruptionMonitor(withDescription: "Location permission") { alert in
             let allow = alert.buttons["Allow While Using App"]

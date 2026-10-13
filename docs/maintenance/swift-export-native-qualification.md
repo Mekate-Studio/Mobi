@@ -133,6 +133,28 @@ The actual approval records and their hash are retained in step diagnostics.
 Historical local runs do not establish this new macro-enablement control;
 fresh hosted execution must validate the changed helper inputs.
 
+The macro-fix attempt at `49ee375`,
+[run 38427585849](https://github.com/Mekate-Studio/Mobi/actions/runs/38427585849),
+verified both phases' locked macro approvals with the skip preference false.
+Both native production and consumer builds passed. The original phase passed
+all 9 tests on iPhone 18 Pro / iOS Simulator 27.0; its complete 354-member
+delivery and immutable receipts were retained and independently verified.
+The reordered phase passed all 8 client tests, then its composite UI scenario
+crossed Xcode's one-minute execution allowance. Its assertions completed at
+about 70 seconds, but XCTest restarted the runner and the 1,300-second outer
+phase check eventually timed out. The result is inconclusive, not compatible;
+replay did not run. Failure recovery reached quiescence; work remained on the
+runner and the incomplete result bundle is retained.
+
+The UI scenario now explicitly requests a 180-second **harness** ceiling.
+Its existing individual assertion waits sum to 90 seconds before XCUI launch,
+idle and background overhead. Client tests retain the 30-second default, and
+all functional assertion waits, phase/outer deadlines and experimental app
+settings stay unchanged. This is not an approved app-latency threshold.
+Partial-bundle summary failures are now phase retention findings; they preserve
+earlier passed evidence and the original execution reason. These changed
+inputs require another complete cold/replay hosted run.
+
 ## Boundaries for later app integration
 
 Native adapters synchronously start and poll Kotlin jobs on Main, copy checked

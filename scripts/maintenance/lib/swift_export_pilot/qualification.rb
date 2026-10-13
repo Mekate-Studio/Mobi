@@ -76,7 +76,7 @@ module Maintenance
         result = Executor.new(source: @source, adapter: adapter, store: @store,
                               policy: JSON.parse(File.read(File.join(@root, 'maintenance-execution-policy.json'))),
                               input_files: [@settings, __FILE__]).run
-        entry = { 'action' => action, 'run_id' => result.fetch('run_id'), 'state' => result.fetch('state') }
+        entry = { 'action' => action, 'run_id' => result.fetch('run_id'), 'state' => result.fetch('state'), 'reason' => result['reason'] }
         @runs << entry
         write("#{action}-result.json", result)
         entry
@@ -86,35 +86,46 @@ module Maintenance
         id = entry.fetch('run_id')
         action = entry.fetch('action')
         check_name = action == 'test' ? 'swift-export-app-pilot' : 'swift-export-pilot-replay'
-        entry['phases'] = %w[baseline candidate].map do |phase|
-          output = File.join(@store.path(id), 'work', phase, 'output')
-          check_path = File.join(@store.path(id), 'steps', "#{phase}-#{check_name}", 'check.json')
-          next { 'phase' => phase, 'status' => 'check_unavailable' } unless File.file?(check_path)
-          check = JSON.parse(File.read(check_path))
-          value = { 'phase' => phase, 'status' => check['status'], 'check_sha256' => Maintenance.file_sha(check_path), 'simulator_runtime' => check.dig('runtime', 'simulator_runtime') }
-          if action == 'test' && check['delivery']
-            delivery = File.join(output, 'registry/objects', check.fetch('delivery').fetch('pointer').fetch('object'))
-            retained = File.join(@output, "#{action}-#{phase}-delivery")
-            SwiftExport::Assemble.copy(delivery, retained)
-            identity = SwiftExport::Delivery.verify(retained)
-            raise Failure, 'Retained cold delivery differs' unless identity == check.dig('delivery', 'identity')
-            value['delivery'] = retained
-            value['delivery_identity'] = identity
-            value['delivery_members'] = SwiftExport::Delivery.files(retained).size
+        entry['phases'] = []
+        %w[baseline candidate].each do |phase|
+          value = { 'phase' => phase, 'status' => 'check_unavailable' }
+          entry['phases'] << value
+          begin
+            output = File.join(@store.path(id), 'work', phase, 'output')
+            check_path = File.join(@store.path(id), 'steps', "#{phase}-#{check_name}", 'check.json')
+            next unless File.file?(check_path)
+            check = JSON.parse(File.read(check_path))
+            value.merge!('status' => check['status'], 'check_sha256' => Maintenance.file_sha(check_path), 'simulator_runtime' => check.dig('runtime', 'simulator_runtime'))
+            if action == 'test' && check['delivery']
+              delivery = File.join(output, 'registry/objects', check.fetch('delivery').fetch('pointer').fetch('object'))
+              retained = File.join(@output, "#{action}-#{phase}-delivery")
+              SwiftExport::Assemble.copy(delivery, retained)
+              identity = SwiftExport::Delivery.verify(retained)
+              raise Failure, 'Retained cold delivery differs' unless identity == check.dig('delivery', 'identity')
+              value['delivery'] = retained
+              value['delivery_identity'] = identity
+              value['delivery_members'] = SwiftExport::Delivery.files(retained).size
+            end
+            bundle = File.join(output, 'PilotBehaviorTests.xcresult')
+            if File.directory?(bundle)
+              retained = File.join(@output, "#{action}-#{phase}.xcresult")
+              FileUtils.cp_r(bundle, retained, preserve: true)
+              summary = test_summary(retained, "#{action}-#{phase}")
+              write("#{action}-#{phase}-summary.json", summary)
+              value['tests_passed'] = summary['result'] == 'Passed' && summary['totalTestCount'] == 9 && summary['passedTests'] == 9 && summary['failedTests'] == 0 && summary['skippedTests'] == 0 && summary['expectedFailures'] == 0
+            end
+          rescue StandardError => e
+            value['retention_error'] = e.message
+            value['tests_passed'] = false
           end
-          bundle = File.join(output, 'PilotBehaviorTests.xcresult')
-          if File.directory?(bundle)
-            retained = File.join(@output, "#{action}-#{phase}.xcresult")
-            FileUtils.cp_r(bundle, retained, preserve: true)
-            text, status = Open3.capture2e('/usr/bin/xcrun', 'xcresulttool', 'get', 'test-results', 'summary', '--path', retained, '--compact')
-            File.write(File.join(@output, "#{action}-#{phase}-summary.log"), text)
-            raise Failure, 'Test summary unavailable' unless status.success?
-            summary = JSON.parse(text)
-            write("#{action}-#{phase}-summary.json", summary)
-            value['tests_passed'] = summary['result'] == 'Passed' && summary['totalTestCount'] == 9 && summary['passedTests'] == 9 && summary['failedTests'] == 0 && summary['skippedTests'] == 0 && summary['expectedFailures'] == 0
-          end
-          value
         end
+      end
+
+      def test_summary(bundle, name)
+        text, status = Open3.capture2e('/usr/bin/xcrun', 'xcresulttool', 'get', 'test-results', 'summary', '--path', bundle, '--compact')
+        File.write(File.join(@output, name + '-summary.log'), text)
+        raise Failure, 'Test summary unavailable; incomplete bundle retained' unless status.success?
+        JSON.parse(text)
       end
 
       def cleanup(entry)

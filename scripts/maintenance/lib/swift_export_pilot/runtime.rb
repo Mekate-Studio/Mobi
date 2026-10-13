@@ -56,7 +56,7 @@ begin
   report['simulator_runtime'] = resources.state['runtime']
   report['test_scopes'] = ['real_app_UI_navigation_background_foreground', 'real_app_test_host_clients_and_separate_cohorts', 'typed_native_noncooperative_cleanup_stub']
   argv = ['/usr/bin/xcodebuild', '-project', project.path.to_s, '-scheme', 'SwiftExportPilot', '-configuration', 'Debug',
-          '-destination', 'id=' + device, '-derivedDataPath', File.join(cache, 'pilot-tests'), '-parallel-testing-enabled', 'NO', '-test-timeouts-enabled', 'YES', '-default-test-execution-time-allowance', '30', '-maximum-test-execution-time-allowance', '30',
+          '-destination', 'id=' + device, '-derivedDataPath', File.join(cache, 'pilot-tests'), '-parallel-testing-enabled', 'NO', '-test-timeouts-enabled', 'YES', '-default-test-execution-time-allowance', '30', '-maximum-test-execution-time-allowance', '180',
           '-resultBundlePath', File.join(output, 'PilotBehaviorTests.xcresult'), 'test', 'CODE_SIGNING_ALLOWED=NO', 'ARCHS=arm64']
   log = File.join(control, 'pilot-test.log')
   status = File.open(log, 'w') { |stream| pid = Process.spawn(*argv, chdir: root, out: stream, err: [:child, :out]); Process.wait2(pid).last }

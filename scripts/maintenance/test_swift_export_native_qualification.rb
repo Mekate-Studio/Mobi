@@ -124,4 +124,34 @@ class SwiftExportNativeQualificationTest < Minitest::Test
       end
     end
   end
+
+  def test_partial_result_bundle_preserves_prior_phase_and_timeout_outcome
+    Dir.mktmpdir do |root|
+      evidence = File.join(root, '.maintenance/evidence'); FileUtils.mkdir_p(evidence)
+      store_root = File.join(root, 'run')
+      %w[baseline candidate].each do |phase|
+        control = File.join(store_root, 'steps', phase + '-swift-export-pilot-replay')
+        FileUtils.mkdir_p(control)
+        File.write(File.join(control, 'check.json'), JSON.generate('status' => phase == 'baseline' ? 'passed' : 'infrastructure'))
+        FileUtils.mkdir_p(File.join(store_root, 'work', phase, 'output/PilotBehaviorTests.xcresult'))
+      end
+      fixture = Maintenance::SwiftExportPilot::Qualification.new(root: root, output: evidence, java_home: nil)
+      store = Object.new
+      store.define_singleton_method(:path) { |_id| store_root }
+      fixture.instance_variable_set(:@store, store)
+      fixture.define_singleton_method(:test_summary) do |_bundle, name|
+        raise Maintenance::Failure, 'Incomplete result bundle' if name.end_with?('candidate')
+        { 'result' => 'Passed', 'totalTestCount' => 9, 'passedTests' => 9, 'failedTests' => 0, 'skippedTests' => 0, 'expectedFailures' => 0 }
+      end
+      entry = { 'action' => 'replay', 'run_id' => 'test-run', 'state' => 'inconclusive', 'reason' => 'check_timeout' }
+      fixture.retain(entry)
+      assert_equal 2, entry['phases'].size
+      assert entry['phases'].first['tests_passed']
+      assert_equal 'Incomplete result bundle', entry['phases'].last['retention_error']
+      assert_equal false, entry['phases'].last['tests_passed']
+      assert_equal 'check_timeout', entry['reason']
+      assert File.directory?(File.join(evidence, 'replay-candidate.xcresult'))
+      assert_raises(Maintenance::Failure) { fixture.passed!(entry) }
+    end
+  end
 end

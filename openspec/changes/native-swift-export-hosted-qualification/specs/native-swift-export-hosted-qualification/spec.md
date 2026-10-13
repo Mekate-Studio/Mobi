@@ -59,6 +59,10 @@ acceptance or production readiness.
 - **WHEN** execution stops before complete delivery or test evidence exists
 - **THEN** available diagnostics are retained and the report identifies the incomplete outcome
 
+#### Scenario: Incomplete result bundle after a timeout
+- **WHEN** a timed-out phase leaves an unreadable test bundle after an earlier phase passes
+- **THEN** retention preserves the earlier phase evidence, the partial bundle and the original timeout reason without a passed qualification
+
 #### Scenario: Complete qualification
 - **WHEN** all phases, test summaries and cleanup checks pass
 - **THEN** the report records qualification passed with production and risk reviews still required

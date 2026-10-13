@@ -32,7 +32,15 @@ or performance-limit approval.
   extra-runtime checks do not qualify runtime floors or preview-image stability.
 - Create source/tuple-bound experimental settings. Retain both cold deliveries,
   but replay only the original-enum archive after confirmed cleanup. Existing
-  timeouts and reviewed-versus-experimental boundaries stay intact.
+  phase/outer timeouts and reviewed-versus-experimental boundaries stay intact.
+- Give only the composite UI scenario a 180-second instrumentation ceiling.
+  Its explicit assertion waits already sum to 90 seconds, before XCUI launch,
+  idle and background overhead; the old command's 30-second cap rounds to one
+  minute and interrupted a 70-second completed scenario on the hosted runtime.
+  Client tests keep their 30-second default; individual UI assertion deadlines
+  and app admission/polling/shutdown settings are unchanged. This is a harness
+  ceiling, not approval of app performance. Keep incomplete bundle errors as
+  phase-level retention findings without replacing the actual execution reason.
 - Enable only four existing locked macro targets after verifying their checkout
   revisions. Store approval fingerprints in the disposable phase home and
   direct Foundation home lookup there; probe its preferences and refuse an

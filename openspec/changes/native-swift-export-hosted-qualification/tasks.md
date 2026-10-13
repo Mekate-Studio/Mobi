@@ -4,6 +4,8 @@
 - [x] 1.2 Add bounded native cold/retention/cleanup/replay orchestration.
 - [x] 1.3 Add a thin explicit hosted workflow and run_job entry.
 - [x] 1.4 Add meaningful refusal/failure contracts and update qualification docs.
+- [x] 1.5 Preserve available phase evidence and the execution reason when a test bundle is incomplete.
+- [x] 1.6 Bound the composite UI instrumentation scenario explicitly while preserving functional waits and client deadlines.
 
 ## 2. Verification and publication
 
