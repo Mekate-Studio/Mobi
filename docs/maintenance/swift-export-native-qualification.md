@@ -111,6 +111,28 @@ Changed helper inputs require fresh receipts; the local receipts above qualify
 the earlier commit only. Hosted status remains pending until the actual report
 and test/cleanup evidence have been inspected.
 
+The first executed hosted attempt at `d3e8ebf`,
+[run 38421602488](https://github.com/Mekate-Studio/Mobi/actions/runs/38421602488),
+passed Apple/JDK/runtime preflight and Kotlin production/export. Locked native
+package checkout verification and the independently downloaded MapLibre
+checksum also passed. Xcode then refused four macro targets at its enablement
+gate, before native compilation; no app tests, reordered phase or replay ran.
+The outcome is incomplete/inconclusive, with positive failure recovery and
+disposable work retained on the runner. Its source-bound archive is retained
+as failure evidence, not a qualified delivery.
+
+The producer now creates approvals only for ComposableArchitectureMacros,
+CasePathsMacros, DependenciesMacrosPlugin and PerceptionMacros at their exact
+locked and verified checkout revisions. Those records live in the disposable
+phase home; `CFFIXED_USER_HOME` keeps Foundation/Xcode home lookup there. A
+read-only Foundation probe verifies that home and refuses an inherited
+`IDESkipMacroFingerprintValidation` bypass. It does not use `-skipMacroValidation`, alter
+developer preferences, suppress warnings or accept dependency risk. Missing,
+duplicate or changed locks and escaping approval paths refuse before approval.
+The actual approval records and their hash are retained in step diagnostics.
+Historical local runs do not establish this new macro-enablement control;
+fresh hosted execution must validate the changed helper inputs.
+
 ## Boundaries for later app integration
 
 Native adapters synchronously start and poll Kotlin jobs on Main, copy checked

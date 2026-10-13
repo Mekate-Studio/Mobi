@@ -33,6 +33,11 @@ or performance-limit approval.
 - Create source/tuple-bound experimental settings. Retain both cold deliveries,
   but replay only the original-enum archive after confirmed cleanup. Existing
   timeouts and reviewed-versus-experimental boundaries stay intact.
+- Enable only four existing locked macro targets after verifying their checkout
+  revisions. Store approval fingerprints in the disposable phase home and
+  direct Foundation home lookup there; probe its preferences and refuse an
+  inherited Xcode skip-macro bypass. A global skip flag would hide the first hosted failure, so
+  it is not used. Approval records are retained; no package risk is accepted.
 - Export reports, step logs, journals, immutable receipts and test bundles on
   failure as well as success. Never upload an entire work directory or cache.
   A cleanup refusal or missing test summary prevents a passing report.

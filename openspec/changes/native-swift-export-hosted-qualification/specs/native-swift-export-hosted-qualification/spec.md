@@ -29,6 +29,14 @@ Ruby, JDK and Apple tool inputs before starting native production.
 - **WHEN** the hosted command runs on the Xcode 27 preview image
 - **THEN** it explicitly binds simulator major 27 into cold and replay inputs and refuses an absent runtime before production
 
+#### Scenario: Macro enablement on a fresh home
+- **WHEN** native package checkout revisions match their locks
+- **THEN** only the four named locked macro targets are approved in the disposable home, with macro validation enabled and approval evidence retained
+
+#### Scenario: Macro approval drift
+- **WHEN** a required package lock is missing, duplicated or differs from the actual checkout, or its approval path escapes the owned home
+- **THEN** approval refuses without changing an unowned approval store
+
 ### Requirement: Cold qualification and guarded replay
 The command SHALL require passing original and reordered cold app tests, retain
 verified deliveries, confirm quiescence and cleanup, then replay the retained

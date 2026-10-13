@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'tool_identity'
+require_relative 'macro_approvals'
 
 # Xcode/SwiftPM own native source, macros and binary artifact resolution.
 require 'json'
@@ -13,6 +14,7 @@ source,output,cache,base=ARGV.map { |p| File.realpath(p) }
 control=File.dirname(ENV.fetch('MOBI_RESULT_PATH'));phase=ENV.fetch('MOBI_PHASE')
 r={'schema'=>1,'check'=>'native-cold','phase'=>phase,'status'=>'infrastructure','commands'=>[],'native_product_seeds'=>0,'adoption_authorized'=>false}
 env=ENV.to_h.merge('PATH'=>'/usr/bin:/bin:/usr/sbin:/sbin','DEVELOPER_DIR'=>Maintenance::SwiftExport::ToolIdentity.developer_dir)
+env['CFFIXED_USER_HOME'] = env.fetch('HOME')
 command=lambda do |name,argv,cwd=source|
  log=File.join(control,name+'.log');start=Process.clock_gettime(Process::CLOCK_MONOTONIC)
  status=File.open(log,'w') { |f| pid=Process.spawn(env,*argv,chdir:cwd,unsetenv_others:true,out:f,err:[:child,:out],in:File::NULL);Process.wait2(pid).last }
@@ -22,6 +24,10 @@ command=lambda do |name,argv,cwd=source|
 end
 begin
  inputs=JSON.parse(File.read(File.join(output,'kotlin-inputs.json'),encoding:'UTF-8'));inputs['files'].each { |f| raise 'Input drift '+f['path'] unless Digest::SHA256.file(f['path']).hexdigest==f['sha256'] }
+ preferences_probe = File.join(control, 'macro-preferences.swift')
+ File.write(preferences_probe, Maintenance::SwiftExport::MacroApprovals::PREFERENCES_PROBE)
+ preferences = command.call('macro-preferences', ['/usr/bin/xcrun', 'swift', '-module-cache-path', File.join(cache, 'macro-preferences-module-cache'), preferences_probe])
+ r['macro_validation_environment'] = Maintenance::SwiftExport::MacroApprovals.verify_environment(preferences, home: env.fetch('HOME'))
  bootstrap=File.join(cache,'native-bootstrap');packages=File.join(cache,'source-packages');pkgcache=File.join(cache,'package-cache');derived=File.join(cache,'native-derived')
  [bootstrap,packages,pkgcache,derived].each { |p| raise 'Cold path already exists' if File.exist?(p);FileUtils.mkdir_p(p) }
  r['initial_empty_roots']=[bootstrap,packages,pkgcache,derived].to_h { |p| [p,Dir.children(p).empty?] }
@@ -56,6 +62,8 @@ begin
   path=File.join(packages,'checkouts',pin['identity']);head=command.call('git-'+pin['identity'],['/usr/bin/git','-C',path,'rev-parse','HEAD']).strip
   raise 'Checkout revision differs' unless head==pin.dig('state','revision');[pin['identity'],head]
  end
+ r['macro_approvals'] = Maintenance::SwiftExport::MacroApprovals.install(workspace: File.dirname(output), home: env.fetch('HOME'), pins: pins, checkout_heads: r.fetch('checkout_heads'))
+ Maintenance::RunStore.atomic(File.join(control, 'macro-approvals.json'), r['macro_approvals'])
  workspace=JSON.parse(File.read(File.join(packages,'workspace-state.json'),encoding:'UTF-8'))
  artifacts=workspace.fetch('object').fetch('artifacts');raise 'Unexpected binary artifact graph' unless artifacts.size==1
  artifact=artifacts.first;raise 'Unexpected binary artifact' unless artifact.dig('packageRef','identity')=='maplibre-gl-native-distribution' && artifact['targetName']=='MapLibre'
