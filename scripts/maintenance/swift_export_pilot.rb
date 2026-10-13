@@ -10,12 +10,13 @@ if $PROGRAM_NAME == __FILE__
     parser = OptionParser.new do |p|
       p.banner = 'Usage: swift_export_pilot.rb --action inspect|build|test --profile NAME --repository-policy NAME --compose enabled|disabled [--runtime-settings PATH --experimental --java-home PATH]'
       %w[action profile repository-policy compose runtime-settings java-home delivery origin-run].each { |key| p.on("--#{key} VALUE") { |value| options[key] = value } }
+      p.on('--simulator-major VALUE', Integer) { |value| options['simulator-major'] = value }
       p.on('--experimental') { options['experimental'] = true }
     end
     parser.parse!(ARGV)
     raise Maintenance::Failure, parser.to_s unless ARGV.empty? && %w[inspect build test replay].include?(options['action'])
     root = File.expand_path('../..', __dir__)
-    descriptor = Maintenance::SwiftExportPilot::Descriptor.new(root: root, profile: options['profile'], repository_policy: options['repository-policy'], compose: options['compose'])
+    descriptor = Maintenance::SwiftExportPilot::Descriptor.new(root: root, profile: options['profile'], repository_policy: options['repository-policy'], compose: options['compose'], simulator_major: options.fetch('simulator-major', 26))
     java_home = options['java-home'] || ENV['JAVA_HOME']
     raise Maintenance::Failure, 'Explicit JDK installation required through --java-home or JAVA_HOME' unless java_home && File.executable?(File.join(java_home, 'bin/java'))
     tools = Maintenance::SwiftExport::ToolIdentity.capture(File.realpath(File.join(java_home, 'bin/java')))

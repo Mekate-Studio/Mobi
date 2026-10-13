@@ -7,13 +7,15 @@ module Maintenance
     # Reuse the locked compiler recipe with an explicit real-app source closure.
     class Descriptor < SwiftExport::Descriptor
       attr_reader :compose
-      def initialize(root:, profile:, repository_policy:, compose:)
+      def initialize(root:, profile:, repository_policy:, compose:, simulator_major: 26)
         raise Failure, 'Explicit Compose selection required' unless %w[enabled disabled].include?(compose)
+        raise Failure, 'Pilot simulator major must be 26 or 27' unless [26, 27].include?(simulator_major)
         @compose = compose
         super(root: root, path: 'scripts/maintenance/swift-export-inputs.json', profile: profile, repository_policy: repository_policy)
         data['id'] = 'swift-export-app-pilot'
         data['pilot_scope'] = 'opt-in-real-app'
         data['compose'] = compose
+        data['pilot_simulator_major'] = simulator_major
         shared = data['modules'].select { |m| %w[MobiCore MobiHome MobiNearby MobiDI].include?(m['name']) || (compose == 'enabled' && m['name'] == 'MobiUI') }
         shared.each do |entry|
           folder = entry['inputs'].first

@@ -25,6 +25,10 @@ Ruby, JDK and Apple tool inputs before starting native production.
 - **WHEN** the selected tool tuple differs from the qualified tuple
 - **THEN** the run reports failure without producing or accepting a delivery
 
+#### Scenario: Hosted runtime selection
+- **WHEN** the hosted command runs on the Xcode 27 preview image
+- **THEN** it explicitly binds simulator major 27 into cold and replay inputs and refuses an absent runtime before production
+
 ### Requirement: Cold qualification and guarded replay
 The command SHALL require passing original and reordered cold app tests, retain
 verified deliveries, confirm quiescence and cleanup, then replay the retained

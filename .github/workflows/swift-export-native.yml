@@ -16,7 +16,7 @@ jobs:
   native:
     name: Native cold and guarded replay
     if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'swift-export-native')
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 95
     env:
       BUNDLE_PATH: ${{ github.workspace }}/.maintenance/bundle

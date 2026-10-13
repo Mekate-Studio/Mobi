@@ -14,7 +14,7 @@ module Maintenance
         @java_home = java_home
         @runs = []
         @report = { 'schema' => 1, 'status' => 'incomplete', 'adoption_authorized' => false,
-                    'scope' => 'native-only-cold-and-guarded-replay', 'settings_status' => 'experimental',
+                    'scope' => 'native-only-cold-and-guarded-replay', 'settings_status' => 'experimental', 'simulator_major' => 27,
                     'external_gates' => %w[production_default device minimum_runtime android_parity signed_release advisory_review diagnostic_review limits_review],
                     'cold_boundary' => 'fresh run-owned products; host tools and dependency caches may be read',
                     'hosted' => ENV['GITHUB_ACTIONS'] == 'true', 'github_run_id' => ENV['GITHUB_RUN_ID'], 'runs' => @runs }
@@ -48,10 +48,13 @@ module Maintenance
         java_text, java_status = Open3.capture2e(File.join(@java_home, 'bin/java'), '-version')
         @report['java_version'] = java_text.strip
         raise Failure, 'Qualification requires JDK 26' unless java_status.success? && java_text.match?(/version "26(?:[.\"])/)
-        @descriptor = Descriptor.new(root: @root, profile: 'coroutine-swift5', repository_policy: 'main-confined', compose: 'disabled')
+        @descriptor = Descriptor.new(root: @root, profile: 'coroutine-swift5', repository_policy: 'main-confined', compose: 'disabled', simulator_major: 27)
         tools = SwiftExport::ToolIdentity.capture(File.realpath(File.join(@java_home, 'bin/java')))
         ENV['DEVELOPER_DIR'] = tools.fetch('developer_dir')
         @report['tools'] = tools
+        available = JSON.parse(SwiftExport::ToolIdentity.command(['/usr/bin/xcrun', 'simctl', 'list', 'runtimes', '--json'], developer: tools.fetch('developer_dir'))).fetch('runtimes')
+        @report['simulator_runtimes'] = available.select { |runtime| runtime['isAvailable'] && runtime.fetch('identifier', '').include?('.iOS-') }
+        raise Failure, 'Hosted qualification requires an available iOS Simulator 27 runtime' unless @report['simulator_runtimes'].any? { |runtime| runtime['version'].split('.').first == '27' }
         @report['source_identity'] = Maintenance.digest(@descriptor.inspection.fetch('selected_files'))
         @report['tuple_identity'] = tools.fetch('identity')
         @settings = File.join(@output, 'settings.json')
@@ -68,7 +71,7 @@ module Maintenance
       end
 
       def execute(action, delivery: nil, origin: nil)
-        descriptor = Descriptor.new(root: @root, profile: 'coroutine-swift5', repository_policy: 'main-confined', compose: 'disabled')
+        descriptor = Descriptor.new(root: @root, profile: 'coroutine-swift5', repository_policy: 'main-confined', compose: 'disabled', simulator_major: 27)
         adapter = Adapter.new(descriptor, java_home: @java_home, settings_path: @settings, action: action, experimental: true, delivery: delivery, origin_id: origin)
         result = Executor.new(source: @source, adapter: adapter, store: @store,
                               policy: JSON.parse(File.read(File.join(@root, 'maintenance-execution-policy.json'))),
@@ -146,7 +149,8 @@ module Maintenance
           FileUtils.cp_r(steps, destination, preserve: true) if File.directory?(steps)
           entry['journal_sha256'] = Maintenance.file_sha(@store.path(id, '.json'))
           entry['result_sha256'] = Maintenance.file_sha(@store.path(id, '.result.json')) if File.file?(@store.path(id, '.result.json'))
-          entry['work_retained'] = File.directory?(File.join(@store.path(id), 'work'))
+          journal = @store.load(id)
+          entry['work_retained'] = journal['resources'].any? { |resource| resource['disposable'] && (resource['state'] != 'removed' || File.exist?(@store.safe_path(journal, resource['path']))) }
         end
       end
 

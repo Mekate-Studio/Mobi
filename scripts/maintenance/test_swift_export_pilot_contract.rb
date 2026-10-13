@@ -78,4 +78,13 @@ class SwiftExportPilotContractTest < Minitest::Test
     assert_raises(Maintenance::Failure) { descriptor('auto') }
     assert_raises(Maintenance::Failure) { Maintenance::SwiftExportPilot::Descriptor.new(root: ROOT, profile: 'auto', repository_policy: 'main-confined', compose: 'disabled') }
   end
+
+  def test_simulator_selection_is_explicit_and_bound_to_delivery_inputs
+    local = descriptor('disabled')
+    hosted = Maintenance::SwiftExportPilot::Descriptor.new(root: ROOT, profile: 'coroutine-swift5', repository_policy: 'main-confined', compose: 'disabled', simulator_major: 27)
+    assert_equal 26, local.data.fetch('pilot_simulator_major')
+    assert_equal 27, hosted.data.fetch('pilot_simulator_major')
+    refute_equal local.inspection.fetch('identity'), hosted.inspection.fetch('identity')
+    assert_raises(Maintenance::Failure) { Maintenance::SwiftExportPilot::Descriptor.new(root: ROOT, profile: 'coroutine-swift5', repository_policy: 'main-confined', compose: 'disabled', simulator_major: 25) }
+  end
 end

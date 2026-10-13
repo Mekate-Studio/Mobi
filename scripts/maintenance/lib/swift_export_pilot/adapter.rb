@@ -43,7 +43,7 @@ module Maintenance
           'resource_types' => %w[filesystem process-group kotlin-native],
           'checks' => [{ 'id' => 'swift-export-app-pilot', 'required' => true, 'timeout_seconds' => 1300,
                          'argv' => [File.realpath(RbConfig.ruby), File.join(__dir__, 'check.rb'), '{source}', '{output}', '{cache}',
-                                    @descriptor.profile, @descriptor.repository_policy, @descriptor.compose, @java, @gem_path, JSON.generate(@tools), @settings_path, @action, @experimental.to_s] }] }
+                                    @descriptor.profile, @descriptor.repository_policy, @descriptor.compose, @java, @gem_path, JSON.generate(@tools), @settings_path, @action, @experimental.to_s, @descriptor.data.fetch('pilot_simulator_major').to_s] }] }
       end
 
       def code_files

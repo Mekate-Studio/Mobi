@@ -25,6 +25,11 @@ or performance-limit approval.
 - Set up Ruby 4.0.6 and JDK 26; resolve the selected Xcode Developer directory
   canonically and verify Swift 6.4/Xcode 27.0/SDK 27.0. Do not change global
   xcode-select. Bound tool metadata propagates selection to subprocesses.
+- Use GitHub's `xcode-27` public-preview image, with simulator major 27 explicitly
+  bound into the descriptor/delivery and replay. Ordinary `macos-26` remains on
+  Xcode 26; its main-app lanes are unchanged. Refuse absent runtime before
+  production. Local pilot commands retain an explicit major-26 default. These
+  extra-runtime checks do not qualify runtime floors or preview-image stability.
 - Create source/tuple-bound experimental settings. Retain both cold deliveries,
   but replay only the original-enum archive after confirmed cleanup. Existing
   timeouts and reviewed-versus-experimental boundaries stay intact.

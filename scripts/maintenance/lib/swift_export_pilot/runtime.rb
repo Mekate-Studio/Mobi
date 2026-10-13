@@ -50,7 +50,9 @@ begin
   developer = Maintenance::SwiftExport::ToolIdentity.developer_dir
   ENV['DEVELOPER_DIR'] = developer
   resources.register_xcode_project!(project.path.to_s, developer_dir: developer)
-  device = resources.create_simulator!(developer, major: 26)
+  major = inputs.dig('app_configuration', 'simulator_major')
+  raise Maintenance::Failure, 'Explicit pilot simulator major missing' unless [26, 27].include?(major)
+  device = resources.create_simulator!(developer, major: major)
   report['simulator_runtime'] = resources.state['runtime']
   report['test_scopes'] = ['real_app_UI_navigation_background_foreground', 'real_app_test_host_clients_and_separate_cohorts', 'typed_native_noncooperative_cleanup_stub']
   argv = ['/usr/bin/xcodebuild', '-project', project.path.to_s, '-scheme', 'SwiftExportPilot', '-configuration', 'Debug',

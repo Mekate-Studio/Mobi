@@ -88,6 +88,17 @@ Bundler dependencies with `MOBI_SWIFT_EXPORT_RUBY` set to Ruby 4.0.6 and
 Swift 6.4/Xcode 27.0/Simulator SDK 27.0 contract. No native build caches are
 restored by this lane.
 
+The pilot lane uses the `xcode-27` public-preview image. GitHub's
+[runner announcement](https://github.com/actions/runner-images/issues/14404)
+documents that separate image and its iOS Simulator 27 runtime; `macos-26`
+carries the Xcode 26 line. The hosted experiment explicitly selects simulator
+major 27, bound into delivery inputs and guarded replay. It fails preflight if
+that runtime is absent. Local pilot commands default to major 26; an explicit
+`--simulator-major 27` selects the hosted experiment's runtime contract. This
+provides additional-runtime evidence and does not qualify the deployment floor
+or change the main app's runtime/default paths. Image-preview limitations remain
+part of the review record.
+
 The command writes `.maintenance/native-hosted-qualification/report.json`,
 both cold deliveries, four available test bundles and summaries, and bounded
 run journals/results/step diagnostics. The workflow retains that directory

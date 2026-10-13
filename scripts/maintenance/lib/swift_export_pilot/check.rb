@@ -9,14 +9,14 @@ require_relative '../../adapters/kotlin_resources'
 require 'rbconfig'
 require_relative '../swift_export/tool_identity'
 
-source, output, cache, profile, policy, compose, java, gem_path, tools_json, settings_path, action, experimental = ARGV
+source, output, cache, profile, policy, compose, java, gem_path, tools_json, settings_path, action, experimental, simulator_major = ARGV
 phase = ENV.fetch('MOBI_PHASE')
 control = File.dirname(ENV.fetch('MOBI_RESULT_PATH'))
 report = { 'schema' => 1, 'check' => 'swift-export-app-pilot', 'phase' => phase, 'status' => 'infrastructure', 'commands' => [], 'adoption_authorized' => false,
            'external_gates' => %w[published_clean_clone hosted device minimum_runtime android_parity signed_release advisory_review], 'diagnostics' => [] }
 pin = nil
 begin
-  descriptor = Maintenance::SwiftExportPilot::Descriptor.new(root: source, profile: profile, repository_policy: policy, compose: compose)
+  descriptor = Maintenance::SwiftExportPilot::Descriptor.new(root: source, profile: profile, repository_policy: policy, compose: compose, simulator_major: Integer(simulator_major))
   inspection = descriptor.inspection
   report['input_identity'] = inspection['identity']
   fixture = File.join(output, 'app-sources')
@@ -50,7 +50,7 @@ begin
              'fixture_sources' => data['modules'].reject { |m| %w[MobiCore MobiHome MobiNearby MobiDI MobiUI].include?(m['name']) }.to_h { |m| [m['name'], m['inputs'].map { |path| File.join(source, path) }] },
              'materialized_fixtures' => fixture, 'producer_scope' => 'fresh_shared_graph_and_shipping_app_facades',
              'build_modules' => compose == 'enabled' ? %w[shared-di shared-ui-home] : %w[shared-di],
-             'app_configuration' => { 'scheme' => 'SwiftExportPilot', 'bundle_identifier' => 'studio.mekate.mobi', 'runtime_resource' => true, 'compilation_conditions' => compose == 'enabled' ? ['MOBI_PILOT_COMPOSE'] : [], 'compose' => compose },
+             'app_configuration' => { 'scheme' => 'SwiftExportPilot', 'bundle_identifier' => 'studio.mekate.mobi', 'runtime_resource' => true, 'compilation_conditions' => compose == 'enabled' ? ['MOBI_PILOT_COMPOSE'] : [], 'compose' => compose, 'simulator_major' => data.fetch('pilot_simulator_major') },
              'declared_modules' => data['modules'].map { |m| m['name'] },
              'module_visibility' => data['modules'].to_h { |m| [m['name'], m['visibility']] },
              'expected_modules' => data['modules'].map { |m| m['name'] } + %w[KotlinCoroutineSupport KotlinRuntimeSupport ExportedKotlinPackages],
