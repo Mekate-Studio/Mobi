@@ -1,0 +1,2 @@
+import NativeBoundary
+@MainActor func use(_ client: NativeHomeClient) async throws -> HomeCounterLoadable { try await client.refresh(3) }

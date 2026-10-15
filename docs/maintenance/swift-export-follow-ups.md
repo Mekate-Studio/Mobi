@@ -2,9 +2,28 @@
 
 Status: deferred follow-up work. Accountable maintainer: Jorge Castro.
 
-The immediate next step is a separate OpenSpec proposal for an opt-in app adoption
-pilot, using the [adoption handoff](swift-export-adoption-plan.md). The following
-items should be revisited with dependency maintenance and architecture archiving.
+The opt-in app pilot is implemented and its native-only published-clone/hosted
+qualification passed. The [production integration proposal](../../openspec/changes/production-swift-export-integration/proposal.md)
+and [critical decision review](../../openspec/changes/production-swift-export-integration/decision-review.md) now use the
+[adoption handoff](swift-export-adoption-plan.md) and
+[current risk review](swift-export-production-risk-review.md). That change should
+supersede the alternate pilot path and preserve Shared UI with one Kotlin graph.
+State-evolution maintainability is the first review: the pilot's handwritten wire
+tags and decoders are not selected as the production contract. The following
+items should be revisited with dependency maintenance and
+architecture archiving.
+
+The first [state-boundary comparison](swift-export-state-boundary-review.md)
+provides compiler controls and review patches for generated typed state and
+direct native Home presentation copying. It keeps D1 review, D2 lifetime work,
+the rollback preflight hold and production qualification distinct. The subsequent
+[ownership comparison](swift-export-ownership-review.md) adds 32 Home/Nearby
+simulator checks and compiler-enforced native module closure. D2 now recommends
+completion notification for review; listener ownership and the additional module
+contract remain explicit review costs. The maintainer subsequently authorized
+provisional app integration for code-based review; see the
+[composition/build review](swift-export-composition-review.md). Final acceptance
+remains pending before production/default adoption.
 
 ## Dependency maintenance
 

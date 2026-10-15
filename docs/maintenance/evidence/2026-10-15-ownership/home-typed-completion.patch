@@ -1,0 +1,167 @@
+--- a/shared-ios-export/src/HomeFacade.kt
++++ b/shared-ios-export/src/HomeFacade.kt
+@@ -27,6 +27,7 @@
+     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+     private var retired = false
+     private var nextId = 1L
++    private var nextObserver = 1L
+     private val requests = mutableMapOf<Long, Request>()
+     private var initialReads = 0
+     private var loadingReads = 0
+@@ -38,8 +39,9 @@
+ 
+     private class Request {
+         lateinit var job: Job
+-        var phase = 0 // running, delivered, cancelled, unexpected bridge failure
+-        var value: NativeHomeSnapshot? = null
++        val observers = mutableMapOf<Long, kotlinx.coroutines.DisposableHandle>()
++        var phase = RequestPhase.Running // running, delivered, cancelled, unexpected bridge failure
++        var value: HomeFeatureState? = null
+     }
+ 
+     private fun requireMain() {
+@@ -51,18 +53,18 @@
+         return service === other
+     }
+ 
+-    fun initialValue(): NativeHomeSnapshot? {
++    fun initialValue(): HomeFeatureState? {
+         requireMain()
+         if (retired) return null
+         initialReads++
+-        return nativeValue(service.initialState())
++        return service.initialState()
+     }
+ 
+-    fun loadingValue(current: Int): NativeHomeSnapshot? {
++    fun loadingValue(current: Int): HomeFeatureState? {
+         requireMain()
+         if (retired) return null
+         loadingReads++
+-        return nativeValue(service.loadingState(current))
++        return service.loadingState(current)
+     }
+ 
+     fun beginRefresh(current: Int): Long {
+@@ -77,22 +79,22 @@
+                 try {
+                     val value = service.refresh(current)
+                     requireMain()
+-                    if (retired || request.phase != 0 || currentCoroutineContext()[Job]?.isActive != true) {
++                    if (retired || request.phase != RequestPhase.Running || currentCoroutineContext()[Job]?.isActive != true) {
+                         lateRejected++
+                         throw CancellationException("Native result cancelled")
+                     }
+-                    request.value = nativeValue(value)
+-                    request.phase = 1
++                    request.value = value
++                    request.phase = RequestPhase.Delivered
+                     delivered++
+                 } catch (error: CancellationException) {
+-                    if (request.phase == 0) {
+-                        request.phase = 2
++                    if (request.phase == RequestPhase.Running) {
++                        request.phase = RequestPhase.Cancelled
+                         cancelled++
+                     }
+                     throw error
+                 } catch (error: IllegalStateException) {
+                     println("Mobi facade invariant failed: ${error.message}")
+-                    if (request.phase == 0) request.phase = 3
++                    if (request.phase == RequestPhase.Running) request.phase = RequestPhase.BridgeFailure
+                 }
+             }
+         request.job.start()
+@@ -105,12 +107,29 @@
+         return NativeRequestSnapshot(request.phase, request.job.isCompleted, request.value)
+     }
+ 
++    fun observeCompletion(id: Long, observer: () -> Unit): Long {
++        requireMain()
++        val request = requests[id] ?: return 0
++        if (request.observers.size >= 2) return 0
++        val token = nextObserver++
++        // Only a payload-free, nonthrowing Swift signal is invoked here.
++        // Job completion does not promise an executor; the signal must be thread-safe.
++        val handle = request.job.invokeOnCompletion { observer() }
++        request.observers[token] = handle
++        return token
++    }
++    fun stopObserving(id: Long, token: Long) {
++        requireMain()
++        requests[id]?.observers?.remove(token)?.dispose()
++    }
++    fun observerCount(): Int { requireMain(); return requests.values.sumOf { it.observers.size } }
++
+     fun cancelRequest(id: Long) {
+         requireMain()
+         val request = requests[id] ?: return
+         // A completed value can still be waiting for Swift to consume it.
+-        if (request.phase == 0 || request.phase == 1) {
+-            request.phase = 2
++        if (request.phase == RequestPhase.Running || request.phase == RequestPhase.Delivered) {
++            request.phase = RequestPhase.Cancelled
+             request.value = null
+             cancelled++
+         }
+@@ -121,7 +140,7 @@
+         requireMain()
+         val request = requests[id]
+         val completed = request == null || request.job.isCompleted
+-        if (completed) requests.remove(id)
++        if (completed) { request?.observers?.values?.forEach { it.dispose() }; requests.remove(id) }
+         return completed
+     }
+ 
+@@ -151,20 +170,8 @@
+     }
+ }
+ 
+-// Version-1 wire algebra. Swift copies these into checked Sendable enums
+-// synchronously on the main actor; Kotlin wrappers never become async return values.
+-data class NativeHomeSnapshot(
+-    val tag: Int,
+-    val value: Int?,
+-    val reason: Int?,
+-)
+-
+-data class NativeRequestSnapshot(
+-    val phase: Int,
+-    val drained: Boolean,
+-    val value: NativeHomeSnapshot?,
+-)
+-
++enum class RequestPhase { Running, Delivered, Cancelled, BridgeFailure }
++data class NativeRequestSnapshot(val phase: RequestPhase, val drained: Boolean, val value: HomeFeatureState?)
+ data class FacadeMetrics(
+     val retired: Boolean,
+     val active: Int,
+@@ -178,28 +185,3 @@
+     val loadingReads: Int,
+ )
+ 
+-private fun nativeValue(state: HomeFeatureState): NativeHomeSnapshot =
+-    when (val loadable = state.counterLoadable) {
+-        CounterLoadable.Initial -> {
+-            NativeHomeSnapshot(0, null, null)
+-        }
+-
+-        is CounterLoadable.Loading -> {
+-            NativeHomeSnapshot(1, loadable.previousValue, null)
+-        }
+-
+-        is CounterLoadable.Loaded -> {
+-            NativeHomeSnapshot(2, loadable.value, null)
+-        }
+-
+-        is CounterLoadable.Error -> {
+-            NativeHomeSnapshot(
+-                3,
+-                loadable.previousValue,
+-                when (loadable.reason) {
+-                    CounterLoadFailureReason.RepositoryUnavailable -> 0
+-                    CounterLoadFailureReason.Unexpected -> 1
+-                },
+-            )
+-        }
+-    }

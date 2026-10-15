@@ -1,0 +1,24 @@
+package studio.mekate.mobi.export.d2
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
+import platform.Foundation.NSThread
+import studio.mekate.mobi.core.*
+import studio.mekate.mobi.export.nearby.NearbyHub
+class NearbyScenario(noncooperative: Boolean, fail: Boolean) {
+    private val repository = FleetGate(noncooperative, fail)
+    private val hub = NearbyHub(repository, 0, 1)
+    val facade = hub.makeFacade()
+    fun completeBackend() { check(NSThread.isMainThread); repository.gate.complete(Unit) }
+    fun entered(): Int { check(NSThread.isMainThread); return repository.entered }
+}
+private class FleetGate(val noncooperative: Boolean, val fail: Boolean) : NearbyFleetRepository {
+    val gate = CompletableDeferred<Unit>()
+    var entered = 0
+    override suspend fun fetchNearbyFleetSnapshot(request: NearbyFleetRequest): FleetSnapshot {
+        check(NSThread.isMainThread); entered++
+        if (noncooperative) withContext(NonCancellable) { gate.await() } else gate.await()
+        if (fail) throw NearbyFleetRepositoryException()
+        return FleetSnapshot(7, request.riderLocation, listOf(NearbyVehicle(VehicleId("d2-vehicle"), VehicleLocation(55.6,12.5))), request.requestedAtMillis)
+    }
+}

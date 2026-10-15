@@ -1,0 +1,53 @@
+--- a/shared-feature-home/src/CounterLoadable.kt
++++ b/shared-feature-home/src/CounterLoadable.kt
+@@ -1,6 +1,8 @@
+ package studio.mekate.mobi.feature.home
+ 
+ sealed interface CounterLoadable {
++    data class RefreshQueued(val previousValue: Int?) : CounterLoadable
++
+     data object Initial : CounterLoadable
+ 
+     data class Loading(
+@@ -20,6 +22,7 @@
+ fun CounterLoadable.currentValueOrNull(): Int? =
+     when (this) {
+         CounterLoadable.Initial -> null
++        is CounterLoadable.RefreshQueued -> previousValue
+         is CounterLoadable.Loading -> previousValue
+         is CounterLoadable.Loaded -> value
+         is CounterLoadable.Error -> previousValue
+--- a/shared-ui-home/src/HomeContent.kt
++++ b/shared-ui-home/src/HomeContent.kt
+@@ -130,6 +130,10 @@
+ 
+ private fun CounterLoadable.toSupportingText(): String =
+     when (this) {
++        is CounterLoadable.RefreshQueued -> {
++            "Refresh queued"
++        }
++
+         CounterLoadable.Initial -> {
+             "Tap the action to load the next fibonacci counter value from the fake repository."
+         }
+@@ -167,6 +171,10 @@
+ 
+ private fun CounterLoadable.toCounterValueText(): String =
+     when (this) {
++        is CounterLoadable.RefreshQueued -> {
++            "Refresh queued"
++        }
++
+         CounterLoadable.Initial -> {
+             "Counter value: Not loaded yet"
+         }
+--- a/ios-app/pilot/swift/HomeCounterLoadable.swift
++++ b/ios-app/pilot/swift/HomeCounterLoadable.swift
+@@ -11,6 +11,7 @@
+ @MainActor init(sharedValue: any Home.CounterLoadable) {
+     switch sharedValue.sealedType() {
+     case .initial: self = .initial
++        case let .refreshQueued(v): self = .loading(previousValue: v.value.previousValue.map(Int.init))
+     case let .loading(v): self = .loading(previousValue: v.value.previousValue.map(Int.init))
+     case let .loaded(v): self = .loaded(value: Int(v.value.value))
+     case let .error(v):

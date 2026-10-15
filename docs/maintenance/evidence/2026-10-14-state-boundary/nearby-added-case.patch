@@ -1,0 +1,52 @@
+--- a/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureService.kt
++++ b/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureService.kt
+@@ -62,6 +62,7 @@
+ 
+                 RiderLocationState.Denied,
+                 is RiderLocationState.Blocked,
++                RiderLocationState.AwaitingPermission,
+                 RiderLocationState.Resolving,
+                 RiderLocationState.Unavailable,
+                 -> {
+--- a/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureState.kt
++++ b/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureState.kt
+@@ -10,6 +10,8 @@
+ )
+ 
+ sealed interface RiderLocationState {
++    data object AwaitingPermission : RiderLocationState
++
+     data object Resolving : RiderLocationState
+ 
+     data class Available(
+--- a/android-app/src/nearbyvehiclemap/NearbyVehicleMapPresentation.kt
++++ b/android-app/src/nearbyvehiclemap/NearbyVehicleMapPresentation.kt
+@@ -127,6 +127,9 @@
+ 
+ private fun RiderLocationState.messageText(snapshotState: SnapshotBackedNearbyVehicleState?): String =
+     when (this) {
++        RiderLocationState.AwaitingPermission -> {
++            "Awaiting permission"
++        }
+         RiderLocationState.Resolving -> {
+             "Grant while-in-use location access to center discovery around the rider."
+         }
+--- a/assessment/StateCopy.swift
++++ b/assessment/StateCopy.swift
+@@ -5,7 +5,7 @@
+ typealias Nearby = ExportedKotlinPackages.studio.mekate.mobi.feature.nearbyvehiclemap
+ enum HomeValue: Sendable { case initial, loading(Int32?), loaded(Int32), error(Int32?, HomeFailure) }
+ enum HomeFailure: Sendable { case repositoryUnavailable, unexpected }
+-enum LocationValue: Sendable { case resolving, available(Double, Double), denied, blocked(Blocked), temporarilyUnavailable(Double, Double), unavailable }
++enum LocationValue: Sendable { case awaitingPermission, resolving, available(Double, Double), denied, blocked(Blocked), temporarilyUnavailable(Double, Double), unavailable }
+ enum Blocked: Sendable { case accessDenied, accessRestricted, servicesDisabled, approximateOnly, temporarilyUnavailable }
+ struct Coordinate: Sendable { let latitude: Double; let longitude: Double }
+ struct Vehicle: Sendable { let id: String; let location: Coordinate }
+@@ -28,6 +28,7 @@
+   static func location(_ value: any Nearby.RiderLocationState) -> LocationValue {
+     switch value.sealedType() {
+     case .resolving: return .resolving
++    case .awaitingPermission: return .awaitingPermission
+     case let .available(v): return .available(v.value.location.latitude, v.value.location.longitude)
+     case .denied: return .denied
+     case let .blocked(v): return .blocked(blocked(v.value.reason))

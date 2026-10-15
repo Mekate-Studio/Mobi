@@ -1,0 +1,25 @@
+import UIKit
+import Foundation
+import NativeBoundary
+@main @MainActor final class AppDelegate: UIResponder, UIApplicationDelegate {
+  func application(_ application: UIApplication, configurationForConnecting session: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+    let config = UISceneConfiguration(name: "D2", sessionRole: session.role)
+    config.delegateClass = SceneDelegate.self
+    return config
+  }
+}
+@MainActor final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+  func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options: UIScene.ConnectionOptions) {
+    guard let scene = scene as? UIWindowScene else { return }
+    window = UIWindow(windowScene: scene)
+    window?.rootViewController = UIViewController(); window?.makeKeyAndVisible()
+    Task { @MainActor in
+      let text = await OwnershipAssessment.run()
+      let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+      try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      try! text.write(to: directory.appendingPathComponent("d2-result.json"), atomically: true, encoding: .utf8)
+      print("MOBI_D2_RESULT=" + text)
+    }
+  }
+}

@@ -1,0 +1,18 @@
+--- a/ios-app/pilot/swift/Shutdown.swift
++++ b/ios-app/pilot/swift/Shutdown.swift
+@@ -10,13 +10,13 @@
+ 
+ @MainActor final class ShutdownCoordinator {
+     private let pool: AdmissionPool
+-    private let native: DrainSupervisor
++    private let native: any NativeDrainReading
+     private let composeActive: @MainActor () -> Int
+     private let clock: any FacadePollingDriver
+     private(set) var waits = 0
+     init(
+         pool: AdmissionPool,
+-        native: DrainSupervisor,
++        native: any NativeDrainReading,
+         composeActive: @escaping @MainActor () -> Int,
+         clock: any FacadePollingDriver = SystemPollDriver(),
+     ) {

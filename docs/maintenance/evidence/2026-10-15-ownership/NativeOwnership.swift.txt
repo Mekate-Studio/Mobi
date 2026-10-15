@@ -1,0 +1,489 @@
+import Foundation
+@_implementationOnly import MobiHome
+typealias Home = ExportedKotlinPackages.studio.mekate.mobi.feature.home
+
+public enum HomeCounterLoadable: Equatable, Sendable {
+    case initial
+    case loading(previousValue: Int?)
+    case loaded(value: Int)
+    case error(previousValue: Int?, reason: HomeCounterLoadFailureReason)
+
+@MainActor init(sharedValue: any Home.CounterLoadable) {
+    switch sharedValue.sealedType() {
+    case .initial: self = .initial
+    case let .loading(v): self = .loading(previousValue: v.value.previousValue.map(Int.init))
+    case let .loaded(v): self = .loaded(value: Int(v.value.value))
+    case let .error(v):
+        self = .error(previousValue: v.value.previousValue.map(Int.init), reason: HomeCounterLoadFailureReason(sharedReason: v.value.reason))
+    }
+}
+
+    var currentValueForRefresh: Int {
+        switch self {
+        case .initial:
+            0
+        case let .loading(previousValue):
+            previousValue ?? 0
+        case let .loaded(value):
+            value
+        case let .error(previousValue, _):
+            previousValue ?? 0
+        }
+    }
+
+    var displayedCounterText: String {
+        switch self {
+        case .initial:
+            return "Counter value: Not loaded yet"
+        case let .loading(previousValue):
+            if let previousValue {
+                return "Counter value: \(previousValue)"
+            }
+            return "Counter value: Loading first result…"
+        case let .loaded(value):
+            return "Counter value: \(value)"
+        case let .error(previousValue, _):
+            if let previousValue {
+                return "Counter value: \(previousValue)"
+            }
+            return "Counter value: No value available"
+        }
+    }
+
+    var supportingText: String {
+        switch self {
+        case .initial:
+            return "Tap the action to load the next fibonacci counter value from the fake repository."
+        case .loading:
+            return "Loading the next fibonacci counter value from the fake repository."
+        case let .loaded(value):
+            return "The fake repository returned fibonacci counter value \(value)."
+        case let .error(previousValue, reason):
+            if let previousValue {
+                return "\(reason.headlineText) Showing last known counter value \(previousValue)."
+            }
+            return "\(reason.headlineText) No fibonacci counter value was loaded yet."
+        }
+    }
+
+    var isLoading: Bool {
+        if case .loading = self {
+            return true
+        }
+
+        return false
+    }
+}
+
+public enum HomeCounterLoadFailureReason: Equatable, Sendable {
+    case repositoryUnavailable
+    case unexpected
+
+    @MainActor init(sharedReason: any Home.CounterLoadFailureReason) {
+        switch sharedReason.sealedType() {
+        case .repositoryUnavailable: self = .repositoryUnavailable
+        case .unexpected: self = .unexpected
+        }
+    }
+
+    var headlineText: String {
+        switch self {
+        case .repositoryUnavailable:
+            "The fake repository failed to load the next fibonacci counter value."
+        case .unexpected:
+            "Something went wrong while loading the next fibonacci counter value."
+        }
+    }
+}
+
+import Foundation
+import Synchronization
+@_implementationOnly import MobiHome
+@_implementationOnly import MobiTypedHome
+
+typealias Transport = ExportedKotlinPackages.studio.mekate.mobi.export.home
+typealias Fixture = ExportedKotlinPackages.studio.mekate.mobi.export.d2
+public enum ObservationMode: String, Sendable { case polling, completion }
+enum BoundaryError: Error { case closed, full, invalidResult, invalidObserver, invalidInput }
+final class SignalCount: Sendable {
+    private let count = Mutex(0)
+    func hit() { count.withLock { $0 += 1 } }
+    var value: Int { count.withLock { $0 } }
+}
+@MainActor final class GateControl {
+    private let scenario: Fixture.Scenario
+    init(noncooperative: Bool = false, fail: Bool = false) { scenario = Fixture.Scenario(noncooperative: noncooperative, fail: fail) }
+    var facade: Transport.HomeFacade { scenario.facade }
+    func release() { scenario.completeBackend() }
+    var entered: Int32 { scenario.entered() }
+}
+@MainActor final class ExperimentClock: FacadePollingDriver {
+    var waits = 0
+    func wait() async throws { waits += 1; try await Task.sleep(for: .milliseconds(5)) }
+}
+@MainActor final class CompletionDrains {
+    private var tasks: [DrainKey: Task<Void, Never>] = [:]
+    private(set) var completed = 0
+    private(set) var accepted = 0
+    var active: Int { tasks.count }
+    let signals = SignalCount()
+    func adopt(_ key: DrainKey, isCompleted: @escaping @MainActor () -> Bool,
+               forget: @escaping @MainActor () -> Bool,
+               subscribe: @escaping @MainActor (@escaping @Sendable () -> Void) -> Int64,
+               unsubscribe: @escaping @MainActor (Int64) -> Void,
+               reservation: AdmissionReservation) {
+        if tasks[key] != nil { return }
+        accepted += 1
+        if isCompleted() { precondition(forget()); reservation.release(); completed += 1; return }
+        let (stream, continuation) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        let counter = signals
+        let callback: @Sendable () -> Void = { counter.hit(); continuation.yield(); continuation.finish() }
+        let token = subscribe(callback); precondition(token != 0)
+        let operation: @MainActor @Sendable () async -> Void = { [weak self] in
+            for await _ in stream { break }
+            precondition(isCompleted()); unsubscribe(token)
+            precondition(forget()); reservation.release()
+            self?.tasks.removeValue(forKey: key); self?.completed += 1
+        }
+        tasks[key] = Task.detached(operation: operation)
+    }
+}
+@MainActor protocol NativeDrainReading { func metrics() -> DrainMetrics }
+extension DrainSupervisor: NativeDrainReading {}
+extension CompletionDrains: NativeDrainReading {
+    func metrics() -> DrainMetrics { DrainMetrics(active: active, accepted: accepted, completed: completed) }
+}
+@MainActor final class ParentScope {
+    let pool = AdmissionPool(capacity: 1)
+    let clock = ExperimentClock()
+    let polling: DrainSupervisor
+    let completion = CompletionDrains()
+    let mode: ObservationMode
+    init(_ mode: ObservationMode) { self.mode = mode; polling = DrainSupervisor(clock: clock) }
+    var active: Int { polling.metrics().active + completion.active }
+    func adopt(_ key: DrainKey, facade: Transport.HomeFacade, reservation: AdmissionReservation) {
+        if mode == .completion { completion.adopt(key, isCompleted: { facade.poll(id: key.request).drained },
+                forget: { facade.forgetRequest(id: key.request) },
+                subscribe: { facade.observeCompletion(id: key.request, observer: $0) },
+                unsubscribe: { facade.stopObserving(id: key.request, token: $0) }, reservation: reservation) }
+        else {
+            _ = polling.adopt(key, isCompleted: { facade.poll(id: key.request).drained }, forget: {
+                let done = facade.forgetRequest(id: key.request); if done { reservation.release() }; return done
+            })
+        }
+    }
+}
+@MainActor public final class NativeHomeClient {
+    private let facade: Transport.HomeFacade
+    private let parent: ParentScope
+    private let owner = UUID()
+    private let mode: ObservationMode
+    let signals = SignalCount()
+    private(set) var reads = 0
+    init(gate: GateControl, parent: ParentScope) { self.facade = gate.facade; self.parent = parent; mode = parent.mode }
+    public func initialValue() throws -> HomeCounterLoadable {
+        guard let value = facade.initialValue() else { throw BoundaryError.closed }
+        return HomeCounterLoadable(sharedValue: value.counterLoadable)
+    }
+    public func retire() { facade.retire() }
+    private func value(_ id: Int64) throws -> HomeCounterLoadable? {
+        reads += 1
+        let snapshot = facade.poll(id: id)
+        switch snapshot.phase {
+        case .Running: return nil
+        case .Delivered:
+            guard snapshot.drained else { return nil }
+            guard let value = snapshot.value else { throw BoundaryError.invalidResult }
+            return HomeCounterLoadable(sharedValue: value.counterLoadable)
+        case .Cancelled: throw CancellationError()
+        case .BridgeFailure: throw BoundaryError.invalidResult
+        }
+    }
+    private func notifiedValue(_ id: Int64) async throws -> HomeCounterLoadable {
+        let (stream, continuation) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        let count = signals
+        let callback: @Sendable () -> Void = { count.hit(); continuation.yield(); continuation.finish() }
+        let token = facade.observeCompletion(id: id, observer: callback)
+        guard token != 0 else { throw BoundaryError.invalidObserver }
+        defer { facade.stopObserving(id: id, token: token) }
+        for await _ in stream {
+            try Task.checkCancellation()
+            guard let result = try value(id) else { throw BoundaryError.invalidResult }; return result
+        }
+        try Task.checkCancellation(); throw BoundaryError.invalidResult
+    }
+    public func refresh(_ current: Int32) async throws -> HomeCounterLoadable {
+        try Task.checkCancellation()
+        guard !facade.metrics().retired else { throw BoundaryError.closed }
+        let reservation = try parent.pool.reserve(.homeRequest)
+        let id = facade.beginRefresh(current: current)
+        guard id != 0 else { reservation.release(); throw BoundaryError.full }
+        do {
+            let result: HomeCounterLoadable
+            if mode == .completion { result = try await notifiedValue(id) }
+            else {
+                while true {
+                    try Task.checkCancellation()
+                    if let completed = try value(id) { result = completed; break }
+                    try await parent.clock.wait()
+                }
+            }
+            precondition(facade.forgetRequest(id: id)); reservation.release(); return result
+        } catch {
+            facade.cancelRequest(id: id)
+            // Captured closures retain facade and lease, never the route/client.
+            parent.adopt(DrainKey(owner: owner, request: id), facade: facade, reservation: reservation)
+            throw error
+        }
+    }
+}
+@MainActor public enum OwnershipAssessment {
+    private static func expect(_ value: @autoclosure () -> Bool, _ message: String) { precondition(value(), message) }
+    private static func waitUntil(_ predicate: @MainActor () -> Bool) async throws {
+        let end = ContinuousClock.now.advanced(by: .seconds(3))
+        while !predicate() { precondition(ContinuousClock.now < end, "fixture condition timed out"); try await Task.sleep(for: .milliseconds(2)) }
+    }
+    public static func run() async -> String {
+        var checks: [String] = []; var observations: [[String: Any]] = []
+        do {
+            for mode in [ObservationMode.polling, .completion] {
+                let parent = ParentScope(mode), gate = GateControl()
+                let client = NativeHomeClient(gate: gate, parent: parent)
+                let task = Task { @MainActor in try await client.refresh(7) }
+                try await waitUntil { gate.entered == 1 }
+                try await Task.sleep(for: .milliseconds(60)); gate.release()
+                let result = try await task.value
+                expect(result == .loaded(value: 8), "wrong typed result")
+                expect(parent.pool.metrics().active == 0 && parent.active == 0, "lease retained after success")
+                expect(gate.facade.observerCount() == 0 && gate.facade.metrics().retained == 0, "observer/request retained")
+                observations.append(["mode": mode.rawValue, "reads": client.reads, "waits": parent.clock.waits, "signals": client.signals.value])
+                checks.append(mode.rawValue + "/typed-success-balanced")
+                let failureGate = GateControl(fail: true), failure = NativeHomeClient(gate: failureGate, parent: parent)
+                let failed = Task { @MainActor in try await failure.refresh(4) }; try await waitUntil { failureGate.entered == 1 }; failureGate.release()
+                let failedValue = try await failed.value
+                expect(failedValue == .error(previousValue: 4, reason: .repositoryUnavailable), "domain failure not copied")
+                checks.append(mode.rawValue + "/typed-domain-error")
+                // Completion may precede listener registration: no lost wakeup.
+                let immediateGate = GateControl(); immediateGate.release()
+                let immediate = NativeHomeClient(gate: immediateGate, parent: parent)
+                let immediateValue = try await immediate.refresh(1)
+                expect(immediateValue == .loaded(value: 2), "lost immediate completion")
+                checks.append(mode.rawValue + "/completion-before-subscription")
+                // A cancelled task must not register backend work.
+                let cancelledGate = GateControl(), cancelled = NativeHomeClient(gate: cancelledGate, parent: parent)
+                let early = Task { @MainActor in try await cancelled.refresh(0) }; early.cancel()
+                do { _ = try await early.value; preconditionFailure("early task delivered") } catch is CancellationError {}
+                expect(cancelledGate.entered == 0 && parent.pool.metrics().active == 0, "cancelled task admitted")
+                checks.append(mode.rawValue + "/cancel-before-admission")
+                // Noncooperative work must outlive the caller and retain capacity.
+                let lateGate = GateControl(noncooperative: true)
+                var owner: NativeHomeClient? = NativeHomeClient(gate: lateGate, parent: parent)
+                weak let weakOwner = owner
+                let late = Task { @MainActor [captured = owner!] in try await captured.refresh(10) }
+                try await waitUntil { lateGate.entered == 1 }; late.cancel()
+                do { _ = try await late.value; preconditionFailure("cancelled result delivered") } catch is CancellationError {}
+                owner = nil
+                expect(parent.pool.metrics().active == 1 && parent.active == 1, "unfinished work released")
+                expect(weakOwner == nil, "cleanup retained client")
+                checks.append(mode.rawValue + "/cancelled-owner-independent-drain")
+                do { _ = try parent.pool.reserve(.homeRequest); preconditionFailure("capacity reused while backend live") } catch AdmissionError.full {}
+                checks.append(mode.rawValue + "/capacity-held-until-completion")
+                let waiter = Task { @MainActor in while parent.active > 0 { try Task.checkCancellation(); try await Task.sleep(for: .milliseconds(5)) } }
+                waiter.cancel(); do { try await waiter.value; preconditionFailure("waiter cancellation ignored") } catch is CancellationError {}
+                try await Task.sleep(for: .milliseconds(15))
+                expect(parent.active == 1 && parent.pool.metrics().active == 1, "cancelled waiter stopped cleanup")
+                checks.append(mode.rawValue + "/cancelled-acknowledgement-and-soft-observation")
+                lateGate.release(); try await waitUntil { parent.active == 0 }
+                expect(parent.pool.metrics().active == 0 && lateGate.facade.metrics().delivered == 0, "stale result or leaked lease")
+                expect(lateGate.facade.metrics().lateRejected == 1 && lateGate.facade.observerCount() == 0, "late rejection/observer cleanup missing")
+                checks.append(mode.rawValue + "/noncooperative-completion-fenced-and-released")
+                // Retirement closes new work and fences a noncooperative completion.
+                let retiredGate = GateControl(noncooperative: true), retired = NativeHomeClient(gate: retiredGate, parent: parent)
+                let retiring = Task { @MainActor in try await retired.refresh(20) }; try await waitUntil { retiredGate.entered == 1 }
+                retired.retire(); retiring.cancel()
+                do { _ = try await retiring.value; preconditionFailure("retired work delivered") } catch is CancellationError {}
+                do { _ = try await retired.refresh(20); preconditionFailure("retired owner admitted") } catch BoundaryError.closed {}
+                retiredGate.release(); try await waitUntil { parent.active == 0 }
+                expect(parent.pool.metrics().active == 0 && retiredGate.facade.metrics().retireTransitions == 1, "retirement not balanced")
+                checks.append(mode.rawValue + "/retirement-fences-and-closes")
+                let shutdownParent = ParentScope(mode), shutdownGate = GateControl(noncooperative: true)
+                let shutdownClient = NativeHomeClient(gate: shutdownGate, parent: shutdownParent)
+                let shutdownTask = Task { @MainActor in try await shutdownClient.refresh(30) }
+                try await waitUntil { shutdownGate.entered == 1 }; shutdownTask.cancel()
+                do { _ = try await shutdownTask.value; preconditionFailure("shutdown result delivered") } catch is CancellationError {}
+                let reader: any NativeDrainReading = mode == .completion ? shutdownParent.completion : shutdownParent.polling
+                let coordinator = ShutdownCoordinator(pool: shutdownParent.pool, native: reader, composeActive: { 0 }, clock: shutdownParent.clock)
+                coordinator.closeAdmission()
+                let receipt = try await coordinator.awaitDrain(softDeadline: .milliseconds(15))
+                expect(receipt.state == .stillDraining && receipt.reservations == 1 && receipt.nativeDrains == 1, "soft deadline released backend")
+                checks.append(mode.rawValue + "/repository-soft-shutdown-coordinator")
+                let acknowledgement = Task { @MainActor in try await coordinator.awaitDrain(softDeadline: .seconds(2)) }
+                acknowledgement.cancel()
+                do { _ = try await acknowledgement.value; preconditionFailure("acknowledgement ignored cancellation") } catch is CancellationError {}
+                expect(shutdownParent.active == 1 && shutdownParent.pool.metrics().active == 1, "acknowledgement cancelled cleanup")
+                shutdownGate.release(); try await waitUntil { shutdownParent.active == 0 }
+                let drained = try await coordinator.awaitDrain(softDeadline: .zero)
+                expect(drained.state == .completed && drained.reservations == 0, "shutdown did not complete")
+                checks.append(mode.rawValue + "/repository-cancelled-shutdown-waiter")
+
+            }
+            checks.append(contentsOf: try await NearbyAssessment.run())
+            let packet: [String: Any] = ["state": "checks_passed_review_required", "checks": checks, "observations": observations, "scope": "macro-free-Home-and-Nearby-prototype-only", "production_adoption": false]
+            return String(data: try JSONSerialization.data(withJSONObject: packet, options: [.prettyPrinted, .sortedKeys]), encoding: .utf8)!
+        } catch {
+            return "{\"state\":\"failed\",\"error\":\"\(error)\"}"
+        }
+    }
+}
+
+@_implementationOnly import MobiNearby
+@_implementationOnly import MobiCore
+
+typealias Nearby = ExportedKotlinPackages.studio.mekate.mobi.feature.nearbyvehiclemap
+typealias NearbyTransport = ExportedKotlinPackages.studio.mekate.mobi.export.nearby
+public struct NearbyFleetValue: Sendable, Equatable {
+    public let sequence: Int64
+    public let latitude: Double
+    public let longitude: Double
+    public let vehicles: [NearbyVehicleValue]
+    public let loadedAt: Int64
+}
+public struct NearbyVehicleValue: Sendable, Equatable { public let id: String; public let latitude: Double; public let longitude: Double }
+public enum NearbyFailureValue: Sendable, Equatable { case riderLocationUnavailable, repositoryUnavailable, unexpected }
+public enum NearbyPresentation: Sendable, Equatable { case initial, loading, loaded(NearbyFleetValue), refreshing(NearbyFleetValue), failedWithSnapshot(NearbyFleetValue, NearbyFailureValue), failedWithoutSnapshot(NearbyFailureValue) }
+@MainActor final class NearbyControl {
+    private let scenario: Fixture.NearbyScenario
+    init(noncooperative: Bool = false, fail: Bool = false) { scenario = Fixture.NearbyScenario(noncooperative: noncooperative, fail: fail) }
+    var facade: NearbyTransport.NearbyFacade { scenario.facade }
+    var entered: Int32 { scenario.entered() }
+    func release() { scenario.completeBackend() }
+}
+extension ParentScope {
+    func adopt(_ key: DrainKey, facade: NearbyTransport.NearbyFacade, reservation: AdmissionReservation) {
+        if mode == .completion {
+            completion.adopt(key, isCompleted: { facade.poll(id: key.request).drained },
+                forget: { facade.forgetRequest(id: key.request) },
+                subscribe: { facade.observeCompletion(id: key.request, observer: $0) },
+                unsubscribe: { facade.stopObserving(id: key.request, token: $0) }, reservation: reservation)
+        } else {
+            _ = polling.adopt(key, isCompleted: { facade.poll(id: key.request).drained }, forget: {
+                let done = facade.forgetRequest(id: key.request); if done { reservation.release() }; return done
+            })
+        }
+    }
+}
+@MainActor public final class NativeNearbyClient {
+    private let facade: NearbyTransport.NearbyFacade
+    private let parent: ParentScope
+    private var state: Int64
+    private let owner = UUID()
+    init(gate: NearbyControl, parent: ParentScope) {
+        facade = gate.facade; self.parent = parent
+        let initial = facade.states.initialValue()
+        state = facade.states.available(id: initial.id, latitude: 55.6, longitude: 12.5).id
+        facade.states.releaseState(id: initial.id)
+    }
+    public func retire() { facade.retire() }
+    private func failure(_ value: Nearby.NearbyVehicleMapFailureReason) -> NearbyFailureValue {
+        switch value { case .RiderLocationUnavailable: .riderLocationUnavailable; case .RepositoryUnavailable: .repositoryUnavailable; case .Unexpected: .unexpected }
+    }
+    private func fleet(_ value: ExportedKotlinPackages.studio.mekate.mobi.core.FleetSnapshot) -> NearbyFleetValue {
+        NearbyFleetValue(sequence: value.sequence, latitude: value.riderLocation.latitude, longitude: value.riderLocation.longitude,
+            vehicles: value.vehicles.map { NearbyVehicleValue(id: $0.id.value, latitude: $0.location.latitude, longitude: $0.location.longitude) }, loadedAt: value.loadedAtMillis)
+    }
+    private func value(_ id: Int64) throws -> NearbyPresentation? {
+        let poll = facade.poll(id: id)
+        switch poll.phase {
+        case .Running: return nil
+        case .Cancelled: throw CancellationError()
+        case .BridgeFailure: throw BoundaryError.invalidResult
+        case .Delivered:
+            guard poll.drained else { return nil }
+            let wire = facade.consume(id: id)
+            let snapshot: any Nearby.NearbyVehicleSnapshotState = wire.value.snapshotState
+            let result: NearbyPresentation
+            switch snapshot.sealedType() {
+            case .initial: result = .initial
+            case .loading: result = .loading
+            case let .loaded(v): result = .loaded(fleet(v.value.snapshot))
+            case let .refreshing(v): result = .refreshing(fleet(v.value.snapshot))
+            case let .failedWithSnapshot(v): result = .failedWithSnapshot(fleet(v.value.snapshot), failure(v.value.reason))
+            case let .failedWithoutSnapshot(v): result = .failedWithoutSnapshot(failure(v.value.reason))
+            }
+            facade.states.releaseState(id: state); state = wire.id
+            return result
+        }
+    }
+    private func notified(_ id: Int64) async throws -> NearbyPresentation {
+        let (stream, continuation) = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+        let callback: @Sendable () -> Void = { continuation.yield(); continuation.finish() }
+        let token = facade.observeCompletion(id: id, observer: callback)
+        guard token != 0 else { throw BoundaryError.invalidObserver }
+        defer { facade.stopObserving(id: id, token: token) }
+        for await _ in stream { try Task.checkCancellation(); guard let value = try value(id) else { throw BoundaryError.invalidResult }; return value }
+        try Task.checkCancellation(); throw BoundaryError.invalidResult
+    }
+    public func refresh(_ now: Int64) async throws -> NearbyPresentation {
+        try Task.checkCancellation(); guard now >= 0 else { throw BoundaryError.invalidInput }; guard !facade.metrics().retired else { throw BoundaryError.closed }
+        let reservation = try parent.pool.reserve(.nearbyRequest)
+        let id = facade.beginRefresh(id: state, now: now)
+        guard id != 0 else { reservation.release(); throw BoundaryError.full }
+        do {
+            let result: NearbyPresentation
+            if parent.mode == .completion { result = try await notified(id) }
+            else {
+                while true { try Task.checkCancellation(); if let value = try value(id) { result = value; break }; try await parent.clock.wait() }
+            }
+            reservation.release(); return result
+        } catch {
+            facade.cancelRequest(id: id); parent.adopt(DrainKey(owner: owner, request: id), facade: facade, reservation: reservation); throw error
+        }
+    }
+}
+@MainActor enum NearbyAssessment {
+    static func waitUntil(_ predicate: @MainActor () -> Bool) async throws {
+        let end = ContinuousClock.now.advanced(by: .seconds(3))
+        while !predicate() { precondition(ContinuousClock.now < end); try await Task.sleep(for: .milliseconds(2)) }
+    }
+    static func run() async throws -> [String] {
+        var checks: [String] = []
+        for mode in [ObservationMode.polling, .completion] {
+            let parent = ParentScope(mode), gate = NearbyControl(), client = NativeNearbyClient(gate: gate, parent: parent)
+            let task = Task { @MainActor in try await client.refresh(1000) }
+            try await waitUntil { gate.entered == 1 }; gate.release()
+            let value = try await task.value
+            guard case let .loaded(fleet) = value else { preconditionFailure("Nearby loaded value missing") }
+            precondition(fleet.sequence == 7 && fleet.loadedAt == 1000 && fleet.vehicles.first?.id == "d2-vehicle" && fleet.latitude == 55.6)
+            precondition(parent.pool.metrics().active == 0 && gate.facade.metrics().requests == 0 && gate.facade.observerCount() == 0)
+            checks.append(mode.rawValue + "/nearby-typed-fleet-balanced")
+            let failureGate = NearbyControl(fail: true), failure = NativeNearbyClient(gate: failureGate, parent: parent)
+            let failed = Task { @MainActor in try await failure.refresh(1000) }; try await waitUntil { failureGate.entered == 1 }; failureGate.release()
+            let failedValue = try await failed.value
+            precondition(failedValue == .failedWithoutSnapshot(.repositoryUnavailable))
+            checks.append(mode.rawValue + "/nearby-typed-domain-error")
+            let invalidGate = NearbyControl(), invalid = NativeNearbyClient(gate: invalidGate, parent: parent)
+            do { _ = try await invalid.refresh(-1); preconditionFailure("negative time reached backend") } catch BoundaryError.invalidInput {}
+            precondition(invalidGate.entered == 0 && parent.pool.metrics().active == 0)
+            checks.append(mode.rawValue + "/nearby-invalid-time-before-admission")
+            let lateGate = NearbyControl(noncooperative: true)
+            var owner: NativeNearbyClient? = NativeNearbyClient(gate: lateGate, parent: parent)
+            weak let weakOwner = owner
+            let late = Task { @MainActor [captured = owner!] in try await captured.refresh(1000) }
+            try await waitUntil { lateGate.entered == 1 }; late.cancel()
+            do { _ = try await late.value; preconditionFailure("Nearby cancelled delivery") } catch is CancellationError {}
+            owner = nil; precondition(weakOwner == nil && parent.active == 1 && parent.pool.metrics().active == 1)
+            lateGate.release(); try await waitUntil { parent.active == 0 }
+            precondition(parent.pool.metrics().active == 0 && lateGate.facade.metrics().requests == 0 && lateGate.facade.metrics().delivered == 0 && lateGate.facade.observerCount() == 0)
+            checks.append(mode.rawValue + "/nearby-owner-independent-noncooperative-drain")
+            let retiringGate = NearbyControl(noncooperative: true), retiring = NativeNearbyClient(gate: retiringGate, parent: parent)
+            let retiringTask = Task { @MainActor in try await retiring.refresh(1000) }; try await waitUntil { retiringGate.entered == 1 }
+            retiring.retire(); retiringTask.cancel()
+            do { _ = try await retiringTask.value; preconditionFailure("Nearby retired delivery") } catch is CancellationError {}
+            do { _ = try await retiring.refresh(1000); preconditionFailure("Nearby retired admission") } catch BoundaryError.closed {}
+            retiringGate.release(); try await waitUntil { parent.active == 0 }
+            precondition(retiringGate.facade.metrics().states == 0 && retiringGate.facade.metrics().requests == 0 && parent.pool.metrics().active == 0)
+            checks.append(mode.rawValue + "/nearby-retirement-clears-owned-handles")
+        }
+        return checks
+    }
+}
