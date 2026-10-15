@@ -116,3 +116,10 @@ asking for acceptance of another trade-off.
 No production choice or maintainer risk disposition has been recorded by this
 proposal. PR #37 remains the pilot reference; this production work should
 supersede its alternate app path rather than rely on merging it first.
+
+
+Qualification order confirmed 2026-10-15: Native Home and Nearby first, with
+Shared UI qualification following separately. This orders candidate work; it
+does not remove Shared UI, the same Home service or one-delivery requirements
+from final adoption. The provisional closed module now contains both native
+features; see the [native integration review](../../../docs/maintenance/swift-export-native-integration-review.md).

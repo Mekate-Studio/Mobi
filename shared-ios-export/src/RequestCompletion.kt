@@ -1,4 +1,4 @@
-package studio.mekate.mobi.export.home
+package studio.mekate.mobi.export.request
 
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.Job
@@ -6,7 +6,7 @@ import platform.Foundation.NSThread
 
 // Request-independent listener ownership. The constructor/job lookup stay inside
 // this Kotlin module; native callers receive only registration/disposal operations.
-class HomeRequestCompletion internal constructor(
+class RequestCompletion internal constructor(
     private val maxObservers: Int,
     private val job: (Long) -> Job?,
 ) {

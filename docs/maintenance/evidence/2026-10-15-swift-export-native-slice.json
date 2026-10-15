@@ -1,0 +1,776 @@
+{
+  "schema": 1,
+  "date": "2026-10-15",
+  "scope": "provisional-Home-Nearby-TCA-MapLibre-native-integration",
+  "assessment": "checks_passed_review_required",
+  "source_head_before_changes": "a4a9543f589a4a68314f83eb7248dd1c92d5a53e",
+  "candidate_sources": {
+    "ios-app/interop/NativeAppServices.swift": "4f9ea4b00f5549cc3d6806790758b59a37a03ea3f4b22cebe0ce211d78d4274d",
+    "ios-app/interop/home/Admission.swift": "5b534511afb15e2b5d4873aaa65f22be70dc3502375a937303884e0e2e32e0ed",
+    "ios-app/interop/home/CancellationRelay.swift": "f6bd4ae882dfa0c62eeb5f61775689ce4d452d0c47c07f6d631a6c22c9772ebd",
+    "ios-app/interop/home/HomeBoundaryFailure.swift": "4c6c78c7d65a120a81af8450629c1b5c3d27758b97e5a3c7f9b08bc7ee22890a",
+    "ios-app/interop/home/HomeCounterLoadable.swift": "1de62941a1953d26425af68970af737ab2421ac64a9fbfd811d174457cfc2fe6",
+    "ios-app/interop/home/HomeFeature+Action.swift": "5b17aa5efa6593b32c89518d8b28e225a56f93eb62db4427ab8922eadbd005ad",
+    "ios-app/interop/home/HomeFeature+State.swift": "c6e0e18dd53a8b21b66f218c3509ad401c79b08ea1143d9d9f2cbaa455bd0c3e",
+    "ios-app/interop/home/HomeFeature.swift": "fbf3aff0e0903133f05fc1d73dce9516235ec296898b9cc4f00e6557c33c59d8",
+    "ios-app/interop/home/HomeFeatureClient.swift": "ce01e3416a0c64b1d5770f43abd0ae84041dc04f9d8c24ac9cc0562040ae64be",
+    "ios-app/interop/home/HomeHeroCard.swift": "423399ffcf00b2c5642926066cf7d1d065094bad5093b96d1973b98fe66fe2d1",
+    "ios-app/interop/home/HomePrimaryActionButton.swift": "e4169a4bbf2d9f70c64167685485f9d7a271340b443fa364ff5a1ff5423b27b1",
+    "ios-app/interop/home/HomeScreenContent.swift": "f196bf82ab24c850aed69667414641d6642efcef48966873ddedb76d97913731",
+    "ios-app/interop/home/HomeView.swift": "56a504e58ad476ccfda77678e4e6d617e9c394b8036fb044ceac807fa4977441",
+    "ios-app/interop/home/NativeHomeAccess.swift": "ccfb9953bcd20197031d238ab50185f8330e4fad2a3650091b621963ce541574",
+    "ios-app/interop/home/NativeHomeRoute.swift": "7f2fdc6083a0c7a348b92a34cdedd3090ec56b46c167c6633475b8cf99db5c76",
+    "ios-app/interop/home/RequestCompletion.swift": "24bf3bb3fea838ed1bafadd67d6897ff98e6d582e03b7b2414492f90642c3d3b",
+    "ios-app/interop/nearby/NativeNearbyAccess.swift": "867dd0c83f5e97f9d5d3b203aea5af71a024d59cde815f42dffbcd56341ff429",
+    "ios-app/interop/nearby/NativeNearbyRoute.swift": "fc76f147becb9df9eb2d3073f887eb4b6caf33e4b70d8c69b9ef1c7c87fbf487",
+    "ios-app/interop/nearby/NearbyStateCopy.swift": "870e6cf488426965c3d9d5e1dd17443b81061fd215c10bd4900bb8bab40e05ce",
+    "ios-app/interop/nearby/NearbyVehicleMapBasemapConfig.swift": "1e9af2add58363e7d969928f141542a099a7124da32eb3c8edab703590ef25f4",
+    "ios-app/interop/nearby/NearbyVehicleMapFeature+Action.swift": "0f8fea880872a880d9c52576bc0dfc3fd60078035247f5adce1ce8d9dab031a7",
+    "ios-app/interop/nearby/NearbyVehicleMapFeature+State.swift": "59eb1d868462bc1f8044745ed9081552071332e21b68c5199406ce9d7f7d6a4f",
+    "ios-app/interop/nearby/NearbyVehicleMapFeature.swift": "d2b62e126f873c0a7789d6636e696a37f7865518f04a1894896baa30b1bf443b",
+    "ios-app/interop/nearby/NearbyVehicleMapFeatureClient.swift": "b85fd80b2bdb28ea1e206214d12006c03c163ed048286c55513e418c42c78afd",
+    "ios-app/interop/nearby/NearbyVehicleMapLocationClient.swift": "79ed764a7368126163c5683026d3376a3004a14b060c35a5e485b653a38ae68b",
+    "ios-app/interop/nearby/NearbyVehicleMapRenderer.swift": "3ec610816b2dff232583ada91ce7467916609bf483999fc7ef5c26b04ac4e020",
+    "ios-app/interop/nearby/NearbyVehicleMapView.swift": "9735da6cfc585a92c4ce4a6f7811b88d3e89db95b954c3a6915c7c3cd359c77c",
+    "shared-ios-export/src/HomeRequestOwner.kt": "03504e6797b66186fd3618b300b637d505f0109a7a553d6878d665dc6777eec0",
+    "shared-ios-export/src/RequestCompletion.kt": "5b03ac4e28ffb9e1d9c0288a5e41edf883c3f63042246a9ab815d77cc3ce1b16",
+    "shared-ios-export/src/NearbyRequestOwner.kt": "bd6ff31e02fb0c730310203769bcdd58244f1f83f730017d02a9fafbe407ab48",
+    "shared-ios-export/src/NearbyFacade.kt": "a6e27b53f918f1e5b7f99c1d788797c8fc70e2d066e96479f2f0ddc5411d7370",
+    "shared-ios-export/src/AppComposition.kt": "c45905e5017a67ed3d031af7389fd8de3482ff5f997f41f881d1f2a0e10704e6"
+  },
+  "implementation_for_evaluation_authorized": true,
+  "qualification_order": [
+    "Native Home/Nearby",
+    "Shared UI"
+  ],
+  "production_adoption_authorized": false,
+  "maintainer_disposition": "review_required",
+  "baseline_unchanged_non_documentation_inputs": 459,
+  "explicit_existing_input_delta": {
+    "shared-ios-export/src/NearbyFacade.kt": "Expose the exact policy-wrapped hub service inside the private generated closure so typed native owners use the same repository cohort"
+  },
+  "tool_tuple": "a44ec744bb9333e3ec14ea5786aa9ce3e0db45a13246e74b61588070803ac97d",
+  "tools": {
+    "swift_version": "swift-driver version: 1.168.6 Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+    "xcode_version": "Xcode 27.0\nBuild version 27A266a",
+    "sdk_version": "27.0",
+    "files": [
+      {
+        "name": "java",
+        "sha256": "f6211ec0d5650f4ac379331c4bce6505ebecbe316c2d57491835e9030d1bc34e"
+      },
+      {
+        "name": "release",
+        "sha256": "b56984ed48ac3049dbd1590cf219ecfb13eeefed36b5ab80032edde84da95f96"
+      },
+      {
+        "name": "modules",
+        "sha256": "e8c40e0c4bad803eee25a18c31128c3bdc6fb141746ed79d8d49caed0e1f2db9"
+      },
+      {
+        "name": "swift-frontend",
+        "sha256": "cf81104bf554eef05e28a8bb5285c763f1323b4511b944d755d8bdd6cb8db717"
+      },
+      {
+        "name": "clang",
+        "sha256": "1590ac950a3d627817d09ade5cb60b2115f17a72182a3141e010b4bcc482a0c9"
+      },
+      {
+        "name": "xcodebuild",
+        "sha256": "7d9561a7f8e3c5d70a571422a4522de986c003879dab3bf7562963b6cdc3e658"
+      },
+      {
+        "name": "xcodebuild",
+        "sha256": "c493a97b720c6afabad03b00577d4387fe9b01d44e57be26caae81511e5820bb"
+      },
+      {
+        "name": "SDKSettings.json",
+        "sha256": "b8c86f02919d336244af1509b95b3bdaf9fd1151ee97ba188f5f77b301ed4a1e"
+      },
+      {
+        "name": "SDKSettings.plist",
+        "sha256": "d217fa1ae2a58d197871b59b93ac5970dc6422e8782a7b486d67768285cbbffa"
+      }
+    ]
+  },
+  "target": "arm64-apple-ios26.0-simulator",
+  "runtime_identifier": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+  "compiler_recipe": {
+    "native_module": "MobiNativeFeatures",
+    "native_swift_mode": "6",
+    "strict_concurrency": "complete",
+    "warnings_as_errors": true,
+    "checked_implementation_only_imports": true,
+    "coroutine_support_swift_mode": "5",
+    "other_generated_module_mode": "6",
+    "native_dependencies": "normal import",
+    "generated_dependencies": "implementation-only import"
+  },
+  "native_dependencies": {
+    "reuse_from": "2026-10-15-swift-export-home-slice.json",
+    "prior_receipt_sha256": "75b9dbcb2dd37557a42acbdb3dda68771aead97738590f2e4d9feb9ef4d5829c",
+    "reused_product_hashes_verified": 258,
+    "cold_native_build_this_step": false,
+    "locked_pins": [
+      {
+        "identity": "combine-schedulers",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/combine-schedulers",
+        "state": {
+          "revision": "fd16d76fd8b9a976d88bfb6cacc05ca8d19c91b6",
+          "version": "1.1.0"
+        }
+      },
+      {
+        "identity": "maplibre-gl-native-distribution",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/maplibre/maplibre-gl-native-distribution",
+        "state": {
+          "revision": "84a79bc375a301169390ac110c868f06c857b83f",
+          "version": "6.27.0"
+        }
+      },
+      {
+        "identity": "swift-case-paths",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-case-paths",
+        "state": {
+          "revision": "206cbce3882b4de9aee19ce62ac5b7306cadd45b",
+          "version": "1.7.3"
+        }
+      },
+      {
+        "identity": "swift-clocks",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-clocks",
+        "state": {
+          "revision": "cc46202b53476d64e824e0b6612da09d84ffde8e",
+          "version": "1.0.6"
+        }
+      },
+      {
+        "identity": "swift-collections",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/apple/swift-collections",
+        "state": {
+          "revision": "6675bc0ff86e61436e615df6fc5174e043e57924",
+          "version": "1.4.1"
+        }
+      },
+      {
+        "identity": "swift-composable-architecture",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-composable-architecture",
+        "state": {
+          "revision": "e2fa1df6cd9eec6fa6314aa20513e47da576f24e",
+          "version": "1.26.0"
+        }
+      },
+      {
+        "identity": "swift-concurrency-extras",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-concurrency-extras",
+        "state": {
+          "revision": "5a3825302b1a0d744183200915a47b508c828e6f",
+          "version": "1.3.2"
+        }
+      },
+      {
+        "identity": "swift-custom-dump",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-custom-dump",
+        "state": {
+          "revision": "06c57924455064182d6b217f06ebc05d00cb2990",
+          "version": "1.5.0"
+        }
+      },
+      {
+        "identity": "swift-dependencies",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-dependencies",
+        "state": {
+          "revision": "706feb7858a7f6c242879d137b8ee30926aa5b26",
+          "version": "1.12.0"
+        }
+      },
+      {
+        "identity": "swift-identified-collections",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-identified-collections",
+        "state": {
+          "revision": "322d9ffeeba85c9f7c4984b39422ec7cc3c56597",
+          "version": "1.1.1"
+        }
+      },
+      {
+        "identity": "swift-navigation",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-navigation",
+        "state": {
+          "revision": "32f35241b8be0719c4c7f00eb27713b1cadb6248",
+          "version": "2.8.0"
+        }
+      },
+      {
+        "identity": "swift-perception",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-perception",
+        "state": {
+          "revision": "25ac73741c3436605d61eceb5207e896973918e7",
+          "version": "2.0.10"
+        }
+      },
+      {
+        "identity": "swift-sharing",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-sharing",
+        "state": {
+          "revision": "c525e53936c878c102421eee241d82711eb38104",
+          "version": "2.8.1"
+        }
+      },
+      {
+        "identity": "swift-syntax",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/swiftlang/swift-syntax",
+        "state": {
+          "revision": "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
+          "version": "603.0.2"
+        }
+      },
+      {
+        "identity": "xctest-dynamic-overlay",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/xctest-dynamic-overlay",
+        "state": {
+          "revision": "cb281f343fd953280336dcbd3822cdf47c182f5b",
+          "version": "1.10.0"
+        }
+      }
+    ],
+    "explicit_macro_validation": {
+      "argument": "-IDESkipMacroFingerprintValidation=NO",
+      "unapproved_macros_refused": true,
+      "global_preferences_changed": false
+    },
+    "exact_approved_macros": [
+      {
+        "packageIdentity": "swift-composable-architecture",
+        "targetName": "ComposableArchitectureMacros",
+        "fingerprint": "e2fa1df6cd9eec6fa6314aa20513e47da576f24e"
+      },
+      {
+        "packageIdentity": "swift-case-paths",
+        "targetName": "CasePathsMacros",
+        "fingerprint": "206cbce3882b4de9aee19ce62ac5b7306cadd45b"
+      },
+      {
+        "packageIdentity": "swift-dependencies",
+        "targetName": "DependenciesMacrosPlugin",
+        "fingerprint": "706feb7858a7f6c242879d137b8ee30926aa5b26"
+      },
+      {
+        "packageIdentity": "swift-perception",
+        "targetName": "PerceptionMacros",
+        "fingerprint": "25ac73741c3436605d61eceb5207e896973918e7"
+      }
+    ]
+  },
+  "warm_model_klibs": {
+    "$REPO/.maintenance/production-state-boundary-20261014T144747Z/evolution-v4/baseline/klibs/shared-core.klib": "d7ab59a794e84c746ce0ce376ecdb0df6b3813f59cfd63147692057f84fca737",
+    "$REPO/.maintenance/production-state-boundary-20261014T144747Z/evolution-v4/baseline/klibs/shared-feature-home.klib": "b975eb1087add6d8301d94920b290fc5b56ad8a91c707452fc32ddfde54f28fb",
+    "$REPO/.maintenance/production-state-boundary-20261014T144747Z/evolution-v4/baseline/klibs/shared-feature-nearby-vehicle-map.klib": "90b35511308fceedbabc2962014354027af576752564372462c6586e96a34726"
+  },
+  "kotlin_native_archive_sha256": "7e3893b23fab69aff9ea897fb040a249eac7e7aa97816f62311357b648ff7ab1",
+  "compiled_native_sources": {
+    "NativeAppServices.swift": "4f9ea4b00f5549cc3d6806790758b59a37a03ea3f4b22cebe0ce211d78d4274d",
+    "Admission.swift": "5b534511afb15e2b5d4873aaa65f22be70dc3502375a937303884e0e2e32e0ed",
+    "CancellationRelay.swift": "f6bd4ae882dfa0c62eeb5f61775689ce4d452d0c47c07f6d631a6c22c9772ebd",
+    "HomeBoundaryFailure.swift": "4c6c78c7d65a120a81af8450629c1b5c3d27758b97e5a3c7f9b08bc7ee22890a",
+    "HomeCounterLoadable.swift": "1de62941a1953d26425af68970af737ab2421ac64a9fbfd811d174457cfc2fe6",
+    "HomeFeature+Action.swift": "5b17aa5efa6593b32c89518d8b28e225a56f93eb62db4427ab8922eadbd005ad",
+    "HomeFeature+State.swift": "c6e0e18dd53a8b21b66f218c3509ad401c79b08ea1143d9d9f2cbaa455bd0c3e",
+    "HomeFeature.swift": "fbf3aff0e0903133f05fc1d73dce9516235ec296898b9cc4f00e6557c33c59d8",
+    "HomeFeatureClient.swift": "ce01e3416a0c64b1d5770f43abd0ae84041dc04f9d8c24ac9cc0562040ae64be",
+    "HomeHeroCard.swift": "423399ffcf00b2c5642926066cf7d1d065094bad5093b96d1973b98fe66fe2d1",
+    "HomePrimaryActionButton.swift": "e4169a4bbf2d9f70c64167685485f9d7a271340b443fa364ff5a1ff5423b27b1",
+    "HomeScreenContent.swift": "f196bf82ab24c850aed69667414641d6642efcef48966873ddedb76d97913731",
+    "HomeView.swift": "56a504e58ad476ccfda77678e4e6d617e9c394b8036fb044ceac807fa4977441",
+    "NativeHomeAccess.swift": "ccfb9953bcd20197031d238ab50185f8330e4fad2a3650091b621963ce541574",
+    "NativeHomeRoute.swift": "7f2fdc6083a0c7a348b92a34cdedd3090ec56b46c167c6633475b8cf99db5c76",
+    "RequestCompletion.swift": "24bf3bb3fea838ed1bafadd67d6897ff98e6d582e03b7b2414492f90642c3d3b",
+    "NativeNearbyAccess.swift": "867dd0c83f5e97f9d5d3b203aea5af71a024d59cde815f42dffbcd56341ff429",
+    "NativeNearbyRoute.swift": "fc76f147becb9df9eb2d3073f887eb4b6caf33e4b70d8c69b9ef1c7c87fbf487",
+    "NearbyStateCopy.swift": "870e6cf488426965c3d9d5e1dd17443b81061fd215c10bd4900bb8bab40e05ce",
+    "NearbyVehicleMapBasemapConfig.swift": "1e9af2add58363e7d969928f141542a099a7124da32eb3c8edab703590ef25f4",
+    "NearbyVehicleMapFeature+Action.swift": "0f8fea880872a880d9c52576bc0dfc3fd60078035247f5adce1ce8d9dab031a7",
+    "NearbyVehicleMapFeature+State.swift": "59eb1d868462bc1f8044745ed9081552071332e21b68c5199406ce9d7f7d6a4f",
+    "NearbyVehicleMapFeature.swift": "d2b62e126f873c0a7789d6636e696a37f7865518f04a1894896baa30b1bf443b",
+    "NearbyVehicleMapFeatureClient.swift": "b85fd80b2bdb28ea1e206214d12006c03c163ed048286c55513e418c42c78afd",
+    "NearbyVehicleMapLocationClient.swift": "79ed764a7368126163c5683026d3376a3004a14b060c35a5e485b653a38ae68b",
+    "NearbyVehicleMapRenderer.swift": "3ec610816b2dff232583ada91ce7467916609bf483999fc7ef5c26b04ac4e020",
+    "NearbyVehicleMapView.swift": "9735da6cfc585a92c4ce4a6f7811b88d3e89db95b954c3a6915c7c3cd359c77c",
+    "HomeSliceAssessment.swift": "3982a7bca519c7c66662380b52e6694b46325fff1cdb16870a5dca2abc02b218",
+    "NearbySliceAssessment.swift": "3c5eaf8d6eb825a0c795cb0434cb53b80f1a84cb1d5b34b0b633dba4d78d4c1b"
+  },
+  "app_binary_sha256": "32d3c0be987693092ecb2e776d149a052024e83decc624a8276c697bfd84e5d3",
+  "installed_app_binary_sha256": "32d3c0be987693092ecb2e776d149a052024e83decc624a8276c697bfd84e5d3",
+  "runtime_json_sha256": "3329ab28d7de3c2d060c4bf2f392b659c0535d4b2b3b891bf686fc40ca5f6f4e",
+  "runtime": {
+    "checks": [
+      "home-real-tca-and-view-controller",
+      "home-initial-native-presentation",
+      "home-real-service-loading",
+      "home-typed-success-and-balanced-capacity",
+      "home-stale-response-fenced",
+      "home-domain-failure-preserved",
+      "home-retry-reenters-service",
+      "home-completion-before-observation",
+      "home-invalid-input-before-admission",
+      "home-cancel-before-admission",
+      "home-tca-cancellation-restores-presentation",
+      "home-owner-independent-noncooperative-drain",
+      "home-capacity-denial-visible-without-backend-work",
+      "home-late-completion-rejected-and-capacity-released",
+      "home-retry-after-capacity-release",
+      "home-retirement-closes-admission",
+      "home-retirement-fences-live-noncooperative-work",
+      "home-boundary-failure-distinct-from-domain-state",
+      "main-confined/same-home-service",
+      "main-confined/foreign-graph-rejected",
+      "main-confined/real-repository-overlap-and-sequences",
+      "shared-operation-mutex/same-home-service",
+      "shared-operation-mutex/foreign-graph-rejected",
+      "shared-operation-mutex/real-repository-overlap-and-sequences",
+      "nearby-real-tca-map-controller-and-initial",
+      "nearby-typed-location-fleet-and-balanced-handles",
+      "nearby-temporary-location-preserves-map",
+      "nearby-stale-response-fenced",
+      "nearby-all-location-blocks-disable-map-actions",
+      "nearby-invalid-input-before-admission",
+      "nearby-foreign-and-released-handles-refused",
+      "nearby-domain-failure-has-native-presentation",
+      "nearby-retry-after-domain-failure",
+      "nearby-immediate-completion-adoption-and-freshness",
+      "nearby-unclaimed-result-released-once",
+      "nearby-noncooperative-drain-outlives-retired-route",
+      "native-home-nearby-share-parent-capacity",
+      "nearby-retirement-drains-and-clears-handles",
+      "nearby-boundary-failure-visible-with-prior-map",
+      "native-composition-real-nearby-location-and-repository",
+      "native-composition-real-home-service",
+      "native-composition-real-nearby-refresh"
+    ],
+    "cohorts": [
+      {
+        "maximumActive": 2,
+        "policy": "main-confined"
+      },
+      {
+        "maximumActive": 1,
+        "policy": "shared-operation-mutex"
+      }
+    ],
+    "production_adoption": false,
+    "real_composition_home_result": "loaded(value: 1)",
+    "scope": "provisional-real-Home-Nearby-TCA-MapLibre-and-native-cohort-only",
+    "state": "checks_passed_review_required"
+  },
+  "owned_simulator_deleted": true,
+  "location_scope": {
+    "coordinate": [
+      55.6,
+      12.5
+    ],
+    "simulator_only": true,
+    "permission_pregranted": true,
+    "prompt_interaction_qualified": false,
+    "physical_device_qualified": false
+  },
+  "compiler_controls": {
+    "closed_native_shell": "passed",
+    "raw_Kotlin_import": "refused",
+    "private_composition": "refused",
+    "hidden_layout_without_checker": "passed",
+    "hidden_layout_with_checker": "refused",
+    "strict_Swift_6_coroutine_support": "refused"
+  },
+  "review_files": [
+    {
+      "path": "2026-10-15-native-slice/App.swift.txt",
+      "sha256": "e6577b4c4b2f7751a0cdf2ba67d64ef66a71ebc72d9ffdf6ceb7757c1111d4de"
+    },
+    {
+      "path": "2026-10-15-native-slice/BadLayout.swift.txt",
+      "sha256": "c2b31bbbbd2997283579c745315b8dfc9bd6ee439fd94b11419984ab24ab9b53"
+    },
+    {
+      "path": "2026-10-15-native-slice/CohortScenario.kt.txt",
+      "sha256": "bc040c28d273c2503e2d32c9ca895ab99aee60430a35623770f6a79d0a275cf9"
+    },
+    {
+      "path": "2026-10-15-native-slice/Hidden.swift.txt",
+      "sha256": "851f265ece2208aef1bdc3bc9b9a00abc5e07973b570449b31cb36313e344916"
+    },
+    {
+      "path": "2026-10-15-native-slice/HomeSliceAssessment.swift.txt",
+      "sha256": "3982a7bca519c7c66662380b52e6694b46325fff1cdb16870a5dca2abc02b218"
+    },
+    {
+      "path": "2026-10-15-native-slice/NearbyScenario.kt.txt",
+      "sha256": "efa1e17fae2946ea7300640d10f01cae9e2814a2a1e0906fdce7f171832daef8"
+    },
+    {
+      "path": "2026-10-15-native-slice/NearbySliceAssessment.swift.txt",
+      "sha256": "3c5eaf8d6eb825a0c795cb0434cb53b80f1a84cb1d5b34b0b633dba4d78d4c1b"
+    },
+    {
+      "path": "2026-10-15-native-slice/PrivateComposition.swift.txt",
+      "sha256": "85b52fa2efad5c8202a2eeb42abaceb7bbdb5b27174d7c39990f6af68d764ae1"
+    },
+    {
+      "path": "2026-10-15-native-slice/RawImport.swift.txt",
+      "sha256": "2569c0ce787cee1181624c5fdfc2793798523369108f9d507cdcc4ee2fc8310e"
+    },
+    {
+      "path": "2026-10-15-native-slice/Scenario.kt.txt",
+      "sha256": "45fcd334e79ef929be1efcebf0e1f62596863d7eacc2e9b220f0a2a36fee1be9"
+    },
+    {
+      "path": "2026-10-15-native-slice/ShellClient.swift.txt",
+      "sha256": "ad6a2e53e8486476b97b2b12de56153517fd256027b86f2d1c019a12c4599643"
+    },
+    {
+      "path": "2026-10-15-native-slice/command-recipe.json",
+      "sha256": "ef0017a989b1934dc8190b93a9291dc1d2953eb8199c41e4619b011029cb0b66"
+    },
+    {
+      "path": "2026-10-15-native-slice/nearby-screen.png",
+      "sha256": "1f7c5a76d351fe49737834aad7ff99d9fe81b923dd48275deb39f434e1d8abbb"
+    }
+  ],
+  "command_outcomes": [
+    {
+      "name": "compile-MobiDI",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-MobiHomeTransport",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-MobiNearbyTransport",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-MobiAppComposition",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-MobiNativeServices",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-export-harness",
+      "exit": 0,
+      "log_sha256": "2511caee3e0eb9f54f9181122e6545fba4ac9100494c96c04e4ec3b527039215",
+      "stage": "kotlin"
+    },
+    {
+      "name": "export-candidate",
+      "exit": 0,
+      "log_sha256": "d3723515f20d3aaffda39331808c2fe4b926e87c4c8eca77766d798a38a120f7",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-ExportedKotlinPackages",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-KotlinRuntimeSupport",
+      "exit": 0,
+      "log_sha256": "0b4d65c999f6fb4fcb7174393dbcb3c3dc88feb512ecdc231ef9c2c18398f4b9",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-KotlinCoroutineSupport",
+      "exit": 0,
+      "log_sha256": "bc16a1b13c07cf791af78426eb1e3acc07d50ea6ca31da94da3e8c04646c9b38",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiCore",
+      "exit": 0,
+      "log_sha256": "755ea10fb8dd38f66766bcf66408d9e92c5020ac56278e563d3d35686d375454",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiHome",
+      "exit": 0,
+      "log_sha256": "16fe8cbede32e04e3fea8bbb13a00867ee01d4d7f72d3d14bd707cbf34a2cd73",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiHomeTransport",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiNearby",
+      "exit": 0,
+      "log_sha256": "3f27f1258e9eead4fa4000097f793c0b3c8820f4dac7b8d12be625c412cd6663",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiDI",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiNativeServices",
+      "exit": 0,
+      "log_sha256": "c2b72ab0b84dd38f2cade248cdb34684dbd86590f7f4c52bdb90d81908f5bbd6",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiNearbyTransport",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiAppComposition",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "joint-native-archive",
+      "exit": 0,
+      "log_sha256": "51ca5e12dfe0102165d6162f5bf93658771c25b72fdd7bdfa4fda81bfccb1a3b",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-native-home-module",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "native-features"
+    },
+    {
+      "name": "closed-shell-client",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "native-features"
+    },
+    {
+      "name": "raw-generated-import-refused",
+      "exit": 1,
+      "expected_success": false,
+      "log_sha256": "443aba45693a601be5e9e03fdadcdc6de6ea9098105cf4ab282605e438ea4cc3",
+      "stage": "native-features"
+    },
+    {
+      "name": "private-composition-refused",
+      "exit": 1,
+      "expected_success": false,
+      "log_sha256": "55d8bdeed312b094533b0ed0ec181b0eae49d4063fdac87f85ac8528af0880af",
+      "stage": "native-features"
+    },
+    {
+      "name": "link-real-home-app",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "7d08fbeb3ecd35c374e10c9d9e0a7f9ed122d9b72912c45468a5e5af7504646e",
+      "stage": "native-features"
+    },
+    {
+      "name": "host-plist",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "native-features"
+    },
+    {
+      "name": "adhoc-sign-home-app",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "64a74beb7d5acc41f1fd06d4764f861485659f05a6079d1561a055398f634a00",
+      "stage": "native-features"
+    },
+    {
+      "name": "native-nearby-runtimes",
+      "exit": 0,
+      "log_sha256": "8d0b16d98226a1673a630c82d26202f4355eb287efa5b5dfaa30fdaadd656e6b",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-device-types",
+      "exit": 0,
+      "log_sha256": "96d335258081671854ac94ea0afb6ae77b8b7efc5892942fc8856d1e6f31be0f",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-create",
+      "exit": 0,
+      "log_sha256": "575aba357150f80dd29205fb443391876f2327997953b29dbbcef78fbcc9b3ca",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-boot",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-boot-ready",
+      "exit": 0,
+      "log_sha256": "8f1f4e8a1f971a000efbdaff4a1332913c7bc00022e3e1798699120c5907b87d",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-install",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-installed-app",
+      "exit": 0,
+      "log_sha256": "1e1b2fe80211c629b10b556d3e440e20708bf353e1450cb073de0d13a220489f",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-location-permission",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-simulated-location",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-launch",
+      "exit": 0,
+      "log_sha256": "5a028320703b6632bb08a5cb6f93784659535b66cd3c64040a34f980eecc24b4",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-container",
+      "exit": 0,
+      "log_sha256": "20545a7f4ae8c03b7251b4a22e5dbc1687ec4a6b0fdaaa76293be9e10367f26b",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-screenshot",
+      "exit": 0,
+      "log_sha256": "e5ef7e74ad018d2911f921530c8d1573324b3ae427f483f0035ea54bfaa778e8",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-terminate",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-shutdown",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-delete",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "native-nearby-cleanup-verify",
+      "exit": 0,
+      "log_sha256": "0e2fb5cd4be4cb8008218d9b28614d9c0a6c3c0ee109aaeba0d5475e46b02754",
+      "stage": "runtime"
+    },
+    {
+      "name": "emit-hidden-module",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "compiler-controls"
+    },
+    {
+      "name": "hidden-layout-baseline",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "edfe8a848cf0ffa32962cc03bcae983ae376c5f9c0ac5403e860b2ec7535e3bb",
+      "stage": "compiler-controls"
+    },
+    {
+      "name": "hidden-layout-checker-refuses",
+      "exit": 1,
+      "expected_success": false,
+      "log_sha256": "baca25b5d0dfcabd8becf2f3dbc33722be1053d17797bb17ba41a939ae766e50",
+      "stage": "compiler-controls"
+    },
+    {
+      "name": "strict-six-support-refuses",
+      "exit": 1,
+      "expected_success": false,
+      "log_sha256": "674f148b5275fa9b45e0d1dc55a0521181d866aabdd6e7a57eef42f19bfb82ee",
+      "stage": "compiler-controls"
+    }
+  ],
+  "incomplete_attempt": {
+    "reason": "The first actual-composition control incorrectly required success from the default random Home repository; corrected to validate and record either expected domain result",
+    "state": "incomplete",
+    "owned_simulator_deleted": true,
+    "raw_record": "control/native-nearby-attempt-random-home"
+  },
+  "remaining_review": [
+    "Feature placement in closed module versus smaller adapter module",
+    "Opaque Kotlin state-handle and pending-result ownership",
+    "Shell route-retention and explicit retirement contract",
+    "Listener/drainer internal invariants and resource measurements",
+    "Generated SwiftJob/KotlinError findings and selected dependency risk",
+    "Profile/policy/settings and final adoption"
+  ],
+  "remaining_gates": [
+    "Shared UI same-service/one-delivery and complete Kotlin/Compose cohort",
+    "Integrated evolution omissions, stale output/delivery and malformed/version-skew controls",
+    "Repo-owned candidate producer/gate and rollback build/test",
+    "Production cold/reordered/relocated replay and hosted exact candidate",
+    "Fresh selected-graph advisory and JVM temp coverage",
+    "Settings/resource/latency disposition",
+    "Android parity, actual minimum runtime, device and separately authorized release"
+  ],
+  "limits": [
+    "Assessment inputs are retained run evidence, not production/CI regression membership",
+    "Native invalid-input and injected-client controls do not qualify malformed Kotlin payloads",
+    "Warm model/native-product reuse is not cold qualification",
+    "Screenshot shows rider and vehicle markers; basemap tile completion/network availability is not asserted",
+    "Simulator native evidence does not qualify Shared UI or production/default adoption"
+  ],
+  "shipping_default_changed": false,
+  "Shared_UI_qualified": false,
+  "complete_production_app_qualified": false,
+  "cold_qualification": false,
+  "raw_evidence_store": ".maintenance/production-app-20261015T165748Z"
+}

@@ -1,14 +1,14 @@
 # Provisional native integration
 
-This directory contains the first Home slice of the proposed Swift-export
+This directory contains the Home and Nearby slices of the proposed Swift-export
 integration. It is application feature code for review, with no separate app
 entry point. The default Xcode/Toolchain app membership still uses `src/`.
 Final design acceptance and default adoption remain pending.
 
-The candidate build compiles `home/` into `MobiNativeHome`. Its normal native
+The candidate build compiles this directory into `MobiNativeFeatures`. Its normal native
 dependency is `MobiIOSDependencies` (TCA, Dependencies and MapLibre). Generated
 Kotlin modules are implementation-only imports on the private side of the
-module. A shell receives `NativeHomeServices` and `NativeHomeRoute`, constructs
+module. A shell receives `NativeAppServices`, `NativeHomeRoute` and `NativeNearbyRoute`, constructs
 the route's controller and retires the route when that navigation owner ends.
 Tab changes or backgrounding do not by themselves end ownership.
 
@@ -25,13 +25,30 @@ Tab changes or backgrounding do not by themselves end ownership.
 - [HomeFeature.swift](home/HomeFeature.swift): actual TCA loading, response,
   cancellation, retry and retirement handling. Boundary/admission failures have
   their own presentation fields; Kotlin domain failures remain domain state.
-- [NativeHomeServices.swift](home/NativeHomeServices.swift): the provisional
+- [NativeAppServices.swift](NativeAppServices.swift): the provisional
   composition root uses the actual Metro-backed Kotlin composition. Factory and
   route APIs expose native types; Kotlin services do not escape to the shell.
 
 The Kotlin side is [HomeRequestOwner](../../shared-ios-export/src/HomeRequestOwner.kt)
-and its [completion registry](../../shared-ios-export/src/HomeRequestCompletion.kt).
-Neither changes shared business transitions or the authoritative state algebra.
+and its [completion registry](../../shared-ios-export/src/RequestCompletion.kt).
+The [typed Nearby owner](../../shared-ios-export/src/NearbyRequestOwner.kt) reuses
+that completion registry. Neither changes shared business transitions or the
+authoritative state algebra.
+
+Nearby's [presentation copy](nearby/NearbyStateCopy.swift) switches directly over
+generated location, snapshot, overlay and reason cases to build the actual map
+scene, messages and overlays. Its reducer/actions contain native values plus an
+opaque owner-scoped handle, with no parallel native transport-case registry.
+[NativeNearbyAccess](nearby/NativeNearbyAccess.swift) keeps the original Kotlin
+state alive for transitions and releases replaced, cancelled and unclaimed
+handles. This handle bookkeeping remains a reviewable maintenance cost.
+Domain failures receive native retry messages; admission and boundary failures
+remain separately visible, preserving the previous map on failed refresh.
+
+The agreed qualification order is Native Home/Nearby first, then Shared UI.
+Shared UI and its same-service/delivery checks remain final adoption requirements.
+See the [native integration review](../../docs/maintenance/swift-export-native-integration-review.md)
+for the source-bound combined assessment and its limits.
 
 ## Review points
 
@@ -47,9 +64,8 @@ presentation, and inspect the omission failure. Then inspect how much generic
 listener, admission and cleanup machinery remains. Code passing runtime tests
 does not decide whether those costs are acceptable.
 
-These Home files temporarily coexist with the direct and pilot implementations
+These feature files temporarily coexist with the direct and pilot implementations
 while the candidate is evaluated. They are intended to replace those paths in
-the single adopted app, not establish a permanently maintained second app. Nearby,
-Shared UI, complete composition identity, production build orchestration and
+the single adopted app, not establish a permanently maintained second app. Shared UI, complete composition identity, production build orchestration and
 final consolidation remain work in the
 [production change](../../openspec/changes/production-swift-export-integration/tasks.md).

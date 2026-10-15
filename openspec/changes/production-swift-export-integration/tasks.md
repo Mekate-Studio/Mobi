@@ -87,3 +87,12 @@ products built with explicit macro validation after an unapproved-macro refusal.
 Task 3.1 remains open for complete Kotlin/Compose participation; 3.4 remains open
 for final dispositions. Tasks 4.1–4.4 have partial Home code, not a finished
 production boundary, complete app or repo-owned production entry point.
+
+Native qualification order confirmed 2026-10-15: Home/Nearby first, then Shared
+UI. The [combined native slice](../../../docs/maintenance/swift-export-native-integration-review.md)
+adds the real Nearby reducer/MapLibre view and direct typed-to-presentation copy,
+using the same completion registry, parent capacity and private app composition
+as Home. Shared UI and complete production gates remain required. Tasks 4.1–4.4
+remain open: this is incremental candidate implementation, not a qualified final
+app or repo-owned production entry point. The draft is published as PR #38;
+7.4 remains open for exact-source clean-clone/hosted candidate qualification.

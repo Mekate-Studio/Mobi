@@ -135,3 +135,10 @@ Adoption selects an exact profile, API, policy, settings, dependency/diagnostic 
 5. Publish/requalify the exact reviewable source through clean-clone and hosted paths, with actual deployment-floor runtime and physical-device evidence. Stage intended content only when preparing a commit and run the exact staged plan/gate. Device and credentialed release operations require their own authorized scope.
 6. Review exact production adoption and rollback scope. Apply the approved default/composition changes; retire obsolete visitors/projections and pilot-only app selection, update the feature blueprint and superseding ADR, then rerun the gates for the final bytes. Keep release held until its separate qualification/authorization closes. Do not merge PR #37 as a shortcut to this decision.
 7. For recovery, restore the complete verified content closure in an owned copy first, remove only transition-owned outputs, verify hashes/modes and direct smoke tests. A live restoration of the user's checkout requires explicit scope. Preserve historical receipts and durable public summaries; archive only through a separately requested completion process.
+
+
+Qualification order confirmed 2026-10-15: Native Home and Nearby first, with
+Shared UI qualification following separately. This orders candidate work; it
+does not remove Shared UI, the same Home service or one-delivery requirements
+from final adoption. The provisional closed module now contains both native
+features; see the [native integration review](../../../docs/maintenance/swift-export-native-integration-review.md).

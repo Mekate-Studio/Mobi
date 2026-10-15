@@ -34,3 +34,10 @@ and prepare a draft PR once a meaningful slice passes the exact commit gates.
 Review actual new-state/payload edits and omitted-handling failures there. This
 authorizes candidate implementation for evaluation, not final design acceptance,
 dependency-risk acceptance, production defaults or merge.
+
+
+Qualification order confirmed 2026-10-15: Native Home and Nearby first, with
+Shared UI qualification following separately. This orders candidate work; it
+does not remove Shared UI, the same Home service or one-delivery requirements
+from final adoption. The provisional closed module now contains both native
+features; see the [native integration review](../../../docs/maintenance/swift-export-native-integration-review.md).

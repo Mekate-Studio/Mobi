@@ -10,6 +10,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import platform.Foundation.NSThread
+import studio.mekate.mobi.export.request.RequestCompletion
 import studio.mekate.mobi.feature.home.HomeFeatureService
 import studio.mekate.mobi.feature.home.HomeFeatureState
 import kotlin.coroutines.cancellation.CancellationException
@@ -28,7 +29,7 @@ class HomeRequestOwner(
     private var retired = false
     private var nextId = 1L
     private val requests = mutableMapOf<Long, Request>()
-    val completion = HomeRequestCompletion(maxObserversPerRequest) { requests[it]?.job }
+    val completion = RequestCompletion(maxObserversPerRequest) { requests[it]?.job }
     private var initialReads = 0
     private var loadingReads = 0
     private var accepted = 0

@@ -7,22 +7,23 @@ import UIKit
 
 private typealias Composition = ExportedKotlinPackages.studio.mekate.mobi.export.composition
 
-/// Provisional Home integration. Settings are explicit evaluation inputs.
-/// The composition will also supply Nearby and Shared UI before adoption.
-@MainActor public final class NativeHomeServices {
+/// Provisional native integration. Settings are explicit evaluation inputs.
+/// Shared UI will use this same composition before final adoption.
+@MainActor public final class NativeAppServices {
     private let composition: Composition.AppComposition
     private let admission: AdmissionPool
     private let supervisor = CompletionDrainSupervisor()
     private let jobsPerOwner: Int32
     private let observersPerRequest: Int32
     private var routes: [WeakHomeRoute] = []
+    private var nearbyRoutes: [WeakNearbyRoute] = []
 
     public init(parentReservations: Int, jobsPerOwner: Int32, observersPerRequest: Int32) {
         precondition(parentReservations > 0 && jobsPerOwner > 0 && observersPerRequest > 0)
         admission = AdmissionPool(capacity: parentReservations)
         self.jobsPerOwner = jobsPerOwner
         self.observersPerRequest = observersPerRequest
-        // Main confinement is provisional. This Home slice does not qualify
+        // Main confinement is provisional. These native slices do not qualify
         // the complete Nearby/Compose repository cohort or production settings.
         composition = Composition.AppComposition(policy: 0, nativeJobsPerOwner: jobsPerOwner)
     }
@@ -43,39 +44,25 @@ private typealias Composition = ExportedKotlinPackages.studio.mekate.mobi.export
         return route
     }
 
+    public func makeNearbyRoute() -> NativeNearbyRoute {
+        let facade = NearbyTransport.NearbyRequestOwner(
+            service: composition.nearbyHub.service,
+            maxJobs: jobsPerOwner,
+            maxObserversPerRequest: observersPerRequest,
+        )
+        let route = NativeNearbyRoute(access: NativeNearbyAccess(
+            facade: facade, supervisor: supervisor, admission: admission,
+        ))
+        nearbyRoutes.removeAll { $0.value == nil }
+        nearbyRoutes.append(WeakNearbyRoute(route))
+        return route
+    }
+
     public func retire() {
         admission.close()
         routes.forEach { $0.value?.retire() }
         routes.removeAll()
-    }
-}
-
-/// The shell owns route lifetime; tab changes/backgrounding need not retire it.
-@MainActor public final class NativeHomeRoute {
-    let store: StoreOf<HomeFeature>
-    private let access: NativeHomeAccess
-    private let relay = CancellationRelay()
-
-    init(access: NativeHomeAccess) {
-        self.access = access
-        let client = HomeFeatureClient(access: access, relay: relay)
-        let store = Store(initialState: HomeFeature.State()) { HomeFeature().dependency(\.homeFeatureClient, client) }
-        self.store = store
-        relay.sink = { [weak store] request in _ = store?.send(.cancelled(request)) }
-    }
-
-    public func makeViewController() -> UIViewController {
-        UIHostingController(rootView: HomeView(store: store))
-    }
-
-    public func retire() {
-        store.send(.retire)
-    }
-}
-
-@MainActor private final class WeakHomeRoute {
-    weak var value: NativeHomeRoute?
-    init(_ route: NativeHomeRoute) {
-        value = route
+        nearbyRoutes.forEach { $0.value?.retire() }
+        nearbyRoutes.removeAll()
     }
 }

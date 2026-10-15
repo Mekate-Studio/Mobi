@@ -76,7 +76,9 @@ class NearbyHub(
                 }
             }
         }
-    private val service = NearbyVehicleMapFeatureService(repository, NearbyVehicleMapFreshnessPolicy())
+
+    // The closed native module constructs typed owners over this exact policy-wrapped service.
+    val service = NearbyVehicleMapFeatureService(repository, NearbyVehicleMapFreshnessPolicy())
 
     init {
         mainOnly()

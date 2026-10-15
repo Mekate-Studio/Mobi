@@ -1,0 +1,29 @@
+package studio.mekate.mobi.export.candidate
+
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
+import platform.Foundation.NSThread
+import studio.mekate.mobi.core.*
+import studio.mekate.mobi.export.nearby.NearbyRequestOwner
+import studio.mekate.mobi.feature.nearbyvehiclemap.*
+
+class NearbyScenario(noncooperative: Boolean, fail: Boolean, malformed: Boolean) {
+    private val repository = FleetGate(noncooperative, fail, malformed)
+    val facade = NearbyRequestOwner(NearbyVehicleMapFeatureService(repository, NearbyVehicleMapFreshnessPolicy()), 1, 1)
+    fun completeBackend() { check(NSThread.isMainThread); repository.gate.complete(Unit) }
+    fun entered(): Int { check(NSThread.isMainThread); return repository.entered }
+    fun allowSuccess() { check(NSThread.isMainThread); repository.fail = false; repository.malformed = false }
+}
+private class FleetGate(val noncooperative: Boolean, var fail: Boolean, var malformed: Boolean) : NearbyFleetRepository {
+    val gate = CompletableDeferred<Unit>()
+    var entered = 0
+    override suspend fun fetchNearbyFleetSnapshot(request: NearbyFleetRequest): FleetSnapshot {
+        check(NSThread.isMainThread); entered++
+        if (noncooperative) withContext(NonCancellable) { gate.await() } else gate.await()
+        if (fail) throw NearbyFleetRepositoryException()
+        return FleetSnapshot(7, request.riderLocation,
+            listOf(NearbyVehicle(VehicleId("candidate-vehicle"), VehicleLocation(if (malformed) Double.NaN else 55.6,12.5))),
+            request.requestedAtMillis)
+    }
+}
