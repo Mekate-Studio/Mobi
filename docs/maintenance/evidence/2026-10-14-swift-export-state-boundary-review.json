@@ -1,0 +1,1307 @@
+{
+  "schema": 1,
+  "date": "2026-10-14",
+  "scope": "isolated-production-state-boundary-compiler-assessment",
+  "assessment": "checks_passed_review_required",
+  "accountable_maintainer": "Jorge Castro",
+  "maintainer_disposition": "review_required",
+  "source_head": "1a8197051117004ec9247b309e61179a8b612422",
+  "source_identity": "838582c15ecb31d1ee0bdaf9d422922be0547159a8d6ef0d89b2c847e898d170",
+  "source_file_count": 816,
+  "tool_tuple": "a44ec744bb9333e3ec14ea5786aa9ce3e0db45a13246e74b61588070803ac97d",
+  "tool_versions": {
+    "swift_version": "swift-driver version: 1.168.6 Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+    "xcode_version": "Xcode 27.0\nBuild version 27A266a",
+    "sdk_version": "27.0"
+  },
+  "rollback": {
+    "files_and_modes_restored": true,
+    "native_repair_pins": [
+      {
+        "identity": "swift-perception",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-perception",
+        "state": {
+          "revision": "25ac73741c3436605d61eceb5207e896973918e7",
+          "version": "2.0.10"
+        }
+      },
+      {
+        "identity": "swift-syntax",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/swiftlang/swift-syntax",
+        "state": {
+          "revision": "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
+          "version": "603.0.2"
+        }
+      }
+    ],
+    "build_and_tests": "incomplete",
+    "reason": "Macro validation bypass is enabled; qualification refuses inherited Xcode preferences",
+    "global_preferences_changed": false
+  },
+  "inventory": {
+    "schema": 1,
+    "scope": "direct-pilot-state-boundary-inventory",
+    "source_identity": "838582c15ecb31d1ee0bdaf9d422922be0547159a8d6ef0d89b2c847e898d170",
+    "source_head": "1a8197051117004ec9247b309e61179a8b612422",
+    "tool_tuple": "a44ec744bb9333e3ec14ea5786aa9ce3e0db45a13246e74b61588070803ac97d",
+    "files": [
+      {
+        "path": "shared-di/src/MobiInteropProjection.kt",
+        "sha256": "e1538fe8b4cc077bbf9335b4ceaaf7c708e7897b712ade81c7f93db103c38ffe",
+        "mode": "0o644"
+      },
+      {
+        "path": "ios-app/src/MobiInteropProjection.swift",
+        "sha256": "ef2fa0411f794f4c69d1f0a7f8199fd7e0a89b59fce437ac8bacb67e63f261a4",
+        "mode": "0o644"
+      },
+      {
+        "path": "ios-app/src/AppServices.swift",
+        "sha256": "e2847e3ebc3f7b1f1ba24d4de7a4973da3c65e8495984b30fd4f18b34ab8e26c",
+        "mode": "0o644"
+      },
+      {
+        "path": "ios-app/pilot/swift/AppServices.swift",
+        "sha256": "ce5758b1d9fb8295cadb0e19fdef09259a84de5e98ef54753f25e3485ffc6496",
+        "mode": "0o644"
+      },
+      {
+        "path": "shared-ios-export/src/HomeFacade.kt",
+        "sha256": "00ef1ab5770c458a2fdb0a9d83b41a16f3821f4fce5b6ba77dcfffee1d1aad25",
+        "mode": "0o644"
+      },
+      {
+        "path": "shared-ios-export/src/NearbyFacade.kt",
+        "sha256": "c9db380c9e4c162a58b9cdaa7c84e33387417d15d5a07c344944a6e349dc7f15",
+        "mode": "0o644"
+      },
+      {
+        "path": "shared-ios-export/src/AppComposition.kt",
+        "sha256": "c45905e5017a67ed3d031af7389fd8de3482ff5f997f41f881d1f2a0e10704e6",
+        "mode": "0o644"
+      },
+      {
+        "path": "shared-ios-export-compose/src/HomeRouteOwner.kt",
+        "sha256": "86a90fe7c04f11b0cf6c5298d4254b491a007a5a1b61dfe89cc2c4b1d21d8fae",
+        "mode": "0o644"
+      },
+      {
+        "path": "ios-app/pilot/swift/NativeHomeAccess.swift",
+        "sha256": "7630c06661d447a377bf277c7a18fadd12ab175762b2c301f2ec10de87c732a7",
+        "mode": "0o644"
+      },
+      {
+        "path": "ios-app/pilot/swift/NativeNearbyAccess.swift",
+        "sha256": "c10c56e42d395013836aaa9a002572bec03717a97ea978e7a34b85075b19d389",
+        "mode": "0o644"
+      },
+      {
+        "path": "ios-app/pilot/swift/NearbyWireDecoder.swift",
+        "sha256": "64a8127bb3774ebf275ee5b3aedf3a36c3113e991c4723cf3862a177847a4680",
+        "mode": "0o644"
+      },
+      {
+        "path": "scripts/maintenance/swift-export-inputs.json",
+        "sha256": "a84ab850677a03ce2db3d00f8153d61bf2a4b6f35240eea75f209cb10da0f129",
+        "mode": "0o644"
+      },
+      {
+        "path": "scripts/maintenance/lib/swift_export_pilot/descriptor.rb",
+        "sha256": "07a8611199412ce3bd6231b6e64f517fa1c419b16854835868316a4065963f4c",
+        "mode": "0o644"
+      },
+      {
+        "path": "scripts/maintenance/lib/swift_export/produce.rb",
+        "sha256": "03adbf7a2d270157bfc175f4f3acc35c87ddcd07efbb3aa706437bc0d374e8b2",
+        "mode": "0o644"
+      },
+      {
+        "path": "scripts/ci/run_job.sh",
+        "sha256": "dcade0a245a88a2f145e6916b44ed5635905dd295c4534ed8ba4a7029ee8c99f",
+        "mode": "0o755"
+      },
+      {
+        "path": "scripts/ci/run_xcodebuild_with_logs.sh",
+        "sha256": "6fc27931801cabdab73525429f284d1829534aad0ee875997d9d7ada4fa7d769",
+        "mode": "0o755"
+      },
+      {
+        "path": "scripts/ci/run_xcode_tests_with_logs.sh",
+        "sha256": "abf226c2f051cf4ed77d10e1735c9d85511633faed1b14183c6b0183b8457d20",
+        "mode": "0o755"
+      }
+    ],
+    "direct_visitor_interfaces": [
+      "MobiCounterVisitor",
+      "MobiCounterFailureVisitor",
+      "MobiRiderLocationVisitor",
+      "MobiSnapshotVisitor",
+      "MobiOverlayVisitor",
+      "MobiRiderReasonVisitor"
+    ],
+    "direct_swift_adapters": [
+      "MobiCounterVisitorAdapter",
+      "MobiCounterFailureVisitorAdapter",
+      "MobiRiderLocationVisitorAdapter",
+      "MobiSnapshotVisitorAdapter",
+      "MobiOverlayVisitorAdapter",
+      "MobiRiderReasonVisitorAdapter"
+    ],
+    "generated_typed_families_in_retained_delivery": [
+      {
+        "module": "MobiHome",
+        "name": "CounterLoadFailureReason_SealedType",
+        "cases": [
+          "repositoryUnavailable",
+          "unexpected"
+        ],
+        "source_sha256": "20ceb127879ba24031e5dc6d16b971c6342562f8f3ef9dd48c067d9c3375596c"
+      },
+      {
+        "module": "MobiHome",
+        "name": "CounterLoadable_SealedType",
+        "cases": [
+          "error",
+          "initial",
+          "loaded",
+          "loading"
+        ],
+        "source_sha256": "20ceb127879ba24031e5dc6d16b971c6342562f8f3ef9dd48c067d9c3375596c"
+      },
+      {
+        "module": "MobiHome",
+        "name": "HomeFeatureEvent_SealedType",
+        "cases": [
+          "refreshClicked"
+        ],
+        "source_sha256": "20ceb127879ba24031e5dc6d16b971c6342562f8f3ef9dd48c067d9c3375596c"
+      },
+      {
+        "module": "MobiNearby",
+        "name": "FailedNearbyVehicleSnapshotState_SealedType",
+        "cases": [
+          "failedWithSnapshot",
+          "failedWithoutSnapshot"
+        ],
+        "source_sha256": "94c02fdd1037cd2b2fe62b59918d4ab65d7e0e477609851a8462fdb8237df0d5"
+      },
+      {
+        "module": "MobiNearby",
+        "name": "NearbyVehicleMapFailureReason",
+        "cases": [
+          "RiderLocationUnavailable",
+          "RepositoryUnavailable",
+          "Unexpected"
+        ],
+        "source_sha256": "94c02fdd1037cd2b2fe62b59918d4ab65d7e0e477609851a8462fdb8237df0d5"
+      },
+      {
+        "module": "MobiNearby",
+        "name": "NearbyVehicleMapOverlayState_SealedType",
+        "cases": [
+          "blockingFailure",
+          "none",
+          "refreshingIndicator",
+          "staleIndicator"
+        ],
+        "source_sha256": "94c02fdd1037cd2b2fe62b59918d4ab65d7e0e477609851a8462fdb8237df0d5"
+      },
+      {
+        "module": "MobiNearby",
+        "name": "NearbyVehicleSnapshotState_SealedType",
+        "cases": [
+          "failedWithSnapshot",
+          "failedWithoutSnapshot",
+          "initial",
+          "loaded",
+          "loading",
+          "refreshing"
+        ],
+        "source_sha256": "94c02fdd1037cd2b2fe62b59918d4ab65d7e0e477609851a8462fdb8237df0d5"
+      },
+      {
+        "module": "MobiNearby",
+        "name": "RiderLocationBlockedReason",
+        "cases": [
+          "AccessDenied",
+          "AccessRestricted",
+          "ServicesDisabled",
+          "ApproximateOnly",
+          "TemporarilyUnavailable"
+        ],
+        "source_sha256": "94c02fdd1037cd2b2fe62b59918d4ab65d7e0e477609851a8462fdb8237df0d5"
+      },
+      {
+        "module": "MobiNearby",
+        "name": "RiderLocationState_SealedType",
+        "cases": [
+          "available",
+          "blocked",
+          "denied",
+          "resolving",
+          "temporarilyUnavailable",
+          "unavailable"
+        ],
+        "source_sha256": "94c02fdd1037cd2b2fe62b59918d4ab65d7e0e477609851a8462fdb8237df0d5"
+      },
+      {
+        "module": "MobiNearby",
+        "name": "SnapshotBackedNearbyVehicleState_SealedType",
+        "cases": [
+          "failedWithSnapshot",
+          "loaded",
+          "refreshing"
+        ],
+        "source_sha256": "94c02fdd1037cd2b2fe62b59918d4ab65d7e0e477609851a8462fdb8237df0d5"
+      }
+    ],
+    "retained_delivery_identity": "7b3919c5c3f19c257823649b8886b864a889a4824d7c28b2a74792bcf2000e56",
+    "shipping_default": "direct-toolchain-with-visitors",
+    "pilot_state_contract": "handwritten-numeric-tags-and-Swift-decoders",
+    "composition_requirement": "Native Home and Shared UI use exact same Home service in one Kotlin delivery",
+    "commands": {
+      "direct": [
+        "scripts/ci/run_job.sh ios-build-debug",
+        "scripts/ci/run_job.sh ios-test"
+      ],
+      "pilot": [
+        "scripts/maintenance/swift_export_pilot.rb",
+        "scripts/maintenance/qualify_swift_export_native.rb"
+      ],
+      "generated_producer": "scripts/maintenance/lib/swift_export/produce.rb"
+    },
+    "limits": [
+      "Native-only hosted pilot is not production Shared UI/device/minimum-runtime/release evidence",
+      "Existing generated async and KotlinError diagnostics remain unresolved",
+      "Snapshot includes working dirty/untracked files and repaired native lock/constraint",
+      "Private cache clones are warm seeds, not cold qualification",
+      "Direct rollback macro-validation preflight is currently held"
+    ],
+    "adoption_authorized": false
+  },
+  "state_controls": [
+    {
+      "name": "baseline",
+      "expected_failure": false,
+      "passed": true,
+      "diagnostic_pattern": null,
+      "consumer_sha256": "73794c0f01f5556126891300eacd99f05e43d2ce6a304bc18d0d8dc18ff26d18"
+    },
+    {
+      "name": "baseline-nonsendable-escape",
+      "expected_failure": true,
+      "passed": true,
+      "diagnostic_pattern": "non-sendable type",
+      "consumer_sha256": "5f2b1fc5fd70d85398ee09e888ed3016e087504de2ade6cdfec304bfd5bf7643"
+    },
+    {
+      "name": "baseline-omitted-case",
+      "expected_failure": true,
+      "passed": true,
+      "diagnostic_pattern": "switch must be exhaustive",
+      "consumer_sha256": "3fefc17ee20f84c6a0176e5dc3e76e96d18dae48fd0d1069e4d164998e844bd0"
+    },
+    {
+      "name": "home-variant-omitted-kotlin",
+      "expected_failure": true,
+      "passed": true
+    },
+    {
+      "name": "home-variant-omitted-swift",
+      "expected_failure": true,
+      "passed": true,
+      "diagnostic_pattern": "switch must be exhaustive",
+      "consumer_sha256": "73794c0f01f5556126891300eacd99f05e43d2ce6a304bc18d0d8dc18ff26d18"
+    },
+    {
+      "name": "home-variant-handled",
+      "expected_failure": false,
+      "passed": true,
+      "diagnostic_pattern": null,
+      "consumer_sha256": "dbfec32d60926b4d685619e0764a024067b5093765635b77f05dc0de6469458a"
+    },
+    {
+      "name": "home-payload-omitted-swift",
+      "expected_failure": true,
+      "passed": true,
+      "diagnostic_pattern": "cannot convert value of type '\\(String\\) -> Any\\?' to expected argument type 'Int32'",
+      "consumer_sha256": "73794c0f01f5556126891300eacd99f05e43d2ce6a304bc18d0d8dc18ff26d18"
+    },
+    {
+      "name": "home-payload-handled",
+      "expected_failure": false,
+      "passed": true,
+      "diagnostic_pattern": null,
+      "consumer_sha256": "1aea43208e4e4aa40bcc8987814a8c911a1bcb62aace838efa7bda2d53ec73ac"
+    },
+    {
+      "name": "nearby-variant-omitted-kotlin",
+      "expected_failure": true,
+      "passed": true
+    },
+    {
+      "name": "nearby-variant-omitted-swift",
+      "expected_failure": true,
+      "passed": true,
+      "diagnostic_pattern": "switch must be exhaustive",
+      "consumer_sha256": "73794c0f01f5556126891300eacd99f05e43d2ce6a304bc18d0d8dc18ff26d18"
+    },
+    {
+      "name": "nearby-variant-handled",
+      "expected_failure": false,
+      "passed": true,
+      "diagnostic_pattern": null,
+      "consumer_sha256": "1abe077f609312f6e322e5a693b63af099a1ae8c2a78e75d047e5298bdd6b272"
+    },
+    {
+      "name": "nearby-renamed-omitted-swift",
+      "expected_failure": true,
+      "passed": true,
+      "diagnostic_pattern": "no member 'unavailable'|no type.*unavailable",
+      "consumer_sha256": "73794c0f01f5556126891300eacd99f05e43d2ce6a304bc18d0d8dc18ff26d18"
+    },
+    {
+      "name": "nearby-renamed-handled",
+      "expected_failure": false,
+      "passed": true,
+      "diagnostic_pattern": null,
+      "consumer_sha256": "1c3c701c40250dfee4366f0e8d671ec73d32b5fa3e9d155acf43cee0908ef202"
+    },
+    {
+      "name": "nearby-reordered",
+      "expected_failure": false,
+      "passed": true,
+      "diagnostic_pattern": null,
+      "consumer_sha256": "73794c0f01f5556126891300eacd99f05e43d2ce6a304bc18d0d8dc18ff26d18"
+    },
+    {
+      "name": "home-variant-distinct-value",
+      "expected_failure": false,
+      "passed": true,
+      "consumer_sha256": "c82d6bf943c1d22b4a03b9b4cf6a4a347396295bb652db3d0b068e4321ea64eb"
+    },
+    {
+      "name": "nearby-variant-distinct-value",
+      "expected_failure": false,
+      "passed": true,
+      "consumer_sha256": "d7f0841cb9adcdf0721447b2ff0e165f64ae17133c200cd3d30ab0536425bda0"
+    }
+  ],
+  "consumer_controls": [
+    {
+      "name": "shared-ui-baseline",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "d2e975c3256f508a289444b2bc55f41347701687cdec23abea7a8b90b0ae1d4f"
+    },
+    {
+      "name": "shared-ui-new-variant-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "d2e975c3256f508a289444b2bc55f41347701687cdec23abea7a8b90b0ae1d4f"
+    },
+    {
+      "name": "shared-ui-new-variant-handled",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "af1ef9a6d06832499542b4ecc3dd0e83b52b5f32330c945ca22e2bdfe69f08ee"
+    },
+    {
+      "name": "shared-ui-payload-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "d2e975c3256f508a289444b2bc55f41347701687cdec23abea7a8b90b0ae1d4f"
+    },
+    {
+      "name": "shared-ui-payload-handled",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "70189ea6ebd8580e34ea6ac4b2ef0996a7d24d0b80b76ee34e53ebb10040dc60"
+    },
+    {
+      "name": "android-presentation-baseline",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "97b381e94d122e191d5378f6194ae2a053300398d400130ef53e12b3a8c10ffd"
+    },
+    {
+      "name": "android-presentation-new-variant-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "97b381e94d122e191d5378f6194ae2a053300398d400130ef53e12b3a8c10ffd"
+    },
+    {
+      "name": "android-presentation-new-variant-handled",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "67e89d29391be5baf666b35943dfd4ddaf0fbc5a563bcc20fafdb96de11170db"
+    },
+    {
+      "name": "android-presentation-renamed-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "97b381e94d122e191d5378f6194ae2a053300398d400130ef53e12b3a8c10ffd"
+    },
+    {
+      "name": "android-presentation-renamed-handled",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "632c053c9edbedfcb2fba21f11aab9e4669e91d0ab962c4fb834a3969cbfa2fb"
+    },
+    {
+      "name": "visitor-baseline",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "e1538fe8b4cc077bbf9335b4ceaaf7c708e7897b712ade81c7f93db103c38ffe"
+    },
+    {
+      "name": "visitor-new-home-variant-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "e1538fe8b4cc077bbf9335b4ceaaf7c708e7897b712ade81c7f93db103c38ffe"
+    },
+    {
+      "name": "visitor-new-nearby-variant-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "e1538fe8b4cc077bbf9335b4ceaaf7c708e7897b712ade81c7f93db103c38ffe"
+    },
+    {
+      "name": "native-presentation-baseline",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "4be0d8a32f41b2c5c9525b21744ff608c73b9553f2284b4021506cda6b42d4a6"
+    },
+    {
+      "name": "native-presentation-added-case-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "0c116798403427ab472c5ee29ae6747bf05210cc7069635f2e4c842ab88d6f58"
+    },
+    {
+      "name": "native-presentation-added-case-explicit-presentation",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "d9f47149368801480c98243d723f696f1c3e712d028f16f31403c08fc446ffb8"
+    },
+    {
+      "name": "inline-presentation-baseline",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "63a8ca96ae329fed7dfcccd32d01fb6e196746199278e5e49b40ed2d55fabd97"
+    },
+    {
+      "name": "inline-presentation-added-case-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "63a8ca96ae329fed7dfcccd32d01fb6e196746199278e5e49b40ed2d55fabd97"
+    },
+    {
+      "name": "inline-presentation-added-case-explicit-ui",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "59c61b92abd43e07b18e0a53a908d61073bfc2f9bd9c324c7a42283569f33b28"
+    },
+    {
+      "name": "inline-presentation-payload-omitted",
+      "expected_failure": true,
+      "passed": true,
+      "source_sha256": "63a8ca96ae329fed7dfcccd32d01fb6e196746199278e5e49b40ed2d55fabd97"
+    },
+    {
+      "name": "inline-presentation-payload-handled",
+      "expected_failure": false,
+      "passed": true,
+      "source_sha256": "a2ec8f9e5b1cec1db8ab929a1da4b88512e447bc51a91cdea9a25ec8342f9586"
+    }
+  ],
+  "command_outcomes": [
+    {
+      "name": "native-version",
+      "exit": 0,
+      "log_sha256": "e57deaa7d1233aa2596481105c7375f2b811b726aef1aa99f2a9ad71e3dcd237",
+      "retained_log": "evolution-v4/native-version.log"
+    },
+    {
+      "name": "compile-harness",
+      "exit": 0,
+      "log_sha256": "2511caee3e0eb9f54f9181122e6545fba4ac9100494c96c04e4ec3b527039215",
+      "retained_log": "evolution-v4/compile-harness.log"
+    },
+    {
+      "name": "baseline-compile-shared-core",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "baseline-compile-shared-feature-home",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "baseline-compile-shared-feature-nearby-vehicle-map",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "baseline-export",
+      "exit": 0,
+      "log_sha256": "f4d1df562edf8bcb71f11e01e624e85ac687351e66e1648312a8e41a52a6703c",
+      "retained_log": "evolution-v4/baseline-export.log"
+    },
+    {
+      "name": "baseline-swift-ExportedKotlinPackages",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "baseline-swift-KotlinRuntimeSupport",
+      "exit": 0,
+      "log_sha256": "c4a13674911f487067ea18f3b5218b42f2cfc4bce9869c36898547edf4b9d4a6",
+      "retained_log": "evolution-v4/baseline-swift-KotlinRuntimeSupport.log"
+    },
+    {
+      "name": "baseline-swift-KotlinCoroutineSupport",
+      "exit": 0,
+      "log_sha256": "57c51602c7996d112b6cdb4083bf4af00d65549049b785f2a3d110c053ddc70b",
+      "retained_log": "evolution-v4/baseline-swift-KotlinCoroutineSupport.log"
+    },
+    {
+      "name": "baseline-swift-MobiCore",
+      "exit": 0,
+      "log_sha256": "1391454b0bc0621446319232873f5450eeeb530da204a1ae39bcb3ab6fc87725",
+      "retained_log": "evolution-v4/baseline-swift-MobiCore.log"
+    },
+    {
+      "name": "baseline-swift-MobiHome",
+      "exit": 0,
+      "log_sha256": "0f8799c33d13b1dd71a92f17eb9db6bc8843155e98749fb0054085fc9f7f9b98",
+      "retained_log": "evolution-v4/baseline-swift-MobiHome.log"
+    },
+    {
+      "name": "baseline-swift-MobiNearby",
+      "exit": 0,
+      "log_sha256": "db4889eae6d4ce9593e1f0b07d23e4f2c3ac54b1752be4d93d72b18eb3877eb6",
+      "retained_log": "evolution-v4/baseline-swift-MobiNearby.log"
+    },
+    {
+      "name": "baseline-consumer",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "baseline-nonsendable-escape-consumer",
+      "exit": 1,
+      "log_sha256": "6cf5fc10e28444a5ed1725b0e28d34b63504971e3f9bde41d2a9dce87c80ae6e",
+      "retained_log": "evolution-v4/baseline-nonsendable-escape-consumer.log"
+    },
+    {
+      "name": "baseline-omitted-case-consumer",
+      "exit": 1,
+      "log_sha256": "335f566fefa4bde00fee81a6779d7b3d7ecf3ffb10aed617cff750b5bfad8b2d",
+      "retained_log": "evolution-v4/baseline-omitted-case-consumer.log"
+    },
+    {
+      "name": "home-variant-omitted-kotlin-compile-shared-feature-home",
+      "exit": 1,
+      "log_sha256": "ceb575912394d7af0c1270bc98b4e84642577ea101a25d31ab5a2c2a7a719ab0",
+      "retained_log": "evolution-v4/home-variant-omitted-kotlin-compile-shared-feature-home.log"
+    },
+    {
+      "name": "home-variant-compile-shared-feature-home",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "home-variant-export",
+      "exit": 0,
+      "log_sha256": "d7cc498287300d9b9419848a529942ff1c056d708ebb0ca67e054989b5184816",
+      "retained_log": "evolution-v4/home-variant-export.log"
+    },
+    {
+      "name": "home-variant-swift-ExportedKotlinPackages",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "home-variant-swift-KotlinRuntimeSupport",
+      "exit": 0,
+      "log_sha256": "e866a271122d6a6e0496bc3c07e8fffbf57ad2ab535f19357aec406d91639226",
+      "retained_log": "evolution-v4/home-variant-swift-KotlinRuntimeSupport.log"
+    },
+    {
+      "name": "home-variant-swift-KotlinCoroutineSupport",
+      "exit": 0,
+      "log_sha256": "108ba1e44f9ae5fad9076f2fe7436868394ef41da65b95dc54c42ee110e9129b",
+      "retained_log": "evolution-v4/home-variant-swift-KotlinCoroutineSupport.log"
+    },
+    {
+      "name": "home-variant-swift-MobiCore",
+      "exit": 0,
+      "log_sha256": "0ec0b7cd18adc6d4c2f0ef9fbbb675bd46ffa08bb0fc89454036afca543de0fc",
+      "retained_log": "evolution-v4/home-variant-swift-MobiCore.log"
+    },
+    {
+      "name": "home-variant-swift-MobiHome",
+      "exit": 0,
+      "log_sha256": "2abf9ffc3a70dfc71f39ab1f0886e7186b02619b26e9f52b5314fca93d657881",
+      "retained_log": "evolution-v4/home-variant-swift-MobiHome.log"
+    },
+    {
+      "name": "home-variant-swift-MobiNearby",
+      "exit": 0,
+      "log_sha256": "9822d7fb76ed2b338a498b840c9e1dc90c55f6110ebad0eccb9bfe8cbf7cc663",
+      "retained_log": "evolution-v4/home-variant-swift-MobiNearby.log"
+    },
+    {
+      "name": "home-variant-omitted-swift-consumer",
+      "exit": 1,
+      "log_sha256": "d6da4dd2d861796ec1877969f80e1aa1d18f75628b961b5ac9ba078954c439cd",
+      "retained_log": "evolution-v4/home-variant-omitted-swift-consumer.log"
+    },
+    {
+      "name": "home-variant-handled-consumer",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "home-payload-compile-shared-feature-home",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "home-payload-export",
+      "exit": 0,
+      "log_sha256": "81ae176f2f9b22a63b5a86e1c58f6ef25c90ed251745f1c223d0346d83595a36",
+      "retained_log": "evolution-v4/home-payload-export.log"
+    },
+    {
+      "name": "home-payload-swift-ExportedKotlinPackages",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "home-payload-swift-KotlinRuntimeSupport",
+      "exit": 0,
+      "log_sha256": "9bbfd49561842c39974accbc003972ee0d09663a99c7821bfdc1e723ca4c9dc7",
+      "retained_log": "evolution-v4/home-payload-swift-KotlinRuntimeSupport.log"
+    },
+    {
+      "name": "home-payload-swift-KotlinCoroutineSupport",
+      "exit": 0,
+      "log_sha256": "fb9c07d7ecbb6aee65839f7bd6bb5753320434d1a6bf6f8e9c074b42b1006403",
+      "retained_log": "evolution-v4/home-payload-swift-KotlinCoroutineSupport.log"
+    },
+    {
+      "name": "home-payload-swift-MobiCore",
+      "exit": 0,
+      "log_sha256": "15d81af9463f29ecbd16bda0b7931d82f931058387b63beb2474038eb1d69404",
+      "retained_log": "evolution-v4/home-payload-swift-MobiCore.log"
+    },
+    {
+      "name": "home-payload-swift-MobiHome",
+      "exit": 0,
+      "log_sha256": "ac9c5fce6c20d819e58343bfe2972277432245c09d3c2625ea28683f2ba6b0f0",
+      "retained_log": "evolution-v4/home-payload-swift-MobiHome.log"
+    },
+    {
+      "name": "home-payload-swift-MobiNearby",
+      "exit": 0,
+      "log_sha256": "ff582c24d04cd4fea4328ee455aa8b7c57ea3aac6162a999120ac9b0761e90b3",
+      "retained_log": "evolution-v4/home-payload-swift-MobiNearby.log"
+    },
+    {
+      "name": "home-payload-omitted-swift-consumer",
+      "exit": 1,
+      "log_sha256": "7bed8b15073364b0a9371b58cf23338c6218821af70ebc49593b4f95c6497880",
+      "retained_log": "evolution-v4/home-payload-omitted-swift-consumer.log"
+    },
+    {
+      "name": "home-payload-handled-consumer",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-variant-omitted-kotlin-compile-shared-feature-nearby-vehicle-map",
+      "exit": 1,
+      "log_sha256": "69d1d053570bc7356fa5acb1a0cb755f14f6cf643a3475523ad87456769f4bea",
+      "retained_log": "evolution-v4/nearby-variant-omitted-kotlin-compile-shared-feature-nearby-vehicle-map.log"
+    },
+    {
+      "name": "nearby-variant-compile-shared-feature-nearby-vehicle-map",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-variant-export",
+      "exit": 0,
+      "log_sha256": "fb6a1a151563a39864323fe7838fe56a20fd5a9219c6772cfc0ccebe0b4582c8",
+      "retained_log": "evolution-v4/nearby-variant-export.log"
+    },
+    {
+      "name": "nearby-variant-swift-ExportedKotlinPackages",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-variant-swift-KotlinRuntimeSupport",
+      "exit": 0,
+      "log_sha256": "a30277437a6cfe2f5745c83e8cc801f8db3a365012dc225d761ba2b4b5219d1b",
+      "retained_log": "evolution-v4/nearby-variant-swift-KotlinRuntimeSupport.log"
+    },
+    {
+      "name": "nearby-variant-swift-KotlinCoroutineSupport",
+      "exit": 0,
+      "log_sha256": "70012ac9bd4f599c832cd3463fe119225749ed94b7a0aed2bfc9110e93c4c784",
+      "retained_log": "evolution-v4/nearby-variant-swift-KotlinCoroutineSupport.log"
+    },
+    {
+      "name": "nearby-variant-swift-MobiCore",
+      "exit": 0,
+      "log_sha256": "8c91e9a3204ad7d4f167668278e38ecf68333f0847d8f9afbb0bb24e4a6694ca",
+      "retained_log": "evolution-v4/nearby-variant-swift-MobiCore.log"
+    },
+    {
+      "name": "nearby-variant-swift-MobiHome",
+      "exit": 0,
+      "log_sha256": "ea55128f39f9e67f9943d952421ad05cfd81153e77f212bc201fe5fa8e3f196a",
+      "retained_log": "evolution-v4/nearby-variant-swift-MobiHome.log"
+    },
+    {
+      "name": "nearby-variant-swift-MobiNearby",
+      "exit": 0,
+      "log_sha256": "603bdab6d74ecce05ad780babf2d441d3ca4f6f205d2927c4bf9dae6f8de4eb7",
+      "retained_log": "evolution-v4/nearby-variant-swift-MobiNearby.log"
+    },
+    {
+      "name": "nearby-variant-omitted-swift-consumer",
+      "exit": 1,
+      "log_sha256": "1b90106ddc3468d9218aa7543b64b1bed406993384986931fd556d8888d0fbbf",
+      "retained_log": "evolution-v4/nearby-variant-omitted-swift-consumer.log"
+    },
+    {
+      "name": "nearby-variant-handled-consumer",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-renamed-compile-shared-feature-nearby-vehicle-map",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-renamed-export",
+      "exit": 0,
+      "log_sha256": "a14ea9bd5a6df9ff57c7eb2531e171904b85f1b9da25ea3137410484476e90a9",
+      "retained_log": "evolution-v4/nearby-renamed-export.log"
+    },
+    {
+      "name": "nearby-renamed-swift-ExportedKotlinPackages",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-renamed-swift-KotlinRuntimeSupport",
+      "exit": 0,
+      "log_sha256": "7899238acde1f8b3385a1db005cca096d18cef26501f68b33b3629baf288524a",
+      "retained_log": "evolution-v4/nearby-renamed-swift-KotlinRuntimeSupport.log"
+    },
+    {
+      "name": "nearby-renamed-swift-KotlinCoroutineSupport",
+      "exit": 0,
+      "log_sha256": "453b306d3b30045e068e8f4f6c4beb8385864fe8fe4464e4aae58eaffc058800",
+      "retained_log": "evolution-v4/nearby-renamed-swift-KotlinCoroutineSupport.log"
+    },
+    {
+      "name": "nearby-renamed-swift-MobiCore",
+      "exit": 0,
+      "log_sha256": "73debe7cfb61757bf34b14dc361def116c74dbebae93f21385c9fde7d91e83bf",
+      "retained_log": "evolution-v4/nearby-renamed-swift-MobiCore.log"
+    },
+    {
+      "name": "nearby-renamed-swift-MobiHome",
+      "exit": 0,
+      "log_sha256": "f7725bf4015c40b1b747dcc3ee475f4ad011dcf954641e91597378354bcbdb94",
+      "retained_log": "evolution-v4/nearby-renamed-swift-MobiHome.log"
+    },
+    {
+      "name": "nearby-renamed-swift-MobiNearby",
+      "exit": 0,
+      "log_sha256": "5b0c00794084ae464860d02848dec5462fef5bf6a4773c9099af9d2c9c6888a6",
+      "retained_log": "evolution-v4/nearby-renamed-swift-MobiNearby.log"
+    },
+    {
+      "name": "nearby-renamed-omitted-swift-consumer",
+      "exit": 1,
+      "log_sha256": "792253add5b599fa12a1b0d19291222b457e1a49275caca3f6c0f86f2d9a1886",
+      "retained_log": "evolution-v4/nearby-renamed-omitted-swift-consumer.log"
+    },
+    {
+      "name": "nearby-renamed-handled-consumer",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-reordered-compile-shared-feature-nearby-vehicle-map",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-reordered-export",
+      "exit": 0,
+      "log_sha256": "d86f3fa597ae4c50d3c7f7f23ff9ad93f11b1df1e5710692e1ddfbbdbbc88b5f",
+      "retained_log": "evolution-v4/nearby-reordered-export.log"
+    },
+    {
+      "name": "nearby-reordered-swift-ExportedKotlinPackages",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "nearby-reordered-swift-KotlinRuntimeSupport",
+      "exit": 0,
+      "log_sha256": "959d47a5e1e7e88c57c34f17eff683ab73f0e66112f03b671847956b33258c23",
+      "retained_log": "evolution-v4/nearby-reordered-swift-KotlinRuntimeSupport.log"
+    },
+    {
+      "name": "nearby-reordered-swift-KotlinCoroutineSupport",
+      "exit": 0,
+      "log_sha256": "def8b318dc044ecdb23430424a81dc0f620ec7191ba5c7d473aee005fd64269d",
+      "retained_log": "evolution-v4/nearby-reordered-swift-KotlinCoroutineSupport.log"
+    },
+    {
+      "name": "nearby-reordered-swift-MobiCore",
+      "exit": 0,
+      "log_sha256": "6a0af1c6c47bb346b5752c36c23fa708b1303f2940a63546d99adbf4221d5de6",
+      "retained_log": "evolution-v4/nearby-reordered-swift-MobiCore.log"
+    },
+    {
+      "name": "nearby-reordered-swift-MobiHome",
+      "exit": 0,
+      "log_sha256": "6f6b9079a8467b3cb4c837f463f9fe4ba322b49db4bc283aa5c9ad0984272b9c",
+      "retained_log": "evolution-v4/nearby-reordered-swift-MobiHome.log"
+    },
+    {
+      "name": "nearby-reordered-swift-MobiNearby",
+      "exit": 0,
+      "log_sha256": "5edcb095845866d02c43405f230db30d6737fbb56af69dbe214e8f3cac072cd3",
+      "retained_log": "evolution-v4/nearby-reordered-swift-MobiNearby.log"
+    },
+    {
+      "name": "nearby-reordered-consumer",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "home-variant-distinct-value-consumer",
+      "exit": 0,
+      "log_sha256": "0a6a829b164e08cfa57579936da34b08e5a88b41c48bf2812a540b93daa65b85",
+      "retained_log": "evolution-v4/home-variant-distinct-value-consumer.log"
+    },
+    {
+      "name": "nearby-variant-distinct-value-consumer",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "shared-ui-baseline",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "shared-ui-new-variant-omitted",
+      "exit": 1,
+      "log_sha256": "6cfe4e99f570616d2c11b512ad7c06fdc376cf4843a6cce4ad860478655ea3c9",
+      "retained_log": "consumer-impact/shared-ui-new-variant-omitted.log"
+    },
+    {
+      "name": "shared-ui-new-variant-handled",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "shared-ui-payload-omitted",
+      "exit": 1,
+      "log_sha256": "7bb66d1aa012779b6220c527948bcc9e5f79434b1fdc6325606d6c4b5b5ddd70",
+      "retained_log": "consumer-impact/shared-ui-payload-omitted.log"
+    },
+    {
+      "name": "shared-ui-payload-handled",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "android-presentation-baseline",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "android-presentation-new-variant-omitted",
+      "exit": 1,
+      "log_sha256": "93e107c05dc13629b4f7eae25feefe32c984e021fb3bf60fc0b263b81102e6d0",
+      "retained_log": "consumer-impact/android-presentation-new-variant-omitted.log"
+    },
+    {
+      "name": "android-presentation-new-variant-handled",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "android-presentation-renamed-omitted",
+      "exit": 1,
+      "log_sha256": "003629c5f63eaf6133bd7d99df1be341c6a633280882546eb8e000167c1b1ce1",
+      "retained_log": "consumer-impact/android-presentation-renamed-omitted.log"
+    },
+    {
+      "name": "android-presentation-renamed-handled",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "visitor-baseline",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "visitor-new-home-variant-omitted",
+      "exit": 1,
+      "log_sha256": "4648a0c453d35455c204a8874b8ab779f20d751b957987713e45571b4742d9cc",
+      "retained_log": "consumer-impact/visitor-new-home-variant-omitted.log"
+    },
+    {
+      "name": "visitor-new-nearby-variant-omitted",
+      "exit": 1,
+      "log_sha256": "4d59c42b17578f8db6ddea5897a64c634e1354a9da224f7129df4fb7740687e0",
+      "retained_log": "consumer-impact/visitor-new-nearby-variant-omitted.log"
+    },
+    {
+      "name": "native-presentation-baseline",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "native-presentation-added-case-omitted",
+      "exit": 1,
+      "log_sha256": "32a47c8b3ee13a5e78e3e0b20dbee534db56c30a8313dda40605ea0c9654e99a",
+      "retained_log": "native-presentation/added-case-omitted.log"
+    },
+    {
+      "name": "native-presentation-added-case-explicit-presentation",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "inline-presentation-baseline",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "inline-presentation-added-case-omitted",
+      "exit": 1,
+      "log_sha256": "36a23a83028f15b9a4eca111bf03afc5d3ecf6f2cc5cfebb263a809149d2b840",
+      "retained_log": "inline-presentation/added-case-omitted.log"
+    },
+    {
+      "name": "inline-presentation-added-case-explicit-ui",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    },
+    {
+      "name": "inline-presentation-payload-omitted",
+      "exit": 1,
+      "log_sha256": "3b164c2b82ab5b757776806b0574c73fe022f62779284daa82a0cce5d364db44",
+      "retained_log": "inline-presentation/payload-omitted.log"
+    },
+    {
+      "name": "inline-presentation-payload-handled",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_log": "inline-presentation/payload-handled.log"
+    }
+  ],
+  "compiler_inputs": {
+    "jar_checksums": {
+      "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "caffeine-2.9.3.jar": "1e0a7bbef1dd791653143f3f05d0e489934bf5481e58a87c9e619cd46b68729b",
+      "checker-qual-3.43.0.jar": "3fbc2e98f05854c3df16df9abaa955b91b15b3ecac33623208ed6424640ef0f6",
+      "error_prone_annotations-2.28.0.jar": "f3fc8a3a0a4020706a373b00e7f57c2512dd26d1f83d28c7d38768f8682b231e",
+      "intellij-kotlinx-coroutines-core-jvm-1.8.0-intellij-13.jar": "48e61a763238a5153e536e69ee756e39fcd52337316f1e1649d59c542ec04296",
+      "kotlin-build-tools-api-2.4.20.jar": "47a622dce7231b1916334b69a00bc1094adf6577e6492f9f06b3d9c2450fe459",
+      "kotlin-compiler-embeddable-2.4.20.jar": "cf97161430683fb9af96dc6a7017ffae1fe8737b80d12eee11f2fe3e76f8ded8",
+      "kotlin-daemon-embeddable-2.4.20.jar": "eef72cf8f17e6d98d33e5b7c7e1cab31a1cf5fc34084dd5e563e7b1f3ef53435",
+      "kotlin-native-utils-2.4.20.jar": "7613fa2f7bcfa893102041ffa57567fb398c31a085834a30043c09e5222e2334",
+      "kotlin-reflect-1.6.10.jar": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203",
+      "kotlin-script-runtime-2.4.20.jar": "fc5a19df78be445d84e8352e0d01098a6a8181324aa50c6f7bf850338e81e1b4",
+      "kotlin-stdlib-2.4.20.jar": "2226de463d309d4a5500a481320b3dea515a6981dcae1def531fbc158884e25f",
+      "kotlin-util-io-2.4.20.jar": "944edbec0f4438b40999e81872f6b05b0604abac6ed11d72c27846d19835f24c",
+      "kotlin-util-klib-2.4.20.jar": "3a58f9a82378e13ea5045266de2c09a8e5a05c44dd92131c4a83794fd3d1ceca",
+      "kotlinx-serialization-core-jvm-1.7.3.jar": "f0adde45864144475385cf4aa7e0b7feb27f61fcf9472665ed98cc971b06b1eb",
+      "opentelemetry-api-1.41.0.jar": "9336668f388de68a0a2c3e114154febd29db19a7644f27c4eba548f5de852258",
+      "opentelemetry-context-1.41.0.jar": "5e3432a4464a432abfdab73be7142e516d25a84aa8426fce1192ffb0532faa35",
+      "swift-export-embeddable-2.4.20.jar": "24c6159bcf0087ecf86bfc9bad01a975e192abcf75005b248292d85a139c2055"
+    },
+    "external_libraries": [
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/foundation/foundation-iossimulatorarm64/1.12.1/foundation-iossimulatorarm64-1.12.1.klib",
+        "sha256": "ee5692cdf88fe24c0e4f0c9db43a9e41ba117564def933c232f49184b1506aa8"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/material3/material3-iossimulatorarm64/1.12.0-alpha03/material3-iossimulatorarm64-1.12.0-alpha03.klib",
+        "sha256": "46a55c65db7ba96bed6106c5dd7fe00cfa2fef317a56afdbc3908a3740ec7f82"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/runtime/runtime-iossimulatorarm64/1.12.1/runtime-iossimulatorarm64-1.12.1.klib",
+        "sha256": "7c7b36480e60bee34c524646d2e72d421b78304c3da6ad4c4d80fad75e4cab4c"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/components/components-resources-iosSimulatorArm64/1.12.1/components-resources-iosSimulatorArm64-1.12.1.klib",
+        "sha256": "643fd3af51156571d5e36e9b99a2f706c1856ec1133211626b049325f454930c"
+      },
+      {
+        "relative_path": ".m2.cache/dev/zacsweers/metro/runtime-iossimulatorarm64/1.4.5/runtime-iossimulatorarm64-1.4.5.klib",
+        "sha256": "597da18aec956953fb48f41a0e188d68fd407d16fb6fa823314d8fd3c461c2bb"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/kotlinx-coroutines-core-iossimulatorarm64/1.11.0/kotlinx-coroutines-core-iossimulatorarm64-1.11.0.klib",
+        "sha256": "3200d59215e7f4c6ffccc32d30d05e5425d80144a8a7bafb70f99d86b9402379"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/collection/collection-iossimulatorarm64/1.5.0/collection-iossimulatorarm64-1.5.0.klib",
+        "sha256": "d437ac17cea331234060bb90fe17118e48d58487034c71881fa081c367d7f703"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/animation/animation-iossimulatorarm64/1.12.1/animation-iossimulatorarm64-1.12.1.klib",
+        "sha256": "3162382f875ecec82751d926397b33e7dc6547c1b9faa0313f0ef0a2d473d33a"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/foundation/foundation-layout-iossimulatorarm64/1.12.1/foundation-layout-iossimulatorarm64-1.12.1.klib",
+        "sha256": "25daf7e45a12e2e119c39a4b6e04cfbaac6fcbe9f1828221c9b61491142f29d7"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-iossimulatorarm64/1.12.1/ui-iossimulatorarm64-1.12.1.klib",
+        "sha256": "2dd05c72adf504f898693736f1ded235b1611f97a18ea63221cb0e7b4783b751"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-text-iossimulatorarm64/1.12.1/ui-text-iossimulatorarm64-1.12.1.klib",
+        "sha256": "e917ca8ce1295721cf4916f9e390af96d8bc596146d82d532fadb901764092e0"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-uikit-iossimulatorarm64/1.12.1/ui-uikit-iossimulatorarm64-1.12.1.klib",
+        "sha256": "6044080304fb5792d093145e7c79dd451d55967fca869014984f903b293f73d8"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-uikit-iossimulatorarm64/1.12.1/ui-uikit-iossimulatorarm64-1.12.1-cinterop-utils.klib",
+        "sha256": "26e1d13042b793c5b2a5069ce0da8e9a1d6236b14cbf80c1930e6cf7ea344d87"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-util-iossimulatorarm64/1.12.1/ui-util-iossimulatorarm64-1.12.1.klib",
+        "sha256": "386c740dcd85731d20ea4204cf27413691fe6feb8dd966cfe8ff57fe0b35a231"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/atomicfu-iossimulatorarm64/0.32.1/atomicfu-iossimulatorarm64-0.32.1.klib",
+        "sha256": "10100e1e68f25dd209fa089bbc9344c3aa8430e87122f1dd9c8b85e1cc46c7f2"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/atomicfu-iossimulatorarm64/0.32.1/atomicfu-iossimulatorarm64-0.32.1-cinterop-interop.klib",
+        "sha256": "c6ba3b588ffae909ac021105ba87dfde5a80de19e2679413f36f05b87e7fa8e2"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/skiko/skiko-iossimulatorarm64/0.150.1/skiko-iossimulatorarm64-0.150.1.klib",
+        "sha256": "f6d557c83ce431988913341d1030e188e4ac310cbaca71a2f39cc4ebe370f09f"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/skiko/skiko-iossimulatorarm64/0.150.1/skiko-iossimulatorarm64-0.150.1-cinterop-uikit.klib",
+        "sha256": "bf60cbf0d6aa8c27930ce5d66f261b0fcaa44df2cc26e8ab2e35111799ec6ee3"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/graphics/graphics-shapes-iossimulatorarm64/1.1.0/graphics-shapes-iossimulatorarm64-1.1.0.klib",
+        "sha256": "e2f76a1fe4766bc986962f22a6124d17ca3c6714acd4ccf54d13088373592f67"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/animation/animation-core-iossimulatorarm64/1.12.1/animation-core-iossimulatorarm64-1.12.1.klib",
+        "sha256": "e8a0d60f5f9e4c049124b991b2deea79eb3816540dffc4d5efecd85640353734"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/material/material-ripple-iossimulatorarm64/1.12.0-beta01/material-ripple-iossimulatorarm64-1.12.0-beta01.klib",
+        "sha256": "fc5531a3bac48c0dd8c646163bd6d43e0849e14c102ca48f70cfe7b3bcebfddc"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-backhandler-iossimulatorarm64/1.12.1/ui-backhandler-iossimulatorarm64-1.12.1.klib",
+        "sha256": "fb7da9cf70e2ae239d1f8df7cbe0c7b571da8966dcecf6cde65f77d1fc5b4027"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/kotlinx-datetime-iossimulatorarm64/0.7.1/kotlinx-datetime-iossimulatorarm64-0.7.1.klib",
+        "sha256": "93536c5776c0d4a6a2d49320b3da8723a0ceb7bd120ad07e02d48db85b2d0688"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/compose/runtime/runtime-iossimulatorarm64/1.12.1/runtime-iossimulatorarm64-1.12.1.klib",
+        "sha256": "61f989e21ff37301645032e2e52801a87bf6a4e6567073148b708199fa0e308e"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/annotation/annotation-iossimulatorarm64/1.9.1/annotation-iossimulatorarm64-1.9.1.klib",
+        "sha256": "370abeae251a2f69bc38cdbed2e19ee2fab102c373875386141c34eb8075db8d"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-geometry-iossimulatorarm64/1.12.1/ui-geometry-iossimulatorarm64-1.12.1.klib",
+        "sha256": "b09b9fe1f9a58b043b8f58752a51654b2475e2e64ef1c45dfc944a9833d8f5e3"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-graphics-iossimulatorarm64/1.12.1/ui-graphics-iossimulatorarm64-1.12.1.klib",
+        "sha256": "0e66920af40232c72b47213f924a0312567f89f4a22bfbaf7a9c831fe9a08194"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-unit-iossimulatorarm64/1.12.1/ui-unit-iossimulatorarm64-1.12.1.klib",
+        "sha256": "4fd3834b046c2a27d50e9b6f3b05913e393a2886d038836c658c485e0466c832"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/compose/runtime/runtime-retain-iossimulatorarm64/1.12.1/runtime-retain-iossimulatorarm64-1.12.1.klib",
+        "sha256": "9ad511a11ea6ba8f86180b4b9c625699b813423fb51b5075638340a749b5288f"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-viewmodel-compose-iossimulatorarm64/2.11.0/lifecycle-viewmodel-compose-iossimulatorarm64-2.11.0.klib",
+        "sha256": "2e590b2a1be5cf3178aff2ae70d5b90e399f1151e82f8e7c606392384236751e"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-viewmodel-savedstate-iossimulatorarm64/2.11.0/lifecycle-viewmodel-savedstate-iossimulatorarm64-2.11.0.klib",
+        "sha256": "8dce7df6c2d8318eec4aa7fe065a693232e7dda3e132d319766bb7ac4a96c8bb"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/savedstate/savedstate-compose-iossimulatorarm64/1.4.0/savedstate-compose-iossimulatorarm64-1.4.0.klib",
+        "sha256": "0b6f97acfee864c3ca3ed46750d3975738dc28c81eab9ac5953d2f452656b95f"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/androidx/lifecycle/lifecycle-runtime-compose-uikitsimarm64/2.9.6/lifecycle-runtime-compose-uikitsimarm64-2.9.6.klib",
+        "sha256": "4880c6df470d1ee3ec4f5b1fa5381892b627f275fce3719a0a9d32b119e8b3b4"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/androidx/navigationevent/navigationevent-compose-iossimulatorarm64/1.1.0/navigationevent-compose-iossimulatorarm64-1.1.0.klib",
+        "sha256": "36da927ef084ab195cd8543258a360b09b9c5609c0f108a0457d370311ad7066"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/runtime/runtime-saveable-iossimulatorarm64/1.12.1/runtime-saveable-iossimulatorarm64-1.12.1.klib",
+        "sha256": "632a4c860e07a60099be0535dc2525aca6e5e0f921e2068652776581b9dbc2f4"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/kotlinx-serialization-core-iossimulatorarm64/1.7.3/kotlinx-serialization-core-iossimulatorarm64-1.7.3.klib",
+        "sha256": "7dbfefcd26b4b71b1b1d0653539e18ef42c92eec60855d92c236c6bdb1755ab8"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/compose/runtime/runtime-annotation-iossimulatorarm64/1.12.1/runtime-annotation-iossimulatorarm64-1.12.1.klib",
+        "sha256": "3bbb7582edb7182298ed6c44809d8f28a6af6160ff84aa4f07413359b93333f1"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-viewmodel-iossimulatorarm64/2.11.0/lifecycle-viewmodel-iossimulatorarm64-2.11.0.klib",
+        "sha256": "9b9bb5a067336fee84fd6bd7b0f74f4ef5c9a6c097927a696b26de8804a602d7"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/compose/runtime/runtime-saveable-iossimulatorarm64/1.12.1/runtime-saveable-iossimulatorarm64-1.12.1.klib",
+        "sha256": "bbbd4272fd2386ee3ce3be40da80eda9048e428a2c30d39c23ad75f58d1254de"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-common-iossimulatorarm64/2.11.0/lifecycle-common-iossimulatorarm64-2.11.0.klib",
+        "sha256": "1afdb1ff365f59b4b2679bdac56e7b9aae7c239d9b2b9f10891a03dc93850a37"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-runtime-compose-iossimulatorarm64/2.11.0/lifecycle-runtime-compose-iossimulatorarm64-2.11.0.klib",
+        "sha256": "d04b002fbd6b28ad35a22a2b13d603c62d28cedbfc249f30cfdcb8f0fbeadc5a"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/savedstate/savedstate-iossimulatorarm64/1.4.0/savedstate-iossimulatorarm64-1.4.0.klib",
+        "sha256": "86d6f55a8a61273c7da2b5fdc813ee88a9fa4c269dd9981fdc4e2940c9be0435"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/navigationevent/navigationevent-compose-iossimulatorarm64/1.1.1/navigationevent-compose-iossimulatorarm64-1.1.1.klib",
+        "sha256": "997294b4c9688f3b17d6c0c6c40e3ffd3174f883d6c24545e5ad02fbc61e639c"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/androidx/savedstate/savedstate-compose-uikitsimarm64/1.3.6/savedstate-compose-uikitsimarm64-1.3.6.klib",
+        "sha256": "ab0ceb3cfa4d34701a03093799e4dee8fa81bf2aa54a97d0ff45fc673581f3a0"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-runtime-iossimulatorarm64/2.11.0/lifecycle-runtime-iossimulatorarm64-2.11.0.klib",
+        "sha256": "c07787f86eefbfcb32cc63cef16e1ed9c8baed33b401e6ecc613c521c20f59fa"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/navigationevent/navigationevent-iossimulatorarm64/1.1.1/navigationevent-iossimulatorarm64-1.1.1.klib",
+        "sha256": "955996f58150fb0164ad841e41d4181f342d3dd7eafb7103dfa60afcb71afd7e"
+      }
+    ],
+    "native_compiler_sha256": "81aa0e438439fc7c1d591e05805af196dddc90965667165983c1a1ab3e6ba0fa"
+  },
+  "review_patches": [
+    {
+      "path": "2026-10-14-state-boundary/home-added-case.patch",
+      "sha256": "96ab808b2bfd5e3fe9c1a902b900fbadb7017736a93b2c174f72ad3ab6cc45f3"
+    },
+    {
+      "path": "2026-10-14-state-boundary/home-renamed-payload.patch",
+      "sha256": "607e2dbf7a0b8fc8f1c9c0b16aa15e06c1ca41aa00b3004be0496610b811e690"
+    },
+    {
+      "path": "2026-10-14-state-boundary/home-typed-presentation.patch",
+      "sha256": "65efbd0fe56f4ff52ede247c44f4730059519b350293ecc7d1fd2341f0f74345"
+    },
+    {
+      "path": "2026-10-14-state-boundary/nearby-added-case.patch",
+      "sha256": "41b703090a4303f162b824d28ed5985c319fdd9359e446657d2009452d61c1da"
+    },
+    {
+      "path": "2026-10-14-state-boundary/nearby-renamed-case.patch",
+      "sha256": "ef2f4e17bd4ddc890976de08f3a3724fa1823867291c911998e094bc3930487e"
+    },
+    {
+      "path": "2026-10-14-state-boundary/nearby-reordered.patch",
+      "sha256": "fa7fe673cd7974c506a21f8aeaa93a223ac19ace8f7835854d5d1df49dbaa7be"
+    }
+  ],
+  "proposed_D1": "Generated sealedType and synchronous MainActor native value/presentation copying; fold Home copying into existing presentation rather than introduce a second handwritten transport enum. Pending maintainer review and D2 integration evidence.",
+  "remaining_gates": [
+    "Actual app integration, graph and API closure",
+    "Async/lifetime/observation decision D2",
+    "Rollback macro-validation preflight resolution and build/tests",
+    "Actual Android SDK/app qualification",
+    "Production Shared UI runtime, minimum runtime, device and signed release",
+    "Stale/delivery mismatch and invalid input controls",
+    "Fresh production dependency/risk/diagnostic/settings decisions"
+  ],
+  "cold_qualification": false,
+  "actual_app_runtime_qualified": false,
+  "actual_android_sdk_qualified": false,
+  "production_adoption_authorized": false,
+  "shipping_source_changed": false,
+  "raw_evidence_store": ".maintenance/production-state-boundary-20261014T144747Z"
+}

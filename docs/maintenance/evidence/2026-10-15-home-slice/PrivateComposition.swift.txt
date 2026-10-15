@@ -1,0 +1,2 @@
+import MobiNativeHome
+@MainActor func bypass(_ services: NativeHomeServices) { _ = services.composition }

@@ -1,0 +1,37 @@
+import UIKit
+import Foundation
+import MobiNativeFeatures
+@main @MainActor final class AppDelegate: UIResponder, UIApplicationDelegate {
+  func application(_ application: UIApplication, configurationForConnecting session: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+    let config = UISceneConfiguration(name: "Home", sessionRole: session.role)
+    config.delegateClass = SceneDelegate.self
+    return config
+  }
+}
+@MainActor final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+  let services = NativeAppServices(parentReservations: 2, jobsPerOwner: 1, observersPerRequest: 1)
+  var home: NativeHomeRoute?
+  var nearby: NativeNearbyRoute?
+  func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options: UIScene.ConnectionOptions) {
+    guard let scene = scene as? UIWindowScene else { return }
+    home = services.makeHomeRoute()
+    window = UIWindow(windowScene: scene)
+    nearby = services.makeNearbyRoute()
+    let tabs = UITabBarController()
+    let homeController = home!.makeViewController()
+    homeController.tabBarItem = UITabBarItem(title: "Home", image: nil, tag: 0)
+    let nearbyController = nearby!.makeViewController()
+    nearbyController.tabBarItem = UITabBarItem(title: "Nearby", image: nil, tag: 1)
+    tabs.viewControllers = [homeController, nearbyController]
+    tabs.selectedIndex = 1
+    window?.rootViewController = tabs
+    window?.makeKeyAndVisible()
+    Task { @MainActor in
+      let text = await HomeSliceAssessment.run(home: home!, nearby: nearby!)
+      let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+      try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      try! text.write(to: directory.appendingPathComponent("home-result.json"), atomically: true, encoding: .utf8)
+    }
+  }
+}

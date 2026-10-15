@@ -1,0 +1,25 @@
+import Foundation
+
+// A fresh unstructured MainActor task delivers cancellation outside TCA's cancelled
+// Send path. The sink captures Store weakly; a delayed signal cannot resurrect it.
+@MainActor final class CancellationRelay {
+    var enabled = true
+    var held = false
+    var sink: (@MainActor (UUID) -> Void)?
+    private(set) var notified: [UUID] = []
+    private(set) var delivered: [UUID] = []
+    private(set) var pending: [UUID] = []
+    private(set) var observedCancelledNotificationTask = false
+    func deliver(_ request: UUID) {
+        notified.append(request)
+        observedCancelledNotificationTask = observedCancelledNotificationTask || Task<Never, Never>.isCancelled
+        guard enabled else { return }
+        if held { pending.append(request); return }
+        delivered.append(request); sink?(request)
+    }
+    func release() {
+        held = false
+        let current = pending; pending.removeAll()
+        current.forEach { request in delivered.append(request); sink?(request) }
+    }
+}

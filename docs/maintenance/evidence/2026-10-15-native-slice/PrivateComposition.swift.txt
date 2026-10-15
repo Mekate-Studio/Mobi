@@ -1,0 +1,2 @@
+import MobiNativeFeatures
+@MainActor func bypass(_ services: NativeAppServices) { _ = services.composition }

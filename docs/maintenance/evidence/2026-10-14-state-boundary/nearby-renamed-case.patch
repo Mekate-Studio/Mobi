@@ -1,0 +1,44 @@
+--- a/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureService.kt
++++ b/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureService.kt
+@@ -63,7 +63,7 @@
+                 RiderLocationState.Denied,
+                 is RiderLocationState.Blocked,
+                 RiderLocationState.Resolving,
+-                RiderLocationState.Unavailable,
++                RiderLocationState.Offline,
+                 -> {
+                     RiderLocationState.Blocked(reason = RiderLocationBlockedReason.TemporarilyUnavailable)
+                 }
+--- a/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureState.kt
++++ b/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureState.kt
+@@ -28,7 +28,7 @@
+     ) : RiderLocationState,
+         VisibleRiderLocationState
+ 
+-    data object Unavailable : RiderLocationState
++    data object Offline : RiderLocationState
+ }
+ 
+ enum class RiderLocationBlockedReason {
+--- a/android-app/src/nearbyvehiclemap/NearbyVehicleMapPresentation.kt
++++ b/android-app/src/nearbyvehiclemap/NearbyVehicleMapPresentation.kt
+@@ -151,7 +151,7 @@
+             "Live location is temporarily unavailable. Keeping the last resolved rider position."
+         }
+ 
+-        RiderLocationState.Unavailable -> {
++        RiderLocationState.Offline -> {
+             "Rider location is temporarily unavailable, so discovery is blocked."
+         }
+     }
+--- a/assessment/StateCopy.swift
++++ b/assessment/StateCopy.swift
+@@ -32,7 +32,7 @@
+     case .denied: return .denied
+     case let .blocked(v): return .blocked(blocked(v.value.reason))
+     case let .temporarilyUnavailable(v): return .temporarilyUnavailable(v.value.location.latitude, v.value.location.longitude)
+-    case .unavailable: return .unavailable
++    case .offline: return .unavailable
+     }
+   }
+   static func blocked(_ value: Nearby.RiderLocationBlockedReason) -> Blocked {

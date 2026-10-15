@@ -1,0 +1,38 @@
+package studio.mekate.mobi.export.candidate
+import platform.Foundation.NSThread
+import studio.mekate.mobi.export.composition.AppComposition
+import studio.mekate.mobi.export.home.HomeRequestOwner
+class CohortScenario(policy: Int) {
+    private val composition = AppComposition(policy, 1)
+    private val foreign = AppComposition(policy, 1)
+    private val home = HomeRequestOwner(composition.homeService, 1, 1)
+    private val first = composition.nearbyHub.makeFacade()
+    private val second = composition.nearbyHub.makeFacade()
+    private var firstRequest = 0L
+    private var secondRequest = 0L
+    fun sameHomeService(): Boolean = home.usesService(composition.homeService)
+    fun rejectsForeignHomeService(): Boolean = !home.usesService(foreign.homeService)
+    fun begin() {
+        check(NSThread.isMainThread)
+        val initialA = first.states.initialValue()
+        val initialB = second.states.initialValue()
+        val a = first.states.available(initialA.id, 55.6, 12.5)
+        val b = second.states.available(initialB.id, 55.6, 12.5)
+        first.states.releaseState(initialA.id); second.states.releaseState(initialB.id)
+        firstRequest = first.beginRefresh(a.id, 1000)
+        secondRequest = second.beginRefresh(b.id, 1001)
+        check(firstRequest != 0L && secondRequest != 0L)
+    }
+    fun completed(): Boolean = first.poll(firstRequest).drained && second.poll(secondRequest).drained
+    fun finish(): Int {
+        check(completed())
+        val a = first.consume(firstRequest); val b = second.consume(secondRequest)
+        check(setOf(a.sequence, b.sequence) == setOf(1L, 2L))
+        check(a.loadedAt == 1000L && b.loadedAt == 1001L)
+        val metrics = composition.nearbyHub.metrics()
+        check(metrics.entered == 2 && metrics.returned == 2 && metrics.active == 0)
+        first.retire(); second.retire(); home.retire()
+        check(first.metrics().states == 0 && second.metrics().states == 0)
+        return metrics.maxActive
+    }
+}

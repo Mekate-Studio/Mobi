@@ -1,0 +1,28 @@
+import UIKit
+import Foundation
+import MobiNativeHome
+@main @MainActor final class AppDelegate: UIResponder, UIApplicationDelegate {
+  func application(_ application: UIApplication, configurationForConnecting session: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+    let config = UISceneConfiguration(name: "Home", sessionRole: session.role)
+    config.delegateClass = SceneDelegate.self
+    return config
+  }
+}
+@MainActor final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+  let services = NativeHomeServices(parentReservations: 2, jobsPerOwner: 1, observersPerRequest: 1)
+  var home: NativeHomeRoute?
+  func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options: UIScene.ConnectionOptions) {
+    guard let scene = scene as? UIWindowScene else { return }
+    home = services.makeHomeRoute()
+    window = UIWindow(windowScene: scene)
+    window?.rootViewController = home!.makeViewController()
+    window?.makeKeyAndVisible()
+    Task { @MainActor in
+      let text = await HomeSliceAssessment.run()
+      let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+      try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      try! text.write(to: directory.appendingPathComponent("home-result.json"), atomically: true, encoding: .utf8)
+    }
+  }
+}

@@ -1,0 +1,303 @@
+import SwiftUI
+import UIKit
+import Foundation
+import Darwin
+import MobiFacadeProbe
+import MobiNearbyFacadeProbe
+import MobiIOSDependencies
+
+private typealias HomeProbe = ExportedKotlinPackages.studio.mekate.mobi.facadeprobe
+private typealias NearbyProbe = ExportedKotlinPackages.studio.mekate.mobi.nearbyfacadeprobe
+struct ProbeFailure: Error { let message: String }
+@MainActor final class RootScenario: ObservableObject {
+    var lifetime = AppLifetime()
+    let observer = RootObserver()
+    @Published var services: AppServices?
+    @Published var input = SyntheticNearbyInput()
+    @Published var rootEnabled = false
+    @Published var accessibilityClientDone = false
+    @Published var generation = 0
+    @Published var selectionRevision = 0
+    var requested = AppDestination.nearbyMap
+    var observed: AppDestination?
+    private var started = false
+    private var session = HomeProbe.ControlledHomeSession()
+    private var oldSession: HomeProbe.ControlledHomeSession?
+    private var oldHub: NearbyProbe.NearbyHub?
+    private var policy: Int32 = -1
+    private var phase = ScenePhase.inactive
+    private var backgrounds = 0
+    private var foregrounds = 0
+    private var cycle = 0
+    private var kind = "none"
+    private var events: [[String: Any]] = []
+    private var latencyObservations: [String: UInt64] = [:]
+    func check(_ condition: Bool, _ message: String) throws { if !condition { throw ProbeFailure(message: message) } }
+    func until(_ description: String, _ predicate: () -> Bool) async throws {
+        for _ in 0..<6000 { if predicate() { return }; try await Task.sleep(for: .milliseconds(5)) }
+        throw ProbeFailure(message: description)
+    }
+    func record(_ label: String) { print("MOBI_DENIAL_CHECK=p\(policy)_\(label)"); fflush(nil) }
+    func sceneState() -> [String: Any] {
+        var result: [String: Any] = ["policy": policy, "cycle": cycle, "kind": kind, "pid": ProcessInfo.processInfo.processIdentifier,
+            "generation": generation, "selection": observed?.rawValue ?? "none", "nativeDrains": lifetime.supervisor.metrics().active,
+            "composeDrains": lifetime.composeSupervisor.active, "homeActive": session.active(), "nearbyActive": services?.nearbyFactory.hub.metrics().active ?? -1,
+            "reservations": lifetime.admission.metrics().active, "admissionOpen": lifetime.admission.metrics().open, "removed": [observer.homes.filter(\.removed).count, observer.nearby.filter(\.removed).count, observer.shared.filter(\.removed).count]]
+        result["identities"] = [observer.homes.last?.identity.uuidString ?? "none", observer.nearby.last?.identity.uuidString ?? "none", observer.shared.last?.identity.uuidString ?? "none"]
+        result["requests"] = [observer.home?.store.state.activeRequest?.uuidString ?? "none", observer.near?.store.state.activeRequest?.uuidString ?? "none"]
+        result["sharedFailure"] = observer.shared.last?.admissionFailure.map { String(describing: $0) } ?? "none"
+        result["sharedAttempts"] = observer.shared.last?.attempts ?? -1
+        result["sharedAdmissions"] = observer.shared.last?.admittedCount ?? -1
+        result["oldHomeActive"] = oldSession?.active() ?? -1
+        result["oldNearbyActive"] = oldHub?.metrics().active ?? -1
+        result["composeJobs"] = observer.shared.last?.owner?.snapshot().activeJobs ?? -1
+        return result
+    }
+    func sceneChanged(_ value: ScenePhase) {
+        let prior = phase; phase = value
+        if value == .background { backgrounds += 1 }
+        if value == .active && prior != .active && backgrounds > 0 { foregrounds += 1 }
+        var event = sceneState(); event["phase"] = String(describing: value); event["backgrounds"] = backgrounds; event["foregrounds"] = foregrounds
+        events.append(event)
+        do {
+            let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            try JSONSerialization.data(withJSONObject: events, options: [.sortedKeys]).write(to: docs.appendingPathComponent("scene-events.json"), options: .atomic)
+        } catch { print("MOBI_DENIAL_FAILURE=scene_event_write:\(error)") }
+        print("MOBI_SCENE_PHASE=\(value):p\(policy):c\(cycle):pid\(ProcessInfo.processInfo.processIdentifier)"); fflush(nil)
+    }
+    func install(_ held: Bool) {
+        session = HomeProbe.ControlledHomeSession(); session.configure(noncooperative: held)
+        if !held { session.releaseGate() }
+        services = AppServices(homeFeatureService: session.service, nearbyPolicy: policy, supervisor: lifetime.supervisor, composeSupervisor: lifetime.composeSupervisor, admission: lifetime.admission)
+        if held { services!.nearbyFactory.hub.configure(outcome: 4) }
+        input = SyntheticNearbyInput(); observed = nil; generation += 1; rootEnabled = true
+    }
+    func select(_ destination: AppDestination) async throws {
+        requested = destination; selectionRevision += 1
+        print("MOBI_SELECTION_REQUEST=\(destination):observed=\(String(describing: observed)):revision=\(selectionRevision)"); fflush(nil)
+        try await until("Selection \(destination) missing") { observed == destination }
+    }
+    func mountAll(_ count: Int) async throws {
+        try await until("Root phase/selection missing") { phase == .active && observed != nil }
+        try await select(.nativeHome); try await until("Home mount missing") { observer.homes.count == count && observer.home != nil }
+        try await select(.nearbyMap); try await until("Nearby mount missing") { observer.nearby.count == count && input.requests > 0 }
+        try await select(.sharedUI); try await until("Compose mount missing") { observer.shared.count == count && observer.shared.last?.controller != nil }
+    }
+    func elements(in view: UIView) -> [NSObject] {
+        var result: [NSObject] = [], seen: Set<ObjectIdentifier> = []
+        func visit(_ object: NSObject) {
+            guard seen.insert(ObjectIdentifier(object)).inserted, seen.count < 3000 else { return }
+            if object.isAccessibilityElement { result.append(object) }
+            if let view = object as? UIView { view.subviews.forEach(visit) }
+            for child in object.accessibilityElements ?? [] { if let child = child as? NSObject { visit(child) } }
+            let count = object.accessibilityElementCount()
+            if count > 0 && count < 300 { for index in 0..<count { if let child = object.accessibilityElement(at: index) as? NSObject { visit(child) } } }
+        }
+        visit(view); return result
+    }
+    func composeButtonReady() -> Bool {
+        guard let view = observer.shared.last?.controller?.view else { return false }
+        return elements(in: view).contains { ($0.accessibilityLabel ?? "").contains("Load next counter value") && $0.accessibilityTraits.contains(.button) }
+    }
+    func activateCompose() throws {
+        guard let view = observer.shared.last?.controller?.view,
+              let button = elements(in: view).first(where: { ($0.accessibilityLabel ?? "").contains("Load next counter value") && $0.accessibilityTraits.contains(.button) }) else { throw ProbeFailure(message: "Compose action missing") }
+        try check(button.accessibilityActivate(), "Compose accessibility action rejected")
+    }
+    func exactService() -> Bool {
+        guard let services, let home = observer.home, let shared = observer.shared.last?.owner else { return false }
+        return home.access.usesService(services.homeFeatureService) && shared.usesService(other: services.homeFeatureService)
+    }
+    func beginNative() { _ = observer.home!.store.send(.refreshTapped); input.precise() }
+    func cancelNative() { observer.home!.store.send(.cancelRefresh); observer.near!.store.send(.cancelRefresh) }
+    func nativeRestored() -> Bool { observer.home?.store.state.counterLoadable == .initial && observer.home?.store.state.activeRequest == nil && observer.near?.store.state.activeRequest == nil && observer.near?.store.state.canRequestRefresh == true }
+    func runningHeld() -> Bool { session.active() == 2 && services!.nearbyFactory.hub.metrics().active == 1 && observer.shared.last?.owner?.snapshot().activeJobs == 1 }
+    func nativeLoaded() -> Bool { observer.home?.store.state.counterLoadable == .loaded(value: 1) && observer.near?.store.state.currentSnapshot?.sequence == 1 }
+    func currentComposeLoaded() -> Bool { observer.shared.last?.owner?.snapshot().delivered == 1 && observer.shared.last?.owner?.snapshot().publications == 1 }
+    func weakServices() -> WeakProbe<AppServices> { WeakProbe(services) }
+    func retainGates() { oldSession = session; oldHub = services!.nearbyFactory.hub }
+    func oldJobsHeld() -> Bool { oldSession!.active() == 2 && oldHub!.metrics().active == 1 }
+    func releaseOldGates() { oldSession!.releaseGate(); oldHub!.releaseGate() }
+    func cycleOS(_ cycleKind: String) async throws {
+        let before = sceneState(), backgroundTarget = backgrounds+1, foregroundBefore = foregrounds
+        cycle += 1; kind = cycleKind
+        print("MOBI_DENIAL_READY=p\(policy):kind=\(kind):cycle=\(cycle)"); fflush(nil)
+        try await until("OS background callback missing") { backgrounds >= backgroundTarget }
+        try await until("OS foreground callback missing") { phase == .active && foregrounds > foregroundBefore }
+        let after = sceneState()
+        for key in ["pid","generation","selection","identities","requests","nativeDrains","composeDrains","homeActive","nearbyActive","removed","composeJobs","reservations","admissionOpen","sharedFailure","sharedAttempts","sharedAdmissions","oldHomeActive","oldNearbyActive"] {
+            try check(String(describing: before[key]!) == String(describing: after[key]!), "OS cycle changed \(key)")
+        }
+        if cycleKind == "denied-route" { try check(oldJobsHeld() && services!.composeOwnersCreated == 0 && observer.shared.last?.owner == nil && observer.shared.last?.admissionFailure == .full, "Denied route OS cycle lost old drains or admitted work") }
+        else { try check(exactService() && runningHeld(), "OS cycle lost service or noncooperative jobs") }
+    }
+    func remove(_ count: Int) async throws {
+        rootEnabled = false
+        try await until("Automatic root dismantle missing") { observer.homes.filter(\.removed).count == count && observer.nearby.filter(\.removed).count == count && observer.shared.filter(\.removed).count == count }
+        try check(observer.homes.allSatisfy(\.retired) && observer.nearby.allSatisfy { $0.retired && $0.statesAtRetire == 0 } && observer.shared.allSatisfy(\.retired), "Automatic retirement missing")
+    }
+    func releaseNative(_ count: Int) async throws {
+        try await until("Native owner/access/Store retained after disposal") { observer.homes.prefix(count).allSatisfy(\.nativeReleased) && observer.nearby.prefix(count).allSatisfy(\.nativeReleased) }
+        print("MOBI_DENIAL_RELEASE=p\(policy):home=\(count):nearby=\(count):native=true"); fflush(nil)
+    }
+    func requestShutdown() {
+        lifetime.shutdown.closeAdmission()
+        observer.home?.retire(); observer.near?.retire()
+        for shared in observer.shared { _ = shared.admitted?.retire() }
+        rootEnabled = false
+    }
+    func text(in controller: UIViewController?) -> String {
+        guard let view = controller?.view else { return "" }
+        return elements(in: view).compactMap(\.accessibilityLabel).joined(separator: " | ")
+    }
+    func findButton(in controller: UIViewController?, label: String) -> NSObject? {
+        guard let view = controller?.view else { return nil }
+        return elements(in: view).first { ($0.accessibilityLabel ?? "").contains(label) && $0.accessibilityTraits.contains(.button) }
+    }
+    func activateNative(_ destination: AppDestination, label: String) async throws {
+        try await select(destination)
+        try await until("Native action not rendered: \(label)") {
+            findButton(in: destination == .nativeHome ? observer.homes.last?.controller : observer.nearby.last?.controller, label: label) != nil
+        }
+        let button = findButton(in: destination == .nativeHome ? observer.homes.last?.controller : observer.nearby.last?.controller, label: label)!
+        try check(button.accessibilityActivate(), "Native rendered action rejected: \(label)")
+    }
+    func sharedFallback() -> DenialViewController? {
+        (observer.shared.last?.controller as? RouteContainerController)?.content as? DenialViewController
+    }
+    func activateRetry() throws {
+        guard let button = observer.shared.last?.retryButton else { throw ProbeFailure(message: "Shared retry control missing") }
+        try check(button.accessibilityActivate(), "Shared retry activation rejected")
+    }
+    func visibleSharedDenial(_ error: AdmissionError) -> Bool {
+        let observation = observer.shared.last!
+        return observation.admissionFailure == error && observation.owner == nil && sharedFallback()?.failure == error && text(in: observation.controller).contains(error.message)
+    }
+    func emit(_ label: String) {
+        let metrics = lifetime.admission.metrics()
+        print("MOBI_DENIAL_SNAPSHOT=p\(policy):\(label):reservations=\(metrics.active):open=\(metrics.open):native=\(lifetime.supervisor.metrics().active):compose=\(lifetime.composeSupervisor.active):owners=\(services?.composeOwnersCreated ?? -1):attempts=\(observer.shared.last?.attempts ?? -1):admitted=\(observer.shared.last?.admittedCount ?? -1)"); fflush(nil)
+    }
+    func exercise(_ selectedPolicy: Int32, start: Int) async throws {
+        policy = selectedPolicy; lifetime = AppLifetime()
+        install(true); let oldService = weakServices()
+        try await mountAll(start+1); beginNative()
+        try await until("Compose button not rendered") { composeButtonReady() }; try activateCompose()
+        try await until("Three held requests missing") { runningHeld() }
+        try check(exactService() && lifetime.admission.metrics().active == 3, "Initial reservations/service mismatch")
+        record("reserved_native_and_compose_work_held_over_exact_shared_home_service")
+        try await cycleOS("running"); record("running_reservations_survive_real_background_foreground")
+        let cancellationStarted = DispatchTime.now().uptimeNanoseconds
+        cancelNative(); try await until("Native cancellation transfer missing") { nativeRestored() && lifetime.supervisor.metrics().active == 2 }
+        try check(lifetime.admission.metrics().active == 3 && lifetime.admission.metrics().released == 0 && runningHeld(), "Cancellation released unfinished capacity or peer")
+        latencyObservations["nativeCancellationToRestoredUI"] = DispatchTime.now().uptimeNanoseconds - cancellationStarted
+        record("native_cancel_restores_ui_keeps_reservations_and_compose_peer")
+        try await cycleOS("native-draining"); record("reserved_native_drains_survive_real_background_foreground")
+        retainGates(); try await remove(start+1); services = nil; try await releaseNative(start+1)
+        try await until("Retired Compose transfer/old services release missing") { oldService.released && lifetime.composeSupervisor.active == 1 }
+        let oldDrainID = observer.shared.last!.drainID!
+        try check(lifetime.admission.metrics().active == 3 && oldJobsHeld(), "Root disposal freed unfinished work")
+        record("old_root_disposal_preserves_three_leases_until_real_kotlin_completion")
+        install(false); try await mountAll(start+2)
+        print("MOBI_DENIAL_DEBUG=state:\(sceneState()):text:\(text(in: observer.shared.last?.controller)):fallback:\(String(describing: sharedFallback())):retry:\(String(describing: observer.shared.last?.retryButton)):owners:\(services!.composeOwnersCreated)"); fflush(nil)
+        try await until("Busy shared screen not rendered") { visibleSharedDenial(.full) && observer.shared.last?.retryButton != nil }
+        try check(services!.composeOwnersCreated == 0 && observer.shared.last?.admittedCount == 0 && session.active() == 0 && lifetime.admission.metrics().active == 3, "Denied render created Kotlin owner/job or lost capacity")
+        emit("mounted-busy")
+        record("denied_compose_mount_renders_busy_retry_without_kotlin_owner_or_controller")
+        try await activateNative(.nativeHome, label: "Load next counter value")
+        try await until("Home busy presentation missing") { observer.home?.store.state.admissionFailure == .full && observer.home?.store.state.activeRequest == nil && text(in: observer.homes.last?.controller).contains(AdmissionError.full.message) }
+        input.precise(); try await select(.nearbyMap)
+        try await until("Nearby busy presentation missing") { observer.near?.store.state.admissionFailure == .full && observer.near?.store.state.activeRequest == nil && text(in: observer.nearby.last?.controller).contains(AdmissionError.full.message) }
+        try check(observer.home!.store.state.counterLoadable == .initial && observer.near!.store.state.currentSnapshot == nil && observer.near!.access.metrics().states == 1 && observer.near!.store.state.canRequestRefresh && observer.home!.access.metrics().accepted == 0 && observer.near!.access.metrics().accepted == 0, "Native denial corrupted prior state or accepted Kotlin request")
+        record("native_rendered_actions_show_busy_messages_restore_prior_values_and_release_loading_handles")
+        try await activateNative(.nativeHome, label: "Try counter again")
+        try await until("Home retry rejection not delivered") { observer.home?.store.state.admissionFailure == .full && observer.home?.store.state.activeRequest == nil }
+        try await activateNative(.nearbyMap, label: "Try nearby again")
+        try await until("Nearby retry rejection not delivered") { observer.near?.store.state.admissionFailure == .full && observer.near?.store.state.activeRequest == nil }
+        let denies = lifetime.admission.metrics().deniedFull
+        observer.near!.store.send(.visibleRefreshDue(nowMillis: 1000))
+        try check(lifetime.admission.metrics().deniedFull == denies && observer.near!.access.metrics().states == 1 && observer.home!.access.metrics().accepted == 0 && observer.near!.access.metrics().accepted == 0 && oldJobsHeld(), "Busy retry leaked loading state, queued automatic work or interrupted peers")
+        record("manual_native_busy_retries_remain_denied_and_visible_tick_does_not_queue_retry")
+        try await select(.sharedUI); try activateRetry(); try activateRetry()
+        try check(visibleSharedDenial(.full) && observer.shared.last!.attempts == 3 && observer.shared.last!.admittedCount == 0 && services!.composeOwnersCreated == 0 && lifetime.admission.metrics().active == 3, "Busy shared retries admitted work")
+        emit("retry-still-busy")
+        record("rendered_shared_retry_rechecks_capacity_without_queuing_or_constructing_kotlin")
+        try await cycleOS("denied-route"); record("busy_fallback_and_old_reservations_survive_real_background_foreground")
+        releaseOldGates()
+        try await until("Actual retired jobs did not drain") { lifetime.supervisor.metrics().active == 0 && lifetime.composeSupervisor.active == 0 && lifetime.admission.metrics().active == 0 }
+        let done = lifetime.composeSupervisor.snapshot(oldDrainID)!
+        try check(done.drained && done.accepted == 1 && done.finished == 1 && done.cancelled == 1 && done.lateRejected == 1 && done.publications == 0 && done.delivered == 0 && visibleSharedDenial(.full) && services!.composeOwnersCreated == 0 && observer.home?.store.state.admissionFailure == .full && observer.near?.store.state.admissionFailure == .full, "Completion auto-retried denial or published retired Compose result")
+        record("actual_old_completion_frees_capacity_without_automatic_ui_retry_or_late_publication")
+        let retryStarted = DispatchTime.now().uptimeNanoseconds
+        let retryView = sharedFallback()!, retryButton = retryView.retryButton!
+        let identity = observer.shared.last!.identity, controllerIdentity = ObjectIdentifier(observer.shared.last!.controller!)
+        try check(retryButton.accessibilityActivate() && retryButton.accessibilityActivate(), "Double retry activation failed")
+        try await until("Admitted Compose not rendered") { composeButtonReady() }
+        try check(observer.shared.last!.identity == identity && ObjectIdentifier(observer.shared.last!.controller!) == controllerIdentity && observer.shared.last!.attempts == 4 && observer.shared.last!.admittedCount == 1 && services!.composeOwnersCreated == 1 && lifetime.admission.metrics().active == 1, "Retry duplicated owner/controller or route reservation")
+        emit("retry-admitted")
+        record("double_retry_admits_one_compose_owner_and_lease_in_same_root_container")
+        try activateCompose()
+        try await activateNative(.nativeHome, label: "Try counter again")
+        try await activateNative(.nearbyMap, label: "Try nearby again")
+        try await until("Native/Compose manual retry did not load") { nativeLoaded() && currentComposeLoaded() && lifetime.admission.metrics().active == 1 && observer.home?.store.state.admissionFailure == nil && observer.near?.store.state.admissionFailure == nil }
+        try check(exactService() && observer.near!.access.metrics().states == 1 && observer.home!.access.metrics().accepted == 1 && observer.near!.access.metrics().accepted == 1, "Manual retry did not release loading state or share correct service")
+        record("real_compose_action_and_native_retry_load_after_capacity_is_freed")
+        observer.home!.store.send(.admissionDenied(UUID(), .closed)); observer.near!.store.send(.admissionDenied(UUID(), .closed))
+        try check(nativeLoaded() && observer.home?.store.state.admissionFailure == nil && observer.near?.store.state.admissionFailure == nil, "Obsolete denial changed current store")
+        latencyObservations["manualRetryToLoadedPeers"] = DispatchTime.now().uptimeNanoseconds - retryStarted
+        record("obsolete_native_denial_responses_are_fenced_by_request_identity")
+        requestShutdown(); try await remove(start+2); services = nil; try await releaseNative(start+2)
+        try check(lifetime.shutdown.receipt().state == .completed && lifetime.admission.metrics().active == 0 && lifetime.admission.metrics().released == 6 && !lifetime.admission.metrics().open, "Retirement did not release idle route lease")
+        record("successful_route_retirement_closes_session_and_releases_all_six_cohort_leases")
+        let attemptsBefore = observer.shared.last!.attempts
+        try check(retryButton.accessibilityActivate(), "Retained stale retry action not delivered")
+        try check(observer.shared.last!.attempts == attemptsBefore && lifetime.admission.metrics().active == 0 && lifetime.admission.metrics().acquired == 6, "Disposed retry callback revived old route")
+        record("retained_retry_control_after_disposal_cannot_revive_route_or_reserve_work")
+        oldSession = nil; oldHub = nil
+        install(false); try await mountAll(start+3)
+        try await until("Closed shared UI missing") { visibleSharedDenial(.closed) }
+        try check(observer.shared.last?.retryButton == nil && services!.composeOwnersCreated == 0 && lifetime.admission.metrics().active == 0, "Closed route offered retry or constructed Kotlin owner")
+        record("closed_pool_mount_renders_session_ended_without_shared_retry_or_kotlin_owner")
+        try await activateNative(.nativeHome, label: "Load next counter value")
+        try await until("Home closed state missing") { observer.home?.store.state.admissionFailure == .closed && observer.home?.store.state.activeRequest == nil }
+        input.precise(); try await select(.nearbyMap)
+        try await until("Nearby closed state missing") { observer.near?.store.state.admissionFailure == .closed && observer.near?.store.state.activeRequest == nil && text(in: observer.nearby.last?.controller).contains(AdmissionError.closed.message) }
+        try await select(.nativeHome)
+        try await until("Home closed text missing") { text(in: observer.homes.last?.controller).contains(AdmissionError.closed.message) }
+        let closedDenials = lifetime.admission.metrics().deniedClosed
+        observer.home!.store.send(.refreshTapped); observer.near!.store.send(.refreshTapped)
+        try check(!observer.home!.store.state.canRequestRefresh && !observer.near!.store.state.canRequestRefresh && observer.home!.access.metrics().accepted == 0 && observer.near!.access.metrics().accepted == 0 && lifetime.admission.metrics().deniedClosed == closedDenials, "Closed native controls remained active or retried")
+        try await select(.sharedUI); try check(retryButton.accessibilityActivate() && services!.composeOwnersCreated == 0 && lifetime.admission.metrics().active == 0, "Old retry crossed closed/new root boundary")
+        emit("closed-root")
+        record("closed_native_ui_preserves_values_disables_actions_and_old_retry_cannot_cross_root")
+        requestShutdown(); try await remove(start+3); services = nil; try await releaseNative(start+3)
+        try check(lifetime.shutdown.receipt().state == .completed && lifetime.supervisor.metrics().active == 0 && lifetime.composeSupervisor.active == 0 && lifetime.admission.metrics().active == 0, "Final root retained unfinished work")
+        record("closed_fallback_disposal_and_all_native_owners_quiescent")
+    }
+    func runOnce() async {
+        guard !started else { return }; started = true
+        print("MOBI_DENIAL_PROCESS=\(ProcessInfo.processInfo.processIdentifier)"); fflush(nil)
+        do {
+            let ready = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("ax-client-ready")
+            for _ in 0..<24000 {
+                if FileManager.default.fileExists(atPath: ready.path) { break }
+                try await Task.sleep(for: .milliseconds(5))
+            }
+            try check(FileManager.default.fileExists(atPath: ready.path), "Owned XCTest accessibility client did not initialize")
+            print("MOBI_AX_CLIENT_ACKNOWLEDGED"); fflush(nil)
+            try await TransportQualification().run()
+            try await ComposeJobQualification().run()
+            try await exercise(CandidateRuntimeSettings.current.repositoryPolicy == "main-confined" ? 0 : 1, start: 0)
+            try check(lifetime.admission.metrics().active == 0 && cycle == 3, "Final lifetime/scene ledger")
+            var metrics = SystemPollDriver.observations()
+            metrics["latencyNanoseconds"] = latencyObservations
+            metrics["finalRetainedCounts"] = sceneState()
+            let measured = try JSONSerialization.data(withJSONObject: metrics, options: [.sortedKeys])
+            print("MOBI_POLL_METRICS=\(String(decoding: measured, as: UTF8.self))"); fflush(nil)
+            accessibilityClientDone = true
+            let finished = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("ax-client-finished")
+            try await until("Owned XCTest client did not finish before host exit") { FileManager.default.fileExists(atPath: finished.path) }
+            print("MOBI_AX_CLIENT_COMPLETED_ACKNOWLEDGED"); fflush(nil)
+            print("MOBI_DENIAL_EXIT=0"); fflush(nil); exit(0)
+        } catch { print("MOBI_DENIAL_FAILURE=\(error)"); fflush(nil); exit(1) }
+    }
+}

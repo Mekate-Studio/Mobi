@@ -1,0 +1,1699 @@
+{
+  "schema": 1,
+  "state": "technical_review_complete_production_adoption_held",
+  "review_date": "2026-10-13",
+  "retrieved_at": "2026-10-13T20:29:48.071125Z",
+  "source": {
+    "qualified_commit": "00814c8f4389e04e025ebdc420d42f3dd71bf399",
+    "review_checkout_commit": "1a8197051117004ec9247b309e61179a8b612422",
+    "github_run_id": "38444261023",
+    "source_identity": "89058d0ac9018f9ce73431fd1ff405d6e86e5056538c60ac07a707cd960c81b9",
+    "tuple_identity": "cd164717723457c4aa68f1184a11f85d7c02c8fe1b30c648f4172290ae5800cf",
+    "qualified_source_manifest_sha256": "954b2e00e3f06f62e3efc6a655d6394cae2000931c34c93ffe57b92fc0f89c71",
+    "qualified_inputs_unchanged": true
+  },
+  "selected_scope": {
+    "profile": "coroutine-swift5",
+    "repository_policy": "main-confined",
+    "compose": "disabled",
+    "target": "arm64 iOS Simulator; deployment26.0; SDK/runtime27.0",
+    "unsupported_surface": "generated Swift async/Flow/error bridge broader than synchronous Main-confined facade copying"
+  },
+  "diagnostics": {
+    "phases": [
+      "cold-original",
+      "cold-reordered"
+    ],
+    "fingerprint_entries": 406,
+    "entry_count_semantics": "retained fingerprint entries including repeated compiler context, not unique warning counts",
+    "families": [
+      {
+        "family": "implementation_only_imports",
+        "fingerprint_entries": 36,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Local paired module typecheck and rejecting ABI-layout fixture show CheckImplementationOnly active and all 10 modules compile. Recommend checked production recipe with fresh cold/replay after implementation; no library-evolution claim.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "generated_unused_or_redundant",
+        "fingerprint_entries": 274,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Retained generated adapters include Unit/Void-result boilerplate and redundant nullable fallbacks. Keep exact source/message review and unknown findings refused; no warning-count allowlist.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "generated_error_sendability",
+        "fingerprint_entries": 10,
+        "production_recommendation": "hold",
+        "rationale": "Generated KotlinError stores a mutable non-Sendable KotlinBase. Pilot copies native errors on Main; generated async/error crossing is outside supported scope. Require isolation/value-error design and negative concurrency controls before production exposure.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "generated_swift_casts",
+        "fingerprint_entries": 12,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Generated downcasts need exact exporter/runtime/type pairing. Review selected uses rather than accepting all generated public APIs; requalify changed enum/type surface.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "generated_unreachable_default",
+        "fingerprint_entries": 16,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Generated exhaustive sealed/enum branches retain defaults. Cold original/reordered transport controls passed for the closed facade surface. Future variants/exporter changes require new review.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "appintents_metadata",
+        "fingerprint_entries": 12,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "No AppIntents dependency is declared in the pilot; extraction-skip warnings are scoped metadata findings. This establishes no signed/archive/AppIntents capability.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "jdk_future_compatibility",
+        "fingerprint_entries": 24,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Compiler/Caffeine call restricted native/Unsafe APIs. Current JDK26 passed; future JVM removal is a tooling compatibility gate. Do not globally enable native access or suppress warnings as a fix.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "generated_cpp_extension",
+        "fingerprint_entries": 4,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Clang accepted generated mixed initializer syntax on this tuple. Retain compiler/target gate and require requalification for compiler/target changes; temporary api.cpp complete source is not retained in delivery.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "coroutine_inheritance",
+        "fingerprint_entries": 2,
+        "production_recommendation": "hold",
+        "rationale": "Generated SwiftJob delegates Job, whose inheritance contract is unstable. No opt-in can establish semantic safety. Require upstream-compatible bridge or a demonstrated closed export surface that excludes this bridge; no general acceptance.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "generated_kotlin_casts",
+        "fingerprint_entries": 10,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Retained generator sources cast erased Flow and callbacks. Broader async/callback APIs are outside pilot facade path. Retain typed wire/owner/lifetime validation; require scoped bridge controls for expanded exports.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "project_module_order",
+        "fingerprint_entries": 2,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Toolchain recommends alphabetical module configuration. Organizational warning only; no semantic or vulnerability acceptance.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "unsigned_signing_configuration",
+        "fingerprint_entries": 2,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "Project graph reports absent Android signing properties. This review executes unsigned source/app checks; signed delivery remains separately held.",
+        "maintainer_disposition": "review_required"
+      },
+      {
+        "family": "maplibre_deprecation",
+        "fingerprint_entries": 2,
+        "production_recommendation": "scoped_control_required",
+        "rationale": "MapLibre logs deprecated automatic inset handling. Keep a native map migration/inset UI task for production and platform qualification; simulator navigation is not a global platform guarantee.",
+        "maintainer_disposition": "review_required"
+      }
+    ],
+    "exact_local_ledger_sha256": "2ca14a58884441e4dcc395f4596b3df085e090e828c268b4a779fcc0789c99dc",
+    "unknown_findings_accepted": false,
+    "replay_fingerprint_entries": 122,
+    "replay_family_fingerprint_counts": {
+      "implementation_only_imports": 36,
+      "generated_unused_or_redundant": 36,
+      "generated_error_sendability": 10,
+      "generated_swift_casts": 12,
+      "generated_unreachable_default": 16,
+      "appintents_metadata": 10,
+      "maplibre_deprecation": 2
+    },
+    "replay_ledger_sha256": "975cf347909cba659a858fd76c429fe894e357c773108faa6dc15dbcbb16ab7f",
+    "replay_binding": "Each analysis fingerprint binds the retained replay check hash; counts are separate from cold producer fingerprints."
+  },
+  "import_checker_rehearsal": {
+    "scope": "local_generated_module_typecheck_only",
+    "control_active": true,
+    "baseline_modules": 10,
+    "checked_modules": 10,
+    "flag": "-enable-experimental-feature CheckImplementationOnly",
+    "local_tuple": "a44ec744bb9333e3ec14ea5786aa9ce3e0db45a13246e74b61588070803ac97d",
+    "hosted_tuple": "cd164717723457c4aa68f1184a11f85d7c02c8fe1b30c648f4172290ae5800cf",
+    "apple_tool_bytes_match_hosted": false,
+    "runtime_qualified": false,
+    "production_flags_applied": false,
+    "receipt_sha256": "fed295db007393854156d52bfa8bf449e14bf85368b97a02eeeaf93f6785cf4b",
+    "setup_attempts": "Earlier owned setup attempts had a fixture syntax error and a graph-array parsing error; corrected paired v3 completed. No qualification was credited to those setup attempts."
+  },
+  "advisories": {
+    "state": "provider_queries_complete_findings_require_triage",
+    "current_query_count": 55,
+    "current_maven_queries": 25,
+    "current_swift_package_queries": 15,
+    "current_git_commit_queries": 15,
+    "legacy_named_build_input_queries": 549,
+    "canonical_swift_names": [
+      {
+        "identity": "combine-schedulers",
+        "locked_location": "https://github.com/pointfreeco/combine-schedulers",
+        "canonical_name": "github.com/pointfreeco/combine-schedulers",
+        "version": "1.1.0",
+        "revision": "fd16d76fd8b9a976d88bfb6cacc05ca8d19c91b6",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/combine-schedulers",
+        "repository_response_sha256": "4c73de094d1d563f0a310b1f7bd982717e64fe693a666859391f3b657c0795fb",
+        "retrieved_at": "2026-10-13T20:51:33.420123+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "maplibre-gl-native-distribution",
+        "locked_location": "https://github.com/maplibre/maplibre-gl-native-distribution",
+        "canonical_name": "github.com/maplibre/maplibre-gl-native-distribution",
+        "version": "6.27.0",
+        "revision": "84a79bc375a301169390ac110c868f06c857b83f",
+        "repository_metadata_url": "https://api.github.com/repos/maplibre/maplibre-gl-native-distribution",
+        "repository_response_sha256": "dd1d00b165261bea5a4348fa45d2aaa6eeaee40e3f2778454bf510a88b54130a",
+        "retrieved_at": "2026-10-13T20:51:33.394333+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-case-paths",
+        "locked_location": "https://github.com/pointfreeco/swift-case-paths",
+        "canonical_name": "github.com/pointfreeco/swift-case-paths",
+        "version": "1.7.3",
+        "revision": "206cbce3882b4de9aee19ce62ac5b7306cadd45b",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-case-paths",
+        "repository_response_sha256": "620d6870567c9b518516a650868483bf13a9ccfaf22c70543352d634f007e0fd",
+        "retrieved_at": "2026-10-13T20:51:33.364364+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-clocks",
+        "locked_location": "https://github.com/pointfreeco/swift-clocks",
+        "canonical_name": "github.com/pointfreeco/swift-clocks",
+        "version": "1.0.6",
+        "revision": "cc46202b53476d64e824e0b6612da09d84ffde8e",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-clocks",
+        "repository_response_sha256": "7eb1ebac583d2fa793f5281112c9a521ac8db40587245b7044db07bf5bfb2ed6",
+        "retrieved_at": "2026-10-13T20:51:33.464281+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-collections",
+        "locked_location": "https://github.com/apple/swift-collections",
+        "canonical_name": "github.com/apple/swift-collections",
+        "version": "1.4.1",
+        "revision": "6675bc0ff86e61436e615df6fc5174e043e57924",
+        "repository_metadata_url": "https://api.github.com/repos/apple/swift-collections",
+        "repository_response_sha256": "2a0ee06fa142a577cd0f327d2434898dd707feda5efc5813f13a2e4dd761a9d3",
+        "retrieved_at": "2026-10-13T20:51:33.953586+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-composable-architecture",
+        "locked_location": "https://github.com/pointfreeco/swift-composable-architecture",
+        "canonical_name": "github.com/pointfreeco/swift-composable-architecture",
+        "version": "1.26.0",
+        "revision": "e2fa1df6cd9eec6fa6314aa20513e47da576f24e",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-composable-architecture",
+        "repository_response_sha256": "cfd4471db00ac16b3c4f09fa1766c6a5116dfd739ebea787518d0fb458301f41",
+        "retrieved_at": "2026-10-13T20:51:33.918556+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-concurrency-extras",
+        "locked_location": "https://github.com/pointfreeco/swift-concurrency-extras",
+        "canonical_name": "github.com/pointfreeco/swift-concurrency-extras",
+        "version": "1.3.2",
+        "revision": "5a3825302b1a0d744183200915a47b508c828e6f",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-concurrency-extras",
+        "repository_response_sha256": "5b74b11ca2ab28dc3ab7e9e3157d733bbd282824fe9f7080eedc4fed5bb83ef9",
+        "retrieved_at": "2026-10-13T20:51:34.054467+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-custom-dump",
+        "locked_location": "https://github.com/pointfreeco/swift-custom-dump",
+        "canonical_name": "github.com/pointfreeco/swift-custom-dump",
+        "version": "1.5.0",
+        "revision": "06c57924455064182d6b217f06ebc05d00cb2990",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-custom-dump",
+        "repository_response_sha256": "734e48cccb7787dfba97b12b29f56f14b197461401d8fbe37268ce88811bbf74",
+        "retrieved_at": "2026-10-13T20:51:33.981280+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-dependencies",
+        "locked_location": "https://github.com/pointfreeco/swift-dependencies",
+        "canonical_name": "github.com/pointfreeco/swift-dependencies",
+        "version": "1.12.0",
+        "revision": "706feb7858a7f6c242879d137b8ee30926aa5b26",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-dependencies",
+        "repository_response_sha256": "e7c1feeacd0ac5154894a866ce88118acea000d437bb48f180083eed0878f9e8",
+        "retrieved_at": "2026-10-13T20:51:34.462358+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-identified-collections",
+        "locked_location": "https://github.com/pointfreeco/swift-identified-collections",
+        "canonical_name": "github.com/pointfreeco/swift-identified-collections",
+        "version": "1.1.1",
+        "revision": "322d9ffeeba85c9f7c4984b39422ec7cc3c56597",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-identified-collections",
+        "repository_response_sha256": "c6e9ca19903bf3218e8653ca8d98661e27bb09620431b54bdd6d70485c4857c1",
+        "retrieved_at": "2026-10-13T20:51:34.492843+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-navigation",
+        "locked_location": "https://github.com/pointfreeco/swift-navigation",
+        "canonical_name": "github.com/pointfreeco/swift-navigation",
+        "version": "2.8.0",
+        "revision": "32f35241b8be0719c4c7f00eb27713b1cadb6248",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-navigation",
+        "repository_response_sha256": "8f257656b0df8ec2af91227e6fbf4ee9bb49cbe60fabc81594aff55e503fabff",
+        "retrieved_at": "2026-10-13T20:51:34.572202+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-perception",
+        "locked_location": "https://github.com/pointfreeco/swift-perception",
+        "canonical_name": "github.com/pointfreeco/swift-perception",
+        "version": "2.0.10",
+        "revision": "25ac73741c3436605d61eceb5207e896973918e7",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-perception",
+        "repository_response_sha256": "0437976fef71adf77fd300da373d4b92824d27d3e18ee2a56dc0acc44a337929",
+        "retrieved_at": "2026-10-13T20:51:34.811339+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-sharing",
+        "locked_location": "https://github.com/pointfreeco/swift-sharing",
+        "canonical_name": "github.com/pointfreeco/swift-sharing",
+        "version": "2.8.1",
+        "revision": "c525e53936c878c102421eee241d82711eb38104",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/swift-sharing",
+        "repository_response_sha256": "7fbf30ff5ead6ba20c5f3e6f8cc8caef47b4ef588b5479aafc23878f11fe6986",
+        "retrieved_at": "2026-10-13T20:51:35.016818+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "swift-syntax",
+        "locked_location": "https://github.com/swiftlang/swift-syntax",
+        "canonical_name": "github.com/swiftlang/swift-syntax",
+        "version": "603.0.2",
+        "revision": "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
+        "repository_metadata_url": "https://api.github.com/repos/swiftlang/swift-syntax",
+        "repository_response_sha256": "500e3dc45cc4acf8cd9576d13b07146f9f0913b13b0607129a6c011e1cad476a",
+        "retrieved_at": "2026-10-13T20:51:35.016295+00:00",
+        "authenticated": true
+      },
+      {
+        "identity": "xctest-dynamic-overlay",
+        "locked_location": "https://github.com/pointfreeco/xctest-dynamic-overlay",
+        "canonical_name": "github.com/pointfreeco/xctest-dynamic-overlay",
+        "version": "1.10.0",
+        "revision": "cb281f343fd953280336dcbd3822cdf47c182f5b",
+        "repository_metadata_url": "https://api.github.com/repos/pointfreeco/xctest-dynamic-overlay",
+        "repository_response_sha256": "cd8dae60215f0a0e53768315e96647fb89c5b7ec6893eee0ca0d4ddb02725379",
+        "retrieved_at": "2026-10-13T20:51:35.411009+00:00",
+        "authenticated": true
+      }
+    ],
+    "current_queries": [
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:swift-export-embeddable"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-native-utils"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.checkerframework:checker-qual"
+        },
+        "version": "3.43.0"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "com.google.errorprone:error_prone_annotations"
+        },
+        "version": "2.28.0"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "io.opentelemetry:opentelemetry-api"
+        },
+        "version": "1.41.0"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "com.github.ben-manes.caffeine:caffeine"
+        },
+        "version": "2.9.3"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-stdlib"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-compiler-embeddable"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
+        },
+        "version": "1.7.3"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-util-io"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-util-klib"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "io.opentelemetry:opentelemetry-context"
+        },
+        "version": "1.41.0"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains:annotations"
+        },
+        "version": "13.0"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-build-tools-api"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-script-runtime"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-reflect"
+        },
+        "version": "1.6.10"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlin:kotlin-daemon-embeddable"
+        },
+        "version": "2.4.20"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "p.ij.intellij-dependencies.com.intellij.platform:kotlinx-coroutines-core-jvm"
+        },
+        "version": "1.8.0-intellij-13"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "dev.zacsweers.metro:runtime-iossimulatorarm64"
+        },
+        "version": "1.4.5"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "dev.zacsweers.metro:runtime"
+        },
+        "version": "1.4.5"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core-iossimulatorarm64"
+        },
+        "version": "1.11.0"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+        },
+        "version": "1.11.0"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlinx:atomicfu-iossimulatorarm64"
+        },
+        "version": "0.32.1"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "org.jetbrains.kotlinx:atomicfu"
+        },
+        "version": "0.32.1"
+      },
+      {
+        "package": {
+          "ecosystem": "Maven",
+          "name": "dev.zacsweers.metro:compiler"
+        },
+        "version": "1.4.5"
+      },
+      {
+        "commit": "fd16d76fd8b9a976d88bfb6cacc05ca8d19c91b6"
+      },
+      {
+        "commit": "84a79bc375a301169390ac110c868f06c857b83f"
+      },
+      {
+        "commit": "206cbce3882b4de9aee19ce62ac5b7306cadd45b"
+      },
+      {
+        "commit": "cc46202b53476d64e824e0b6612da09d84ffde8e"
+      },
+      {
+        "commit": "6675bc0ff86e61436e615df6fc5174e043e57924"
+      },
+      {
+        "commit": "e2fa1df6cd9eec6fa6314aa20513e47da576f24e"
+      },
+      {
+        "commit": "5a3825302b1a0d744183200915a47b508c828e6f"
+      },
+      {
+        "commit": "06c57924455064182d6b217f06ebc05d00cb2990"
+      },
+      {
+        "commit": "706feb7858a7f6c242879d137b8ee30926aa5b26"
+      },
+      {
+        "commit": "322d9ffeeba85c9f7c4984b39422ec7cc3c56597"
+      },
+      {
+        "commit": "32f35241b8be0719c4c7f00eb27713b1cadb6248"
+      },
+      {
+        "commit": "25ac73741c3436605d61eceb5207e896973918e7"
+      },
+      {
+        "commit": "c525e53936c878c102421eee241d82711eb38104"
+      },
+      {
+        "commit": "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1"
+      },
+      {
+        "commit": "cb281f343fd953280336dcbd3822cdf47c182f5b"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/combine-schedulers"
+        },
+        "version": "1.1.0"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/maplibre/maplibre-gl-native-distribution"
+        },
+        "version": "6.27.0"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-case-paths"
+        },
+        "version": "1.7.3"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-clocks"
+        },
+        "version": "1.0.6"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/apple/swift-collections"
+        },
+        "version": "1.4.1"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-composable-architecture"
+        },
+        "version": "1.26.0"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-concurrency-extras"
+        },
+        "version": "1.3.2"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-custom-dump"
+        },
+        "version": "1.5.0"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-dependencies"
+        },
+        "version": "1.12.0"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-identified-collections"
+        },
+        "version": "1.1.1"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-navigation"
+        },
+        "version": "2.8.0"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-perception"
+        },
+        "version": "2.0.10"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/swift-sharing"
+        },
+        "version": "2.8.1"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/swiftlang/swift-syntax"
+        },
+        "version": "603.0.2"
+      },
+      {
+        "package": {
+          "ecosystem": "SwiftURL",
+          "name": "github.com/pointfreeco/xctest-dynamic-overlay"
+        },
+        "version": "1.10.0"
+      }
+    ],
+    "authentication": "GitHub requests use macOS Keychain-backed gh login; OSV is an independent public provider, not an authentication fallback",
+    "provider_packets_verified": 61,
+    "native_named_matches": [],
+    "findings": [
+      {
+        "id": "GHSA-2363-cqg2-863c",
+        "severity": "high",
+        "summary": "JDOM XML external entity parsing",
+        "primary_url": "https://github.com/advisories/GHSA-2363-cqg2-863c",
+        "published_at": "2021-07-27T19:02:56Z",
+        "updated_at": "2025-09-16T15:06:11Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.jdom:jdom2"
+            },
+            "version": "2.0.6"
+          }
+        ],
+        "finding_record_sha256": "921ad65b892fedf4dd5fd11335f0fbcdea4eb49e17594ca164e1226c7cbe2022",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-343h-94h5-c4wr",
+        "severity": "low",
+        "summary": "LZ4 recursive empty-block stack exhaustion",
+        "primary_url": "https://github.com/advisories/GHSA-343h-94h5-c4wr",
+        "published_at": "2026-10-07T20:35:46Z",
+        "updated_at": "2026-10-07T20:35:46Z",
+        "in_existing_decision": false,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.lz4:lz4-java"
+            },
+            "version": "1.8.0"
+          }
+        ],
+        "finding_record_sha256": "a9625a409a957ddee411348ab05e8e9195a1f5a508068abaaf10513370949864",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-3677-xxcr-wjqv",
+        "severity": "high",
+        "summary": "jose4j compressed-content resource exhaustion",
+        "primary_url": "https://github.com/advisories/GHSA-3677-xxcr-wjqv",
+        "published_at": "2025-12-17T18:31:33Z",
+        "updated_at": "2026-01-06T19:46:24Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.bitbucket.b_c:jose4j"
+            },
+            "version": "0.9.5"
+          }
+        ],
+        "finding_record_sha256": "464466f5bd708d70fb4bc77e131858750a15ea97d1fba2c42807ede8aeacf4b4",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-4v53-57pg-c464",
+        "severity": "medium",
+        "summary": "LZ4 unchecked compressed-length allocation",
+        "primary_url": "https://github.com/advisories/GHSA-4v53-57pg-c464",
+        "published_at": "2026-10-07T16:17:50Z",
+        "updated_at": "2026-10-07T16:17:51Z",
+        "in_existing_decision": false,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.lz4:lz4-java"
+            },
+            "version": "1.8.0"
+          }
+        ],
+        "finding_record_sha256": "0768bb5806bb1b725d278533b9daf43d3ba21893dc2e254ac5bb46a84c845bc4",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-574f-3g2m-x479",
+        "severity": "critical",
+        "summary": "Bouncy Castle GOST counter-mode keystream reuse",
+        "primary_url": "https://github.com/advisories/GHSA-574f-3g2m-x479",
+        "published_at": "2026-04-17T18:31:50Z",
+        "updated_at": "2026-09-24T15:18:46Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.bouncycastle:bcprov-jdk18on"
+            },
+            "version": "1.79"
+          }
+        ],
+        "finding_record_sha256": "9d848223a6ac7e963f307ef45c06c99f08033a80d187bf595e9f13d922554ebf",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-6cx8-rjf8-pr8g",
+        "severity": "medium",
+        "summary": "LZ4 unchecked decompressed-length allocation",
+        "primary_url": "https://github.com/advisories/GHSA-6cx8-rjf8-pr8g",
+        "published_at": "2026-10-07T16:17:47Z",
+        "updated_at": "2026-10-07T16:17:49Z",
+        "in_existing_decision": false,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.lz4:lz4-java"
+            },
+            "version": "1.8.0"
+          }
+        ],
+        "finding_record_sha256": "ff19772502c851d530a8e26427f72347a54ccad4197ff4172a4d5cb6d55b78b2",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-7hhh-6rmp-j9qf",
+        "severity": "high",
+        "summary": "Jackson invalid-token buffer growth",
+        "primary_url": "https://github.com/advisories/GHSA-7hhh-6rmp-j9qf",
+        "published_at": "2026-10-01T15:20:27Z",
+        "updated_at": "2026-10-01T15:20:28Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "com.fasterxml.jackson.core:jackson-core"
+            },
+            "version": "2.21.1"
+          }
+        ],
+        "finding_record_sha256": "dcda8663f6462a2897d8c18ab9fdb383aa5a23cd17db26eaace56648616f3dc2",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-7r82-7xv7-xcpj",
+        "severity": "medium",
+        "summary": "Apache HttpClient cross-site scripting",
+        "primary_url": "https://github.com/advisories/GHSA-7r82-7xv7-xcpj",
+        "published_at": "2021-06-03T23:40:23Z",
+        "updated_at": "2023-02-01T05:05:30Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.apache.httpcomponents:httpclient"
+            },
+            "version": "4.5.6"
+          }
+        ],
+        "finding_record_sha256": "79cfce3ad15704c5da777e0944e629f46989ebf0b4ed387fb203fe590d7af702",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-9pwp-9qqc-pr26",
+        "severity": "critical",
+        "summary": "Bouncy Castle certificate-name constraint bypass",
+        "primary_url": "https://github.com/advisories/GHSA-9pwp-9qqc-pr26",
+        "published_at": "2026-08-03T03:31:56Z",
+        "updated_at": "2026-09-18T17:36:32Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.bouncycastle:bcprov-jdk18on"
+            },
+            "version": "1.79"
+          }
+        ],
+        "finding_record_sha256": "c90abd5d85f5d8135c4a185ace0624b56b5f2f9792f84d34563f05bbbfa1a65a",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-c3fc-8qff-9hwx",
+        "severity": "medium",
+        "summary": "Bouncy Castle LDAP input injection",
+        "primary_url": "https://github.com/advisories/GHSA-c3fc-8qff-9hwx",
+        "published_at": "2026-04-17T18:31:50Z",
+        "updated_at": "2026-04-18T01:06:03Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.bouncycastle:bcprov-jdk18on"
+            },
+            "version": "1.79"
+          }
+        ],
+        "finding_record_sha256": "fe2b5ae436a8040a4c7524b8d626ed219f38efcc2bc1179b0d71c8cf55ae819e",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-cmp6-m4wj-q63q",
+        "severity": "high",
+        "summary": "LZ4 Java decompressor data disclosure",
+        "primary_url": "https://github.com/advisories/GHSA-cmp6-m4wj-q63q",
+        "published_at": "2025-12-05T18:54:55Z",
+        "updated_at": "2025-12-05T18:54:56Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.lz4:lz4-java"
+            },
+            "version": "1.8.0"
+          }
+        ],
+        "finding_record_sha256": "12cb93f0d76f96e28b999e378c3eeca30d0a7cf6d454ce804596ee4e6e75e0b8",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-gm45-99xc-r7wv",
+        "severity": "medium",
+        "summary": "LZ4 repeated frame-buffer CPU and GC pressure",
+        "primary_url": "https://github.com/advisories/GHSA-gm45-99xc-r7wv",
+        "published_at": "2026-10-07T20:35:40Z",
+        "updated_at": "2026-10-07T20:35:41Z",
+        "in_existing_decision": false,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.lz4:lz4-java"
+            },
+            "version": "1.8.0"
+          }
+        ],
+        "finding_record_sha256": "cbe42301e0bf65ee9b5b53cf922ee4469132169be3650413cc133e58f3b46648",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-j288-q9x7-2f5v",
+        "severity": "medium",
+        "summary": "Commons Lang recursive input exhaustion",
+        "primary_url": "https://github.com/advisories/GHSA-j288-q9x7-2f5v",
+        "published_at": "2025-07-11T15:31:37Z",
+        "updated_at": "2025-11-05T20:30:33Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.apache.commons:commons-lang3"
+            },
+            "version": "3.16.0"
+          }
+        ],
+        "finding_record_sha256": "290646401198a5fd6e61d9739c9101803425682f4d7be2d84aaf7b3831dc5421",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-mcr4-qmvw-px4g",
+        "severity": "high",
+        "summary": "LZ4 JNI extraction race in shared temporary storage",
+        "primary_url": "https://github.com/advisories/GHSA-mcr4-qmvw-px4g",
+        "published_at": "2026-10-07T20:35:51Z",
+        "updated_at": "2026-10-07T20:35:52Z",
+        "in_existing_decision": false,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.lz4:lz4-java"
+            },
+            "version": "1.8.0"
+          }
+        ],
+        "finding_record_sha256": "73763f75e0e1d99e204ab353e8c9e6987863ffecb61a7c763817974413ac0f4e",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-p6pp-m3f8-5c89",
+        "severity": "high",
+        "summary": "Jackson floating-number regex complexity",
+        "primary_url": "https://github.com/advisories/GHSA-p6pp-m3f8-5c89",
+        "published_at": "2026-10-01T15:19:21Z",
+        "updated_at": "2026-10-01T15:19:23Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "com.fasterxml.jackson.core:jackson-core"
+            },
+            "version": "2.21.1"
+          }
+        ],
+        "finding_record_sha256": "8db826ea1b73d77fcf294f04e9bbc9d0dfa0a5e286882d6859d81c94415f0195",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-qp49-qgx5-5m26",
+        "severity": "high",
+        "summary": "Bouncy Castle ASN.1 depth-check bypass",
+        "primary_url": "https://github.com/advisories/GHSA-qp49-qgx5-5m26",
+        "published_at": "2026-08-03T06:31:44Z",
+        "updated_at": "2026-09-18T17:37:53Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.bouncycastle:bcprov-jdk18on"
+            },
+            "version": "1.79"
+          }
+        ],
+        "finding_record_sha256": "adef8fb469bf61c5469c761d9c8a9cebc6e339c5dfde59fec496c9901113dba9",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-r7wm-3cxj-wff9",
+        "severity": "high",
+        "summary": "Jackson streaming number-length limit bypass",
+        "primary_url": "https://github.com/advisories/GHSA-r7wm-3cxj-wff9",
+        "published_at": "2026-07-21T21:58:53Z",
+        "updated_at": "2026-10-02T23:08:42Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "com.fasterxml.jackson.core:jackson-core"
+            },
+            "version": "2.21.1"
+          }
+        ],
+        "finding_record_sha256": "49fe9497bd595b3fdf872dd23a2ae1e454da84fbfbe24253189c37e1232b29a8",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-r937-wjx7-w2jp",
+        "severity": "medium",
+        "summary": "Kotlin build-cache unsafe deserialization",
+        "primary_url": "https://github.com/advisories/GHSA-r937-wjx7-w2jp",
+        "published_at": "2026-06-26T15:32:13Z",
+        "updated_at": "2026-08-12T19:25:24Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+            },
+            "version": "2.2.10"
+          }
+        ],
+        "finding_record_sha256": "7011de090491aaf448ef059ef5b8d263e9bb5b7227f795031de4c4719859a5f0",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "severity": "medium",
+        "summary": "OpenTelemetry baggage-parser resource exhaustion",
+        "primary_url": "https://github.com/advisories/GHSA-rcgg-9c38-7xpx",
+        "published_at": "2026-05-14T16:36:04Z",
+        "updated_at": "2026-06-09T02:01:15Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "current",
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "io.opentelemetry:opentelemetry-api"
+            },
+            "version": "1.41.0"
+          },
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "io.opentelemetry:opentelemetry-api"
+            },
+            "version": "1.60.1"
+          }
+        ],
+        "finding_record_sha256": "7426161e3175e41d80c1d658f8545ba5d31be1c1c6fffa884c0415dcffe625fa",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-vqf4-7m7x-wgfc",
+        "severity": "high",
+        "summary": "LZ4 decoder out-of-bounds access",
+        "primary_url": "https://github.com/advisories/GHSA-vqf4-7m7x-wgfc",
+        "published_at": "2025-11-28T18:30:23Z",
+        "updated_at": "2025-12-31T22:00:13Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.lz4:lz4-java"
+            },
+            "version": "1.8.0"
+          }
+        ],
+        "finding_record_sha256": "69079cd4ddb25785e8b1b56b737c887fafa3d1ef01e6c3af6177fb9f5273a665",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-wg6q-6289-32hp",
+        "severity": "medium",
+        "summary": "Bouncy Castle bcpkix algorithm vulnerability",
+        "primary_url": "https://github.com/advisories/GHSA-wg6q-6289-32hp",
+        "published_at": "2026-04-15T18:31:54Z",
+        "updated_at": "2026-04-16T21:32:20Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.bouncycastle:bcpkix-jdk18on"
+            },
+            "version": "1.79"
+          }
+        ],
+        "finding_record_sha256": "1ce9e2d922acb8d86b20fc7418246623cc289fc4c4c97b5bba52e8ad81019678",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      },
+      {
+        "id": "GHSA-xx22-p4ch-683r",
+        "severity": "medium",
+        "summary": "LZ4 native hash invalid-range JVM crash",
+        "primary_url": "https://github.com/advisories/GHSA-xx22-p4ch-683r",
+        "published_at": "2026-07-24T16:13:41Z",
+        "updated_at": "2026-07-24T16:13:49Z",
+        "in_existing_decision": true,
+        "scopes": [
+          "legacy"
+        ],
+        "matched_queries": [
+          {
+            "package": {
+              "ecosystem": "Maven",
+              "name": "org.lz4:lz4-java"
+            },
+            "version": "1.8.0"
+          }
+        ],
+        "finding_record_sha256": "c63bd2fdd54be0ad1ca3ccb46b27627b938bade31abe8ae97baa64434c27475d",
+        "disposition": "review_required",
+        "consumer_reachability": "unmeasured",
+        "remediation_verified": false
+      }
+    ],
+    "severity_counts": {
+      "high": 9,
+      "low": 1,
+      "medium": 10,
+      "critical": 2
+    },
+    "new_ids_outside_prior_decision": [
+      "GHSA-343h-94h5-c4wr",
+      "GHSA-4v53-57pg-c464",
+      "GHSA-6cx8-rjf8-pr8g",
+      "GHSA-gm45-99xc-r7wv",
+      "GHSA-mcr4-qmvw-px4g"
+    ],
+    "provider_freshness_hours": 24,
+    "swift_normalization": "Known vulnerable SwiftNIO2.40.0 control returned three IDs only with github.com/apple/swift-nio. Initial HTTPS SwiftURL lookups were superseded, then all15 canonical native names were requeried. Control dependencies are excluded from Mobi finding counts.",
+    "provider_bindings": [
+      {
+        "sha256": "a8c052fa9e544767bbdf340a825a3d6ee1c6761c9623fd4feb9f36f0e96ba27c",
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-13T20:29:40.950592Z",
+        "response_sha256": "dbfd1c64d64c02988cd3b1f10d797805002ac9e84b7922c93d4eca3ce090697a",
+        "authenticated": false
+      },
+      {
+        "sha256": "d8fb6ef9364daa7ce6ee377991853998f1e9c7723ab0af3f95f045d2329e1ecd",
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-13T20:29:40.950877Z",
+        "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686",
+        "authenticated": false
+      },
+      {
+        "sha256": "6ed9418bad9a069dc50bf3da89652b323f9fc27bed432abdcc1920bcd1ad67a9",
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-13T20:29:40.952465Z",
+        "response_sha256": "4a528b15a042ac4a3b71c9e2f1aca18900873e9520a96d5d2cb2cf6cde8d6d9f",
+        "authenticated": false
+      },
+      {
+        "sha256": "d6472a1d8bbe4731c0e4dce155f3649280f31fea8601e66ae9e22389e548a6d0",
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-13T20:29:40.953802Z",
+        "response_sha256": "369a5b64aa1622b523dd7889cca76c00eaf03af1ef1cdaf5eda74301a64194b2",
+        "authenticated": false
+      },
+      {
+        "sha256": "76492c0ec31967333d60615a8e9b252b24856c7b0e32166176fba45b2d27154b",
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-13T20:29:41.508063Z",
+        "response_sha256": "1c800854cddf3bae25b858c67834f5ba1c27bb99fdab230a4145dcb62cfddc5c",
+        "authenticated": false
+      },
+      {
+        "sha256": "f8a95cd36f785802bc010cf2a5dea8b6640afc457c03d30b3923044d553d0dd1",
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-13T20:29:41.538149Z",
+        "response_sha256": "66a01d2b993cde9c65c285e447576cb1fb9056f0800b964d7ced113d2e7e3955",
+        "authenticated": false
+      },
+      {
+        "sha256": "59ca2a6c70948515038fcc2a2b419b43bbc3baf7b8b199772a5aa9fbf1541f86",
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-13T20:29:41.569661Z",
+        "response_sha256": "e80dcba87b3b54377e242a2c56ebb38e8be4fae6bed52b4bf42ff1133e7bd10a",
+        "authenticated": false
+      },
+      {
+        "sha256": "87b446334360098540b236edd42da011fd5d275bbf298369064bf979a2550501",
+        "url": "https://api.github.com/advisories?ecosystem=maven&type=reviewed&affects=org.jetbrains.kotlin%3Aswift-export-embeddable%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-native-utils%402.4.20%2Corg.checkerframework%3Achecker-qual%403.43.0%2Ccom.google.errorprone%3Aerror_prone_annotations%402.28.0%2Cio.opentelemetry%3Aopentelemetry-api%401.41.0%2Ccom.github.ben-manes.caffeine%3Acaffeine%402.9.3%2Corg.jetbrains.kotlin%3Akotlin-stdlib%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-compiler-embeddable%402.4.20%2Corg.jetbrains.kotlinx%3Akotlinx-serialization-core-jvm%401.7.3%2Corg.jetbrains.kotlin%3Akotlin-util-io%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-util-klib%402.4.20%2Cio.opentelemetry%3Aopentelemetry-context%401.41.0%2Corg.jetbrains%3Aannotations%4013.0%2Corg.jetbrains.kotlin%3Akotlin-build-tools-api%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-script-runtime%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-reflect%401.6.10%2Corg.jetbrains.kotlin%3Akotlin-daemon-embeddable%402.4.20%2Cp.ij.intellij-dependencies.com.intellij.platform%3Akotlinx-coroutines-core-jvm%401.8.0-intellij-13%2Cdev.zacsweers.metro%3Aruntime-iossimulatorarm64%401.4.5%2Cdev.zacsweers.metro%3Aruntime%401.4.5%2Corg.jetbrains.kotlinx%3Akotlinx-coroutines-core-iossimulatorarm64%401.11.0%2Corg.jetbrains.kotlinx%3Akotlinx-coroutines-core%401.11.0%2Corg.jetbrains.kotlinx%3Aatomicfu-iossimulatorarm64%400.32.1%2Corg.jetbrains.kotlinx%3Aatomicfu%400.32.1%2Cdev.zacsweers.metro%3Acompiler%401.4.5&per_page=100",
+        "retrieved_at": "2026-10-13T20:29:41.590293Z",
+        "response_sha256": "b72e380d602360deddf56b4d58afe50321a175494a05a97da7b80f1b25b98740",
+        "authenticated": true
+      },
+      {
+        "sha256": "5e382891c4fd49c46d71caa7351b300522980622067c4604422819d5d88747de",
+        "url": "https://api.github.com/advisories?ecosystem=maven&type=unreviewed&affects=org.jetbrains.kotlin%3Aswift-export-embeddable%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-native-utils%402.4.20%2Corg.checkerframework%3Achecker-qual%403.43.0%2Ccom.google.errorprone%3Aerror_prone_annotations%402.28.0%2Cio.opentelemetry%3Aopentelemetry-api%401.41.0%2Ccom.github.ben-manes.caffeine%3Acaffeine%402.9.3%2Corg.jetbrains.kotlin%3Akotlin-stdlib%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-compiler-embeddable%402.4.20%2Corg.jetbrains.kotlinx%3Akotlinx-serialization-core-jvm%401.7.3%2Corg.jetbrains.kotlin%3Akotlin-util-io%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-util-klib%402.4.20%2Cio.opentelemetry%3Aopentelemetry-context%401.41.0%2Corg.jetbrains%3Aannotations%4013.0%2Corg.jetbrains.kotlin%3Akotlin-build-tools-api%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-script-runtime%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-reflect%401.6.10%2Corg.jetbrains.kotlin%3Akotlin-daemon-embeddable%402.4.20%2Cp.ij.intellij-dependencies.com.intellij.platform%3Akotlinx-coroutines-core-jvm%401.8.0-intellij-13%2Cdev.zacsweers.metro%3Aruntime-iossimulatorarm64%401.4.5%2Cdev.zacsweers.metro%3Aruntime%401.4.5%2Corg.jetbrains.kotlinx%3Akotlinx-coroutines-core-iossimulatorarm64%401.11.0%2Corg.jetbrains.kotlinx%3Akotlinx-coroutines-core%401.11.0%2Corg.jetbrains.kotlinx%3Aatomicfu-iossimulatorarm64%400.32.1%2Corg.jetbrains.kotlinx%3Aatomicfu%400.32.1%2Cdev.zacsweers.metro%3Acompiler%401.4.5&per_page=100",
+        "retrieved_at": "2026-10-13T20:29:42.057075Z",
+        "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "authenticated": true
+      },
+      {
+        "sha256": "a4c0d23444ea72ed35c67f215986d55072d8319556f6549396b93f766496fc8e",
+        "url": "https://api.github.com/advisories?ecosystem=maven&type=malware&affects=org.jetbrains.kotlin%3Aswift-export-embeddable%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-native-utils%402.4.20%2Corg.checkerframework%3Achecker-qual%403.43.0%2Ccom.google.errorprone%3Aerror_prone_annotations%402.28.0%2Cio.opentelemetry%3Aopentelemetry-api%401.41.0%2Ccom.github.ben-manes.caffeine%3Acaffeine%402.9.3%2Corg.jetbrains.kotlin%3Akotlin-stdlib%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-compiler-embeddable%402.4.20%2Corg.jetbrains.kotlinx%3Akotlinx-serialization-core-jvm%401.7.3%2Corg.jetbrains.kotlin%3Akotlin-util-io%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-util-klib%402.4.20%2Cio.opentelemetry%3Aopentelemetry-context%401.41.0%2Corg.jetbrains%3Aannotations%4013.0%2Corg.jetbrains.kotlin%3Akotlin-build-tools-api%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-script-runtime%402.4.20%2Corg.jetbrains.kotlin%3Akotlin-reflect%401.6.10%2Corg.jetbrains.kotlin%3Akotlin-daemon-embeddable%402.4.20%2Cp.ij.intellij-dependencies.com.intellij.platform%3Akotlinx-coroutines-core-jvm%401.8.0-intellij-13%2Cdev.zacsweers.metro%3Aruntime-iossimulatorarm64%401.4.5%2Cdev.zacsweers.metro%3Aruntime%401.4.5%2Corg.jetbrains.kotlinx%3Akotlinx-coroutines-core-iossimulatorarm64%401.11.0%2Corg.jetbrains.kotlinx%3Akotlinx-coroutines-core%401.11.0%2Corg.jetbrains.kotlinx%3Aatomicfu-iossimulatorarm64%400.32.1%2Corg.jetbrains.kotlinx%3Aatomicfu%400.32.1%2Cdev.zacsweers.metro%3Acompiler%401.4.5&per_page=100",
+        "retrieved_at": "2026-10-13T20:29:42.064714Z",
+        "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "authenticated": true
+      },
+      {
+        "sha256": "e9aa25fd85216d013fdd675a4ed69dc14fad5f25b228a879219cadf252d3acdf",
+        "url": "https://api.github.com/advisories?ecosystem=swift&type=reviewed&affects=https%3A%2F%2Fgithub.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Chttps%3A%2F%2Fgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Chttps%3A%2F%2Fgithub.com%2Fapple%2Fswift-collections%401.4.1%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Chttps%3A%2F%2Fgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0%2Cgithub.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Cgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Cgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Cgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Cgithub.com%2Fapple%2Fswift-collections%401.4.1%2Cgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Cgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Cgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Cgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Cgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Cgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Cgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Cgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Cgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Cgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0&per_page=100",
+        "retrieved_at": "2026-10-13T20:29:42.129434Z",
+        "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "authenticated": true
+      },
+      {
+        "sha256": "83438a6e54042b350dec502b3e5c1e72f5ca3b7f67399af15e1d7096ba2f3d54",
+        "url": "https://api.github.com/advisories?ecosystem=swift&type=unreviewed&affects=https%3A%2F%2Fgithub.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Chttps%3A%2F%2Fgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Chttps%3A%2F%2Fgithub.com%2Fapple%2Fswift-collections%401.4.1%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Chttps%3A%2F%2Fgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0%2Cgithub.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Cgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Cgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Cgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Cgithub.com%2Fapple%2Fswift-collections%401.4.1%2Cgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Cgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Cgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Cgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Cgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Cgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Cgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Cgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Cgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Cgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0&per_page=100",
+        "retrieved_at": "2026-10-13T20:29:42.162583Z",
+        "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "authenticated": true
+      },
+      {
+        "sha256": "9375b27f528af83b10a1c3990d80ca722deb760f64b7b1f2c230276439c3050e",
+        "url": "https://api.github.com/advisories?ecosystem=swift&type=malware&affects=https%3A%2F%2Fgithub.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Chttps%3A%2F%2Fgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Chttps%3A%2F%2Fgithub.com%2Fapple%2Fswift-collections%401.4.1%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Chttps%3A%2F%2Fgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Chttps%3A%2F%2Fgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0%2Cgithub.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Cgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Cgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Cgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Cgithub.com%2Fapple%2Fswift-collections%401.4.1%2Cgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Cgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Cgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Cgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Cgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Cgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Cgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Cgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Cgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Cgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0&per_page=100",
+        "retrieved_at": "2026-10-13T20:29:42.456736Z",
+        "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "authenticated": true
+      },
+      {
+        "sha256": "56bc62145a9815816760c8be02f9b04b7a5c926a39e1a21a9ca7fdcc786eb7f8",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-2363-cqg2-863c",
+        "retrieved_at": "2026-10-13T20:29:42.813778Z",
+        "response_sha256": "ce3308038fdc6cc554eac0ff2950c93d3bb38cfb2e23bc4bc1231965dc4283cb",
+        "authenticated": false
+      },
+      {
+        "sha256": "921ad65b892fedf4dd5fd11335f0fbcdea4eb49e17594ca164e1226c7cbe2022",
+        "url": "https://api.github.com/advisories/GHSA-2363-cqg2-863c",
+        "retrieved_at": "2026-10-13T20:29:42.817167Z",
+        "response_sha256": "43706c841db8e2fde5e9f34e52f658dcf6f80b41c7f45496c7c413ac8b0cfaed",
+        "authenticated": true
+      },
+      {
+        "sha256": "a1569f7991c3894af3a5347f515be0a1e2111909ee0f30cb7ccfabf7ea1e5d90",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-343h-94h5-c4wr",
+        "retrieved_at": "2026-10-13T20:29:42.817734Z",
+        "response_sha256": "a88e840918025bd3ed7beac87a5b1545ba3137b0803812a300bb36e895f0f032",
+        "authenticated": false
+      },
+      {
+        "sha256": "a9625a409a957ddee411348ab05e8e9195a1f5a508068abaaf10513370949864",
+        "url": "https://api.github.com/advisories/GHSA-343h-94h5-c4wr",
+        "retrieved_at": "2026-10-13T20:29:42.818083Z",
+        "response_sha256": "40312b632018b91928974451961241b32352b68e9b31d0b33e372c1dc0a9b1b5",
+        "authenticated": true
+      },
+      {
+        "sha256": "d5449d77e8d5295875f3170ca345606c373215466de4d18893099e51fd0ae71f",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-3677-xxcr-wjqv",
+        "retrieved_at": "2026-10-13T20:29:43.159908Z",
+        "response_sha256": "37f441ac6f38f94bafa96782d16037689614622e8c604a3849d3c0535e1452e9",
+        "authenticated": false
+      },
+      {
+        "sha256": "464466f5bd708d70fb4bc77e131858750a15ea97d1fba2c42807ede8aeacf4b4",
+        "url": "https://api.github.com/advisories/GHSA-3677-xxcr-wjqv",
+        "retrieved_at": "2026-10-13T20:29:43.277346Z",
+        "response_sha256": "4103b4a1116b451b75cbf5a09c5d9063f9ce2925a002c80459bab8b2a81a945e",
+        "authenticated": true
+      },
+      {
+        "sha256": "1980d36ee362a4238da1c1907c6a1e71c3280d6b19b5be588c4d6fe2ee126e67",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-4v53-57pg-c464",
+        "retrieved_at": "2026-10-13T20:29:43.363919Z",
+        "response_sha256": "7278d81adfa434af91dfd6c1b29bc38120ea4001cc8f483d3b8ffcba82ee443e",
+        "authenticated": false
+      },
+      {
+        "sha256": "0768bb5806bb1b725d278533b9daf43d3ba21893dc2e254ac5bb46a84c845bc4",
+        "url": "https://api.github.com/advisories/GHSA-4v53-57pg-c464",
+        "retrieved_at": "2026-10-13T20:29:43.404320Z",
+        "response_sha256": "6dbf5ed4ccb98e1ba05a69b64d25856af97a360bdbf68d65db463afa8b587285",
+        "authenticated": true
+      },
+      {
+        "sha256": "f49c66ef432751409df50d43d5dd7b86829237cf1157b62f106594f3ee9034ac",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-574f-3g2m-x479",
+        "retrieved_at": "2026-10-13T20:29:43.512328Z",
+        "response_sha256": "b9d3ea05548a84dfe574d1500f11dc2c7d790572e7c2ad2785c3e817b18e70fc",
+        "authenticated": false
+      },
+      {
+        "sha256": "9d848223a6ac7e963f307ef45c06c99f08033a80d187bf595e9f13d922554ebf",
+        "url": "https://api.github.com/advisories/GHSA-574f-3g2m-x479",
+        "retrieved_at": "2026-10-13T20:29:43.765751Z",
+        "response_sha256": "ab53885a78ffe25342474959495e15d48cd5d56ad2c7a5afdc988491de98f08b",
+        "authenticated": true
+      },
+      {
+        "sha256": "b58a778cb83079aef36ca592f6244efd07cd665fec0e335a92a1cdf63b2f7efa",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-6cx8-rjf8-pr8g",
+        "retrieved_at": "2026-10-13T20:29:43.824700Z",
+        "response_sha256": "dd17d841f562529359dbb46887e572a71597a56d7a008974d542cfc0ecc593d2",
+        "authenticated": false
+      },
+      {
+        "sha256": "ff19772502c851d530a8e26427f72347a54ccad4197ff4172a4d5cb6d55b78b2",
+        "url": "https://api.github.com/advisories/GHSA-6cx8-rjf8-pr8g",
+        "retrieved_at": "2026-10-13T20:29:43.926569Z",
+        "response_sha256": "82605840b30b7a9347060f1e5c007099fe40979446bfe1f6839cc275d092e67f",
+        "authenticated": true
+      },
+      {
+        "sha256": "313844a78d91416f8997f709d42057efa038da23ef36ccc6f4357b8b276857aa",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-7hhh-6rmp-j9qf",
+        "retrieved_at": "2026-10-13T20:29:44.040168Z",
+        "response_sha256": "0e73009876fc99308b9672492cf3e4321cf664264e97ff3d354ee773c84d6db6",
+        "authenticated": false
+      },
+      {
+        "sha256": "dcda8663f6462a2897d8c18ab9fdb383aa5a23cd17db26eaace56648616f3dc2",
+        "url": "https://api.github.com/advisories/GHSA-7hhh-6rmp-j9qf",
+        "retrieved_at": "2026-10-13T20:29:44.194689Z",
+        "response_sha256": "648ac8d8dc85bf787fa78f2997bc9dec8645aaee57eda2d2b1802369d84c3c85",
+        "authenticated": true
+      },
+      {
+        "sha256": "b4ef7d34e8433ce3453a9cfacaee6b3f247e3548034e4fcfc81f84b8b8d1f115",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-7r82-7xv7-xcpj",
+        "retrieved_at": "2026-10-13T20:29:44.350474Z",
+        "response_sha256": "24cd878ab04cd49ebd53fe1197adbc5cd323db7695caa2bda2bb62da267ff5ac",
+        "authenticated": false
+      },
+      {
+        "sha256": "79cfce3ad15704c5da777e0944e629f46989ebf0b4ed387fb203fe590d7af702",
+        "url": "https://api.github.com/advisories/GHSA-7r82-7xv7-xcpj",
+        "retrieved_at": "2026-10-13T20:29:44.384354Z",
+        "response_sha256": "80126ef7677980d08d7b2a99bda99f48741aac91445c8705271aa01513997f41",
+        "authenticated": true
+      },
+      {
+        "sha256": "7ec9f3e0a187050d37ba75e46fc99fab0dd950e2ebbba6d5eac28243c96d4268",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-9pwp-9qqc-pr26",
+        "retrieved_at": "2026-10-13T20:29:44.427412Z",
+        "response_sha256": "96fc10e4f66c0fc416458f3b14a8a504cd69974adcd8c0f14c6006ccfed0503f",
+        "authenticated": false
+      },
+      {
+        "sha256": "c90abd5d85f5d8135c4a185ace0624b56b5f2f9792f84d34563f05bbbfa1a65a",
+        "url": "https://api.github.com/advisories/GHSA-9pwp-9qqc-pr26",
+        "retrieved_at": "2026-10-13T20:29:44.745642Z",
+        "response_sha256": "abadd0c79bf9ba21166acf1c632528e6d975d839609309a58163d03fb535a36d",
+        "authenticated": true
+      },
+      {
+        "sha256": "89a378c136375287bf95b534b74acd5f63179c43687103b5fece21c30fd76eec",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-c3fc-8qff-9hwx",
+        "retrieved_at": "2026-10-13T20:29:44.751828Z",
+        "response_sha256": "e75d2a4b71d3a6932128f249303475a2647405d3e464a55accf001b2a231f7df",
+        "authenticated": false
+      },
+      {
+        "sha256": "fe2b5ae436a8040a4c7524b8d626ed219f38efcc2bc1179b0d71c8cf55ae819e",
+        "url": "https://api.github.com/advisories/GHSA-c3fc-8qff-9hwx",
+        "retrieved_at": "2026-10-13T20:29:44.853527Z",
+        "response_sha256": "ca105a1690b4506e88e9cfeeffc0945f8470722020d3a1d3c47562a1d96813c7",
+        "authenticated": true
+      },
+      {
+        "sha256": "794482e9acf8feb0178e15b29617fc454de7ec52597086eeef8f779bfb093422",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-cmp6-m4wj-q63q",
+        "retrieved_at": "2026-10-13T20:29:44.937578Z",
+        "response_sha256": "7ffacf8cfb876fcd01b78a8b7b9681741f2e3eebc23559a25ea1d5a1eefb8fd2",
+        "authenticated": false
+      },
+      {
+        "sha256": "12cb93f0d76f96e28b999e378c3eeca30d0a7cf6d454ce804596ee4e6e75e0b8",
+        "url": "https://api.github.com/advisories/GHSA-cmp6-m4wj-q63q",
+        "retrieved_at": "2026-10-13T20:29:45.105010Z",
+        "response_sha256": "d087cf2aaed4c0f818005fbcf1cf789f46fbc7d2f1c0eb9da3f5cff41cd936e5",
+        "authenticated": true
+      },
+      {
+        "sha256": "46fd326b3cd0e551df469e37cc87f1264ea5c7765c777df33fae7031de049de4",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-gm45-99xc-r7wv",
+        "retrieved_at": "2026-10-13T20:29:45.275285Z",
+        "response_sha256": "699bd55589e65d532ae85777f3ccb9c2bd49221b96510de92657c731e6ce3f27",
+        "authenticated": false
+      },
+      {
+        "sha256": "cbe42301e0bf65ee9b5b53cf922ee4469132169be3650413cc133e58f3b46648",
+        "url": "https://api.github.com/advisories/GHSA-gm45-99xc-r7wv",
+        "retrieved_at": "2026-10-13T20:29:45.306318Z",
+        "response_sha256": "186766da04cdd1bdd4ad76e83561c1385902ae696c423b8a5d067bfa73877cbf",
+        "authenticated": true
+      },
+      {
+        "sha256": "2a8b16552c80b986fcd58e8025dee37e82a33b06c4d75471d020cb35c4203ac7",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-j288-q9x7-2f5v",
+        "retrieved_at": "2026-10-13T20:29:45.382934Z",
+        "response_sha256": "b963ca12d4e1b9c2552aa7f1b2e682353207015f067269721815ea078e160a7c",
+        "authenticated": false
+      },
+      {
+        "sha256": "290646401198a5fd6e61d9739c9101803425682f4d7be2d84aaf7b3831dc5421",
+        "url": "https://api.github.com/advisories/GHSA-j288-q9x7-2f5v",
+        "retrieved_at": "2026-10-13T20:29:45.641595Z",
+        "response_sha256": "2b794c5dfb255658d043f04683935d568972ce8868c33f8e9d4ea5a5502ee547",
+        "authenticated": true
+      },
+      {
+        "sha256": "667026d86a8d4d8b8a49a6d293616f6bc4ffa503a5f1f9fc2ddcaecc12e92743",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-mcr4-qmvw-px4g",
+        "retrieved_at": "2026-10-13T20:29:45.647918Z",
+        "response_sha256": "f485b582ebc2cae8a40423ff87f47b265532745dfbca897f9834d74f7e654df3",
+        "authenticated": false
+      },
+      {
+        "sha256": "73763f75e0e1d99e204ab353e8c9e6987863ffecb61a7c763817974413ac0f4e",
+        "url": "https://api.github.com/advisories/GHSA-mcr4-qmvw-px4g",
+        "retrieved_at": "2026-10-13T20:29:45.779905Z",
+        "response_sha256": "d845ed0ef03b8f380e38863b1bbf2e050068c282f74d0ec0a521c361c038e49d",
+        "authenticated": true
+      },
+      {
+        "sha256": "e767b0c28c61345b5ba60f7a35a5e528304083c471ad97a8061d3112060dcb60",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-p6pp-m3f8-5c89",
+        "retrieved_at": "2026-10-13T20:29:45.799352Z",
+        "response_sha256": "9b6f0609477ce9c001fed4ba5e466a0466251adec83a59e26c9ff7df44c63c95",
+        "authenticated": false
+      },
+      {
+        "sha256": "8db826ea1b73d77fcf294f04e9bbc9d0dfa0a5e286882d6859d81c94415f0195",
+        "url": "https://api.github.com/advisories/GHSA-p6pp-m3f8-5c89",
+        "retrieved_at": "2026-10-13T20:29:45.993919Z",
+        "response_sha256": "de1bc379ff160aa23d3fd427357095e33cf14fd5155b94b9a74bd3cffdb504be",
+        "authenticated": true
+      },
+      {
+        "sha256": "aabcbce1546afb450fd7cd759f1de2b50cf011d54a3c25c580cc95515feba70d",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-qp49-qgx5-5m26",
+        "retrieved_at": "2026-10-13T20:29:46.134486Z",
+        "response_sha256": "174ec3fb8781343fbe4ca79db322a7169eb65386e827182172cae28b4c0c58af",
+        "authenticated": false
+      },
+      {
+        "sha256": "adef8fb469bf61c5469c761d9c8a9cebc6e339c5dfde59fec496c9901113dba9",
+        "url": "https://api.github.com/advisories/GHSA-qp49-qgx5-5m26",
+        "retrieved_at": "2026-10-13T20:29:46.185951Z",
+        "response_sha256": "b2a610968a96c6e168575b8f0e6418d555920cf7fdcbce943fd68e7165b2e645",
+        "authenticated": true
+      },
+      {
+        "sha256": "82df72e2a8104ff2b80aa7b42c787f382d52b41ee6e6e604d73a482e3f23c87e",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-r7wm-3cxj-wff9",
+        "retrieved_at": "2026-10-13T20:29:46.312687Z",
+        "response_sha256": "d50987dfbbbd87949fb658d48e8f4f0feee087bb38d94d081b4bc4cdbda0de26",
+        "authenticated": false
+      },
+      {
+        "sha256": "49fe9497bd595b3fdf872dd23a2ae1e454da84fbfbe24253189c37e1232b29a8",
+        "url": "https://api.github.com/advisories/GHSA-r7wm-3cxj-wff9",
+        "retrieved_at": "2026-10-13T20:29:46.468966Z",
+        "response_sha256": "28a60dc48c827cfce6dfa950014bb9e74a63f3088cef714abfbf83ec89d67b32",
+        "authenticated": true
+      },
+      {
+        "sha256": "ebcd2d5410950efd3be70ba4099e313dfd43ea93fc46e76abdaf4b9afdf512e4",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-r937-wjx7-w2jp",
+        "retrieved_at": "2026-10-13T20:29:46.503475Z",
+        "response_sha256": "489dee8dd862364365105e7a9d457baf9618b685e44d9667004a7191d05be281",
+        "authenticated": false
+      },
+      {
+        "sha256": "7011de090491aaf448ef059ef5b8d263e9bb5b7227f795031de4c4719859a5f0",
+        "url": "https://api.github.com/advisories/GHSA-r937-wjx7-w2jp",
+        "retrieved_at": "2026-10-13T20:29:46.654294Z",
+        "response_sha256": "abaac02ef97d3163190ca935c518bae2c6b974dfab60c66f5d9e68e5a74f740d",
+        "authenticated": true
+      },
+      {
+        "sha256": "09dd902bf0f79ecf1f5df3b2b232f55b24f5859f5678c0bb34e2572c1c1927e5",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-rcgg-9c38-7xpx",
+        "retrieved_at": "2026-10-13T20:29:46.676830Z",
+        "response_sha256": "fc12ab412dcfb7a81381a7f724f5b99e10fffe52978f36df7f7ad8fd08ef6186",
+        "authenticated": false
+      },
+      {
+        "sha256": "7426161e3175e41d80c1d658f8545ba5d31be1c1c6fffa884c0415dcffe625fa",
+        "url": "https://api.github.com/advisories/GHSA-rcgg-9c38-7xpx",
+        "retrieved_at": "2026-10-13T20:29:46.844632Z",
+        "response_sha256": "c1d2c36dd3a9f89c943d7270345253aa4e5a1097e6aed98e7a8840ac4146fc77",
+        "authenticated": true
+      },
+      {
+        "sha256": "7ae1f9d7126f25913cbe94ae8b4d52a1bcdbf118cd68c5bb4964cb6908dba478",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-vqf4-7m7x-wgfc",
+        "retrieved_at": "2026-10-13T20:29:47.026227Z",
+        "response_sha256": "3d10b2eaf0ae670218045ac66de1fc7f170142b7819cd8227e34225695849a59",
+        "authenticated": false
+      },
+      {
+        "sha256": "69079cd4ddb25785e8b1b56b737c887fafa3d1ef01e6c3af6177fb9f5273a665",
+        "url": "https://api.github.com/advisories/GHSA-vqf4-7m7x-wgfc",
+        "retrieved_at": "2026-10-13T20:29:47.040901Z",
+        "response_sha256": "15bb6df52a498cda07a2008d18ba5efde59ac44fa669fa2aadf44951460a9c98",
+        "authenticated": true
+      },
+      {
+        "sha256": "8aa2cbb6d61bde99f8366a3595f41182547920571d2cc34071e8672190f56025",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-wg6q-6289-32hp",
+        "retrieved_at": "2026-10-13T20:29:47.167874Z",
+        "response_sha256": "f703c9bf7a61fe11d4ceab7740f8155d8b95cd092dd8436d684b9a64c5107ff4",
+        "authenticated": false
+      },
+      {
+        "sha256": "1ce9e2d922acb8d86b20fc7418246623cc289fc4c4c97b5bba52e8ad81019678",
+        "url": "https://api.github.com/advisories/GHSA-wg6q-6289-32hp",
+        "retrieved_at": "2026-10-13T20:29:47.366467Z",
+        "response_sha256": "0937f10b2d577b4b06b1a312a3860e59ab5577355f17bea7b0c6ac4af757ce20",
+        "authenticated": true
+      },
+      {
+        "sha256": "bb220918a1e8a62bb5bd9e54d1aade0d4c222d2092c49992436ab5725057ad1f",
+        "url": "https://api.osv.dev/v1/vulns/GHSA-xx22-p4ch-683r",
+        "retrieved_at": "2026-10-13T20:29:47.373677Z",
+        "response_sha256": "acfc41f2b66eb889eba8326e678140ed34330b3194adc9613ed6ad3392413e5a",
+        "authenticated": false
+      },
+      {
+        "sha256": "c63bd2fdd54be0ad1ca3ccb46b27627b938bade31abe8ae97baa64434c27475d",
+        "url": "https://api.github.com/advisories/GHSA-xx22-p4ch-683r",
+        "retrieved_at": "2026-10-13T20:29:47.501982Z",
+        "response_sha256": "132c2caf1b66473739504d7eceff0a63410dfb7f72bb22061015cf1f1f676b05",
+        "authenticated": true
+      },
+      {
+        "sha256": "59ed39b85d38ae09b3819a090c1dd809e63b2af372e1a72de6c8b982520db627",
+        "url": "https://api.osv.dev/v1/querybatch",
+        "retrieved_at": "2026-10-13T20:51:35.909189+00:00",
+        "response_sha256": "5cc954cdb47ca7101b9cb09316257f2981d314a740743ec8691da5824f303930",
+        "authenticated": false
+      },
+      {
+        "sha256": "f4551a10b6c8fb274de4d36389ea9b9a31e886c5a591db5e954f2cc6c8d098b1",
+        "url": "https://api.github.com/advisories?ecosystem=swift&type=reviewed&affects=github.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Cgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Cgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Cgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Cgithub.com%2Fapple%2Fswift-collections%401.4.1%2Cgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Cgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Cgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Cgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Cgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Cgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Cgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Cgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Cgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Cgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0&per_page=100",
+        "retrieved_at": "2026-10-13T20:51:36.341072+00:00",
+        "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "authenticated": true
+      },
+      {
+        "sha256": "2847958b2331c0f51dda73213fd34cc043bcc93155232646a3143aabc7f69148",
+        "url": "https://api.github.com/advisories?ecosystem=swift&type=unreviewed&affects=github.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Cgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Cgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Cgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Cgithub.com%2Fapple%2Fswift-collections%401.4.1%2Cgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Cgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Cgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Cgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Cgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Cgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Cgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Cgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Cgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Cgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0&per_page=100",
+        "retrieved_at": "2026-10-13T20:51:36.915715+00:00",
+        "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "authenticated": true
+      },
+      {
+        "sha256": "8ebeae16bee356e96c0dcb5bd29fad7868132804fc17367854084627b776d055",
+        "url": "https://api.github.com/advisories?ecosystem=swift&type=malware&affects=github.com%2Fpointfreeco%2Fcombine-schedulers%401.1.0%2Cgithub.com%2Fmaplibre%2Fmaplibre-gl-native-distribution%406.27.0%2Cgithub.com%2Fpointfreeco%2Fswift-case-paths%401.7.3%2Cgithub.com%2Fpointfreeco%2Fswift-clocks%401.0.6%2Cgithub.com%2Fapple%2Fswift-collections%401.4.1%2Cgithub.com%2Fpointfreeco%2Fswift-composable-architecture%401.26.0%2Cgithub.com%2Fpointfreeco%2Fswift-concurrency-extras%401.3.2%2Cgithub.com%2Fpointfreeco%2Fswift-custom-dump%401.5.0%2Cgithub.com%2Fpointfreeco%2Fswift-dependencies%401.12.0%2Cgithub.com%2Fpointfreeco%2Fswift-identified-collections%401.1.1%2Cgithub.com%2Fpointfreeco%2Fswift-navigation%402.8.0%2Cgithub.com%2Fpointfreeco%2Fswift-perception%402.0.10%2Cgithub.com%2Fpointfreeco%2Fswift-sharing%402.8.1%2Cgithub.com%2Fswiftlang%2Fswift-syntax%40603.0.2%2Cgithub.com%2Fpointfreeco%2Fxctest-dynamic-overlay%401.10.0&per_page=100",
+        "retrieved_at": "2026-10-13T20:51:37.252909+00:00",
+        "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "authenticated": true
+      }
+    ],
+    "dependency_surface": "incomplete",
+    "missing_surfaces": [
+      "complete selected Toolchain build-input graph for this pilot",
+      "MapLibre embedded C/C++ transitive components",
+      "JDK/Swift/Xcode/Ruby vendor vulnerability assessment",
+      "complete production Compose graph",
+      "consumer reachability"
+    ],
+    "canonical_repository_metadata_verified": 15
+  },
+  "existing_risk_decision": {
+    "path": "maintenance-toolchain-risk-acceptance.json",
+    "decision_sha256": "b9d1c54e8f688dd071d916216952b618c9ff03bb88479fa05729aa0c3b51d53e",
+    "expires_at": "2026-11-03T05:48:38Z",
+    "existing_checker_state": "blocked",
+    "existing_checker_reasons": [
+      "advisory_evidence_incomplete",
+      "release_evidence_incomplete",
+      "source_binding_sha256_drift"
+    ],
+    "fresh_finding_set_matches_prior_decision": false,
+    "approval_extended": false
+  },
+  "private_tmp_control": {
+    "source_controls": [
+      "scripts/maintenance/lib/executor.rb:owned0700 phase dirs and077 umask",
+      "scripts/maintenance/lib/swift_export/produce.rb:java.io.tmpdir plus explicit owned launcher options"
+    ],
+    "local_version_launch_status": "private_tmp_verified",
+    "mode": "700",
+    "owner_matches_process": true,
+    "all_child_jvms_qualified": false,
+    "exploit_test_run": false,
+    "receipt_sha256": "616797c7bd7149d888d4e32440e325c83206e4eda3fc7f95eac73a7ca7a50e7b",
+    "disposition": "Preserve and verify this control for each production JVM launch. Version-only evidence is not full exposure mitigation."
+  },
+  "maintainer_risk_disposition": "pending",
+  "dependency_pins_changed": false,
+  "production_defaults_changed": false,
+  "adoption_authorized": false
+}

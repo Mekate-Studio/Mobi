@@ -1,0 +1,171 @@
+import Foundation
+import MobiNearbyFacadeProbe
+
+private typealias Probe = ExportedKotlinPackages.studio.mekate.mobi.nearbyfacadeprobe
+struct NativeCoordinate: Sendable, Equatable { let latitude: Double; let longitude: Double }
+enum NativeLocationBlocked: Int32, Sendable, CaseIterable { case accessDenied, accessRestricted, servicesDisabled, approximateOnly, temporarilyUnavailable }
+enum NativeLocation: Sendable, Equatable { case resolving, available(NativeCoordinate), denied, blocked(NativeLocationBlocked), temporarilyUnavailable(NativeCoordinate), unavailable }
+enum NativeNearbyFailure: Int32, Sendable { case riderLocationUnavailable, repositoryUnavailable, unexpected }
+struct NativeVehicle: Sendable, Equatable { let id: String; let location: NativeCoordinate }
+struct NativeFleet: Sendable, Equatable { let sequence: Int64; let riderLocation: NativeCoordinate; let vehicles: [NativeVehicle]; let loadedAt: Int64 }
+enum NativeSnapshot: Sendable, Equatable { case initial, loading, loaded(NativeFleet), refreshing(NativeFleet), failedWithSnapshot(NativeFleet, NativeNearbyFailure), failedWithoutSnapshot(NativeNearbyFailure) }
+enum NativeOverlay: Int32, Sendable { case none, refreshing, stale, blockingFailure }
+struct NativeNearbyState: Sendable, Equatable {
+    fileprivate let owner: UUID
+    fileprivate let handle: Int64
+    let location: NativeLocation
+    let snapshot: NativeSnapshot
+    let overlay: NativeOverlay
+    let canRefresh: Bool
+    let canInteract: Bool
+    func sameHandle(as other: Self) -> Bool { owner == other.owner && handle == other.handle }
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.location == rhs.location && lhs.snapshot == rhs.snapshot && lhs.overlay == rhs.overlay && lhs.canRefresh == rhs.canRefresh && lhs.canInteract == rhs.canInteract
+    }
+}
+struct NativeNearbyMetrics: Sendable { let retired: Bool; let states: Int32; let requests: Int32; let active: Int32; let accepted: Int32; let delivered: Int32; let cancelled: Int32; let lateRejected: Int32 }
+enum NativeNearbyError: Error, Equatable { case wrongOwner, released, retired, invalidWire, invalidInput, bridgeFailure }
+
+@MainActor final class NativeNearbyAccess {
+    private let supervisor: DrainSupervisor
+    private let admission: AdmissionPool
+    private let drainOwner = UUID()
+    private(set) var lastCancellation: DrainReceipt?
+    private let clock: any FacadePollingDriver
+    private let owner = UUID()
+    private let facade: Probe.NearbyFacade
+    private var retired = false
+    var rejectNextResultSchema = false
+    private var pendingResults: Set<Int64> = []
+    init(hub: ExportedKotlinPackages.studio.mekate.mobi.nearbyfacadeprobe.NearbyHub, supervisor: DrainSupervisor, admission: AdmissionPool, clock: any FacadePollingDriver = SystemPollDriver()) { self.supervisor = supervisor; self.admission = admission; self.clock = clock; facade = hub.makeFacade() }
+    func initial() throws -> NativeNearbyState { try requireOpen(); return try copy(facade.initialValue()) }
+    private func requireOpen() throws { guard !retired else { throw NativeNearbyError.retired } }
+    private func handle(_ state: NativeNearbyState) throws -> Int64 {
+        try requireOpen()
+        guard state.owner == owner else { throw NativeNearbyError.wrongOwner }
+        guard facade.hasState(id: state.handle) else { throw NativeNearbyError.released }
+        return state.handle
+    }
+    func available(_ state: NativeNearbyState, _ location: NativeCoordinate) throws -> NativeNearbyState {
+        guard location.latitude.isFinite, location.longitude.isFinite, (-90...90).contains(location.latitude), (-180...180).contains(location.longitude) else { throw NativeNearbyError.invalidInput }
+        return try copy(facade.available(id: handle(state), latitude: location.latitude, longitude: location.longitude))
+    }
+    func blocked(_ state: NativeNearbyState, _ reason: NativeLocationBlocked) throws -> NativeNearbyState { try copy(facade.blocked(id: handle(state), reason: reason.rawValue)) }
+    func temporary(_ state: NativeNearbyState) throws -> NativeNearbyState { try copy(facade.temporary(id: handle(state))) }
+    func loading(_ state: NativeNearbyState) throws -> NativeNearbyState { try copy(facade.loading(id: handle(state))) }
+    func timePassed(_ state: NativeNearbyState, now: Int64) throws -> NativeNearbyState { try validTime(now); return try copy(facade.timePassed(id: handle(state), now: now)) }
+    func shouldRefresh(_ state: NativeNearbyState, now: Int64) throws -> Bool { try validTime(now); return facade.shouldRefresh(id: try handle(state), now: now) }
+    private func validTime(_ now: Int64) throws { guard now >= 0 else { throw NativeNearbyError.invalidInput } }
+    func release(_ state: NativeNearbyState) throws { facade.releaseState(id: try handle(state)) }
+    func adoptResult(_ value: NativeNearbyState) throws {
+        _ = try handle(value)
+        guard pendingResults.remove(value.handle) != nil else { throw NativeNearbyError.invalidWire }
+    }
+    func discardUnclaimed(_ value: NativeNearbyState) {
+        guard value.owner == owner, pendingResults.remove(value.handle) != nil else { return }
+        if !retired { facade.releaseState(id: value.handle) }
+    }
+    func releaseOwned(_ value: NativeNearbyState) {
+        guard value.owner == owner else { return }
+        pendingResults.remove(value.handle)
+        if !retired { facade.releaseState(id: value.handle) }
+    }
+    func pendingCount() -> Int { pendingResults.count }
+    func retire() { if !retired { retired = true; pendingResults.removeAll(); facade.retire() } }
+    func metrics() -> NativeNearbyMetrics {
+        let m = facade.metrics()
+        return NativeNearbyMetrics(retired: m.retired, states: m.states, requests: m.requests, active: m.active, accepted: m.accepted, delivered: m.delivered, cancelled: m.cancelled, lateRejected: m.lateRejected)
+    }
+    func refresh(_ state: NativeNearbyState, now: Int64) async throws -> NativeNearbyState {
+        try Task.checkCancellation(); try validTime(now)
+        let stateID = try handle(state)
+        let reservation = try admission.reserve(.nearbyRequest)
+        let id = facade.beginRefresh(id: stateID, now: now)
+        guard id != 0 else { reservation.release(); throw NativeNearbyError.retired }
+        var ownsRequest = true
+        do {
+            while true {
+                try Task.checkCancellation()
+                if let result = try completed(id, didConsume: { ownsRequest = false; reservation.release() }) { return result }
+                try await clock.wait()
+            }
+        } catch {
+            if ownsRequest {
+            facade.cancelRequest(id: id)
+            // Transfer only the Kotlin facade to an independently owned MainActor ticket.
+            // This caller acknowledges cancellation without claiming Kotlin completion.
+            let retainedFacade = facade
+            lastCancellation = supervisor.adopt(
+                DrainKey(owner: drainOwner, request: id),
+                isCompleted: { retainedFacade.poll(id: id).drained },
+                forget: { let forgotten = retainedFacade.forgetRequest(id: id); if forgotten { reservation.release() }; return forgotten }
+            )
+            }
+            throw error
+        }
+    }
+    private func completed(_ id: Int64, didConsume: () -> Void) throws -> NativeNearbyState? {
+        let poll = facade.poll(id: id)
+        switch poll.phase {
+        case 0: return nil
+        case 1:
+            guard poll.drained else { return nil }
+            let wire = facade.consume(id: id)
+            didConsume() // Kotlin removed the request; subsequent copy failure owns only this state handle.
+            do {
+                if rejectNextResultSchema { rejectNextResultSchema = false; try Self.validateSchema(99) }
+                let result = try copy(wire)
+                pendingResults.insert(result.handle)
+                return result
+            } catch {
+                facade.releaseState(id: wire.id)
+                throw error
+            }
+        case 2: throw CancellationError()
+        default: throw NativeNearbyError.bridgeFailure
+        }
+    }
+    static func validateSchema(_ version: Int32) throws { guard version == 1 else { throw NativeNearbyError.invalidWire } }
+    static func decodeBlockedTag(_ tag: Int32) throws -> NativeLocationBlocked { guard let value = NativeLocationBlocked(rawValue: tag) else { throw NativeNearbyError.invalidWire }; return value }
+    static func decodeFailureTag(_ tag: Int32) throws -> NativeNearbyFailure { guard let value = NativeNearbyFailure(rawValue: tag) else { throw NativeNearbyError.invalidWire }; return value }
+    // Called synchronously; generated wrappers and indexed Kotlin collections stay here.
+    private func copy(_ w: Probe.WireState) throws -> NativeNearbyState {
+        try Self.validateSchema(w.schemaVersion)
+        let coordinate: NativeCoordinate?
+        if let lat = w.latitude, let lon = w.longitude { coordinate = NativeCoordinate(latitude: lat, longitude: lon) }
+        else { guard w.latitude == nil, w.longitude == nil else { throw NativeNearbyError.invalidWire }; coordinate = nil }
+        let location: NativeLocation
+        switch w.locationTag {
+        case 0: guard coordinate == nil, w.blockedReason == nil else { throw NativeNearbyError.invalidWire }; location = .resolving
+        case 1: guard let coordinate, w.blockedReason == nil else { throw NativeNearbyError.invalidWire }; location = .available(coordinate)
+        case 2: guard coordinate == nil, w.blockedReason == nil else { throw NativeNearbyError.invalidWire }; location = .denied
+        case 3: guard coordinate == nil, let raw = w.blockedReason else { throw NativeNearbyError.invalidWire }; location = .blocked(try Self.decodeBlockedTag(raw))
+        case 4: guard let coordinate, w.blockedReason == nil else { throw NativeNearbyError.invalidWire }; location = .temporarilyUnavailable(coordinate)
+        case 5: guard coordinate == nil, w.blockedReason == nil else { throw NativeNearbyError.invalidWire }; location = .unavailable
+        default: throw NativeNearbyError.invalidWire
+        }
+        let fleet: NativeFleet?
+        if let seq = w.sequence, let at = w.loadedAt, let lat = w.snapshotLatitude, let lon = w.snapshotLongitude {
+            let vehicles = (0..<w.vehicleCount).map { index -> NativeVehicle in
+                let v = w.vehicleAt(index: index)
+                return NativeVehicle(id: v.id, location: NativeCoordinate(latitude: v.latitude, longitude: v.longitude))
+            }
+            fleet = NativeFleet(sequence: seq, riderLocation: NativeCoordinate(latitude: lat, longitude: lon), vehicles: vehicles, loadedAt: at)
+        } else {
+            guard w.sequence == nil, w.loadedAt == nil, w.snapshotLatitude == nil, w.snapshotLongitude == nil, w.vehicleCount == 0 else { throw NativeNearbyError.invalidWire }; fleet = nil
+        }
+        let reason = try w.failureReason.map(Self.decodeFailureTag)
+        let snapshot: NativeSnapshot
+        switch w.snapshotTag {
+        case 0: guard fleet == nil, w.failureReason == nil else { throw NativeNearbyError.invalidWire }; snapshot = .initial
+        case 1: guard fleet == nil, w.failureReason == nil else { throw NativeNearbyError.invalidWire }; snapshot = .loading
+        case 2: guard let fleet, w.failureReason == nil else { throw NativeNearbyError.invalidWire }; snapshot = .loaded(fleet)
+        case 3: guard let fleet, w.failureReason == nil else { throw NativeNearbyError.invalidWire }; snapshot = .refreshing(fleet)
+        case 4: guard let fleet, let reason else { throw NativeNearbyError.invalidWire }; snapshot = .failedWithSnapshot(fleet, reason)
+        case 5: guard fleet == nil, let reason else { throw NativeNearbyError.invalidWire }; snapshot = .failedWithoutSnapshot(reason)
+        default: throw NativeNearbyError.invalidWire
+        }
+        guard let overlay = NativeOverlay(rawValue: w.overlayTag) else { throw NativeNearbyError.invalidWire }
+        return NativeNearbyState(owner: owner, handle: w.id, location: location, snapshot: snapshot, overlay: overlay, canRefresh: w.canRefresh, canInteract: w.canInteract)
+    }
+}

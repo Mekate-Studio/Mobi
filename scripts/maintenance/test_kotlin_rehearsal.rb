@@ -114,7 +114,8 @@ module KotlinRehearsalTest
   end
 
   def self.target_fixture(root)
-    FileUtils.cp(File.join(ROOT, 'project.yaml'), root)
+    # This fixture models the historical seven-module bridge target policy.
+    File.write(File.join(root, 'project.yaml'), YAML.dump('modules' => %w[android-app ios-app] + Maintenance::KotlinTargets::MODULES))
     %w[android-app ios-app].concat(Maintenance::KotlinTargets::MODULES).each do |name|
       FileUtils.mkdir_p(File.join(root, name))
       FileUtils.cp(File.join(ROOT, name, 'module.yaml'), File.join(root, name))

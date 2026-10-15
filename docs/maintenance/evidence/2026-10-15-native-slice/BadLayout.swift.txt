@@ -1,0 +1,2 @@
+@_implementationOnly import HiddenModule
+public struct PublicBox { private var hidden: Hidden; public init() { hidden = Hidden() } }
