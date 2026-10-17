@@ -132,6 +132,16 @@ minimums, and present support loss or architectural tradeoffs to the maintainer.
 Adoption requires an explicit decision bound to the reviewed source and changes.
 Bridge retirement remains a separate deferred decision. Elixir stays dormant.
 
+## Interop workaround retirement
+
+The same watch writes `workarounds.json` and a retirement table in the step
+summary. The [inventory and workflow](interop-workarounds.md) separate real app
+improvements, temporary bridge mechanisms and experimental policy. Eligible
+release leads request rechecks of matching IDs; absent candidate source and
+unrun checks never imply retirement. Swift/Xcode, coroutines and other provider
+coverage gaps remain explicit. Use `assess-interop-workarounds` for a report-only
+local inventory. This adds no schedule or automatic update/removal authority.
+
 ## Primary references
 
 - [GitHub releases API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28): release metadata and pagination boundaries.
