@@ -238,6 +238,72 @@ module WatchTest
     assert(uploads.all? { |step| step['with']['include-hidden-files'] == true && step['with']['path'].start_with?('.maintenance/watch-reports/current') })
   end
 
+  test('workaround inventory is visible without pretending retirement checks ran') do
+    source = Maintenance::Source.new(ROOT)
+    result = Maintenance::InteropWorkarounds.observe(ROOT, releases: {}, source_files: source.files)
+    assert(result['entries'].size == 12 && result['retirement_authorized'] == false)
+    assert(result['entries'].values.all? { |row| row['retirement_state'] == 'unverified' && row['probe_state'] == 'not_automated' })
+    assert(result['entries']['IOS-04']['coverage_gaps'].include?('coroutines:not_observed'))
+    assert(result['entries']['IOS-01']['coverage_gaps'].include?('xcode:not_observed'))
+    assert(result['entries']['IOS-01']['source_state'] == 'present')
+  end
+
+  test('an eligible release requests recheck only for its declared workaround triggers') do
+    releases = { 'kotlin' => { 'state' => 'observed', 'newer' => [{ 'version' => '99.0.0', 'age_state' => 'eligible_for_review' }] } }
+    result = Maintenance::InteropWorkarounds.observe(ROOT, releases: releases, source_files: {})
+    assert(result['entries']['IOS-04']['recheck_state'] == 'release_review_due')
+    assert(result['entries']['IOS-04']['release_leads'] == { 'kotlin' => ['99.0.0'] })
+    assert(result['entries']['IOS-09']['recheck_state'] == 'review_required')
+    assert(result['entries'].values.none? { |row| row['retirement_authorized'] })
+  end
+
+  test('absent candidate source is not evidence that a workaround was retired') do
+    result = Maintenance::InteropWorkarounds.observe(ROOT, releases: {}, source_files: {})
+    row = result['entries']['IOS-05']
+    assert(row['source_state'] == 'not_in_checkout' && row['retirement_state'] == 'unverified')
+    assert(!row['retirement_authorized'] && !row['retirement_checks'].empty?)
+  end
+
+  test('provider gaps and age-blocked releases do not become removal evidence') do
+    releases = { 'kotlin' => { 'state' => 'incomplete', 'newer' => [] },
+                 'toolchain' => { 'state' => 'observed', 'newer' => [{ 'version' => '99.0.0', 'age_state' => 'age_blocked' }] } }
+    row = Maintenance::InteropWorkarounds.observe(ROOT, releases: releases, source_files: {})['entries']['IOS-01']
+    assert(row['coverage_gaps'].include?('kotlin:provider_incomplete'))
+    assert(row['release_leads'].empty? && row['recheck_state'] == 'review_required')
+  end
+
+  test('missing registry, missing retirement conditions and claimed probe success are refused') do
+    Dir.mktmpdir('mobi-workaround-registry-') do |root|
+      reject(/Cannot observe/) { Maintenance::InteropWorkarounds.observe(root, releases: {}, source_files: {}) }
+      registry = JSON.parse(File.read(File.join(ROOT, Maintenance::InteropWorkarounds::REGISTRY)))
+      [nil, registry['entries'].first.merge('retirement_checks' => []), registry['entries'].first.merge('probe_state' => 'passed'),
+       registry['entries'].first.merge('paths' => ['../escape'])].each do |bad|
+        File.write(File.join(root, Maintenance::InteropWorkarounds::REGISTRY), JSON.generate(registry.merge('entries' => [bad])))
+        reject(/Invalid/) { Maintenance::InteropWorkarounds.observe(root, releases: {}, source_files: {}) }
+      end
+    end
+  end
+
+  test('watch artifacts and summary expose rechecks while unchanged observations stay quiet') do
+    fixture do |root|
+      first, output = run_watch(root)
+      detail = JSON.parse(File.read(File.join(output, 'workarounds.json')))
+      assert(detail['entries']['IOS-01']['recheck_state'] == 'release_review_due')
+      assert(first.dig('snapshot', 'observation', 'missing_capabilities').include?('interop_retirement_probes'))
+      summary = File.read(File.join(output, 'summary.md'))
+      assert(summary.include?('Interop workaround retirement') && summary.include?('not_automated') && summary.include?('xcode:not_observed'))
+      second, = run_watch(root, previous: File.join(output, 'snapshot.json'))
+      assert(!second['notification']['notify'])
+    end
+  end
+
+  test('workaround recheck state changes produce an identifiable watch delta') do
+    old = Maintenance::Watch.snapshot({}, { 'workarounds' => { 'IOS-01' => { 'recheck_state' => 'review_required' } } })
+    current = Maintenance::Watch.snapshot({}, { 'workarounds' => { 'IOS-01' => { 'recheck_state' => 'release_review_due' } } })
+    change = Maintenance::Watch.compare(current, old, continuity: 'restored')['changes'].first
+    assert(change['kind'] == 'workaround_review_changed' && change['field'] == 'workarounds.IOS-01.recheck_state')
+  end
+
   def self.run
     failures = 0
     @tests.each do |name, block|

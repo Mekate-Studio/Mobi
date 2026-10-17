@@ -1,0 +1,278 @@
+{
+  "schema": 1,
+  "reviewed_at": "2026-10-17",
+  "owner": "Mobi maintainers",
+  "scope": "Mobi iOS interop: maintained direct code plus unmerged pilot/candidate mechanisms",
+  "external_scope": {
+    "pilot": "https://github.com/Mekate-Studio/Mobi/pull/37",
+    "candidate": "https://github.com/Mekate-Studio/Mobi/pull/38"
+  },
+  "entries": [
+    {
+      "id": "IOS-01",
+      "scope": "default",
+      "title": "Handwritten sealed-state visitors",
+      "reason": "The maintained direct integration cannot consume the qualified generated sealed-state API through its current build path.",
+      "paths": [
+        "shared-di/src/MobiInteropProjection.kt",
+        "ios-app/src/MobiInteropProjection.swift"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "toolchain",
+        "swift",
+        "xcode"
+      ],
+      "replacement": "Use compiler-generated sealed cases in the actual feature presentation; delete the Kotlin visitor interfaces and Swift projections.",
+      "retirement_checks": [
+        "Added, removed and changed payload cases fail when consumer handling is omitted.",
+        "Home, Nearby, Android and Shared UI preserve their behavior on the selected delivery."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-02",
+      "scope": "default",
+      "title": "Unchecked Kotlin state sendability",
+      "reason": "The direct Nearby client declares the raw Kotlin state unchecked Sendable; that assertion does not provide compiler-checked isolation.",
+      "paths": [
+        "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeatureClient.swift"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "swift",
+        "xcode",
+        "design"
+      ],
+      "replacement": "Use compiler-checked actor ownership/native values or an upstream-supported safe state crossing; remove unchecked/preconcurrency declarations that are no longer needed.",
+      "retirement_checks": [
+        "An off-actor raw state read and an unsafe Sendable container are rejected.",
+        "Actual feature transitions, equality and cross-runtime lifetime pass without unchecked Sendable."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-03",
+      "scope": "pilot",
+      "title": "Numeric wire tags and decoders",
+      "reason": "The earlier pilot manually encodes variants and nullable payload combinations instead of consuming generated typed state.",
+      "paths": [
+        "shared-ios-export/src/HomeFacade.kt",
+        "shared-ios-export/src/NearbyFacade.kt",
+        "ios-app/pilot/swift/NearbyWireDecoder.swift"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "design"
+      ],
+      "replacement": "Delete the pilot wire protocol and decoders as real feature slices replace them; do not promote this protocol into production.",
+      "retirement_checks": [
+        "No feature meaning depends on ordinal/tag tables.",
+        "The adopted app has one maintained path; historical evidence remains separately retained."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-04",
+      "scope": "candidate",
+      "title": "Request-owner facades around suspend calls",
+      "reason": "The qualified supported path avoids broader generated async/error APIs while SwiftJob inheritance and KotlinError sendability findings remain unresolved.",
+      "paths": [
+        "shared-ios-export/src/HomeRequestOwner.kt",
+        "shared-ios-export/src/NearbyRequestOwner.kt"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "coroutines",
+        "swift",
+        "xcode"
+      ],
+      "replacement": "Use a qualified upstream async bridge, or a smaller operation-owned adapter; delete request registries and facade methods made redundant.",
+      "retirement_checks": [
+        "Real service success, domain failure, cancellation and late completion preserve behavior.",
+        "No non-Sendable Kotlin result/error escapes isolation; unfinished work remains owned until completion."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-05",
+      "scope": "candidate",
+      "title": "Opaque Nearby state handles",
+      "reason": "The current candidate keeps original Kotlin states in a dictionary and mirrors ownership with UUIDs, adoption and release calls.",
+      "paths": [
+        "shared-ios-export/src/NearbyRequestOwner.kt",
+        "ios-app/interop/nearby/NativeNearbyAccess.swift"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "swift",
+        "xcode",
+        "design"
+      ],
+      "replacement": "Assess an actor-owned original-state reference with native presentation; remove state IDs, the state dictionary and manual adopt/release bookkeeping if qualified.",
+      "retirement_checks": [
+        "Actual TCA state/equality and the full map presentation compile without unsafe state crossing.",
+        "Replacement, cancellation and dropped results release references correctly; no lifetime/resource regression."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-06",
+      "scope": "candidate",
+      "title": "Custom completion and drain transport",
+      "reason": "Native observation/disposal and detached cleanup compensate for the unqualified async bridge and the selected early-cancellation acknowledgement design.",
+      "paths": [
+        "shared-ios-export/src/RequestCompletion.kt",
+        "ios-app/interop/home/RequestCompletion.swift",
+        "ios-app/pilot/swift/NativeNearbyAccess.swift"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "coroutines",
+        "swift",
+        "xcode",
+        "design"
+      ],
+      "replacement": "Prefer qualified structured async ownership; remove polling/listener registries and separate drain transport where redundant. Preserve actual-completion accounting for noncooperative work.",
+      "retirement_checks": [
+        "Cancellation timing is explicit and tested.",
+        "Cancelling a waiter or ending a route cannot abandon unfinished backend work.",
+        "No polling loop/listener/drain registry remains solely for a retired bridge path."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-07",
+      "scope": "candidate",
+      "title": "Closed generated API and experimental import checker",
+      "reason": "A private generated-module closure constrains unsupported API use; CheckImplementationOnly supplies an actively tested hidden-layout check on the assessed tuple.",
+      "paths": [
+        "ios-app/interop/NativeAppServices.swift",
+        "scripts/maintenance/lib/swift_export/build.rb"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "toolchain",
+        "swift",
+        "xcode"
+      ],
+      "replacement": "Use a supported narrow module/import recipe; remove experimental flag and unnecessary whole-feature module placement when equivalent enforcement is qualified.",
+      "retirement_checks": [
+        "Raw API escape and invalid hidden-layout controls are rejected by the replacement recipe.",
+        "Actual consumer compile/link works without exposing Kotlin types or weakening diagnostics."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-08",
+      "scope": "candidate",
+      "title": "Swift 5 coroutine-support compilation",
+      "reason": "The assessed generated coroutine support does not compile under the fully strict Swift 6 alternative; the selected profile keeps that module in Swift 5.",
+      "paths": [
+        "scripts/maintenance/lib/swift_export/descriptor.rb",
+        "scripts/maintenance/lib/swift_export/build.rb",
+        "scripts/maintenance/swift-export-inputs.json"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "coroutines",
+        "swift",
+        "xcode"
+      ],
+      "replacement": "Compile the affected support module in strict Swift 6 after upstream fixes; delete the per-module Swift 5 exception.",
+      "retirement_checks": [
+        "Strict support compilation passes without suppressions, unsafe conformance patches or fallback.",
+        "The real app passes error/cancellation/isolation and delivery checks on that recipe."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-09",
+      "scope": "candidate",
+      "title": "Runtime MainActor assertions and cancellation relay",
+      "reason": "The candidate adapts synchronous TCA dependency closures with assumeIsolated and relays cancellation back to a weak Store. This also reflects TCA and adapter design, not only Swift export.",
+      "paths": [
+        "ios-app/interop/home/HomeFeatureClient.swift",
+        "ios-app/interop/nearby/NearbyVehicleMapFeatureClient.swift",
+        "ios-app/interop/home/CancellationRelay.swift"
+      ],
+      "recheck_on": [
+        "swift",
+        "xcode",
+        "native_dependencies",
+        "design"
+      ],
+      "replacement": "Use compiler-expressed actor contracts and ordinary feature-effect cancellation where supported; delete redundant assertions and relay tasks.",
+      "retirement_checks": [
+        "The actual pinned TCA reducer/client compiles with checked isolation.",
+        "Cancellation reaches the intended feature without retaining its route or losing state restoration."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-10",
+      "scope": "candidate",
+      "title": "Custom Swift-export producer and profile plumbing",
+      "reason": "The assessed standalone exporter/build path supplies module graphs, bridge compilation, modes and provenance outside a qualified supported Toolchain integration.",
+      "paths": [
+        "scripts/maintenance/lib/swift_export/produce.rb",
+        "scripts/maintenance/lib/swift_export/assemble.rb",
+        "scripts/maintenance/fixtures/swift-export/ExportHarness.kt.template"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "toolchain",
+        "swift",
+        "xcode"
+      ],
+      "replacement": "Use supported build-tool integration; remove replaced exporter invocation, profile and module-order machinery while keeping repo-owned validation.",
+      "retirement_checks": [
+        "Cold and relocated delivery builds preserve one Kotlin image, shared service identity, resources and native dependencies.",
+        "The default app and CI use the same maintained command; delegated Android bootstrap remains intact."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-11",
+      "scope": "candidate",
+      "title": "Explicit macro-validation invocation override",
+      "reason": "The assessed owned build overrides an inherited macro-skip preference using an explicit Xcode argument. This is an environment control, not a Swift-export language limitation.",
+      "paths": [
+        "scripts/maintenance/lib/swift_export/native.rb",
+        "scripts/maintenance/lib/swift_export/macro_approvals.rb"
+      ],
+      "recheck_on": [
+        "xcode",
+        "native_dependencies",
+        "design"
+      ],
+      "replacement": "Remove only the invocation override when the scoped build environment reliably validates macros; keep exact revision approvals and refusal controls.",
+      "retirement_checks": [
+        "An unapproved locked macro is refused before the approved build succeeds.",
+        "No global preference change or skip-validation fallback is used."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-12",
+      "scope": "candidate",
+      "title": "Private JVM temporary directories",
+      "reason": "Private temp ownership is a dependency-risk control for affected exporter/tool launches, not a repair of decoder/allocation vulnerabilities or a general Swift limitation.",
+      "paths": [
+        "scripts/maintenance/lib/swift_export/produce.rb",
+        "scripts/maintenance/lib/swift_export/bootstrap.rb"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "toolchain",
+        "dependency_risk"
+      ],
+      "replacement": "Reassess the exact affected graph after supported dependency remediation; remove vulnerability-specific plumbing only when its rationale and coverage are closed.",
+      "retirement_checks": [
+        "Fresh selected-graph/advisory evidence supports the disposition.",
+        "Every affected JVM launch/descendant is accounted for; unrelated vulnerability findings are not marked fixed by temp handling."
+      ],
+      "probe_state": "not_automated"
+    }
+  ]
+}

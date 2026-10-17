@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../lib/watch'
+require_relative '../lib/interop_workarounds'
 require_relative '../lib/compatibility_report'
 require 'rubygems/version'
 
@@ -99,6 +100,8 @@ module Maintenance
       direct = !source.files.key?(Compatibility::CATALOG)
       releases = KotlinReleaseWatch.new(fetcher: @fetcher, now: @now, token: @token).discover(adapter.config, direct: direct)
       RunStore.atomic(File.join(@output, 'discovery.json'), releases)
+      workarounds = InteropWorkarounds.observe(@root, releases: releases, source_files: source.files)
+      RunStore.atomic(File.join(@output, 'workarounds.json'), workarounds)
       begin
         native_report, injected_cleanup = @probe ? @probe.call(source) : native(source)
         @cleanup_state ||= injected_cleanup
@@ -112,7 +115,8 @@ module Maintenance
       matrix = native_report.fetch('phases', []).each_with_object({}) do |phase, result|
         phase.fetch('cells').each { |cell, value| result[phase['phase'] + '/' + cell] = value.fetch('status') }
       end
-      gaps = assessment['missing_capabilities'] + %w[native_tests application_builds retirement_approval]
+      gaps = assessment['missing_capabilities'] + %w[native_tests application_builds retirement_approval interop_retirement_probes]
+      gaps << 'interop_trigger_coverage' if workarounds['entries'].values.any? { |entry| !entry['coverage_gaps'].empty? }
       gaps << 'release_provider_coverage' if releases.values.any? { |r| r['state'] != 'observed' }
       gaps << 'watch_native_result' if matrix.empty?
       gaps << 'watch_cleanup' unless @cleanup_state == 'cleaned'
@@ -124,7 +128,7 @@ module Maintenance
                 'probe_inputs_sha256' => Maintenance.digest(source.files.reject { |path, _| path.start_with?('docs/', 'openspec/') || %w[README.md AGENTS.md LICENSE LICENSE.md].include?(path) }),
                 'minimum_release_age_days' => adapter.config['minimum_release_age_days'] }
       observation = { 'assessment_state' => state, 'native_state' => native_report['state'], 'native_reason' => native_report['reason'],
-                      'matrix' => matrix, 'releases' => releases.transform_values { |r| r.reject { |key, _| key == 'source' } },
+                      'workarounds' => workarounds.fetch('entries'), 'matrix' => matrix, 'releases' => releases.transform_values { |r| r.reject { |key, _| key == 'source' } },
                       'direct_paths' => assessment['direct_paths'], 'capability_observations' => assessment.fetch('capability_observations', []), 'missing_capabilities' => gaps.uniq.sort,
                       'cleanup' => @cleanup_state || 'not_started', 'history_provider' => @history == 'local' ? 'local' : @history == 'initial' ? 'available' : @history == 'found' ? 'available' : 'incomplete' }
       previous, continuity = Watch.previous(@history == 'initial' ? nil : @previous, scope, now: @now)
