@@ -73,6 +73,79 @@ Swift's [error-handling language rules](https://docs.swift.org/latest/documentat
 and [actor-isolation migration guidance](https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/commonproblems/)
 are language references, not qualification of the Kotlin bridge.
 
+## Required upstream source review
+
+The primary sources for Swift-export evolution are JetBrains' official
+[Swift-export implementation/design docs](https://github.com/JetBrains/kotlin/tree/master/docs/swift-export)
+and the [published user guide](https://kotlinlang.org/docs/native-swift-export.html).
+Review both for every Swift-export dependency/tool update and before proposing
+workaround removal. Check the docs at the selected release/tag as well as current
+upstream changes; `master` is a discovery source, not the selected release's contract.
+Record disagreements rather than assuming either document is current in every detail.
+
+Use the [official sample](https://github.com/Kotlin/swift-export-sample) to inspect
+actual build configuration and consumer code. Its version catalog and build files
+must be read alongside the README. Treat example code as implementation guidance;
+its error/cancellation/isolation handling still needs evaluation in Mobi's real
+feature. Keep the retired iOS Gradle bridge retired: a Gradle example is not
+qualification of Mobi's Toolchain path.
+
+Use [KT-64572](https://youtrack.jetbrains.com/issue/KT-64572) as the first-release
+milestone and navigation point. Follow relevant linked work, including
+[KT-80305](https://youtrack.jetbrains.com/issue/KT-80305) for coroutine support,
+and inspect specific issues for each encountered failure. Record state, affected
+versions, available/fixed version, reproduction and applicability. A fixed parent
+milestone cannot close all bugs in that feature. If no matching issue is verified,
+record that gap; do not label a broad milestone as the exact bug. Prepare a minimal
+reproducer and proposed report for review before publishing upstream.
+
+| Workaround IDs | Upstream review focus | Required Mobi check |
+| --- | --- | --- |
+| IOS-01, IOS-03 | Sealed-state mapping, generated cases and real sample consumers | Actual feature uses exhaustive generated handling without handwritten tags/visitors |
+| IOS-02, IOS-05, IOS-09 | Generated reference ownership, Swift concurrency, selected Swift/TCA contracts | Real reducer/map/equality/lifetime and off-actor rejection; handle/relay machinery justified separately |
+| IOS-04, IOS-06, IOS-08 | Coroutine docs and KT-80305; follow cancellation/exception issues, not just the parent status | Real success/error/cancellation/late completion, strict support compilation and unfinished-work ownership |
+| IOS-07, IOS-10 | Architecture, standalone execution, compiler bridges, module export and sample build configuration | Narrow generated API, one Kotlin image, correct module graph and supported cold Toolchain delivery |
+| IOS-11, IOS-12 | Relevant Xcode/macro documentation and exact dependency/advisory evidence | These environment/risk controls cannot be retired from Swift-export milestones alone |
+
+The implementation docs' symbol-stability guide is also relevant when an update
+changes generated symbol expectations: inspect whether the difference is intended
+before updating expected output. A refreshed golden file is not a behavior check.
+
+### Source review recorded 2026-10-18
+
+- Reviewed all six implementation/design documents at
+  [Kotlin `5827df9172f0`](https://github.com/JetBrains/kotlin/tree/5827df9172f0a7cee5eda8dac6439a35100a6ac7/docs/swift-export).
+  The README warns of documentation lag and unstable standalone APIs. Its
+  [language mapping](https://github.com/JetBrains/kotlin/blob/5827df9172f0a7cee5eda8dac6439a35100a6ac7/docs/swift-export/language-mapping.md)
+  still excludes suspend functions, whereas the published guide documents async
+  and Flow support. That mismatch is a source-freshness finding, not evidence to
+  preserve an async facade. Selected-release compilation/runtime checks remain open.
+- Inspected sample configuration, version catalog and Swift consumer at
+  [sample `d21f61f4d05a`](https://github.com/Kotlin/swift-export-sample/tree/d21f61f4d05ab7cb57d62d7e008ec3e6f1a69e48).
+  It selects Kotlin 2.4.10 and coroutines 1.11.0, configures multi-module export
+  through Gradle, and calls async/Flow APIs. Its consumer includes forced error
+  handling and a catch that does not distinguish cancellation from other failures;
+  those choices do not qualify Mobi's error policy. No sample build was run.
+- Read the public YouTrack issue API because the issue pages require JavaScript.
+  KT-64572 is marked Fixed with availability in 2.2.20-Beta2 and links KT-80305.
+  KT-80305 is also marked Fixed and links specific cancellation
+  [KT-80970](https://youtrack.jetbrains.com/issue/KT-80970) and exception
+  [KT-80971](https://youtrack.jetbrains.com/issue/KT-80971) work. Those links are
+  investigation leads; this review has not verified an exact matching issue/fix
+  for Mobi's SwiftJob inheritance or KotlinError sendability findings.
+
+For every subsequent review, record the review date, source URLs and immutable
+commits/content digests, selected Kotlin/Toolchain/coroutines/Swift/Xcode versions,
+changes since the previous review, affected registry IDs, issue applicability,
+and the executable Mobi result. If a source is unavailable or inconsistent, keep
+that evidence gap visible and leave retirement unverified. Publish the conclusion
+beside the affected code in the small update/removal PR.
+
+Documentation, sample and issue changes are currently **manual review inputs**.
+The release watch does not poll these repositories or YouTrack, or automatically
+complete this review. Changing a source or seeing a fixed issue requests a
+recheck; only the registry's actual removal checks can qualify simplification.
+
 ## Observable retirement in the update workflow
 
 Run `./scripts/dev/dependency_updates.sh assess-interop-workarounds` for a local
@@ -94,8 +167,9 @@ The existing watch is bounded release discovery and is not an advisory review.
 
 For each tool/dependency/design update:
 
-1. Read the registry and changed watch observations, including uncovered local
-   tool-tuple changes. Record affected IDs in the actual update PR.
+1. Complete the required upstream source review above. Read the registry and
+   changed watch observations, including uncovered local tool-tuple changes.
+   Record affected IDs and source-review evidence in the actual update PR.
 2. Recheck the named replacement on the selected source/tool graph. Add the
    executable removal/regression check to the maintained repo gate in that same
    focused PR; a release note or toy probe is not sufficient.

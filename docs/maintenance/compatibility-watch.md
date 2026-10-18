@@ -142,6 +142,11 @@ unrun checks never imply retirement. Swift/Xcode, coroutines and other provider
 coverage gaps remain explicit. Use `assess-interop-workarounds` for a report-only
 local inventory. This adds no schedule or automatic update/removal authority.
 
+Swift-export updates and workaround removal also require the
+[source review](interop-workarounds.md#required-upstream-source-review) of official
+docs, the official sample and relevant YouTrack issues. These are manual review
+inputs; the current watch does not poll their changes or validate their claims.
+
 ## Primary references
 
 - [GitHub releases API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28): release metadata and pagination boundaries.
