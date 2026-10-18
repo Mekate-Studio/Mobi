@@ -299,6 +299,13 @@ payloads, typed failure reasons and explicit feature factories; do not hide a
 missing case behind a string tag, `else` or native default branch. See the
 [accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
 
+Home's [`HomeFeatureClient`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
+copies shared state into the existing `Sendable` native counter value before
+returning it to the reducer. Its Kotlin projection is private to that client;
+Home's reducer, actions and presentation state use native values. Keep business
+transitions in Kotlin. The adapter still needs the current visitors tracked as
+[IOS-01](../maintenance/interop-workarounds.md); moving conversion does not retire them.
+
 ### 6. Decide whether shared Compose UI is worth it
 
 Only add `shared-ui-*` when the feature benefits from a reusable shared screen.
@@ -336,6 +343,12 @@ Current repo conventions:
 - Kotlin tests use BDD-style names like `should have state X when Y`
 - Kotlin tests should use explicit `given`, `when`, and `then` sections
 - Swift tests use Swift Testing with `@Test`
+- Keep TCA feature suites nested under
+  [`NativeFeatureTests`](../../ios-app/tests/NativeFeatureTests.swift) while
+  IOS-13 applies; use extensions to keep feature test files separate. This protects
+  TCA's shared executor setting. Concurrency scenarios still overlap requests
+  within each test. Recheck parallel suites through the
+  [retirement registry](../../maintenance-interop-workarounds.json).
 - Tests needing object setup should use fixtures or factories instead of
   inlining noisy construction
 

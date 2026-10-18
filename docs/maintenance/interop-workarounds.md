@@ -4,7 +4,7 @@ This inventory separates application improvements from temporary integration
 mechanisms. The [registry](../../maintenance-interop-workarounds.json) names each
 workaround, its affected code, replacement, recheck triggers and removal checks.
 It includes the maintained direct app and unmerged work from PRs #37/#38;
-listing a candidate mechanism does not adopt it. This PR adds reporting only.
+listing a candidate mechanism does not adopt it.
 
 ## Workarounds first
 
@@ -22,6 +22,7 @@ listing a candidate mechanism does not adopt it. This PR adds reporting only.
 | IOS-10 | Custom exporter, bridge producer and module/profile plumbing | Supported Toolchain/build integration; keep validation, remove replaced custom production machinery |
 | IOS-11 | Explicit macro-validation invocation override | Reliable validation in the scoped environment; keep exact approvals and negative refusal control |
 | IOS-12 | Private JVM temp handling for affected tool inputs | Exact-graph dependency remediation/risk review; temp handling does not fix unrelated vulnerabilities |
+| IOS-13 | Serialized Home/Nearby test suite | Parallel execution after TCA provides per-test executor isolation; preserve overlapping-request regression checks |
 
 “Facade” is a pattern name, not a defect category. The request/wire facades above
 compensate for integration limitations or candidate representation choices.
@@ -106,6 +107,17 @@ reproducer and proposed report for review before publishing upstream.
 | IOS-04, IOS-06, IOS-08 | Coroutine docs and KT-80305; follow cancellation/exception issues, not just the parent status | Real success/error/cancellation/late completion, strict support compilation and unfinished-work ownership |
 | IOS-07, IOS-10 | Architecture, standalone execution, compiler bridges, module export and sample build configuration | Narrow generated API, one Kotlin image, correct module graph and supported cold Toolchain delivery |
 | IOS-11, IOS-12 | Relevant Xcode/macro documentation and exact dependency/advisory evidence | These environment/risk controls cannot be retired from Swift-export milestones alone |
+
+IOS-13 is a native test-harness constraint, not a Swift-export limitation. The
+pinned [TCA TestStore](https://github.com/pointfreeco/swift-composable-architecture/blob/e2fa1df6cd9eec6fa6314aa20513e47da576f24e/Sources/ComposableArchitecture/TestStore.swift#L471-L477)
+uses a process-wide executor hook, installed at initialization and restored at
+deinitialization. A shared serialized parent prevents Home and Nearby store
+lifetimes from overlapping. The ordering test still runs two requests together
+and completes the newer request first; serializing test functions does not
+remove concurrency from the behavior being checked. Reassess the parent suite
+on TCA/Swift/Xcode updates, and remove it only after the registry's cold, parallel
+and negative-control checks pass. Native dependency release discovery remains an
+explicit coverage gap in the current watch.
 
 The implementation docs' symbol-stability guide is also relevant when an update
 changes generated symbol expectations: inspect whether the difference is intended

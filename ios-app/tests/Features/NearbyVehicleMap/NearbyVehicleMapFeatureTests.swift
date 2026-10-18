@@ -6,8 +6,7 @@ import Foundation
 import MobiIOSDependencies
 import Testing
 
-@Suite("NearbyVehicleMapFeature")
-struct NearbyVehicleMapFeatureTests {
+extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     @MainActor
     @Test("should have resolving rider location when task is sent")
     func shouldHaveResolvingRiderLocationWhenTaskIsSent() async {
@@ -101,19 +100,24 @@ struct NearbyVehicleMapFeatureTests {
             $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
         }
         let earlierRequest = try #require(await pending.next())
-        let newerTask = await store.send(.locationResolutionResponse(.precise(latitude: 55.6761, longitude: 12.5683)))
-        let newerRequest = try #require(await pending.next())
         let newerState = NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2, vehicles: [])
-        let newerSharedState = try #require(newerState.sharedState)
+        do {
+            defer { earlierRequest.resume(returning: NearbyVehicleMapFeatureTestFactory.loadedSharedState()) }
+            let newerTask = await store.send(.locationResolutionResponse(.precise(
+                latitude: 55.6761,
+                longitude: 12.5683,
+            )))
+            let newerRequest = try #require(await pending.next())
+            let newerSharedState = try #require(newerState.sharedState)
 
-        // when
-        newerRequest.resume(returning: newerSharedState)
-        await store.receive(.sharedStateLoaded(newerState)) {
-            $0 = newerState
+            // when
+            newerRequest.resume(returning: newerSharedState)
+            await store.receive(.sharedStateLoaded(newerState)) {
+                $0 = newerState
+            }
+            await newerTask.finish()
         }
-        earlierRequest.resume(returning: NearbyVehicleMapFeatureTestFactory.loadedSharedState())
         await earlierTask.finish()
-        await newerTask.finish()
         await store.finish()
 
         // then

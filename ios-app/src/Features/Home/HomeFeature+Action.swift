@@ -4,6 +4,6 @@ extension HomeFeature {
     enum Action: Equatable {
         case task
         case refreshTapped
-        case sharedStateLoaded(State)
+        case refreshResponse(HomeCounterLoadable)
     }
 }

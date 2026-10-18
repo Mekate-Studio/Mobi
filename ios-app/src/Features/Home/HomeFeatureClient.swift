@@ -2,27 +2,28 @@ import Foundation
 @preconcurrency import KotlinModules
 import MobiIOSDependencies
 
-struct HomeFeatureClient {
-    var initialState: @Sendable () -> HomeFeatureState
-    var loadingState: @Sendable (_ counterValue: Int) -> HomeFeatureState
-    var refresh: @Sendable (_ counterValue: Int) async -> HomeFeatureState
+struct HomeFeatureClient: Sendable {
+    var initialState: @Sendable () -> HomeCounterLoadable
+    var loadingState: @Sendable (_ counterValue: Int) -> HomeCounterLoadable
+    var refresh: @Sendable (_ counterValue: Int) async -> HomeCounterLoadable
 }
 
 extension HomeFeatureClient {
     init(service: HomeFeatureService) {
         self.init(
             initialState: {
-                service.initialState()
+                HomeCounterLoadable(sharedState: service.initialState())
             },
             loadingState: { counterValue in
-                service.loadingState(counterValue: Int32(counterValue))
+                HomeCounterLoadable(sharedState: service.loadingState(counterValue: Int32(counterValue)))
             },
             refresh: { counterValue in
                 do {
-                    return try await service.refresh(counterValue: Int32(counterValue))
+                    let sharedState = try await service.refresh(counterValue: Int32(counterValue))
+                    return HomeCounterLoadable(sharedState: sharedState)
                 } catch {
-                    return service.unexpectedErrorState(
-                        counterValue: Int32(counterValue),
+                    return HomeCounterLoadable(
+                        sharedState: service.unexpectedErrorState(counterValue: Int32(counterValue)),
                     )
                 }
             },
@@ -54,5 +55,37 @@ extension DependencyValues {
     var homeFeatureClient: HomeFeatureClient {
         get { self[HomeFeatureClient.self] }
         set { self[HomeFeatureClient.self] = newValue }
+    }
+}
+
+private extension HomeCounterLoadable {
+    init(sharedState: HomeFeatureState) {
+        switch mobiProjection(of: sharedState.counterLoadable) {
+        case .initial:
+            self = .initial
+
+        case let .loading(loading):
+            self = .loading(previousValue: loading.previousValue?.intValue)
+
+        case let .loaded(loaded):
+            self = .loaded(value: Int(loaded.value))
+
+        case let .error(error):
+            self = .error(
+                previousValue: error.previousValue?.intValue,
+                reason: HomeCounterLoadFailureReason(sharedReason: error.reason),
+            )
+        }
+    }
+}
+
+private extension HomeCounterLoadFailureReason {
+    init(sharedReason: CounterLoadFailureReason) {
+        switch mobiProjection(of: sharedReason) {
+        case .repositoryUnavailable:
+            self = .repositoryUnavailable
+        case .unexpected:
+            self = .unexpected
+        }
     }
 }

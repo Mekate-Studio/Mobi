@@ -1,30 +1,8 @@
-import Foundation
-@preconcurrency import KotlinModules
-
-enum HomeCounterLoadable: Equatable {
+enum HomeCounterLoadable: Equatable, Sendable {
     case initial
     case loading(previousValue: Int?)
     case loaded(value: Int)
     case error(previousValue: Int?, reason: HomeCounterLoadFailureReason)
-
-    init(sharedLoadable: CounterLoadable) {
-        switch mobiProjection(of: sharedLoadable) {
-        case .initial:
-            self = .initial
-
-        case let .loading(loading):
-            self = .loading(previousValue: loading.previousValue?.intValue)
-
-        case let .loaded(loaded):
-            self = .loaded(value: Int(loaded.value))
-
-        case let .error(error):
-            self = .error(
-                previousValue: error.previousValue?.intValue,
-                reason: HomeCounterLoadFailureReason(sharedReason: error.reason),
-            )
-        }
-    }
 
     var currentValueForRefresh: Int {
         switch self {
@@ -83,18 +61,9 @@ enum HomeCounterLoadable: Equatable {
     }
 }
 
-enum HomeCounterLoadFailureReason: Equatable {
+enum HomeCounterLoadFailureReason: Equatable, Sendable {
     case repositoryUnavailable
     case unexpected
-
-    init(sharedReason: CounterLoadFailureReason) {
-        switch mobiProjection(of: sharedReason) {
-        case .repositoryUnavailable:
-            self = .repositoryUnavailable
-        case .unexpected:
-            self = .unexpected
-        }
-    }
 
     var headlineText: String {
         switch self {
