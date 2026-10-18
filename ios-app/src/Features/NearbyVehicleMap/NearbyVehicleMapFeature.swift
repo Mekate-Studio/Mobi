@@ -5,6 +5,8 @@ import MobiIOSDependencies
 struct NearbyVehicleMapFeature {
     @Dependency(\.nearbyVehicleMapFeatureClient) private var client
 
+    private enum CancelID { case refresh }
+
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -66,6 +68,7 @@ struct NearbyVehicleMapFeature {
             loadedState.apply(sharedState: sharedState)
             await send(.sharedStateLoaded(loadedState))
         }
+        .cancellable(id: CancelID.refresh, cancelInFlight: true)
     }
 
     private func currentTimeMillis() -> Int64 {
