@@ -122,6 +122,63 @@ struct NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test("should allow retry after Kotlin cancels the first snapshot request")
+    func shouldAllowRetryAfterKotlinCancelsFirstSnapshotRequest() async {
+        // given
+        let service = NearbyVehicleMapFeatureService(
+            nearbyFleetRepository: CancelOnceNearbyFleetRepository(),
+            freshnessPolicy: NearbyVehicleMapFreshnessPolicy(),
+        )
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore(client: .init(service: service))
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+        await store.send(.locationResolutionResponse(.precise(latitude: 55.6761, longitude: 12.5683))) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
+        }
+        let readyState = NearbyVehicleMapFeatureTestFactory.readyState()
+
+        // when
+        await store.receive(.sharedStateLoaded(readyState)) {
+            $0 = readyState
+        }
+
+        // then
+        #expect(store.state.canRequestRefresh)
+        #expect(store.state.overlay == .none)
+        await store.send(.refreshTapped) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
+        }
+        await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState())) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadedState()
+        }
+    }
+
+    @MainActor
+    @Test("should retain the snapshot and allow retry after Kotlin cancels a refresh")
+    func shouldRetainSnapshotAndAllowRetryAfterKotlinCancelsRefresh() async {
+        // given
+        let service = NearbyVehicleMapFeatureService(
+            nearbyFleetRepository: CancelOnceNearbyFleetRepository(),
+            freshnessPolicy: NearbyVehicleMapFreshnessPolicy(),
+        )
+        let client = NearbyVehicleMapFeatureClient(service: service)
+        let previousState = NearbyVehicleMapFeatureTestFactory.loadedSharedState()
+        let refreshingState = client.loadingState(previousState)
+
+        // when
+        let recoveredState = await client.refresh(refreshingState, 11000)
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(sharedState: recoveredState)
+
+        // then
+        #expect(recoveredState.isEqual(previousState))
+        #expect(state.canRequestRefresh)
+        #expect(state.overlay == .none)
+        #expect(state.mapContent == NearbyVehicleMapFeatureTestFactory.loadedState().mapContent)
+    }
+
+    @MainActor
     @Test("should load rider centered snapshot after precise location is resolved")
     func shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved() async {
         // given
@@ -367,6 +424,18 @@ private enum NearbyVehicleMapFeatureTestFactory {
         return state
     }
 
+    static func readyState() -> NearbyVehicleMapFeature.State {
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(
+            sharedState: makeSharedState(
+                riderLocationState: RiderLocationStateAvailable(location: riderLocation()),
+                snapshotState: NearbyVehicleSnapshotStateInitial.shared,
+                overlayState: NearbyVehicleMapOverlayStateNone.shared,
+            ),
+        )
+        return state
+    }
+
     static func loadingState() -> NearbyVehicleMapFeature.State {
         var state = NearbyVehicleMapFeature.State()
         state.apply(
@@ -492,5 +561,21 @@ private enum NearbyVehicleMapFeatureTestFactory {
 
     static func riderLocation() -> RiderLocation {
         RiderLocation(latitude: 55.6761, longitude: 12.5683)
+    }
+}
+
+private final class CancelOnceNearbyFleetRepository: NSObject, NearbyFleetRepository {
+    private var shouldCancel = true
+
+    func fetchNearbyFleetSnapshot(
+        request _: NearbyFleetRequest,
+        completionHandler: @escaping (FleetSnapshot?, (any Error)?) -> Void,
+    ) {
+        if shouldCancel {
+            shouldCancel = false
+            completionHandler(nil, KotlinCancellationException(message: "Cancelled test request").asError())
+        } else {
+            completionHandler(NearbyVehicleMapFeatureTestFactory.snapshot(), nil)
+        }
     }
 }
