@@ -123,3 +123,25 @@ fun NearbyVehicleSnapshotState.failedWith(reason: NearbyVehicleMapFailureReason)
 fun NearbyVehicleSnapshotState.isRefreshInFlight(): Boolean =
     this is NearbyVehicleSnapshotState.Loading ||
         this is NearbyVehicleSnapshotState.Refreshing
+
+fun NearbyVehicleMapFeatureState.cancelledRefreshState(): NearbyVehicleMapFeatureState {
+    val snapshotState =
+        when (val currentSnapshotState = snapshotState) {
+            NearbyVehicleSnapshotState.Loading -> {
+                NearbyVehicleSnapshotState.Initial
+            }
+
+            is NearbyVehicleSnapshotState.Refreshing -> {
+                NearbyVehicleSnapshotState.Loaded(snapshot = currentSnapshotState.snapshot)
+            }
+
+            else -> {
+                return this
+            }
+        }
+
+    return copy(
+        snapshotState = snapshotState,
+        mapOverlayState = NearbyVehicleMapOverlayState.None,
+    )
+}

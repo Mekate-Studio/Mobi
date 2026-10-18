@@ -54,7 +54,7 @@ extension NearbyVehicleMapFeatureClient {
                         nowMillis: nowMillis,
                     )
                 } catch {
-                    return currentState
+                    return currentState.cancelledRefreshState()
                 }
             },
             shouldRefresh: { currentState, nowMillis in
