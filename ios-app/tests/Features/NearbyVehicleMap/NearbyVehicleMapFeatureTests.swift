@@ -80,6 +80,48 @@ struct NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test("should keep the newer snapshot when an earlier refresh finishes last", .timeLimit(.minutes(1)))
+    func shouldKeepNewerSnapshotWhenEarlierRefreshFinishesLast() async throws {
+        // given
+        let requests = AsyncStream<CheckedContinuation<NearbyVehicleMapFeatureState, Never>>.makeStream()
+        defer { requests.continuation.finish() }
+        var pending = requests.stream.makeAsyncIterator()
+        var client = NearbyVehicleMapFeatureTestFactory.makeClient()
+        client.refresh = { _, _ in
+            await withCheckedContinuation { requests.continuation.yield($0) }
+        }
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore(client: client)
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+        let earlierTask = await store.send(.locationResolutionResponse(.precise(
+            latitude: 55.6761,
+            longitude: 12.5683,
+        ))) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
+        }
+        let earlierRequest = try #require(await pending.next())
+        let newerTask = await store.send(.locationResolutionResponse(.precise(latitude: 55.6761, longitude: 12.5683)))
+        let newerRequest = try #require(await pending.next())
+        let newerState = NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2, vehicles: [])
+        let newerSharedState = try #require(newerState.sharedState)
+
+        // when
+        newerRequest.resume(returning: newerSharedState)
+        await store.receive(.sharedStateLoaded(newerState)) {
+            $0 = newerState
+        }
+        earlierRequest.resume(returning: NearbyVehicleMapFeatureTestFactory.loadedSharedState())
+        await earlierTask.finish()
+        await newerTask.finish()
+        await store.finish()
+
+        // then
+        #expect(store.state.mapContent == newerState.mapContent)
+        #expect(store.state.message == "Showing 0 vehicles around the rider.")
+    }
+
+    @MainActor
     @Test("should load rider centered snapshot after precise location is resolved")
     func shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved() async {
         // given
@@ -349,9 +391,9 @@ private enum NearbyVehicleMapFeatureTestFactory {
         return state
     }
 
-    static func loadedState(sequence: Int64 = 1) -> NearbyVehicleMapFeature.State {
+    static func loadedState(sequence: Int64 = 1, vehicles: [NearbyVehicle]? = nil) -> NearbyVehicleMapFeature.State {
         var state = NearbyVehicleMapFeature.State()
-        state.apply(sharedState: loadedSharedState(sequence: sequence))
+        state.apply(sharedState: loadedSharedState(sequence: sequence, vehicles: vehicles))
         return state
     }
 
@@ -379,10 +421,13 @@ private enum NearbyVehicleMapFeatureTestFactory {
         return state
     }
 
-    static func loadedSharedState(sequence: Int64 = 1) -> NearbyVehicleMapFeatureState {
+    static func loadedSharedState(
+        sequence: Int64 = 1,
+        vehicles: [NearbyVehicle]? = nil,
+    ) -> NearbyVehicleMapFeatureState {
         makeSharedState(
             riderLocationState: RiderLocationStateAvailable(location: riderLocation()),
-            snapshotState: NearbyVehicleSnapshotStateLoaded(snapshot: snapshot(sequence: sequence)),
+            snapshotState: NearbyVehicleSnapshotStateLoaded(snapshot: snapshot(sequence: sequence, vehicles: vehicles)),
             overlayState: NearbyVehicleMapOverlayStateNone.shared,
         )
     }
@@ -431,11 +476,11 @@ private enum NearbyVehicleMapFeatureTestFactory {
         }
     }
 
-    static func snapshot(sequence: Int64 = 1) -> FleetSnapshot {
+    static func snapshot(sequence: Int64 = 1, vehicles: [NearbyVehicle]? = nil) -> FleetSnapshot {
         FleetSnapshot(
             sequence: sequence,
             riderLocation: riderLocation(),
-            vehicles: [
+            vehicles: vehicles ?? [
                 NearbyVehicle(
                     id: "mobi-ios-001",
                     location: VehicleLocation(latitude: 55.6764, longitude: 12.5687),
