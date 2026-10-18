@@ -241,11 +241,13 @@ module WatchTest
   test('workaround inventory is visible without pretending retirement checks ran') do
     source = Maintenance::Source.new(ROOT)
     result = Maintenance::InteropWorkarounds.observe(ROOT, releases: {}, source_files: source.files)
-    assert(result['entries'].size == 12 && result['retirement_authorized'] == false)
+    assert(result['entries'].size == 13 && result['retirement_authorized'] == false)
     assert(result['entries'].values.all? { |row| row['retirement_state'] == 'unverified' && row['probe_state'] == 'not_automated' })
     assert(result['entries']['IOS-04']['coverage_gaps'].include?('coroutines:not_observed'))
     assert(result['entries']['IOS-01']['coverage_gaps'].include?('xcode:not_observed'))
     assert(result['entries']['IOS-01']['source_state'] == 'present')
+    assert(result['entries']['IOS-13']['source_state'] == 'present')
+    assert(result['entries']['IOS-13']['coverage_gaps'].include?('native_dependencies:not_observed'))
   end
 
   test('an eligible release requests recheck only for its declared workaround triggers') do

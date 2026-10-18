@@ -4,8 +4,7 @@ import KotlinModules
 import MobiIOSDependencies
 import Testing
 
-@Suite("HomeFeature")
-struct HomeFeatureTests {
+extension NativeFeatureTests.HomeFeatureTests {
     @MainActor
     @Test("should have initial shared state when task is sent")
     func shouldHaveInitialSharedStateWhenTaskIsSent() async {

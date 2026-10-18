@@ -273,6 +273,29 @@
         "Every affected JVM launch/descendant is accounted for; unrelated vulnerability findings are not marked fixed by temp handling."
       ],
       "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-13",
+      "scope": "default",
+      "title": "Serialized native feature tests",
+      "reason": "The pinned TCA 1.26.0 TestStore installs and restores a process-wide executor hook. Concurrent store lifetimes make these tests depend on shared scheduler state.",
+      "paths": [
+        "ios-app/tests/NativeFeatureTests.swift",
+        "ios-app/tests/Features/Home/HomeFeatureTests.swift",
+        "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift"
+      ],
+      "recheck_on": [
+        "native_dependencies",
+        "swift",
+        "xcode",
+        "design"
+      ],
+      "replacement": "Run the native feature suites concurrently when TCA provides per-test executor isolation; remove the serialized parent after qualifying the actual tests.",
+      "retirement_checks": [
+        "Cold local and hosted runs plus repeated parallel Home/Nearby execution pass with the original time limits and exhaustive assertions.",
+        "Removing effect cancellation still fails the out-of-order completion test; cancellation or assertion failure leaves no pending test continuation."
+      ],
+      "probe_state": "not_automated"
     }
   ]
 }
