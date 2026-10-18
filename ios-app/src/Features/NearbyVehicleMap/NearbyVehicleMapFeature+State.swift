@@ -46,8 +46,12 @@ extension NearbyVehicleMapFeature {
             }
         }
 
+        var hasResolvedRiderLocation: Bool {
+            riderLocation != nil
+        }
+
         var canInteractWithVehicles: Bool {
-            guard riderLocation != nil, let sharedState else { return false }
+            guard hasResolvedRiderLocation, let sharedState else { return false }
             guard case .blockingFailure = mobiProjection(of: sharedState.mapOverlayState) else {
                 return true
             }
@@ -82,7 +86,7 @@ extension NearbyVehicleMapFeature {
         }
 
         var canRequestRefresh: Bool {
-            guard riderLocation != nil, let sharedState else { return false }
+            guard hasResolvedRiderLocation, let sharedState else { return false }
 
             switch mobiProjection(of: sharedState.snapshotState) {
             case .loading, .refreshing:

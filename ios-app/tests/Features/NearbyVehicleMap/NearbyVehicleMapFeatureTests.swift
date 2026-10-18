@@ -46,6 +46,40 @@ struct NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test("should keep location blocked when an earlier refresh completes")
+    func shouldKeepLocationBlockedWhenEarlierRefreshCompletes() async {
+        // given
+        let completion = AsyncStream<Void>.makeStream()
+        var client = NearbyVehicleMapFeatureTestFactory.makeClient()
+        client.refresh = { _, _ in
+            for await _ in completion.stream {
+                break
+            }
+            return NearbyVehicleMapFeatureTestFactory.loadedSharedState()
+        }
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore(client: client)
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+        await store.send(.locationResolutionResponse(.precise(latitude: 55.6761, longitude: 12.5683))) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
+        }
+
+        // when
+        await store.send(.locationResolutionResponse(.blocked(.accessDenied))) {
+            $0 = NearbyVehicleMapFeatureTestFactory.deniedState()
+        }
+        completion.continuation.yield(())
+        completion.continuation.finish()
+        await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState()))
+
+        // then
+        #expect(store.state.mapContent == .waitingForRider)
+        #expect(store.state.overlay == .blockingFailure)
+        #expect(store.state.canInteractWithVehicles == false)
+    }
+
+    @MainActor
     @Test("should load rider centered snapshot after precise location is resolved")
     func shouldLoadRiderCenteredSnapshotAfterPreciseLocationIsResolved() async {
         // given
@@ -218,11 +252,13 @@ private enum NearbyVehicleMapFeatureTestFactory {
     typealias LocationBlockedReason = NearbyVehicleMapFeature.LocationBlockedReason
 
     @MainActor
-    static func makeStore() -> TestStore<NearbyVehicleMapFeature.State, NearbyVehicleMapFeature.Action> {
+    static func makeStore(
+        client: NearbyVehicleMapFeatureClient = makeClient(),
+    ) -> TestStore<NearbyVehicleMapFeature.State, NearbyVehicleMapFeature.Action> {
         TestStore(initialState: NearbyVehicleMapFeature.State()) {
             NearbyVehicleMapFeature()
         } withDependencies: {
-            $0.nearbyVehicleMapFeatureClient = makeClient()
+            $0.nearbyVehicleMapFeatureClient = client
         }
     }
 
