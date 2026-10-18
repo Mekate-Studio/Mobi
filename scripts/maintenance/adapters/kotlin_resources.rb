@@ -159,6 +159,35 @@ module Maintenance
       Dir.glob(File.join(work, '{cache,home}', '**', 'bin', '*')).select { |p| names.include?(File.basename(p)) }
     end
 
+    # New optional producers declare their private Xcode projects before builds;
+    # the historical bridge's output/project convention remains a separate path.
+    def register_xcode_project!(path, developer_dir:)
+      data = state
+      path = File.expand_path(path)
+      project = File.join(path, 'project.pbxproj')
+      unless path.start_with?(data['workspace'] + '/') && File.realpath(path) == path &&
+             File.file?(project) && !File.symlink?(project) && File.realpath(developer_dir) == developer_dir
+        raise Failure, 'Xcode project ownership unavailable'
+      end
+      data['developer_dir'] = developer_dir
+      record = { 'path' => path.delete_prefix(data['workspace'] + '/'), 'sha256' => Maintenance.file_sha(project) }
+      data['xcode_projects'] ||= []
+      raise Failure, 'Xcode project changed after registration' if data['xcode_projects'].any? { |p| p['path'] == record['path'] && p != record }
+      data['xcode_projects'] << record unless data['xcode_projects'].include?(record)
+      save(data)
+    end
+
+    def release_xcode_project!(path)
+      data = state
+      relative = File.expand_path(path).delete_prefix(data['workspace'] + '/')
+      root = File.dirname(File.expand_path(path))
+      raise Failure, 'Xcode children still use project' if native_children.any? { |p| p['command'].include?(root + '/') }
+      record = Array(data['xcode_projects']).find { |p| p['path'] == relative }
+      raise Failure, 'Xcode project intent unavailable' unless record
+      data['xcode_projects'].delete(record)
+      save(data)
+    end
+
     def native_child_proof(identity, binaries: nil)
       return nil unless identity && identity['uid'] == Process.uid
       data = state; work = data.fetch('workspace'); command = identity.fetch('command')
@@ -172,7 +201,17 @@ module Maintenance
       real = File.realpath(binary)
       private_binary = private_bins.include?(binary) && real.start_with?(work + '/')
       project = File.join(work, 'output/project')
-      xcode_child = xcode_bins.include?(binary) && real.start_with?(developer + '/') && command.include?(project + '/')
+      declared_roots = Array(data['xcode_projects']).map do |record|
+        relative = record.fetch('path')
+        raise Failure, 'Invalid declared Xcode resource' if Pathname.new(relative).absolute? || relative.split('/').any? { |p| p.empty? || %w[. ..].include?(p) }
+        owned = File.join(work, relative)
+        file = File.join(owned, 'project.pbxproj')
+        unless !File.symlink?(owned) && !File.symlink?(file) && File.file?(file) && Maintenance.file_sha(file) == record.fetch('sha256')
+          raise Failure, 'Declared Xcode project identity changed'
+        end
+        File.dirname(owned)
+      end
+      xcode_child = xcode_bins.include?(binary) && real.start_with?(developer + '/') && ([project] + declared_roots).any? { |p| command.include?(p + '/') }
       wrapper = File.join(project, 'gradle-bridge/gradle/wrapper/gradle-wrapper.jar')
       java_wrapper = binary == host_java && command.include?(' -jar ' + wrapper + ' ') && File.file?(wrapper)
       build_script = binary == '/bin/sh' && ['/bin/sh -c ', '/bin/sh '].any? { |prefix| command.start_with?(prefix + project + '/build/') }

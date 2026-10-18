@@ -1,0 +1,43 @@
+import Foundation
+
+enum AdmissionError: Error, Equatable, Sendable { case full, closed }
+enum AdmissionKind: String, Sendable { case homeRequest, nearbyRequest, composeRoute }
+struct AdmissionMetrics: Sendable {
+    let open: Bool
+    let active: Int
+    let acquired: Int
+    let released: Int
+    let deniedFull: Int
+    let deniedClosed: Int
+    let closeTransitions: Int
+    let byKind: [String: Int]
+}
+// Diagnostic limit counts native requests plus Compose route leases, NOT every
+// Compose job. A route reserves before any Kotlin owner/controller is constructed.
+@MainActor final class AdmissionPool {
+    let capacity: Int
+    private var leases: [UUID: AdmissionKind] = [:]
+    private var open = true
+    private var acquired = 0, released = 0, deniedFull = 0, deniedClosed = 0, closeTransitions = 0
+    init(capacity: Int) { precondition(capacity > 0); self.capacity = capacity }
+    func reserve(_ kind: AdmissionKind) throws -> AdmissionReservation {
+        guard open else { deniedClosed += 1; throw AdmissionError.closed }
+        guard leases.count < capacity else { deniedFull += 1; throw AdmissionError.full }
+        let id = UUID(); leases[id] = kind; acquired += 1
+        return AdmissionReservation(id: id, pool: self)
+    }
+    fileprivate func release(_ id: UUID) { precondition(leases.removeValue(forKey: id) != nil); released += 1 }
+    func close() { guard open else { return }; open = false; closeTransitions += 1 }
+    func metrics() -> AdmissionMetrics {
+        AdmissionMetrics(open: open, active: leases.count, acquired: acquired, released: released,
+            deniedFull: deniedFull, deniedClosed: deniedClosed, closeTransitions: closeTransitions,
+            byKind: Dictionary(grouping: leases.values, by: \.rawValue).mapValues(\.count))
+    }
+}
+@MainActor final class AdmissionReservation {
+    let id: UUID
+    private let pool: AdmissionPool
+    private var released = false
+    fileprivate init(id: UUID, pool: AdmissionPool) { self.id = id; self.pool = pool }
+    func release() { precondition(!released); released = true; pool.release(id) }
+}

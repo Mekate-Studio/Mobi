@@ -1,0 +1,7 @@
+public protocol DependencyKey { static var liveValue: Self { get } }
+public struct DependencyValues {
+    public subscript<K: DependencyKey>(_ key: K.Type) -> K {
+        get { K.liveValue }
+        set { }
+    }
+}

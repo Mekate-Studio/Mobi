@@ -1,0 +1,41 @@
+import Foundation
+import MobiIOSDependencies
+
+struct HomeFeatureClient: Sendable {
+    var initialState: @Sendable () throws -> HomeCounterLoadable
+    var loadingState: @Sendable (Int) throws -> HomeCounterLoadable
+    var refresh: @Sendable (Int) async throws -> HomeCounterLoadable
+    var notifyCancelled: @Sendable (UUID) -> Void
+    var retire: @Sendable () -> Void
+
+    @MainActor init(access: NativeHomeAccess, relay: CancellationRelay) {
+        // Pinned TCA Store is MainActor, while its Reducer protocol is synchronous.
+        // These sync entry points ASSERT that executor contract at runtime.
+        initialState = { try MainActor.assumeIsolated { try HomeCounterLoadable(nativeValue: access.initialValue()) } }
+        loadingState = { current in
+            try MainActor.assumeIsolated { try HomeCounterLoadable(nativeValue: access.loadingValue(Int32(current))) }
+        }
+        refresh = { try await HomeCounterLoadable(nativeValue: access.refresh(Int32($0))) }
+        notifyCancelled = { request in _ = Task.detached { @MainActor in relay.deliver(request) } }
+        retire = { MainActor.assumeIsolated { access.retire() } }
+    }
+
+    private init() {
+        initialState = { fatalError("AppServices must inject the Home client") }
+        loadingState = { _ in fatalError("AppServices must inject the Home client") }
+        refresh = { _ in fatalError("AppServices must inject the Home client") }
+        notifyCancelled = { _ in fatalError("Composition root must inject cancellation relay") }
+        retire = { fatalError("AppServices must inject the Home client") }
+    }
+}
+
+extension HomeFeatureClient: DependencyKey {
+    static let liveValue = HomeFeatureClient()
+}
+
+extension DependencyValues {
+    var homeFeatureClient: HomeFeatureClient {
+        get { self[HomeFeatureClient.self] }
+        set { self[HomeFeatureClient.self] = newValue }
+    }
+}

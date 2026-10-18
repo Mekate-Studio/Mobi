@@ -1,0 +1,11 @@
+product:
+  type: kmp/lib
+  platforms: [iosArm64, iosSimulatorArm64]
+
+dependencies:
+  - ../shared-feature-home
+  - ../shared-ui-home
+  - org.jetbrains.kotlinx:atomicfu:0.32.1
+
+settings:
+  compose: enabled

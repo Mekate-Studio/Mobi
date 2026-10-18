@@ -1,0 +1,84 @@
+import Foundation
+
+@MainActor final class ThrowThenHoldDriver: FacadePollingDriver {
+    private let gate = ManualPollDriver()
+    private(set) var failures = 0
+    private(set) var stamps: [UInt64] = []
+    var pending: Int { gate.pending }
+    func wait() async throws {
+        if failures < 12 {
+            failures += 1;stamps.append(DispatchTime.now().uptimeNanoseconds)
+            if failures.isMultiple(of: 2) { throw CancellationError() }
+            throw ProbeFailure.driver
+        }
+        try await gate.wait()
+    }
+    func release() { gate.advance() }
+}
+enum ProbeFailure: Error { case driver, timeout }
+@MainActor final class CompletionGate { var done = false;var forgetCount = 0 }
+
+@main struct Probe {
+    @MainActor static func main() async throws {
+        let argument = CommandLine.arguments.last ?? ""
+        let homeAccess = NativeHomeAccess(), nearbyAccess = NativeNearbyAccess(), relay = CancellationRelay()
+        let home = HomeFeatureClient(access: homeAccess, relay: relay)
+        let nearby = NearbyVehicleMapFeatureClient(access: nearbyAccess, relay: relay)
+        if argument == "bad-home" || argument == "bad-nearby" {
+            FileHandle.standardOutput.write(Data("EXECUTOR_FOREIGN_ATTEMPT=\(argument)\n".utf8))
+            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                DispatchQueue.global().async {
+                    FileHandle.standardOutput.write(Data("EXECUTOR_FOREIGN_CALLBACK_STARTED=\(argument)\n".utf8))
+                    if argument == "bad-home" { _ = try? home.initialState() }
+                    else { _ = try? nearby.initialState() }
+                    FileHandle.standardOutput.write(Data("EXECUTOR_FOREIGN_UNEXPECTED_RETURN=\(argument)\n".utf8))
+                    continuation.resume()
+                }
+            }
+            fatalError("Foreign synchronous client unexpectedly returned")
+        }
+        var groups: [String] = []
+        func record(_ name: String, _ condition: Bool) {
+            precondition(condition, name);groups.append(name)
+            FileHandle.standardOutput.write(Data("EXECUTOR_CHECK=\(name)\n".utf8))
+        }
+        let safeHome = ExecutorHomeClient(raw: home), safeNearby = ExecutorNearbyClient(raw: nearby)
+        record("main_actor_original_clients",try home.initialState().value==1 && nearby.initialState().value==1)
+        let h = try await Task.detached { try await safeHome.initial() }.value
+        let n = try await Task.detached { try await safeNearby.initial() }.value
+        record("foreign_async_clients_hop_before_sync_access",h.value==1 && n.value==1 && homeAccess.calls.count==2 && nearbyAccess.calls.count==2)
+        let values = try await Task.detached { (try await safeHome.loading(7),try await safeNearby.loading(n)) }.value
+        record("foreign_async_loading_hops_to_main_actor",values.0.value==7 && values.1.value==1)
+        await Task.detached { await safeNearby.release(n);await safeHome.retire();await safeNearby.retire() }.value
+        record("foreign_async_release_and_retire_hop",homeAccess.calls.count==4 && nearbyAccess.calls.count==5)
+        let driver = ThrowThenHoldDriver(), completion = CompletionGate(), supervisor = DrainSupervisor(clock: driver)
+        let key = DrainKey(owner: UUID(), request: 1), marker = UUID()
+        let creator = Task { @MainActor in
+            TaskScopeProbe.$marker.withValue(marker) {
+                supervisor.adopt(key, isCompleted: { completion.done }, forget: { completion.forgetCount += 1;return true })
+            }
+        }
+        let receipt = await creator.value;creator.cancel()
+        record("error_driver_ticket_owned_independently",receipt.state==DrainState.stillDraining && supervisor.metrics().active==1 && completion.forgetCount==0)
+        let deadline = DispatchTime.now().uptimeNanoseconds+5_000_000_000
+        while driver.pending==0 {
+            if DispatchTime.now().uptimeNanoseconds>deadline { throw ProbeFailure.timeout }
+            try await Task.sleep(for: .milliseconds(1))
+        }
+        record("throwing_and_cancelled_sleeps_reach_bounded_gate",driver.failures==12 && driver.stamps.count==12 && completion.forgetCount==0)
+        let differences = zip(driver.stamps.dropFirst(),driver.stamps).map { $0-$1 }
+        record("fallback_sleep_observed_between_failed_polls",differences.count==11 && differences.allSatisfy { $0>0 } && driver.stamps.last!-driver.stamps.first!>=10_000_000)
+        record("failed_polling_does_not_lose_or_complete_ticket",supervisor.contains(key) && supervisor.metrics().active==1 && supervisor.metrics().completed==0)
+        let duplicate = supervisor.adopt(key,isCompleted:{ completion.done },forget:{ completion.forgetCount += 1;return true })
+        record("duplicate_adoption_during_error_backoff_one_ticket",duplicate.state==DrainState.stillDraining && supervisor.metrics().accepted==1)
+        record("error_cleanup_does_not_inherit_creator_task_scope",supervisor.startedJobs==1 && supervisor.inheritedScopeMarkers.isEmpty)
+        completion.done=true;driver.release()
+        while supervisor.metrics().active != 0 {
+            if DispatchTime.now().uptimeNanoseconds>deadline { throw ProbeFailure.timeout }
+            try await Task.sleep(for: .milliseconds(1))
+        }
+        record("actual_controlled_completion_forgets_once_after_errors",completion.forgetCount==1 && supervisor.metrics().completed==1)
+        record("completed_error_ticket_not_reintroduced",!supervisor.contains(key) && driver.pending==0)
+        FileHandle.standardOutput.write(Data(("EXECUTOR_BACKOFF_NS="+differences.map(String.init).joined(separator:",")+"\nEXECUTOR_EXIT=0\n").utf8))
+    }
+}

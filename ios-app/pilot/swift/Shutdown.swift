@@ -1,0 +1,58 @@
+import Foundation
+
+enum ShutdownState: String, Sendable { case stillDraining, completed }
+struct ShutdownReceipt: Sendable {
+    let state: ShutdownState
+    let reservations: Int
+    let nativeDrains: Int
+    let composeDrains: Int
+}
+
+@MainActor final class ShutdownCoordinator {
+    private let pool: AdmissionPool
+    private let native: DrainSupervisor
+    private let composeActive: @MainActor () -> Int
+    private let clock: any FacadePollingDriver
+    private(set) var waits = 0
+    init(
+        pool: AdmissionPool,
+        native: DrainSupervisor,
+        composeActive: @escaping @MainActor () -> Int,
+        clock: any FacadePollingDriver = SystemPollDriver(),
+    ) {
+        self.pool = pool; self.native = native; self.composeActive = composeActive; self.clock = clock
+    }
+
+    /// Closing admission is synchronous. The root owns route retirement separately;
+    /// this API never drops cleanup ownership or claims active leases have drained.
+    func closeAdmission() {
+        pool.close()
+    }
+
+    func receipt() -> ShutdownReceipt {
+        let reservations = pool.metrics().active, nativeDrains = native.metrics().active,
+            composeDrains = composeActive()
+        return ShutdownReceipt(
+            state: reservations == 0 && nativeDrains == 0 && composeDrains == 0 ? .completed : .stillDraining,
+            reservations: reservations,
+            nativeDrains: nativeDrains,
+            composeDrains: composeDrains,
+        )
+    }
+
+    func awaitDrain(softDeadline: Duration) async throws -> ShutdownReceipt {
+        precondition(!pool.metrics().open && softDeadline >= .zero)
+        let timer = ContinuousClock(), deadline = timer.now.advanced(by: softDeadline)
+        while true {
+            try Task.checkCancellation()
+            let current = receipt()
+            if current.state == .completed || timer.now >= deadline {
+                return current
+            }
+            waits += 1
+            // Cancellation propagates only to this acknowledgement waiter. The
+            // two independent supervisors and their leases are never cancelled.
+            try await clock.wait()
+        }
+    }
+}

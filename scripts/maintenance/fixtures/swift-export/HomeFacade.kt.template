@@ -1,0 +1,240 @@
+@file:OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+package studio.mekate.mobi.facadeprobe
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.launch
+import platform.Foundation.NSThread
+import studio.mekate.mobi.feature.home.CounterLoadFailureReason
+import studio.mekate.mobi.feature.home.CounterLoadable
+import studio.mekate.mobi.feature.home.HomeFeatureService
+import studio.mekate.mobi.feature.home.HomeFeatureState
+import kotlin.coroutines.cancellation.CancellationException
+
+// Isolated transport prototype, not shared feature state or a replacement service.
+// Registry access and its jobs are confined to the platform main thread.
+// This permits suspended Home operations to overlap; it is NOT a complete-operation mutex.
+class LegacyHomeFacade(private val service: HomeFeatureService) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var retired = false
+    private var nextId = 1L
+    private val requests = mutableMapOf<Long, Request>()
+    private var initialReads = 0
+    private var loadingReads = 0
+    private var accepted = 0
+    private var delivered = 0
+    private var cancelled = 0
+    private var lateRejected = 0
+    private var retireTransitions = 0
+    private class Request {
+        lateinit var job: Job
+        var phase = 0 // running, delivered, cancelled, unexpected bridge failure
+        var value: NativeHomeSnapshot? = null
+    }
+    private fun requireMain() { check(NSThread.isMainThread) }
+    fun usesService(other: HomeFeatureService): Boolean { requireMain(); return service === other }
+    fun initialValue(): NativeHomeSnapshot { requireMain(); initialReads++; return nativeValue(service.initialState()) }
+    fun loadingValue(current: Int): NativeHomeSnapshot { requireMain(); loadingReads++; return nativeValue(service.loadingState(current)) }
+    fun beginRefresh(current: Int): Long {
+        requireMain()
+        if (retired) return 0
+        val id = nextId++
+        val request = Request()
+        requests[id] = request
+        accepted++
+        request.job = scope.launch(start = CoroutineStart.LAZY) {
+            try {
+                val value = service.refresh(current)
+                requireMain()
+                if (retired || request.phase != 0 || currentCoroutineContext()[Job]?.isActive != true) {
+                    lateRejected++
+                    throw CancellationException("Native result cancelled")
+                }
+                request.value = nativeValue(value)
+                request.phase = 1
+                delivered++
+            } catch (error: CancellationException) {
+                if (request.phase == 0) { request.phase = 2; cancelled++ }
+            } catch (error: Exception) {
+                if (request.phase == 0) request.phase = 3
+            }
+        }
+        request.job.start()
+        return id
+    }
+    fun poll(id: Long): NativeRequestSnapshot {
+        requireMain()
+        val request = checkNotNull(requests[id])
+        return NativeRequestSnapshot(request.phase, request.job.isCompleted, request.value)
+    }
+    fun cancelRequest(id: Long) {
+        requireMain()
+        val request = requests[id] ?: return
+        // A completed value can still be waiting for Swift to consume it.
+        if (request.phase == 0 || request.phase == 1) {
+            request.phase = 2
+            request.value = null
+            cancelled++
+        }
+        request.job.cancel(CancellationException("Native request cancelled"))
+    }
+    fun forgetRequest(id: Long): Boolean {
+        requireMain()
+        val request = requests[id] ?: return true
+        if (!request.job.isCompleted) return false
+        requests.remove(id)
+        return true
+    }
+    fun retire() {
+        requireMain()
+        if (retired) return
+        retired = true
+        retireTransitions++
+        requests.keys.toList().forEach { cancelRequest(it) }
+        scope.coroutineContext[Job]?.cancel()
+    }
+    fun metrics(): FacadeMetrics {
+        requireMain()
+        return FacadeMetrics(retired, requests.values.count { !it.job.isCompleted }, requests.size,
+            accepted, delivered, cancelled, lateRejected, retireTransitions, initialReads, loadingReads)
+    }
+}
+
+class HomeFacade(private val service: HomeFeatureService) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var retired = false
+    private var nextId = 1L
+    private val requests = mutableMapOf<Long, Request>()
+    private var initialReads = 0
+    private var loadingReads = 0
+    private var accepted = 0
+    private var delivered = 0
+    private var cancelled = 0
+    private var lateRejected = 0
+    private var retireTransitions = 0
+    private class Request {
+        lateinit var job: Job
+        var phase = 0 // running, delivered, cancelled, unexpected bridge failure
+        var value: NativeHomeSnapshot? = null
+    }
+    private fun requireMain() { check(NSThread.isMainThread) }
+    fun usesService(other: HomeFeatureService): Boolean { requireMain(); return service === other }
+    fun initialValue(): NativeHomeSnapshot? { requireMain(); if (retired) return null; initialReads++; return nativeValue(service.initialState()) }
+    fun loadingValue(current: Int): NativeHomeSnapshot? { requireMain(); if (retired) return null; loadingReads++; return nativeValue(service.loadingState(current)) }
+    fun beginRefresh(current: Int): Long {
+        requireMain()
+        if (retired) return 0
+        val id = nextId++
+        val request = Request()
+        requests[id] = request
+        accepted++
+        request.job = scope.launch(start = CoroutineStart.LAZY) {
+            try {
+                val value = service.refresh(current)
+                requireMain()
+                if (retired || request.phase != 0 || currentCoroutineContext()[Job]?.isActive != true) {
+                    lateRejected++
+                    throw CancellationException("Native result cancelled")
+                }
+                request.value = nativeValue(value)
+                request.phase = 1
+                delivered++
+            } catch (error: CancellationException) {
+                if (request.phase == 0) { request.phase = 2; cancelled++ }
+            } catch (error: Exception) {
+                if (request.phase == 0) request.phase = 3
+            }
+        }
+        request.job.start()
+        return id
+    }
+    fun poll(id: Long): NativeRequestSnapshot {
+        requireMain()
+        val request = checkNotNull(requests[id])
+        return NativeRequestSnapshot(request.phase, request.job.isCompleted, request.value)
+    }
+    fun cancelRequest(id: Long) {
+        requireMain()
+        val request = requests[id] ?: return
+        // A completed value can still be waiting for Swift to consume it.
+        if (request.phase == 0 || request.phase == 1) {
+            request.phase = 2
+            request.value = null
+            cancelled++
+        }
+        request.job.cancel(CancellationException("Native request cancelled"))
+    }
+    fun forgetRequest(id: Long): Boolean {
+        requireMain()
+        val request = requests[id] ?: return true
+        if (!request.job.isCompleted) return false
+        requests.remove(id)
+        return true
+    }
+    fun retire() {
+        requireMain()
+        if (retired) return
+        retired = true
+        retireTransitions++
+        requests.keys.toList().forEach { cancelRequest(it) }
+        scope.coroutineContext[Job]?.cancel()
+    }
+    fun metrics(): FacadeMetrics {
+        requireMain()
+        return FacadeMetrics(retired, requests.values.count { !it.job.isCompleted }, requests.size,
+            accepted, delivered, cancelled, lateRejected, retireTransitions, initialReads, loadingReads)
+    }
+}
+
+// Version-1 prototype wire algebra. Swift copies these into checked Sendable enums
+// synchronously on the main actor; Kotlin wrappers never become async return values.
+data class NativeHomeSnapshot(val tag: Int, val value: Int?, val reason: Int?)
+data class NativeRequestSnapshot(val phase: Int, val drained: Boolean, val value: NativeHomeSnapshot?)
+data class FacadeMetrics(val retired: Boolean, val active: Int, val retained: Int,
+    val accepted: Int, val delivered: Int, val cancelled: Int, val lateRejected: Int, val retireTransitions: Int, val initialReads: Int, val loadingReads: Int)
+
+private fun nativeValue(state: HomeFeatureState): NativeHomeSnapshot = when (val loadable = state.counterLoadable) {
+    CounterLoadable.Initial -> NativeHomeSnapshot(0, null, null)
+    is CounterLoadable.Loading -> NativeHomeSnapshot(1, loadable.previousValue, null)
+    is CounterLoadable.Loaded -> NativeHomeSnapshot(2, loadable.value, null)
+    is CounterLoadable.Error -> NativeHomeSnapshot(3, loadable.previousValue, when (loadable.reason) {
+        CounterLoadFailureReason.RepositoryUnavailable -> 0
+        CounterLoadFailureReason.Unexpected -> 1
+    })
+}
+
+// Deterministic controls use the unchanged shared service's real error/state mapping.
+class ScriptedFacadeSession(private val outcome: Int) {
+    val service = HomeFeatureService(object : studio.mekate.mobi.core.CounterRepository {
+        override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int = when (outcome) {
+            0 -> currentCounterValue + 1
+            1 -> throw studio.mekate.mobi.core.CounterRepositoryException()
+            else -> throw IllegalStateException("Scripted unexpected error")
+        }
+    })
+}
+
+class ControlledHomeSession {
+    private var gate = kotlinx.coroutines.CompletableDeferred<Unit>()
+    private var noncooperative = false
+    private var entered = 0
+    private var active = 0
+    val service = HomeFeatureService(object : studio.mekate.mobi.core.CounterRepository {
+        override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int {
+            entered++; active++
+            try {
+                if (noncooperative) kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { gate.await() }
+                else gate.await()
+                return currentCounterValue + 1
+            } finally { active-- }
+        }
+    })
+    fun configure(noncooperative: Boolean) { check(NSThread.isMainThread); check(active == 0); this.noncooperative = noncooperative; gate = kotlinx.coroutines.CompletableDeferred() }
+    fun releaseGate() { check(NSThread.isMainThread); gate.complete(Unit) }
+    fun entered(): Int { check(NSThread.isMainThread); return entered }
+    fun active(): Int { check(NSThread.isMainThread); return active }
+}

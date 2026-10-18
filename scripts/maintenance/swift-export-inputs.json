@@ -1,0 +1,625 @@
+{
+  "schema": 1,
+  "id": "mobi-swift-export",
+  "purpose": "diagnostic-candidate",
+  "target": {
+    "kotlin": "ios_simulator_arm64",
+    "swift": "arm64-apple-ios26.0-simulator",
+    "sdk": "iphonesimulator",
+    "minimum_ios": "26.0",
+    "single_scene": true
+  },
+  "wire_schema": "F4",
+  "modules": [
+    {
+      "name": "MobiCore",
+      "visibility": "partial",
+      "dependencies": [],
+      "inputs": [
+        "shared-core"
+      ]
+    },
+    {
+      "name": "MobiHome",
+      "visibility": "full",
+      "dependencies": [
+        "MobiCore"
+      ],
+      "inputs": [
+        "shared-feature-home"
+      ]
+    },
+    {
+      "name": "MobiNearby",
+      "visibility": "full",
+      "dependencies": [
+        "MobiCore"
+      ],
+      "inputs": [
+        "shared-feature-nearby-vehicle-map"
+      ]
+    },
+    {
+      "name": "MobiDI",
+      "visibility": "full",
+      "dependencies": [
+        "MobiCore",
+        "MobiHome",
+        "MobiNearby"
+      ],
+      "inputs": [
+        "shared-di"
+      ]
+    },
+    {
+      "name": "MobiUI",
+      "visibility": "full",
+      "dependencies": [
+        "MobiCore",
+        "MobiHome"
+      ],
+      "inputs": [
+        "shared-ui-home"
+      ]
+    },
+    {
+      "name": "MobiLifetimeProbe",
+      "visibility": "full",
+      "dependencies": [
+        "MobiCore",
+        "MobiHome",
+        "MobiNearby",
+        "MobiDI"
+      ],
+      "inputs": [
+        "scripts/maintenance/fixtures/swift-export/LifetimeProbe.kt.template"
+      ]
+    },
+    {
+      "name": "MobiRouteProbe",
+      "visibility": "full",
+      "dependencies": [
+        "MobiCore",
+        "MobiHome"
+      ],
+      "inputs": [
+        "scripts/maintenance/fixtures/swift-export/HomeRouteOwner.kt.template"
+      ]
+    },
+    {
+      "name": "MobiFacadeProbe",
+      "visibility": "full",
+      "dependencies": [
+        "MobiCore",
+        "MobiHome"
+      ],
+      "inputs": [
+        "scripts/maintenance/fixtures/swift-export/HomeFacade.kt.template"
+      ]
+    },
+    {
+      "name": "MobiNearbyFacadeProbe",
+      "visibility": "full",
+      "dependencies": [
+        "MobiCore",
+        "MobiNearby"
+      ],
+      "inputs": [
+        "scripts/maintenance/fixtures/swift-export/NearbyFacade.kt.template"
+      ]
+    }
+  ],
+  "inputs": {
+    "generator": [
+      "scripts/maintenance/lib/swift_export",
+      "scripts/maintenance/fixtures/swift-export"
+    ],
+    "schema": [
+      "scripts/maintenance/fixtures/swift-export/HomeFacade.kt.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyFacade.kt.template"
+    ],
+    "native": [
+      "ios-app/Dependencies/Package.swift",
+      "ios-app/Dependencies/Sources",
+      "ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+      "ios-app/src/Info.plist",
+      "ios-app/src/Assets.xcassets"
+    ],
+    "build": [
+      "kotlin",
+      "project.yaml",
+      "shared-feature-nearby-vehicle-map/module.yaml",
+      "shared-ui-home/module.yaml",
+      "shared-feature-home/module.yaml",
+      "shared-core/module.yaml",
+      "shared-di/module.yaml"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "swift-export-embeddable-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/swift-export-embeddable/2.4.20/swift-export-embeddable-2.4.20.pom",
+      "sha256": "a11638ddb770715e1460c433ff13bcc413ce4f7978fa69b662c0bc99f8b5b141"
+    },
+    {
+      "path": "swift-export-embeddable-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/swift-export-embeddable/2.4.20/swift-export-embeddable-2.4.20.jar",
+      "sha256": "24c6159bcf0087ecf86bfc9bad01a975e192abcf75005b248292d85a139c2055"
+    },
+    {
+      "path": "kotlin-native-utils-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-native-utils/2.4.20/kotlin-native-utils-2.4.20.pom",
+      "sha256": "453ba071c89165cbdfc877ca733a4f38c01fc2f4894e9a259d7651f1176cd80c"
+    },
+    {
+      "path": "kotlin-native-utils-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-native-utils/2.4.20/kotlin-native-utils-2.4.20.jar",
+      "sha256": "7613fa2f7bcfa893102041ffa57567fb398c31a085834a30043c09e5222e2334"
+    },
+    {
+      "path": "checker-qual-3.43.0.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/checkerframework/checker-qual/3.43.0/checker-qual-3.43.0.pom",
+      "sha256": "9313bf53b3efd8aaca266eea8b96e307976b65c0b16510cc6f02319fbaebed43"
+    },
+    {
+      "path": "checker-qual-3.43.0.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/checkerframework/checker-qual/3.43.0/checker-qual-3.43.0.jar",
+      "sha256": "3fbc2e98f05854c3df16df9abaa955b91b15b3ecac33623208ed6424640ef0f6"
+    },
+    {
+      "path": "error_prone_annotations-2.28.0.pom",
+      "url": "https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.28.0/error_prone_annotations-2.28.0.pom",
+      "sha256": "0ce909f13a568148476e5ee200f380f98c75ba08971aaf15db295eb77598ef3a"
+    },
+    {
+      "path": "error_prone_annotations-2.28.0.jar",
+      "url": "https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.28.0/error_prone_annotations-2.28.0.jar",
+      "sha256": "f3fc8a3a0a4020706a373b00e7f57c2512dd26d1f83d28c7d38768f8682b231e"
+    },
+    {
+      "path": "opentelemetry-api-1.41.0.pom",
+      "url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-api/1.41.0/opentelemetry-api-1.41.0.pom",
+      "sha256": "bc1ef0f77b3bd6db0b7a6f1652fdb421698a0e54374504a7419fb1beb4562993"
+    },
+    {
+      "path": "opentelemetry-api-1.41.0.jar",
+      "url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-api/1.41.0/opentelemetry-api-1.41.0.jar",
+      "sha256": "9336668f388de68a0a2c3e114154febd29db19a7644f27c4eba548f5de852258"
+    },
+    {
+      "path": "caffeine-2.9.3.pom",
+      "url": "https://repo.maven.apache.org/maven2/com/github/ben-manes/caffeine/caffeine/2.9.3/caffeine-2.9.3.pom",
+      "sha256": "6fa4f1c10192806f8ef05b5d4be7bd9f5ce58b876f64364d4e90c3fc092323dc"
+    },
+    {
+      "path": "caffeine-2.9.3.jar",
+      "url": "https://repo.maven.apache.org/maven2/com/github/ben-manes/caffeine/caffeine/2.9.3/caffeine-2.9.3.jar",
+      "sha256": "1e0a7bbef1dd791653143f3f05d0e489934bf5481e58a87c9e619cd46b68729b"
+    },
+    {
+      "path": "kotlin-stdlib-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.4.20/kotlin-stdlib-2.4.20.pom",
+      "sha256": "bd69b382dba8e2b7ae3846375eb2f1389017eb908987277051ae4e3acec8c938"
+    },
+    {
+      "path": "kotlin-stdlib-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.4.20/kotlin-stdlib-2.4.20.jar",
+      "sha256": "2226de463d309d4a5500a481320b3dea515a6981dcae1def531fbc158884e25f"
+    },
+    {
+      "path": "kotlin-compiler-embeddable-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.4.20/kotlin-compiler-embeddable-2.4.20.pom",
+      "sha256": "269d98cc4c68670c11e4aeb404e1c7c6f31b782321908d7268ba25cd236d59b2"
+    },
+    {
+      "path": "kotlin-compiler-embeddable-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.4.20/kotlin-compiler-embeddable-2.4.20.jar",
+      "sha256": "cf97161430683fb9af96dc6a7017ffae1fe8737b80d12eee11f2fe3e76f8ded8"
+    },
+    {
+      "path": "kotlinx-serialization-core-jvm-1.7.3.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-core-jvm/1.7.3/kotlinx-serialization-core-jvm-1.7.3.pom",
+      "sha256": "734f5f749208dd0bef3d98caa594cf9222afdf0fee5b6843347a8fe64e240427"
+    },
+    {
+      "path": "kotlinx-serialization-core-jvm-1.7.3.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-core-jvm/1.7.3/kotlinx-serialization-core-jvm-1.7.3.jar",
+      "sha256": "f0adde45864144475385cf4aa7e0b7feb27f61fcf9472665ed98cc971b06b1eb"
+    },
+    {
+      "path": "kotlin-util-io-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-io/2.4.20/kotlin-util-io-2.4.20.pom",
+      "sha256": "840f888f360f4395c0967e17620b96d8b0cf5180efe2a214fdabd4d66677665b"
+    },
+    {
+      "path": "kotlin-util-io-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-io/2.4.20/kotlin-util-io-2.4.20.jar",
+      "sha256": "944edbec0f4438b40999e81872f6b05b0604abac6ed11d72c27846d19835f24c"
+    },
+    {
+      "path": "kotlin-util-klib-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-klib/2.4.20/kotlin-util-klib-2.4.20.pom",
+      "sha256": "7fb051f47bbe01f318a1f434e2a7ed61a446fcc7a4d3ccb5a44c2b5105b0fd6b"
+    },
+    {
+      "path": "kotlin-util-klib-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-klib/2.4.20/kotlin-util-klib-2.4.20.jar",
+      "sha256": "3a58f9a82378e13ea5045266de2c09a8e5a05c44dd92131c4a83794fd3d1ceca"
+    },
+    {
+      "path": "opentelemetry-context-1.41.0.pom",
+      "url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-context/1.41.0/opentelemetry-context-1.41.0.pom",
+      "sha256": "cb3b396259983429594d62e476675cc00bb252c90d314d647a9b56dec23e5526"
+    },
+    {
+      "path": "opentelemetry-context-1.41.0.jar",
+      "url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-context/1.41.0/opentelemetry-context-1.41.0.jar",
+      "sha256": "5e3432a4464a432abfdab73be7142e516d25a84aa8426fce1192ffb0532faa35"
+    },
+    {
+      "path": "annotations-13.0.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/annotations/13.0/annotations-13.0.pom",
+      "sha256": "965aeb2bedff369819bdde1bf7a0b3b89b8247dd69c88b86375d76163bb8c397"
+    },
+    {
+      "path": "annotations-13.0.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/annotations/13.0/annotations-13.0.jar",
+      "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+    },
+    {
+      "path": "kotlin-build-tools-api-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-api/2.4.20/kotlin-build-tools-api-2.4.20.pom",
+      "sha256": "e8cd9ffd7d0886ba1a1795cbf4a34a06681f184aa50f25686effeefb3c1f56f5"
+    },
+    {
+      "path": "kotlin-build-tools-api-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-api/2.4.20/kotlin-build-tools-api-2.4.20.jar",
+      "sha256": "47a622dce7231b1916334b69a00bc1094adf6577e6492f9f06b3d9c2450fe459"
+    },
+    {
+      "path": "kotlin-script-runtime-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-script-runtime/2.4.20/kotlin-script-runtime-2.4.20.pom",
+      "sha256": "dd0e3846b61a6d641300958cc52e4693cd7b47bd1d626505f383b2f9d23ade0e"
+    },
+    {
+      "path": "kotlin-script-runtime-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-script-runtime/2.4.20/kotlin-script-runtime-2.4.20.jar",
+      "sha256": "fc5a19df78be445d84e8352e0d01098a6a8181324aa50c6f7bf850338e81e1b4"
+    },
+    {
+      "path": "kotlin-reflect-1.6.10.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-reflect/1.6.10/kotlin-reflect-1.6.10.pom",
+      "sha256": "57905524274a00ae028aaccc27283f6bc5925a934a046c1cc5d06c8ee4d6d5a9"
+    },
+    {
+      "path": "kotlin-reflect-1.6.10.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-reflect/1.6.10/kotlin-reflect-1.6.10.jar",
+      "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+    },
+    {
+      "path": "kotlin-daemon-embeddable-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-embeddable/2.4.20/kotlin-daemon-embeddable-2.4.20.pom",
+      "sha256": "ca631ce7c7cc2a8ecb47d3462b429004c1cd3488437b3f739e35eafea2033bfb"
+    },
+    {
+      "path": "kotlin-daemon-embeddable-2.4.20.jar",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-embeddable/2.4.20/kotlin-daemon-embeddable-2.4.20.jar",
+      "sha256": "eef72cf8f17e6d98d33e5b7c7e1cab31a1cf5fc34084dd5e563e7b1f3ef53435"
+    },
+    {
+      "path": "kotlinx-coroutines-core-jvm-1.8.0.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.pom",
+      "sha256": "a5633abd53467ceb91622d81f2e982080877145e0b76e1b75788715434885d0b"
+    },
+    {
+      "path": "intellij-kotlinx-coroutines-core-jvm-1.8.0-intellij-13.jar",
+      "url": "https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/com/intellij/platform/kotlinx-coroutines-core-jvm/1.8.0-intellij-13/kotlinx-coroutines-core-jvm-1.8.0-intellij-13.jar",
+      "sha256": "48e61a763238a5153e536e69ee756e39fcd52337316f1e1649d59c542ec04296"
+    }
+  ],
+  "compiler": {
+    "kotlin": "2.4.20",
+    "toolchain": "0.13.0",
+    "jdk_major": 26,
+    "export_jars": [
+      "annotations-13.0.jar",
+      "caffeine-2.9.3.jar",
+      "checker-qual-3.43.0.jar",
+      "error_prone_annotations-2.28.0.jar",
+      "intellij-kotlinx-coroutines-core-jvm-1.8.0-intellij-13.jar",
+      "kotlin-build-tools-api-2.4.20.jar",
+      "kotlin-compiler-embeddable-2.4.20.jar",
+      "kotlin-daemon-embeddable-2.4.20.jar",
+      "kotlin-native-utils-2.4.20.jar",
+      "kotlin-reflect-1.6.10.jar",
+      "kotlin-script-runtime-2.4.20.jar",
+      "kotlin-stdlib-2.4.20.jar",
+      "kotlin-util-io-2.4.20.jar",
+      "kotlin-util-klib-2.4.20.jar",
+      "kotlinx-serialization-core-jvm-1.7.3.jar",
+      "opentelemetry-api-1.41.0.jar",
+      "opentelemetry-context-1.41.0.jar",
+      "swift-export-embeddable-2.4.20.jar"
+    ],
+    "external_libraries": [
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/foundation/foundation-iossimulatorarm64/1.12.1/foundation-iossimulatorarm64-1.12.1.klib",
+        "sha256": "ee5692cdf88fe24c0e4f0c9db43a9e41ba117564def933c232f49184b1506aa8"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/material3/material3-iossimulatorarm64/1.12.0-alpha03/material3-iossimulatorarm64-1.12.0-alpha03.klib",
+        "sha256": "46a55c65db7ba96bed6106c5dd7fe00cfa2fef317a56afdbc3908a3740ec7f82"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/runtime/runtime-iossimulatorarm64/1.12.1/runtime-iossimulatorarm64-1.12.1.klib",
+        "sha256": "7c7b36480e60bee34c524646d2e72d421b78304c3da6ad4c4d80fad75e4cab4c"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/components/components-resources-iosSimulatorArm64/1.12.1/components-resources-iosSimulatorArm64-1.12.1.klib",
+        "sha256": "643fd3af51156571d5e36e9b99a2f706c1856ec1133211626b049325f454930c"
+      },
+      {
+        "relative_path": ".m2.cache/dev/zacsweers/metro/runtime-iossimulatorarm64/1.4.5/runtime-iossimulatorarm64-1.4.5.klib",
+        "sha256": "597da18aec956953fb48f41a0e188d68fd407d16fb6fa823314d8fd3c461c2bb"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/kotlinx-coroutines-core-iossimulatorarm64/1.11.0/kotlinx-coroutines-core-iossimulatorarm64-1.11.0.klib",
+        "sha256": "3200d59215e7f4c6ffccc32d30d05e5425d80144a8a7bafb70f99d86b9402379"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/collection/collection-iossimulatorarm64/1.5.0/collection-iossimulatorarm64-1.5.0.klib",
+        "sha256": "d437ac17cea331234060bb90fe17118e48d58487034c71881fa081c367d7f703"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/animation/animation-iossimulatorarm64/1.12.1/animation-iossimulatorarm64-1.12.1.klib",
+        "sha256": "3162382f875ecec82751d926397b33e7dc6547c1b9faa0313f0ef0a2d473d33a"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/foundation/foundation-layout-iossimulatorarm64/1.12.1/foundation-layout-iossimulatorarm64-1.12.1.klib",
+        "sha256": "25daf7e45a12e2e119c39a4b6e04cfbaac6fcbe9f1828221c9b61491142f29d7"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-iossimulatorarm64/1.12.1/ui-iossimulatorarm64-1.12.1.klib",
+        "sha256": "2dd05c72adf504f898693736f1ded235b1611f97a18ea63221cb0e7b4783b751"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-text-iossimulatorarm64/1.12.1/ui-text-iossimulatorarm64-1.12.1.klib",
+        "sha256": "e917ca8ce1295721cf4916f9e390af96d8bc596146d82d532fadb901764092e0"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-uikit-iossimulatorarm64/1.12.1/ui-uikit-iossimulatorarm64-1.12.1.klib",
+        "sha256": "6044080304fb5792d093145e7c79dd451d55967fca869014984f903b293f73d8"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-uikit-iossimulatorarm64/1.12.1/ui-uikit-iossimulatorarm64-1.12.1-cinterop-utils.klib",
+        "sha256": "26e1d13042b793c5b2a5069ce0da8e9a1d6236b14cbf80c1930e6cf7ea344d87"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-util-iossimulatorarm64/1.12.1/ui-util-iossimulatorarm64-1.12.1.klib",
+        "sha256": "386c740dcd85731d20ea4204cf27413691fe6feb8dd966cfe8ff57fe0b35a231"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/atomicfu-iossimulatorarm64/0.32.1/atomicfu-iossimulatorarm64-0.32.1.klib",
+        "sha256": "10100e1e68f25dd209fa089bbc9344c3aa8430e87122f1dd9c8b85e1cc46c7f2"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/atomicfu-iossimulatorarm64/0.32.1/atomicfu-iossimulatorarm64-0.32.1-cinterop-interop.klib",
+        "sha256": "c6ba3b588ffae909ac021105ba87dfde5a80de19e2679413f36f05b87e7fa8e2"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/skiko/skiko-iossimulatorarm64/0.150.1/skiko-iossimulatorarm64-0.150.1.klib",
+        "sha256": "f6d557c83ce431988913341d1030e188e4ac310cbaca71a2f39cc4ebe370f09f"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/skiko/skiko-iossimulatorarm64/0.150.1/skiko-iossimulatorarm64-0.150.1-cinterop-uikit.klib",
+        "sha256": "bf60cbf0d6aa8c27930ce5d66f261b0fcaa44df2cc26e8ab2e35111799ec6ee3"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/graphics/graphics-shapes-iossimulatorarm64/1.1.0/graphics-shapes-iossimulatorarm64-1.1.0.klib",
+        "sha256": "e2f76a1fe4766bc986962f22a6124d17ca3c6714acd4ccf54d13088373592f67"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/animation/animation-core-iossimulatorarm64/1.12.1/animation-core-iossimulatorarm64-1.12.1.klib",
+        "sha256": "e8a0d60f5f9e4c049124b991b2deea79eb3816540dffc4d5efecd85640353734"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/material/material-ripple-iossimulatorarm64/1.12.0-beta01/material-ripple-iossimulatorarm64-1.12.0-beta01.klib",
+        "sha256": "fc5531a3bac48c0dd8c646163bd6d43e0849e14c102ca48f70cfe7b3bcebfddc"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-backhandler-iossimulatorarm64/1.12.1/ui-backhandler-iossimulatorarm64-1.12.1.klib",
+        "sha256": "fb7da9cf70e2ae239d1f8df7cbe0c7b571da8966dcecf6cde65f77d1fc5b4027"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/kotlinx-datetime-iossimulatorarm64/0.7.1/kotlinx-datetime-iossimulatorarm64-0.7.1.klib",
+        "sha256": "93536c5776c0d4a6a2d49320b3da8723a0ceb7bd120ad07e02d48db85b2d0688"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/compose/runtime/runtime-iossimulatorarm64/1.12.1/runtime-iossimulatorarm64-1.12.1.klib",
+        "sha256": "61f989e21ff37301645032e2e52801a87bf6a4e6567073148b708199fa0e308e"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/annotation/annotation-iossimulatorarm64/1.9.1/annotation-iossimulatorarm64-1.9.1.klib",
+        "sha256": "370abeae251a2f69bc38cdbed2e19ee2fab102c373875386141c34eb8075db8d"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-geometry-iossimulatorarm64/1.12.1/ui-geometry-iossimulatorarm64-1.12.1.klib",
+        "sha256": "b09b9fe1f9a58b043b8f58752a51654b2475e2e64ef1c45dfc944a9833d8f5e3"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-graphics-iossimulatorarm64/1.12.1/ui-graphics-iossimulatorarm64-1.12.1.klib",
+        "sha256": "0e66920af40232c72b47213f924a0312567f89f4a22bfbaf7a9c831fe9a08194"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/ui/ui-unit-iossimulatorarm64/1.12.1/ui-unit-iossimulatorarm64-1.12.1.klib",
+        "sha256": "4fd3834b046c2a27d50e9b6f3b05913e393a2886d038836c658c485e0466c832"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/compose/runtime/runtime-retain-iossimulatorarm64/1.12.1/runtime-retain-iossimulatorarm64-1.12.1.klib",
+        "sha256": "9ad511a11ea6ba8f86180b4b9c625699b813423fb51b5075638340a749b5288f"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-viewmodel-compose-iossimulatorarm64/2.11.0/lifecycle-viewmodel-compose-iossimulatorarm64-2.11.0.klib",
+        "sha256": "2e590b2a1be5cf3178aff2ae70d5b90e399f1151e82f8e7c606392384236751e"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-viewmodel-savedstate-iossimulatorarm64/2.11.0/lifecycle-viewmodel-savedstate-iossimulatorarm64-2.11.0.klib",
+        "sha256": "8dce7df6c2d8318eec4aa7fe065a693232e7dda3e132d319766bb7ac4a96c8bb"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/savedstate/savedstate-compose-iossimulatorarm64/1.4.0/savedstate-compose-iossimulatorarm64-1.4.0.klib",
+        "sha256": "0b6f97acfee864c3ca3ed46750d3975738dc28c81eab9ac5953d2f452656b95f"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/androidx/lifecycle/lifecycle-runtime-compose-uikitsimarm64/2.9.6/lifecycle-runtime-compose-uikitsimarm64-2.9.6.klib",
+        "sha256": "4880c6df470d1ee3ec4f5b1fa5381892b627f275fce3719a0a9d32b119e8b3b4"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/androidx/navigationevent/navigationevent-compose-iossimulatorarm64/1.1.0/navigationevent-compose-iossimulatorarm64-1.1.0.klib",
+        "sha256": "36da927ef084ab195cd8543258a360b09b9c5609c0f108a0457d370311ad7066"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/compose/runtime/runtime-saveable-iossimulatorarm64/1.12.1/runtime-saveable-iossimulatorarm64-1.12.1.klib",
+        "sha256": "632a4c860e07a60099be0535dc2525aca6e5e0f921e2068652776581b9dbc2f4"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/kotlinx/kotlinx-serialization-core-iossimulatorarm64/1.7.3/kotlinx-serialization-core-iossimulatorarm64-1.7.3.klib",
+        "sha256": "7dbfefcd26b4b71b1b1d0653539e18ef42c92eec60855d92c236c6bdb1755ab8"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/compose/runtime/runtime-annotation-iossimulatorarm64/1.12.1/runtime-annotation-iossimulatorarm64-1.12.1.klib",
+        "sha256": "3bbb7582edb7182298ed6c44809d8f28a6af6160ff84aa4f07413359b93333f1"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-viewmodel-iossimulatorarm64/2.11.0/lifecycle-viewmodel-iossimulatorarm64-2.11.0.klib",
+        "sha256": "9b9bb5a067336fee84fd6bd7b0f74f4ef5c9a6c097927a696b26de8804a602d7"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/compose/runtime/runtime-saveable-iossimulatorarm64/1.12.1/runtime-saveable-iossimulatorarm64-1.12.1.klib",
+        "sha256": "bbbd4272fd2386ee3ce3be40da80eda9048e428a2c30d39c23ad75f58d1254de"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-common-iossimulatorarm64/2.11.0/lifecycle-common-iossimulatorarm64-2.11.0.klib",
+        "sha256": "1afdb1ff365f59b4b2679bdac56e7b9aae7c239d9b2b9f10891a03dc93850a37"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-runtime-compose-iossimulatorarm64/2.11.0/lifecycle-runtime-compose-iossimulatorarm64-2.11.0.klib",
+        "sha256": "d04b002fbd6b28ad35a22a2b13d603c62d28cedbfc249f30cfdcb8f0fbeadc5a"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/savedstate/savedstate-iossimulatorarm64/1.4.0/savedstate-iossimulatorarm64-1.4.0.klib",
+        "sha256": "86d6f55a8a61273c7da2b5fdc813ee88a9fa4c269dd9981fdc4e2940c9be0435"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/navigationevent/navigationevent-compose-iossimulatorarm64/1.1.1/navigationevent-compose-iossimulatorarm64-1.1.1.klib",
+        "sha256": "997294b4c9688f3b17d6c0c6c40e3ffd3174f883d6c24545e5ad02fbc61e639c"
+      },
+      {
+        "relative_path": ".m2.cache/org/jetbrains/androidx/savedstate/savedstate-compose-uikitsimarm64/1.3.6/savedstate-compose-uikitsimarm64-1.3.6.klib",
+        "sha256": "ab0ceb3cfa4d34701a03093799e4dee8fa81bf2aa54a97d0ff45fc673581f3a0"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/lifecycle/lifecycle-runtime-iossimulatorarm64/2.11.0/lifecycle-runtime-iossimulatorarm64-2.11.0.klib",
+        "sha256": "c07787f86eefbfcb32cc63cef16e1ed9c8baed33b401e6ecc613c521c20f59fa"
+      },
+      {
+        "relative_path": ".m2.cache/androidx/navigationevent/navigationevent-iossimulatorarm64/1.1.1/navigationevent-iossimulatorarm64-1.1.1.klib",
+        "sha256": "955996f58150fb0164ad841e41d4181f342d3dd7eafb7103dfa60afcb71afd7e"
+      }
+    ],
+    "compose_plugin": {
+      "relative_path": ".m2.cache/org/jetbrains/kotlin/kotlin-compose-compiler-plugin-embeddable/2.4.20/kotlin-compose-compiler-plugin-embeddable-2.4.20.jar",
+      "sha256": "e6fc101fd0b8592911de57f96a75b09e0b6158eaccbc71ddd6ca82e05e0386a2"
+    },
+    "archive_flags": [
+      "-Xbinary=swiftExport=true",
+      "-opt-in",
+      "kotlin.experimental.ExperimentalNativeApi",
+      "-opt-in",
+      "kotlinx.cinterop.ExperimentalForeignApi",
+      "-opt-in",
+      "kotlin.native.internal.InternalForKotlinNative"
+    ],
+    "swift_flags": [
+      "-package-name",
+      "MobiSwiftExportCandidate"
+    ],
+    "metro_plugin": {
+      "relative_path": ".m2.cache/dev/zacsweers/metro/compiler/1.4.5/compiler-1.4.5.jar",
+      "sha256": "e94246f0f3af1f7e8b34d4238f5c95187abf69cb940bf96d239d4a731ebb824e"
+    }
+  },
+  "native": {
+    "package": "ios-app/Dependencies",
+    "lock": "ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+    "plist": "ios-app/src/Info.plist",
+    "assets": "ios-app/src/Assets.xcassets",
+    "sources": [
+      "scripts/maintenance/fixtures/swift-export/Admission.swift.template",
+      "scripts/maintenance/fixtures/swift-export/AppServices.swift.template",
+      "scripts/maintenance/fixtures/swift-export/CancellationRelay.swift.template",
+      "scripts/maintenance/fixtures/swift-export/ComposeDrainSupervisor.swift.template",
+      "scripts/maintenance/fixtures/swift-export/DenialUI.swift.template",
+      "scripts/maintenance/fixtures/swift-export/DrainSupervisor.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomeCounterLoadable.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomeFeature+Action.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomeFeature+State.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomeFeature.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomeFeatureClient.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomeHeroCard.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomePrimaryActionButton.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomeScreenContent.swift.template",
+      "scripts/maintenance/fixtures/swift-export/HomeView.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NativeHomeAccess.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NativeNearbyAccess.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapBasemapConfig.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapFeature+Action.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapFeature+State.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapFeature.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapFeatureClient.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapLocationClient.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapRenderer.swift.template",
+      "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapView.swift.template",
+      "scripts/maintenance/fixtures/swift-export/OwnedRoutes.swift.template",
+      "scripts/maintenance/fixtures/swift-export/Owners.swift.template",
+      "scripts/maintenance/fixtures/swift-export/Polling.swift.template",
+      "scripts/maintenance/fixtures/swift-export/RootScenario.swift.template",
+      "scripts/maintenance/fixtures/swift-export/Shutdown.swift.template",
+      "scripts/maintenance/fixtures/swift-export/TaskScope.swift.template",
+      "scripts/maintenance/fixtures/swift-export/iosApp.swift.template",
+      "scripts/maintenance/fixtures/swift-export/RuntimeSettings.swift.template",
+      "scripts/maintenance/fixtures/swift-export/SafeExecutor.swift.template",
+      "scripts/maintenance/fixtures/swift-export/ComposeJobQualification.swift.template",
+      "scripts/maintenance/fixtures/swift-export/TransportQualification.swift.template"
+    ],
+    "macros": [
+      "ComposableArchitectureMacros",
+      "CasePathsMacros",
+      "PerceptionMacros"
+    ],
+    "binary_artifacts": [
+      {
+        "url": "https://github.com/maplibre/maplibre-native/releases/download/ios-v6.27.0/MapLibre.dynamic.xcframework.zip",
+        "sha256": "57c610ca85c47a82deb24317e33dc72bb481024d99505cd5f8bd552048676c6b"
+      }
+    ]
+  },
+  "diagnostics": {
+    "native_warnings": "fail",
+    "generated": "fingerprint-review",
+    "runtime": "fingerprint-review",
+    "inheritance": "unresolved-adoption-gate"
+  },
+  "runtime_settings": {
+    "scope": "diagnostic-only",
+    "parent_reservations": 3,
+    "compose_jobs_per_owner": 1,
+    "polling_nanoseconds": 2000000,
+    "backoff_nanoseconds": 2000000,
+    "shutdown_observation_nanoseconds": 20000000
+  },
+  "cache_policy": {
+    "logical_payload_byte_limit": 4294967296,
+    "minimum_age_seconds": 604800
+  }
+}

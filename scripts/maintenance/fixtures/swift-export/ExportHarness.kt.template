@@ -1,0 +1,36 @@
+import java.nio.file.Path
+import org.jetbrains.kotlin.konan.target.Distribution
+import org.jetbrains.kotlin.konan.target.KonanTarget
+import org.jetbrains.kotlin.swiftexport.standalone.*
+import org.jetbrains.kotlin.swiftexport.standalone.config.*
+
+fun main(args: Array<String>) {
+    val output = Path.of(args[0])
+    val modules = args.drop(2).map { declaration ->
+        val (name, visibility, file) = declaration.split("=", limit = 3)
+        InputModule(name, Path.of(file), SwiftModuleConfig(
+            bridgeModuleName = "${name}Bridge",
+            shouldBeFullyExported = visibility == "full",
+            rootPackage = "studio.mekate.mobi",
+            unsupportedDeclarationReporterKind = UnsupportedDeclarationReporterKind.Inline,
+        ))
+    }.toSet()
+    val result = runSwiftExport(modules, SwiftExportConfig(
+        outputPath = output,
+        distribution = Distribution(args[1]),
+        konanTarget = KonanTarget.IOS_SIMULATOR_ARM64,
+        enableCoroutinesSupport = true,
+        stableDeclarationsOrder = true,
+        errorTypeStrategy = ErrorTypeStrategy.Fail,
+        unsupportedTypeStrategy = ErrorTypeStrategy.Fail,
+    )).getOrThrow()
+    for (module in result.sortedBy { it.name }) {
+        when (module) {
+            is SwiftExportModule.SwiftOnly -> println("MODULE\t${module.name}\tswift\t${module.swiftApi}\t\t\t\t")
+            is SwiftExportModule.BridgesToKotlin -> println("MODULE\t${module.name}\tbridge\t${module.files.swiftApi}\t${module.files.kotlinBridges}\t${module.files.cHeaderBridges}\t${module.bridgeName}\t${module.dependencies.joinToString(",") { it.name }}")
+        }
+    }
+    // Standalone analysis uses application-lifetime workers. Terminate this CLI
+    // only after runSwiftExport succeeded and every output descriptor was printed.
+    kotlin.system.exitProcess(0)
+}

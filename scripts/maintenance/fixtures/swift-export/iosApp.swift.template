@@ -1,0 +1,39 @@
+import MobiIOSDependencies
+import SwiftUI
+
+// Actual entry structure ported with explicit diagnostic controls.
+@main struct IOSApp: App {
+    @StateObject private var scenario = RootScenario()
+    var body: some Scene { WindowGroup { EntryContainer(scenario: scenario) } }
+}
+struct EntryContainer: View {
+    @ObservedObject var scenario: RootScenario
+    @Environment(\.scenePhase) private var scenePhase
+    var body: some View {
+        Group {
+            if scenario.rootEnabled, let services = scenario.services {
+                AppRootView(appServices: services, scenario: scenario).id(scenario.generation)
+            } else { Text("Diagnostic root removed").accessibilityIdentifier(scenario.accessibilityClientDone ? "mobi.ax.finished" : "mobi.ax.root-removed") }
+        }.task { await scenario.runOnce() }.onChange(of: scenePhase, initial: true) { _, value in scenario.sceneChanged(value) }
+    }
+}
+struct AppRootView: View {
+    weak var appServices: AppServices?
+    @ObservedObject var scenario: RootScenario
+    @SceneStorage("selectedAppDestination") private var selectedDestination = AppDestination.nearbyMap
+    var body: some View {
+        if let appServices {
+        TabView(selection: $selectedDestination) {
+            OwnedNativeHomeRoute(services: appServices, observer: scenario.observer)
+                .tabItem { Label("Native Home", systemImage: "iphone") }.tag(AppDestination.nativeHome)
+            OwnedNearbyRoute(services: appServices, observer: scenario.observer, input: scenario.input)
+                .tabItem { Label("Nearby Map", systemImage: "map") }.tag(AppDestination.nearbyMap)
+            SharedHomeDemoView(services: appServices, observer: scenario.observer)
+                .tabItem { Label("Shared UI", systemImage: "square.stack.3d.up") }.tag(AppDestination.sharedUI)
+        }
+        .onChange(of: selectedDestination, initial: true) { _, value in scenario.observed = value; print("MOBI_SELECTION_OBSERVED=\(value):revision=\(scenario.selectionRevision)") }
+        .onReceive(scenario.$selectionRevision.dropFirst()) { revision in print("MOBI_SELECTION_APPLY=\(scenario.requested):prior=\(selectedDestination):revision=\(revision)"); selectedDestination = scenario.requested }
+        }
+    }
+}
+enum AppDestination: String { case nativeHome, nearbyMap, sharedUI }
