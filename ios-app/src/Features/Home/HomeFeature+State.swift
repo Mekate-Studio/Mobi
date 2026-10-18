@@ -1,14 +1,9 @@
-import KotlinModules
 import MobiIOSDependencies
 
 extension HomeFeature {
     @ObservableState
     struct State: Equatable {
         var counterLoadable = HomeCounterLoadable.initial
-
-        mutating func apply(sharedState: HomeFeatureState) {
-            counterLoadable = HomeCounterLoadable(sharedLoadable: sharedState.counterLoadable)
-        }
 
         var title: String {
             "Shared feature, platform rendering"

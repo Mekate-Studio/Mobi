@@ -1,6 +1,6 @@
 @testable import app
 import Foundation
-@preconcurrency import KotlinModules
+import KotlinModules
 import MobiIOSDependencies
 import Testing
 
@@ -35,7 +35,7 @@ struct HomeFeatureTests {
         }
 
         // when / then
-        await store.receive(.sharedStateLoaded(HomeFeatureTestFactory.expectedState(loadable: .loaded(value: 1)))) {
+        await store.receive(.refreshResponse(.loaded(value: 1))) {
             $0 = HomeFeatureTestFactory.expectedState(loadable: .loaded(value: 1))
         }
     }
@@ -62,14 +62,7 @@ struct HomeFeatureTests {
 
         // when / then
         await store.receive(
-            .sharedStateLoaded(
-                HomeFeatureTestFactory.expectedState(
-                    loadable: .error(
-                        previousValue: nil,
-                        reason: .repositoryUnavailable,
-                    ),
-                ),
-            ),
+            .refreshResponse(.error(previousValue: nil, reason: .repositoryUnavailable)),
         ) {
             $0 = HomeFeatureTestFactory.expectedState(
                 loadable: .error(
@@ -78,6 +71,43 @@ struct HomeFeatureTests {
                 ),
             )
         }
+    }
+
+    @Test("should preserve live Home client states and payloads", arguments: [0, 8])
+    func shouldPreserveLiveHomeClientStatesAndPayloads(counterValue: Int) async {
+        // given
+        let client = HomeFeatureClient(service: HomeFeatureService(counterRepository: HomeCounterRepositoryStub()))
+
+        // when / then
+        #expect(client.initialState() == .initial)
+        #expect(
+            client.loadingState(counterValue)
+                == .loading(previousValue: counterValue > 0 ? counterValue : nil),
+        )
+        let refreshed = await client.refresh(counterValue)
+        #expect(refreshed == .loaded(value: 21))
+    }
+
+    @Test(
+        "should preserve live Home repository failures and previous values",
+        arguments: [0, 8], [HomeCounterLoadFailureReason.repositoryUnavailable, .unexpected],
+    )
+    func shouldPreserveLiveHomeRepositoryFailuresAndPreviousValues(
+        counterValue: Int,
+        reason: HomeCounterLoadFailureReason,
+    ) async {
+        // given
+        let repository = HomeCounterRepositoryStub(failureReason: reason)
+        let client = HomeFeatureClient(service: HomeFeatureService(counterRepository: repository))
+
+        // when
+        let refreshed = await client.refresh(counterValue)
+
+        // then
+        #expect(
+            refreshed
+                == .error(previousValue: counterValue > 0 ? counterValue : nil, reason: reason),
+        )
     }
 }
 
@@ -89,103 +119,42 @@ private enum HomeFeatureTestFactory {
         TestStore(initialState: HomeFeature.State()) {
             HomeFeature()
         } withDependencies: {
-            $0.homeFeatureClient = makeHomeFeatureClient(refreshResult: refreshResult)
-        }
-    }
-
-    static func makeHomeFeatureClient(
-        refreshResult: HomeCounterLoadable,
-    ) -> HomeFeatureClient {
-        HomeFeatureClient(
-            initialState: {
-                makeSharedState(loadable: .initial)
-            },
-            loadingState: { counterValue in
-                makeSharedState(
-                    loadable: .loading(previousValue: counterValue > 0 ? counterValue : nil),
-                )
-            },
-            refresh: { counterValue in
-                await Task.yield()
-                let resolvedLoadable: HomeCounterLoadable = switch refreshResult {
-                case .loaded:
-                    .loaded(value: nextCounterValue(after: counterValue))
-                case let .error(_, reason):
-                    .error(
-                        previousValue: counterValue > 0 ? counterValue : nil,
-                        reason: reason,
-                    )
-                default:
-                    refreshResult
-                }
-                return makeSharedState(loadable: resolvedLoadable)
-            },
-        )
-    }
-
-    static func makeSharedState(
-        loadable: HomeCounterLoadable,
-    ) -> HomeFeatureState {
-        HomeFeatureState(
-            counterLoadable: makeSharedLoadable(loadable: loadable),
-        )
-    }
-
-    static func expectedState(
-        loadable: HomeCounterLoadable,
-    ) -> HomeFeature.State {
-        var state = HomeFeature.State()
-        state.apply(
-            sharedState: makeSharedState(loadable: loadable),
-        )
-        return state
-    }
-
-    static func makeSharedLoadable(
-        loadable: HomeCounterLoadable,
-    ) -> CounterLoadable {
-        switch loadable {
-        case .initial:
-            CounterLoadableInitial.shared
-        case let .loading(previousValue):
-            CounterLoadableLoading(
-                previousValue: previousValue.map { KotlinInt(int: Int32($0)) },
-            )
-        case let .loaded(value):
-            CounterLoadableLoaded(value: Int32(value))
-        case let .error(previousValue, reason):
-            CounterLoadableError(
-                previousValue: previousValue.map { KotlinInt(int: Int32($0)) },
-                reason: makeSharedFailureReason(reason: reason),
+            $0.homeFeatureClient = HomeFeatureClient(
+                initialState: { .initial },
+                loadingState: { counterValue in
+                    .loading(previousValue: counterValue > 0 ? counterValue : nil)
+                },
+                refresh: { _ in
+                    await Task.yield()
+                    return refreshResult
+                },
             )
         }
     }
 
-    static func makeSharedFailureReason(
-        reason: HomeCounterLoadFailureReason,
-    ) -> CounterLoadFailureReason {
-        switch reason {
-        case .repositoryUnavailable:
-            CounterLoadFailureReasonRepositoryUnavailable.shared
-        case .unexpected:
-            CounterLoadFailureReasonUnexpected.shared
-        }
+    static func expectedState(loadable: HomeCounterLoadable) -> HomeFeature.State {
+        HomeFeature.State(counterLoadable: loadable)
+    }
+}
+
+private final class HomeCounterRepositoryStub: NSObject, CounterRepository {
+    let failureReason: HomeCounterLoadFailureReason?
+
+    init(failureReason: HomeCounterLoadFailureReason? = nil) {
+        self.failureReason = failureReason
     }
 
-    static func nextCounterValue(after counterValue: Int) -> Int {
-        if counterValue < 1 {
-            return 1
+    func fetchNextCounterValue(
+        currentCounterValue _: Int32,
+        completionHandler: @escaping (KotlinInt?, (any Error)?) -> Void,
+    ) {
+        switch failureReason {
+        case nil:
+            completionHandler(KotlinInt(int: 21), nil)
+        case .repositoryUnavailable?:
+            completionHandler(nil, CounterRepositoryException(message: "Repository test failure").asError())
+        case .unexpected?:
+            completionHandler(nil, KotlinIllegalStateException(message: "Unexpected test failure").asError())
         }
-
-        var previous = 0
-        var current = 1
-
-        while current <= counterValue {
-            let next = previous + current
-            previous = current
-            current = next
-        }
-
-        return current
     }
 }

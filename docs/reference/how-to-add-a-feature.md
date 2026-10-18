@@ -299,6 +299,13 @@ payloads, typed failure reasons and explicit feature factories; do not hide a
 missing case behind a string tag, `else` or native default branch. See the
 [accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
 
+Home's [`HomeFeatureClient`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
+copies shared state into the existing `Sendable` native counter value before
+returning it to the reducer. Its Kotlin projection is private to that client;
+Home's reducer, actions and presentation state use native values. Keep business
+transitions in Kotlin. The adapter still needs the current visitors tracked as
+[IOS-01](../maintenance/interop-workarounds.md); moving conversion does not retire them.
+
 ### 6. Decide whether shared Compose UI is worth it
 
 Only add `shared-ui-*` when the feature benefits from a reusable shared screen.
