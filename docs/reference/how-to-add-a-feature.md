@@ -343,6 +343,12 @@ Current repo conventions:
 - Kotlin tests use BDD-style names like `should have state X when Y`
 - Kotlin tests should use explicit `given`, `when`, and `then` sections
 - Swift tests use Swift Testing with `@Test`
+- Keep TCA feature suites nested under
+  [`NativeFeatureTests`](../../ios-app/tests/NativeFeatureTests.swift) while
+  IOS-13 applies; use extensions to keep feature test files separate. This protects
+  TCA's shared executor setting. Concurrency scenarios still overlap requests
+  within each test. Recheck parallel suites through the
+  [retirement registry](../../maintenance-interop-workarounds.json).
 - Tests needing object setup should use fixtures or factories instead of
   inlining noisy construction
 
