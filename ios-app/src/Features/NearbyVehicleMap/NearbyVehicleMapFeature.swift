@@ -44,6 +44,7 @@ struct NearbyVehicleMapFeature {
                 return refreshEffect(state: &state, nowMillis: nowMillis)
 
             case let .sharedStateLoaded(loadedState):
+                guard state.hasResolvedRiderLocation else { return .none }
                 state = loadedState
                 return .none
             }
