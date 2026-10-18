@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'run_store'
+require_relative 'interop_workarounds'
 require 'uri'
 
 module Maintenance
@@ -96,6 +97,8 @@ module Maintenance
                  'capability_regressed'
                elsif field.start_with?('matrix.')
                  'capability_evidence_changed'
+               elsif field.start_with?('workarounds.')
+                 'workaround_review_changed'
                elsif field.start_with?('releases.')
                  'release_evidence_changed'
                else
@@ -125,6 +128,7 @@ module Maintenance
         lines += ['', '| Upstream capability observation | Scope | Evidence state |', '| --- | --- | --- |']
         observations.each { |entry| lines << '| `' + entry.fetch('id') + '` | `' + entry.fetch('scope') + '` | `' + entry.fetch('state') + '` |' }
       end
+      lines += InteropWorkarounds.summary(observation.fetch('workarounds', {}))
       lines += ['', 'Missing capabilities: ' + observation.fetch('missing_capabilities').map { |s| '`' + s + '`' }.join(', ') + '.', '']
       lines.join("\n")
     end
