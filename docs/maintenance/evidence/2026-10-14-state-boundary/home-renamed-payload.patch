@@ -1,0 +1,62 @@
+--- a/shared-feature-home/src/CounterLoadable.kt
++++ b/shared-feature-home/src/CounterLoadable.kt
+@@ -8,7 +8,7 @@
+     ) : CounterLoadable
+ 
+     data class Loaded(
+-        val value: Int,
++        val count: Int,
+     ) : CounterLoadable
+ 
+     data class Error(
+@@ -21,7 +21,7 @@
+     when (this) {
+         CounterLoadable.Initial -> null
+         is CounterLoadable.Loading -> previousValue
+-        is CounterLoadable.Loaded -> value
++        is CounterLoadable.Loaded -> count
+         is CounterLoadable.Error -> previousValue
+     }
+ 
+--- a/shared-feature-home/src/HomeFeatureService.kt
++++ b/shared-feature-home/src/HomeFeatureService.kt
+@@ -30,7 +30,7 @@
+             state(
+                 counterLoadable =
+                     CounterLoadable.Loaded(
+-                        value = nextCounterValue,
++                        count = nextCounterValue,
+                     ),
+             )
+         } catch (error: CancellationException) {
+--- a/shared-ui-home/src/HomeContent.kt
++++ b/shared-ui-home/src/HomeContent.kt
+@@ -139,7 +139,7 @@
+         }
+ 
+         is CounterLoadable.Loaded -> {
+-            "The fake repository returned fibonacci counter value $value."
++            "The fake repository returned fibonacci counter value $count."
+         }
+ 
+         is CounterLoadable.Error -> {
+@@ -176,7 +176,7 @@
+         }
+ 
+         is CounterLoadable.Loaded -> {
+-            "Counter value: $value"
++            "Counter value: $count"
+         }
+ 
+         is CounterLoadable.Error -> {
+--- a/ios-app/pilot/swift/HomeCounterLoadable.swift
++++ b/ios-app/pilot/swift/HomeCounterLoadable.swift
+@@ -12,7 +12,7 @@
+     switch sharedValue.sealedType() {
+     case .initial: self = .initial
+     case let .loading(v): self = .loading(previousValue: v.value.previousValue.map(Int.init))
+-    case let .loaded(v): self = .loaded(value: Int(v.value.value))
++    case let .loaded(v): self = .loaded(value: Int(v.value.count))
+     case let .error(v):
+         self = .error(previousValue: v.value.previousValue.map(Int.init), reason: HomeCounterLoadFailureReason(sharedReason: v.value.reason))
+     }

@@ -1,0 +1,29 @@
+package studio.mekate.mobi.export.d2
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
+import platform.Foundation.NSThread
+import studio.mekate.mobi.core.CounterRepository
+import studio.mekate.mobi.core.CounterRepositoryException
+import studio.mekate.mobi.feature.home.HomeFeatureService
+import studio.mekate.mobi.export.home.HomeRequestOwner
+
+// Deterministic test-only repository; never part of shipping membership.
+class Scenario(noncooperative: Boolean, fail: Boolean) {
+    private val repository = GateRepository(noncooperative, fail)
+    private val service = HomeFeatureService(repository)
+    val facade = HomeRequestOwner(service, 1, 1)
+    fun completeBackend() { check(NSThread.isMainThread); repository.gate.complete(Unit) }
+    fun entered(): Int { check(NSThread.isMainThread); return repository.entered }
+}
+private class GateRepository(val noncooperative: Boolean, val fail: Boolean) : CounterRepository {
+    val gate = CompletableDeferred<Unit>()
+    var entered = 0
+    override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int {
+        check(NSThread.isMainThread); entered++
+        if (noncooperative) withContext(NonCancellable) { gate.await() } else gate.await()
+        check(NSThread.isMainThread)
+        if (fail) throw CounterRepositoryException()
+        return currentCounterValue + 1
+    }
+}

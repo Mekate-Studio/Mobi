@@ -1,0 +1,7 @@
+@_exported import MobiHome
+@_exported import MobiDI
+@_exported import MobiUI
+@_exported import ExportedKotlinPackages
+public typealias HomeFeatureService = ExportedKotlinPackages.studio.mekate.mobi.feature.home.HomeFeatureService
+public typealias SharedDependencies = ExportedKotlinPackages.studio.mekate.mobi.di.SharedDependencies
+public typealias SharedHomeViewControllerFactory = ExportedKotlinPackages.studio.mekate.mobi.ui.home.SharedHomeViewControllerFactory

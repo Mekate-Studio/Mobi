@@ -1,0 +1,5 @@
+import Foundation
+func forbidden(home: ExecutorHomeClient, nearby: ExecutorNearbyClient) throws {
+    _ = try home.initialSync()
+    _ = try nearby.initialSync()
+}

@@ -1,0 +1,3 @@
+import NativeBoundary
+@MainActor func nearby(_ client: NativeNearbyClient) async throws -> NearbyPresentation { try await client.refresh(1000) }
+func nativeCopy(_ value: NearbyPresentation) async -> NearbyPresentation { await Task.detached { value }.value }

@@ -1,0 +1,18 @@
+import XCTest
+import Darwin
+
+final class AccessibilityBootstrap: XCTestCase {
+    @MainActor func testObserveInstalledRehearsal() throws {
+        let app = XCUIApplication(bundleIdentifier: "studio.mekate.mobi.maintenance.swift-export-candidate")
+        app.activate()
+        _ = app.buttons.count
+        print("MOBI_AX_BRIDGE_READY"); fflush(nil)
+        for _ in 0..<480 {
+            if app.staticTexts["mobi.ax.finished"].exists { print("MOBI_AX_HOST_FINISHED"); fflush(nil); return }
+            XCTAssertNotEqual(app.state, .notRunning, "Host exited before observer completion handshake")
+            _ = app.buttons.count
+            Thread.sleep(forTimeInterval: 0.25)
+        }
+        XCTFail("Owned rehearsal host did not finish while observed")
+    }
+}

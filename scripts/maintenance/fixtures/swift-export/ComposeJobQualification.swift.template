@@ -1,0 +1,74 @@
+import Foundation
+import UIKit
+import MobiHome
+import MobiRouteProbe
+
+@MainActor final class ComposeJobQualification {
+    private var groups: [String] = []
+    func record(_ name: String, _ condition: Bool) {
+        precondition(condition,name);groups.append(name)
+        FileHandle.standardOutput.write(Data("JOB_CHECK=\(name)\n".utf8))
+    }
+    func until(_ condition: @MainActor () -> Bool) async throws {
+        let end=DispatchTime.now().uptimeNanoseconds+10_000_000_000
+        while !condition() {
+            if DispatchTime.now().uptimeNanoseconds>end { throw NSError(domain:"JobControlTimeout",code:1) }
+            try await Task.sleep(for:.milliseconds(2))
+        }
+    }
+    func run() async throws {
+        typealias Session=ExportedKotlinPackages.studio.mekate.mobi.routeprobe.RouteJobGateSession
+        typealias Owner=ExportedKotlinPackages.studio.mekate.mobi.routeprobe.HomeRouteOwner
+        let session=Session(),owner=Owner(service:session.service,maxJobs:1)
+        record("invalid_explicit_limit_rejected_inside_kotlin",session.invalidLimitRejected())
+        record("exact_home_service_and_empty_owner",owner.usesService(other:session.service) && owner.snapshot().activeJobs==0)
+        record("first_work_reserved_and_started",owner.startProbe(value:0))
+        try await until { session.enteredCount()==1 }
+        owner.burstProbe(count:20)
+        try await until { owner.snapshot().probeAttempts==20 }
+        let busy=owner.snapshot()
+        record("concurrent_burst_capped_before_backend_entry",busy.accepted==1 && busy.rejected==20 && busy.activeJobs==1 && busy.maximum==1 && session.enteredCount()==1 && session.maximumCount()==1)
+        record("busy_duplicate_direct_launch_refuses",!owner.startProbe(value:0) && owner.snapshot().rejected==21 && session.enteredCount()==1)
+        owner.retire();owner.retire()
+        record("retirement_keeps_noncooperative_job_reservation",!owner.isOpen && !owner.isDrained && owner.snapshot().activeJobs==1 && owner.snapshot().releases==0 && session.activeCount()==1 && owner.snapshot().retireTransitions==1)
+        record("retired_owner_refuses_new_job",!owner.startProbe(value:0) && session.enteredCount()==1)
+        session.releaseGate()
+        try await until { owner.isDrained }
+        let drained=owner.snapshot()
+        record("actual_completion_releases_once_and_fences_delivery",drained.activeJobs==0 && drained.releases==1 && drained.finished==1 && drained.delivered==0 && drained.publications==0 && session.returnedCount()==1 && session.activeCount()==0)
+        // A fresh owner on the same service can start after actual completion.
+        let fresh=Owner(service:session.service,maxJobs:1)
+        record("fresh_owner_same_service_admitted",fresh.usesService(other:session.service) && fresh.startProbe(value:1))
+        try await until { fresh.snapshot().releases==1 }
+        record("fresh_owner_publishes_and_releases_completed_job",fresh.snapshot().delivered==1 && fresh.snapshot().publications==1 && fresh.snapshot().activeJobs==0)
+        fresh.retire()
+        let attachSession=Session(),attach=Owner(service:attachSession.service,maxJobs:1)
+        attach.armRetireBeforeAttachment()
+        record("retirement_can_win_between_reserve_and_attach",attach.startProbe(value:0))
+        try await until { attach.isDrained }
+        record("pre_attachment_retirement_never_enters_backend",attach.snapshot().accepted==1 && attach.snapshot().releases==1 && attach.snapshot().finished==0 && attachSession.enteredCount()==0)
+        let failureSession=Session(),failure=Owner(service:failureSession.service,maxJobs:1)
+        record("loading_failure_cancelled_unstarted_job",failure.failLoadingProbe())
+        try await until { failure.snapshot().activeJobs==0 }
+        record("loading_failure_releases_once_without_backend",failure.snapshot().releases==1 && failureSession.enteredCount()==0 && failure.snapshot().finished==0)
+        failure.retire()
+        // Two owners share one service. The limit is per owner, explicitly not global.
+        let shared=Session(),a=Owner(service:shared.service,maxJobs:1),b=Owner(service:shared.service,maxJobs:1)
+        record("two_owners_each_admit_over_same_service",a.startProbe(value:0) && b.startProbe(value:0))
+        try await until { shared.enteredCount()==2 }
+        record("per_owner_limit_not_mislabeled_global",a.snapshot().maximum==1 && b.snapshot().maximum==1 && shared.maximumCount()==2)
+        a.retire();record("peer_retirement_does_not_retire_other_owner",b.isOpen && a.snapshot().activeJobs==1 && b.snapshot().activeJobs==1)
+        shared.releaseGate();try await until { a.isDrained && b.snapshot().releases==1 }
+        record("peer_can_publish_while_retired_peer_is_fenced",a.snapshot().publications==0 && b.snapshot().publications==1 && a.snapshot().releases==1 && b.snapshot().releases==1)
+        b.retire()
+        let two=Session(),capacityTwo=Owner(service:two.service,maxJobs:2)
+        record("explicit_second_limit_accepts_two_jobs",capacityTwo.startProbe(value:0) && capacityTwo.startProbe(value:0) && !capacityTwo.startProbe(value:0))
+        try await until { two.enteredCount()==2 }
+        record("second_limit_measured_independently",capacityTwo.snapshot().activeJobs==2 && capacityTwo.snapshot().maximum==2 && two.maximumCount()==2)
+        capacityTwo.retire();record("retired_second_limit_retains_both_jobs",capacityTwo.snapshot().activeJobs==2 && capacityTwo.snapshot().releases==0)
+        two.releaseGate();try await until { capacityTwo.isDrained }
+        record("second_limit_releases_both_after_real_completion",capacityTwo.snapshot().releases==2 && capacityTwo.snapshot().publications==0 && two.activeCount()==0)
+        FileHandle.standardOutput.write(Data("JOB_COMPLETED=0\n".utf8))
+
+    }
+}

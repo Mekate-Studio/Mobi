@@ -13,6 +13,15 @@ This project currently uses an early split of the target structure:
 - [`android-app/`](../../android-app): Android app host
 - [`ios-app/`](../../ios-app): iOS app host
 
+The opt-in [Swift export app pilot](../maintenance/swift-export-app-pilot.md)
+keeps iOS transport facades and its private Kotlin composition root in
+`shared-ios-export`, optional Compose route ownership in
+`shared-ios-export-compose`, and native adapters/reducers in `ios-app/pilot`.
+These modules participate in an explicit generated alternate configuration;
+the default iOS project continues to use the repaired direct integration.
+The pilot source closure links one Kotlin delivery and keeps experimental
+runtime settings and qualification evidence separate from production selection.
+
 The target architecture keeps that simple base, but grows it into a
 native-first app shell with shared business logic and selective shared UI.
 

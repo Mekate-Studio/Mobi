@@ -1,0 +1,31 @@
+--- a/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureState.kt
++++ b/shared-feature-nearby-vehicle-map/src/NearbyVehicleMapFeatureState.kt
+@@ -10,7 +10,7 @@
+ )
+ 
+ sealed interface RiderLocationState {
+-    data object Resolving : RiderLocationState
++
+ 
+     data class Available(
+         override val location: RiderLocation,
+@@ -29,14 +29,15 @@
+         VisibleRiderLocationState
+ 
+     data object Unavailable : RiderLocationState
++    data object Resolving : RiderLocationState
+ }
+ 
+ enum class RiderLocationBlockedReason {
++    TemporarilyUnavailable,
++    ApproximateOnly,
++    ServicesDisabled,
++    AccessRestricted,
+     AccessDenied,
+-    AccessRestricted,
+-    ServicesDisabled,
+-    ApproximateOnly,
+-    TemporarilyUnavailable,
+ }
+ 
+ interface VisibleRiderLocationState {

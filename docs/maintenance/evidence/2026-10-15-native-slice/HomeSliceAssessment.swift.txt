@@ -1,0 +1,171 @@
+#if MOBI_INTEROP_ASSESSMENT
+import Foundation
+import MobiIOSDependencies
+@_implementationOnly import MobiNativeServices
+import UIKit
+
+private typealias HomeFixture = ExportedKotlinPackages.studio.mekate.mobi.export.d2
+private typealias CohortFixture = ExportedKotlinPackages.studio.mekate.mobi.export.candidate
+
+@MainActor public enum HomeSliceAssessment {
+    private static func check(_ value: @autoclosure () -> Bool, _ message: String) {
+        precondition(value(), message)
+    }
+
+    private static func until(_ predicate: @MainActor () -> Bool) async throws {
+        let deadline = ContinuousClock.now.advanced(by: .seconds(4))
+        while !predicate() {
+            precondition(ContinuousClock.now < deadline, "Home assessment timed out")
+            try await Task.sleep(for: .milliseconds(2))
+        }
+    }
+
+    public static func run(home: NativeHomeRoute, nearby: NativeNearbyRoute) async -> String {
+        var checks: [String] = []
+        var cohorts: [[String: Any]] = []
+        do {
+            let pool = AdmissionPool(capacity: 1)
+            let drains = CompletionDrainSupervisor()
+            let fixture = HomeFixture.Scenario(noncooperative: false, fail: false)
+            let access = NativeHomeAccess(facade: fixture.facade, supervisor: drains, admission: pool)
+            let route = NativeHomeRoute(access: access)
+            let controller = route.makeViewController()
+            controller.loadViewIfNeeded()
+            check(controller.view != nil, "Home view controller not constructed")
+            checks.append("home-real-tca-and-view-controller")
+            route.store.send(.task)
+            check(route.store.counterLoadable == .initial, "wrong initial state")
+            checks.append("home-initial-native-presentation")
+            let success = route.store.send(.refreshTapped)
+            check(route.store.counterLoadable == .loading(previousValue: nil), "loading missing")
+            try await until { fixture.entered() == 1 }
+            checks.append("home-real-service-loading")
+            fixture.completeBackend()
+            await success.finish()
+            check(route.store.counterLoadable == .loaded(value: 1), "typed service success missing")
+            check(pool.metrics().active == 0 && drains.metrics().active == 0 && fixture.facade.completion.observerCount == 0, "success retained work")
+            checks.append("home-typed-success-and-balanced-capacity")
+            let stale = UUID()
+            route.store.send(.response(stale, .loaded(value: 999)))
+            check(route.store.counterLoadable == .loaded(value: 1), "stale reducer response accepted")
+            checks.append("home-stale-response-fenced")
+            let failureFixture = HomeFixture.Scenario(noncooperative: false, fail: true)
+            let failedRoute = NativeHomeRoute(access: NativeHomeAccess(facade: failureFixture.facade, supervisor: drains, admission: pool))
+            let failure = failedRoute.store.send(.refreshTapped)
+            try await until { failureFixture.entered() == 1 }
+            failureFixture.completeBackend()
+            await failure.finish()
+            check(failedRoute.store.counterLoadable == .error(previousValue: nil, reason: .repositoryUnavailable), "domain error missing")
+            check(failedRoute.store.boundaryFailure == nil && failedRoute.store.supportingText.contains("fake repository"), "domain error displayed as boundary failure")
+            checks.append("home-domain-failure-preserved")
+            let retry = failedRoute.store.send(.refreshTapped)
+            await retry.finish()
+            check(failureFixture.entered() == 2 && failedRoute.store.activeRequest == nil, "retry did not reach real service")
+            check(pool.metrics().active == 0 && failureFixture.facade.completion.observerCount == 0, "retry not balanced")
+            checks.append("home-retry-reenters-service")
+            let immediateFixture = HomeFixture.Scenario(noncooperative: false, fail: false)
+            immediateFixture.completeBackend()
+            let immediate = NativeHomeAccess(facade: immediateFixture.facade, supervisor: drains, admission: pool)
+            let immediateValue = try await immediate.refresh(3)
+            check(immediateValue == .loaded(value: 4), "immediate completion lost")
+            checks.append("home-completion-before-observation")
+            do {
+                _ = try immediate.loadingValue(Int.max)
+                preconditionFailure("invalid native counter accepted")
+            } catch HomeBoundaryFailure.invalidCounter {}
+            check(pool.metrics().active == 0, "invalid input acquired capacity")
+            checks.append("home-invalid-input-before-admission")
+            let earlyFixture = HomeFixture.Scenario(noncooperative: false, fail: false)
+            let earlyAccess = NativeHomeAccess(facade: earlyFixture.facade, supervisor: drains, admission: pool)
+            let early = Task { @MainActor in try await earlyAccess.refresh(0) }
+            early.cancel()
+            do { _ = try await early.value; preconditionFailure("cancelled request admitted") } catch is CancellationError {}
+            check(earlyFixture.entered() == 0 && pool.metrics().active == 0, "early cancellation reached backend")
+            checks.append("home-cancel-before-admission")
+            let lateFixture = HomeFixture.Scenario(noncooperative: true, fail: false)
+            var lateRoute: NativeHomeRoute? = NativeHomeRoute(access: NativeHomeAccess(facade: lateFixture.facade, supervisor: drains, admission: pool))
+            weak let weakRoute = lateRoute
+            let lateTask = lateRoute!.store.send(.refreshTapped)
+            try await until { lateFixture.entered() == 1 }
+            lateRoute!.store.send(.cancelRefresh)
+            await lateTask.finish()
+            check(lateRoute!.store.counterLoadable == .initial && lateRoute!.store.activeRequest == nil, "cancel did not restore presentation")
+            checks.append("home-tca-cancellation-restores-presentation")
+            lateRoute = nil
+            check(weakRoute == nil && drains.metrics().active == 1 && pool.metrics().active == 1, "cleanup retained route or lost live work")
+            checks.append("home-owner-independent-noncooperative-drain")
+            let blockedFixture = HomeFixture.Scenario(noncooperative: false, fail: false)
+            let blockedRoute = NativeHomeRoute(access: NativeHomeAccess(facade: blockedFixture.facade, supervisor: drains, admission: pool))
+            await blockedRoute.store.send(.refreshTapped).finish()
+            check(blockedRoute.store.admissionFailure == .full && blockedRoute.store.counterLoadable == .initial, "capacity failure presentation missing")
+            check(blockedFixture.entered() == 0, "denied request entered backend")
+            checks.append("home-capacity-denial-visible-without-backend-work")
+            lateFixture.completeBackend()
+            try await until { drains.metrics().active == 0 }
+            check(pool.metrics().active == 0 && lateFixture.facade.metrics().lateRejected == 1 && lateFixture.facade.completion.observerCount == 0, "late completion escaped or capacity leaked")
+            checks.append("home-late-completion-rejected-and-capacity-released")
+            let unblocked = blockedRoute.store.send(.refreshTapped)
+            try await until { blockedFixture.entered() == 1 }
+            blockedFixture.completeBackend()
+            await unblocked.finish()
+            check(blockedRoute.store.counterLoadable == .loaded(value: 1) && blockedRoute.store.admissionFailure == nil, "capacity retry failed")
+            checks.append("home-retry-after-capacity-release")
+            blockedRoute.retire()
+            await blockedRoute.store.send(.refreshTapped).finish()
+            check(blockedRoute.store.retired && blockedFixture.entered() == 1, "retired route admitted work")
+            checks.append("home-retirement-closes-admission")
+            let retiringFixture = HomeFixture.Scenario(noncooperative: true, fail: false)
+            let retiring = NativeHomeRoute(access: NativeHomeAccess(facade: retiringFixture.facade, supervisor: drains, admission: pool))
+            let retiringTask = retiring.store.send(.refreshTapped)
+            try await until { retiringFixture.entered() == 1 }
+            retiring.retire()
+            await retiringTask.finish()
+            check(retiring.store.retired && drains.metrics().active == 1 && pool.metrics().active == 1, "retirement abandoned live backend")
+            retiringFixture.completeBackend()
+            try await until { drains.metrics().active == 0 }
+            check(pool.metrics().active == 0 && retiringFixture.facade.metrics().delivered == 0 && retiringFixture.facade.completion.observerCount == 0, "retired request delivered or leaked")
+            checks.append("home-retirement-fences-live-noncooperative-work")
+            let relay = CancellationRelay()
+            var brokenClient = HomeFeatureClient(access: immediate, relay: relay)
+            brokenClient.refresh = { _ in throw HomeBoundaryFailure.invalidResult }
+            let brokenDependency = brokenClient
+            let broken = Store(initialState: HomeFeature.State()) { HomeFeature().dependency(\.homeFeatureClient, brokenDependency) }
+            await broken.send(.refreshTapped).finish()
+            check(broken.counterLoadable == .initial && broken.boundaryFailure == .invalidResult && broken.admissionFailure == nil, "boundary failure became domain state")
+            checks.append("home-boundary-failure-distinct-from-domain-state")
+            for policy: Int32 in [0, 1] {
+                let label = policy == 0 ? "main-confined" : "shared-operation-mutex"
+                let cohort = CohortFixture.CohortScenario(policy: policy)
+                check(cohort.sameHomeService(), "composition uses different Home service")
+                checks.append(label + "/same-home-service")
+                check(cohort.rejectsForeignHomeService(), "foreign service identity accepted")
+                checks.append(label + "/foreign-graph-rejected")
+                cohort.begin()
+                try await until { cohort.completed() }
+                let maximum = cohort.finish()
+                check(maximum == (policy == 0 ? 2 : 1), "repository overlap differs from policy")
+                cohorts.append(["policy": label, "maximumActive": maximum])
+                checks.append(label + "/real-repository-overlap-and-sequences")
+            }
+            checks += try await NearbySliceAssessment.run()
+            try await until { nearby.store.activeRequest == nil && nearby.store.canInteractWithVehicles }
+            guard case let .riderCentered(realScene) = nearby.store.mapContent else { preconditionFailure("Real graph map missing") }
+            check(!realScene.vehicleMarkers.isEmpty, "Real graph has no vehicles")
+            checks.append("native-composition-real-nearby-location-and-repository")
+            await home.store.send(.refreshTapped).finish()
+            check(home.store.counterLoadable == .loaded(value: 1) || home.store.counterLoadable == .error(previousValue: nil, reason: .repositoryUnavailable), "Real graph Home domain result missing")
+            checks.append("native-composition-real-home-service")
+            await nearby.store.send(.refreshTapped).finish()
+            check(nearby.store.activeRequest == nil && nearby.store.canInteractWithVehicles, "Real graph Nearby retry failed")
+            checks.append("native-composition-real-nearby-refresh")
+            return json(["state": "checks_passed_review_required", "scope": "provisional-real-Home-Nearby-TCA-MapLibre-and-native-cohort-only", "checks": checks, "cohorts": cohorts, "real_composition_home_result": String(describing: home.store.counterLoadable), "production_adoption": false])
+        } catch {
+            return json(["state": "failed", "error": String(describing: error), "checks": checks])
+        }
+    }
+
+    private static func json(_ value: [String: Any]) -> String {
+        String(data: try! JSONSerialization.data(withJSONObject: value, options: [.sortedKeys]), encoding: .utf8)!
+    }
+}
+#endif

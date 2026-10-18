@@ -1,0 +1,135 @@
+@file:OptIn(kotlin.native.runtime.NativeRuntimeApi::class, kotlin.ExperimentalStdlibApi::class, kotlinx.coroutines.InternalCoroutinesApi::class)
+package studio.mekate.mobi.lifetimeprobe
+
+import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlin.coroutines.ContinuationInterceptor
+import kotlin.time.TimeSource
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.native.runtime.GC
+import studio.mekate.mobi.core.CounterRepository
+import studio.mekate.mobi.di.SharedDependencies
+import studio.mekate.mobi.feature.home.HomeFeatureService
+
+// Isolated diagnostic decorator. The real Metro repository and its failure policy remain unchanged.
+class LifetimeSession {
+    private val start = TimeSource.Monotonic.markNow()
+    private val trace = atomic("")
+    private val requestJob = atomic<Job?>(null)
+    fun observe(label: String) { event(label, requestJob.value) }
+    fun traceSnapshot(): String = trace.value
+    private fun event(label: String, job: Job?, detail: String = "") {
+        val line = "${start.elapsedNow().inWholeMicroseconds}|$label|active=${job?.isActive}|cancelled=${job?.isCancelled}|completed=${job?.isCompleted}|$detail\n"
+        while (true) { val prior = trace.value; if (trace.compareAndSet(prior, prior + line)) return }
+    }
+    private val entered = atomic(0)
+    private val active = atomic(0)
+    private val maximum = atomic(0)
+    private val delegated = atomic(0)
+    private val delegateActive = atomic(0)
+    private val delegateMaximum = atomic(0)
+    private val completed = atomic(0)
+    private val failed = atomic(0)
+    private val cancelled = atomic(0)
+    private val finished = atomic(0)
+    private val waiting = atomic(0)
+    private val gate = atomic<CompletableDeferred<Unit>?>(null)
+    private val repository = SharedDependencies.createDefaultGraph().counterRepository
+    val service = HomeFeatureService(object : CounterRepository {
+        override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int {
+            val context = currentCoroutineContext()
+            val job = context[Job]
+            requestJob.value = job
+            event("entry", job, "dispatcher=${context[ContinuationInterceptor]}")
+            job?.invokeOnCompletion(onCancelling = true, invokeImmediately = true) { cause -> event("job_cancelling_or_normal_completion", job, "cause=${cause?.let { it::class.simpleName }}") }
+            job?.invokeOnCompletion { cause -> event("job_completed", job, "cause=${cause?.let { it::class.simpleName }}") }
+            entered.incrementAndGet()
+            updateMaximum(maximum, active.incrementAndGet())
+            try {
+                gate.value?.let { held ->
+                    event("gate_wait", job)
+                    waiting.incrementAndGet()
+                    try { held.await() } finally { waiting.decrementAndGet() }
+                }
+                event("before_delegate", job)
+                delegated.incrementAndGet()
+                updateMaximum(delegateMaximum, delegateActive.incrementAndGet())
+                try {
+                    return repository.fetchNextCounterValue(currentCounterValue).also { event("delegate_return", job); completed.incrementAndGet() }
+                } finally { delegateActive.decrementAndGet() }
+            } catch (error: CancellationException) {
+                event("caught_cancellation", job, "cause=${error::class.simpleName}")
+                cancelled.incrementAndGet()
+                throw error
+            } catch (error: Exception) {
+                event("caught_failure", job, "cause=${error::class.simpleName}")
+                failed.incrementAndGet()
+                throw error
+            } finally {
+                event("repository_finally", job)
+                requestJob.compareAndSet(job, null)
+                active.decrementAndGet()
+                finished.incrementAndGet()
+            }
+        }
+    })
+    fun armGate() {
+        check(active.value == 0)
+        check(gate.compareAndSet(null, CompletableDeferred()))
+    }
+    fun releaseGate() { gate.getAndSet(null)?.complete(Unit) }
+    fun resetIdleMetrics() {
+        check(active.value == 0 && delegateActive.value == 0 && waiting.value == 0)
+        check(gate.value == null)
+        trace.value = ""; requestJob.value = null
+        entered.value = 0; maximum.value = 0; delegated.value = 0; delegateMaximum.value = 0
+        completed.value = 0; failed.value = 0; cancelled.value = 0; finished.value = 0
+    }
+    fun snapshot(): RequestMetrics = RequestMetrics(
+        entered.value, active.value, maximum.value, delegated.value, delegateActive.value,
+        delegateMaximum.value, completed.value, failed.value, cancelled.value, finished.value, waiting.value,
+    )
+}
+
+private fun updateMaximum(target: kotlinx.atomicfu.AtomicInt, value: Int) {
+    while (true) { val previous = target.value; if (value <= previous || target.compareAndSet(previous, value)) return }
+}
+
+data class RequestMetrics(
+    val entered: Int,
+    val active: Int,
+    val maximum: Int,
+    val delegated: Int,
+    val delegateActive: Int,
+    val delegateMaximum: Int,
+    val completed: Int,
+    val failed: Int,
+    val cancelled: Int,
+    val finished: Int,
+    val waiting: Int,
+)
+
+// Collection is diagnostic only, after Swift/UI references have been dropped.
+fun collectDiagnosticGarbage(): Long { GC.collect(); return GC.lastGCInfo?.epoch ?: -1 }
+fun currentGcEpoch(): Long = GC.lastGCInfo?.epoch ?: -1
+
+
+// Separate scripted control; it deliberately defers cancellation to exercise the late-result fence.
+class NonCooperativeSession {
+    private val gate = CompletableDeferred<Unit>()
+    private val entered = atomic(0)
+    private val returned = atomic(0)
+    val service = HomeFeatureService(object : CounterRepository {
+        override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int {
+            entered.incrementAndGet()
+            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) { gate.await() }
+            returned.incrementAndGet()
+            return 1
+        }
+    })
+    fun hasEntered(): Boolean = entered.value == 1
+    fun hasReturned(): Boolean = returned.value == 1
+    fun releaseGate() { gate.complete(Unit) }
+}

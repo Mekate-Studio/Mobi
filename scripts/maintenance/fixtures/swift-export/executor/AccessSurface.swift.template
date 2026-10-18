@@ -1,0 +1,39 @@
+import Foundation
+
+// Typed stubs isolate the actual client closure's executor assertion. No Kotlin/TCA
+// business execution, capability lifecycle or dependency injection is claimed here.
+struct HomeCounterLoadable: Sendable { let value: Int32; init(nativeValue: Int32) { value = nativeValue } }
+struct NativeNearbyState: Sendable { let value: Int }
+struct NativeCoordinate: Sendable { let latitude: Double; let longitude: Double }
+enum NativeLocationBlocked: Sendable { case accessDenied, accessRestricted, servicesDisabled, approximateOnly, temporarilyUnavailable }
+enum NearbyVehicleMapFeature { enum LocationBlockedReason: Sendable { case accessDenied, accessRestricted, servicesDisabled, approximateOnly, temporarilyUnavailable } }
+@MainActor final class AccessCalls {
+    var count = 0
+    func record() {
+        count += 1
+        if let path = ProcessInfo.processInfo.environment["BODY_MARKER"] { _ = FileManager.default.createFile(atPath: path, contents: Data("access-body-entered".utf8)) }
+    }
+}
+@MainActor final class NativeHomeAccess {
+    let calls = AccessCalls()
+    func initialValue() throws -> Int32 { calls.record();return 1 }
+    func loadingValue(_ value: Int32) throws -> Int32 { calls.record();return value }
+    func refresh(_ value: Int32) async throws -> Int32 { calls.record();return value+1 }
+    func retire() { calls.record() }
+}
+@MainActor final class NativeNearbyAccess {
+    let calls = AccessCalls()
+    func initial() throws -> NativeNearbyState { calls.record();return NativeNearbyState(value: 1) }
+    func available(_ value: NativeNearbyState, _ coordinate: NativeCoordinate) throws -> NativeNearbyState { calls.record();return value }
+    func blocked(_ value: NativeNearbyState, _ reason: NativeLocationBlocked) throws -> NativeNearbyState { calls.record();return value }
+    func temporary(_ value: NativeNearbyState) throws -> NativeNearbyState { calls.record();return value }
+    func loading(_ value: NativeNearbyState) throws -> NativeNearbyState { calls.record();return value }
+    func refresh(_ value: NativeNearbyState, now: Int64) async throws -> NativeNearbyState { calls.record();return value }
+    func shouldRefresh(_ value: NativeNearbyState, now: Int64) throws -> Bool { calls.record();return true }
+    func timePassed(_ value: NativeNearbyState, now: Int64) throws -> NativeNearbyState { calls.record();return value }
+    func adoptResult(_ value: NativeNearbyState) throws { calls.record() }
+    func releaseOwned(_ value: NativeNearbyState) { calls.record() }
+    func discardUnclaimed(_ value: NativeNearbyState) { calls.record() }
+    func retire() { calls.record() }
+}
+@MainActor final class CancellationRelay { func deliver(_ id: UUID) {} }

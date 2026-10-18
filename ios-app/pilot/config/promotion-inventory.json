@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "entries": [
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/AccessibilityBootstrap.swift.txt",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/Admission.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/Aliases.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/AppServices.swift.template",
+      "disposition": "adapt-before-promotion"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/CancellationRelay.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/ComposeDrainSupervisor.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/ComposeJobQualification.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/DenialUI.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/DrainSupervisor.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/ExportHarness.kt.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeCounterLoadable.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeFacade.kt.template",
+      "disposition": "adapt-before-promotion"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeFeature+Action.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeFeature+State.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeFeature.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeFeatureClient.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeHeroCard.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomePrimaryActionButton.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeRouteOwner.kt.template",
+      "disposition": "adapt-before-promotion"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeScreenContent.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/HomeView.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/LifetimeProbe.kt.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NativeHomeAccess.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NativeNearbyAccess.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyFacade.kt.template",
+      "disposition": "adapt-before-promotion"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapBasemapConfig.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapFeature+Action.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapFeature+State.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapFeature.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapFeatureClient.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapLocationClient.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapRenderer.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/NearbyVehicleMapView.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/OwnedRoutes.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/Owners.swift.template",
+      "disposition": "adapt-before-promotion"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/Polling.swift.template",
+      "disposition": "adapt-before-promotion"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/README.md",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/ReorderedNearbyState.kt.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/RootScenario.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/RuntimeSettings.swift.template",
+      "disposition": "adapt-before-promotion"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/SafeExecutor.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/Shutdown.swift.template",
+      "disposition": "reusable-app-integration"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/TaskScope.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/TransportQualification.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/executor/AccessSurface.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/executor/DependencySurface.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/executor/Forbidden.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/executor/Probe.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/iosApp.swift.template",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/offline-style.json",
+      "disposition": "test-or-producer-only"
+    },
+    {
+      "source": "scripts/maintenance/fixtures/swift-export/reader.rb",
+      "disposition": "reusable-app-integration"
+    }
+  ],
+  "boundary": "Ship no root scenario, synthetic location/time, injected gate/failure, legacy facade, forced GC, probe scope or scripted launch automation. Preserve shared domain states and policies unchanged. The app root owns one delivery and exact service/repository instances."
+}

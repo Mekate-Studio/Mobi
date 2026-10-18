@@ -1,0 +1,1120 @@
+{
+  "schema": 1,
+  "date": "2026-10-15",
+  "scope": "provisional-real-Home-TCA-module-and-native-repository-cohort",
+  "assessment": "checks_passed_review_required",
+  "accountable_maintainer": "Jorge Castro",
+  "maintainer_disposition": "review_required",
+  "implementation_for_evaluation_authorized": true,
+  "production_adoption_authorized": false,
+  "source_head": "1a8197051117004ec9247b309e61179a8b612422",
+  "checkpoint_source_identity": "624db908840ddd4cfde5cd69903bc389faea6eab3d60cc758fa1e1b2f1e045d8",
+  "checkpoint_source_files": 840,
+  "existing_non_documentation_inputs_unchanged": 460,
+  "candidate_source_files": {
+    "ios-app/interop/home/Admission.swift": "5b534511afb15e2b5d4873aaa65f22be70dc3502375a937303884e0e2e32e0ed",
+    "ios-app/interop/home/CancellationRelay.swift": "f6bd4ae882dfa0c62eeb5f61775689ce4d452d0c47c07f6d631a6c22c9772ebd",
+    "ios-app/interop/home/HomeBoundaryFailure.swift": "4c6c78c7d65a120a81af8450629c1b5c3d27758b97e5a3c7f9b08bc7ee22890a",
+    "ios-app/interop/home/HomeCounterLoadable.swift": "1de62941a1953d26425af68970af737ab2421ac64a9fbfd811d174457cfc2fe6",
+    "ios-app/interop/home/HomeFeature+Action.swift": "5b17aa5efa6593b32c89518d8b28e225a56f93eb62db4427ab8922eadbd005ad",
+    "ios-app/interop/home/HomeFeature+State.swift": "c6e0e18dd53a8b21b66f218c3509ad401c79b08ea1143d9d9f2cbaa455bd0c3e",
+    "ios-app/interop/home/HomeFeature.swift": "fbf3aff0e0903133f05fc1d73dce9516235ec296898b9cc4f00e6557c33c59d8",
+    "ios-app/interop/home/HomeFeatureClient.swift": "ce01e3416a0c64b1d5770f43abd0ae84041dc04f9d8c24ac9cc0562040ae64be",
+    "ios-app/interop/home/HomeHeroCard.swift": "423399ffcf00b2c5642926066cf7d1d065094bad5093b96d1973b98fe66fe2d1",
+    "ios-app/interop/home/HomePrimaryActionButton.swift": "e4169a4bbf2d9f70c64167685485f9d7a271340b443fa364ff5a1ff5423b27b1",
+    "ios-app/interop/home/HomeScreenContent.swift": "f196bf82ab24c850aed69667414641d6642efcef48966873ddedb76d97913731",
+    "ios-app/interop/home/HomeView.swift": "56a504e58ad476ccfda77678e4e6d617e9c394b8036fb044ceac807fa4977441",
+    "ios-app/interop/home/NativeHomeAccess.swift": "ccfb9953bcd20197031d238ab50185f8330e4fad2a3650091b621963ce541574",
+    "ios-app/interop/home/NativeHomeServices.swift": "44aecfa0bf6d9cf1c18bb3951a2b1d4381e54bcbadc0c11d0c700cdd40ea968a",
+    "ios-app/interop/home/RequestCompletion.swift": "24bf3bb3fea838ed1bafadd67d6897ff98e6d582e03b7b2414492f90642c3d3b",
+    "shared-ios-export/src/HomeRequestOwner.kt": "06f3dceae0176c03e7fa31a6979b05fb8430c698051410ea64cdbf0199c36aab",
+    "shared-ios-export/src/HomeRequestCompletion.kt": "d8bbc0926156585bb9f19671aca6d8c96526f33362e4efaf716bd708e1ae7252"
+  },
+  "compiled_native_sources": {
+    "Admission.swift": "5b534511afb15e2b5d4873aaa65f22be70dc3502375a937303884e0e2e32e0ed",
+    "CancellationRelay.swift": "f6bd4ae882dfa0c62eeb5f61775689ce4d452d0c47c07f6d631a6c22c9772ebd",
+    "HomeBoundaryFailure.swift": "4c6c78c7d65a120a81af8450629c1b5c3d27758b97e5a3c7f9b08bc7ee22890a",
+    "HomeCounterLoadable.swift": "1de62941a1953d26425af68970af737ab2421ac64a9fbfd811d174457cfc2fe6",
+    "HomeFeature+Action.swift": "5b17aa5efa6593b32c89518d8b28e225a56f93eb62db4427ab8922eadbd005ad",
+    "HomeFeature+State.swift": "c6e0e18dd53a8b21b66f218c3509ad401c79b08ea1143d9d9f2cbaa455bd0c3e",
+    "HomeFeature.swift": "fbf3aff0e0903133f05fc1d73dce9516235ec296898b9cc4f00e6557c33c59d8",
+    "HomeFeatureClient.swift": "ce01e3416a0c64b1d5770f43abd0ae84041dc04f9d8c24ac9cc0562040ae64be",
+    "HomeHeroCard.swift": "423399ffcf00b2c5642926066cf7d1d065094bad5093b96d1973b98fe66fe2d1",
+    "HomePrimaryActionButton.swift": "e4169a4bbf2d9f70c64167685485f9d7a271340b443fa364ff5a1ff5423b27b1",
+    "HomeScreenContent.swift": "f196bf82ab24c850aed69667414641d6642efcef48966873ddedb76d97913731",
+    "HomeView.swift": "56a504e58ad476ccfda77678e4e6d617e9c394b8036fb044ceac807fa4977441",
+    "NativeHomeAccess.swift": "ccfb9953bcd20197031d238ab50185f8330e4fad2a3650091b621963ce541574",
+    "NativeHomeServices.swift": "44aecfa0bf6d9cf1c18bb3951a2b1d4381e54bcbadc0c11d0c700cdd40ea968a",
+    "RequestCompletion.swift": "24bf3bb3fea838ed1bafadd67d6897ff98e6d582e03b7b2414492f90642c3d3b",
+    "HomeSliceAssessment.swift": "6d5be8f24589fd311a1be8f860dfe3827087b842f2caf16c2b081944ef3fde59"
+  },
+  "tool_tuple": "a44ec744bb9333e3ec14ea5786aa9ce3e0db45a13246e74b61588070803ac97d",
+  "tools": {
+    "swift_version": "swift-driver version: 1.168.6 Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+    "xcode_version": "Xcode 27.0\nBuild version 27A266a",
+    "sdk_version": "27.0",
+    "files": [
+      {
+        "name": "java",
+        "sha256": "f6211ec0d5650f4ac379331c4bce6505ebecbe316c2d57491835e9030d1bc34e"
+      },
+      {
+        "name": "release",
+        "sha256": "b56984ed48ac3049dbd1590cf219ecfb13eeefed36b5ab80032edde84da95f96"
+      },
+      {
+        "name": "modules",
+        "sha256": "e8c40e0c4bad803eee25a18c31128c3bdc6fb141746ed79d8d49caed0e1f2db9"
+      },
+      {
+        "name": "swift-frontend",
+        "sha256": "cf81104bf554eef05e28a8bb5285c763f1323b4511b944d755d8bdd6cb8db717"
+      },
+      {
+        "name": "clang",
+        "sha256": "1590ac950a3d627817d09ade5cb60b2115f17a72182a3141e010b4bcc482a0c9"
+      },
+      {
+        "name": "xcodebuild",
+        "sha256": "7d9561a7f8e3c5d70a571422a4522de986c003879dab3bf7562963b6cdc3e658"
+      },
+      {
+        "name": "xcodebuild",
+        "sha256": "c493a97b720c6afabad03b00577d4387fe9b01d44e57be26caae81511e5820bb"
+      },
+      {
+        "name": "SDKSettings.json",
+        "sha256": "b8c86f02919d336244af1509b95b3bdaf9fd1151ee97ba188f5f77b301ed4a1e"
+      },
+      {
+        "name": "SDKSettings.plist",
+        "sha256": "d217fa1ae2a58d197871b59b93ac5970dc6422e8782a7b486d67768285cbbffa"
+      }
+    ]
+  },
+  "profile": "coroutine-swift5",
+  "native_swift_mode": "6",
+  "checker": "CheckImplementationOnly",
+  "target": "arm64-apple-ios26.0-simulator",
+  "runtime_identifier": "com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+  "macro_validation": {
+    "explicit_argument": "-IDESkipMacroFingerprintValidation=NO",
+    "unapproved_macros_refused": true,
+    "exact_locked_approvals": [
+      {
+        "packageIdentity": "swift-composable-architecture",
+        "targetName": "ComposableArchitectureMacros",
+        "fingerprint": "e2fa1df6cd9eec6fa6314aa20513e47da576f24e"
+      },
+      {
+        "packageIdentity": "swift-case-paths",
+        "targetName": "CasePathsMacros",
+        "fingerprint": "206cbce3882b4de9aee19ce62ac5b7306cadd45b"
+      },
+      {
+        "packageIdentity": "swift-dependencies",
+        "targetName": "DependenciesMacrosPlugin",
+        "fingerprint": "706feb7858a7f6c242879d137b8ee30926aa5b26"
+      },
+      {
+        "packageIdentity": "swift-perception",
+        "targetName": "PerceptionMacros",
+        "fingerprint": "25ac73741c3436605d61eceb5207e896973918e7"
+      }
+    ],
+    "locked_pins": [
+      {
+        "identity": "combine-schedulers",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/combine-schedulers",
+        "state": {
+          "revision": "fd16d76fd8b9a976d88bfb6cacc05ca8d19c91b6",
+          "version": "1.1.0"
+        }
+      },
+      {
+        "identity": "maplibre-gl-native-distribution",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/maplibre/maplibre-gl-native-distribution",
+        "state": {
+          "revision": "84a79bc375a301169390ac110c868f06c857b83f",
+          "version": "6.27.0"
+        }
+      },
+      {
+        "identity": "swift-case-paths",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-case-paths",
+        "state": {
+          "revision": "206cbce3882b4de9aee19ce62ac5b7306cadd45b",
+          "version": "1.7.3"
+        }
+      },
+      {
+        "identity": "swift-clocks",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-clocks",
+        "state": {
+          "revision": "cc46202b53476d64e824e0b6612da09d84ffde8e",
+          "version": "1.0.6"
+        }
+      },
+      {
+        "identity": "swift-collections",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/apple/swift-collections",
+        "state": {
+          "revision": "6675bc0ff86e61436e615df6fc5174e043e57924",
+          "version": "1.4.1"
+        }
+      },
+      {
+        "identity": "swift-composable-architecture",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-composable-architecture",
+        "state": {
+          "revision": "e2fa1df6cd9eec6fa6314aa20513e47da576f24e",
+          "version": "1.26.0"
+        }
+      },
+      {
+        "identity": "swift-concurrency-extras",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-concurrency-extras",
+        "state": {
+          "revision": "5a3825302b1a0d744183200915a47b508c828e6f",
+          "version": "1.3.2"
+        }
+      },
+      {
+        "identity": "swift-custom-dump",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-custom-dump",
+        "state": {
+          "revision": "06c57924455064182d6b217f06ebc05d00cb2990",
+          "version": "1.5.0"
+        }
+      },
+      {
+        "identity": "swift-dependencies",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-dependencies",
+        "state": {
+          "revision": "706feb7858a7f6c242879d137b8ee30926aa5b26",
+          "version": "1.12.0"
+        }
+      },
+      {
+        "identity": "swift-identified-collections",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-identified-collections",
+        "state": {
+          "revision": "322d9ffeeba85c9f7c4984b39422ec7cc3c56597",
+          "version": "1.1.1"
+        }
+      },
+      {
+        "identity": "swift-navigation",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-navigation",
+        "state": {
+          "revision": "32f35241b8be0719c4c7f00eb27713b1cadb6248",
+          "version": "2.8.0"
+        }
+      },
+      {
+        "identity": "swift-perception",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-perception",
+        "state": {
+          "revision": "25ac73741c3436605d61eceb5207e896973918e7",
+          "version": "2.0.10"
+        }
+      },
+      {
+        "identity": "swift-sharing",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/swift-sharing",
+        "state": {
+          "revision": "c525e53936c878c102421eee241d82711eb38104",
+          "version": "2.8.1"
+        }
+      },
+      {
+        "identity": "swift-syntax",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/swiftlang/swift-syntax",
+        "state": {
+          "revision": "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
+          "version": "603.0.2"
+        }
+      },
+      {
+        "identity": "xctest-dynamic-overlay",
+        "kind": "remoteSourceControl",
+        "location": "https://github.com/pointfreeco/xctest-dynamic-overlay",
+        "state": {
+          "revision": "cb281f343fd953280336dcbd3822cdf47c182f5b",
+          "version": "1.10.0"
+        }
+      }
+    ],
+    "global_preferences_changed": false,
+    "fresh_native_product_build": true,
+    "whole_app_cold_qualification": false,
+    "lock_sha256": "8f74d427f1744a1d087b60d313b5d634da4c622602427a8d6d7f903f6f35cc34"
+  },
+  "native_products": {
+    "ColdNativeProducts/CasePaths.o": "f5acd1dd7018e9b44b10db273241e93f101d14532e35255be9d6639dabadeffc",
+    "ColdNativeProducts/CasePaths.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "9766b540cbcfa2d6e5cf539281ebc0ef37babe6a6b63d027444fabd4a5c4721e",
+    "ColdNativeProducts/CasePaths.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/CasePaths.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "79a65bf71c74bc3ecddad245b5fbc1ca26a4bcd538b506789d1ebd6bb1160ce9",
+    "ColdNativeProducts/CasePaths.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "50ac474417501850e4bf40039bce59d2d17fa7d6c44cab8af5c727b3c994f576",
+    "ColdNativeProducts/CasePathsCore.o": "7d08f62fc2964839c169f832ea95a792b9eb5a45c6fc27d4578523f2f918c414",
+    "ColdNativeProducts/CasePathsCore.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "7f91a7474410a5e739e4a96e5711e43d6fcf932be219ed29e07b99cc748c4ace",
+    "ColdNativeProducts/CasePathsCore.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/CasePathsCore.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "2da2728b773f3a805b619636d02a8b88a9dfffa8ae06fbe1999cd5cd54d7aa19",
+    "ColdNativeProducts/CasePathsCore.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "ded92e641f3bce6956891f73046555aba56ca8b058363f8847b325af1502039c",
+    "ColdNativeProducts/Clocks.o": "1b38a9abc8e57fa640f2a144be6774c1558ea8a307670133ae307393c9d7afe9",
+    "ColdNativeProducts/Clocks.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "419f7a4d35930846c5677b39a2e4435e22714965d9ef39bc169d0eeeb6827c4e",
+    "ColdNativeProducts/Clocks.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/Clocks.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "456a4351ba340244cee53e1096970f936aed5bb41d2140d85e147a6f75c6d25a",
+    "ColdNativeProducts/Clocks.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "8e9941a6fc0b0add58413317ae8690758f27c28ad9b44c0fe82b5ae5ff8277e7",
+    "ColdNativeProducts/CombineSchedulers.o": "27068b19352e64d24e620e230b85c5590bfe6fdaa19f306ad10c9de9ec805d96",
+    "ColdNativeProducts/CombineSchedulers.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "73151e5e96505145e5757fda4215670d0de9ccb769b77357f857419bb1b94491",
+    "ColdNativeProducts/CombineSchedulers.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/CombineSchedulers.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "431382f66d07199f61d4a258b5e936202a9be9c77adf6dd51795d85da5c80e06",
+    "ColdNativeProducts/CombineSchedulers.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "47bb6584793cdcb942d646160654b81904c123a0ec7df9628d2d6128f3f667a1",
+    "ColdNativeProducts/ComposableArchitecture.o": "a08ca377cb26c679f42d9550cea640a3e3609ef274ec92feee54075981b5b23d",
+    "ColdNativeProducts/ComposableArchitecture.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "37faf573b71f6671dced0243410f467b2b0ce7f5cf35040fadfb5cd27e70f62c",
+    "ColdNativeProducts/ComposableArchitecture.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/ComposableArchitecture.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "b67e3a7c740bc8296bf23967c8a7a30bb749e341eaca8bea235d7eab74bdf3db",
+    "ColdNativeProducts/ComposableArchitecture.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "0b25dca6f4dfd6d3a8f198fd3aac6519a0d12f161cf7b7e7cd08cad301a66e1a",
+    "ColdNativeProducts/ConcurrencyExtras.o": "efce960111c0403f8fb7c5430a3d2504af34be2f549d7c81400554d900ed3ec6",
+    "ColdNativeProducts/ConcurrencyExtras.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "366af723a04120b8ea76402f1cf67b662dbd9ccbeac140ba69be595966d05d3e",
+    "ColdNativeProducts/ConcurrencyExtras.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/ConcurrencyExtras.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "33ce144af534aa9132d79c410f353c918c23b0a1625f2900883b6b9e6c5435d6",
+    "ColdNativeProducts/ConcurrencyExtras.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "42179ffbdfe557a316ba3c668d9cecc89f6f6d88d0963ecbbee56af0620a8b20",
+    "ColdNativeProducts/CustomDump.o": "fe3a9bfdafac97bee003b762d995338a85796ac5ca1afa877f01adef12bdfe60",
+    "ColdNativeProducts/CustomDump.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "be9c7cdce517a36d94d25305e4dfe60710d7b1421771f6d19b95f027758d21e8",
+    "ColdNativeProducts/CustomDump.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/CustomDump.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "2ebea32f46c8eac0e1ee8d87d40725436712d3a663a2bc9074fad4678df106f4",
+    "ColdNativeProducts/CustomDump.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "1f13a570734047dd9ce33ecd560ef53ae18520610a4fa12818cb10aab4dc5459",
+    "ColdNativeProducts/Dependencies.o": "bcca4ff48e2c96cedea6fe8955bed1920ab2ca3f30310e55da62b0190049b626",
+    "ColdNativeProducts/Dependencies.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "ca952a4eaf6e9974227da2323966ba9603dde2d726c79cae1c0210b866030a48",
+    "ColdNativeProducts/Dependencies.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/Dependencies.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "1dc7c72e373d137c8af51baf3ff6c913309540bb30eaae1e21558a4074b2d5f7",
+    "ColdNativeProducts/Dependencies.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "054124a7f91e7840cf8dd16fd331f815ea8266616a228fd82a9d03f99cf76411",
+    "ColdNativeProducts/DependenciesMacros.o": "436e629e0aeb41b903722f8bd302ed600243d4817596dc173b62c10565ee2e53",
+    "ColdNativeProducts/DependenciesMacros.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "c675afe019bd0e2f66ef7dfba3b05ff5ad2fe83dc4fb79c586d69167ee63a336",
+    "ColdNativeProducts/DependenciesMacros.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/DependenciesMacros.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "a64b87700df0ed4b44e0c20cd4db78c538496eee7e9333fe709076bcddc591eb",
+    "ColdNativeProducts/DependenciesMacros.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "9fb03db50e4f4bfc74cdfdc7a5b57bd7e239eac6cdddeab55bee59dfce96389d",
+    "ColdNativeProducts/IdentifiedCollections.o": "c1a541e5fa398d62d4eb4dda677565a760550b1c99a63906347a68a99d99bc54",
+    "ColdNativeProducts/IdentifiedCollections.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "900ba99aa97ddddcc034c646213f90ea919521b7245b7b936c691b99cb598e03",
+    "ColdNativeProducts/IdentifiedCollections.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/IdentifiedCollections.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "1ae19bcbc211b191825617e9de7055a6b6bc0e130a66a49a5a7304ace56172a7",
+    "ColdNativeProducts/IdentifiedCollections.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "dbf2efa631e22a7e1d89769069f4000e222ec1125180d4045c096decccfee753",
+    "ColdNativeProducts/InternalCollectionsUtilities.o": "1480c28d8c40701c257127fee35bcf6ad8838c99997de5f2bfe94d69477fee4b",
+    "ColdNativeProducts/InternalCollectionsUtilities.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "c744048075e744f0597233d476bee9f987229803fd6902fb7c9164bb2e12f9ee",
+    "ColdNativeProducts/InternalCollectionsUtilities.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/InternalCollectionsUtilities.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "f326252da7e8790ee3ab45e49ffc6c6a9369ea1fbfd9319b9478e125453f7d22",
+    "ColdNativeProducts/InternalCollectionsUtilities.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "315aea72844077ea55251eac77283219ce30e4e5385376f38601fcb3f826604e",
+    "ColdNativeProducts/IssueReporting.o": "b1bd40e86f526877b58d8a77b52944a78109754b819c7aead770e4ce95ce3ab3",
+    "ColdNativeProducts/IssueReporting.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "6b08b52d64ac8182466dd2dd12ceaea2fdfb3bcceb6564a743cfce3907a1c904",
+    "ColdNativeProducts/IssueReporting.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/IssueReporting.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "95bb782270f2a70e0b134434652e0ed536068f16ebf5e74517f475085ab15e1e",
+    "ColdNativeProducts/IssueReporting.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "6b60c60064df117c47878a36753ced7972eecd3610c5ebe69ebdb926e8b5e91f",
+    "ColdNativeProducts/MapLibre.framework/Assets.car": "b56caa057ad056829ae492282042e8cc787a6a6b1505bee5fc22c1fb802e7fd8",
+    "ColdNativeProducts/MapLibre.framework/Base.lproj/Localizable.strings": "a248a387e65f5661ab20cc66a37836abb2a9cd134e8f693594853cd6d40ef20b",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNActionJournalOptions.h": "becc2546fa9a22143aa1dcdf44f8d7d20a6bc389d6dd37deeb623dd5404b268c",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNAnnotation.h": "7b25caf4f576b02b74c9fda69ee32e3355e68bc3dd0b9b9d9d2f5f95fd4da593",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNAnnotationImage.h": "72b1f4709bf5f200963479f42431d9bb10e67a40179c62e08e54fd2f2e69479c",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNAnnotationView.h": "e05cf4238df8770c473df35b5129bef0ef291e33ff03c57e60752d2829847ee8",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNAttributedExpression.h": "3bb297827f2f12e8c61b6784fd801ff3e5fb58970e9c3b3ea8f9f5da3bca2e03",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNAttributionInfo.h": "cf1455f7b7c17a9d6417c2447bab1cc5c8afd82f5153eb63f0ce853e8e4bc513",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNBackendResource.h": "1c926efe1216aaa51dde3459f4d0c96b784989df24caa60d8f63f00b7967eef9",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNBackgroundStyleLayer.h": "c62bffd0528862f3731c48200f04925a873bc229ef524b206a9d5c0d68c856a1",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCalloutView.h": "1823dc79fb2c5060ac37b8e98663109396a73d74585dc99513fb13a58d170c1a",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCameraChangeReason.h": "bf8570b7f5160ee7400fada57a00a6573d97a60b91d50cafd10244b16359d39d",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCircleStyleLayer.h": "e770719b29b235ef9b9ccd742bd57302292c92677f0946f83d92538d236e8ab9",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNClockDirectionFormatter.h": "a0f0f3608ffa4890062edbaeed6390cde33ac7f1dffd43a479ebbcf898e7503f",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCluster.h": "2f47f72c3ff90bb5db289801e8c00d9b98d0e1e61d2e81130f949c673ee4b822",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNColorReliefStyleLayer.h": "a37d48bc62ef8aa818c4ee33e95ffc077290865cdfff06f83b8ef0a8e029a149",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCompassButton.h": "11885f3fc0986e63bfbbad01d7537a2bb8a2c7235d1848cd82c1381ec0835450",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCompassDirectionFormatter.h": "ae0ce0014c7d6cc450da30374900f6d77e4d295a18e05b889d9492f8a2ab8dee",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNComputedShapeSource.h": "3d918f41528ebbcd9854b17142d661270917f5b419c3f186847e5a66f6fd0a17",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCoordinateFormatter.h": "b4eebd47590debb8fede534edce1c90b86c8517103318342f6e60477beaa22c9",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCustomDrawableStyleLayer.h": "75f8558d407c911131c3e51d6c5ec667eee1a743b02423b8c66bd5121c8f6757",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNCustomStyleLayer.h": "2eca4ddc7f54fb01c726ad84beedd8d6f2964aedd64a4b1b3576cae38aee20b2",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNDefaultStyle.h": "58d86015f95288974f3eec9778bb98891446f3baf7357d6283b5238dfb5fbf3d",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNDefines.h": "973968104a81c182c0345bb7296f5392376c363eff036a1d8b0dcf60c49bb9a0",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNDisplayUtils.h": "b3ab8966980f4c437e08e5a6a09984a3d11b73f85f312303478e8408ec1d8a3f",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNDistanceFormatter.h": "18c17cd5a7817c057951e828481b770df4a143440ab2d4b9d886a148075e2f75",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNFeature.h": "3d7226cba9e02d6e0df0f3d6f8a814e359e7cb724ca5fe7aaeeb886076831dd5",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNFillExtrusionStyleLayer.h": "5521ff667f29eb6a905da172b1c09f3cf6f096d3104538a51f9cf4f196a73051",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNFillStyleLayer.h": "9061dee2dfdff5cd8853ee34a2a23e37d3dc6120f015d5687d13babcc5646a77",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNForegroundStyleLayer.h": "5de2cdbefb732b7c7563c0bef94e5cd3c7ab867a183542e6f2d93f0797bcf9ef",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNFoundation.h": "9f9c70b24365a9f44e080482cd54f336679f7d809d45c35f13ec6030f7b946de",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNGeometry.h": "0051a7504a9bc24d6d163ee6417ee8a9933ce4e7fef4d9aa846d3f01cb19261b",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNHeatmapStyleLayer.h": "94362aeb7c46a24b2446ebd04a71196c36153cb5df80ed354282f6ed481e588a",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNHillshadeStyleLayer.h": "26eeaac190dbf7f6612e4c42dabcfcba443e2c591136341b5212a577c1a97f80",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNImageSource.h": "4ace2ca9a3c88dcf5dc98211035f5c9445f85b4a91b6305f04f4bd9b586e103b",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNLight.h": "17e51e03358bcba1bd929d1933411ab03e7b3712e07ce27ad0646dbd683f564b",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNLineStyleLayer.h": "521c49bf294f7a0f537d5973288114c1351038d1e3d6bc32c0057f0807b56789",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNLocationManager.h": "057e391a64c0f4317e44acd0c1e6312c4e37ffc8b74e0c44186254250637b0c3",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNLoggingConfiguration.h": "4433878a9eb9824755492292b7f41e1524270d767d93d721f72c04942f732c54",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNMapCamera.h": "07b2589f13a28520e3a9f9a79c35638b84c2ccc3cb920f0b9004f0b8061a6fd9",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNMapOptions.h": "427168d09ede5aaa622476f39e2037b3fd77a2107715662be4f87e906e9a0080",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNMapProjection.h": "11efe4157bae048c8f1e8cded76c23664cbee6c029f4f6e07b0f3cbc2f37d1ed",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNMapSnapshotter.h": "88f319e8fd21f7722b60fd0e01c0851ba7a99704923e33d13019987fce9b00ac",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNMapView+IBAdditions.h": "a9a0c5ed3bd04c372c75bdd2bbd1a2e52bbc277f3f6e323da6e7892d94a9bd4f",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNMapView.h": "9ff1836dbba03b10658c88e5171fa1f80add8808c5d66de5c5ccc4f835131ab4",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNMapViewDelegate.h": "93623cc2ebb512bc58c630cfbfd2c532cdafeb3b6537e1b13469bcaf18b02371",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNMultiPoint.h": "fda65ebd033466fef5128f40024d58088dbf62d600930c9e5db40d3fff905325",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNNetworkConfiguration.h": "36c22f32578d3186f0ec7a7638ad38b3ba445cf99472dd6037db9f3d0287904f",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNNetworkResponse.h": "ac2dcde5f82138b7ee7f6f60531292298ac7073eb7fcdade1140ad1fa33b9aeb",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNOfflinePack.h": "d921cf3fbccafd98fd00659688aacea86b30564f2439c0bfb10a2c58fc510bca",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNOfflineRegion.h": "6368f86fec046f2f91e98eec1c0d1be2e5ce9dc649628e0336bb7ed55ff1328b",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNOfflineStorage.h": "91a958b837059fe62be27cdc2c2a0560fc6b1e3da4730ad0e976532223db5c19",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNOverlay.h": "fa96beb206e3f821076f82b2a4efc38605cfb53ef780243b4d3281c6c9d704f1",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNPluginLayer.h": "191e973f912e588f4cdf3bbd7b70d06d348f13c9c3678ddc1c9954d4cde248a2",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNPluginStyleLayer.h": "a1fb32bcaf5d9de21133ce03bd164f545f673fd00ded8d93376ba6514ff0b3e6",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNPointAnnotation.h": "c39c5d9b8e45ebfe17dade07abc22165a0ceb4da4661fbc88867cb1c6bc2cd4d",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNPointCollection.h": "6b4ae56dd3245847dadcd050d05602c80fee2000f8fba98696ef89587be6c4f7",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNPolygon.h": "b8f2371091705cf8a28f4465d4ffec35d903b95dd14cfc8663147a875b99e6db",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNPolyline.h": "032e810ca8b601f77715e7c64e49cce2327a0691fcc8768db6de3ce05a38aec5",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNRasterDEMSource.h": "6ee1d7b1cbdeda0757e15d23b8ef8f2217e287b5e3d9372d54ef62f2d031d593",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNRasterStyleLayer.h": "037008ac3d407aabb7fea8cd308f94620bc72cc60a245027d0075afcd5f3bcb0",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNRasterTileSource.h": "af786c3093bbe62e2b468df126b4f14596409390f313ef57236246a6a036ba9e",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNRenderingStats.h": "9cb1989a13ec38f712b60dcc957379c5a18741cd9ad7aa98deeec3ddff90b26e",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNScaleBar.h": "70af708f8251d63b2704cfcb0d496226acf069c55fee87517dce0187bf7b661f",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNSettings.h": "081927609c2299924111caa11d068b4ab7fb55a4e0c651146aa80a72e4cb0589",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNShape.h": "6d74ad320c1173a8f5f65a0bf457a1b8a85559756c9e4a232e8383214a320912",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNShapeCollection.h": "8db3a65cf7bd409fb8000274329501d65b5501f3fb069a9f70855c405a0036de",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNShapeOfflineRegion.h": "847c550cf64df581da57623b7afbebe53c24146590331cb959a91908b1c96449",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNShapeSource.h": "b8e2cec9d7db45d6c802df656450564660a1dc919b3188c5accffe293f19bb31",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNSource.h": "0bd92e1df505d2381dc6f9e248e02527c262330409187f4fc451b17c8f767be6",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNStyle.h": "553ee1f32398c1544c1f2cd6cea854aa300107ff17f799c4b15d6eff0aab42ee",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNStyleLayer.h": "331eb4735b1b7ff518654b3266422a8c68e254e82ffd068c6483cc0a70df0ef2",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNStyleValue.h": "145a316d2070a5236800b62a39a6563c2946c6c868b1b5a06b20141df89a46ab",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNSymbolStyleLayer.h": "59ac834f5ffb08b062e317e2c3a56da7afdfabd79374dd20dc1b844155f8f659",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNTileOperation.h": "a47f3c401a93013faf7a7adad639227bf8ca396eb982c2abda05bf8c8fe879ae",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNTilePyramidOfflineRegion.h": "e732a918b5156213b295ea80ecd47e3ad81c0beaa12d9de9c3ca470c1362e897",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNTileServerOptions.h": "b6bb757578abe3161ac4a332e4a6134e860f28849a9919ac0e382ea5d8bdd806",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNTileSource.h": "91f8924c6cf2d53936a421fa5e9fc1a40dfe92c5a6bb32cd45ee13dd641f23a3",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNTypes.h": "3732a41e06ae125f9119d3524f20de10e1f5abddd517bf06990b12b532816f8b",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNUserLocation.h": "cb490941e1dd75b96ab0139c897465aac264ebd41d74faa42a87b69c3ee5d6a9",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNUserLocationAnnotationView.h": "6d59842624c947f14afba00c899121ffcbfaaf0e99804f280edc72374ad5dfcf",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNUserLocationAnnotationViewStyle.h": "3a6bd3ed78e1cf8f2af65924aa418aef3a001376d7683f42e32c206a52f74bc3",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNVectorStyleLayer.h": "e4c71978ea49d5c3488cc27f84690625e097a548f582ed4ca7df3c68ebf167a3",
+    "ColdNativeProducts/MapLibre.framework/Headers/MLNVectorTileSource.h": "9985d3d3961569398f8c5b1b0949c65a47a4db550e0618dea0a5428585add3d8",
+    "ColdNativeProducts/MapLibre.framework/Headers/MapLibre.h": "cc1d37f09d219bcd9afa60a691dca7609afc88dcc7ee30ab094fe0cabc83455a",
+    "ColdNativeProducts/MapLibre.framework/Headers/Mapbox.h": "f63a53c4dc79d73de5ac55695aa3ae54e2faa6ecd00a623fb502190f12cc3f43",
+    "ColdNativeProducts/MapLibre.framework/Headers/NSExpression+MLNAdditions.h": "f453d56f66babeddbfd93a4aff8b6035163236bf98db0bedc68bf22691112982",
+    "ColdNativeProducts/MapLibre.framework/Headers/NSPredicate+MLNAdditions.h": "c056ee5b94afb45187724bfe78e2b8788550f160952e4cf2778f4d3cf459ebe7",
+    "ColdNativeProducts/MapLibre.framework/Headers/NSValue+MLNAdditions.h": "b29d2cf01dbdd33b8bfef32d4a8034e8924a37ee08ada20dfe52dfc4834a239c",
+    "ColdNativeProducts/MapLibre.framework/Info.plist": "2b7e036987ff4e4d4808b478432944b1808dcd9360b980da08d07ff5526789a9",
+    "ColdNativeProducts/MapLibre.framework/MapLibre": "5e3a276b7396112ee403c9d4a6ddb8866f33d01ea8106c9f98d8ba53a38dfe7b",
+    "ColdNativeProducts/MapLibre.framework/Modules/module.modulemap": "fbba086ba2930dbfa6d1c6846f4653592c2601f2dfd3f95de2a26dd17f235435",
+    "ColdNativeProducts/MapLibre.framework/PrivacyInfo.xcprivacy": "18497e8537624746cce3326a2635241e8257035e9c8bb45c0fb90a8de57aed1e",
+    "ColdNativeProducts/MapLibre.framework/ar.lproj/Localizable.stringsdict": "6e59ad65de382f0bfc5b7b2e01e444f42a828993158e7c3a203acfd911746733",
+    "ColdNativeProducts/MapLibre.framework/bg.lproj/Localizable.strings": "6f6f770d04b580879ed601ef4b51332c0b303bebc094301084f388872d3e6075",
+    "ColdNativeProducts/MapLibre.framework/bg.lproj/Localizable.stringsdict": "273f0d91839807b2488ff19befed1821d8dd9283ad93e72286d7aeaa87b565f8",
+    "ColdNativeProducts/MapLibre.framework/ca.lproj/Localizable.strings": "d061bbe035fd9dddc90225e1152b820065b26548a2eadce2d2fdf4963a423d4f",
+    "ColdNativeProducts/MapLibre.framework/ca.lproj/Localizable.stringsdict": "7ffca1291c2bcd1b5e12703a261d8abaad3b2eb45f1a52b3130889f21d90c4d2",
+    "ColdNativeProducts/MapLibre.framework/cs.lproj/Localizable.strings": "d90ec154900204a2cf3428ed36e70949e92dda11826725c2047de99e99d5c598",
+    "ColdNativeProducts/MapLibre.framework/cs.lproj/Localizable.stringsdict": "71d5fc7ea57c47b9c6803ab412cf99fd6e330be64d57d1c29e8a5e1e348af467",
+    "ColdNativeProducts/MapLibre.framework/da.lproj/Localizable.strings": "d5119eed20f122248a26213dc697ad39774cb7f3e91a96d1a4d9fad4ad62842b",
+    "ColdNativeProducts/MapLibre.framework/da.lproj/Localizable.stringsdict": "2f470a80cb78e130c10dc8c8fa94fd4562c2d516b922c83286a03e4f5a3cc680",
+    "ColdNativeProducts/MapLibre.framework/de.lproj/Localizable.strings": "478f855bba607b397b2efa045255aee4ae57b5c74c03cab83e971ab6badc5854",
+    "ColdNativeProducts/MapLibre.framework/de.lproj/Localizable.stringsdict": "2f6b80f8d27aba1791164dea1764c30f886299af07a1c3bab8e630ac64d1521b",
+    "ColdNativeProducts/MapLibre.framework/en.lproj/Localizable.stringsdict": "71d5fc7ea57c47b9c6803ab412cf99fd6e330be64d57d1c29e8a5e1e348af467",
+    "ColdNativeProducts/MapLibre.framework/es.lproj/Localizable.strings": "79aa0b6015204db0b019fdfd2a4b6324223c0b237ad7bd9ba2c8dd5ca04d4aa9",
+    "ColdNativeProducts/MapLibre.framework/es.lproj/Localizable.stringsdict": "c04f5cc5793275851f2ef8336d8c3863bbfdca53caa8ccd223f95bd8cf02e498",
+    "ColdNativeProducts/MapLibre.framework/fr.lproj/Localizable.strings": "23f9091d9bfd8c86c89bfb67e3e2caccadfe2f7d8e0240bc5e7b42c482421cbf",
+    "ColdNativeProducts/MapLibre.framework/fr.lproj/Localizable.stringsdict": "f04139944c3c9e5d406ecf4af2d0bf5285eda6eef216e3467e6580940e1f0368",
+    "ColdNativeProducts/MapLibre.framework/gl.lproj/Localizable.strings": "fadbce286fd1259ba55aa5d7fa873db22d45606d41eebb2e91b2e77725c1e29a",
+    "ColdNativeProducts/MapLibre.framework/gl.lproj/Localizable.stringsdict": "6d9d8b1ed6826586b0a051122ae3793ad5087e729665d5173ae88dfbf71964a1",
+    "ColdNativeProducts/MapLibre.framework/he.lproj/Localizable.strings": "e2e5357101f2b8ba72509f325bd7548eab2faeb3ec8488360e954051a3572488",
+    "ColdNativeProducts/MapLibre.framework/hu.lproj/Localizable.strings": "6af0768c7908aad85948fb093c1eb07c3bc242308793e0192093a83b889abf5e",
+    "ColdNativeProducts/MapLibre.framework/hu.lproj/Localizable.stringsdict": "32437e002d7e18cdee2e1e79da707482f96591407ce1298d506288978f988f6f",
+    "ColdNativeProducts/MapLibre.framework/ja.lproj/Localizable.strings": "e1788da47124ac4ef41ca4cc70ae36a5ce3dd3110844dbb83c12c2c82c523853",
+    "ColdNativeProducts/MapLibre.framework/ko.lproj/Localizable.strings": "dfdeadb267032eecdc4316f008bcdcfca10c082bc03e20f9e623af3ee135476a",
+    "ColdNativeProducts/MapLibre.framework/ko.lproj/Localizable.stringsdict": "4c6551d58d3fa908046cc8f8102e31a80caea4a2c425d791343871e1bd117758",
+    "ColdNativeProducts/MapLibre.framework/lt.lproj/Localizable.strings": "dc6e5c4f8a4567bfb0f0aa4bee120a6167b9353e5b6ef6448b16dd5224c3fd5f",
+    "ColdNativeProducts/MapLibre.framework/lt.lproj/Localizable.stringsdict": "22abbc5a32df61b0e550dc88a85603c4bbbfd59628b16bff6e98629f964c807d",
+    "ColdNativeProducts/MapLibre.framework/metal-cpp-ignores.txt": "59ca9016ee447ad3e140135c200dead3f0b49669611114a53f29c379941e7432",
+    "ColdNativeProducts/MapLibre.framework/pt-BR.lproj/Localizable.strings": "65b686319d7dc8cb4e688187960ba2543a2b3d2a24c4a502b32677df46b4635c",
+    "ColdNativeProducts/MapLibre.framework/pt-BR.lproj/Localizable.stringsdict": "554b52131dab22b4e87c70746ee4109421e91dbceba80d2a00dbf65a7cc9aac7",
+    "ColdNativeProducts/MapLibre.framework/pt-PT.lproj/Localizable.strings": "2fc9aac0bf9388c21a48627a073fc518e7e35c4d800c60cc4b118025b82ffd47",
+    "ColdNativeProducts/MapLibre.framework/pt-PT.lproj/Localizable.stringsdict": "ce7850f9d19a784552a4406b9dab6ffd04378c9b649e207099690514c5d64732",
+    "ColdNativeProducts/MapLibre.framework/ru.lproj/Localizable.strings": "9effcb5a0fb7d0f8eb4fc2a5b6b73ea360ba4fb261bee2956b433210908a3dba",
+    "ColdNativeProducts/MapLibre.framework/ru.lproj/Localizable.stringsdict": "00e6647e06d4e9433a0dce5691be8d2931b41ae9d8297727c73adc580ff408b6",
+    "ColdNativeProducts/MapLibre.framework/sv.lproj/Localizable.strings": "112007543200948a94753ebd844709aa26d39734a23cb9252889f02e93a474ec",
+    "ColdNativeProducts/MapLibre.framework/sv.lproj/Localizable.stringsdict": "7394caa2ce14e40446594328e613021dae1358af01d4f285a2e4b82737cac3d9",
+    "ColdNativeProducts/MapLibre.framework/uk.lproj/Localizable.strings": "6335a432d2f466e2e312efcbe98bf1516b896ca3c979b8fa955375d310ad3f02",
+    "ColdNativeProducts/MapLibre.framework/uk.lproj/Localizable.stringsdict": "c40fe1ae86c3e1b4612d16a37a2392e05f612a1383dfe87db51abf0b5ee30d43",
+    "ColdNativeProducts/MapLibre.framework/vi.lproj/Localizable.strings": "8d80f2e9b76782381c0eef0def9f94de340d4925ac58d561d65f673a979bd21c",
+    "ColdNativeProducts/MapLibre.framework/vi.lproj/Localizable.stringsdict": "9d4e0f86e16829a67ccd8b43424ccda96a82e61af465ee170930299d005a665a",
+    "ColdNativeProducts/MapLibre.framework/zh-Hans.lproj/Localizable.strings": "bf07fcf887c5d2f390d5ac76988f281dfe754b8be1a174e71a36fab2fb8a23c8",
+    "ColdNativeProducts/MapLibre.framework/zh-Hant.lproj/Localizable.strings": "c767daab78a37e140713c202af324edb59b1420d563ebe336a0239ce166b4f13",
+    "ColdNativeProducts/MapLibre.framework/zh-Hant.lproj/Localizable.stringsdict": "1e25eaaeaee9567e745d29e60d3722d74984035e4a34041ccb7a8bafc43f826b",
+    "ColdNativeProducts/MobiIOSDependencies.o": "f0d8e40f6bc921d334a7be86d2c68182125339c1415cdb91eb7be5d791a835d5",
+    "ColdNativeProducts/MobiIOSDependencies.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "76fd320263be2f2fd9e463ab30b8fa6a8a06edac0bcccfbf85d5dbf6bb9ed1d4",
+    "ColdNativeProducts/MobiIOSDependencies.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/MobiIOSDependencies.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "d2f8d13a9d59aaf6075f7702cfc64a4f90d008fff69cedfe832d3dcb181b8b7a",
+    "ColdNativeProducts/MobiIOSDependencies.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "681893aff667615b82a2127acc0836456471db77dd01166a51577cb5d98ae0f0",
+    "ColdNativeProducts/OrderedCollections.o": "6b34a1ce2701c3c3b881580ecf8d164743516d5e74292fc3d19eaad657c9e972",
+    "ColdNativeProducts/OrderedCollections.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "e9aef46db9aaada96d0f0d96783c987e264ac339d000237fb16514f75bf21c86",
+    "ColdNativeProducts/OrderedCollections.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/OrderedCollections.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "92b40212d7222c7f55eb70883a5b67a2b40f489c1a5202663f2e14d456f1ade3",
+    "ColdNativeProducts/OrderedCollections.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "b408ba5ae17bbdcf6df6cad1b88f34d3482d8ca51dc3179b4db11442bdacea8e",
+    "ColdNativeProducts/Perception.o": "30abb14a58ebe08325e658f0bd189436a3b53d85add6fa0c006a6c107ca7a3a3",
+    "ColdNativeProducts/Perception.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "b4cf85ffb5273f1fa0d626b89a41305849a2b6afd78c8dc92cc6c44fe28f0edb",
+    "ColdNativeProducts/Perception.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/Perception.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "18a1f8fb848bed3cd69f47d930fa95bd40829e1c0d7395b8b8efd493d480dae2",
+    "ColdNativeProducts/Perception.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "0e919c8c08f4151e245d73486b4bf9eecd43bd476349e9a3b52f17e01435e764",
+    "ColdNativeProducts/PerceptionCore.o": "e516947235cf45e34b32510ae86e4b6cf359d682e724d6397fdbaa51395e83a8",
+    "ColdNativeProducts/PerceptionCore.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "60797b8570c352a357da6ceed3aa8ba30e570bd9cdcb21087599f3f929e6d594",
+    "ColdNativeProducts/PerceptionCore.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/PerceptionCore.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "abdddbbd066199b5473858655cc7755f25519ba76052906a0c5b35f030373862",
+    "ColdNativeProducts/PerceptionCore.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "f7f20ae86256ae47477030ea3d714219505f1ca8995fc978c70e5a2e173a3137",
+    "ColdNativeProducts/Sharing.o": "e9480bbb1914d12df17526085db148081b46f29b46b6f17a2e4284e6f1aeea11",
+    "ColdNativeProducts/Sharing.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "c3cd050ac368db0977ebd4a170c782c19cd27cb6d3c8e5d48b5a85a530a70939",
+    "ColdNativeProducts/Sharing.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/Sharing.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "d22e0a14a238285347c89ed8dc0e9c58138aeabf0275b2db2f54f77641db503d",
+    "ColdNativeProducts/Sharing.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "a8a166ad6cb56c4a05e0bd0d1c4f053f0e663f4d35372cc50cb6b8b776e73c63",
+    "ColdNativeProducts/Sharing1.o": "4c8699bd915bac078c959ba243873e3821cf0c2f264bdf404ab52ca68bbbeabe",
+    "ColdNativeProducts/Sharing1.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "4e0fe6654741228d086d214a62270d9c3c5267ed34431987302e2bdf8e0d983c",
+    "ColdNativeProducts/Sharing1.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/Sharing1.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "b1bffc06733a11c45cb54ed685e8e0abe48503034cbbb996d7d1a053b618d6f0",
+    "ColdNativeProducts/Sharing1.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "86f37e37df5abac815712835ce26bbd9e0b891de1aedcf71ab7bafe9e6d097ea",
+    "ColdNativeProducts/Sharing2.o": "3704c25ee22f47706c2df02fa29953c030fa63c8b8bf83bbe36e3c6b61b77a6a",
+    "ColdNativeProducts/Sharing2.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "20393ee8e38ab62a7ab59e8694d5ab5340a3c2669609d98c5c62b76bdcd9bc9e",
+    "ColdNativeProducts/Sharing2.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/Sharing2.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "9f5508c5882848df30e78eaa366b692aa8b4c4aa02aa2aadc53bc1826b2c86ce",
+    "ColdNativeProducts/Sharing2.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "b7595e9b93df4f3e36213acef3c8585358750bfb977e7495aa36851daee90cb5",
+    "ColdNativeProducts/SwiftNavigation.o": "143088e736537688db04bd0fb382487330665f0b09e1e52418fab0c01a8c8eaa",
+    "ColdNativeProducts/SwiftNavigation.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "7d8e0018b1251c30b5ab9edda0e55e41d31c87d53f4f2c48705aa5023d9abddb",
+    "ColdNativeProducts/SwiftNavigation.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/SwiftNavigation.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "dc368949220f8d9d5f9c6320dbeabb79f0b44e4bbf300c927e6aba0c4679ddf1",
+    "ColdNativeProducts/SwiftNavigation.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "35ca42465978b1f345f78990661f145ec9bbd9703e6d0bdce4e1fb8f9f9fcec0",
+    "ColdNativeProducts/SwiftUINavigation.o": "2f6c27077ada2550a8d06ff1d6635793082db13a37d3c676eb1e5f6b70bcdc15",
+    "ColdNativeProducts/SwiftUINavigation.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "65d57b584f4d5a83c8a0bf734dfcf4a2810be5683eed7d2ecc3836b69e0afccb",
+    "ColdNativeProducts/SwiftUINavigation.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/SwiftUINavigation.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "3981b87bcb212e41733c9ac815732727db042335ce920ab23f7707e6b2f9e2e9",
+    "ColdNativeProducts/SwiftUINavigation.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "b493c31304e8e193ded69e4342164bbeedee661766acb7d4e41fa630d6c02644",
+    "ColdNativeProducts/UIKitNavigation.o": "1e07b6660cb9351b2fcd9cb6c46fa972fc543002742f0dc05ea5f57478b5b016",
+    "ColdNativeProducts/UIKitNavigation.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "26a029f4ed006a5d09ef5aeb225edada13f2080f37e6d84bff085b471298b81a",
+    "ColdNativeProducts/UIKitNavigation.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/UIKitNavigation.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "9d205c83fd9f3655fff4a29f265e03ba83e06339d981fea3769d98c93b7c4515",
+    "ColdNativeProducts/UIKitNavigation.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "76f52d666e2792e84711820a0bd196daa38afd1e607799cee7bcdbe1ed7cd1e7",
+    "ColdNativeProducts/UIKitNavigationShim.o": "95c6634b1878b1453f2aff44799e282fcd7ca76e03516a160b66c0bf9bb829f9",
+    "ColdNativeProducts/XCTestDynamicOverlay.o": "84ab18d11d187fcf7c6b21014480a56855cab128244bb439e59794705f8f7b05",
+    "ColdNativeProducts/XCTestDynamicOverlay.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo": "a6caa6e627e1f24208b35177c9280c2fb9557f022b8d2513bd6522970be46e70",
+    "ColdNativeProducts/XCTestDynamicOverlay.swiftmodule/arm64-apple-ios-simulator.abi.json": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728",
+    "ColdNativeProducts/XCTestDynamicOverlay.swiftmodule/arm64-apple-ios-simulator.swiftdoc": "2b563ac7fae923eb7c75fd57c32e032d17cc6234cc4cbcb228cc582568ac02df",
+    "ColdNativeProducts/XCTestDynamicOverlay.swiftmodule/arm64-apple-ios-simulator.swiftmodule": "d9e5de8467edd50753becdca1797972f6a778d0109285e7a374419e5b2b0da39",
+    "ColdNativeProducts/macros/CasePathsMacros": "9ce64032b3333034944ad9a7fd6bf0d0828795da90328f972da891026f723ae8",
+    "ColdNativeProducts/macros/ComposableArchitectureMacros": "0bd260b6fd0cdc4b0550a7ceb850d0cf810b05dff236989d4734173ccce3bd10",
+    "ColdNativeProducts/macros/PerceptionMacros": "0f49c950aed213b7a608b0e6e7516a254e930b30ebd7466fb478c79d5b6fea83",
+    "ColdNativeResources/swift-composable-architecture_ComposableArchitecture.bundle/Info.plist": "bfbde19ba4b57fe7f3c404445adc1a086e3a461814d2f864bc673b16740858f4",
+    "ColdNativeResources/swift-composable-architecture_ComposableArchitecture.bundle/PrivacyInfo.xcprivacy": "be3d1289982ee0a0551899398508fbc5b8625cc301b3dbe1a8516e1eeb289800",
+    "ColdNativeResources/swift-sharing_Sharing.bundle/Info.plist": "4b7884556ec6d71973bd66914e0a725f6e0253cb4390ddef41d06a6a5cb2a520",
+    "ColdNativeResources/swift-sharing_Sharing.bundle/PrivacyInfo.xcprivacy": "4f136913ed00c8d64990696a560a91ca48f152479138d7f4f2885b91ee005e10"
+  },
+  "maplibre_publisher_sha256": "57c610ca85c47a82deb24317e33dc72bb481024d99505cd5f8bd552048676c6b",
+  "kotlin_warm_model_klibs": {
+    "$REPO/.maintenance/production-state-boundary-20261014T144747Z/evolution-v4/baseline/klibs/shared-core.klib": "d7ab59a794e84c746ce0ce376ecdb0df6b3813f59cfd63147692057f84fca737",
+    "$REPO/.maintenance/production-state-boundary-20261014T144747Z/evolution-v4/baseline/klibs/shared-feature-home.klib": "b975eb1087add6d8301d94920b290fc5b56ad8a91c707452fc32ddfde54f28fb",
+    "$REPO/.maintenance/production-state-boundary-20261014T144747Z/evolution-v4/baseline/klibs/shared-feature-nearby-vehicle-map.klib": "90b35511308fceedbabc2962014354027af576752564372462c6586e96a34726"
+  },
+  "kotlin_module_names": [
+    "ExportedKotlinPackages",
+    "KotlinRuntimeSupport",
+    "KotlinCoroutineSupport",
+    "MobiCore",
+    "MobiHome",
+    "MobiHomeTransport",
+    "MobiNativeServices",
+    "MobiNearby",
+    "MobiDI",
+    "MobiNearbyTransport",
+    "MobiAppComposition"
+  ],
+  "kotlin_native_archive_sha256": "9c41677a7baa70f6320dabaade73e17bd540ad33067218729bd0f36bdc11cadc",
+  "app_binary_sha256": "e878f2bbb0a36106e58cdee1e29d701bb13aac13236928abc7adb79c9ab8f274",
+  "installed_app_binary_sha256": "e878f2bbb0a36106e58cdee1e29d701bb13aac13236928abc7adb79c9ab8f274",
+  "runtime_json_sha256": "4d21db91c8e082e899346b0760ecd88eaf367963b8db80e14fa78d57df910b20",
+  "runtime": {
+    "checks": [
+      "home-real-tca-and-view-controller",
+      "home-initial-native-presentation",
+      "home-real-service-loading",
+      "home-typed-success-and-balanced-capacity",
+      "home-stale-response-fenced",
+      "home-domain-failure-preserved",
+      "home-retry-reenters-service",
+      "home-completion-before-observation",
+      "home-invalid-input-before-admission",
+      "home-cancel-before-admission",
+      "home-tca-cancellation-restores-presentation",
+      "home-owner-independent-noncooperative-drain",
+      "home-capacity-denial-visible-without-backend-work",
+      "home-late-completion-rejected-and-capacity-released",
+      "home-retry-after-capacity-release",
+      "home-retirement-closes-admission",
+      "home-retirement-fences-live-noncooperative-work",
+      "home-boundary-failure-distinct-from-domain-state",
+      "main-confined/same-home-service",
+      "main-confined/foreign-graph-rejected",
+      "main-confined/real-repository-overlap-and-sequences",
+      "shared-operation-mutex/same-home-service",
+      "shared-operation-mutex/foreign-graph-rejected",
+      "shared-operation-mutex/real-repository-overlap-and-sequences"
+    ],
+    "cohorts": [
+      {
+        "maximumActive": 2,
+        "policy": "main-confined"
+      },
+      {
+        "maximumActive": 1,
+        "policy": "shared-operation-mutex"
+      }
+    ],
+    "production_adoption": false,
+    "scope": "provisional-real-Home-TCA-and-native-cohort-only",
+    "state": "checks_passed_review_required"
+  },
+  "owned_simulator_deleted": true,
+  "review_files": [
+    {
+      "path": "2026-10-15-home-slice/App.swift.txt",
+      "sha256": "05adcc3c00ac3fd1c5ad4021c830512ac99fd89d61709495d49820c142ece8ee"
+    },
+    {
+      "path": "2026-10-15-home-slice/BadLayout.swift.txt",
+      "sha256": "c2b31bbbbd2997283579c745315b8dfc9bd6ee439fd94b11419984ab24ab9b53"
+    },
+    {
+      "path": "2026-10-15-home-slice/CohortScenario.kt.txt",
+      "sha256": "bc040c28d273c2503e2d32c9ca895ab99aee60430a35623770f6a79d0a275cf9"
+    },
+    {
+      "path": "2026-10-15-home-slice/Hidden.swift.txt",
+      "sha256": "851f265ece2208aef1bdc3bc9b9a00abc5e07973b570449b31cb36313e344916"
+    },
+    {
+      "path": "2026-10-15-home-slice/HomeSliceAssessment.swift.txt",
+      "sha256": "6d5be8f24589fd311a1be8f860dfe3827087b842f2caf16c2b081944ef3fde59"
+    },
+    {
+      "path": "2026-10-15-home-slice/PrivateComposition.swift.txt",
+      "sha256": "196a29e6217853e582834551f3a73af5696bb5d3388e18cdfd880145514fe145"
+    },
+    {
+      "path": "2026-10-15-home-slice/RawImport.swift.txt",
+      "sha256": "7c8b5c4596ade2ac1a814988524e3590013cc7f0e69c7f9cbb17027dd758b6e6"
+    },
+    {
+      "path": "2026-10-15-home-slice/Scenario.kt.txt",
+      "sha256": "45fcd334e79ef929be1efcebf0e1f62596863d7eacc2e9b220f0a2a36fee1be9"
+    },
+    {
+      "path": "2026-10-15-home-slice/ShellClient.swift.txt",
+      "sha256": "88754a9714ee5b7dc9aa89d9112ae536c10b5868ba103a5e607900561156ac4e"
+    },
+    {
+      "path": "2026-10-15-home-slice/command-recipe.json",
+      "sha256": "3db2319be49dc995ed3090d5d156e83f0ad007d3d69af4c7a649d97a7c148c12"
+    },
+    {
+      "path": "2026-10-15-home-slice/home-screen.png",
+      "sha256": "872d03381ec19927ca3c64816ac721301ec8393b6993b03541880fbda0712f09"
+    }
+  ],
+  "compiler_controls": {
+    "native_shell": "passed_with_native_dependency_products_and_no_raw_Kotlin_search_paths",
+    "raw_Kotlin_import": "refused",
+    "private_composition": "refused",
+    "hidden_layout_without_checker": "passed",
+    "hidden_layout_with_checker": "refused",
+    "strict_Swift_6_coroutine_support": "refused_unrepaired_Sendable_or_inheritance"
+  },
+  "command_outcomes": [
+    {
+      "name": "macro-preferences",
+      "exit": 0,
+      "seconds": 2.421,
+      "log_sha256": "67d93a718629da34a42fdd38bd2f90116093f6840bbd60a2f8bf04bbe61d7534",
+      "stage": "native"
+    },
+    {
+      "name": "resolve",
+      "exit": 0,
+      "seconds": 71.527,
+      "log_sha256": "9301d861d5d89446a31459882d9430af0c803ca5e13457d2c5b65f0b4e118310",
+      "stage": "native"
+    },
+    {
+      "name": "git-combine-schedulers",
+      "exit": 0,
+      "seconds": 0.014,
+      "log_sha256": "3e2e17202b469574c060871f2065f6e1bd45c5d96b342bda35ea231220ab641a",
+      "stage": "native"
+    },
+    {
+      "name": "git-maplibre-gl-native-distribution",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "196d1986d89fd369a57cbb946eb96095c00692d82f32fe41f8ac177012c093a7",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-case-paths",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "215981d2a7639726272717c310c6845f097ddff7cf4fff28e5c717a82b2a564a",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-clocks",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "54df6781e2d098a5e411c269df04f1192d5b074499b2cfa467f42a63b2867a21",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-collections",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "be2d76633607c12b30eecd7fbba62718df67c6a302c65ed4cfe524c34a40aa1a",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-composable-architecture",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "e542dc37bb4aa0681fb3c0cfe6d38cadf3f1b655c8b449054c569a8803ba9897",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-concurrency-extras",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "ff68e6c28c39d3e31998a461dfbe81d25dd17a64e054cecd26504f37aa0c7c8b",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-custom-dump",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "6378a2c73e85fa58f256316c40ed4d970175e124f8b4bed4673ffaa13ee06872",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-dependencies",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "fe1bb5743a0c32dfe480888dce5a7b21063e7b914973125b145af50362e6c479",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-identified-collections",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "948250129d152fa0d4b9fe8248af1acdabca0d236b646d02abff2dad8ce67b03",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-navigation",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "4eeb5e4320865c8197a398561c8c7f78fd92a5d647b41748162dcc797321b19e",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-perception",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "e75852ca0a667b9a27bed35f4827493f591de2a98d8717705140e592d29bf120",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-sharing",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "e55e5634718d6f8ef092fe4d606fe1063710f943773914b853d599a3c202df2f",
+      "stage": "native"
+    },
+    {
+      "name": "git-swift-syntax",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "ba5e21087475e4d40069a5e456fe74885c7f7fe69543e2f54765134ea2b9d978",
+      "stage": "native"
+    },
+    {
+      "name": "git-xctest-dynamic-overlay",
+      "exit": 0,
+      "seconds": 0.009,
+      "log_sha256": "b37151f2bd78c6abb707a67b1dd476bdc86f71ab35460aebf9a1370d3cebee1d",
+      "stage": "native"
+    },
+    {
+      "name": "download-maplibre",
+      "exit": 0,
+      "seconds": 0.775,
+      "log_sha256": "a8eb0761b4f87face35255e9b7662b10eb8cd49b2b4687882bd9abe18b176f8b",
+      "stage": "native"
+    },
+    {
+      "name": "extract-maplibre",
+      "exit": 0,
+      "seconds": 0.117,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "native"
+    },
+    {
+      "name": "unapproved-macro-refusal",
+      "exit": 65,
+      "expected_success": false,
+      "log_sha256": "3dacda64ca78dc1d470ed072f117d6075bbaf589c91b73d808f5bc9c3194d9a4",
+      "stage": "native"
+    },
+    {
+      "name": "build",
+      "exit": 0,
+      "seconds": 32.121,
+      "log_sha256": "9269614a22e953e0939e4c8361812a0179ed8e98c6af3c6cae6b343e6815cc4a",
+      "stage": "native"
+    },
+    {
+      "name": "macro-platform-ComposableArchitectureMacros",
+      "exit": 0,
+      "seconds": 0.014,
+      "log_sha256": "ea041f7464cd957d12b5490b2405b2c2fe69c4d079f3eeb31d51b7aa688eee1b",
+      "stage": "native"
+    },
+    {
+      "name": "macro-platform-CasePathsMacros",
+      "exit": 0,
+      "seconds": 0.012,
+      "log_sha256": "ccbf25d0dac69a6dd333241ef08621ad20bc9972b3233802b0cc739de2513b7f",
+      "stage": "native"
+    },
+    {
+      "name": "macro-platform-PerceptionMacros",
+      "exit": 0,
+      "seconds": 0.012,
+      "log_sha256": "1dfedade133813f33b14b432a5da640111d70f95014e866a0323430636970d08",
+      "stage": "native"
+    },
+    {
+      "name": "compile-MobiDI",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-MobiHomeTransport",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-MobiNearbyTransport",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-MobiAppComposition",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-MobiNativeServices",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-export-harness",
+      "exit": 0,
+      "log_sha256": "2511caee3e0eb9f54f9181122e6545fba4ac9100494c96c04e4ec3b527039215",
+      "stage": "kotlin"
+    },
+    {
+      "name": "export-candidate",
+      "exit": 0,
+      "log_sha256": "5a751fb1af5221b0585bd570c5a64c6772b3bea55f7e481a89643067169d6918",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-ExportedKotlinPackages",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-KotlinRuntimeSupport",
+      "exit": 0,
+      "log_sha256": "0b4d65c999f6fb4fcb7174393dbcb3c3dc88feb512ecdc231ef9c2c18398f4b9",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-KotlinCoroutineSupport",
+      "exit": 0,
+      "log_sha256": "bc16a1b13c07cf791af78426eb1e3acc07d50ea6ca31da94da3e8c04646c9b38",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiCore",
+      "exit": 0,
+      "log_sha256": "755ea10fb8dd38f66766bcf66408d9e92c5020ac56278e563d3d35686d375454",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiHome",
+      "exit": 0,
+      "log_sha256": "16fe8cbede32e04e3fea8bbb13a00867ee01d4d7f72d3d14bd707cbf34a2cd73",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiHomeTransport",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiNativeServices",
+      "exit": 0,
+      "log_sha256": "d46facbd499b9961e378667562db53f527b96420bc3e4753b63cd2137398d2ab",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiNearby",
+      "exit": 0,
+      "log_sha256": "3f27f1258e9eead4fa4000097f793c0b3c8820f4dac7b8d12be625c412cd6663",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiDI",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiNearbyTransport",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "emit-MobiAppComposition",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "kotlin"
+    },
+    {
+      "name": "joint-native-archive",
+      "exit": 0,
+      "log_sha256": "6ad2b9112566e4e2e0c1dadb2d087e8c38ad75268616ab726ecf290b6db95828",
+      "stage": "kotlin"
+    },
+    {
+      "name": "compile-native-home-module",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "home"
+    },
+    {
+      "name": "closed-shell-client",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "home"
+    },
+    {
+      "name": "raw-generated-import-refused",
+      "exit": 1,
+      "expected_success": false,
+      "log_sha256": "cd3a3fd2440d0b9cd96d0d8a3bf4da2492630dbfc5575c7c59ceaa8713245270",
+      "stage": "home"
+    },
+    {
+      "name": "private-composition-refused",
+      "exit": 1,
+      "expected_success": false,
+      "log_sha256": "acb26c1bf0763bf08f869cef249d2cc29d68d377acde7c83052a4fa0ef62643c",
+      "stage": "home"
+    },
+    {
+      "name": "link-real-home-app",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "7d08fbeb3ecd35c374e10c9d9e0a7f9ed122d9b72912c45468a5e5af7504646e",
+      "stage": "home"
+    },
+    {
+      "name": "host-plist",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "home"
+    },
+    {
+      "name": "adhoc-sign-home-app",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "f3cbb2c0c7a7894fc2d58b866c493258b130e8bbbbbcfa2009c413eec55be278",
+      "stage": "home"
+    },
+    {
+      "name": "home-runtimes",
+      "exit": 0,
+      "log_sha256": "af52ba9a359028d58a0e3f328599f7bce395a42bf4aff1964b4f44a127a9fea9",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-device-types",
+      "exit": 0,
+      "log_sha256": "96d335258081671854ac94ea0afb6ae77b8b7efc5892942fc8856d1e6f31be0f",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-create",
+      "exit": 0,
+      "log_sha256": "0853e879ccb30ee3765bf673bb3162b2d33a4814c9b61bf691055de59f999ad0",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-boot",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-boot-ready",
+      "exit": 0,
+      "log_sha256": "94af36bf784cf4c87c14913c08e4e347591d0cf5e8f0fe1845ed6f37323099b3",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-install",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-installed-app",
+      "exit": 0,
+      "log_sha256": "e13a9bb2df6b946215c962a5cc79c62e73824a165640b6c25ee9eee799fc70f2",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-launch",
+      "exit": 0,
+      "log_sha256": "690e0f6b27b205cbf4095b1db254b51e78a2bb2ca94dda6004802ebd8689a63c",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-container",
+      "exit": 0,
+      "log_sha256": "2f28c4f54698eb80c63cd28575dd25330be358163849e6fe58583b346661bbad",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-screenshot",
+      "exit": 0,
+      "log_sha256": "7b551875d47bb5dfad3374466d913a5463fd3b66236dee4d2c65eeb27d2911c9",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-terminate",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-shutdown",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-delete",
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stage": "runtime"
+    },
+    {
+      "name": "home-cleanup-verify",
+      "exit": 0,
+      "log_sha256": "b8c6afa6c4649ee05ee9fdfb810e12a6776b507760eed52b8fa62e16b61a9d07",
+      "stage": "runtime"
+    },
+    {
+      "name": "emit-hidden-module",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "b2a39714842e23bbf58418fbb8cfd71605d14cbe19115a17c9f5bc58e61c5c8b",
+      "stage": "compiler-controls"
+    },
+    {
+      "name": "hidden-layout-baseline",
+      "exit": 0,
+      "expected_success": true,
+      "log_sha256": "a185cdbb50537a4b8cc9d53d7ef9f5b19b488117fa3e2b7b9e6a9c2b58ee8077",
+      "stage": "compiler-controls"
+    },
+    {
+      "name": "hidden-layout-checker-refuses",
+      "exit": 1,
+      "expected_success": false,
+      "log_sha256": "b6090a13f7978aaaf5df26db558e7160e34de55a33f710a2b12763672ae38a44",
+      "stage": "compiler-controls"
+    },
+    {
+      "name": "strict-six-support-refuses",
+      "exit": 1,
+      "expected_success": false,
+      "log_sha256": "674f148b5275fa9b45e0d1dc55a0521181d866aabdd6e7a57eef42f19bfb82ee",
+      "stage": "compiler-controls"
+    }
+  ],
+  "failed_attempts": [
+    "Expected macro refusal reached but first parser failed on ASCII encoding; fresh native directory reran UTF-8 control and passed approved build",
+    "TCA macros/conformances cannot all be implementation-only; kept normal native imports and private generated imports without removing checker",
+    "Private alias prevented cross-file internal initializer; corrected alias visibility",
+    "Initial prototype formatting and class/function counts failed static rules; split listener registry and applied pinned formatting without changing rules"
+  ],
+  "remaining_findings": [
+    "Generated coroutine inheritance and KotlinError Sendable remain review-required",
+    "Home native dependency remains normal import; closure applies to generated Kotlin modules",
+    "Request cleanup assertions are internal invariants; resource/object measurements and production settings remain pending",
+    "Candidate still carries legacy Nearby transport in its private image until Nearby integration replaces it",
+    "Assessment harness/test-only Kotlin classes are not production membership",
+    "No supported cold production command or hosted integration gate yet"
+  ],
+  "remaining_gates": [
+    "Native Nearby integration and Shared UI on exact same Home service/delivery",
+    "Complete Kotlin/Compose cohort policy and bypass controls",
+    "Integrated state/payload evolution and stale/version-skew/malformed-input controls",
+    "Repo-owned production build/test orchestration and direct rollback rerun using explicit macro validation",
+    "Fresh selected-graph advisories and diagnostic dispositions",
+    "App measurements and settings disposition",
+    "Exact staged gates, draft publication, cold/relocated replay and hosted",
+    "Android, actual minimum runtime, device and separately authorized release"
+  ],
+  "shipping_default_changed": false,
+  "complete_production_app_qualified": false,
+  "Shared_UI_qualified": false,
+  "cold_qualification": false,
+  "raw_evidence_store": ".maintenance/production-app-20261015T165748Z"
+}

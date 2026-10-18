@@ -1,0 +1,14 @@
+{
+  "version": 8,
+  "name": "Mobi offline diagnostic style",
+  "sources": {},
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#e6ede8"
+      }
+    }
+  ]
+}

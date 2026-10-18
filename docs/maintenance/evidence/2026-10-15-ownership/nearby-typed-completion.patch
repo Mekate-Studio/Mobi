@@ -1,0 +1,216 @@
+--- a/shared-ios-export/src/NearbyFacade.kt
++++ b/shared-ios-export/src/NearbyFacade.kt
+@@ -1,5 +1,6 @@
+ package studio.mekate.mobi.export.nearby
+ 
++import studio.mekate.mobi.export.home.RequestPhase
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.CoroutineStart
+ import kotlinx.coroutines.Dispatchers
+@@ -137,8 +138,8 @@
+ 
+     fun blocked(
+         id: Long,
+-        reason: Int,
+-    ): WireState = store(service.riderLocationBlocked(state(id), decodeBlocked(reason)))
++        reason: RiderLocationBlockedReason,
++    ): WireState = store(service.riderLocationBlocked(state(id), reason))
+ 
+     fun loading(id: Long): WireState = store(service.loadingState(state(id)))
+ 
+@@ -175,11 +176,13 @@
+     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+     private var retired = false
+     private var nextRequest = 1L
++    private var nextObserver = 1L
+     val states = NearbyStateOwner(service)
+ 
+     private class Request {
+         lateinit var job: Job
+-        var phase = 0
++        val observers = mutableMapOf<Long, kotlinx.coroutines.DisposableHandle>()
++        var phase = RequestPhase.Running
+         var value: NearbyVehicleMapFeatureState? = null
+     }
+ 
+@@ -212,27 +215,44 @@
+                 try {
+                     val result = service.refreshSnapshot(current, now)
+                     mainOnly()
+-                    if (retired || request.phase != 0 || currentCoroutineContext()[Job]?.isActive != true) {
++                    if (retired || request.phase != RequestPhase.Running || currentCoroutineContext()[Job]?.isActive != true) {
+                         lateRejected++
+                         throw CancellationException("Late Nearby result")
+                     }
+                     request.value = result
+-                    request.phase = 1
++                    request.phase = RequestPhase.Delivered
+                     delivered++
+                 } catch (error: CancellationException) {
+-                    if (request.phase == 0) {
+-                        request.phase = 2
++                    if (request.phase == RequestPhase.Running) {
++                        request.phase = RequestPhase.Cancelled
+                         cancelled++
+                     }
+                     throw error
+                 } catch (error: IllegalStateException) {
+                     println("Mobi facade invariant failed: ${error.message}")
+-                    if (request.phase == 0) request.phase = 3
++                    if (request.phase == RequestPhase.Running) request.phase = RequestPhase.BridgeFailure
+                 }
+             }
+         request.job.start()
+         return requestId
++    }
++
++    fun observeCompletion(id: Long, observer: () -> Unit): Long {
++        mainOnly()
++        val request = requests[id] ?: return 0
++        if (request.observers.size >= 2) return 0
++        val token = nextObserver++
++        // Only a payload-free, nonthrowing Swift signal is invoked here.
++        // Job completion does not promise an executor; the signal must be thread-safe.
++        val handle = request.job.invokeOnCompletion { observer() }
++        request.observers[token] = handle
++        return token
++    }
++    fun stopObserving(id: Long, token: Long) {
++        mainOnly()
++        requests[id]?.observers?.remove(token)?.dispose()
+     }
++    fun observerCount(): Int { mainOnly(); return requests.values.sumOf { it.observers.size } }
+ 
+     fun poll(id: Long): WireRequest {
+         mainOnly()
+@@ -243,9 +263,9 @@
+     fun consume(id: Long): WireState {
+         mainOnly()
+         val r = checkNotNull(requests[id])
+-        check(r.phase == 1 && r.job.isCompleted && !retired)
++        check(r.phase == RequestPhase.Delivered && r.job.isCompleted && !retired)
+         val result = states.store(checkNotNull(r.value))
+-        requests.remove(id)
++        r.observers.values.forEach { it.dispose() }; requests.remove(id)
+         return result
+     }
+ 
+@@ -253,10 +273,10 @@
+         mainOnly()
+         val r =
+             requests[id] ?: return
+-        if (r.phase == 0 ||
+-            r.phase == 1
++        if (r.phase == RequestPhase.Running ||
++            r.phase == RequestPhase.Delivered
+         ) {
+-            r.phase = 2
++            r.phase = RequestPhase.Cancelled
+             r.value = null
+             cancelled++
+         }
+@@ -267,7 +287,7 @@
+         mainOnly()
+         val request = requests[id]
+         val completed = request == null || request.job.isCompleted
+-        if (completed) requests.remove(id)
++        if (completed) { request?.observers?.values?.forEach { it.dispose() }; requests.remove(id) }
+         return completed
+     }
+ 
+@@ -298,7 +318,7 @@
+ }
+ 
+ data class WireRequest(
+-    val phase: Int,
++    val phase: RequestPhase,
+     val drained: Boolean,
+ )
+ 
+@@ -313,85 +333,4 @@
+     val lateRejected: Int,
+ )
+ 
+-data class WireVehicle(
+-    val id: String,
+-    val latitude: Double,
+-    val longitude: Double,
+-)
+-
+-// Wire tags are transport only; the source feature service owns transitions/freshness.
+-class WireState(
+-    val id: Long,
+-    private val state: NearbyVehicleMapFeatureState,
+-) {
+-    val schemaVersion = 1
+-    private val location = (state.riderLocationState as? VisibleRiderLocationState)?.location
+-    private val snapshot = (state.snapshotState as? SnapshotBackedNearbyVehicleState)?.snapshot
+-    val locationTag =
+-        when (state.riderLocationState) {
+-            RiderLocationState.Resolving -> 0
+-            is RiderLocationState.Available -> 1
+-            RiderLocationState.Denied -> 2
+-            is RiderLocationState.Blocked -> 3
+-            is RiderLocationState.TemporarilyUnavailable -> 4
+-            RiderLocationState.Unavailable -> 5
+-        }
+-    val latitude = location?.latitude
+-    val longitude = location?.longitude
+-    val blockedReason = (state.riderLocationState as? RiderLocationState.Blocked)?.reason?.let(::blockedTag)
+-    val snapshotTag =
+-        when (state.snapshotState) {
+-            NearbyVehicleSnapshotState.Initial -> 0
+-            NearbyVehicleSnapshotState.Loading -> 1
+-            is NearbyVehicleSnapshotState.Loaded -> 2
+-            is NearbyVehicleSnapshotState.Refreshing -> 3
+-            is NearbyVehicleSnapshotState.FailedWithSnapshot -> 4
+-            is NearbyVehicleSnapshotState.FailedWithoutSnapshot -> 5
+-        }
+-    val failureReason = (state.snapshotState as? FailedNearbyVehicleSnapshotState)?.reason?.let(::failureTag)
+-    val sequence = snapshot?.sequence
+-    val loadedAt = snapshot?.loadedAtMillis
+-    val snapshotLatitude = snapshot?.riderLocation?.latitude
+-    val snapshotLongitude = snapshot?.riderLocation?.longitude
+-    val vehicleCount = snapshot?.vehicles?.size ?: 0
+-    val overlayTag =
+-        when (state.mapOverlayState) {
+-            NearbyVehicleMapOverlayState.None -> 0
+-            NearbyVehicleMapOverlayState.RefreshingIndicator -> 1
+-            NearbyVehicleMapOverlayState.StaleIndicator -> 2
+-            NearbyVehicleMapOverlayState.BlockingFailure -> 3
+-        }
+-    val canRefresh = state.canRequestRefresh()
+-    val canInteract = state.canInteractWithVehicles()
+-
+-    fun vehicleAt(index: Int): WireVehicle {
+-        val v = checkNotNull(snapshot).vehicles[index]
+-        return WireVehicle(v.id.value, v.location.latitude, v.location.longitude)
+-    }
+-}
+-
+-private fun blockedTag(reason: RiderLocationBlockedReason): Int =
+-    when (reason) {
+-        RiderLocationBlockedReason.AccessDenied -> 0
+-        RiderLocationBlockedReason.AccessRestricted -> 1
+-        RiderLocationBlockedReason.ServicesDisabled -> 2
+-        RiderLocationBlockedReason.ApproximateOnly -> 3
+-        RiderLocationBlockedReason.TemporarilyUnavailable -> 4
+-    }
+-
+-private fun decodeBlocked(tag: Int): RiderLocationBlockedReason =
+-    when (tag) {
+-        0 -> RiderLocationBlockedReason.AccessDenied
+-        1 -> RiderLocationBlockedReason.AccessRestricted
+-        2 -> RiderLocationBlockedReason.ServicesDisabled
+-        3 -> RiderLocationBlockedReason.ApproximateOnly
+-        4 -> RiderLocationBlockedReason.TemporarilyUnavailable
+-        else -> error("Invalid blocked tag")
+-    }
+-
+-private fun failureTag(reason: NearbyVehicleMapFailureReason): Int =
+-    when (reason) {
+-        NearbyVehicleMapFailureReason.RiderLocationUnavailable -> 0
+-        NearbyVehicleMapFailureReason.RepositoryUnavailable -> 1
+-        NearbyVehicleMapFailureReason.Unexpected -> 2
+-    }
++class WireState(val id: Long, val value: NearbyVehicleMapFeatureState)

@@ -1,0 +1,3 @@
+import UIKit
+import MobiNativeHome
+@MainActor func home(_ services: NativeHomeServices) -> UIViewController { services.makeHomeRoute().makeViewController() }

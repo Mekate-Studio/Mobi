@@ -1,0 +1,131 @@
+#if MOBI_INTEROP_ASSESSMENT
+import Foundation
+import MobiIOSDependencies
+@_implementationOnly import MobiNativeServices
+import UIKit
+
+private typealias NearbyFixture = ExportedKotlinPackages.studio.mekate.mobi.export.candidate
+
+@MainActor enum NearbySliceAssessment {
+    private static func check(_ value: @autoclosure () -> Bool, _ message: String) {
+        precondition(value(), message)
+    }
+    private static func until(_ predicate: @MainActor () -> Bool) async throws {
+        let end = ContinuousClock.now.advanced(by: .seconds(4))
+        while !predicate() {
+            precondition(ContinuousClock.now < end, "Nearby assessment timed out")
+            try await Task.sleep(for: .milliseconds(2))
+        }
+    }
+    private static func fixture(_ noncooperative: Bool = false, fail: Bool = false) -> NearbyFixture.NearbyScenario {
+        NearbyFixture.NearbyScenario(noncooperative: noncooperative, fail: fail, malformed: false)
+    }
+    static func run() async throws -> [String] {
+        var checks: [String] = []
+        let pool = AdmissionPool(capacity: 1), drains = CompletionDrainSupervisor()
+        let gate = fixture()
+        let access = NativeNearbyAccess(facade: gate.facade, supervisor: drains, admission: pool)
+        let route = NativeNearbyRoute(access: access)
+        route.makeViewController().loadViewIfNeeded()
+        route.store.send(.task)
+        check(route.store.mapContent == .waitingForRider && gate.facade.metrics().states == 1, "initial map/handle missing")
+        checks.append("nearby-real-tca-map-controller-and-initial")
+        let load = route.store.send(.locationResolutionResponse(.precise(latitude: 55.6, longitude: 12.5)))
+        try await until { gate.entered() == 1 }
+        check(route.store.activeRequest != nil && !route.store.canRequestRefresh, "loading not visible")
+        gate.completeBackend(); await load.finish()
+        guard case let .riderCentered(scene) = route.store.mapContent else { preconditionFailure("map not centered") }
+        check(scene.riderMarker.coordinate.latitude == 55.6 && scene.vehicleMarkers.first?.id == "candidate-vehicle", "typed map payload lost")
+        check(gate.facade.metrics().states == 1 && gate.facade.metrics().requests == 0 && pool.metrics().active == 0 && gate.facade.completion.observerCount == 0 && access.pendingCount() == 0, "success retained handles/work")
+        checks.append("nearby-typed-location-fleet-and-balanced-handles")
+        let retained = route.store.sharedState!
+        let temporary = route.store.send(.locationResolutionResponse(.temporarilyUnavailable))
+        await temporary.finish()
+        check(route.store.mapContent == retained.mapContent && route.store.message.contains("last resolved"), "temporary loss dropped snapshot")
+        check(gate.facade.metrics().states == 1, "temporary transition retained old handles")
+        checks.append("nearby-temporary-location-preserves-map")
+        route.store.send(.response(UUID(), retained))
+        check(route.store.message.contains("last resolved") && gate.facade.metrics().states == 1, "stale action changed map or released current handle")
+        checks.append("nearby-stale-response-fenced")
+        for reason in [NearbyVehicleMapFeature.LocationBlockedReason.accessDenied, .accessRestricted, .servicesDisabled, .approximateOnly, .temporarilyUnavailable] {
+            await route.store.send(.locationResolutionResponse(.blocked(reason))).finish()
+            check(!route.store.canRequestRefresh && !route.store.canInteractWithVehicles && route.store.overlay.blocksMap, "blocked location remained actionable")
+            check(gate.facade.metrics().states == 1, "blocked transition leaked handles")
+        }
+        checks.append("nearby-all-location-blocks-disable-map-actions")
+        do { _ = try access.available(route.store.sharedState!, latitude: .nan, longitude: 12.5); preconditionFailure("NaN location accepted") } catch NativeNearbyError.invalidInput {}
+        do { _ = try await access.refresh(route.store.sharedState!, now: -1); preconditionFailure("negative time accepted") } catch NativeNearbyError.invalidInput {}
+        check(pool.metrics().active == 0 && gate.entered() == 1, "invalid input reached backend")
+        checks.append("nearby-invalid-input-before-admission")
+        let foreignGate = fixture(), foreignAccess = NativeNearbyAccess(facade: foreignGate.facade, supervisor: drains, admission: pool)
+        do { _ = try foreignAccess.loading(route.store.sharedState!); preconditionFailure("foreign handle accepted") } catch NativeNearbyError.wrongOwner {}
+        let released = try foreignAccess.initial(); foreignAccess.releaseOwned(released)
+        do { _ = try foreignAccess.loading(released); preconditionFailure("released handle accepted") } catch NativeNearbyError.released {}
+        checks.append("nearby-foreign-and-released-handles-refused")
+        let failedGate = fixture(fail: true), failedAccess = NativeNearbyAccess(facade: failedGate.facade, supervisor: drains, admission: pool)
+        let failedRoute = NativeNearbyRoute(access: failedAccess)
+        failedRoute.store.send(.task)
+        let failed = failedRoute.store.send(.locationResolutionResponse(.precise(latitude: 55.6, longitude: 12.5)))
+        try await until { failedGate.entered() == 1 }; failedGate.completeBackend(); await failed.finish()
+        check(failedRoute.store.message == "Nearby vehicles are unavailable. Try refreshing again." && failedRoute.store.boundaryFailure == nil, "repository failure replaced by bridge failure")
+        checks.append("nearby-domain-failure-has-native-presentation")
+        failedGate.allowSuccess()
+        await failedRoute.store.send(.refreshTapped).finish()
+        check(failedGate.entered() == 2 && failedRoute.store.message == "Showing 1 vehicles around the rider." && failedGate.facade.metrics().states == 1, "retry failed or retained states")
+        checks.append("nearby-retry-after-domain-failure")
+        let immediateGate = fixture(); immediateGate.completeBackend()
+        let immediate = NativeNearbyAccess(facade: immediateGate.facade, supervisor: drains, admission: pool)
+        let initial = try immediate.initial(), located = try immediate.available(initial, latitude: 55.6, longitude: 12.5)
+        immediate.releaseOwned(initial)
+        let loaded = try await immediate.refresh(located, now: 1000)
+        try immediate.adoptResult(loaded)
+        do { try immediate.adoptResult(loaded); preconditionFailure("result adopted twice") } catch NativeNearbyError.invalidResult {}
+        immediate.releaseOwned(located)
+        let refreshDue = try immediate.shouldRefresh(loaded, now: 11_000)
+        check(refreshDue, "Kotlin freshness policy not used")
+        let timePassed = try immediate.timePassed(loaded, now: 11_000)
+        immediate.releaseOwned(loaded); immediate.releaseOwned(timePassed)
+        check(immediateGate.facade.metrics().states == 0 && immediateGate.facade.completion.observerCount == 0, "immediate result or observer leaked")
+        checks.append("nearby-immediate-completion-adoption-and-freshness")
+        let unclaimedInitial = try immediate.initial(), unclaimedLocation = try immediate.available(unclaimedInitial, latitude: 55.6, longitude: 12.5)
+        immediate.releaseOwned(unclaimedInitial)
+        let unclaimed = try await immediate.refresh(unclaimedLocation, now: 1001)
+        immediate.discardUnclaimed(unclaimed); immediate.discardUnclaimed(unclaimed)
+        check(immediateGate.facade.metrics().states == 1 && immediate.pendingCount() == 0, "unclaimed result retained or double released")
+        immediate.releaseOwned(unclaimedLocation)
+        checks.append("nearby-unclaimed-result-released-once")
+        let lateGate = fixture(true)
+        var late: NativeNearbyRoute? = NativeNearbyRoute(access: NativeNearbyAccess(facade: lateGate.facade, supervisor: drains, admission: pool))
+        weak let weakRoute = late
+        late!.store.send(.task)
+        let lateTask = late!.store.send(.locationResolutionResponse(.precise(latitude: 55.6, longitude: 12.5)))
+        try await until { lateGate.entered() == 1 }; late!.store.send(.cancelRefresh); await lateTask.finish()
+        check(late!.store.activeRequest == nil && lateGate.facade.metrics().states == 1, "cancellation lost restored state")
+        late!.retire(); late = nil
+        check(weakRoute == nil && drains.metrics().active == 1 && pool.metrics().active == 1, "cleanup retained route or released capacity early")
+        checks.append("nearby-noncooperative-drain-outlives-retired-route")
+        let blockedHomeGate = ExportedKotlinPackages.studio.mekate.mobi.export.d2.Scenario(noncooperative: false, fail: false)
+        let blockedHome = NativeHomeRoute(access: NativeHomeAccess(facade: blockedHomeGate.facade, supervisor: drains, admission: pool))
+        await blockedHome.store.send(.refreshTapped).finish()
+        check(blockedHome.store.admissionFailure == .full && blockedHomeGate.entered() == 0, "Home bypassed shared parent capacity")
+        checks.append("native-home-nearby-share-parent-capacity")
+        lateGate.completeBackend(); try await until { drains.metrics().active == 0 }
+        check(pool.metrics().active == 0 && lateGate.facade.metrics().states == 0 && lateGate.facade.metrics().requests == 0 && lateGate.facade.metrics().delivered == 0 && lateGate.facade.completion.observerCount == 0, "retired late work leaked/delivered")
+        checks.append("nearby-retirement-drains-and-clears-handles")
+        do { _ = try await immediate.refresh(unclaimedLocation, now: 1002); preconditionFailure("released state refreshed") } catch NativeNearbyError.released {}
+        let relay = CancellationRelay()
+        var client = NearbyVehicleMapFeatureClient(access: failedAccess, relay: relay)
+        client.refresh = { _, _ in throw NativeNearbyError.invalidResult }
+        let dependency = client
+        var brokenState = NearbyVehicleMapFeature.State()
+        brokenState.sharedState = failedRoute.store.sharedState
+        let broken = Store(initialState: brokenState) { NearbyVehicleMapFeature().dependency(\.nearbyVehicleMapFeatureClient, dependency) }
+        await broken.send(.refreshTapped).finish()
+        check(broken.boundaryFailure == .invalidResult && broken.message == NativeNearbyError.invalidResult.message && broken.sharedState?.mapContent == failedRoute.store.mapContent, "boundary failure not visible or lost prior map")
+        checks.append("nearby-boundary-failure-visible-with-prior-map")
+        route.retire(); failedRoute.retire(); immediate.retire(); foreignAccess.retire(); broken.send(.retire); blockedHome.retire()
+        check(gate.facade.metrics().states == 0 && failedGate.facade.metrics().states == 0 && immediateGate.facade.metrics().states == 0 && pool.metrics().active == 0, "final ownership cleanup failed")
+        return checks
+    }
+}
+#endif

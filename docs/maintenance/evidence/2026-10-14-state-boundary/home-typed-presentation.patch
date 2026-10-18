@@ -1,0 +1,47 @@
+--- a/ios-app/pilot/swift/HomeCounterLoadable.swift
++++ b/ios-app/pilot/swift/HomeCounterLoadable.swift
+@@ -1,4 +1,6 @@
+ import Foundation
++import MobiHome
++typealias Home = ExportedKotlinPackages.studio.mekate.mobi.feature.home
+ 
+ enum HomeCounterLoadable: Equatable, Sendable {
+     case initial
+@@ -6,18 +8,15 @@
+     case loaded(value: Int)
+     case error(previousValue: Int?, reason: HomeCounterLoadFailureReason)
+ 
+-    init(nativeValue: NativeHomeValue) {
+-        switch nativeValue {
+-        case .initial: self = .initial
+-        case let .loading(value): self = .loading(previousValue: value.map(Int.init))
+-        case let .loaded(value): self = .loaded(value: Int(value))
+-        case let .error(value, reason):
+-            self = .error(
+-                previousValue: value.map(Int.init),
+-                reason: HomeCounterLoadFailureReason(nativeReason: reason),
+-            )
+-        }
++@MainActor init(sharedValue: any Home.CounterLoadable) {
++    switch sharedValue.sealedType() {
++    case .initial: self = .initial
++    case let .loading(v): self = .loading(previousValue: v.value.previousValue.map(Int.init))
++    case let .loaded(v): self = .loaded(value: Int(v.value.value))
++    case let .error(v):
++        self = .error(previousValue: v.value.previousValue.map(Int.init), reason: HomeCounterLoadFailureReason(sharedReason: v.value.reason))
+     }
++}
+ 
+     var currentValueForRefresh: Int {
+         switch self {
+@@ -80,8 +79,8 @@
+     case repositoryUnavailable
+     case unexpected
+ 
+-    init(nativeReason: NativeHomeFailure) {
+-        switch nativeReason {
++    @MainActor init(sharedReason: any Home.CounterLoadFailureReason) {
++        switch sharedReason.sealedType() {
+         case .repositoryUnavailable: self = .repositoryUnavailable
+         case .unexpected: self = .unexpected
+         }
