@@ -1,0 +1,17 @@
+product: jvm/app
+
+# The embeddable compiler's IntelliJ analysis workers require this runtime.
+# IOS-10: remove the explicit selection when the upstream POM supplies it.
+repositories:
+  - https://packages.jetbrains.team/maven/p/ij/intellij-dependencies
+
+dependencies:
+  - com.intellij.platform:kotlinx-coroutines-core-jvm:1.8.0-intellij-13: runtime-only
+  - org.jetbrains.kotlin:swift-export-embeddable:2.4.20
+  - org.jetbrains.kotlin:kotlin-native-utils:2.4.20
+  - org.jetbrains.kotlin:kotlin-compiler-embeddable:2.4.20
+
+settings:
+  kotlin:
+    optIns:
+      - org.jetbrains.kotlin.analysis.api.KaExperimentalApi

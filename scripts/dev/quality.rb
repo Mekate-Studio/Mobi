@@ -90,7 +90,7 @@ module Quality
         config = yaml("#{name}/module.yaml")
         @configs[name] = config
         config.each_key do |key|
-          unless key.is_a?(String) && key.match?(/\A(?:product|dependencies|test-dependencies|settings|test-settings)(?:@[A-Za-z0-9_-]+)?\z/)
+          unless key.is_a?(String) && key.match?(/\A(?:product|dependencies|test-dependencies|settings|test-settings|repositories)(?:@[A-Za-z0-9_-]+)?\z/)
             raise Failure, "Unsupported module layout/configuration #{key.inspect} in #{name}/module.yaml"
           end
         end

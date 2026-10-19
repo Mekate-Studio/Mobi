@@ -52,6 +52,23 @@ module InventoryTest
     native
   end
 
+  test('Renovate updates the scoped exporter runtime version without consuming YAML scope syntax') do
+    config = JSON.parse(File.read(File.join(ROOT, 'renovate.json')))
+    manager = config.fetch('customManagers').find { |m| m['description'].include?('Maven coordinates declared in Kotlin Toolchain module') }
+    pattern = Regexp.new(manager.fetch('matchStrings').first)
+    text = File.read(File.join(ROOT, 'tools/swift-export/module.yaml'))
+    match = nil
+    text.to_enum(:scan, pattern).each do
+      candidate = Regexp.last_match
+      match = candidate if candidate['packageName'] == 'com.intellij.platform:kotlinx-coroutines-core-jvm'
+    end
+    assert(match && match['currentValue'] == '1.8.0-intellij-13')
+    updated = text.dup
+    updated[match.begin('currentValue')...match.end('currentValue')] = '1.8.0-intellij-14'
+    dependency = YAML.safe_load(updated).fetch('dependencies').first
+    assert(dependency == { 'com.intellij.platform:kotlinx-coroutines-core-jvm:1.8.0-intellij-14' => 'runtime-only' })
+  end
+
   test('real Renovate fixture retains all expected native manager groups and compiler plugins') do
     native = Maintenance::NativeExtraction.parse(File.join(ROOT, 'scripts/maintenance/fixtures/renovate-44.93.5.jsonl'))
     assert(native['managers'].keys.sort == %w[bundler dockerfile github-actions gradle gradle-wrapper regex ruby-version swift].sort)
@@ -155,14 +172,15 @@ module InventoryTest
       reject(/identity changed/) { Maintenance::Tools.new(root) }
     end
   end
-  test('Kotlin supplementation covers seven modules, plugins, three lock ecosystems and tool/environment gaps') do
+  test('Kotlin supplementation covers all nine modules, scoped build tools, plugins and explicit resolution gaps') do
     source = Maintenance::Source.new(ROOT)
     native = current_native(source)
     config = JSON.parse(File.read(File.join(ROOT, 'renovate.json')))
     # Deliberate fixture ceiling, independent of the repository's adopted policy.
     config.fetch('packageRules').each { |r| r['allowedVersions'] = '<1.2.0' if r['allowedVersions'] && r.fetch('matchPackageNames', []).include?('/^dev\\.zacsweers\\.metro:/') }
     result = Maintenance::Kotlin.new(ROOT, source.files, native, config).inventory
-    assert(result['modules'].size == 7)
+    assert(result['modules'].size == 9)
+    assert(result['components'].any? { |c| c['name'] == 'com.intellij.platform:kotlinx-coroutines-core-jvm' && c['version'] == '1.8.0-intellij-13' && c['source'] == 'tools/swift-export/module.yaml' })
     assert(result['resolved_inputs'].map { |r| r['id'].split(':').first }.sort == %w[npm rubygems swift])
     assert(result['resolved_inputs'].find { |r| r['id'].start_with?('swift:') }['packages'].size == 15)
     assert(result['components'].any? { |c| c['name'] == 'Kotlin Toolchain' && c['artifact_sha256'].size == 64 })

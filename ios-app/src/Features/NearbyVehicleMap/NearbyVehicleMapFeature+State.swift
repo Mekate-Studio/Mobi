@@ -1,5 +1,6 @@
-@preconcurrency import KotlinModules
+@preconcurrency import MobiCore
 import MobiIOSDependencies
+@preconcurrency import MobiNearby
 
 extension NearbyVehicleMapFeature {
     @ObservableState
@@ -30,15 +31,15 @@ extension NearbyVehicleMapFeature {
                 return "Preparing the rider-centered nearby vehicle map."
             }
 
-            switch mobiProjection(of: sharedState.riderLocationState) {
+            switch sharedState.riderLocationState.sealedType() {
             case .resolving:
                 return "Grant while-in-use location access to center discovery around the rider."
             case .available:
                 return vehicleCountText
             case .denied:
-                return blockedLocationMessage(.accessDenied)
+                return blockedLocationMessage(.AccessDenied)
             case let .blocked(state):
-                return blockedLocationMessage(state.reason)
+                return blockedLocationMessage(state.value.reason)
             case .temporarilyUnavailable:
                 return "Live location is temporarily unavailable. Keeping the last resolved rider position."
             case .unavailable:
@@ -52,7 +53,7 @@ extension NearbyVehicleMapFeature {
 
         var canInteractWithVehicles: Bool {
             guard hasResolvedRiderLocation, let sharedState else { return false }
-            guard case .blockingFailure = mobiProjection(of: sharedState.mapOverlayState) else {
+            guard case .blockingFailure = sharedState.mapOverlayState.sealedType() else {
                 return true
             }
             return false
@@ -73,7 +74,7 @@ extension NearbyVehicleMapFeature {
         var overlay: NearbyVehicleMapOverlay {
             guard let sharedState else { return .none }
 
-            switch mobiProjection(of: sharedState.mapOverlayState) {
+            switch sharedState.mapOverlayState.sealedType() {
             case .none:
                 return .none
             case .refreshingIndicator:
@@ -88,7 +89,7 @@ extension NearbyVehicleMapFeature {
         var canRequestRefresh: Bool {
             guard hasResolvedRiderLocation, let sharedState else { return false }
 
-            switch mobiProjection(of: sharedState.snapshotState) {
+            switch sharedState.snapshotState.sealedType() {
             case .loading, .refreshing:
                 return false
             case .initial, .loaded, .failedWithSnapshot, .failedWithoutSnapshot:
@@ -99,15 +100,15 @@ extension NearbyVehicleMapFeature {
         private var currentSnapshot: FleetSnapshot? {
             guard let sharedState else { return nil }
 
-            switch mobiProjection(of: sharedState.snapshotState) {
+            switch sharedState.snapshotState.sealedType() {
             case .initial, .loading:
                 return nil
             case let .loaded(state):
-                return state.snapshot
+                return state.value.snapshot
             case let .refreshing(state):
-                return state.snapshot
+                return state.value.snapshot
             case let .failedWithSnapshot(state):
-                return state.snapshot
+                return state.value.snapshot
             case .failedWithoutSnapshot:
                 return nil
             }
@@ -123,29 +124,29 @@ extension NearbyVehicleMapFeature {
         private var riderLocation: RiderLocation? {
             guard let sharedState else { return nil }
 
-            switch mobiProjection(of: sharedState.riderLocationState) {
+            switch sharedState.riderLocationState.sealedType() {
             case .resolving, .denied, .blocked:
                 return nil
             case let .available(state):
-                return state.location
+                return state.value.location
             case let .temporarilyUnavailable(state):
-                return state.location
+                return state.value.location
             case .unavailable:
                 return nil
             }
         }
 
         private func blockedLocationMessage(_ reason: RiderLocationBlockedReason) -> String {
-            switch mobiProjection(of: reason) {
-            case .accessDenied:
+            switch reason {
+            case .AccessDenied:
                 "Precise location access is required before nearby vehicles can be positioned relative to the rider."
-            case .accessRestricted:
+            case .AccessRestricted:
                 "Precise location is restricted on this device, so nearby vehicle discovery is blocked."
-            case .servicesDisabled:
+            case .ServicesDisabled:
                 "Location services are unavailable, so nearby vehicle discovery is blocked."
-            case .approximateOnly:
+            case .ApproximateOnly:
                 "Precise location is required for nearby vehicle discovery."
-            case .temporarilyUnavailable:
+            case .TemporarilyUnavailable:
                 "Rider location is temporarily unavailable, so discovery is blocked."
             }
         }
@@ -213,7 +214,7 @@ struct NearbyVehicleMapVehicleMarker: Equatable {
     let coordinate: NearbyVehicleMapCoordinate
 
     init(vehicle: NearbyVehicle) {
-        id = String(describing: vehicle.id)
+        id = vehicle.id.value
         coordinate = NearbyVehicleMapCoordinate(location: vehicle.location)
     }
 }

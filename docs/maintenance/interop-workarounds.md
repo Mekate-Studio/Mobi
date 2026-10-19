@@ -4,14 +4,15 @@ This inventory separates application improvements from temporary integration
 mechanisms. The [registry](../../maintenance-interop-workarounds.json) names each
 workaround, its affected code, replacement, recheck triggers and removal checks.
 It includes the maintained direct app and unmerged work from PRs #37/#38;
-listing a candidate mechanism does not adopt it.
+listing a candidate mechanism does not adopt it. The actual app integration and
+its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-export-for-native-features.md).
 
 ## Workarounds first
 
 | ID | Mechanism | Retirement or simplification target |
 | --- | --- | --- |
-| IOS-01 | Current Kotlin visitors and Swift projections | Generated exhaustive state handling in real consumers; delete both handwritten layers |
-| IOS-02 | Current unchecked Kotlin state Sendable declaration | Checked actor ownership/native values; remove unsupported crossing assertions |
+| IOS-01 | Former Kotlin visitors and Swift projections, removed by the app integration | Generated exhaustive state handling in real consumers; delete both handwritten layers |
+| IOS-02 | Unchecked raw-state sendability and preconcurrency service captures | Checked actor ownership/native values; remove unsupported crossing assertions |
 | IOS-03 | Pilot numeric tags, wire facades and decoders | Delete the duplicate protocol as actual feature slices replace it; no upstream release is needed to reject this design |
 | IOS-04 | Home/Nearby request-owner facades | Qualified direct async or a smaller operation owner; remove redundant request registries and facade API |
 | IOS-05 | Nearby state IDs, owner UUIDs and adopt/release calls | Qualify retained actor-owned state; delete the state dictionary and manual ownership protocol |
@@ -23,6 +24,8 @@ listing a candidate mechanism does not adopt it.
 | IOS-11 | Explicit macro-validation invocation override | Reliable validation in the scoped environment; keep exact approvals and negative refusal control |
 | IOS-12 | Private JVM temp handling for affected tool inputs | Exact-graph dependency remediation/risk review; temp handling does not fix unrelated vulnerabilities |
 | IOS-13 | Serialized Home/Nearby test suite | Parallel execution after TCA provides per-test executor isolation; preserve overlapping-request regression checks |
+| IOS-14 | Kotlin-owned live-client repository fixtures | Recheck native error round-trips; preserve typed Kotlin failure meaning and cancellation coverage |
+| IOS-15 | Test-only Kotlin constructors for internal generated nested aliases | Public generated case constructors; delete the helper constructors without mangled aliases |
 
 “Facade” is a pattern name, not a defect category. The request/wire facades above
 compensate for integration limitations or candidate representation choices.
@@ -30,6 +33,13 @@ An ordinary feature client or composition root can remain useful after those
 workarounds disappear. Native presentation types, `@MainActor` isolation,
 compiler checking, package locks and macro approvals are not removal targets
 merely because a temporary bridge uses them.
+
+The normal iOS test job checks the actual generated modules. It verifies complete
+switches and omitted-case rejection, then reports strict generated-support and
+nested-constructor availability. Reports are in `build/logs/swift-export-checks/` and uploaded from PR jobs even
+when the checks pass.
+The release watch marks these checks `available_in_ci`; it does not pretend to
+have run them or turn a passing probe into retirement authorization.
 
 ## Changes with a different purpose
 
@@ -107,6 +117,7 @@ reproducer and proposed report for review before publishing upstream.
 | IOS-04, IOS-06, IOS-08 | Coroutine docs and KT-80305; follow cancellation/exception issues, not just the parent status | Real success/error/cancellation/late completion, strict support compilation and unfinished-work ownership |
 | IOS-07, IOS-10 | Architecture, standalone execution, compiler bridges, module export and sample build configuration | Narrow generated API, one Kotlin image, correct module graph and supported cold Toolchain delivery |
 | IOS-11, IOS-12 | Relevant Xcode/macro documentation and exact dependency/advisory evidence | These environment/risk controls cannot be retired from Swift-export milestones alone |
+| IOS-14, IOS-15 | Reverse async exception identity and public generated nested constructors | Real repository-failure round-trip and native tests after deleting compensating fixtures |
 
 IOS-13 is a native test-harness constraint, not a Swift-export limitation. The
 pinned [TCA TestStore](https://github.com/pointfreeco/swift-composable-architecture/blob/e2fa1df6cd9eec6fa6314aa20513e47da576f24e/Sources/ComposableArchitecture/TestStore.swift#L471-L477)
@@ -171,8 +182,9 @@ An eligible release observed by an existing provider marks matching entries
 an unchanged known gap stays quiet but remains in every report. This is a
 reassessment request, never a claim that the release fixes the limitation.
 
-This first slice does **not** automate the retirement probes. Every entry says
-`probe_state: not_automated` and `retirement_state: unverified`. Missing provider
+The release watch does not execute retirement probes. Entries either say
+`probe_state: not_automated` or point to compile checks as `available_in_ci`;
+watch results still say `retirement_state: unverified`. Missing provider
 coverage, including Swift/Xcode, coroutines and native dependency/risk triggers,
 is explicit. Absent pilot/candidate source means `not_in_checkout`, not retired.
 The existing watch is bounded release discovery and is not an advisory review.

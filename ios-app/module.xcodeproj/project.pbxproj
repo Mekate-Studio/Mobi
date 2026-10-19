@@ -113,7 +113,6 @@
 				A93CF19A71E94FF8EAB2A48D /* Sources */,
 				A93CFB18D8F0162B8642836E /* Frameworks */,
 				A93CF1127A893585707018F1 /* Resources */,
-				A93CF0D4D71D4D59A2C85A01 /* Embed Kotlin Frameworks */,
 			);
 			buildRules = (
 			);
@@ -199,21 +198,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A93CF0D4D71D4D59A2C85A01 /* Embed Kotlin Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Kotlin Frameworks";
-			outputPaths = (
-				"$(TARGET_TEMP_DIR)/.kotlin-embed-stamp",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -eu\nKotlinFrameworksDir=\"${TARGET_BUILD_DIR}/AmperFrameworks\"\nAppFrameworksDir=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nStampFile=\"${TARGET_TEMP_DIR}/.kotlin-embed-stamp\"\nLegacyStampFile=\"${AppFrameworksDir}/.amper-embed-stamp\"\n\nmkdir -p \"${AppFrameworksDir}\"\nmkdir -p \"$(dirname \"${StampFile}\")\"\n/bin/rm -f \"${LegacyStampFile}\"\n\nif [ -d \"${KotlinFrameworksDir}\" ]; then\n  for framework in \"${KotlinFrameworksDir}\"/*.framework; do\n    [ -e \"${framework}\" ] || continue\n\n    framework_name=\"$(basename \"${framework}\")\"\n    executable_name=\"$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' \"${framework}/Info.plist\" 2>/dev/null || basename \"${framework}\" .framework)\"\n    binary_path=\"${framework}/${executable_name}\"\n    file_output=\"$(/usr/bin/file \"${binary_path}\" 2>/dev/null || true)\"\n\n    case \"${file_output}\" in\n      *\"dynamically linked shared library\"*)\n        /usr/bin/rsync -aL \"${framework}/\" \"${AppFrameworksDir}/${framework_name}/\"\n        if [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n          /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --generate-entitlement-der \"${AppFrameworksDir}/${framework_name}\"\n        fi\n        ;;\n      *)\n        echo \"Skipping static framework ${framework_name}\"\n        ;;\n    esac\n  done\n\n  /bin/rm -rf \"${KotlinFrameworksDir}\"\nfi\n\n/usr/bin/touch \"${StampFile}\"\n";
-		};
 		A93CF46588F1B180AC5404FB /* Build Kotlin */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -227,7 +211,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# !KOTLIN INTEGRATION STEP!\n# This script is managed by the Kotlin Toolchain, do not edit manually!\n\"${KOTLIN_CLI_WRAPPER_PATH}\" tool xcode-integration\n";
+			shellScript = "set -eu\n/usr/bin/ruby \"${SRCROOT}/../scripts/ios/build_swift_export.rb\"\n";
 		};
 		E04D202610040001001664A3 /* Validate Kotlin Builder */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -272,6 +256,9 @@
 		A93CF06FCC6EDBAAD219309E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				SWIFT_INCLUDE_PATHS = ("$(inherited)", "$(SRCROOT)/../build/swift-export/$(CONFIGURATION)-$(PLATFORM_NAME)/Package");
+				LIBRARY_SEARCH_PATHS = ("$(inherited)", "$(SRCROOT)/../build/swift-export/$(CONFIGURATION)-$(PLATFORM_NAME)/Package");
+				OTHER_LDFLAGS = ("$(inherited)", "-lMobiNative", "-lExportedKotlinPackages", "-lKotlinRuntimeSupport", "-lKotlinCoroutineSupport", "-lMobiCore", "-lMobiHome", "-lMobiNearby", "-lMobiIOS", "-lc++");
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				KOTLIN_CLI_WRAPPER_PATH = ../kotlin;
@@ -285,10 +272,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(TARGET_BUILD_DIR)/AmperFrameworks",
-				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = src/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -317,6 +300,9 @@
 		A93CF7D25C52225D684DCD18 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				SWIFT_INCLUDE_PATHS = ("$(inherited)", "$(SRCROOT)/../build/swift-export/$(CONFIGURATION)-$(PLATFORM_NAME)/Package");
+				LIBRARY_SEARCH_PATHS = ("$(inherited)", "$(SRCROOT)/../build/swift-export/$(CONFIGURATION)-$(PLATFORM_NAME)/Package");
+				OTHER_LDFLAGS = ("$(inherited)", "-lMobiNative", "-lExportedKotlinPackages", "-lKotlinRuntimeSupport", "-lKotlinCoroutineSupport", "-lMobiCore", "-lMobiHome", "-lMobiNearby", "-lMobiIOS", "-lc++");
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				KOTLIN_CLI_WRAPPER_PATH = ../kotlin;
@@ -328,10 +314,6 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(TARGET_BUILD_DIR)/AmperFrameworks",
-				);
 				INFOPLIST_FILE = src/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -359,6 +341,9 @@
 		B13D10092F800001001664A3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = ("$(inherited)", "-lMobiTestSupport");
+				SWIFT_INCLUDE_PATHS = ("$(inherited)", "$(SRCROOT)/../build/swift-export/$(CONFIGURATION)-$(PLATFORM_NAME)/Package");
+				LIBRARY_SEARCH_PATHS = ("$(inherited)", "$(SRCROOT)/../build/swift-export/$(CONFIGURATION)-$(PLATFORM_NAME)/Package");
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -366,10 +351,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(TARGET_BUILD_DIR)/AmperFrameworks",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -391,6 +372,9 @@
 		B13D100A2F800001001664A3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = ("$(inherited)", "-lMobiTestSupport");
+				SWIFT_INCLUDE_PATHS = ("$(inherited)", "$(SRCROOT)/../build/swift-export/$(CONFIGURATION)-$(PLATFORM_NAME)/Package");
+				LIBRARY_SEARCH_PATHS = ("$(inherited)", "$(SRCROOT)/../build/swift-export/$(CONFIGURATION)-$(PLATFORM_NAME)/Package");
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -398,10 +382,6 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(TARGET_BUILD_DIR)/AmperFrameworks",
-				);
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

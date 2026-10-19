@@ -1,22 +1,25 @@
-import KotlinModules
+import MobiHome
+import MobiIOS
 import MobiIOSDependencies
+import MobiNearby
+import UIKit
 
 @MainActor
 struct AppServices {
     let homeFeatureClient: HomeFeatureClient
     let nearbyVehicleMapFeatureClient: NearbyVehicleMapFeatureClient
-    let sharedHomeViewControllerFactory: SharedHomeViewControllerFactory
+    let makeSharedHomeViewController: @MainActor () -> UIViewController
 
     init(
-        homeFeatureService: HomeFeatureService = SharedDependencies.shared.createDefaultHomeFeatureService(),
-        nearbyVehicleMapFeatureService: NearbyVehicleMapFeatureService = SharedDependencies.shared
-            .createDefaultNearbyVehicleMapFeatureService(),
+        homeFeatureService: HomeFeatureService = IosDependencies.shared.createHomeFeatureService(),
+        nearbyVehicleMapFeatureService: NearbyVehicleMapFeatureService = IosDependencies.shared
+            .createNearbyVehicleMapFeatureService(),
     ) {
         homeFeatureClient = HomeFeatureClient(service: homeFeatureService)
         nearbyVehicleMapFeatureClient = NearbyVehicleMapFeatureClient(service: nearbyVehicleMapFeatureService)
-        sharedHomeViewControllerFactory = SharedHomeViewControllerFactory(
-            service: homeFeatureService,
-        )
+        makeSharedHomeViewController = {
+            IosDependencies.shared.createSharedHomeViewController(service: homeFeatureService)
+        }
     }
 
     func makeHomeStore() -> StoreOf<HomeFeature> {

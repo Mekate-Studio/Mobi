@@ -1,0 +1,12 @@
+product:
+  type: kmp/lib
+  platforms: [iosArm64, iosSimulatorArm64]
+
+dependencies:
+  - ../shared-di
+  - ../shared-ui-home
+
+settings:
+  kotlin:
+    optIns:
+      - kotlinx.cinterop.ExperimentalForeignApi

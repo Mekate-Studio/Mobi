@@ -184,6 +184,30 @@ module ValidationTest
     end
   end
 
+  test('iOS client fixtures select the hosted runner while unknown native tests still refuse') do |f|
+    base(f)
+    f.write('project.yaml', "modules: [feature, android-app, shared-ios-app]\n")
+    f.write('shared-ios-app/module.yaml', "product:\n  type: kmp/lib\n  platforms: [iosArm64, iosSimulatorArm64]\n")
+    fixture = 'shared-ios-app/test@ios/IosInteropTestServices.kt'
+    f.write(fixture, 'object IosInteropTestServices')
+    f.stage
+    f.git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '--quiet', '--no-verify', '-m', 'native fixtures')
+    f.write(fixture, 'object IosInteropTestServices { val value = 1 }')
+    f.stage
+    data = plan(f)
+    assert(data['jobs'] == %w[ios-test ios-build-debug], data.inspect)
+    assert(data['host_test_modules'] == [], data.inspect)
+    assert(Dir.chdir(f.root) { HostTests.modules } == ['android-app'], 'native fixtures entered Android tests')
+    f.write('shared-ios-app/test@ios/UnregisteredTest.kt', 'class UnregisteredTest')
+    f.stage
+    begin
+      Dir.chdir(f.root) { HostTests.modules }
+      raise 'unregistered native test accepted'
+    rescue Quality::Failure => error
+      assert(error.message.include?('Uncovered Kotlin test target'), error.message)
+    end
+  end
+
   test('ignored unstaged tests do not enter the staged validation plan') do |f|
     base(f)
     f.write('project.yaml', "modules: [feature, android-app, new-module]\n")

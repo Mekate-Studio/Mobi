@@ -103,7 +103,12 @@ module Maintenance
         data = graph.configs.fetch(name)
         walk = lambda do |value, keys|
           case value
-          when Hash then value.each { |key, item| walk.call(item, keys + [key]) }
+          when Hash
+            value.each do |key, item|
+              # Scoped dependency coordinates are YAML keys, not values.
+              walk.call(key, keys) if key.is_a?(String) && key.match?(/\A[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[^\s]+\z/)
+              walk.call(item, keys + [key])
+            end
           when Array then value.each { |item| walk.call(item, keys) }
           when String
             if value.match?(/\A[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+:[^\s]+\z/)

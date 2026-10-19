@@ -162,6 +162,13 @@ jobs:
           bundler-cache: true
       - name: Run iOS pull-request tests
         run: ./scripts/ci/run_job.sh ios-test
+      - name: Upload Swift-export checks
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: swift-export-checks-${{ github.sha }}
+          if-no-files-found: ignore
+          path: build/logs/swift-export-checks
       - name: Upload failure diagnostics
         if: failure()
         uses: actions/upload-artifact@v7

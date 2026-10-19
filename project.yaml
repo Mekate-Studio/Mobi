@@ -5,4 +5,6 @@ modules:
   - shared-di
   - shared-feature-home
   - shared-feature-nearby-vehicle-map
+  - shared-ios-app
   - shared-ui-home
+  - tools/swift-export
