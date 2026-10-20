@@ -1,6 +1,7 @@
 import Foundation
-@preconcurrency import KotlinModules
+@preconcurrency import MobiCore
 import MobiIOSDependencies
+@preconcurrency import MobiNearby
 
 extension NearbyVehicleMapFeatureState: @unchecked @retroactive Sendable {}
 
@@ -54,7 +55,7 @@ extension NearbyVehicleMapFeatureClient {
                         nowMillis: nowMillis,
                     )
                 } catch {
-                    return currentState.cancelledRefreshState()
+                    return cancelledRefreshState(currentState)
                 }
             },
             shouldRefresh: { currentState, nowMillis in
@@ -118,15 +119,15 @@ private extension NearbyVehicleMapFeature.LocationBlockedReason {
     var sharedReason: RiderLocationBlockedReason {
         switch self {
         case .accessDenied:
-            .accessDenied
+            .AccessDenied
         case .accessRestricted:
-            .accessRestricted
+            .AccessRestricted
         case .servicesDisabled:
-            .servicesDisabled
+            .ServicesDisabled
         case .approximateOnly:
-            .approximateOnly
+            .ApproximateOnly
         case .temporarilyUnavailable:
-            .temporarilyUnavailable
+            .TemporarilyUnavailable
         }
     }
 }

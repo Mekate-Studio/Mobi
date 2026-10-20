@@ -114,8 +114,11 @@ module KotlinRehearsalTest
   end
 
   def self.target_fixture(root)
-    FileUtils.cp(File.join(ROOT, 'project.yaml'), root)
-    %w[android-app ios-app].concat(Maintenance::KotlinTargets::MODULES).each do |name|
+    # This fixture models the historical seven-module Intel-to-ARM upgrade,
+    # independently of additional modules in the maintained app.
+    modules = %w[android-app ios-app] + Maintenance::KotlinTargets::MODULES
+    File.write(File.join(root, 'project.yaml'), YAML.dump('modules' => modules))
+    modules.each do |name|
       FileUtils.mkdir_p(File.join(root, name))
       FileUtils.cp(File.join(ROOT, name, 'module.yaml'), File.join(root, name))
       if Maintenance::KotlinTargets::MODULES.include?(name)

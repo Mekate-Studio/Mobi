@@ -34,7 +34,7 @@ module Maintenance
         end
         # Absence can mean an unmerged candidate, not successful removal.
         source_state = present.empty? ? 'not_in_checkout' : present.size == entry['paths'].size ? 'present' : 'partially_present'
-        row = entry.slice('title', 'scope', 'replacement', 'retirement_checks', 'probe_state').merge(
+        row = entry.slice('title', 'scope', 'replacement', 'retirement_checks', 'probe_state', 'probe_command', 'probe_report').merge(
           'source_state' => source_state, 'present_paths' => present,
           'source_sha256' => Maintenance.digest(present.sort.to_h { |path| [path, source_files.fetch(path)] }),
           'recheck_state' => leads.empty? ? 'review_required' : 'release_review_due',
@@ -59,7 +59,12 @@ module Maintenance
         value = entry[key]
         valid &&= value.is_a?(Array) && !value.empty? && value.all? { |item| item.is_a?(String) && !item.empty? }
       end
-      raise Failure, 'Invalid interop workaround entry' unless valid && entry['probe_state'] == 'not_automated'
+      valid &&= %w[not_automated available_in_ci].include?(entry['probe_state'])
+      if entry['probe_state'] == 'available_in_ci'
+        valid &&= entry['probe_command'] == 'ruby scripts/ios/check_swift_export.rb' &&
+                  entry['probe_report'] == 'build/logs/swift-export-checks/report.json'
+      end
+      raise Failure, 'Invalid interop workaround entry' unless valid
       entry['paths'].each do |path|
         raise Failure, 'Invalid workaround source path' if Pathname.new(path).absolute? || path.split('/').include?('..')
       end
@@ -69,7 +74,7 @@ module Maintenance
       return [] if entries.empty?
 
       lines = ['', '## Interop workaround retirement', '',
-               'Release leads request reassessment; no retirement probes ran and no removal is authorized.', '',
+               'Release leads request reassessment. This watch did not run retirement probes; available CI checks are pointers, not removal evidence.', '',
                '| ID | Scope | Source | Recheck | Probe |', '| --- | --- | --- | --- | --- |']
       entries.sort.each do |id, row|
         lines << '| ' + [id, row.fetch('scope'), row.fetch('source_state'), row.fetch('recheck_state'), row.fetch('probe_state')].join(' | ') + ' |'

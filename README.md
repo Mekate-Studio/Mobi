@@ -93,12 +93,13 @@ entry points:
 - [iOS Gradle Bridge Migration](docs/reference/ios-gradle-bridge.md)
 - [Quality And Dependency Maintenance Audit](docs/maintenance/README.md)
 
-The approved direct development default uses Kotlin Toolchain for iOS development, tests
-and unsigned builds, with explicit typed Swift projections. Gradle/unknown
+The iOS development path uses Kotlin Toolchain for KLib compilation and a tracked
+Swift-export producer for generated native Home/Nearby APIs. Xcode owns the app,
+native packages, tests and unsigned builds; one Kotlin archive also contains Shared UI. Gradle/unknown
 iOS builder overrides refuse; rollback restores complete content first.
 Credentialed iOS archive/export/TestFlight lanes are held pending separate
 signed-delivery evidence and authorization. The bridge has a separate removal change; complete published Git revisions
-preserve content rollback. See the [accepted decision](docs/adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+preserve content rollback. See the [integration decision and trade-offs](docs/adr/0009-generated-swift-export-for-native-features.md).
 
 ## Repository Shape
 
@@ -106,10 +107,13 @@ preserve content rollback. See the [accepted decision](docs/adr/0008-explicit-io
 - [`shared-core/`](shared-core): platform-agnostic shared domain logic
 - [`shared-feature-home/`](shared-feature-home): shared feature contract and
   state
+- [`shared-feature-nearby-vehicle-map/`](shared-feature-nearby-vehicle-map): rider-centered map state and refresh policy
 - [`shared-di/`](shared-di): shared dependency graph and composition helpers
+- [`shared-ios-app/`](shared-ios-app): iOS composition and the shared UIKit entry point
 - [`shared-ui-home/`](shared-ui-home): shared Compose UI for the home feature
 - [`android-app/`](android-app): Android app shell
 - [`ios-app/`](ios-app): iOS app shell
+- [`tools/swift-export/`](tools/swift-export): tracked standalone exporter, pending Toolchain integration
 - [`docs/adr/`](docs/adr): architecture decision records
 - [`scripts/ci/run_job.sh`](scripts/ci/run_job.sh): repo-owned job dispatcher
 - [`fastlane/Fastfile`](fastlane/Fastfile): build and release lanes

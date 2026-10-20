@@ -1,5 +1,5 @@
 import Foundation
-@preconcurrency import KotlinModules
+@preconcurrency import MobiHome
 import MobiIOSDependencies
 
 struct HomeFeatureClient: Sendable {
@@ -60,20 +60,20 @@ extension DependencyValues {
 
 private extension HomeCounterLoadable {
     init(sharedState: HomeFeatureState) {
-        switch mobiProjection(of: sharedState.counterLoadable) {
+        switch sharedState.counterLoadable.sealedType() {
         case .initial:
             self = .initial
 
         case let .loading(loading):
-            self = .loading(previousValue: loading.previousValue?.intValue)
+            self = .loading(previousValue: loading.value.previousValue.map(Int.init))
 
         case let .loaded(loaded):
-            self = .loaded(value: Int(loaded.value))
+            self = .loaded(value: Int(loaded.value.value))
 
         case let .error(error):
             self = .error(
-                previousValue: error.previousValue?.intValue,
-                reason: HomeCounterLoadFailureReason(sharedReason: error.reason),
+                previousValue: error.value.previousValue.map(Int.init),
+                reason: HomeCounterLoadFailureReason(sharedReason: error.value.reason),
             )
         }
     }
@@ -81,7 +81,7 @@ private extension HomeCounterLoadable {
 
 private extension HomeCounterLoadFailureReason {
     init(sharedReason: CounterLoadFailureReason) {
-        switch mobiProjection(of: sharedReason) {
+        switch sharedReason.sealedType() {
         case .repositoryUnavailable:
             self = .repositoryUnavailable
         case .unexpected:

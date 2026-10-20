@@ -30,7 +30,7 @@ private struct AppRootView: View {
                 }
                 .tag(AppDestination.nearbyMap)
 
-            SharedHomeDemoView(factory: appServices.sharedHomeViewControllerFactory)
+            SharedHomeDemoView(makeViewController: appServices.makeSharedHomeViewController)
                 .tabItem {
                     Label("Shared UI", systemImage: "square.stack.3d.up")
                 }

@@ -20,7 +20,7 @@
         "/(^|/)module\\.yaml$/"
       ],
       "matchStrings": [
-        "(?:^|\\n)(?<indentation>\\s*)-\\s+(?<packageName>[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+):(?<currentValue>[^\\s#]+)"
+        "(?:^|\\n)(?<indentation>\\s*)-\\s+(?<packageName>[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+):(?<currentValue>[^\\s:#]+)"
       ],
       "datasourceTemplate": "maven",
       "versioningTemplate": "gradle"
@@ -32,7 +32,7 @@
         "/(^|/)module\\.yaml$/"
       ],
       "matchStrings": [
-        "(?:^|\\n)(?<indentation>\\s*)dependency:\\s+(?<packageName>[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+):(?<currentValue>[^\\s#]+)"
+        "(?:^|\\n)(?<indentation>\\s*)dependency:\\s+(?<packageName>[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+):(?<currentValue>[^\\s:#]+)"
       ],
       "datasourceTemplate": "maven",
       "versioningTemplate": "gradle"
@@ -142,6 +142,19 @@
         "major"
       ],
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Resolve the Swift-export analysis runtime from its publisher repository.",
+      "matchDatasources": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "com.intellij.platform:kotlinx-coroutines-core-jvm"
+      ],
+      "registryUrls": [
+        "https://packages.jetbrains.team/maven/p/ij/intellij-dependencies"
+      ],
+      "groupName": "swift export analysis runtime"
     }
   ]
 }

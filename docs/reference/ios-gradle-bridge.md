@@ -1,12 +1,13 @@
 # iOS build transition and recovery
 
-The current development/test/unsigned default uses Kotlin Toolchain and explicit
-typed projections. Xcode owns native targets and Swift packages. The physical
+The current development/test/unsigned path uses Toolchain KLib compilation and
+a tracked Swift-export producer. Xcode owns native targets and Swift packages. The physical
 removal change removes the hand-maintained iOS bridge, while Android continues
 using Toolchain delegated Gradle/AGP where required.
 
-See [ADR 0008](../adr/0008-explicit-ios-projections-and-direct-development-builds.md)
-and the [removal record](../maintenance/bridge-removal.md) for current scope,
+See [ADR 0009](../adr/0009-generated-swift-export-for-native-features.md)
+for generated delivery, [ADR 0008](../adr/0008-explicit-ios-projections-and-direct-development-builds.md)
+for the earlier direct path, and the [removal record](../maintenance/bridge-removal.md) for current scope,
 validation and full-content recovery. Credentialed delivery remains held.
 A builder flag cannot restore the prior SKIE consumers; restore their complete
 published revision in an isolated copy and rebuild before use.

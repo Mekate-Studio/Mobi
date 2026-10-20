@@ -241,13 +241,23 @@ module WatchTest
   test('workaround inventory is visible without pretending retirement checks ran') do
     source = Maintenance::Source.new(ROOT)
     result = Maintenance::InteropWorkarounds.observe(ROOT, releases: {}, source_files: source.files)
-    assert(result['entries'].size == 13 && result['retirement_authorized'] == false)
-    assert(result['entries'].values.all? { |row| row['retirement_state'] == 'unverified' && row['probe_state'] == 'not_automated' })
+    assert(result['entries'].size == 15 && result['retirement_authorized'] == false)
+    assert(result['entries'].values.all? { |row| row['retirement_state'] == 'unverified' && %w[not_automated available_in_ci].include?(row['probe_state']) })
     assert(result['entries']['IOS-04']['coverage_gaps'].include?('coroutines:not_observed'))
     assert(result['entries']['IOS-01']['coverage_gaps'].include?('xcode:not_observed'))
-    assert(result['entries']['IOS-01']['source_state'] == 'present')
+    assert(result['entries']['IOS-01']['source_state'] == 'not_in_checkout')
     assert(result['entries']['IOS-13']['source_state'] == 'present')
     assert(result['entries']['IOS-13']['coverage_gaps'].include?('native_dependencies:not_observed'))
+  end
+
+  test('CI probe availability does not become a retirement result') do
+    source = Maintenance::Source.new(ROOT)
+    result = Maintenance::InteropWorkarounds.observe(ROOT, releases: {}, source_files: source.files)
+    row = result.fetch('entries').fetch('IOS-15')
+    assert(row['probe_state'] == 'available_in_ci')
+    assert(row['probe_command'] == 'ruby scripts/ios/check_swift_export.rb')
+    assert(row['retirement_state'] == 'unverified' && row['retirement_authorized'] == false)
+    assert(result['retirement_authorized'] == false)
   end
 
   test('an eligible release requests recheck only for its declared workaround triggers') do

@@ -3,6 +3,13 @@
 require_relative '../dev/quality'
 
 module HostTests
+  # These Kotlin fixture libraries are exercised by the hosted Swift tests in
+  # ios-test. This is not support for running arbitrary Kotlin/Native test roots.
+  IOS_CLIENT_FIXTURES = %w[
+    shared-ios-app/test@ios/IosInteropTestServices.kt
+    shared-ios-app/test@ios/IosInteropTestStates.kt
+  ].freeze
+
   def self.modules(paths: nil)
     graph = Quality::ModuleGraph.new
     graph.modules.select do |name|
@@ -13,12 +20,13 @@ module HostTests
               end
       tests.each do |path|
         Quality.source_path!(path)
+        next if IOS_CLIENT_FIXTURES.include?(path)
         source_root = path.delete_prefix(name + '/').split('/').first
         unless %w[test test@android].include?(source_root)
           raise Quality::Failure, "Uncovered Kotlin test target: #{path}; add an explicit native test runner before claiming coverage"
         end
       end
-      next false if tests.empty?
+      next false if (tests - IOS_CLIENT_FIXTURES).empty?
 
       product = graph.configs.fetch(name).fetch('product')
       android = product == 'android/app' || product == 'android/lib' ||

@@ -1,11 +1,10 @@
-import KotlinModules
 import SwiftUI
 
 struct SharedHomeDemoView: UIViewControllerRepresentable {
-    let factory: SharedHomeViewControllerFactory
+    let makeViewController: @MainActor () -> UIViewController
 
     func makeUIViewController(context _: Context) -> UIViewController {
-        factory.create()
+        makeViewController()
     }
 
     func updateUIViewController(_: UIViewController, context _: Context) {}

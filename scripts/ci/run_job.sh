@@ -62,6 +62,7 @@ case "${job_name}" in
     ci_prepare_ios_job
     cd "${CI_PROJECT_DIR}"
     ./scripts/ci/run_xcode_tests_with_logs.sh "$@"
+    /usr/bin/ruby scripts/ios/check_swift_export.rb
     ;;
   ios-build-release)
     ci_prepare_ios_job

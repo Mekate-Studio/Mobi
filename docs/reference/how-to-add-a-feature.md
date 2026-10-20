@@ -290,21 +290,21 @@ iOS owns:
 
 Shared Kotlin should feed feature behavior, but should not expose TCA types.
 
-For direct iOS content, expose sealed states/reasons through typed visitors in
-`shared-di/src/MobiInteropProjection.kt` and native Swift enums/adapters in
-`ios-app/src/MobiInteropProjection.swift`. Use `mobiProjection(of:)` at native
-consumer switches. A new case needs an exhaustive Kotlin dispatch branch,
-protocol method, Swift enum/adapter and native consumer tests. Keep concrete
-payloads, typed failure reasons and explicit feature factories; do not hide a
-missing case behind a string tag, `else` or native default branch. See the
-[accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+For native iOS, export sealed states through the generated feature modules and
+switch directly on `value.sealedType()`. Kotlin enum reasons are generated Swift
+enums. Handle every case and read typed payloads; do not add string tags, native
+default branches or handwritten visitor protocols. Add the feature to the explicit
+public export graph and keep implementation dependencies private. See
+[ADR 0009](../adr/0009-generated-swift-export-for-native-features.md) for the current
+producer and its retirement checks.
 
 Home's [`HomeFeatureClient`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
-copies shared state into the existing `Sendable` native counter value before
-returning it to the reducer. Its Kotlin projection is private to that client;
+copies shared state into the existing native `Sendable` counter value before
+returning it to the reducer. Its generated-case mapping is private to that client;
 Home's reducer, actions and presentation state use native values. Keep business
-transitions in Kotlin. The adapter still needs the current visitors tracked as
-[IOS-01](../maintenance/interop-workarounds.md); moving conversion does not retire them.
+transitions in Kotlin. Nearby retains its shared state; its unchecked crossing
+and preconcurrency imports remain tracked as IOS-02 rather than being presented
+as checked isolation.
 
 ### 6. Decide whether shared Compose UI is worth it
 

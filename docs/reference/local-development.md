@@ -92,8 +92,8 @@ writes its output to `build/logs/android-emulator-<avd-name>.log`.
 in Xcode, where you can use the standard iOS run/debug loop against a simulator
 or device.
 
-The approved direct development default defaults to Kotlin Toolchain for iOS development,
-tests and unsigned builds. Use the same repo-owned smoke jobs as CI:
+The iOS development path uses Toolchain KLib compilation and the tracked
+Swift-export producer for native Home/Nearby APIs. Use the same repo-owned smoke jobs as CI:
 
 ```bash
 export KOTLIN_IOS_BUILDER=kotlin
@@ -102,18 +102,18 @@ export KOTLIN_IOS_BUILDER=kotlin
 ./scripts/ci/run_job.sh ios-build-release
 ```
 
-Xcode runs a repo-owned builder preflight before its managed Kotlin phase.
+Xcode runs a repo-owned builder preflight before the Swift-export producer phase.
 Gradle and unknown selectors refuse; remove a stale Gradle override to build
 direct content. To return to the retained integration, restore the complete
 reviewed content patch, clean only owned generated products and revalidate the
 restored native consumers before selecting Gradle. A restored bridge directory alone
-do not make this source interchangeable with SKIE content.
+does not make this source interchangeable with SKIE content.
 
 Credentialed iOS archive/export/TestFlight lanes are held before signing or API
 key processing pending separate signed-delivery evidence and authorization.
 The simulator Release smoke job remains unsigned; raw unsigned archive
 assessment is a separate capability check. See the
-[accepted decision](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+[integration decision](../adr/0009-generated-swift-export-for-native-features.md).
 
 The reviewed Toolchain 0.13.0 targets Apple Silicon iOS simulators and ARM devices.
 Physical/exact-floor execution, broader Compose/resources, empty-host onboarding

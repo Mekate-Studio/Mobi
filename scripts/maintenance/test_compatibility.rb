@@ -51,7 +51,7 @@ def self.retained_fixture
       File.write(project, content)
       manifest = File.join(root, 'ios-app/module.yaml')
       File.write(manifest, File.read(manifest).sub("  - ../shared-di\n", ''))
-      %w[shared-di/src/MobiInteropProjection.kt ios-app/src/MobiInteropProjection.swift].each { |path| File.unlink(File.join(root, path)) }
+      %w[shared-di/src/MobiInteropProjection.kt ios-app/src/MobiInteropProjection.swift].each { |path| File.unlink(File.join(root, path)) if File.file?(File.join(root, path)) }
       state = File.join(root, 'ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift')
       File.write(state, File.read(state).sub('switch mobiProjection(of: reason) {', 'switch reason {'))
     end

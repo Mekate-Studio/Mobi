@@ -25,7 +25,10 @@ The key architecture decisions are also captured in ADRs:
 - [ADR 0005: iOS uses TCA dependencies with a lightweight app composition root](../adr/0005-ios-uses-tca-dependencies-with-a-lightweight-app-composition-root.md)
 - [ADR 0006: Shared feature state uses sealed value types and SKIE](../adr/0006-shared-async-feature-state-uses-sealed-loadable-and-skie.md)
 
-ADR 0008 supersedes the iOS build/projection portions of ADRs 0003 and 0006; their native package ownership and shared sealed-state decisions remain. See [ADR 0008](../adr/0008-explicit-ios-projections-and-direct-development-builds.md).
+ADR 0008 replaced the iOS build/projection portions of ADRs 0003 and 0006.
+[ADR 0009](../adr/0009-generated-swift-export-for-native-features.md) replaces
+those handwritten visitors with generated Swift export. Native package ownership
+and shared sealed-state decisions remain.
 
 For a practical implementation blueprint, see
 [How To Add A Feature](./how-to-add-a-feature.md).
@@ -117,7 +120,7 @@ for this toolchain.
 - TCA for reducers, stores, and navigation state
 - Explicit dependency injection into stores and dependencies
 - A small app composition root instead of a separate Swift DI container
-- Explicit typed Kotlin visitors and native Swift projections for shared sealed state
+- Generated Swift-export cases with native presentation mapping for shared sealed state
 
 Metro powers the shared Kotlin graph, but Swift should still depend on small
 KMP facades or adapters instead of reaching into a Kotlin DI container
@@ -158,20 +161,23 @@ under `Debug-iphonesimulator` instead of the macOS host products directory,
 which broke `@Reducer` and `@ObservableState` expansion from the CLI. The
 repo's iOS CI and Fastlane entrypoints therefore disable explicit Swift modules
 by default while also letting Xcode choose the simulator architectures itself.
-The approved direct development default uses Toolchain 0.13.0 with ARM device/simulator
-targets and keeps Xcode's app/test targets and native Swift packages. Shared DI
-exposes exhaustive typed visitors; `mobiProjection(of:)` maps concrete Kotlin
-states/reasons into native Swift enums. New cases require Kotlin dispatch,
-protocol, Swift enum/adapter and native consumer coverage. Shared Kotlin keeps
-business state and transitions; Swift owns localized copy and TCA presentation.
+The iOS development build uses Toolchain 0.13.0 to compile Kotlin libraries and a
+tracked standalone Swift-export producer to generate the Home/Nearby APIs and
+one Kotlin archive. Xcode retains its app/test targets and native Swift packages.
+Native consumers use generated `sealedType()` cases; Kotlin keeps business state
+and transitions, while Swift owns localized copy and TCA presentation. The small
+`shared-ios-app` module exposes the existing factories and shared UIKit entry point.
 
-Standard suspend bridging remains in use. Kotlin services rethrow cancellation;
-Home's Swift client returns `Unexpected` on caught errors, while Nearby Map's
-client returns its input state. The build migration preserves these behaviors
-and adds no automatic task cancellation or stale-response policy.
+Kotlin services still classify repository failures and rethrow cancellation.
+Home's client preserves its existing Unexpected fallback. Nearby normalizes a
+cancelled loading/refreshing state to a retryable state while preserving its last
+snapshot. TCA cancellation still prevents a superseded refresh from replacing a
+newer result. The export migration adds no new feature policy. See
+[ADR 0009](../adr/0009-generated-swift-export-for-native-features.md) for build,
+isolation and test-fixture trade-offs and their retirement checks.
 
-A repo-owned preflight rejects incompatible builder selectors before the managed
-Toolchain phase. Credentialed iOS archive/export/upload entry points are held
+A repo-owned preflight rejects incompatible builder selectors before the
+Kotlin build phase. Credentialed iOS archive/export/upload entry points are held
 pending separate delivery evidence and authorization; development, tests and
 unsigned assessment remain available. Physical bridge removal preserves complete
 published Git revisions for content recovery; see the

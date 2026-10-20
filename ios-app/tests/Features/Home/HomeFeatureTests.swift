@@ -1,8 +1,11 @@
 @testable import app
 import Foundation
-import KotlinModules
+@preconcurrency import MobiCore
+@preconcurrency import MobiHome
 import MobiIOSDependencies
+import MobiTestSupport
 import Testing
+import UIKit
 
 extension NativeFeatureTests.HomeFeatureTests {
     @MainActor
@@ -72,10 +75,33 @@ extension NativeFeatureTests.HomeFeatureTests {
         }
     }
 
+    @MainActor
+    @Test("should create Shared UI from the injected app composition")
+    func shouldCreateSharedUIFromInjectedAppComposition() async {
+        let services = AppServices(
+            homeFeatureService: IosInteropTestServices.shared.successfulHomeService(),
+            nearbyVehicleMapFeatureService: IosInteropTestServices.shared.cancellingNearbyService(),
+        )
+        let controller = services.makeSharedHomeViewController()
+        controller.loadViewIfNeeded()
+        #expect(controller.viewIfLoaded != nil)
+        let refreshed = await services.homeFeatureClient.refresh(0)
+        #expect(refreshed == .loaded(value: 21))
+    }
+
+    @Test("should preserve Home fallback when a Swift Task is cancelled", .timeLimit(.minutes(1)))
+    func shouldPreserveHomeFallbackWhenSwiftTaskIsCancelled() async {
+        let client = HomeFeatureClient(service: IosInteropTestServices.shared.delayedHomeService())
+        let refresh = Task { await client.refresh(8) }
+        refresh.cancel()
+        let result = await refresh.value
+        #expect(result == .error(previousValue: 8, reason: .unexpected))
+    }
+
     @Test("should preserve live Home client states and payloads", arguments: [0, 8])
     func shouldPreserveLiveHomeClientStatesAndPayloads(counterValue: Int) async {
         // given
-        let client = HomeFeatureClient(service: HomeFeatureService(counterRepository: HomeCounterRepositoryStub()))
+        let client = HomeFeatureClient(service: IosInteropTestServices.shared.successfulHomeService())
 
         // when / then
         #expect(client.initialState() == .initial)
@@ -96,8 +122,11 @@ extension NativeFeatureTests.HomeFeatureTests {
         reason: HomeCounterLoadFailureReason,
     ) async {
         // given
-        let repository = HomeCounterRepositoryStub(failureReason: reason)
-        let client = HomeFeatureClient(service: HomeFeatureService(counterRepository: repository))
+        let service = switch reason {
+        case .repositoryUnavailable: IosInteropTestServices.shared.repositoryUnavailableHomeService()
+        case .unexpected: IosInteropTestServices.shared.unexpectedFailureHomeService()
+        }
+        let client = HomeFeatureClient(service: service)
 
         // when
         let refreshed = await client.refresh(counterValue)
@@ -133,27 +162,5 @@ private enum HomeFeatureTestFactory {
 
     static func expectedState(loadable: HomeCounterLoadable) -> HomeFeature.State {
         HomeFeature.State(counterLoadable: loadable)
-    }
-}
-
-private final class HomeCounterRepositoryStub: NSObject, CounterRepository {
-    let failureReason: HomeCounterLoadFailureReason?
-
-    init(failureReason: HomeCounterLoadFailureReason? = nil) {
-        self.failureReason = failureReason
-    }
-
-    func fetchNextCounterValue(
-        currentCounterValue _: Int32,
-        completionHandler: @escaping (KotlinInt?, (any Error)?) -> Void,
-    ) {
-        switch failureReason {
-        case nil:
-            completionHandler(KotlinInt(int: 21), nil)
-        case .repositoryUnavailable?:
-            completionHandler(nil, CounterRepositoryException(message: "Repository test failure").asError())
-        case .unexpected?:
-            completionHandler(nil, KotlinIllegalStateException(message: "Unexpected test failure").asError())
-        }
     }
 }

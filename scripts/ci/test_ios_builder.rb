@@ -100,19 +100,20 @@ module IOSBuilderTest
       end
     end
   end
-  test('Xcode preflight precedes the managed integration phase and rejects Gradle') do
+  test('Xcode preflight precedes the generated export producer and rejects Gradle') do
     output, status = run('/usr/bin/plutil', '-convert', 'json', '-o', '-', File.join(ROOT, 'ios-app/module.xcodeproj/project.pbxproj'))
     assert(status.success?)
     objects = JSON.parse(output).fetch('objects')
     app = objects.fetch('A93CFF74FDA625823427EABC')
     phases = app.fetch('buildPhases')
     preflight = 'E04D202610040001001664A3'
-    managed = 'A93CF46588F1B180AC5404FB'
-    assert(phases.index(preflight) < phases.index(managed))
+    producer = 'A93CF46588F1B180AC5404FB'
+    assert(phases.index(preflight) < phases.index(producer))
     script = objects.fetch(preflight).fetch('shellScript')
     output, status = Open3.capture2e({ 'PATH' => '/usr/bin:/bin', 'SRCROOT' => File.join(ROOT, 'ios-app'), 'KOTLIN_IOS_BUILDER' => 'gradle' }, '/bin/sh', '-c', script, unsetenv_others: true)
     assert(status.exitstatus == 64 && output.include?('complete reviewed content patch'))
-    assert(objects.fetch(managed).fetch('shellScript') == "# !KOTLIN INTEGRATION STEP!\n# This script is managed by the Kotlin Toolchain, do not edit manually!\n\"${KOTLIN_CLI_WRAPPER_PATH}\" tool xcode-integration\n")
+    assert(objects.fetch(producer).fetch('shellScript') == "set -eu\n/usr/bin/ruby \"${SRCROOT}/../scripts/ios/build_swift_export.rb\"\n")
+    assert(phases.none? { |phase| objects.fetch(phase)['name'] == 'Embed Kotlin Frameworks' })
   end
   test('Fastlane selector normalization agrees with shell defaults') do
     with_fastlane do |dsl|

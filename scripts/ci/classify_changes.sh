@@ -103,6 +103,12 @@ while IFS= read -r "${read_options[@]}" changed_path || [[ -n "${changed_path}" 
       ios_build=true
       ;;
 
+    shared-ios-app/*)
+      docs_only=false
+      ios_tests=true
+      ios_build=true
+      ;;
+
     shared-di/*|shared-ui-*/*)
       docs_only=false
       shared_tests=true

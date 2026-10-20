@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "reviewed_at": "2026-10-17",
+  "reviewed_at": "2026-10-19",
   "owner": "Mobi maintainers",
   "scope": "Mobi iOS interop: maintained direct code plus unmerged pilot/candidate mechanisms",
   "external_scope": {
@@ -11,8 +11,8 @@
     {
       "id": "IOS-01",
       "scope": "default",
-      "title": "Handwritten sealed-state visitors",
-      "reason": "The maintained direct integration cannot consume the qualified generated sealed-state API through its current build path.",
+      "title": "Handwritten sealed-state visitors replaced in the app",
+      "reason": "The integration replaces the former Kotlin visitor interfaces and Swift projection adapters with generated sealed cases. Removed source paths remain recorded; source absence alone is not retirement evidence.",
       "paths": [
         "shared-di/src/MobiInteropProjection.kt",
         "ios-app/src/MobiInteropProjection.swift"
@@ -28,15 +28,18 @@
         "Added, removed and changed payload cases fail when consumer handling is omitted.",
         "Home, Nearby, Android and Shared UI preserve their behavior on the selected delivery."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "available_in_ci",
+      "probe_command": "ruby scripts/ios/check_swift_export.rb",
+      "probe_report": "build/logs/swift-export-checks/report.json"
     },
     {
       "id": "IOS-02",
       "scope": "default",
-      "title": "Unchecked Kotlin state sendability",
-      "reason": "The direct Nearby client declares the raw Kotlin state unchecked Sendable; that assertion does not provide compiler-checked isolation.",
+      "title": "Unchecked shared-state and service crossings",
+      "reason": "Nearby retains its unchecked raw-state Sendable declaration. Home and Nearby keep preconcurrency service imports; generated Swift service captures warn about non-Sendable ownership. This does not provide compiler-checked isolation.",
       "paths": [
-        "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeatureClient.swift"
+        "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeatureClient.swift",
+        "ios-app/src/Features/Home/HomeFeatureClient.swift"
       ],
       "recheck_on": [
         "kotlin",
@@ -143,12 +146,13 @@
     },
     {
       "id": "IOS-07",
-      "scope": "candidate",
-      "title": "Closed generated API and experimental import checker",
-      "reason": "A private generated-module closure constrains unsupported API use; CheckImplementationOnly supplies an actively tested hidden-layout check on the assessed tuple.",
+      "scope": "default",
+      "title": "Generated implementation-only import checking",
+      "reason": "The maintained producer enables CheckImplementationOnly for generated imports. The older candidate whole-feature placement is not adopted.",
       "paths": [
         "ios-app/interop/NativeAppServices.swift",
-        "scripts/maintenance/lib/swift_export/build.rb"
+        "scripts/maintenance/lib/swift_export/build.rb",
+        "scripts/ios/build_swift_export.rb"
       ],
       "recheck_on": [
         "kotlin",
@@ -165,13 +169,14 @@
     },
     {
       "id": "IOS-08",
-      "scope": "candidate",
+      "scope": "default",
       "title": "Swift 5 coroutine-support compilation",
-      "reason": "The assessed generated coroutine support does not compile under the fully strict Swift 6 alternative; the selected profile keeps that module in Swift 5.",
+      "reason": "The maintained producer explicitly compiles KotlinCoroutineSupport in Swift 5. The full strict Swift 6 support probe also exposes generated KotlinError sendability diagnostics; generated-source patches and automatic fallback are not used.",
       "paths": [
         "scripts/maintenance/lib/swift_export/descriptor.rb",
         "scripts/maintenance/lib/swift_export/build.rb",
-        "scripts/maintenance/swift-export-inputs.json"
+        "scripts/maintenance/swift-export-inputs.json",
+        "scripts/ios/build_swift_export.rb"
       ],
       "recheck_on": [
         "kotlin",
@@ -182,9 +187,12 @@
       "replacement": "Compile the affected support module in strict Swift 6 after upstream fixes; delete the per-module Swift 5 exception.",
       "retirement_checks": [
         "Strict support compilation passes without suppressions, unsafe conformance patches or fallback.",
-        "The real app passes error/cancellation/isolation and delivery checks on that recipe."
+        "The real app passes error/cancellation/isolation and delivery checks on that recipe.",
+        "Run scripts/ios/build_swift_export.rb --strict-support and require a clean generated graph on the selected SDK before deleting the explicit exception."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "available_in_ci",
+      "probe_command": "ruby scripts/ios/check_swift_export.rb",
+      "probe_report": "build/logs/swift-export-checks/report.json"
     },
     {
       "id": "IOS-09",
@@ -211,13 +219,17 @@
     },
     {
       "id": "IOS-10",
-      "scope": "candidate",
+      "scope": "default",
       "title": "Custom Swift-export producer and profile plumbing",
-      "reason": "The assessed standalone exporter/build path supplies module graphs, bridge compilation, modes and provenance outside a qualified supported Toolchain integration.",
+      "reason": "The maintained producer supplies standalone generation, exact Toolchain task-record inputs, native bridge compilation and Swift module ordering. Its explicit IntelliJ coroutines runtime supplies classes missing from the selected exporter POM runtime graph.",
       "paths": [
         "scripts/maintenance/lib/swift_export/produce.rb",
         "scripts/maintenance/lib/swift_export/assemble.rb",
-        "scripts/maintenance/fixtures/swift-export/ExportHarness.kt.template"
+        "scripts/maintenance/fixtures/swift-export/ExportHarness.kt.template",
+        "tools/swift-export/module.yaml",
+        "tools/swift-export/src/Main.kt",
+        "scripts/ios/generate_swift_export.rb",
+        "scripts/ios/build_swift_export.rb"
       ],
       "recheck_on": [
         "kotlin",
@@ -228,7 +240,9 @@
       "replacement": "Use supported build-tool integration; remove replaced exporter invocation, profile and module-order machinery while keeping repo-owned validation.",
       "retirement_checks": [
         "Cold and relocated delivery builds preserve one Kotlin image, shared service identity, resources and native dependencies.",
-        "The default app and CI use the same maintained command; delegated Android bootstrap remains intact."
+        "The default app and CI use the same maintained command; delegated Android bootstrap remains intact.",
+        "Remove the explicit IntelliJ coroutines runtime and repository only after generation has no analysis-worker exceptions, including failures that otherwise exit zero.",
+        "Recheck --runtime-assertions on Kotlin/Compose updates. The current optional full-app probe aborts in Compose class_addProtocol; normal delivery retains the baseline assertion mode."
       ],
       "probe_state": "not_automated"
     },
@@ -255,12 +269,14 @@
     },
     {
       "id": "IOS-12",
-      "scope": "candidate",
+      "scope": "default",
       "title": "Private JVM temporary directories",
       "reason": "Private temp ownership is a dependency-risk control for affected exporter/tool launches, not a repair of decoder/allocation vulnerabilities or a general Swift limitation.",
       "paths": [
         "scripts/maintenance/lib/swift_export/produce.rb",
-        "scripts/maintenance/lib/swift_export/bootstrap.rb"
+        "scripts/maintenance/lib/swift_export/bootstrap.rb",
+        "scripts/ios/generate_swift_export.rb",
+        "scripts/ios/build_swift_export.rb"
       ],
       "recheck_on": [
         "kotlin",
@@ -296,6 +312,57 @@
         "Removing effect cancellation still fails the out-of-order completion test; cancellation or assertion failure leaves no pending test continuation."
       ],
       "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-14",
+      "scope": "default",
+      "title": "Kotlin-owned live-client repository fixtures",
+      "reason": "The generated reverse async bridge wraps Swift NSError failures in SwiftException, so Kotlin test sources construct the original typed failures and cancellation directly. Production error policy is unchanged; Release excludes test fixtures.",
+      "paths": [
+        "shared-ios-app/test@ios/IosInteropTestServices.kt",
+        "ios-app/tests/Features/Home/HomeFeatureTests.swift",
+        "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift",
+        "scripts/ci/test_modules.rb"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "coroutines",
+        "swift",
+        "xcode"
+      ],
+      "replacement": "Use native repository doubles again if the selected bridge preserves the failure identity required by the client characterization, or retain Kotlin fixtures as an explicit test-design choice.",
+      "retirement_checks": [
+        "Run a Swift repository error round-trip through the real Kotlin Home service; repository-unavailable and unexpected failures must remain distinct.",
+        "Preserve cancellation recovery, snapshot identity, retry and the existing live-client assertions.",
+        "Remove the corresponding IOS_CLIENT_FIXTURES runner registration when its Kotlin fixture file is deleted; unknown native tests must still refuse."
+      ],
+      "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-15",
+      "scope": "default",
+      "title": "Test constructors for internal generated nested aliases",
+      "reason": "Kotlin 2.4.20 generates internal nested sealed-case aliases. Test-only Kotlin constructors avoid mangled Swift names and generated-source patches.",
+      "paths": [
+        "shared-ios-app/test@ios/IosInteropTestStates.kt",
+        "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift",
+        "scripts/ci/test_modules.rb"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "toolchain",
+        "swift",
+        "xcode"
+      ],
+      "replacement": "Use public generated nested case constructors in the existing native test factory and delete the compensating Kotlin constructor helpers.",
+      "retirement_checks": [
+        "Typecheck ordinary RiderLocationState.Available, NearbyVehicleSnapshotState.Loaded and singleton constructors from the actual generated app modules.",
+        "Run all native tests after deleting the test-only constructors; no mangled typealiases or copied generated source may replace them.",
+        "Remove the corresponding IOS_CLIENT_FIXTURES runner registration when its Kotlin fixture file is deleted; unknown native tests must still refuse."
+      ],
+      "probe_state": "available_in_ci",
+      "probe_command": "ruby scripts/ios/check_swift_export.rb",
+      "probe_report": "build/logs/swift-export-checks/report.json"
     }
   ]
 }
