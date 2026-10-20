@@ -269,7 +269,7 @@
     },
     {
       "id": "IOS-12",
-      "scope": "candidate",
+      "scope": "default",
       "title": "Private JVM temporary directories",
       "reason": "Private temp ownership is a dependency-risk control for affected exporter/tool launches, not a repair of decoder/allocation vulnerabilities or a general Swift limitation.",
       "paths": [
