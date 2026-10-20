@@ -53,10 +53,10 @@ report = { 'schema' => 1, 'scope' => 'actual_delivery_compile_contracts', 'targe
 Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
   base = ['/usr/bin/xcrun', 'swiftc', '-sdk', sdk, '-target', triple,
           '-I', package, '-module-cache-path', File.join(temporary, 'cache'), '-swift-version', '6']
-  compile = lambda do |name, text|
+  compile = lambda do |name, text, sources = []|
     path = File.join(temporary, name + '.swift')
     File.write(path, text)
-    diagnostic, status = Open3.capture2e(*(base + ['-warnings-as-errors', '-typecheck', path]))
+    diagnostic, status = Open3.capture2e(*(base + ['-warnings-as-errors', '-emit-sil', '-whole-module-optimization', '-parse-as-library', '-o', File.join(temporary, name + '.sil'), path] + sources))
     File.write(File.join(logs, name + '.log'), diagnostic)
     [status.success?, diagnostic]
   end
@@ -82,6 +82,39 @@ Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
     end
     report['checks'] << { 'name' => name, 'complete' => 'passed', 'omitted_case' => omitted, 'omission' => 'rejected' }
   end
+
+  # IOS-02: ownership diagnostics also run during SIL generation. Type checking
+  # alone can accept the actor wrapper while missing its async service transfer.
+  native_value = "func nativeValue(_ value: HomeCounterLoadable) -> @Sendable () -> Void { { _ = value } }\n"
+  good, diagnostic = compile.call('native-home-value', native_value, [File.join(root, 'ios-app/src/Features/Home/HomeCounterLoadable.swift')])
+  abort "Native Home value crossing failed:\n#{diagnostic}" unless good
+  report['isolation'] = { 'scope' => 'partial_compile_contracts', 'native_home_value' => 'passed' }
+  [
+    ['home_service_capture', 'MobiHome', 'HomeFeatureService'],
+    ['nearby_service_capture', 'MobiNearby', 'NearbyVehicleMapFeatureService'],
+    ['nearby_state_capture', 'MobiNearby', 'NearbyVehicleMapFeatureState']
+  ].each do |name, mod, type|
+    text = "import #{mod}\nfunc crossing(_ value: #{type}) -> @Sendable () -> Void { { _ = value } }\n"
+    good, diagnostic = compile.call(name, text)
+    unless good || (diagnostic.include?("capture of 'value' with non-Sendable type") && diagnostic.include?(type))
+      abort "Unexpected #{name} probe failure:\n#{diagnostic}"
+    end
+    report['isolation'][name] = good ? 'retirement_candidate' : 'blocked_by_non_sendable_capture'
+  end
+  actor_source = <<~SWIFT
+    import MobiHome
+    @MainActor final class HomeOwner {
+      private let service: HomeFeatureService
+      init(service: HomeFeatureService) { self.service = service }
+      func refresh() async throws { _ = try await service.refresh(counterValue: 0) }
+    }
+  SWIFT
+  good, diagnostic = compile.call('home-actor-refresh', actor_source)
+  unless good || diagnostic.include?("sending 'self.service' risks causing data races")
+    abort "Unexpected Home actor ownership probe failure:\n#{diagnostic}"
+  end
+  report['isolation']['home_actor_refresh'] = good ? 'retirement_candidate' : 'blocked_by_async_service_transfer'
+  puts '[swift-export] IOS-02 partial isolation checks: ' + JSON.generate(report.fetch('isolation'))
 
   constructor_source = <<~SWIFT
     import MobiCore

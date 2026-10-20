@@ -1,6 +1,7 @@
 # ADR 0009: Generated Swift export for native features
 
-Status: Proposed for review with the actual app integration.
+Status: Accepted in [PR #44](https://github.com/Mekate-Studio/Mobi/pull/44).
+The qualification bounds below still apply.
 
 ## Decision
 
