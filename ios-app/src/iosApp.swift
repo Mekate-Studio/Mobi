@@ -14,11 +14,17 @@ struct IOSApp: App {
 
 private struct AppRootView: View {
     let appServices: AppServices
+    @StateObject private var homeStore: StoreOf<HomeFeature>
     @SceneStorage("selectedAppDestination") private var selectedDestination = AppDestination.nearbyMap
+
+    init(appServices: AppServices) {
+        self.appServices = appServices
+        _homeStore = StateObject(wrappedValue: appServices.makeHomeStore())
+    }
 
     var body: some View {
         TabView(selection: $selectedDestination) {
-            HomeView(store: appServices.makeHomeStore())
+            HomeView(store: homeStore)
                 .tabItem {
                     Label("Native Home", systemImage: "iphone")
                 }
