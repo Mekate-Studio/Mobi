@@ -22,6 +22,16 @@ extension NearbyVehicleMapFeature {
             self.sharedState = sharedState
         }
 
+        mutating func applyRefreshResult(_ result: State) {
+            guard let current = sharedState, let refreshed = result.sharedState else { return }
+
+            sharedState = refreshed.copy(
+                riderLocationState: current.riderLocationState,
+                snapshotState: refreshed.snapshotState,
+                mapOverlayState: refreshed.mapOverlayState,
+            )
+        }
+
         var title: String {
             "Nearby vehicles"
         }
