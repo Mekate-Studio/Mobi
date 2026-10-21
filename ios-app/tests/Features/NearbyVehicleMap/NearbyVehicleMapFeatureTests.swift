@@ -81,6 +81,47 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test("should keep location degraded when an active refresh completes", .timeLimit(.minutes(1)))
+    func shouldKeepLocationDegradedWhenActiveRefreshCompletes() async throws {
+        // given
+        let completion = AsyncStream<Void>.makeStream()
+        defer { completion.continuation.finish() }
+        var client = NearbyVehicleMapFeatureTestFactory.makeClient()
+        client.refresh = { _, _ in
+            for await _ in completion.stream {
+                break
+            }
+            return NearbyVehicleMapFeatureTestFactory.loadedSharedState()
+        }
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore(client: client)
+        await store.send(.task) {
+            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        }
+        await store.send(.locationResolutionResponse(.precise(latitude: 55.6761, longitude: 12.5683))) {
+            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
+        }
+        var degradedLoadingState = NearbyVehicleMapFeatureTestFactory.loadingState()
+        let loadingState = try #require(degradedLoadingState.sharedState)
+        degradedLoadingState.apply(sharedState: client.locationTemporarilyUnavailableState(loadingState))
+
+        // when
+        await store.send(.locationResolutionResponse(.temporarilyUnavailable)) {
+            $0 = degradedLoadingState
+        }
+        completion.continuation.yield(())
+        completion.continuation.finish()
+        await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState())) {
+            $0 = NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState()
+        }
+
+        // then
+        #expect(store.state.canRequestRefresh)
+        #expect(store.state.mapContent == NearbyVehicleMapFeatureTestFactory.loadedState().mapContent)
+        #expect(store.state
+            .message == "Live location is temporarily unavailable. Keeping the last resolved rider position.")
+    }
+
+    @MainActor
     @Test("should keep the newer snapshot when an earlier refresh finishes last", .timeLimit(.minutes(1)))
     func shouldKeepNewerSnapshotWhenEarlierRefreshFinishesLast() async throws {
         // given
