@@ -36,7 +36,14 @@ merely because a temporary bridge uses them.
 
 The normal iOS test job checks the actual generated modules. It verifies complete
 switches and omitted-case rejection, then reports strict generated-support and
-nested-constructor availability. Reports are in `build/logs/swift-export-checks/` and uploaded from PR jobs even
+nested-constructor availability. IOS-02 also checks the real native Home value,
+generated service/raw-state Sendable captures and a Home actor-owned async call.
+These partial isolation checks emit SIL so ownership diagnostics run; type checking
+alone can miss an unsafe async transfer. An actor annotation by itself does not
+qualify the generated async boundary. Passing results only identify a retirement
+candidate: actual reducer transitions, shared Home/Compose service ownership,
+equality, cancellation and cross-runtime lifetime still need qualification before
+removing an exception. Reports are in `build/logs/swift-export-checks/` and uploaded from PR jobs even
 when the checks pass.
 The release watch marks these checks `available_in_ci`; it does not pretend to
 have run them or turn a passing probe into retirement authorization.

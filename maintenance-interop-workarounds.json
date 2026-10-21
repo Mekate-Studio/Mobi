@@ -52,7 +52,9 @@
         "An off-actor raw state read and an unsafe Sendable container are rejected.",
         "Actual feature transitions, equality and cross-runtime lifetime pass without unchecked Sendable."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "available_in_ci",
+      "probe_command": "ruby scripts/ios/check_swift_export.rb",
+      "probe_report": "build/logs/swift-export-checks/report.json"
     },
     {
       "id": "IOS-03",

@@ -253,10 +253,12 @@ module WatchTest
   test('CI probe availability does not become a retirement result') do
     source = Maintenance::Source.new(ROOT)
     result = Maintenance::InteropWorkarounds.observe(ROOT, releases: {}, source_files: source.files)
-    row = result.fetch('entries').fetch('IOS-15')
-    assert(row['probe_state'] == 'available_in_ci')
-    assert(row['probe_command'] == 'ruby scripts/ios/check_swift_export.rb')
-    assert(row['retirement_state'] == 'unverified' && row['retirement_authorized'] == false)
+    %w[IOS-02 IOS-15].each do |id|
+      row = result.fetch('entries').fetch(id)
+      assert(row['probe_state'] == 'available_in_ci')
+      assert(row['probe_command'] == 'ruby scripts/ios/check_swift_export.rb')
+      assert(row['retirement_state'] == 'unverified' && row['retirement_authorized'] == false)
+    end
     assert(result['retirement_authorized'] == false)
   end
 
