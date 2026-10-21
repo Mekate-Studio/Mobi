@@ -9,6 +9,7 @@ struct HomeFeature {
         Reduce { state, action in
             switch action {
             case .task:
+                guard case .initial = state.counterLoadable else { return .none }
                 state.counterLoadable = homeFeatureClient.initialState()
                 return .none
 

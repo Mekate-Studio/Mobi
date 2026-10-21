@@ -22,6 +22,26 @@ extension NativeFeatureTests.HomeFeatureTests {
     }
 
     @MainActor
+    @Test(
+        "should preserve existing Home state when the view task runs again",
+        arguments: [
+            HomeCounterLoadable.loaded(value: 8),
+            .error(previousValue: 8, reason: .repositoryUnavailable),
+            .loading(previousValue: 8),
+        ],
+    )
+    func shouldPreserveExistingHomeStateWhenViewTaskRunsAgain(counterLoadable: HomeCounterLoadable) async {
+        // given
+        let store = HomeFeatureTestFactory.makeStore(counterLoadable: counterLoadable)
+
+        // when
+        await store.send(.task)
+
+        // then
+        #expect(store.state.counterLoadable == counterLoadable)
+    }
+
+    @MainActor
     @Test("should have refreshed shared state when repository load completes after refresh action is sent")
     func shouldHaveRefreshedSharedStateWhenRepositoryLoadCompletesAfterRefreshActionIsSent() async {
         // given
@@ -143,8 +163,9 @@ private enum HomeFeatureTestFactory {
     @MainActor
     static func makeStore(
         refreshResult: HomeCounterLoadable = .loaded(value: 1),
+        counterLoadable: HomeCounterLoadable = .initial,
     ) -> TestStore<HomeFeature.State, HomeFeature.Action> {
-        TestStore(initialState: HomeFeature.State()) {
+        TestStore(initialState: expectedState(loadable: counterLoadable)) {
             HomeFeature()
         } withDependencies: {
             $0.homeFeatureClient = HomeFeatureClient(

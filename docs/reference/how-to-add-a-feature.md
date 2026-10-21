@@ -290,6 +290,11 @@ iOS owns:
 
 Shared Kotlin should feed feature behavior, but should not expose TCA types.
 
+Keep a feature store in a stable owning scope. `AppRootView` retains Native Home's
+store with `@StateObject` for the scene's lifetime instead of creating it in `body`.
+Repeated view tasks preserve loaded, loading and failure state; they initialize
+Home only while its counter remains initial.
+
 For native iOS, export sealed states through the generated feature modules and
 switch directly on `value.sealedType()`. Kotlin enum reasons are generated Swift
 enums. Handle every case and read typed payloads; do not add string tags, native
