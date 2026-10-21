@@ -15,11 +15,13 @@ struct IOSApp: App {
 private struct AppRootView: View {
     let appServices: AppServices
     @StateObject private var homeStore: StoreOf<HomeFeature>
+    @StateObject private var nearbyStore: StoreOf<NearbyVehicleMapFeature>
     @SceneStorage("selectedAppDestination") private var selectedDestination = AppDestination.nearbyMap
 
     init(appServices: AppServices) {
         self.appServices = appServices
         _homeStore = StateObject(wrappedValue: appServices.makeHomeStore())
+        _nearbyStore = StateObject(wrappedValue: appServices.makeNearbyVehicleMapStore())
     }
 
     var body: some View {
@@ -30,7 +32,7 @@ private struct AppRootView: View {
                 }
                 .tag(AppDestination.nativeHome)
 
-            NearbyVehicleMapView(store: appServices.makeNearbyVehicleMapStore())
+            NearbyVehicleMapView(store: nearbyStore)
                 .tabItem {
                     Label("Nearby Map", systemImage: "map")
                 }
