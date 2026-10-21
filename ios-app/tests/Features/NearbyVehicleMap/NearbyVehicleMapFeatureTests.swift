@@ -26,6 +26,27 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test(
+        "should preserve existing Nearby state when the view task runs again",
+        arguments: [
+            NearbyVehicleMapFeatureTestFactory.loadedState(),
+            NearbyVehicleMapFeatureTestFactory.refreshingState(),
+            NearbyVehicleMapFeatureTestFactory.deniedState(),
+            NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState(),
+        ],
+    )
+    func shouldPreserveExistingNearbyStateWhenViewTaskRunsAgain(state: NearbyVehicleMapFeature.State) async {
+        // given
+        let store = NearbyVehicleMapFeatureTestFactory.makeStore(initialState: state)
+
+        // when
+        await store.send(.task)
+
+        // then
+        #expect(store.state.sharedState == state.sharedState)
+    }
+
+    @MainActor
     @Test("should wire denied permission into blocking overlay")
     func shouldWireDeniedPermissionIntoBlockingOverlay() async {
         // given
@@ -394,8 +415,9 @@ private enum NearbyVehicleMapFeatureTestFactory {
     @MainActor
     static func makeStore(
         client: NearbyVehicleMapFeatureClient = makeClient(),
+        initialState: NearbyVehicleMapFeature.State = .init(),
     ) -> TestStore<NearbyVehicleMapFeature.State, NearbyVehicleMapFeature.Action> {
-        TestStore(initialState: NearbyVehicleMapFeature.State()) {
+        TestStore(initialState: initialState) {
             NearbyVehicleMapFeature()
         } withDependencies: {
             $0.nearbyVehicleMapFeatureClient = client
