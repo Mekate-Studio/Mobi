@@ -63,6 +63,58 @@ extension NativeFeatureTests.HomeFeatureTests {
     }
 
     @MainActor
+    @Test(
+        "should ignore duplicate refresh while loading and allow refresh after completion",
+        .timeLimit(.minutes(1)),
+        arguments: [
+            HomeCounterLoadable.loaded(value: 13),
+            .error(previousValue: 8, reason: .repositoryUnavailable),
+        ],
+    )
+    func shouldIgnoreDuplicateRefreshWhileLoadingAndAllowRefreshAfterCompletion(result: HomeCounterLoadable) async {
+        await confirmation(
+            "Only the first and post-completion refresh reach the client",
+            expectedCount: 2,
+        ) { requested in
+            // given
+            let completion = AsyncStream<Void>.makeStream()
+            defer { completion.continuation.finish() }
+            let store = TestStore(initialState: HomeFeature.State(counterLoadable: .loaded(value: 8))) {
+                HomeFeature()
+            } withDependencies: {
+                $0.homeFeatureClient = HomeFeatureClient(
+                    initialState: { .initial },
+                    loadingState: { .loading(previousValue: $0) },
+                    refresh: { _ in
+                        requested()
+                        for await _ in completion.stream {}
+                        return result
+                    },
+                )
+            }
+            await store.send(.refreshTapped) {
+                $0.counterLoadable = .loading(previousValue: 8)
+            }
+
+            // when
+            await store.send(.refreshTapped)
+            completion.continuation.finish()
+            await store.receive(.refreshResponse(result)) {
+                $0.counterLoadable = result
+            }
+
+            // then
+            await store.send(.refreshTapped) {
+                $0.counterLoadable = .loading(previousValue: result.currentValueForRefresh)
+            }
+            await store.receive(.refreshResponse(result)) {
+                $0.counterLoadable = result
+            }
+            await store.finish()
+        }
+    }
+
+    @MainActor
     @Test("should have error shared state when repository load fails after refresh action is sent")
     func shouldHaveErrorSharedStateWhenRepositoryLoadFailsAfterRefreshActionIsSent() async {
         // given
