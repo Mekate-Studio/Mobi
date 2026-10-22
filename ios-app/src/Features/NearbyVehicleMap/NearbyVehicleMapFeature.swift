@@ -39,6 +39,7 @@ struct NearbyVehicleMapFeature {
                 }
 
             case .refreshTapped:
+                guard state.canRequestRefresh else { return .none }
                 return refreshEffect(state: &state, nowMillis: currentTimeMillis())
 
             case let .visibleRefreshDue(nowMillis):
