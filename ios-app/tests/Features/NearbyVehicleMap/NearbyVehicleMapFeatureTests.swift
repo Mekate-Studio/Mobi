@@ -47,6 +47,38 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test(
+        "should ignore manual refresh while location is blocked or a snapshot is loading",
+        arguments: [
+            NearbyVehicleMapFeatureTestFactory.deniedState(),
+            NearbyVehicleMapFeatureTestFactory.loadingState(),
+            NearbyVehicleMapFeatureTestFactory.refreshingState(),
+        ],
+    )
+    func shouldIgnoreManualRefreshWhileBlockedOrLoading(state: NearbyVehicleMapFeature.State) async {
+        await confirmation("No manual refresh work reaches the client", expectedCount: 0) { requested in
+            // given
+            var client = NearbyVehicleMapFeatureTestFactory.makeClient()
+            client.loadingState = { currentState in
+                requested()
+                return currentState
+            }
+            client.refresh = { currentState, _ in
+                requested()
+                return currentState
+            }
+            let store = NearbyVehicleMapFeatureTestFactory.makeStore(client: client, initialState: state)
+
+            // when
+            await store.send(.refreshTapped)
+            await store.finish()
+
+            // then
+            #expect(store.state.sharedState == state.sharedState)
+        }
+    }
+
+    @MainActor
     @Test("should wire denied permission into blocking overlay")
     func shouldWireDeniedPermissionIntoBlockingOverlay() async {
         // given
