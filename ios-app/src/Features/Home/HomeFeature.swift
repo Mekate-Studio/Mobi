@@ -14,6 +14,7 @@ struct HomeFeature {
                 return .none
 
             case .refreshTapped:
+                guard !state.counterLoadable.isLoading else { return .none }
                 let currentCounterValue = state.counterLoadable.currentValueForRefresh
                 state.counterLoadable = homeFeatureClient.loadingState(currentCounterValue)
                 return .run { send in
