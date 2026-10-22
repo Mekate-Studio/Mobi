@@ -157,17 +157,72 @@ extension NativeFeatureTests.HomeFeatureTests {
         let controller = services.makeSharedHomeViewController()
         controller.loadViewIfNeeded()
         #expect(controller.viewIfLoaded != nil)
-        let refreshed = await services.homeFeatureClient.refresh(0)
+        let refreshed = await services.homeFeatureClient.refresh(.initial)
         #expect(refreshed == .loaded(value: 21))
     }
 
-    @Test("should preserve Home fallback when a Swift Task is cancelled", .timeLimit(.minutes(1)))
-    func shouldPreserveHomeFallbackWhenSwiftTaskIsCancelled() async {
+    @Test(
+        "should restore previous Home state when a Swift Task is cancelled",
+        .timeLimit(.minutes(1)),
+        arguments: [
+            HomeCounterLoadable.initial,
+            .loaded(value: 8),
+            .error(previousValue: 8, reason: .repositoryUnavailable),
+        ],
+    )
+    func shouldRestorePreviousHomeStateWhenSwiftTaskIsCancelled(previousState: HomeCounterLoadable) async {
         let client = HomeFeatureClient(service: IosInteropTestServices.shared.delayedHomeService())
-        let refresh = Task { await client.refresh(8) }
+        let refresh = Task { await client.refresh(previousState) }
         refresh.cancel()
         let result = await refresh.value
-        #expect(result == .error(previousValue: 8, reason: .unexpected))
+        #expect(result == previousState)
+    }
+
+    @MainActor
+    @Test(
+        "should restore previous Home state and allow retry after Kotlin cancels refresh",
+        arguments: [
+            HomeCounterLoadable.initial,
+            .loaded(value: 8),
+            .error(previousValue: 8, reason: .repositoryUnavailable),
+        ],
+    )
+    func shouldRestorePreviousHomeStateAndAllowRetryAfterKotlinCancelsRefresh(
+        previousState: HomeCounterLoadable,
+    ) async {
+        // given
+        let client = HomeFeatureClient(service: IosInteropTestServices.shared.cancellingHomeService())
+        let store = TestStore(initialState: HomeFeature.State(counterLoadable: previousState)) {
+            HomeFeature()
+        } withDependencies: {
+            $0.homeFeatureClient = client
+        }
+        let loadingState = client.loadingState(previousState.currentValueForRefresh)
+
+        // when
+        await store.send(.refreshTapped) {
+            $0.counterLoadable = loadingState
+        }
+        await store.receive(.refreshResponse(previousState)) {
+            $0.counterLoadable = previousState
+        }
+
+        // then
+        #expect(!store.state.counterLoadable.isLoading)
+        await store.send(.refreshTapped) {
+            $0.counterLoadable = loadingState
+        }
+        await store.receive(.refreshResponse(.loaded(value: 21))) {
+            $0.counterLoadable = .loaded(value: 21)
+        }
+    }
+
+    @Test("should preserve fallback for uncaught Kotlin failure", arguments: [0, 8])
+    func shouldPreserveFallbackForUncaughtKotlinFailure(counterValue: Int) async {
+        let client = HomeFeatureClient(service: IosInteropTestServices.shared.uncaughtFailureHomeService())
+        let previousState = counterValue > 0 ? HomeCounterLoadable.loaded(value: counterValue) : .initial
+        let refreshed = await client.refresh(previousState)
+        #expect(refreshed == .error(previousValue: counterValue > 0 ? counterValue : nil, reason: .unexpected))
     }
 
     @Test("should preserve live Home client states and payloads", arguments: [0, 8])
@@ -181,7 +236,7 @@ extension NativeFeatureTests.HomeFeatureTests {
             client.loadingState(counterValue)
                 == .loading(previousValue: counterValue > 0 ? counterValue : nil),
         )
-        let refreshed = await client.refresh(counterValue)
+        let refreshed = await client.refresh(counterValue > 0 ? .loaded(value: counterValue) : .initial)
         #expect(refreshed == .loaded(value: 21))
     }
 
@@ -201,7 +256,7 @@ extension NativeFeatureTests.HomeFeatureTests {
         let client = HomeFeatureClient(service: service)
 
         // when
-        let refreshed = await client.refresh(counterValue)
+        let refreshed = await client.refresh(counterValue > 0 ? .loaded(value: counterValue) : .initial)
 
         // then
         #expect(

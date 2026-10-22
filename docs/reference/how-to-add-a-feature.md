@@ -307,8 +307,13 @@ producer and its retirement checks.
 Home's [`HomeFeatureClient`](../../ios-app/src/Features/Home/HomeFeatureClient.swift)
 copies shared state into the existing native `Sendable` counter value before
 returning it to the reducer. Its generated-case mapping is private to that client;
-Home's reducer, actions and presentation state use native values. Keep business
-transitions in Kotlin. Nearby retains its shared state; its unchecked crossing
+Home's reducer, actions and presentation state use native values. Refresh receives
+the native value captured before entering loading, so a client-level
+`CancellationError` restores that exact value and preserves retry. Kotlin domain
+failures remain typed failures. TCA still suppresses sends from cancelled effects;
+a future UI cancel operation needs its own reducer transition.
+
+Keep business transitions in Kotlin. Nearby retains its shared state; its unchecked crossing
 and preconcurrency imports remain tracked as IOS-02 rather than being presented
 as checked isolation.
 
