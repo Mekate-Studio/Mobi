@@ -54,8 +54,14 @@ extension NearbyVehicleMapFeatureClient {
                         currentState: currentState,
                         nowMillis: nowMillis,
                     )
-                } catch {
+                } catch is CancellationError {
                     return cancelledRefreshState(currentState)
+                } catch {
+                    return service.failedState(
+                        currentState: currentState,
+                        reason: .Unexpected,
+                        nowMillis: nowMillis,
+                    )
                 }
             },
             shouldRefresh: { currentState, nowMillis in

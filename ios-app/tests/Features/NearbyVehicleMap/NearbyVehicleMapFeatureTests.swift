@@ -222,6 +222,98 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test("should distinguish an uncaught Nearby Kotlin error from cancellation")
+    func shouldDistinguishUncaughtNearbyKotlinErrorFromCancellation() async throws {
+        // given
+        let service = IosInteropTestServices.shared.uncaughtFailureNearbyService()
+        let readyState = try #require(NearbyVehicleMapFeatureTestFactory.readyState().sharedState)
+        let loadingState = service.loadingState(currentState: readyState)
+
+        // when
+        do {
+            _ = try await service.refreshSnapshot(currentState: loadingState, nowMillis: 11000)
+            Issue.record("An uncaught Kotlin error must cross the generated bridge as a failure")
+        } catch {
+            // then
+            #expect(!(error is CancellationError))
+        }
+        let retriedState = try await service.refreshSnapshot(currentState: loadingState, nowMillis: 11000)
+        #expect(retriedState == NearbyVehicleMapFeatureTestFactory.loadedSharedState())
+    }
+
+    @MainActor
+    @Test(
+        "should preserve Nearby failure meaning and allow retry",
+        arguments: [
+            NearbyVehicleMapFeatureTestFactory.readyState(),
+            NearbyVehicleMapFeatureTestFactory.loadedState(),
+            NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState(),
+        ],
+        [NearbyVehicleMapFailureReason.Unexpected, .RepositoryUnavailable],
+    )
+    func shouldPreserveNearbyFailureMeaningAndAllowRetry(
+        previousState: NearbyVehicleMapFeature.State,
+        reason: NearbyVehicleMapFailureReason,
+    ) async throws {
+        // given
+        let service = reason == .Unexpected
+            ? IosInteropTestServices.shared.uncaughtFailureNearbyService()
+            : IosInteropTestServices.shared.repositoryUnavailableNearbyService()
+        let client = NearbyVehicleMapFeatureClient(service: service)
+        let previousSharedState = try #require(previousState.sharedState)
+        let previousSnapshot = NearbyVehicleMapFeatureTestFactory
+            .currentSnapshot(from: previousSharedState.snapshotState)
+
+        // when
+        let failedState = await client.refresh(client.loadingState(previousSharedState), 11000)
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(sharedState: failedState)
+
+        // then
+        switch failedState.snapshotState.sealedType() {
+        case let .failedWithSnapshot(failed):
+            #expect(failed.value.reason == reason)
+            #expect(failed.value.snapshot == previousSnapshot)
+        case let .failedWithoutSnapshot(failed):
+            #expect(failed.value.reason == reason)
+            #expect(previousSnapshot == nil)
+        case .initial, .loading, .loaded, .refreshing:
+            Issue.record("A failed refresh must remain a typed failure rather than cancellation recovery")
+        }
+        #expect(failedState.riderLocationState == previousSharedState.riderLocationState)
+        #expect(state.mapContent == previousState.mapContent)
+        #expect(state.overlay == (previousSnapshot == nil ? .blockingFailure : .stale))
+        #expect(state.canRequestRefresh)
+        let retriedState = await client.refresh(client.loadingState(failedState), 11001)
+        #expect(
+            retriedState.snapshotState == IosInteropTestStates.shared.snapshotLoaded(
+                snapshot: NearbyVehicleMapFeatureTestFactory.snapshot(),
+            ),
+        )
+        #expect(retriedState.mapOverlayState == IosInteropTestStates.shared.overlayNone)
+    }
+
+    @MainActor
+    @Test("should block an expired Nearby snapshot after an uncaught Kotlin error")
+    func shouldBlockExpiredNearbySnapshotAfterUncaughtKotlinError() async {
+        // given
+        let client = NearbyVehicleMapFeatureClient(service: IosInteropTestServices.shared
+            .uncaughtFailureNearbyService())
+        let previousState = NearbyVehicleMapFeatureTestFactory.loadedSharedState()
+
+        // when
+        let failedState = await client.refresh(client.loadingState(previousState), 31001)
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(sharedState: failedState)
+
+        // then
+        #expect(state.overlay == .blockingFailure)
+        #expect(!state.canInteractWithVehicles)
+        #expect(state.canRequestRefresh)
+        #expect(state.mapContent == NearbyVehicleMapFeatureTestFactory.loadedState().mapContent)
+    }
+
+    @MainActor
     @Test("should allow retry after Kotlin cancels the first snapshot request")
     func shouldAllowRetryAfterKotlinCancelsFirstSnapshotRequest() async {
         // given

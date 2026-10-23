@@ -182,7 +182,7 @@ class NearbyVehicleMapFeatureService(
         return currentState.copy(mapOverlayState = overlayState)
     }
 
-    private fun failedState(
+    fun failedState(
         currentState: NearbyVehicleMapFeatureState,
         reason: NearbyVehicleMapFailureReason,
         nowMillis: Long,

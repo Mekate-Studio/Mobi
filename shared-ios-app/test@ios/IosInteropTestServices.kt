@@ -6,6 +6,7 @@ import studio.mekate.mobi.core.CounterRequestFailurePolicy
 import studio.mekate.mobi.core.FakeCounterRepository
 import studio.mekate.mobi.core.FleetSnapshot
 import studio.mekate.mobi.core.NearbyFleetRepository
+import studio.mekate.mobi.core.NearbyFleetRepositoryException
 import studio.mekate.mobi.core.NearbyFleetRequest
 import studio.mekate.mobi.core.NearbyVehicle
 import studio.mekate.mobi.core.VehicleId
@@ -65,19 +66,30 @@ object IosInteropTestServices {
         )
 
     fun cancellingNearbyService(): NearbyVehicleMapFeatureService =
-        NearbyVehicleMapFeatureService(
-            nearbyFleetRepository = CancelOnceNearbyFleetRepository(),
-            freshnessPolicy = NearbyVehicleMapFreshnessPolicy(),
-        )
+        recoveringNearbyService(CancellationException("Cancelled test request"))
+
+    fun uncaughtFailureNearbyService(): NearbyVehicleMapFeatureService =
+        recoveringNearbyService(AssertionError("Uncaught Kotlin test failure"))
+
+    fun repositoryUnavailableNearbyService(): NearbyVehicleMapFeatureService =
+        recoveringNearbyService(NearbyFleetRepositoryException("Test failure"))
 }
 
-private class CancelOnceNearbyFleetRepository : NearbyFleetRepository {
-    private var shouldCancel = true
+private fun recoveringNearbyService(firstFailure: Throwable): NearbyVehicleMapFeatureService =
+    NearbyVehicleMapFeatureService(
+        nearbyFleetRepository = RecoveringNearbyFleetRepository(firstFailure),
+        freshnessPolicy = NearbyVehicleMapFreshnessPolicy(),
+    )
+
+private class RecoveringNearbyFleetRepository(
+    private val firstFailure: Throwable,
+) : NearbyFleetRepository {
+    private var shouldFail = true
 
     override suspend fun fetchNearbyFleetSnapshot(request: NearbyFleetRequest): FleetSnapshot {
-        if (shouldCancel) {
-            shouldCancel = false
-            throw CancellationException("Cancelled test request")
+        if (shouldFail) {
+            shouldFail = false
+            throw firstFailure
         }
         return FleetSnapshot(
             sequence = 1,
