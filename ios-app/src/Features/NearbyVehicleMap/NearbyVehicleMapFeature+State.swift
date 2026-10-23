@@ -92,7 +92,14 @@ extension NearbyVehicleMapFeature {
             case .staleIndicator:
                 return .stale
             case .blockingFailure:
-                return .blockingFailure
+                switch sharedState.snapshotState.sealedType() {
+                case let .failedWithSnapshot(state):
+                    return state.value.reason.blockingOverlay
+                case let .failedWithoutSnapshot(state):
+                    return state.value.reason.blockingOverlay
+                case .initial, .loading, .loaded, .refreshing:
+                    return .blockingFailure
+                }
             }
         }
 
@@ -263,5 +270,24 @@ enum NearbyVehicleMapOverlay: Equatable {
             return true
         }
         return false
+    }
+}
+
+private extension NearbyVehicleMapFailureReason {
+    var blockingOverlay: NearbyVehicleMapOverlay {
+        switch self {
+        case .RiderLocationUnavailable:
+            .blockingFailure
+        case .RepositoryUnavailable:
+            .blocking(
+                headline: "Map unavailable",
+                message: "The fleet repository could not load nearby vehicles. Try refreshing again.",
+            )
+        case .Unexpected:
+            .blocking(
+                headline: "Map unavailable",
+                message: "Something went wrong while loading nearby vehicles. Try refreshing again.",
+            )
+        }
     }
 }

@@ -282,7 +282,11 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         }
         #expect(failedState.riderLocationState == previousSharedState.riderLocationState)
         #expect(state.mapContent == previousState.mapContent)
-        #expect(state.overlay == (previousSnapshot == nil ? .blockingFailure : .stale))
+        if previousSnapshot == nil {
+            #expect(state.overlay.blocksMap)
+        } else {
+            #expect(state.overlay == .stale)
+        }
         #expect(state.canRequestRefresh)
         let retriedState = await client.refresh(client.loadingState(failedState), 11001)
         #expect(
@@ -307,10 +311,46 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         state.apply(sharedState: failedState)
 
         // then
-        #expect(state.overlay == .blockingFailure)
+        #expect(state.overlay.blocksMap)
         #expect(!state.canInteractWithVehicles)
         #expect(state.canRequestRefresh)
         #expect(state.mapContent == NearbyVehicleMapFeatureTestFactory.loadedState().mapContent)
+    }
+
+    @MainActor
+    @Test(
+        "should explain snapshot failures without blaming precise location",
+        arguments: [
+            NearbyVehicleMapFeatureTestFactory.readyState(),
+            NearbyVehicleMapFeatureTestFactory.loadedState(),
+        ],
+        [NearbyVehicleMapFailureReason.RepositoryUnavailable, .Unexpected],
+    )
+    func shouldExplainSnapshotFailuresWithoutBlamingPreciseLocation(
+        previousState: NearbyVehicleMapFeature.State,
+        reason: NearbyVehicleMapFailureReason,
+    ) async throws {
+        // given
+        let service = reason == .RepositoryUnavailable
+            ? IosInteropTestServices.shared.repositoryUnavailableNearbyService()
+            : IosInteropTestServices.shared.uncaughtFailureNearbyService()
+        let client = NearbyVehicleMapFeatureClient(service: service)
+        let previousSharedState = try #require(previousState.sharedState)
+        let expectedMessage = reason == .RepositoryUnavailable
+            ? "The fleet repository could not load nearby vehicles. Try refreshing again."
+            : "Something went wrong while loading nearby vehicles. Try refreshing again."
+
+        // when
+        let failedState = await client.refresh(client.loadingState(previousSharedState), 31001)
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(sharedState: failedState)
+
+        // then
+        #expect(state.overlay == .blocking(headline: "Map unavailable", message: expectedMessage))
+        #expect(state.hasResolvedRiderLocation)
+        #expect(state.canRequestRefresh)
+        #expect(!state.canInteractWithVehicles)
+        #expect(state.mapContent == previousState.mapContent)
     }
 
     @MainActor
