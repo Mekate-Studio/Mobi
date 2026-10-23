@@ -13,11 +13,18 @@ dependencies:
   - org.maplibre.gl:android-sdk:13.3.0
 
 test-dependencies:
+  - com.slack.circuit:circuit-test:0.34.0
+  - org.robolectric:robolectric:4.16
   - org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0
 
 settings:
   compose: enabled
   junit: junit-4
+  jvm:
+    test:
+      freeJvmArgs:
+        # Robolectric loads native Android runtime code in host tests.
+        - --enable-native-access=ALL-UNNAMED
   kotlin:
     compilerPlugins:
       - id: dev.zacsweers.metro.compiler

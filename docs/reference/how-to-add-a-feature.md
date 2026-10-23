@@ -352,6 +352,7 @@ Reference tests:
 - [`FakeCounterRepositoryTest.kt`](../../shared-core/test/FakeCounterRepositoryTest.kt)
 - [`HomeFeatureServiceTest.kt`](../../shared-feature-home/test/HomeFeatureServiceTest.kt)
 - [`HomePresenterStateProducerTest.kt`](../../android-app/test/home/HomePresenterStateProducerTest.kt)
+- [`NearbyVehicleMapPresenterTest.kt`](../../android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterTest.kt) for actual Compose effects
 - [`HomeFeatureTests.swift`](../../ios-app/tests/Features/Home/HomeFeatureTests.swift)
 
 Current repo conventions:
@@ -372,6 +373,17 @@ For native correctness and presentation fixes, assess the other consumers and
 record their status in the [cross-platform follow-ups](../maintenance/mobile-feature-follow-ups.md).
 Shared service tests qualify shared behavior; actual presenter/reducer checks are
 needed for native request ordering, cancellation and lifecycle ownership.
+
+For Compose-owned work, use Circuit's version-matched `circuit-test` helpers to
+exercise the actual presenter, with coroutine virtual time and a controlled
+repository. The Android host runner uses Robolectric 4.16 at API 36, following the
+[pinned Toolchain's supported example](https://github.com/JetBrains/kotlin-toolchain/tree/v0.13.0/sources/test-integration/test-projects/android/robolectric).
+These are test-only dependencies; Circuit's helpers bring Molecule and Turbine,
+and Robolectric resolves an instrumented Android runtime on first execution.
+The app's `jvm.test.freeJvmArgs` enables native access for that runtime. This is
+host lifecycle evidence, not device rendering, navigation or permission testing.
+Keep effects keyed to their owner when their work changes observed state, and
+check both completion across recomposition and cancellation on disposal.
 
 ### 8. Document only the delta
 
