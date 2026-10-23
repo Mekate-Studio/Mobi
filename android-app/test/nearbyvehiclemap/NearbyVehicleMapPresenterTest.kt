@@ -207,6 +207,7 @@ class NearbyVehicleMapPresenterTest {
                         awaitItem().featureState.snapshotState,
                     ).snapshot.sequence,
                 )
+                assertEquals(0L, testScheduler.currentTime)
                 cancelAndIgnoreRemainingEvents()
             }
         }
