@@ -27,6 +27,27 @@ and admission rules. A fresh, busy or blocked state stays unchanged by the timer
 Location changes during an already active request remain MOB-02; cancellation
 recovery while the feature stays owned remains MOB-04.
 
+## AND-01: Presenter host-test harness simplification
+
+`android-app/module.yaml` adds Robolectric 4.16 and native access for host tests;
+the presenter suite selects its runner and API 36 without app resources.
+This compensates for the pinned Toolchain's Android schema not exposing Circuit's
+[documented AGP stub-default setting](https://github.com/slackhq/circuit/blob/0.34.0/docs/testing.md).
+Running the actual presenter without Robolectric currently fails in Android
+logging/tracing stubs before qualifying feature behavior. The
+[Toolchain example](https://github.com/JetBrains/kotlin-toolchain/tree/v0.13.0/sources/test-integration/test-projects/android/robolectric)
+provides the supported current runner.
+
+Recheck AND-01 when updating Toolchain, Circuit, Compose, Robolectric or the test
+JDK. Review supported host configuration, then run all five presenter lifecycle
+checks and the full Android host suite without Robolectric. If they pass on the
+actual Android dependency variant, remove the redundant dependency, runner/SDK
+annotations and native-access flag, and rerun the normal gate. Preserve the
+runtime assertions; do not replace them with state-producer delegation tests.
+Record **retained**, **ready for removal** or **incomplete**, with the executed
+checks, in the update PR. This is a manual adoption-review step; the iOS interop
+watch does not emit AND-01 assessments or poll Circuit/Robolectric releases.
+
 The Android surfaces are:
 
 - [Nearby presenter](../../android-app/src/nearbyvehiclemap/NearbyVehicleMapPresenter.kt)

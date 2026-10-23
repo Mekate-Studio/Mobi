@@ -384,6 +384,8 @@ The app's `jvm.test.freeJvmArgs` enables native access for that runtime. This is
 host lifecycle evidence, not device rendering, navigation or permission testing.
 Keep effects keyed to their owner when their work changes observed state, and
 check both completion across recomposition and cancellation on disposal.
+Recheck [AND-01](../maintenance/mobile-feature-follow-ups.md#and-01-presenter-host-test-harness-simplification)
+on relevant dependency updates to remove this harness cost when supported.
 
 ### 8. Document only the delta
 
