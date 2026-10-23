@@ -43,7 +43,7 @@ struct NearbyVehicleMapFeature {
                 return refreshEffect(state: &state, nowMillis: currentTimeMillis())
 
             case let .visibleRefreshDue(nowMillis):
-                guard let sharedState = state.sharedState else { return .none }
+                guard state.canRequestRefresh, let sharedState = state.sharedState else { return .none }
                 guard client.shouldRefresh(sharedState, nowMillis) else { return .none }
                 return refreshEffect(state: &state, nowMillis: nowMillis)
 
