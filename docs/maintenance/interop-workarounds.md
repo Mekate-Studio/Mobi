@@ -65,6 +65,11 @@ The maintainer tolerates the interim guarded implementation while requiring a
 readability improvement. This is not blanket approval of production adoption,
 bridge diagnostics, dependency risk or experimental policies.
 
+Android applicability and executable follow-ups for ordinary application
+improvements are tracked in [cross-platform mobile feature follow-ups](mobile-feature-follow-ups.md).
+Those items stay separate from IOS-prefixed bridge workarounds; fixing one native
+consumer does not qualify the other consumer's lifecycle or effects.
+
 ## Readable Swift is an acceptance condition
 
 `guard`, `try` and `do/catch` are normal Swift tools; their number is not evidence

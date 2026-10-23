@@ -3,6 +3,8 @@ package studio.mekate.mobi.nearbyvehiclemap
 import studio.mekate.mobi.core.NearbyVehicle
 import studio.mekate.mobi.core.RiderLocation
 import studio.mekate.mobi.core.VehicleLocation
+import studio.mekate.mobi.feature.nearbyvehiclemap.FailedNearbyVehicleSnapshotState
+import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFailureReason
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
@@ -87,7 +89,10 @@ fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicle
                         ),
                 )
             },
-        overlay = mapOverlayState.toPresentation(),
+        overlay =
+            mapOverlayState.toPresentation(
+                failureReason = (this.snapshotState as? FailedNearbyVehicleSnapshotState)?.reason,
+            ),
         primaryActionLabel = "Refresh nearby vehicles",
         canRequestRefresh = canRequestRefresh(),
         canInteractWithVehicles = canInteractWithVehicles(),
@@ -181,7 +186,9 @@ private fun blockedLocationMessage(reason: RiderLocationBlockedReason): String =
 
 private const val RIDER_CENTERED_CAMERA_ZOOM = 15.0
 
-private fun NearbyVehicleMapOverlayState.toPresentation(): NearbyVehicleMapOverlayPresentation =
+private fun NearbyVehicleMapOverlayState.toPresentation(
+    failureReason: NearbyVehicleMapFailureReason?,
+): NearbyVehicleMapOverlayPresentation =
     when (this) {
         NearbyVehicleMapOverlayState.None -> {
             NearbyVehicleMapOverlayPresentation.None
@@ -204,7 +211,20 @@ private fun NearbyVehicleMapOverlayState.toPresentation(): NearbyVehicleMapOverl
         NearbyVehicleMapOverlayState.BlockingFailure -> {
             NearbyVehicleMapOverlayPresentation.Blocking(
                 headline = "Map unavailable",
-                message = "Precise rider location is required before nearby vehicle actions are available.",
+                message =
+                    when (failureReason) {
+                        NearbyVehicleMapFailureReason.RepositoryUnavailable -> {
+                            "The fleet repository could not load nearby vehicles. Try refreshing again."
+                        }
+
+                        NearbyVehicleMapFailureReason.Unexpected -> {
+                            "Something went wrong while loading nearby vehicles. Try refreshing again."
+                        }
+
+                        NearbyVehicleMapFailureReason.RiderLocationUnavailable, null -> {
+                            "Precise rider location is required before nearby vehicle actions are available."
+                        }
+                    },
             )
         }
     }
