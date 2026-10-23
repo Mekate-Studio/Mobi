@@ -17,7 +17,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
 import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
-import studio.mekate.mobi.feature.nearbyvehiclemap.isRefreshInFlight
 import kotlin.time.Duration.Companion.milliseconds
 
 class NearbyVehicleMapPresenter(
@@ -79,8 +78,8 @@ class NearbyVehicleMapPresenter(
                     featureState = stateProducer.locationTemporarilyUnavailableState(currentState = featureState)
                 },
                 onRefreshRequested = { nowMillis ->
-                    if (!featureState.snapshotState.isRefreshInFlight()) {
-                        scope.launch {
+                    scope.launch {
+                        if (featureState.canRequestRefresh()) {
                             featureState = stateProducer.loadingState(currentState = featureState)
                             featureState =
                                 stateProducer.refreshedState(
