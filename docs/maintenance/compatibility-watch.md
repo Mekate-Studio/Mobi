@@ -147,6 +147,12 @@ Swift-export updates and workaround removal also require the
 docs, the official sample and relevant YouTrack issues. These are manual review
 inputs; the current watch does not poll their changes or validate their claims.
 
+Android presenter-test dependency and Toolchain update reviews must also assess
+[AND-01](mobile-feature-follow-ups.md#and-01-presenter-host-test-harness-simplification):
+record retained/removal-ready/incomplete status and actual host-test evidence in
+the update PR. This manual check is outside the iOS interop retirement report;
+the watch does not poll Circuit/Robolectric or automatically qualify this harness.
+
 ## Primary references
 
 - [GitHub releases API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28): release metadata and pagination boundaries.

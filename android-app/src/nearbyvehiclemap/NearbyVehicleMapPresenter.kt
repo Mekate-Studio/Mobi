@@ -13,9 +13,10 @@ import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
-import studio.mekate.mobi.feature.nearbyvehiclemap.SnapshotBackedNearbyVehicleState
+import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
 import studio.mekate.mobi.feature.nearbyvehiclemap.isRefreshInFlight
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -30,9 +31,13 @@ class NearbyVehicleMapPresenter(
         var featureState by remember(stateProducer) { mutableStateOf(stateProducer.initialState()) }
         val scope = rememberCoroutineScope()
 
-        LaunchedEffect(featureState) {
-            if (featureState.snapshotState is SnapshotBackedNearbyVehicleState) {
+        LaunchedEffect(stateProducer) {
+            while (isActive) {
                 delay(NearbyVehicleMapFeatureService.REFRESH_INTERVAL_MILLIS.milliseconds)
+                val nowMillis = System.currentTimeMillis()
+                if (!featureState.canRequestRefresh() || !stateProducer.shouldRefresh(featureState, nowMillis)) {
+                    continue
+                }
                 featureState =
                     stateProducer.loadingState(
                         currentState = featureState,
@@ -40,7 +45,7 @@ class NearbyVehicleMapPresenter(
                 featureState =
                     stateProducer.refreshedState(
                         currentState = featureState,
-                        nowMillis = System.currentTimeMillis(),
+                        nowMillis = nowMillis,
                     )
             }
         }
