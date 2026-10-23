@@ -313,9 +313,14 @@ the native value captured before entering loading, so a client-level
 failures remain typed failures. TCA still suppresses sends from cancelled effects;
 a future UI cancel operation needs its own reducer transition.
 
-Keep business transitions in Kotlin. Nearby retains its shared state; its unchecked crossing
-and preconcurrency imports remain tracked as IOS-02 rather than being presented
-as checked isolation.
+Keep business transitions in Kotlin. Nearby distinguishes client cancellation
+from other thrown errors: cancellation restores a retryable shared state; other
+errors use the service's existing `Unexpected` failure policy, retaining the
+snapshot and applying its stale-window overlay. Repository failures keep their
+typed reason. No separate native interop-error state is introduced.
+
+Nearby retains its shared state; its unchecked crossing and preconcurrency imports
+remain tracked as IOS-02 rather than being presented as checked isolation.
 
 ### 6. Decide whether shared Compose UI is worth it
 
