@@ -385,6 +385,56 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test("should let an active refresh finish before the next visible refresh", .timeLimit(.minutes(1)))
+    func shouldLetActiveRefreshFinishBeforeNextVisibleRefresh() async throws {
+        try await confirmation("Refresh starts once per completed cycle", expectedCount: 2) { started in
+            // given
+            let requests = AsyncStream<Void>.makeStream()
+            let completion = AsyncStream<Void>.makeStream()
+            defer {
+                requests.continuation.finish()
+                completion.continuation.finish()
+            }
+            var pending = requests.stream.makeAsyncIterator()
+            var client = NearbyVehicleMapFeatureTestFactory.makeClient()
+            client.refresh = { _, _ in
+                started()
+                requests.continuation.yield(())
+                for await _ in completion.stream {
+                    break
+                }
+                return NearbyVehicleMapFeatureTestFactory.loadedSharedState(sequence: 2)
+            }
+            let store = NearbyVehicleMapFeatureTestFactory.makeStore(
+                client: client,
+                initialState: NearbyVehicleMapFeatureTestFactory.loadedState(),
+            )
+            await store.send(.visibleRefreshDue(nowMillis: 11000)) {
+                $0 = NearbyVehicleMapFeatureTestFactory.refreshingState()
+            }
+            _ = try #require(await pending.next())
+
+            // when
+            await store.send(.visibleRefreshDue(nowMillis: 21000))
+            completion.continuation.finish()
+            await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2))) {
+                $0 = NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2)
+            }
+
+            // then
+            #expect(store.state.canRequestRefresh)
+            await store.send(.visibleRefreshDue(nowMillis: 31000)) {
+                $0
+                    .apply(sharedState: client
+                        .loadingState(NearbyVehicleMapFeatureTestFactory.loadedSharedState(sequence: 2)))
+            }
+            await store.receive(.sharedStateLoaded(NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2))) {
+                $0 = NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2)
+            }
+        }
+    }
+
+    @MainActor
     @Test("should request visible refresh when refresh is due")
     func shouldRequestVisibleRefreshWhenRefreshIsDue() async {
         // given
