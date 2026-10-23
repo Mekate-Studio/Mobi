@@ -5,7 +5,7 @@ import MobiIOSDependencies
 struct HomeFeatureClient: Sendable {
     var initialState: @Sendable () -> HomeCounterLoadable
     var loadingState: @Sendable (_ counterValue: Int) -> HomeCounterLoadable
-    var refresh: @Sendable (_ counterValue: Int) async -> HomeCounterLoadable
+    var refresh: @Sendable (_ previousState: HomeCounterLoadable) async -> HomeCounterLoadable
 }
 
 extension HomeFeatureClient {
@@ -17,13 +17,16 @@ extension HomeFeatureClient {
             loadingState: { counterValue in
                 HomeCounterLoadable(sharedState: service.loadingState(counterValue: Int32(counterValue)))
             },
-            refresh: { counterValue in
+            refresh: { previousState in
+                let counterValue = Int32(previousState.currentValueForRefresh)
                 do {
-                    let sharedState = try await service.refresh(counterValue: Int32(counterValue))
+                    let sharedState = try await service.refresh(counterValue: counterValue)
                     return HomeCounterLoadable(sharedState: sharedState)
+                } catch is CancellationError {
+                    return previousState
                 } catch {
                     return HomeCounterLoadable(
-                        sharedState: service.unexpectedErrorState(counterValue: Int32(counterValue)),
+                        sharedState: service.unexpectedErrorState(counterValue: counterValue),
                     )
                 }
             },

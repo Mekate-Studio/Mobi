@@ -16,9 +16,11 @@ import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureServic
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFreshnessPolicy
 import kotlin.coroutines.cancellation.CancellationException
 
-// IOS-14: Kotlin-owned failures preserve their identity at the client seam.
+// IOS-14: Kotlin-owned domain-failure fixtures preserve their identity at the client seam.
 // The selected generated reverse async bridge wraps Swift errors in SwiftException.
-// These fixtures replace the former Swift repository stubs; release excludes them.
+// Recheck native repository stubs when that round-trip is faithful.
+// Kotlin-origin cancellation/uncaught-error controls also qualify the forward bridge;
+// retain those controls when IOS-14 is retired. Release excludes all these test fixtures.
 object IosInteropTestServices {
     fun successfulHomeService(): HomeFeatureService = homeService(null)
 
@@ -52,6 +54,16 @@ object IosInteropTestServices {
             },
         )
 
+    fun cancellingHomeService(): HomeFeatureService = HomeFeatureService(CancelOnceCounterRepository())
+
+    fun uncaughtFailureHomeService(): HomeFeatureService =
+        HomeFeatureService(
+            object : CounterRepository {
+                override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int =
+                    throw AssertionError("Uncaught Kotlin test failure")
+            },
+        )
+
     fun cancellingNearbyService(): NearbyVehicleMapFeatureService =
         NearbyVehicleMapFeatureService(
             nearbyFleetRepository = CancelOnceNearbyFleetRepository(),
@@ -79,5 +91,17 @@ private class CancelOnceNearbyFleetRepository : NearbyFleetRepository {
                 ),
             loadedAtMillis = 1000,
         )
+    }
+}
+
+private class CancelOnceCounterRepository : CounterRepository {
+    private var shouldCancel = true
+
+    override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int {
+        if (shouldCancel) {
+            shouldCancel = false
+            throw CancellationException("Cancelled Home test request")
+        }
+        return 21
     }
 }

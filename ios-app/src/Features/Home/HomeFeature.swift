@@ -15,10 +15,11 @@ struct HomeFeature {
 
             case .refreshTapped:
                 guard !state.counterLoadable.isLoading else { return .none }
-                let currentCounterValue = state.counterLoadable.currentValueForRefresh
+                let previousState = state.counterLoadable
+                let currentCounterValue = previousState.currentValueForRefresh
                 state.counterLoadable = homeFeatureClient.loadingState(currentCounterValue)
                 return .run { send in
-                    let counterLoadable = await homeFeatureClient.refresh(currentCounterValue)
+                    let counterLoadable = await homeFeatureClient.refresh(previousState)
                     await send(.refreshResponse(counterLoadable))
                 }
 
