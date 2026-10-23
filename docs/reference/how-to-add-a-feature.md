@@ -368,6 +368,11 @@ Current repo conventions:
 - Tests needing object setup should use fixtures or factories instead of
   inlining noisy construction
 
+For native correctness and presentation fixes, assess the other consumers and
+record their status in the [cross-platform follow-ups](../maintenance/mobile-feature-follow-ups.md).
+Shared service tests qualify shared behavior; actual presenter/reducer checks are
+needed for native request ordering, cancellation and lifecycle ownership.
+
 ### 8. Document only the delta
 
 If the feature follows the established pattern, lightweight docs are enough.
