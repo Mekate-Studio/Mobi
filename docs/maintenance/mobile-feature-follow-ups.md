@@ -1,6 +1,6 @@
 # Cross-platform mobile feature follow-ups
 
-Reviewed against `8f381bd71d30d44357a5267c3aa51e798ec384b9` on 2026-10-24.
+Reviewed against `4731933c3ff17105f8471e3dfe02b0827629e4e0` on 2026-10-24.
 The iOS changes below are merged. Android source review identifies applicability;
 only the named executable checks qualify a counterpart. This list tracks ordinary
 application improvements separately from the [interop workaround registry](interop-workarounds.md).
@@ -13,7 +13,7 @@ application improvements separately from the [interop workaround registry](inter
 | MOB-02 | Reject obsolete refresh results and preserve current location decisions, [#40](https://github.com/Mekate-Studio/Mobi/pull/40)/[#41](https://github.com/Mekate-Studio/Mobi/pull/41)/[#46](https://github.com/Mekate-Studio/Mobi/pull/46) | Native Nearby implemented: completion preserves current location decisions, and a new precise location supersedes earlier refresh work | Actual presenter checks cover blocked/degraded completion and overlapping requests, including repeated coordinates, changed coordinates, queued location events, old/new success or failure, late noncooperative completion, manual cancellation/retry and timer survival. Host checks qualify native result ownership; device location delivery is outside this evidence. |
 | MOB-03 | Let active work finish across visible timer ticks, [#53](https://github.com/Mekate-Studio/Mobi/pull/53) | Implemented: a composition-owned timer checks shared admission/freshness and awaits each automatic request | Actual Circuit presenter regressions under Robolectric/API 36 cover loading recomposition, a slow automatic request and subsequent refresh, a pending manual request, blocked location, a snapshot not due, and cancellation on composition disposal. This qualifies host Compose ownership; device interaction and navigation lifetime are outside this check. |
 | MOB-04 | Deliberate cancellation recovery, [#42](https://github.com/Mekate-Studio/Mobi/pull/42)/[#51](https://github.com/Mekate-Studio/Mobi/pull/51) | Native Home/Nearby implemented for their recorded ownership cases; optional Shared Home remains open | Home checks cover exact previous-state recovery and retry for repository-thrown and owned-job cancellation. Nearby checks cover active-job repository cancellation, retained/absent snapshots, earlier failures, degraded/blocked location, retry, timer survival and obsolete-request rejection. Supersession/disposal cancel Nearby jobs and skip recovery. A future independent cancel action while Nearby remains owned needs its own policy/runtime checks; optional Shared Home needs its own rendering-runtime qualification. |
-| MOB-05 | Manual refresh admission, [#49](https://github.com/Mekate-Studio/Mobi/pull/49)/[#50](https://github.com/Mekate-Studio/Mobi/pull/50) | Native Home/Nearby implemented: admission and loading share a nonsuspending segment after dispatch. Home resolves its current counter there; Nearby uses shared `canRequestRefresh`. Optional `SharedHomeScreen` still checks before launching; that source-observed risk is unqualified | Nearby checks cover rapid/busy callbacks, completion, blocked/resolving location and retry. Home checks cover queued duplicates, busy rejection, completion, retained callbacks using current values, repository-failure retry with absent/previous values, and disposal. Shared Compose Home admission needs its own rendering-runtime check. Explicit `VisibleRefreshDue` freshness remains separate; its existing callback route is preserved. |
+| MOB-05 | Manual refresh admission, [#49](https://github.com/Mekate-Studio/Mobi/pull/49)/[#50](https://github.com/Mekate-Studio/Mobi/pull/50) | Native Home/Nearby implemented: admission and loading share a nonsuspending segment after dispatch. Home resolves its current counter there; Nearby uses shared `canRequestRefresh`. Optional `SharedHomeScreen` still checks before launching; that source-observed risk is unqualified | Nearby checks cover rapid/busy callbacks, completion, blocked/resolving location and retry. Home checks cover queued duplicates, busy rejection, completion, retained callbacks using current values, repository-failure retry with absent/previous values, and disposal. Shared Compose Home admission needs its own rendering-runtime check. Android automatic refresh uses the presenter-owned timer and shared freshness; its unused `VisibleRefreshDue` UI event is removed. iOS still emits its own visible-refresh action. |
 | MOB-06 | Feature lifetime across view re-entry, [#47](https://github.com/Mekate-Studio/Mobi/pull/47)/[#48](https://github.com/Mekate-Studio/Mobi/pull/48) | Needs platform review: presenters use ordinary `remember` and AppShell conditionally composes each destination | Establish the intended tab/back-stack lifetime using Circuit/Compose ownership, then test tab re-entry and recreation with loaded/error states. iOS `StateObject` is not an Android implementation recipe. |
 | MOB-07 | Swift-export errors, service captures and generated support | Platform-specific: Android calls Kotlin directly | Keep IOS-prefixed bridge exceptions and retirement checks in the interop registry. Shared repository error/freshness rules already reach both platforms; Swift `KotlinError` handling and TCA executor constraints need no literal Android port. |
 
@@ -36,8 +36,15 @@ cannot supply an obsolete counter value. The iOS Home reducer already reads its
 current value in the admitted action. Optional Shared Home still needs its own
 runtime qualification; native presenter checks do not qualify its UI callback.
 Manual refresh and repository-failure retry still bypass
-freshness; the automatic timer retains its existing freshness check. This is
-native callback correctness, with no added shared state or interop workaround.
+freshness; the automatic timer retains its existing freshness check. Android's
+[UI](../../android-app/src/nearbyvehiclemap/NearbyVehicleMapUiFactory.kt) emits
+manual refresh intent, while the presenter owns automatic timing. The unused
+Android `VisibleRefreshDue` event and adapter branch are removed: adding another
+callback would duplicate an automatic path with no production caller. The
+existing routing check now exercises the actual manual event, and queued
+manual-duplicate coverage remains intact. iOS keeps `visibleRefreshDue` because
+its view emits that action and its reducer applies shared freshness. This is
+native contract cleanup, with no new shared state, policy or interop workaround.
 
 MOB-02's Nearby completion checks run the actual presenter with controlled
 repository completion. A single local refresh function serves initial-location,

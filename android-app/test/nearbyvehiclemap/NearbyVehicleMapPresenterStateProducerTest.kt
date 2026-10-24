@@ -60,7 +60,7 @@ class NearbyVehicleMapPresenterStateProducerTest {
     }
 
     @Test
-    fun `should request refresh when visible refresh event is sent`() {
+    fun `should request refresh when manual refresh event is sent`() {
         // given
         val producer = createStateProducer()
         var requestedAtMillis = -1L
@@ -76,7 +76,7 @@ class NearbyVehicleMapPresenterStateProducerTest {
             )
 
         // when
-        screenState.eventSink(NearbyVehicleMapScreenEvent.VisibleRefreshDue(nowMillis = 11_000))
+        screenState.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 11_000))
 
         // then
         assertEquals(11_000, requestedAtMillis)

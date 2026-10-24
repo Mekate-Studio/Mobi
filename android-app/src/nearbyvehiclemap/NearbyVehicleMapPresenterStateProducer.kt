@@ -75,10 +75,6 @@ class NearbyVehicleMapPresenterStateProducer(
                         onLocationTemporarilyUnavailable()
                     }
 
-                    is NearbyVehicleMapScreenEvent.VisibleRefreshDue -> {
-                        onRefreshRequested(event.nowMillis)
-                    }
-
                     is NearbyVehicleMapScreenEvent.ManualRefreshRequested -> {
                         onRefreshRequested(event.nowMillis)
                     }
