@@ -471,6 +471,9 @@ Navigation should remain native.
 ### iOS
 
 - TCA owns navigation path, destinations, sheets, and alerts
+- Nearby's retained store distinguishes cached content under location revalidation
+  from ready content; refresh and interactions wait for the current location result
+  ([ADR 0012](../adr/0012-ios-nearby-location-revalidation.md))
 - shared modules emit intents or outputs, not Swift navigation types
 
 ### Shared Compose screens

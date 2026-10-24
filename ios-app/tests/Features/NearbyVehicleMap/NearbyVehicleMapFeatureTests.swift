@@ -27,15 +27,14 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
 
     @MainActor
     @Test(
-        "should preserve existing Nearby state when the view task runs again",
+        "should preserve blocked or unresolved Nearby state when the view task runs again",
         arguments: [
-            NearbyVehicleMapFeatureTestFactory.loadedState(),
-            NearbyVehicleMapFeatureTestFactory.refreshingState(),
+            NearbyVehicleMapFeatureTestFactory.initialState(),
             NearbyVehicleMapFeatureTestFactory.deniedState(),
-            NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState(),
+            NearbyVehicleMapFeatureTestFactory.approximateOnlyState(),
         ],
     )
-    func shouldPreserveExistingNearbyStateWhenViewTaskRunsAgain(state: NearbyVehicleMapFeature.State) async {
+    func shouldPreserveBlockedOrUnresolvedStateWhenViewTaskRunsAgain(state: NearbyVehicleMapFeature.State) async {
         // given
         let store = NearbyVehicleMapFeatureTestFactory.makeStore(initialState: state)
 
@@ -623,7 +622,7 @@ private extension NearbyVehicleMapFeature.LocationBlockedReason {
     }
 }
 
-private enum NearbyVehicleMapFeatureTestFactory {
+enum NearbyVehicleMapFeatureTestFactory {
     typealias LocationBlockedReason = NearbyVehicleMapFeature.LocationBlockedReason
 
     @MainActor
