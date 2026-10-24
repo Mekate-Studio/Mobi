@@ -1,6 +1,6 @@
 # Cross-platform mobile feature follow-ups
 
-Reviewed against `57f8b51f539f0ddd59870cff41425cd3d9d91504` on 2026-10-24.
+Reviewed against `78d57d1ea61d124d690015556cdac5f1e25144b2` on 2026-10-24.
 The iOS changes below are merged. Android source review identifies applicability;
 only the named executable checks qualify a counterpart. This list tracks ordinary
 application improvements separately from the [interop workaround registry](interop-workarounds.md).
@@ -10,7 +10,7 @@ application improvements separately from the [interop workaround registry](inter
 | ID | Improvement and iOS evidence | Android assessment | Required follow-up or closure evidence |
 | --- | --- | --- | --- |
 | MOB-01 | Accurate blocking failure messages, [#54](https://github.com/Mekate-Studio/Mobi/pull/54) | Implemented: Android presentation reads the existing typed failure reason | Regression checks cover location/repository/unexpected reasons, with absent and retained snapshots, blocking and retry. Validation is reported in the implementation PR; Compose/device interaction is not claimed. |
-| MOB-02 | Reject obsolete refresh results and preserve current location decisions, [#40](https://github.com/Mekate-Studio/Mobi/pull/40)/[#41](https://github.com/Mekate-Studio/Mobi/pull/41)/[#46](https://github.com/Mekate-Studio/Mobi/pull/46) | Open: `NearbyVehicleMapPresenter` assigns awaited results directly while location callbacks can change state | Exercise the actual presenter: blocked/degraded location during a request and a newer location request finishing before the older one. Retain the current location decision and newest applicable snapshot. State-producer delegation tests do not qualify this ordering. |
+| MOB-02 | Reject obsolete refresh results and preserve current location decisions, [#40](https://github.com/Mekate-Studio/Mobi/pull/40)/[#41](https://github.com/Mekate-Studio/Mobi/pull/41)/[#46](https://github.com/Mekate-Studio/Mobi/pull/46) | Partially implemented: Nearby completion preserves the current blocked/degraded location decision; ordering between overlapping location requests remains open | Actual presenter checks cover blocked/degraded location during initial, manual and automatic requests, success/failure, absent/retained snapshots and degraded retry. Still exercise a newer location request finishing before the older one and retain the newest applicable snapshot. State-producer delegation tests do not qualify that ordering. |
 | MOB-03 | Let active work finish across visible timer ticks, [#53](https://github.com/Mekate-Studio/Mobi/pull/53) | Implemented: a composition-owned timer checks shared admission/freshness and awaits each automatic request | Actual Circuit presenter regressions under Robolectric/API 36 cover loading recomposition, a slow automatic request and subsequent refresh, a pending manual request, blocked location, a snapshot not due, and cancellation on composition disposal. This qualifies host Compose ownership; device interaction and navigation lifetime are outside this check. |
 | MOB-04 | Deliberate cancellation recovery, [#42](https://github.com/Mekate-Studio/Mobi/pull/42)/[#51](https://github.com/Mekate-Studio/Mobi/pull/51) | Open: both presenters enter loading before awaiting services that rethrow `CancellationException` | Distinguish cancellation while the feature remains owned from composition disposal. Qualify the intended prior-state restoration and retry, including previous errors/snapshots. Preserve structured cancellation; do not copy Swift bridge error handling into direct Kotlin calls. |
 | MOB-05 | Manual refresh admission, [#49](https://github.com/Mekate-Studio/Mobi/pull/49)/[#50](https://github.com/Mekate-Studio/Mobi/pull/50) | Native Home/Nearby implemented: admission and loading share a nonsuspending segment after dispatch. Home resolves its current counter there; Nearby uses shared `canRequestRefresh`. Optional `SharedHomeScreen` still checks before launching; that source-observed risk is unqualified | Nearby checks cover rapid/busy callbacks, completion, blocked/resolving location and retry. Home checks cover queued duplicates, busy rejection, completion, retained callbacks using current values, repository-failure retry with absent/previous values, and disposal. Shared Compose Home admission needs its own rendering-runtime check. Explicit `VisibleRefreshDue` freshness remains separate; its existing callback route is preserved. |
@@ -24,7 +24,7 @@ exercise the actual composition with virtual coroutine time and controlled repos
 The timer checks every ten seconds from composition entry; after an automatic request
 finishes, it waits another interval. Each tick uses the existing shared freshness
 and admission rules. A fresh, busy or blocked state stays unchanged by the timer.
-Location changes during an already active request remain MOB-02; cancellation
+Ordering between overlapping location requests remains MOB-02; cancellation
 recovery while the feature stays owned remains MOB-04.
 
 MOB-05's [Home](../../android-app/test/home/HomePresenterTest.kt) and
@@ -38,6 +38,17 @@ runtime qualification; native presenter checks do not qualify its UI callback.
 Manual refresh and repository-failure retry still bypass
 freshness; the automatic timer retains its existing freshness check. This is
 native callback correctness, with no added shared state or interop workaround.
+
+MOB-02's Nearby completion checks run the actual presenter with controlled
+repository completion. A single local refresh function serves initial-location,
+manual and timer requests. After the await, it reads the currently owned location
+decision: blocked state remains untouched; visible state accepts the returned
+snapshot/failure while retaining its current location variant. The existing iOS
+reducer already guards blocked completion and preserves the current location.
+This is ordinary native result application, with no new shared API, state flags
+or interop workaround. It does not establish which overlapping location request
+owns a result; that part of MOB-02 remains open. Device location delivery is not
+qualified by the host checks.
 
 ## AND-01: Presenter host-test harness simplification
 

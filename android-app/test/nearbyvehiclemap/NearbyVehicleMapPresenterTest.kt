@@ -24,6 +24,7 @@ import studio.mekate.mobi.core.NearbyFleetRepository
 import studio.mekate.mobi.core.NearbyFleetRepositoryException
 import studio.mekate.mobi.core.NearbyFleetRequest
 import studio.mekate.mobi.core.RiderLocation
+import studio.mekate.mobi.feature.nearbyvehiclemap.FailedNearbyVehicleSnapshotState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFailureReason
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFreshnessPolicy
@@ -315,6 +316,190 @@ class NearbyVehicleMapPresenterTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `should preserve blocked location when an active refresh completes`() =
+        runTest {
+            for (completion in listOf(
+                Result.success(snapshot(sequence = 2)),
+                Result.failure(NearbyFleetRepositoryException()),
+            )) {
+                for (hasSnapshot in listOf(false, true)) {
+                    for (reason in RiderLocationBlockedReason.entries) {
+                        // given
+                        val repository = ControlledFleetRepository()
+                        queuedPresenter(repository).testFlow {
+                            val loading = startRefresh(repository, hasSnapshot)
+                            val request = repository.requests.receive()
+
+                            // when
+                            loading.eventSink(NearbyVehicleMapScreenEvent.LocationAccessBlocked(reason))
+                            val blocked = awaitItem().featureState
+                            request.complete(completion)
+                            runCurrent()
+
+                            // then
+                            assertEquals(NearbyVehicleMapOverlayState.BlockingFailure, blocked.mapOverlayState)
+                            assertEquals(
+                                NearbyVehicleMapFailureReason.RiderLocationUnavailable,
+                                assertIs<FailedNearbyVehicleSnapshotState>(blocked.snapshotState).reason,
+                            )
+                            if (hasSnapshot) {
+                                assertEquals(
+                                    1L,
+                                    assertIs<NearbyVehicleSnapshotState.FailedWithSnapshot>(
+                                        blocked.snapshotState,
+                                    ).snapshot.sequence,
+                                )
+                            } else {
+                                assertIs<NearbyVehicleSnapshotState.FailedWithoutSnapshot>(blocked.snapshotState)
+                            }
+                            expectNoEvents()
+                            assertTrue(repository.requests.tryReceive().isFailure)
+                            cancelAndIgnoreRemainingEvents()
+                        }
+                    }
+                }
+            }
+        }
+
+    @Test
+    fun `should preserve degraded location when a refresh completes and allow retry`() =
+        runTest {
+            for (completion in listOf(
+                Result.success(snapshot(sequence = 2)),
+                Result.failure(NearbyFleetRepositoryException()),
+            )) {
+                for (hasSnapshot in listOf(false, true)) {
+                    // given
+                    val repository = ControlledFleetRepository()
+                    queuedPresenter(repository).testFlow {
+                        val loading = startRefresh(repository, hasSnapshot)
+                        val request = repository.requests.receive()
+
+                        // when
+                        loading.eventSink(NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable)
+                        val degraded = awaitItem()
+                        assertIs<RiderLocationState.TemporarilyUnavailable>(degraded.featureState.riderLocationState)
+                        request.complete(completion)
+                        val completed = awaitItem()
+                        val state = completed.featureState
+
+                        // then
+                        val location = assertIs<RiderLocationState.TemporarilyUnavailable>(state.riderLocationState)
+                        assertEquals(RIDER_LOCATION, location.location)
+                        if (completion.isSuccess) {
+                            val loaded = assertIs<NearbyVehicleSnapshotState.Loaded>(state.snapshotState)
+                            assertEquals(2L, loaded.snapshot.sequence)
+                            assertEquals(NearbyVehicleMapOverlayState.None, state.mapOverlayState)
+                        } else {
+                            assertEquals(
+                                NearbyVehicleMapFailureReason.RepositoryUnavailable,
+                                assertIs<FailedNearbyVehicleSnapshotState>(state.snapshotState).reason,
+                            )
+                            if (hasSnapshot) {
+                                val failed =
+                                    assertIs<NearbyVehicleSnapshotState.FailedWithSnapshot>(state.snapshotState)
+                                assertEquals(1L, failed.snapshot.sequence)
+                                assertEquals(NearbyVehicleMapOverlayState.StaleIndicator, state.mapOverlayState)
+                            } else {
+                                assertIs<NearbyVehicleSnapshotState.FailedWithoutSnapshot>(state.snapshotState)
+                                assertEquals(NearbyVehicleMapOverlayState.BlockingFailure, state.mapOverlayState)
+                            }
+                        }
+                        completed.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 1))
+                        awaitItem()
+                        repository.requests.receive().complete(Result.success(snapshot(sequence = 3)))
+                        val retried = awaitItem().featureState
+                        assertIs<RiderLocationState.TemporarilyUnavailable>(retried.riderLocationState)
+                        assertEquals(
+                            3L,
+                            assertIs<NearbyVehicleSnapshotState.Loaded>(retried.snapshotState).snapshot.sequence,
+                        )
+                        assertTrue(repository.requests.tryReceive().isFailure)
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+
+    @Test
+    fun `should preserve location decisions when an automatic refresh completes`() =
+        runTest {
+            for (blocked in listOf(false, true)) {
+                for (completion in listOf(
+                    Result.success(snapshot(sequence = 2)),
+                    Result.failure(NearbyFleetRepositoryException()),
+                )) {
+                    // given
+                    val repository = ControlledFleetRepository()
+                    queuedPresenter(repository).testFlow {
+                        resolveLocation(repository)
+                        advanceTimeBy(REFRESH_INTERVAL_MILLIS)
+                        runCurrent()
+                        val loading = awaitItem()
+                        assertIs<NearbyVehicleSnapshotState.Refreshing>(loading.featureState.snapshotState)
+                        val request = repository.requests.receive()
+
+                        // when
+                        loading.eventSink(
+                            if (blocked) {
+                                NearbyVehicleMapScreenEvent.LocationAccessBlocked(
+                                    RiderLocationBlockedReason.ApproximateOnly,
+                                )
+                            } else {
+                                NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable
+                            },
+                        )
+                        val decision = awaitItem().featureState
+                        request.complete(completion)
+                        runCurrent()
+
+                        // then
+                        if (blocked) {
+                            assertEquals(NearbyVehicleMapOverlayState.BlockingFailure, decision.mapOverlayState)
+                            expectNoEvents()
+                        } else {
+                            val completed = awaitItem().featureState
+                            assertIs<RiderLocationState.TemporarilyUnavailable>(completed.riderLocationState)
+                            if (completion.isSuccess) {
+                                assertEquals(
+                                    2L,
+                                    assertIs<NearbyVehicleSnapshotState.Loaded>(
+                                        completed.snapshotState,
+                                    ).snapshot.sequence,
+                                )
+                            } else {
+                                val failed =
+                                    assertIs<NearbyVehicleSnapshotState.FailedWithSnapshot>(completed.snapshotState)
+                                assertEquals(1L, failed.snapshot.sequence)
+                                assertEquals(NearbyVehicleMapFailureReason.RepositoryUnavailable, failed.reason)
+                            }
+                        }
+                        assertTrue(repository.requests.tryReceive().isFailure)
+                        cancelAndIgnoreRemainingEvents()
+                    }
+                }
+            }
+        }
+
+    private suspend fun ReceiveTurbine<NearbyVehicleMapScreenState>.startRefresh(
+        repository: ControlledFleetRepository,
+        hasSnapshot: Boolean,
+    ): NearbyVehicleMapScreenState {
+        if (hasSnapshot) {
+            resolveLocation(repository).eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 0))
+        } else {
+            awaitItem().eventSink(NearbyVehicleMapScreenEvent.PreciseLocationResolved(RIDER_LOCATION))
+        }
+        return awaitItem().also { loading ->
+            if (hasSnapshot) {
+                assertIs<NearbyVehicleSnapshotState.Refreshing>(loading.featureState.snapshotState)
+            } else {
+                assertIs<NearbyVehicleSnapshotState.Loading>(loading.featureState.snapshotState)
+            }
+        }
+    }
 
     private fun TestScope.queuedPresenter(repository: NearbyFleetRepository): Flow<NearbyVehicleMapScreenState> {
         val presenter = presenter(repository)
