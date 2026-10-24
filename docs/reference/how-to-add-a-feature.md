@@ -384,6 +384,16 @@ The app's `jvm.test.freeJvmArgs` enables native access for that runtime. This is
 host lifecycle evidence, not device rendering, navigation or permission testing.
 Keep effects keyed to their owner when their work changes observed state, and
 check both completion across recomposition and cancellation on disposal.
+
+For callback admission, also queue the presenter composition with
+`moleculeFlow(...).flowOn(StandardTestDispatcher(testScheduler))` and observe it
+through Turbine, using the already selected Circuit test dependencies. Send rapid
+events before `runCurrent()`. Eager collection alone can hide a gap between a
+callback check and a queued launch. On the presenter's single dispatcher, check
+current eligibility and enter loading before suspending for repository work.
+The [admission tests](../../android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterTest.kt)
+include a location decision changing before queued work starts.
+
 Recheck [AND-01](../maintenance/mobile-feature-follow-ups.md#and-01-presenter-host-test-harness-simplification)
 on relevant dependency updates to remove this harness cost when supported.
 
