@@ -1,6 +1,6 @@
 # ADR 0011: Android Nearby state across native tab switches
 
-Status: Proposed for review with the Nearby tab-lifetime change.
+Status: Accepted via [PR #66](https://github.com/Mekate-Studio/Mobi/pull/66).
 
 ## Decision
 

@@ -32,6 +32,7 @@ struct NearbyVehicleMapView: View {
                     store.send(.locationResolutionResponse(.temporarilyUnavailable))
                 }
                 .buttonStyle(.bordered)
+                .disabled(!store.canInteractWithVehicles)
             }
             .padding(20)
             .navigationTitle("Nearby Map")

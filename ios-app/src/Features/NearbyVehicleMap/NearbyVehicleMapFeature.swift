@@ -11,9 +11,11 @@ struct NearbyVehicleMapFeature {
         Reduce { state, action in
             switch action {
             case .task:
-                guard state.sharedState == nil else { return .none }
-                state.apply(sharedState: client.initialState())
-                return .none
+                if state.sharedState == nil {
+                    state.apply(sharedState: client.initialState())
+                }
+                state.beginLocationResolution()
+                return .cancel(id: CancelID.refresh)
 
             case let .locationResolutionResponse(result):
                 guard let sharedState = state.sharedState else { return .none }

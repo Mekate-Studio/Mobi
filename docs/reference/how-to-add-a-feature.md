@@ -308,8 +308,16 @@ Shared Kotlin should feed feature behavior, but should not expose TCA types.
 Keep feature stores in a stable owning scope. `AppRootView` retains Native Home
 and Nearby stores with `@StateObject` for the scene's lifetime instead of creating
 them in `body`. Repeated view tasks preserve existing state: Home initializes only
-while its counter remains initial, and Nearby only while its shared state is absent.
-Nearby still requests current location and runs visible refresh on reappearance.
+while its counter remains initial. Nearby initializes only while its shared state is
+absent, then begins location revalidation on each task. Its single native content
+value distinguishes preparing, checking with retained shared data, and ready.
+A cached map stays visible during checking, but manual/timer refresh and interactions
+wait for a current location result. Keeping the previous shared value inside the
+checking case preserves temporary-loss fallback even without a snapshot. A new
+check normalizes loading through shared cancellation policy and cancels the prior
+refresh effect. Known blocked decisions remain blocked. See
+[ADR 0012](../adr/0012-ios-nearby-location-revalidation.md); failure aging on return
+and platform location delivery remain separate qualification work.
 
 For native iOS, export sealed states through the generated feature modules and
 switch directly on `value.sealedType()`. Kotlin enum reasons are generated Swift

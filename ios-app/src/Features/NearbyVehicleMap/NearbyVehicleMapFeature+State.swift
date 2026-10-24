@@ -3,9 +3,24 @@ import MobiIOSDependencies
 @preconcurrency import MobiNearby
 
 extension NearbyVehicleMapFeature {
+    private enum Content {
+        case preparing
+        case checkingLocation(NearbyVehicleMapFeatureState)
+        case ready(NearbyVehicleMapFeatureState)
+    }
+
     @ObservableState
     struct State: Equatable {
-        var sharedState: NearbyVehicleMapFeatureState?
+        private var content = Content.preparing
+
+        var sharedState: NearbyVehicleMapFeatureState? {
+            switch content {
+            case .preparing:
+                nil
+            case let .checkingLocation(state), let .ready(state):
+                state
+            }
+        }
 
         static func == (
             lhs: State,
@@ -19,17 +34,22 @@ extension NearbyVehicleMapFeature {
         }
 
         mutating func apply(sharedState: NearbyVehicleMapFeatureState) {
-            self.sharedState = sharedState
+            content = .ready(sharedState)
+        }
+
+        mutating func beginLocationResolution() {
+            guard hasResolvedRiderLocation, let sharedState else { return }
+            content = .checkingLocation(cancelledRefreshState(sharedState))
         }
 
         mutating func applyRefreshResult(_ result: State) {
             guard let current = sharedState, let refreshed = result.sharedState else { return }
 
-            sharedState = refreshed.copy(
+            apply(sharedState: refreshed.copy(
                 riderLocationState: current.riderLocationState,
                 snapshotState: refreshed.snapshotState,
                 mapOverlayState: refreshed.mapOverlayState,
-            )
+            ))
         }
 
         var title: String {
@@ -37,6 +57,11 @@ extension NearbyVehicleMapFeature {
         }
 
         var message: String {
+            if case .checkingLocation = content {
+                return currentSnapshot == nil
+                    ? "Checking precise rider location before loading nearby vehicles."
+                    : Self.checkingLocationMessage
+            }
             guard let sharedState else {
                 return "Preparing the rider-centered nearby vehicle map."
             }
@@ -58,7 +83,8 @@ extension NearbyVehicleMapFeature {
         }
 
         var hasResolvedRiderLocation: Bool {
-            riderLocation != nil
+            guard case .ready = content else { return false }
+            return riderLocation != nil
         }
 
         var canInteractWithVehicles: Bool {
@@ -70,6 +96,9 @@ extension NearbyVehicleMapFeature {
         }
 
         var mapContent: NearbyVehicleMapContent {
+            if case .checkingLocation = content, currentSnapshot == nil {
+                return .waitingForRider
+            }
             guard let riderLocation else {
                 return .waitingForRider
             }
@@ -82,6 +111,11 @@ extension NearbyVehicleMapFeature {
         }
 
         var overlay: NearbyVehicleMapOverlay {
+            if case .checkingLocation = content {
+                return currentSnapshot == nil
+                    ? .none
+                    : .banner(headline: "Checking location", message: Self.checkingLocationMessage)
+            }
             guard let sharedState else { return .none }
 
             switch sharedState.mapOverlayState.sealedType() {
@@ -113,6 +147,9 @@ extension NearbyVehicleMapFeature {
                 return true
             }
         }
+
+        private static let checkingLocationMessage =
+            "Keeping the last snapshot visible while precise rider location is checked."
 
         private var currentSnapshot: FleetSnapshot? {
             guard let sharedState else { return nil }
