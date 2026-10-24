@@ -233,10 +233,13 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         await store.send(.task).finish()
         #expect(!store.canInteractWithVehicles)
         await store.send(.locationResolutionResponse(.temporarilyUnavailable)).finish()
-        oldRequest.resume(returning: Factory.loadedSharedState(sequence: 99))
+        oldRequest.resume(returning: Factory.loadedSharedState(sequence: 99, vehicles: []))
         await oldTask.finish()
 
         // then
+        let retained = try #require(previous.sharedState)
+        let current = try #require(store.sharedState)
+        #expect(current.snapshotState == retained.snapshotState)
         #expect(store.mapContent == previous.mapContent)
         #expect(store.canRequestRefresh)
         #expect(store.canInteractWithVehicles)
