@@ -71,16 +71,18 @@ cross-platform build limitation, despite its Android CI discovery. It leaves
 the Toolchain and its HTTP client unchanged. A passing installed-JDK run does not
 qualify automatic download.
 
-The first hosted prerequisite run then hit the same parser limit while downloading
-`kotlin-native-prebuilt:2.4.20` from `repo1.maven.org`, before JDK selection or tests.
-The producer selects the other direct Maven Central endpoint,
-`https://repo.maven.apache.org/maven2`, through the pinned Toolchain's supported
+Hosted prerequisite runs hit the same parser limit downloading
+`kotlin-native-prebuilt:2.4.20` from both direct Maven Central endpoints,
+`repo1.maven.org` and `repo.maven.apache.org`, before JDK selection or tests.
+The producer selects [Google's documented public Maven Central mirror](https://docs.cloud.google.com/docs/buildpacks/java#google_cloud_hosted_maven_central_mirror)
+through the pinned Toolchain's supported
 [`KOTLIN_DEFAULT_MAVEN_CENTRAL_URL` setting](https://github.com/JetBrains/kotlin-toolchain/blob/v0.13.0/sources/libraries/maven-central-configuration/src/org/jetbrains/amper/mavencentral/mavenUtil.kt).
 Its [native provisioner](https://github.com/JetBrains/kotlin-toolchain/blob/v0.13.0/sources/amper-kotlin-native/src/org/jetbrains/amper/kotlin/native/konanDistributionProvisioning.kt)
-uses that setting for the distribution too. This changes the endpoint for the
-producer's Toolchain resolution, with the same coordinates and compiler version;
-it adds no fallback, custom transport or injected cache. An existing explicit
-endpoint selection is preserved. Hosted results qualify this route separately.
+uses that setting for the distribution too. This adds a public mirror dependency
+for the producer's Toolchain resolution, including dependencies, with the same
+coordinates and compiler version. There is no custom transport or injected cache;
+an explicit endpoint selection is preserved. Hosted results qualify this route
+separately; a local pass cannot qualify hosted cold downloads.
 The explicit matching JDK declaration is a normal build prerequisite that can
 remain useful after the download limitation is fixed.
 
