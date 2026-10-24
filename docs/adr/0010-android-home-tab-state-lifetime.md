@@ -1,6 +1,6 @@
 # ADR 0010: Android Home ready state across native tab switches
 
-Status: Proposed for review with the Home tab-lifetime change.
+Status: Accepted in [PR #65](https://github.com/Mekate-Studio/Mobi/pull/65).
 
 ## Decision
 

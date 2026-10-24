@@ -263,17 +263,20 @@ Android owns:
 
 Shared Kotlin should feed Android state, but should not expose Circuit types.
 
-Choose state lifetime separately from work lifetime. Native Home uses Circuit's
-keyed retained-state provider in `AppDestinationContent` for its last ready value;
-its visible loading state and coroutine scope remain composition-owned. The
-content owner remembers the graph's Circuit instance, keeping its service/factory
-identity stable across tab recomposition. Returning
-from the Nearby tab restores initial/loaded/error state without restarting a
-cancelled refresh. The service instance is the retention input, so recreating a
-presenter does not invalidate the value. Qualify late cancelled completion before
-allowing it to write retained state. See
-[ADR 0010](../adr/0010-android-home-tab-state-lifetime.md) for the ownership cost
-and the remaining Nearby, recreation and process-restoration scope.
+Choose state lifetime separately from work lifetime. Native Home and Nearby use
+keyed Circuit retention providers in `AppDestinationContent`; visible loading and
+coroutine scopes remain composition-owned. The content owner remembers Circuit,
+keeping its service/factory identities stable across tab recomposition. Retained
+values must not capture jobs, callbacks or UI objects.
+
+Home retains its exact last ready state. Nearby stores its existing shared
+cancellation-normalized value and revalidates location on return. A cached snapshot
+can be shown while Resolving, with actions disabled; known blocked decisions stay
+blocked. Apply shared time/failure policy to a retained visible-location failure
+before using it again. Qualify both late results and old callbacks before allowing
+them to write retained state. See [ADR 0010](../adr/0010-android-home-tab-state-lifetime.md)
+and [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md) for the explicit
+costs and remaining recreation/process-restoration scope.
 
 ### 5. Add iOS presentation
 
@@ -365,7 +368,8 @@ Reference tests:
 - [`HomeFeatureServiceTest.kt`](../../shared-feature-home/test/HomeFeatureServiceTest.kt)
 - [`HomePresenterStateProducerTest.kt`](../../android-app/test/home/HomePresenterStateProducerTest.kt)
 - [`HomePresenterTest.kt`](../../android-app/test/home/HomePresenterTest.kt) for queued admission and retained callbacks
-- [`HomeTabLifetimeTest.kt`](../../android-app/test/home/HomeTabLifetimeTest.kt) for production tab-content retention and cancelled work
+- [`HomeTabLifetimeTest.kt`](../../android-app/test/home/HomeTabLifetimeTest.kt) for production Home tab-content retention and cancelled work
+- [`NearbyTabLifetimeTest.kt`](../../android-app/test/nearbyvehiclemap/NearbyTabLifetimeTest.kt) for Nearby retention, revalidation and timer ownership
 - [`NearbyVehicleMapPresenterTest.kt`](../../android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterTest.kt) for actual Compose effects
 - [`HomeFeatureTests.swift`](../../ios-app/tests/Features/Home/HomeFeatureTests.swift)
 

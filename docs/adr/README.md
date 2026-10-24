@@ -12,12 +12,14 @@ Current ADRs:
 - [ADR 0005: iOS uses TCA dependencies with a lightweight app composition root](0005-ios-uses-tca-dependencies-with-a-lightweight-app-composition-root.md)
 - [ADR 0006: Shared feature state uses sealed value types and SKIE](0006-shared-async-feature-state-uses-sealed-loadable-and-skie.md)
 
+- [ADR 0010: Android Home ready state across native tab switches](0010-android-home-tab-state-lifetime.md)
+
 Proposed, without changing the accepted decisions:
 
 - [ADR 0007: Direct iOS transition requires measured capability evidence](0007-direct-ios-transition-requires-capability-evidence.md)
 - [ADR 0008: Explicit iOS projections and direct development builds](0008-explicit-ios-projections-and-direct-development-builds.md)
 - [ADR 0009: Generated Swift export for native features](0009-generated-swift-export-for-native-features.md)
-- [ADR 0010: Android Home ready state across native tab switches](0010-android-home-tab-state-lifetime.md)
+- [ADR 0011: Android Nearby state across native tab switches](0011-android-nearby-tab-state-lifetime.md)
 
 Use a new ADR when a decision changes one of these:
 
