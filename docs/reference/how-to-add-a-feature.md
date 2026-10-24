@@ -263,6 +263,18 @@ Android owns:
 
 Shared Kotlin should feed Android state, but should not expose Circuit types.
 
+Choose state lifetime separately from work lifetime. Native Home uses Circuit's
+keyed retained-state provider in `AppDestinationContent` for its last ready value;
+its visible loading state and coroutine scope remain composition-owned. The
+content owner remembers the graph's Circuit instance, keeping its service/factory
+identity stable across tab recomposition. Returning
+from the Nearby tab restores initial/loaded/error state without restarting a
+cancelled refresh. The service instance is the retention input, so recreating a
+presenter does not invalidate the value. Qualify late cancelled completion before
+allowing it to write retained state. See
+[ADR 0010](../adr/0010-android-home-tab-state-lifetime.md) for the ownership cost
+and the remaining Nearby, recreation and process-restoration scope.
+
 ### 5. Add iOS presentation
 
 Implement the iOS shell in [`ios-app/`](../../ios-app).
@@ -353,6 +365,7 @@ Reference tests:
 - [`HomeFeatureServiceTest.kt`](../../shared-feature-home/test/HomeFeatureServiceTest.kt)
 - [`HomePresenterStateProducerTest.kt`](../../android-app/test/home/HomePresenterStateProducerTest.kt)
 - [`HomePresenterTest.kt`](../../android-app/test/home/HomePresenterTest.kt) for queued admission and retained callbacks
+- [`HomeTabLifetimeTest.kt`](../../android-app/test/home/HomeTabLifetimeTest.kt) for production tab-content retention and cancelled work
 - [`NearbyVehicleMapPresenterTest.kt`](../../android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterTest.kt) for actual Compose effects
 - [`HomeFeatureTests.swift`](../../ios-app/tests/Features/Home/HomeFeatureTests.swift)
 

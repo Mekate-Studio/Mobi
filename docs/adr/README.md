@@ -17,6 +17,7 @@ Proposed, without changing the accepted decisions:
 - [ADR 0007: Direct iOS transition requires measured capability evidence](0007-direct-ios-transition-requires-capability-evidence.md)
 - [ADR 0008: Explicit iOS projections and direct development builds](0008-explicit-ios-projections-and-direct-development-builds.md)
 - [ADR 0009: Generated Swift export for native features](0009-generated-swift-export-for-native-features.md)
+- [ADR 0010: Android Home ready state across native tab switches](0010-android-home-tab-state-lifetime.md)
 
 Use a new ADR when a decision changes one of these:
 
