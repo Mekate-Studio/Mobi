@@ -6,11 +6,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.home.CounterLoadable
@@ -25,7 +28,8 @@ class HomePresenter(
 
     @Composable
     override fun present(): HomeScreenState {
-        var featureState by remember(stateProducer) { mutableStateOf(stateProducer.initialState()) }
+        var readyState by rememberRetained(service) { mutableStateOf(stateProducer.initialState()) }
+        var featureState by remember(service) { mutableStateOf(readyState) }
         val scope = rememberCoroutineScope()
 
         return remember(featureState, stateProducer, scope) {
@@ -36,7 +40,10 @@ class HomePresenter(
                         val currentCounterValue = previousState.counterLoadable.currentValueForRefresh()
                         featureState = stateProducer.loadingState(counterValue = currentCounterValue)
                         try {
-                            featureState = stateProducer.refreshedState(counterValue = currentCounterValue)
+                            val refreshedState = stateProducer.refreshedState(counterValue = currentCounterValue)
+                            currentCoroutineContext().ensureActive()
+                            readyState = refreshedState
+                            featureState = refreshedState
                         } catch (error: CancellationException) {
                             if (scope.isActive) featureState = previousState
                             throw error

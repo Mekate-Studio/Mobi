@@ -14,7 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.CircuitContent
+import com.slack.circuit.retained.rememberRetainedStateHolder
 import studio.mekate.mobi.di.SharedDependencies
+import studio.mekate.mobi.feature.home.HomeFeatureService
 import studio.mekate.mobi.home.HomeScreen
 import studio.mekate.mobi.nearbyvehiclemap.NearbyVehicleMapScreen
 import studio.mekate.mobi.ui.home.SharedHomeScreen
@@ -40,36 +42,44 @@ fun AppShell() {
             }
         },
     ) { paddingValues ->
-        when (selectedDestination) {
+        AppDestinationContent(
+            destination = selectedDestination,
+            appGraph = appGraph,
+            homeFeatureService = sharedGraph.homeFeatureService,
+            modifier = Modifier.padding(paddingValues),
+        )
+    }
+}
+
+@Composable
+internal fun AppDestinationContent(
+    destination: AppDestination,
+    appGraph: AndroidAppGraph,
+    homeFeatureService: HomeFeatureService,
+    modifier: Modifier = Modifier,
+) {
+    val circuit = remember(appGraph) { appGraph.circuit }
+    CircuitCompositionLocals(circuit) {
+        val retainedStateHolder = rememberRetainedStateHolder()
+        when (destination) {
             AppDestination.NativeHome -> {
-                CircuitCompositionLocals(appGraph.circuit) {
-                    CircuitContent(
-                        HomeScreen,
-                        modifier = Modifier.padding(paddingValues),
-                    )
+                retainedStateHolder.RetainedStateProvider(key = AppDestination.NativeHome.name) {
+                    CircuitContent(HomeScreen, modifier = modifier)
                 }
             }
 
             AppDestination.NearbyVehicleMap -> {
-                CircuitCompositionLocals(appGraph.circuit) {
-                    CircuitContent(
-                        NearbyVehicleMapScreen,
-                        modifier = Modifier.padding(paddingValues),
-                    )
-                }
+                CircuitContent(NearbyVehicleMapScreen, modifier = modifier)
             }
 
             AppDestination.SharedComposeDemo -> {
-                SharedHomeScreen(
-                    service = sharedGraph.homeFeatureService,
-                    modifier = Modifier.padding(paddingValues),
-                )
+                SharedHomeScreen(service = homeFeatureService, modifier = modifier)
             }
         }
     }
 }
 
-private enum class AppDestination(
+internal enum class AppDestination(
     val label: String,
     val shortLabel: String,
 ) {
