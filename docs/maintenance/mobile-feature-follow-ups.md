@@ -54,6 +54,34 @@ Record **retained**, **ready for removal** or **incomplete**, with the executed
 checks, in the update PR. This is a manual adoption-review step; the iOS interop
 watch does not emit AND-01 assessments or poll Circuit/Robolectric releases.
 
+## AND-02: Toolchain JDK download header limit
+
+On 2026-10-24, Toolchain 0.13.0's automatic Temurin 25 download failed before
+compilation in its HTTP response-header parser: `TooLongLineException` with an
+8,192-character limit. The observed GitHub response had a 9,242-character CSP
+header. The same failure occurred in
+[hosted Home validation](https://github.com/Mekate-Studio/Mobi/actions/runs/40071276148/job/120805064097).
+
+The current accommodation supplies JDK 25 through the supported `JAVA_HOME` path.
+Mobile workflows use `setup-java` to declare that already-required major; local
+jobs can select an installed JDK. The Xcode test/build wrappers and Fastlane
+archive arguments forward that selection as a build setting: observed Xcode
+phases otherwise replaced the parent JDK 25 with a local JDK 19. This is a
+cross-platform build limitation, despite its Android CI discovery. It leaves
+the Toolchain and its HTTP client unchanged. A passing installed-JDK run does not qualify automatic download.
+The explicit matching JDK declaration is a normal build prerequisite that can
+remain useful after the download limitation is fixed.
+
+On Toolchain/bundled HTTP-client or provider changes, review the pinned upstream
+provisioning requirements and recheck automatic JDK provisioning from empty caches
+without a matching installed `JAVA_HOME`. Record retained/removal-ready/incomplete
+status and actual results in the update PR. Retire this download accommodation only
+after the cold route and the normal native jobs pass. Keep declared CI JDKs aligned
+with the selected Toolchain requirements. This manual check is outside the iOS
+interop report; it adds no schedule or automatic toolchain adoption.
+Runtime declarations also apply to gated release workflows; smoke checks do not
+qualify credentialed archive, signing or publication.
+
 The Android surfaces are:
 
 - [Nearby presenter](../../android-app/src/nearbyvehiclemap/NearbyVehicleMapPresenter.kt)

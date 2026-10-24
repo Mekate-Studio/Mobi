@@ -182,13 +182,14 @@ end
 
 def ios_xcargs
   [
+    ("JAVA_HOME=#{shell_escape(ENV.fetch('JAVA_HOME'))}" unless ENV.fetch('JAVA_HOME', '').empty?),
     "DEVELOPMENT_TEAM=#{shell_escape(ios_development_team!)}",
     "PRODUCT_BUNDLE_IDENTIFIER=#{shell_escape(ios_bundle_identifier!)}",
     "PROVISIONING_PROFILE_SPECIFIER=#{shell_escape(ios_provisioning_profile_specifier!)}",
     "MARKETING_VERSION=#{shell_escape(ios_version)}",
     "CURRENT_PROJECT_VERSION=#{shell_escape(ios_build_number)}",
     "SWIFT_ENABLE_EXPLICIT_MODULES=#{shell_escape(ios_swift_enable_explicit_modules)}"
-  ].join(" ")
+  ].compact.join(" ")
 end
 
 def resolved_ios_ipa!

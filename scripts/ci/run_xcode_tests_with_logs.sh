@@ -32,6 +32,11 @@ echo "Using SKIP_MACRO_VALIDATION=${skip_macro_validation}"
 
 cmd=(xcodebuild)
 
+# Xcode otherwise replaces the selected JDK with its own JAVA_HOME build setting.
+if [[ -n "${JAVA_HOME:-}" ]]; then
+  cmd+=("JAVA_HOME=${JAVA_HOME}")
+fi
+
 if [[ -f "${workspace_contents_path}" ]]; then
   echo "Using Xcode workspace=${workspace_path}"
   cmd+=(-workspace "${workspace_path}")
