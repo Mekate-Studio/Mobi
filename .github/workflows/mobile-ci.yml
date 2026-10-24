@@ -116,7 +116,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "25"
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -156,7 +156,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "25"
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -200,7 +200,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "25"
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -230,7 +230,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "17"
+          java-version: "25"
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true

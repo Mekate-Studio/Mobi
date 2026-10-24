@@ -153,6 +153,14 @@ record retained/removal-ready/incomplete status and actual host-test evidence in
 the update PR. This manual check is outside the iOS interop retirement report;
 the watch does not poll Circuit/Robolectric or automatically qualify this harness.
 
+Toolchain and bundled HTTP-client update reviews must also assess
+[AND-02](mobile-feature-follow-ups.md#and-02-toolchain-distribution-download-header-limit):
+record installed-JDK native results separately from automatic cold provisioning.
+A matching `JAVA_HOME` does not qualify the failing JDK download route; the
+producer endpoint override also requires a cold check of the unmodified Maven
+Central route before removal. This is another
+manual adoption-review step, outside the automated iOS retirement report.
+
 ## Primary references
 
 - [GitHub releases API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28): release metadata and pagination boundaries.

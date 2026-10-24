@@ -4,7 +4,7 @@ One of the goals of this CI design is that the same job contract works locally.
 
 ## Prerequisites
 
-- JDK 21+
+- JDK 25 with `JAVA_HOME` pointing to it for mobile Toolchain jobs
 - Ruby (the repository's `.ruby-version` is the validated runtime) and Bundler
 - Android SDK for Android jobs
 - Xcode with an installed iOS Simulator runtime for iOS jobs
@@ -12,6 +12,24 @@ One of the goals of this CI design is that the same job contract works locally.
   unzip for static-quality setup. The explicit installer below provides the
   private Ruby/Java runtimes and five analyzers; global analyzer installs are
   not required. Native jobs still use their own prerequisites above.
+
+Toolchain 0.13.0 defaults to JDK 25 and supports selecting an installed matching
+JDK through `JAVA_HOME`, as described in its
+[pinned provisioning documentation](https://github.com/JetBrains/kotlin-toolchain/blob/v0.13.0/docs/src/user-guide/advanced/jdk-provisioning.md).
+For example, after installing JDK 25 on macOS:
+
+```bash
+export JAVA_HOME="$(/usr/libexec/java_home -v 25)"
+```
+
+Mobile PR, nightly and release workflows declare the same major through
+`setup-java`. Repo-owned Xcode commands also forward `JAVA_HOME` as a build
+setting, since Xcode can replace the parent environment value. For direct Xcode
+invocations, supply `"JAVA_HOME=$JAVA_HOME"` as a build setting too. GUI builds
+without this setting still depend on automatic JDK provisioning. The
+static-quality runtime remains independently pinned. The
+[AND-02 bootstrap note](../maintenance/mobile-feature-follow-ups.md#and-02-toolchain-distribution-download-header-limit)
+records why automatic JDK download currently needs separate qualification.
 
 Set a writable Kotlin Toolchain cache before running build commands:
 
