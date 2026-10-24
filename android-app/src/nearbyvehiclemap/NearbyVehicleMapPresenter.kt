@@ -16,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
+import studio.mekate.mobi.feature.nearbyvehiclemap.VisibleRiderLocationState
 import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -30,6 +31,18 @@ class NearbyVehicleMapPresenter(
         var featureState by remember(stateProducer) { mutableStateOf(stateProducer.initialState()) }
         val scope = rememberCoroutineScope()
 
+        suspend fun refresh(nowMillis: Long) {
+            featureState = stateProducer.loadingState(currentState = featureState)
+            val refreshedState =
+                stateProducer.refreshedState(
+                    currentState = featureState,
+                    nowMillis = nowMillis,
+                )
+            if (featureState.riderLocationState is VisibleRiderLocationState) {
+                featureState = refreshedState.copy(riderLocationState = featureState.riderLocationState)
+            }
+        }
+
         LaunchedEffect(stateProducer) {
             while (isActive) {
                 delay(NearbyVehicleMapFeatureService.REFRESH_INTERVAL_MILLIS.milliseconds)
@@ -37,15 +50,7 @@ class NearbyVehicleMapPresenter(
                 if (!featureState.canRequestRefresh() || !stateProducer.shouldRefresh(featureState, nowMillis)) {
                     continue
                 }
-                featureState =
-                    stateProducer.loadingState(
-                        currentState = featureState,
-                    )
-                featureState =
-                    stateProducer.refreshedState(
-                        currentState = featureState,
-                        nowMillis = nowMillis,
-                    )
+                refresh(nowMillis)
             }
         }
 
@@ -59,12 +64,7 @@ class NearbyVehicleMapPresenter(
                                 currentState = featureState,
                                 location = location,
                             )
-                        featureState = stateProducer.loadingState(currentState = featureState)
-                        featureState =
-                            stateProducer.refreshedState(
-                                currentState = featureState,
-                                nowMillis = System.currentTimeMillis(),
-                            )
+                        refresh(System.currentTimeMillis())
                     }
                 },
                 onLocationAccessBlocked = { reason ->
@@ -80,12 +80,7 @@ class NearbyVehicleMapPresenter(
                 onRefreshRequested = { nowMillis ->
                     scope.launch {
                         if (featureState.canRequestRefresh()) {
-                            featureState = stateProducer.loadingState(currentState = featureState)
-                            featureState =
-                                stateProducer.refreshedState(
-                                    currentState = featureState,
-                                    nowMillis = nowMillis,
-                                )
+                            refresh(nowMillis)
                         }
                     }
                 },
