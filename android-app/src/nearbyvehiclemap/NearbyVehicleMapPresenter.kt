@@ -21,6 +21,8 @@ import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
 import studio.mekate.mobi.feature.nearbyvehiclemap.VisibleRiderLocationState
 import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
+import studio.mekate.mobi.feature.nearbyvehiclemap.cancelledRefreshState
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.milliseconds
 
 class NearbyVehicleMapPresenter(
@@ -38,10 +40,16 @@ class NearbyVehicleMapPresenter(
         suspend fun refresh(nowMillis: Long) {
             featureState = stateProducer.loadingState(currentState = featureState)
             val refreshedState =
-                stateProducer.refreshedState(
-                    currentState = featureState,
-                    nowMillis = nowMillis,
-                )
+                try {
+                    stateProducer.refreshedState(
+                        currentState = featureState,
+                        nowMillis = nowMillis,
+                    )
+                } catch (error: CancellationException) {
+                    currentCoroutineContext().ensureActive()
+                    featureState = featureState.cancelledRefreshState()
+                    throw error
+                }
             currentCoroutineContext().ensureActive()
             if (featureState.riderLocationState is VisibleRiderLocationState) {
                 featureState = refreshedState.copy(riderLocationState = featureState.riderLocationState)
