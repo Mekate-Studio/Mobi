@@ -11,10 +11,12 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.home.CounterLoadable
 import studio.mekate.mobi.feature.home.HomeFeatureService
 import studio.mekate.mobi.feature.home.currentValueForRefresh
+import kotlin.coroutines.cancellation.CancellationException
 
 class HomePresenter(
     private val service: HomeFeatureService,
@@ -30,9 +32,15 @@ class HomePresenter(
             stateProducer.create(featureState = featureState) {
                 scope.launch {
                     if (featureState.counterLoadable !is CounterLoadable.Loading) {
-                        val currentCounterValue = featureState.counterLoadable.currentValueForRefresh()
+                        val previousState = featureState
+                        val currentCounterValue = previousState.counterLoadable.currentValueForRefresh()
                         featureState = stateProducer.loadingState(counterValue = currentCounterValue)
-                        featureState = stateProducer.refreshedState(counterValue = currentCounterValue)
+                        try {
+                            featureState = stateProducer.refreshedState(counterValue = currentCounterValue)
+                        } catch (error: CancellationException) {
+                            if (scope.isActive) featureState = previousState
+                            throw error
+                        }
                     }
                 }
             }

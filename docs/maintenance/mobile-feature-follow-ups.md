@@ -1,6 +1,6 @@
 # Cross-platform mobile feature follow-ups
 
-Reviewed against `16b485b175f9292fac1d6dad0b0d56c304446662` on 2026-10-24.
+Reviewed against `ca64973b47dc9612888c3a07201b8f4ae2300056` on 2026-10-24.
 The iOS changes below are merged. Android source review identifies applicability;
 only the named executable checks qualify a counterpart. This list tracks ordinary
 application improvements separately from the [interop workaround registry](interop-workarounds.md).
@@ -12,7 +12,7 @@ application improvements separately from the [interop workaround registry](inter
 | MOB-01 | Accurate blocking failure messages, [#54](https://github.com/Mekate-Studio/Mobi/pull/54) | Implemented: Android presentation reads the existing typed failure reason | Regression checks cover location/repository/unexpected reasons, with absent and retained snapshots, blocking and retry. Validation is reported in the implementation PR; Compose/device interaction is not claimed. |
 | MOB-02 | Reject obsolete refresh results and preserve current location decisions, [#40](https://github.com/Mekate-Studio/Mobi/pull/40)/[#41](https://github.com/Mekate-Studio/Mobi/pull/41)/[#46](https://github.com/Mekate-Studio/Mobi/pull/46) | Native Nearby implemented: completion preserves current location decisions, and a new precise location supersedes earlier refresh work | Actual presenter checks cover blocked/degraded completion and overlapping requests, including repeated coordinates, changed coordinates, queued location events, old/new success or failure, late noncooperative completion, manual cancellation/retry and timer survival. Host checks qualify native result ownership; device location delivery is outside this evidence. |
 | MOB-03 | Let active work finish across visible timer ticks, [#53](https://github.com/Mekate-Studio/Mobi/pull/53) | Implemented: a composition-owned timer checks shared admission/freshness and awaits each automatic request | Actual Circuit presenter regressions under Robolectric/API 36 cover loading recomposition, a slow automatic request and subsequent refresh, a pending manual request, blocked location, a snapshot not due, and cancellation on composition disposal. This qualifies host Compose ownership; device interaction and navigation lifetime are outside this check. |
-| MOB-04 | Deliberate cancellation recovery, [#42](https://github.com/Mekate-Studio/Mobi/pull/42)/[#51](https://github.com/Mekate-Studio/Mobi/pull/51) | Open: both presenters enter loading before awaiting services that rethrow `CancellationException` | Distinguish cancellation while the feature remains owned from composition disposal. Qualify the intended prior-state restoration and retry, including previous errors/snapshots. Preserve structured cancellation; do not copy Swift bridge error handling into direct Kotlin calls. |
+| MOB-04 | Deliberate cancellation recovery, [#42](https://github.com/Mekate-Studio/Mobi/pull/42)/[#51](https://github.com/Mekate-Studio/Mobi/pull/51) | Partially implemented: native Home restores its exact previous state while owned and rethrows cancellation. Native Nearby and optional Shared Home remain open | Actual Home presenter checks cover repository-thrown cancellation and cancellation of the owned request job, initial/loaded/error states, retry, cancellation propagation and disposal. Qualify Nearby recovery without undoing location supersession, and qualify optional Shared Home in its own rendering runtime. Preserve structured cancellation; do not copy Swift bridge error handling into direct Kotlin calls. |
 | MOB-05 | Manual refresh admission, [#49](https://github.com/Mekate-Studio/Mobi/pull/49)/[#50](https://github.com/Mekate-Studio/Mobi/pull/50) | Native Home/Nearby implemented: admission and loading share a nonsuspending segment after dispatch. Home resolves its current counter there; Nearby uses shared `canRequestRefresh`. Optional `SharedHomeScreen` still checks before launching; that source-observed risk is unqualified | Nearby checks cover rapid/busy callbacks, completion, blocked/resolving location and retry. Home checks cover queued duplicates, busy rejection, completion, retained callbacks using current values, repository-failure retry with absent/previous values, and disposal. Shared Compose Home admission needs its own rendering-runtime check. Explicit `VisibleRefreshDue` freshness remains separate; its existing callback route is preserved. |
 | MOB-06 | Feature lifetime across view re-entry, [#47](https://github.com/Mekate-Studio/Mobi/pull/47)/[#48](https://github.com/Mekate-Studio/Mobi/pull/48) | Needs platform review: presenters use ordinary `remember` and AppShell conditionally composes each destination | Establish the intended tab/back-stack lifetime using Circuit/Compose ownership, then test tab re-entry and recreation with loaded/error states. iOS `StateObject` is not an Android implementation recipe. |
 | MOB-07 | Swift-export errors, service captures and generated support | Platform-specific: Android calls Kotlin directly | Keep IOS-prefixed bridge exceptions and retirement checks in the interop registry. Shared repository error/freshness rules already reach both platforms; Swift `KotlinError` handling and TCA executor constraints need no literal Android port. |
@@ -61,6 +61,23 @@ exclusive to refresh work; unrelated jobs would otherwise be cancelled too.
 Cancellation is cooperative: the host fixture deliberately returns late to
 qualify result rejection, not termination of an external provider. Device
 location delivery is not qualified by the host checks.
+
+MOB-04's native Home check runs both cancellation modes from initial state,
+loaded zero/positive values, and repository/unexpected errors with absent or
+retained values. The presenter captures its previous typed state at admission,
+restores it only while its composition-owned scope remains
+[`active`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/is-active.html),
+then rethrows cancellation. The owning scope and the individual request job have
+different lifetimes: a cancelled child can recover the visible state while its
+owner still exists; disposal cancels the owner too. The existing disposal check
+continues to assert cancellation of both the request and its pending repository
+response. Existing typed repository-failure behavior stays shared and unchanged.
+The iOS Home client already restores the previous state on cancellation. This
+is ordinary native lifecycle handling, with no new shared API, state flag or
+interop workaround. Native Nearby recovery remains open because an obsolete
+request must not restore over a newer location decision or request. Optional
+Shared Home still assigns `service.refresh` directly and needs its own runtime
+qualification; native presenter evidence does not qualify that consumer.
 
 ## AND-01: Presenter host-test harness simplification
 
