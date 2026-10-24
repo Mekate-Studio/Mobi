@@ -54,7 +54,7 @@ Record **retained**, **ready for removal** or **incomplete**, with the executed
 checks, in the update PR. This is a manual adoption-review step; the iOS interop
 watch does not emit AND-01 assessments or poll Circuit/Robolectric releases.
 
-## AND-02: Toolchain JDK download header limit
+## AND-02: Toolchain distribution download header limit
 
 On 2026-10-24, Toolchain 0.13.0's automatic Temurin 25 download failed before
 compilation in its HTTP response-header parser: `TooLongLineException` with an
@@ -68,15 +68,29 @@ jobs can select an installed JDK. The Xcode test/build wrappers and Fastlane
 archive arguments forward that selection as a build setting: observed Xcode
 phases otherwise replaced the parent JDK 25 with a local JDK 19. This is a
 cross-platform build limitation, despite its Android CI discovery. It leaves
-the Toolchain and its HTTP client unchanged. A passing installed-JDK run does not qualify automatic download.
+the Toolchain and its HTTP client unchanged. A passing installed-JDK run does not
+qualify automatic download.
+
+The first hosted prerequisite run then hit the same parser limit while downloading
+`kotlin-native-prebuilt:2.4.20` from `repo1.maven.org`, before JDK selection or tests.
+The producer selects the other direct Maven Central endpoint,
+`https://repo.maven.apache.org/maven2`, through the pinned Toolchain's supported
+[`KOTLIN_DEFAULT_MAVEN_CENTRAL_URL` setting](https://github.com/JetBrains/kotlin-toolchain/blob/v0.13.0/sources/libraries/maven-central-configuration/src/org/jetbrains/amper/mavencentral/mavenUtil.kt).
+Its [native provisioner](https://github.com/JetBrains/kotlin-toolchain/blob/v0.13.0/sources/amper-kotlin-native/src/org/jetbrains/amper/kotlin/native/konanDistributionProvisioning.kt)
+uses that setting for the distribution too. This changes the endpoint for the
+producer's Toolchain resolution, with the same coordinates and compiler version;
+it adds no fallback, custom transport or injected cache. An existing explicit
+endpoint selection is preserved. Hosted results qualify this route separately.
 The explicit matching JDK declaration is a normal build prerequisite that can
 remain useful after the download limitation is fixed.
 
 On Toolchain/bundled HTTP-client or provider changes, review the pinned upstream
 provisioning requirements and recheck automatic JDK provisioning from empty caches
-without a matching installed `JAVA_HOME`. Record retained/removal-ready/incomplete
+without a matching installed `JAVA_HOME`, and recheck the default Maven Central
+endpoint without the producer override. Record retained/removal-ready/incomplete
 status and actual results in the update PR. Retire this download accommodation only
-after the cold route and the normal native jobs pass. Keep declared CI JDKs aligned
+after the cold routes and the normal native jobs pass. Remove the producer
+endpoint default once the unmodified route passes. Keep declared CI JDKs aligned
 with the selected Toolchain requirements. This manual check is outside the iOS
 interop report; it adds no schedule or automatic toolchain adoption.
 Runtime declarations also apply to gated release workflows; smoke checks do not

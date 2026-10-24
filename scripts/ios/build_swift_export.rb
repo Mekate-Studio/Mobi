@@ -148,7 +148,11 @@ module MobiSwiftExport
       Dir.mktmpdir('mobi-swift-export-build-') do |temporary|
         # IOS-12 applies to KLib compilation and the native compiler too.
         options = [ENV['JAVA_TOOL_OPTIONS'], %Q(-Djava.io.tmpdir="#{temporary}")].compact.join(' ')
-        @environment = { 'TMPDIR' => temporary, 'JAVA_TOOL_OPTIONS' => options }
+        @environment = {
+          'TMPDIR' => temporary, 'JAVA_TOOL_OPTIONS' => options,
+          # AND-02: use Toolchain's supported direct Maven Central endpoint setting.
+          'KOTLIN_DEFAULT_MAVEN_CENTRAL_URL' => ENV.fetch('KOTLIN_DEFAULT_MAVEN_CENTRAL_URL', 'https://repo.maven.apache.org/maven2')
+        }
         inputs = libraries
         generate(inputs)
         native_archive(inputs)

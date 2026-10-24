@@ -28,7 +28,7 @@ setting, since Xcode can replace the parent environment value. For direct Xcode
 invocations, supply `"JAVA_HOME=$JAVA_HOME"` as a build setting too. GUI builds
 without this setting still depend on automatic JDK provisioning. The
 static-quality runtime remains independently pinned. The
-[AND-02 bootstrap note](../maintenance/mobile-feature-follow-ups.md#and-02-toolchain-jdk-download-header-limit)
+[AND-02 bootstrap note](../maintenance/mobile-feature-follow-ups.md#and-02-toolchain-distribution-download-header-limit)
 records why automatic JDK download currently needs separate qualification.
 
 Set a writable Kotlin Toolchain cache before running build commands:
