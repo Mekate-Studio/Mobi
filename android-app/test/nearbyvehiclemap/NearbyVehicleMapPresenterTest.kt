@@ -4,9 +4,11 @@ import app.cash.molecule.RecompositionMode
 import app.cash.molecule.moleculeFlow
 import app.cash.turbine.ReceiveTurbine
 import com.slack.circuit.test.test
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +18,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -483,6 +486,177 @@ class NearbyVehicleMapPresenterTest {
             }
         }
 
+    @Test
+    fun `should keep the newer location result when an older request finishes late`() =
+        runTest {
+            for (location in listOf(RIDER_LOCATION, RiderLocation(latitude = 55.68, longitude = 12.57))) {
+                for (olderResult in listOf(
+                    Result.success(snapshot(sequence = 1)),
+                    Result.failure(NearbyFleetRepositoryException()),
+                )) {
+                    for (newerResult in listOf(
+                        Result.success(snapshot(sequence = 2, location = location)),
+                        Result.failure(NearbyFleetRepositoryException()),
+                    )) {
+                        val repository = LateCompletingFleetRepository()
+                        try {
+                            queuedPresenter(repository).testFlow {
+                                // given
+                                awaitItem().eventSink(
+                                    NearbyVehicleMapScreenEvent.PreciseLocationResolved(RIDER_LOCATION),
+                                )
+                                val loading = awaitItem()
+                                val older = repository.requests.receive()
+
+                                // when
+                                loading.eventSink(NearbyVehicleMapScreenEvent.PreciseLocationResolved(location))
+                                runCurrent()
+                                val newer = repository.requests.receive()
+                                if (location != RIDER_LOCATION) awaitItem()
+                                newer.complete(newerResult)
+                                val completed = awaitItem().featureState
+                                older.complete(olderResult)
+                                runCurrent()
+
+                                // then
+                                assertEquals(
+                                    location,
+                                    assertIs<RiderLocationState.Available>(completed.riderLocationState).location,
+                                )
+                                if (newerResult.isSuccess) {
+                                    assertEquals(
+                                        newerResult.getOrThrow(),
+                                        assertIs<NearbyVehicleSnapshotState.Loaded>(completed.snapshotState).snapshot,
+                                    )
+                                } else {
+                                    assertEquals(
+                                        NearbyVehicleMapFailureReason.RepositoryUnavailable,
+                                        assertIs<NearbyVehicleSnapshotState.FailedWithoutSnapshot>(
+                                            completed.snapshotState,
+                                        ).reason,
+                                    )
+                                }
+                                expectNoEvents()
+                                cancelAndIgnoreRemainingEvents()
+                            }
+                        } finally {
+                            repository.completePendingRequests()
+                        }
+                    }
+                }
+            }
+        }
+
+    @Test
+    fun `should start only the latest queued precise location request`() =
+        runTest {
+            // given
+            val repository = ControlledFleetRepository()
+            val latestLocation = RiderLocation(latitude = 55.68, longitude = 12.57)
+            queuedPresenter(repository).testFlow {
+                val initial = awaitItem()
+
+                // when
+                initial.eventSink(NearbyVehicleMapScreenEvent.PreciseLocationResolved(RIDER_LOCATION))
+                initial.eventSink(NearbyVehicleMapScreenEvent.PreciseLocationResolved(latestLocation))
+                runCurrent()
+                val loading = awaitItem().featureState
+                val request = repository.requests.receive()
+
+                // then
+                assertEquals(
+                    latestLocation,
+                    assertIs<RiderLocationState.Available>(loading.riderLocationState).location,
+                )
+                assertTrue(repository.requests.tryReceive().isFailure)
+                request.complete(Result.success(snapshot(sequence = 1, location = latestLocation)))
+                val loaded = assertIs<NearbyVehicleSnapshotState.Loaded>(awaitItem().featureState.snapshotState)
+                assertEquals(latestLocation, loaded.snapshot.riderLocation)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `should cancel a superseded manual refresh and allow another after completion`() =
+        runTest {
+            // given
+            val repository = ControlledFleetRepository()
+            queuedPresenter(repository).testFlow {
+                val loaded = resolveLocation(repository)
+                loaded.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 0))
+                val refreshing = awaitItem()
+                val manual = repository.requests.receive()
+
+                // when
+                refreshing.eventSink(NearbyVehicleMapScreenEvent.PreciseLocationResolved(RIDER_LOCATION))
+                runCurrent()
+                val newer = repository.requests.receive()
+                newer.complete(Result.success(snapshot(sequence = 2)))
+                val completed = awaitItem()
+
+                // then
+                assertTrue(manual.isCancelled)
+                assertEquals(
+                    2L,
+                    assertIs<NearbyVehicleSnapshotState.Loaded>(completed.featureState.snapshotState).snapshot.sequence,
+                )
+                completed.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 1))
+                awaitItem()
+                repository.requests.receive().complete(Result.success(snapshot(sequence = 3)))
+                assertEquals(
+                    3L,
+                    assertIs<NearbyVehicleSnapshotState.Loaded>(
+                        awaitItem().featureState.snapshotState,
+                    ).snapshot.sequence,
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `should retain the timer and newer snapshot after superseding an automatic refresh`() =
+        runTest {
+            val repository = LateCompletingFleetRepository()
+            try {
+                queuedPresenter(repository).testFlow {
+                    // given
+                    resolveLocation(repository.requests)
+                    advanceTimeBy(REFRESH_INTERVAL_MILLIS)
+                    runCurrent()
+                    val refreshing = awaitItem()
+                    val automatic = repository.requests.receive()
+
+                    // when
+                    refreshing.eventSink(NearbyVehicleMapScreenEvent.PreciseLocationResolved(RIDER_LOCATION))
+                    runCurrent()
+                    repository.requests.receive().complete(Result.success(snapshot(sequence = 2)))
+                    val completed = awaitItem().featureState
+                    automatic.complete(Result.failure(NearbyFleetRepositoryException()))
+                    runCurrent()
+
+                    // then
+                    assertEquals(
+                        2L,
+                        assertIs<NearbyVehicleSnapshotState.Loaded>(completed.snapshotState).snapshot.sequence,
+                    )
+                    expectNoEvents()
+                    advanceTimeBy(REFRESH_INTERVAL_MILLIS)
+                    runCurrent()
+                    assertIs<NearbyVehicleSnapshotState.Refreshing>(awaitItem().featureState.snapshotState)
+                    repository.requests.receive().complete(Result.success(snapshot(sequence = 3)))
+                    assertEquals(
+                        3L,
+                        assertIs<NearbyVehicleSnapshotState.Loaded>(
+                            awaitItem().featureState.snapshotState,
+                        ).snapshot.sequence,
+                    )
+                    cancelAndIgnoreRemainingEvents()
+                }
+            } finally {
+                repository.completePendingRequests()
+            }
+        }
+
     private suspend fun ReceiveTurbine<NearbyVehicleMapScreenState>.startRefresh(
         repository: ControlledFleetRepository,
         hasSnapshot: Boolean,
@@ -511,10 +685,15 @@ class NearbyVehicleMapPresenterTest {
     private suspend fun ReceiveTurbine<NearbyVehicleMapScreenState>.resolveLocation(
         repository: ControlledFleetRepository,
         loadedAtMillis: Long = 0,
+    ): NearbyVehicleMapScreenState = resolveLocation(repository.requests, loadedAtMillis)
+
+    private suspend fun ReceiveTurbine<NearbyVehicleMapScreenState>.resolveLocation(
+        requests: Channel<CompletableDeferred<Result<FleetSnapshot>>>,
+        loadedAtMillis: Long = 0,
     ): NearbyVehicleMapScreenState {
         awaitItem().eventSink(NearbyVehicleMapScreenEvent.PreciseLocationResolved(RIDER_LOCATION))
         assertIs<NearbyVehicleSnapshotState.Loading>(awaitItem().featureState.snapshotState)
-        repository.requests.receive().complete(Result.success(snapshot(sequence = 1, loadedAtMillis = loadedAtMillis)))
+        requests.receive().complete(Result.success(snapshot(sequence = 1, loadedAtMillis = loadedAtMillis)))
         return awaitItem().also { assertIs<NearbyVehicleSnapshotState.Loaded>(it.featureState.snapshotState) }
     }
 
@@ -526,9 +705,10 @@ class NearbyVehicleMapPresenterTest {
     private fun snapshot(
         sequence: Long,
         loadedAtMillis: Long = 0,
+        location: RiderLocation = RIDER_LOCATION,
     ) = FleetSnapshot(
         sequence = sequence,
-        riderLocation = RIDER_LOCATION,
+        riderLocation = location,
         vehicles = emptyList(),
         loadedAtMillis = loadedAtMillis,
     )
@@ -547,5 +727,23 @@ private class ControlledFleetRepository : NearbyFleetRepository {
         requests.send(result)
         // Throw from the repository; failing the deferred child would cancel its parent job.
         return result.await().getOrThrow()
+    }
+}
+
+private class LateCompletingFleetRepository : NearbyFleetRepository {
+    val requests = Channel<CompletableDeferred<Result<FleetSnapshot>>>(Channel.UNLIMITED)
+    private val pending = mutableListOf<CompletableDeferred<Result<FleetSnapshot>>>()
+
+    override suspend fun fetchNearbyFleetSnapshot(request: NearbyFleetRequest): FleetSnapshot =
+        // Simulate a callback-backed provider returning after its caller was cancelled.
+        withContext(NonCancellable) {
+            val result = CompletableDeferred<Result<FleetSnapshot>>()
+            pending.add(result)
+            requests.send(result)
+            result.await().getOrThrow()
+        }
+
+    fun completePendingRequests() {
+        pending.forEach { it.complete(Result.failure(CancellationException())) }
     }
 }

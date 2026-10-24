@@ -12,7 +12,10 @@ import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
@@ -29,7 +32,8 @@ class NearbyVehicleMapPresenter(
     @Suppress("LongMethod") // State transitions stay together at the Circuit presentation boundary.
     override fun present(): NearbyVehicleMapScreenState {
         var featureState by remember(stateProducer) { mutableStateOf(stateProducer.initialState()) }
-        val scope = rememberCoroutineScope()
+        // Only refresh requests belong to this scope; location updates supersede its children.
+        val refreshScope = rememberCoroutineScope()
 
         suspend fun refresh(nowMillis: Long) {
             featureState = stateProducer.loadingState(currentState = featureState)
@@ -38,6 +42,7 @@ class NearbyVehicleMapPresenter(
                     currentState = featureState,
                     nowMillis = nowMillis,
                 )
+            currentCoroutineContext().ensureActive()
             if (featureState.riderLocationState is VisibleRiderLocationState) {
                 featureState = refreshedState.copy(riderLocationState = featureState.riderLocationState)
             }
@@ -46,19 +51,22 @@ class NearbyVehicleMapPresenter(
         LaunchedEffect(stateProducer) {
             while (isActive) {
                 delay(NearbyVehicleMapFeatureService.REFRESH_INTERVAL_MILLIS.milliseconds)
-                val nowMillis = System.currentTimeMillis()
-                if (!featureState.canRequestRefresh() || !stateProducer.shouldRefresh(featureState, nowMillis)) {
-                    continue
-                }
-                refresh(nowMillis)
+                refreshScope
+                    .launch {
+                        val nowMillis = System.currentTimeMillis()
+                        if (featureState.canRequestRefresh() && stateProducer.shouldRefresh(featureState, nowMillis)) {
+                            refresh(nowMillis)
+                        }
+                    }.join()
             }
         }
 
-        return remember(featureState, stateProducer, scope) {
+        return remember(featureState, stateProducer, refreshScope) {
             stateProducer.create(
                 featureState = featureState,
                 onPreciseLocationResolved = { location ->
-                    scope.launch {
+                    refreshScope.coroutineContext.cancelChildren()
+                    refreshScope.launch {
                         featureState =
                             stateProducer.preciseLocationResolvedState(
                                 currentState = featureState,
@@ -78,7 +86,7 @@ class NearbyVehicleMapPresenter(
                     featureState = stateProducer.locationTemporarilyUnavailableState(currentState = featureState)
                 },
                 onRefreshRequested = { nowMillis ->
-                    scope.launch {
+                    refreshScope.launch {
                         if (featureState.canRequestRefresh()) {
                             refresh(nowMillis)
                         }
