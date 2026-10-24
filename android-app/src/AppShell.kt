@@ -69,7 +69,9 @@ internal fun AppDestinationContent(
             }
 
             AppDestination.NearbyVehicleMap -> {
-                CircuitContent(NearbyVehicleMapScreen, modifier = modifier)
+                retainedStateHolder.RetainedStateProvider(key = AppDestination.NearbyVehicleMap.name) {
+                    CircuitContent(NearbyVehicleMapScreen, modifier = modifier)
+                }
             }
 
             AppDestination.SharedComposeDemo -> {

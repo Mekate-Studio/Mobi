@@ -72,14 +72,10 @@ private fun NearbyVehicleMapContent(
         }
 
     LaunchedEffect(context) {
-        when (val result = AndroidNearbyVehicleLocationResolver.resolveCurrentLocation(context)) {
-            AndroidNearbyVehicleLocationResult.PermissionRequired -> {
-                permissionLauncher.launch(AndroidNearbyVehicleLocationResolver.locationPermissions)
-            }
-
-            else -> {
-                state.eventSink(result.toScreenEvent())
-            }
+        val result = AndroidNearbyVehicleLocationResolver.resolveCurrentLocation(context)
+        state.eventSink(result.toScreenEvent())
+        if (result == AndroidNearbyVehicleLocationResult.PermissionRequired) {
+            permissionLauncher.launch(AndroidNearbyVehicleLocationResolver.locationPermissions)
         }
     }
 
@@ -140,7 +136,10 @@ private fun NearbyVehicleMapActions(
             Text(presentation.primaryActionLabel)
         }
     }
-    OutlinedButton(onClick = onLocationLossRequested) {
+    OutlinedButton(
+        enabled = presentation.canInteractWithVehicles,
+        onClick = onLocationLossRequested,
+    ) {
         Text("Simulate temporary location loss")
     }
 }

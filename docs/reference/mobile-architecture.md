@@ -462,9 +462,10 @@ Navigation should remain native.
 ### Android
 
 - Circuit back stack and navigator own Android navigation
-- the root shell owns tab selection; Native Home keeps only its ready state in a
-  keyed Circuit retention provider while refresh work remains composition-owned
-  ([ADR 0010](../adr/0010-android-home-tab-state-lifetime.md))
+- the root shell owns tab selection; Native Home and Nearby retain ready values
+  in keyed Circuit providers while refresh work remains composition-owned
+  ([ADR 0010](../adr/0010-android-home-tab-state-lifetime.md),
+  [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md))
 - shared modules emit intents or outputs, not navigation framework objects
 
 ### iOS

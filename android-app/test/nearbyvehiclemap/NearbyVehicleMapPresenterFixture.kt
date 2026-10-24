@@ -88,10 +88,12 @@ internal const val REFRESH_INTERVAL_MILLIS = NearbyVehicleMapFeatureService.REFR
 internal class ControlledFleetRepository : NearbyFleetRepository {
     val requests = Channel<CompletableDeferred<Result<FleetSnapshot>>>(Channel.UNLIMITED)
     val jobs = mutableListOf<Job>()
+    val fleetRequests = mutableListOf<NearbyFleetRequest>()
 
     override suspend fun fetchNearbyFleetSnapshot(request: NearbyFleetRequest): FleetSnapshot {
         val job = currentCoroutineContext().job
         jobs.add(job)
+        fleetRequests.add(request)
         val result = CompletableDeferred<Result<FleetSnapshot>>(job)
         requests.send(result)
         // Throw from the repository; failing the deferred child would cancel its parent job.

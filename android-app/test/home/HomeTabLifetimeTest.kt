@@ -1,20 +1,7 @@
 package studio.mekate.mobi.home
 
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import app.cash.molecule.RecompositionMode
-import app.cash.molecule.moleculeFlow
-import com.slack.circuit.foundation.Circuit
-import com.slack.circuit.runtime.ui.ui
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,11 +9,9 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.job
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -34,18 +19,15 @@ import kotlinx.coroutines.withContext
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import studio.mekate.mobi.AndroidAppGraph
-import studio.mekate.mobi.AndroidDependencies
 import studio.mekate.mobi.AppDestination
-import studio.mekate.mobi.AppDestinationContent
+import studio.mekate.mobi.NativeTabState
 import studio.mekate.mobi.core.CounterRepository
 import studio.mekate.mobi.di.SharedApplicationGraph
 import studio.mekate.mobi.di.SharedDependencies
 import studio.mekate.mobi.feature.home.CounterLoadable
 import studio.mekate.mobi.feature.home.HomeFeatureService
 import studio.mekate.mobi.feature.home.currentValueForRefresh
-import studio.mekate.mobi.nearbyvehiclemap.NearbyVehicleMapScreen
-import studio.mekate.mobi.nearbyvehiclemap.NearbyVehicleMapScreenState
+import studio.mekate.mobi.nativeTabContent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -161,55 +143,16 @@ class HomeTabLifetimeTest {
     private fun TestScope.tabContent(
         repository: CounterRepository,
         destination: State<AppDestination>,
-    ): Flow<HomeScreenState> =
-        channelFlow {
-            val service = HomeFeatureService(repository)
-            val appGraph = recordingAppGraph(repository, service) { trySend(it) }
-            val owner = TabContentOwner()
-            try {
-                moleculeFlow(RecompositionMode.Immediate) {
-                    CompositionLocalProvider(
-                        LocalLifecycleOwner provides owner,
-                        LocalViewModelStoreOwner provides owner,
-                    ) {
-                        AppDestinationContent(destination.value, appGraph, service)
-                    }
-                }.collect()
-            } finally {
-                owner.lifecycle.currentState = Lifecycle.State.DESTROYED
-                owner.viewModelStore.clear()
-            }
-        }.flowOn(StandardTestDispatcher(testScheduler))
-
-    private fun recordingAppGraph(
-        repository: CounterRepository,
-        service: HomeFeatureService,
-        onState: (HomeScreenState) -> Unit,
-    ): AndroidAppGraph {
+    ): Flow<HomeScreenState> {
         val defaults = SharedDependencies.createDefaultGraph()
         val sharedGraph =
             object : SharedApplicationGraph by defaults {
                 override val counterRepository = repository
-                override val homeFeatureService = service
+                override val homeFeatureService = HomeFeatureService(repository)
             }
-        val productionGraph = AndroidDependencies.createGraph(sharedGraph)
-        return object : AndroidAppGraph {
-            // Keep Metro's real unscoped factories; substitute only the rendering observers.
-            override val circuit: Circuit
-                get() =
-                    productionGraph.circuit
-                        .newBuilder()
-                        .apply {
-                            uiFactories.clear()
-                            addUiFactory { screen, _ ->
-                                when (screen) {
-                                    HomeScreen -> ui<HomeScreenState> { state, _ -> SideEffect { onState(state) } }
-                                    NearbyVehicleMapScreen -> ui<NearbyVehicleMapScreenState> { _, _ -> }
-                                    else -> null
-                                }
-                            }
-                        }.build()
-        }
+        return nativeTabContent(destination, sharedGraph)
+            .filterIsInstance<NativeTabState.Home>()
+            .map { it.state }
     }
 }
 
@@ -230,14 +173,4 @@ private class LateCompletingCounterRepository : CounterRepository {
     fun completePendingRequests() {
         pending.forEach { it.complete(Result.failure(CancellationException())) }
     }
-}
-
-private class TabContentOwner :
-    LifecycleOwner,
-    ViewModelStoreOwner {
-    override val viewModelStore = ViewModelStore()
-    override val lifecycle =
-        LifecycleRegistry.createUnsafe(this).apply {
-            currentState = Lifecycle.State.RESUMED
-        }
 }

@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
@@ -19,6 +20,8 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
+import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureState
+import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
 import studio.mekate.mobi.feature.nearbyvehiclemap.VisibleRiderLocationState
 import studio.mekate.mobi.feature.nearbyvehiclemap.canRequestRefresh
 import studio.mekate.mobi.feature.nearbyvehiclemap.cancelledRefreshState
@@ -33,12 +36,29 @@ class NearbyVehicleMapPresenter(
     @Composable
     @Suppress("LongMethod") // State transitions stay together at the Circuit presentation boundary.
     override fun present(): NearbyVehicleMapScreenState {
-        var featureState by remember(stateProducer) { mutableStateOf(stateProducer.initialState()) }
+        var readyState by rememberRetained(service) { mutableStateOf(stateProducer.initialState()) }
+        var featureState by remember(service) {
+            val restored =
+                if (readyState.riderLocationState is VisibleRiderLocationState) {
+                    stateProducer
+                        .stateAfterTimePasses(readyState, System.currentTimeMillis())
+                        .copy(riderLocationState = RiderLocationState.Resolving)
+                } else {
+                    readyState
+                }
+            mutableStateOf(restored)
+        }
         // Only refresh requests belong to this scope; location updates supersede its children.
         val refreshScope = rememberCoroutineScope()
 
+        fun applyState(state: NearbyVehicleMapFeatureState) {
+            if (!refreshScope.isActive) return
+            readyState = state.cancelledRefreshState()
+            featureState = state
+        }
+
         suspend fun refresh(nowMillis: Long) {
-            featureState = stateProducer.loadingState(currentState = featureState)
+            applyState(stateProducer.loadingState(currentState = featureState))
             val refreshedState =
                 try {
                     stateProducer.refreshedState(
@@ -47,12 +67,12 @@ class NearbyVehicleMapPresenter(
                     )
                 } catch (error: CancellationException) {
                     currentCoroutineContext().ensureActive()
-                    featureState = featureState.cancelledRefreshState()
+                    applyState(featureState.cancelledRefreshState())
                     throw error
                 }
             currentCoroutineContext().ensureActive()
             if (featureState.riderLocationState is VisibleRiderLocationState) {
-                featureState = refreshedState.copy(riderLocationState = featureState.riderLocationState)
+                applyState(refreshedState.copy(riderLocationState = featureState.riderLocationState))
             }
         }
 
@@ -75,23 +95,32 @@ class NearbyVehicleMapPresenter(
                 onPreciseLocationResolved = { location ->
                     refreshScope.coroutineContext.cancelChildren()
                     refreshScope.launch {
-                        featureState =
+                        applyState(
                             stateProducer.preciseLocationResolvedState(
                                 currentState = featureState,
                                 location = location,
-                            )
+                            ),
+                        )
                         refresh(System.currentTimeMillis())
                     }
                 },
                 onLocationAccessBlocked = { reason ->
-                    featureState =
+                    refreshScope.coroutineContext.cancelChildren()
+                    applyState(
                         stateProducer.locationAccessBlockedState(
                             currentState = featureState,
                             reason = reason,
-                        )
+                        ),
+                    )
                 },
                 onLocationTemporarilyUnavailable = {
-                    featureState = stateProducer.locationTemporarilyUnavailableState(currentState = featureState)
+                    val currentState =
+                        if (featureState.riderLocationState == RiderLocationState.Resolving) {
+                            featureState.copy(riderLocationState = readyState.riderLocationState)
+                        } else {
+                            featureState
+                        }
+                    applyState(stateProducer.locationTemporarilyUnavailableState(currentState))
                 },
                 onRefreshRequested = { nowMillis ->
                     refreshScope.launch {

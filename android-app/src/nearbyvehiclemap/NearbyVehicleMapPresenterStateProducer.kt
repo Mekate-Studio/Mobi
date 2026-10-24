@@ -52,6 +52,11 @@ class NearbyVehicleMapPresenterStateProducer(
             nowMillis = nowMillis,
         )
 
+    fun stateAfterTimePasses(
+        currentState: NearbyVehicleMapFeatureState,
+        nowMillis: Long,
+    ): NearbyVehicleMapFeatureState = service.stateAfterTimePasses(currentState, nowMillis)
+
     fun create(
         featureState: NearbyVehicleMapFeatureState,
         onPreciseLocationResolved: (RiderLocation) -> Unit,

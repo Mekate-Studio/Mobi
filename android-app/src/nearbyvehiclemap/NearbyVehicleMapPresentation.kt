@@ -74,25 +74,34 @@ sealed interface NearbyVehicleMapOverlayPresentation {
 fun NearbyVehicleMapFeatureState.toNearbyVehicleMapPresentation(): NearbyVehicleMapPresentation {
     val snapshotState = snapshotState as? SnapshotBackedNearbyVehicleState
     val riderLocationState = riderLocationState as? VisibleRiderLocationState
+    val mapLocation =
+        riderLocationState?.location
+            ?: snapshotState?.snapshot?.riderLocation?.takeIf {
+                this.riderLocationState == RiderLocationState.Resolving
+            }
 
     return NearbyVehicleMapPresentation(
         title = "Nearby vehicles",
         message = this.riderLocationState.messageText(snapshotState = snapshotState),
         mapContent =
-            if (riderLocationState == null) {
+            if (mapLocation == null) {
                 NearbyVehicleMapContentPresentation.WaitingForRider
             } else {
                 NearbyVehicleMapContentPresentation.RiderCentered(
                     scene =
-                        riderLocationState.location.toMapScenePresentation(
+                        mapLocation.toMapScenePresentation(
                             vehicles = snapshotState?.snapshot?.vehicles.orEmpty(),
                         ),
                 )
             },
         overlay =
-            mapOverlayState.toPresentation(
-                failureReason = (this.snapshotState as? FailedNearbyVehicleSnapshotState)?.reason,
-            ),
+            if (this.riderLocationState == RiderLocationState.Resolving && snapshotState != null) {
+                NearbyVehicleMapOverlayPresentation.Banner("Checking location", CHECKING_LOCATION_MESSAGE)
+            } else {
+                mapOverlayState.toPresentation(
+                    failureReason = (this.snapshotState as? FailedNearbyVehicleSnapshotState)?.reason,
+                )
+            },
         primaryActionLabel = "Refresh nearby vehicles",
         canRequestRefresh = canRequestRefresh(),
         canInteractWithVehicles = canInteractWithVehicles(),
@@ -133,7 +142,11 @@ private fun VehicleLocation.toMapCoordinatePresentation(): NearbyVehicleMapCoord
 private fun RiderLocationState.messageText(snapshotState: SnapshotBackedNearbyVehicleState?): String =
     when (this) {
         RiderLocationState.Resolving -> {
-            "Grant while-in-use location access to center discovery around the rider."
+            if (snapshotState == null) {
+                "Grant while-in-use location access to center discovery around the rider."
+            } else {
+                CHECKING_LOCATION_MESSAGE
+            }
         }
 
         is RiderLocationState.Available -> {
@@ -185,6 +198,8 @@ private fun blockedLocationMessage(reason: RiderLocationBlockedReason): String =
     }
 
 private const val RIDER_CENTERED_CAMERA_ZOOM = 15.0
+private const val CHECKING_LOCATION_MESSAGE =
+    "Keeping the last snapshot visible while precise rider location is checked."
 
 private fun NearbyVehicleMapOverlayState.toPresentation(
     failureReason: NearbyVehicleMapFailureReason?,
