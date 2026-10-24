@@ -24,20 +24,20 @@ class HomePresenterStateProducerTest {
     }
 
     @Test
-    fun `should request refresh for current counter value when refresh event is sent`() {
+    fun `should forward refresh intent when refresh event is sent`() {
         // given
         val producer = createStateProducer(shouldFail = false)
-        var requestedCounterValue = -1
+        var refreshRequests = 0
         val homeScreenState =
-            producer.create(featureState = producer.initialState()) { counterValue ->
-                requestedCounterValue = counterValue
+            producer.create(featureState = producer.initialState()) {
+                refreshRequests += 1
             }
 
         // when
         homeScreenState.eventSink(HomeScreenEvent.RefreshClicked)
 
         // then
-        assertEquals(0, requestedCounterValue)
+        assertEquals(1, refreshRequests)
     }
 
     @Test

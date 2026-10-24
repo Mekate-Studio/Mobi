@@ -352,6 +352,7 @@ Reference tests:
 - [`FakeCounterRepositoryTest.kt`](../../shared-core/test/FakeCounterRepositoryTest.kt)
 - [`HomeFeatureServiceTest.kt`](../../shared-feature-home/test/HomeFeatureServiceTest.kt)
 - [`HomePresenterStateProducerTest.kt`](../../android-app/test/home/HomePresenterStateProducerTest.kt)
+- [`HomePresenterTest.kt`](../../android-app/test/home/HomePresenterTest.kt) for queued admission and retained callbacks
 - [`NearbyVehicleMapPresenterTest.kt`](../../android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterTest.kt) for actual Compose effects
 - [`HomeFeatureTests.swift`](../../ios-app/tests/Features/Home/HomeFeatureTests.swift)
 
@@ -391,6 +392,8 @@ through Turbine, using the already selected Circuit test dependencies. Send rapi
 events before `runCurrent()`. Eager collection alone can hide a gap between a
 callback check and a queued launch. On the presenter's single dispatcher, check
 current eligibility and enter loading before suspending for repository work.
+When an event means "refresh current", resolve inputs from current owned state at
+that boundary; keep derived counter values out of retained UI callbacks.
 The [admission tests](../../android-app/test/nearbyvehiclemap/NearbyVehicleMapPresenterTest.kt)
 include a location decision changing before queued work starts.
 
