@@ -173,7 +173,7 @@ class NearbyVehicleMapPresenterTest {
 
                 // when
                 loaded.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 0))
-                loaded.eventSink(NearbyVehicleMapScreenEvent.VisibleRefreshDue(nowMillis = 0))
+                loaded.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 0))
                 runCurrent()
 
                 // then
@@ -213,7 +213,6 @@ class NearbyVehicleMapPresenterTest {
 
                         // when
                         current.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 0))
-                        current.eventSink(NearbyVehicleMapScreenEvent.VisibleRefreshDue(nowMillis = 0))
                         runCurrent()
 
                         // then
@@ -262,7 +261,6 @@ class NearbyVehicleMapPresenterTest {
 
                 // when
                 initial.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 0))
-                initial.eventSink(NearbyVehicleMapScreenEvent.VisibleRefreshDue(nowMillis = 0))
                 runCurrent()
 
                 // then

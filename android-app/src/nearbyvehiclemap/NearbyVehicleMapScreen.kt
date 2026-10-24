@@ -41,10 +41,6 @@ sealed interface NearbyVehicleMapScreenEvent {
 
     data object LocationTemporarilyUnavailable : NearbyVehicleMapScreenEvent
 
-    data class VisibleRefreshDue(
-        val nowMillis: Long,
-    ) : NearbyVehicleMapScreenEvent
-
     data class ManualRefreshRequested(
         val nowMillis: Long,
     ) : NearbyVehicleMapScreenEvent
