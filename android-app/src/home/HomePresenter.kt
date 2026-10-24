@@ -14,6 +14,7 @@ import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.home.CounterLoadable
 import studio.mekate.mobi.feature.home.HomeFeatureService
+import studio.mekate.mobi.feature.home.currentValueForRefresh
 
 class HomePresenter(
     private val service: HomeFeatureService,
@@ -26,9 +27,10 @@ class HomePresenter(
         val scope = rememberCoroutineScope()
 
         return remember(featureState, stateProducer, scope) {
-            stateProducer.create(featureState = featureState) { currentCounterValue ->
-                if (featureState.counterLoadable !is CounterLoadable.Loading) {
-                    scope.launch {
+            stateProducer.create(featureState = featureState) {
+                scope.launch {
+                    if (featureState.counterLoadable !is CounterLoadable.Loading) {
+                        val currentCounterValue = featureState.counterLoadable.currentValueForRefresh()
                         featureState = stateProducer.loadingState(counterValue = currentCounterValue)
                         featureState = stateProducer.refreshedState(counterValue = currentCounterValue)
                     }
