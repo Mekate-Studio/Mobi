@@ -315,9 +315,12 @@ A cached map stays visible during checking, but manual/timer refresh and interac
 wait for a current location result. Keeping the previous shared value inside the
 checking case preserves temporary-loss fallback even without a snapshot. A new
 check normalizes loading through shared cancellation policy and cancels the prior
-refresh effect. Known blocked decisions remain blocked. See
-[ADR 0012](../adr/0012-ios-nearby-location-revalidation.md); failure aging on return
-and platform location delivery remain separate qualification work.
+refresh effect. Before checking a previously visible location, apply the shared
+failure-aging policy using the reducer's injected date. The checking value keeps
+that aged state through temporary-location fallback. Known blocked decisions
+bypass aging and remain blocked. See
+[ADR 0012](../adr/0012-ios-nearby-location-revalidation.md); platform location delivery
+and scene/process lifetime remain separate qualification work.
 
 For native iOS, export sealed states through the generated feature modules and
 switch directly on `value.sealedType()`. Kotlin enum reasons are generated Swift

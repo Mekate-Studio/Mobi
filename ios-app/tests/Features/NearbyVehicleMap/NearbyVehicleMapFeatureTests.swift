@@ -634,6 +634,7 @@ enum NearbyVehicleMapFeatureTestFactory {
             NearbyVehicleMapFeature()
         } withDependencies: {
             $0.nearbyVehicleMapFeatureClient = client
+            $0.date.now = Date(timeIntervalSince1970: 11)
         }
     }
 
@@ -686,6 +687,7 @@ enum NearbyVehicleMapFeatureTestFactory {
                 guard let snapshot = currentSnapshot(from: currentState.snapshotState) else { return false }
                 return nowMillis - snapshot.loadedAtMillis >= 10000
             },
+            stateAfterTimePasses: { state, _ in state },
         )
     }
 

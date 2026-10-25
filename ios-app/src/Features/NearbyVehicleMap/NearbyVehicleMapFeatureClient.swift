@@ -22,6 +22,10 @@ struct NearbyVehicleMapFeatureClient {
     var refresh: @Sendable (_ currentState: NearbyVehicleMapFeatureState, _ nowMillis: Int64) async
         -> NearbyVehicleMapFeatureState
     var shouldRefresh: @Sendable (_ currentState: NearbyVehicleMapFeatureState, _ nowMillis: Int64) -> Bool
+    var stateAfterTimePasses: @Sendable (
+        _ currentState: NearbyVehicleMapFeatureState,
+        _ nowMillis: Int64,
+    ) -> NearbyVehicleMapFeatureState
 }
 
 extension NearbyVehicleMapFeatureClient {
@@ -70,6 +74,9 @@ extension NearbyVehicleMapFeatureClient {
                     nowMillis: nowMillis,
                 )
             },
+            stateAfterTimePasses: { currentState, nowMillis in
+                service.stateAfterTimePasses(currentState: currentState, nowMillis: nowMillis)
+            },
         )
     }
 }
@@ -107,6 +114,11 @@ extension NearbyVehicleMapFeatureClient: DependencyKey {
             )
         },
         shouldRefresh: { _, _ in
+            fatalError(
+                "NearbyVehicleMapFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root.",
+            )
+        },
+        stateAfterTimePasses: { _, _ in
             fatalError(
                 "NearbyVehicleMapFeatureClient.liveValue was used without AppServices injecting dependencies. Create stores through AppServices so iOS has a single composition root.",
             )

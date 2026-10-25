@@ -1,6 +1,6 @@
 # ADR 0012: iOS Nearby location revalidation on view entry
 
-Status: Proposed for review with the iOS location-revalidation change.
+Status: Accepted via [PR #67](https://github.com/Mekate-Studio/Mobi/pull/67).
 
 ## Decision
 
@@ -40,8 +40,8 @@ The simulation button honors the existing interaction predicate.
   No UUID, request registry, new client operation or dependency is introduced.
 - The retained store is unchanged. This does not adopt Android's retained cache
   mechanics or change iOS work lifetime merely to match Android.
-- This change gates current-location use. It does not implement failure aging on
-  re-entry; that remains recorded under MOB-06 for a separate slice.
+- The initial decision gated current-location use. Failure aging on re-entry is
+  covered by the focused follow-up below.
 - Existing IOS-02 unchecked shared-state crossings remain unchanged and retain
   their existing retirement checks in the interop registry.
 
@@ -56,3 +56,26 @@ These checks drive actions in the owning TCA runtime. They do not qualify
 CoreLocation delivery, permission dialogs, actual tab/view task scheduling,
 SwiftUI rendering, background/foreground behavior or process restoration. Those
 remain separate from this increment's source and simulator test evidence.
+
+## Follow-up: failure aging on re-entry
+
+Proposed for review with the failure-aging increment.
+
+Before beginning a new location check, the reducer sends a visible-location state
+through the existing shared `stateAfterTimePasses` policy. The client adds only
+that adapter operation. The checking case retains the aged value, so temporary
+location fallback cannot restore an expired stale overlay. Snapshot data, failure
+reason and manual retry remain shared behavior. Healthy and snapshot-absent states
+keep the existing shared policy; no native expiry threshold is added.
+
+Known blocked or unresolved location bypasses aging. Applying failure aging
+unconditionally could replace a location-blocking overlay with a stale banner
+while the cached snapshot remains inside its stale window. The Android entry
+path already has this same visible-location boundary.
+
+Reducer-owned epoch timestamps now use the existing TCA date dependency, whose
+live value still reads the system date. Deterministic checks freeze that date at
+the shared stale-window boundary and one millisecond beyond it, preserving the
+last snapshot and failure reason through fallback and retry. This adds no package,
+state cache, scheduler or Swift-export workaround. Platform delivery and scene/
+process lifetime limits above remain unchanged.

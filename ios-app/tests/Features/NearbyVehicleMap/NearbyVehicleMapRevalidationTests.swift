@@ -164,7 +164,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         #expect(!store.canRequestRefresh)
         await store.send(.locationResolutionResponse(.temporarilyUnavailable)).finish()
 
-        // then: this slice preserves policy; it does not age failures on re-entry.
+        // then: this fixture's date remains inside the shared stale window.
         let restored = try #require(store.sharedState)
         #expect(restored.snapshotState == failed.snapshotState)
         #expect(store.overlay == previousFailure.overlay)
@@ -258,5 +258,6 @@ private func runtimeStore(
         NearbyVehicleMapFeature()
     } withDependencies: {
         $0.nearbyVehicleMapFeatureClient = client
+        $0.date.now = Date(timeIntervalSince1970: 11)
     }
 }
