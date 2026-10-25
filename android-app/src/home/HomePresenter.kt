@@ -6,15 +6,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.LifecycleStartEffect
 import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
 import com.slack.circuit.runtime.presenter.Presenter
 import com.slack.circuit.runtime.screen.Screen
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import studio.mekate.mobi.feature.home.CounterLoadable
 import studio.mekate.mobi.feature.home.HomeFeatureService
@@ -30,10 +35,25 @@ class HomePresenter(
     override fun present(): HomeScreenState {
         var readyState by rememberRetained(service) { mutableStateOf(stateProducer.initialState()) }
         var featureState by remember(service) { mutableStateOf(readyState) }
-        val scope = rememberCoroutineScope()
+        val compositionScope = rememberCoroutineScope()
+        val requestScope = remember(service) { mutableStateOf<CoroutineScope?>(null) }
 
-        return remember(featureState, stateProducer, scope) {
+        LifecycleStartEffect(service, compositionScope) {
+            val scope =
+                CoroutineScope(
+                    compositionScope.coroutineContext + SupervisorJob(compositionScope.coroutineContext.job),
+                )
+            requestScope.value = scope
+            onStopOrDispose {
+                scope.cancel()
+                requestScope.value = null
+                featureState = readyState
+            }
+        }
+
+        return remember(featureState, stateProducer, requestScope) {
             stateProducer.create(featureState = featureState) {
+                val scope = requestScope.value ?: return@create
                 scope.launch {
                     if (featureState.counterLoadable !is CounterLoadable.Loading) {
                         val previousState = featureState

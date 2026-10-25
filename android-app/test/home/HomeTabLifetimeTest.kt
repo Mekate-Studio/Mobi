@@ -1,33 +1,15 @@
 package studio.mekate.mobi.home
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.job
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import studio.mekate.mobi.AppDestination
-import studio.mekate.mobi.NativeTabState
-import studio.mekate.mobi.core.CounterRepository
-import studio.mekate.mobi.di.SharedApplicationGraph
-import studio.mekate.mobi.di.SharedDependencies
 import studio.mekate.mobi.feature.home.CounterLoadable
-import studio.mekate.mobi.feature.home.HomeFeatureService
 import studio.mekate.mobi.feature.home.currentValueForRefresh
-import studio.mekate.mobi.nativeTabContent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -45,7 +27,7 @@ class HomeTabLifetimeTest {
                 // given
                 val repository = ControlledCounterRepository()
                 val destination = mutableStateOf(AppDestination.NativeHome)
-                tabContent(repository, destination).testFlow {
+                homeTabContent(repository, destination).testFlow {
                     val previous = reachState(repository, target)
 
                     // when
@@ -70,7 +52,7 @@ class HomeTabLifetimeTest {
                 // given
                 val repository = ControlledCounterRepository()
                 val destination = mutableStateOf(AppDestination.NativeHome)
-                tabContent(repository, destination).testFlow {
+                homeTabContent(repository, destination).testFlow {
                     val previous = reachState(repository, target)
                     previous.eventSink(HomeScreenEvent.RefreshClicked)
                     assertIs<CounterLoadable.Loading>(awaitItem().featureState.counterLoadable)
@@ -103,7 +85,7 @@ class HomeTabLifetimeTest {
         runTest {
             val repository = LateCompletingCounterRepository()
             val destination = mutableStateOf(AppDestination.NativeHome)
-            tabContent(repository, destination).testFlow {
+            homeTabContent(repository, destination).testFlow {
                 try {
                     // given
                     awaitItem().eventSink(HomeScreenEvent.RefreshClicked)
@@ -139,38 +121,4 @@ class HomeTabLifetimeTest {
                 }
             }
         }
-
-    private fun TestScope.tabContent(
-        repository: CounterRepository,
-        destination: State<AppDestination>,
-    ): Flow<HomeScreenState> {
-        val defaults = SharedDependencies.createDefaultGraph()
-        val sharedGraph =
-            object : SharedApplicationGraph by defaults {
-                override val counterRepository = repository
-                override val homeFeatureService = HomeFeatureService(repository)
-            }
-        return nativeTabContent(destination, sharedGraph)
-            .filterIsInstance<NativeTabState.Home>()
-            .map { it.state }
-    }
-}
-
-private class LateCompletingCounterRepository : CounterRepository {
-    val requests = Channel<PendingCounterRequest>(Channel.UNLIMITED)
-    private val pending = mutableListOf<CompletableDeferred<Result<Int>>>()
-
-    override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int {
-        val job = currentCoroutineContext().job
-        return withContext(NonCancellable) {
-            val result = CompletableDeferred<Result<Int>>()
-            pending.add(result)
-            requests.send(PendingCounterRequest(currentCounterValue, result, job))
-            result.await().getOrThrow()
-        }
-    }
-
-    fun completePendingRequests() {
-        pending.forEach { it.complete(Result.failure(CancellationException())) }
-    }
 }

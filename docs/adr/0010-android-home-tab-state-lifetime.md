@@ -77,3 +77,10 @@ Nearby retention needs a separate location/timer decision. Optional Shared Home,
 Activity recreation, process restoration, device rendering and navigation-button
 interaction remain unqualified here. iOS already owns its native stores at the
 scene root; its effect lifetime is not an Android implementation recipe.
+
+## Visible-host lifetime follow-up
+
+[ADR 0013](0013-android-home-visible-work-lifetime.md) adds an explicit STARTED
+request lifetime inside the composition owner. It preserves this ready-state
+retention policy, cancels work on host stop, and rejects responses from an older
+visible lifetime. Activity recreation/process restoration remain separate.

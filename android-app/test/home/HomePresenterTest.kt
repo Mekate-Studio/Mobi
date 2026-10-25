@@ -1,12 +1,8 @@
 package studio.mekate.mobi.home
 
-import app.cash.molecule.RecompositionMode
-import app.cash.molecule.moleculeFlow
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -17,7 +13,6 @@ import studio.mekate.mobi.core.CounterRepository
 import studio.mekate.mobi.core.CounterRepositoryException
 import studio.mekate.mobi.feature.home.CounterLoadFailureReason
 import studio.mekate.mobi.feature.home.CounterLoadable
-import studio.mekate.mobi.feature.home.HomeFeatureService
 import studio.mekate.mobi.feature.home.currentValueForRefresh
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -206,9 +201,6 @@ class HomePresenterTest {
             assertTrue(repository.requests.tryReceive().isFailure)
         }
 
-    private fun TestScope.queuedPresenter(repository: CounterRepository): Flow<HomeScreenState> {
-        val presenter = HomePresenter(HomeFeatureService(repository))
-        return moleculeFlow(RecompositionMode.Immediate) { presenter.present() }
-            .flowOn(StandardTestDispatcher(testScheduler))
-    }
+    private fun TestScope.queuedPresenter(repository: CounterRepository): Flow<HomeScreenState> =
+        homeTabContent(repository)
 }
