@@ -1,6 +1,5 @@
 package studio.mekate.mobi.nearbyvehiclemap
 
-import com.slack.circuit.test.test
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
@@ -34,8 +33,7 @@ class NearbyVehicleMapPresenterTest {
         runTest {
             // given
             val repository = ControlledFleetRepository()
-            val presenter = presenter(repository)
-            presenter.test {
+            queuedPresenter(repository).testFlow {
                 resolveLocation(repository)
 
                 // when
@@ -73,7 +71,7 @@ class NearbyVehicleMapPresenterTest {
         runTest {
             // given
             val repository = ControlledFleetRepository()
-            presenter(repository).test {
+            queuedPresenter(repository).testFlow {
                 val loaded = resolveLocation(repository)
                 loaded.eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 0))
                 assertIs<NearbyVehicleSnapshotState.Refreshing>(awaitItem().featureState.snapshotState)
@@ -98,7 +96,7 @@ class NearbyVehicleMapPresenterTest {
         runTest {
             // given
             val repository = ControlledFleetRepository()
-            presenter(repository).test {
+            queuedPresenter(repository).testFlow {
                 resolveLocation(repository).eventSink(
                     NearbyVehicleMapScreenEvent.LocationAccessBlocked(RiderLocationBlockedReason.AccessDenied),
                 )
@@ -122,7 +120,7 @@ class NearbyVehicleMapPresenterTest {
         runTest {
             // given
             val repository = ControlledFleetRepository()
-            presenter(repository).test {
+            queuedPresenter(repository).testFlow {
                 // A future timestamp stays not due independently of wall-clock test execution time.
                 resolveLocation(repository, loadedAtMillis = Long.MAX_VALUE)
 
@@ -143,7 +141,7 @@ class NearbyVehicleMapPresenterTest {
             // given
             val repository = ControlledFleetRepository()
             lateinit var automatic: CompletableDeferred<Result<FleetSnapshot>>
-            presenter(repository).test {
+            queuedPresenter(repository).testFlow {
                 resolveLocation(repository)
                 advanceTimeBy(REFRESH_INTERVAL_MILLIS)
                 runCurrent()

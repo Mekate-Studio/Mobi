@@ -81,3 +81,34 @@ restoration remain unqualified here. Optional Shared Home remains separate.
 iOS already retains its stores and rechecks location; its cached-map action gating
 and expiry-on-re-entry need their own runtime qualification before adopting this
 Android presentation policy.
+
+## Host timer follow-up: proposed for review
+
+The Nearby timer now belongs to each STARTED host lifetime inside its composition.
+The existing [LifecycleStartEffect API](https://developer.android.com/topic/libraries/architecture/lifecycle#lifecyclestarteffect)
+pairs timer launch with stop/disposal cancellation. Every new START waits the
+existing full interval; missed background ticks are dropped. Paused-but-visible
+STARTED hosts keep their cadence. Shared freshness and refresh admission stay
+unchanged.
+
+A separate remembered timer scope replaces the previous LaunchedEffect owner.
+The short-lived timer job belongs to that scope, while requests keep their existing
+refresh scope. Location supersession can therefore keep cancelling request children
+without killing the timer. The effect is keyed to its producer and timer scope,
+so loading recomposition does not reset cadence. This adds seven net production
+lines and no retained value, lifecycle flag, shared API, dependency or workaround.
+
+This follow-up only changes scheduling. An already launched request can finish
+while stopped, and manual/location callbacks retain their existing composition
+lifetime. Moving requests to STARTED requires coordinated cancellation recovery,
+stopped callback admission and location/permission revalidation on return. Those
+remain explicit follow-up work rather than claiming Home's policy is already
+applied to Nearby.
+
+The production Metro/Circuit fixture now supplies the real host owner for existing
+Nearby presenter checks too. New virtual-time checks qualify initial stop, visible
+pause, repeated stop/start with a fresh full delay, and completion of an admitted
+request while stopped or after restart without duplicates. Existing tab-disposal,
+location-supersession, admission, cancellation and freshness checks still run.
+OS Activity-event delivery, permission dialogs, recreation and process restoration
+remain outside this host evidence.

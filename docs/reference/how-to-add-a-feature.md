@@ -281,7 +281,11 @@ blocked. Apply shared time/failure policy to a retained visible-location failure
 before using it again. Qualify both late results and old callbacks before allowing
 them to write retained state. See [ADR 0010](../adr/0010-android-home-tab-state-lifetime.md)
 and [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md) for the explicit
-costs and remaining recreation/process-restoration scope.
+costs and remaining recreation/process-restoration scope. Nearby's timer uses
+LifecycleStartEffect with a separate timer scope so request supersession cannot
+cancel future ticks. Stop cancels the timer; each START waits a full interval.
+Requests already launched and location/manual callbacks remain composition-owned;
+request cancellation and location revalidation on host START are separate work.
 
 ### 5. Add iOS presentation
 

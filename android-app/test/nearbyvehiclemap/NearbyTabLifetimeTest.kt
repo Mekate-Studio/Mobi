@@ -1,13 +1,8 @@
 package studio.mekate.mobi.nearbyvehiclemap
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import app.cash.turbine.ReceiveTurbine
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -15,19 +10,14 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import studio.mekate.mobi.AppDestination
-import studio.mekate.mobi.NativeTabState
-import studio.mekate.mobi.core.NearbyFleetRepository
 import studio.mekate.mobi.core.NearbyFleetRepositoryException
 import studio.mekate.mobi.core.RiderLocation
-import studio.mekate.mobi.di.SharedApplicationGraph
-import studio.mekate.mobi.di.SharedDependencies
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFailureReason
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapOverlayState
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationBlockedReason
 import studio.mekate.mobi.feature.nearbyvehiclemap.RiderLocationState
 import studio.mekate.mobi.feature.nearbyvehiclemap.isRefreshInFlight
-import studio.mekate.mobi.nativeTabContent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -45,7 +35,7 @@ class NearbyTabLifetimeTest {
             for (location in listOf(RIDER_LOCATION, RiderLocation(latitude = 55.68, longitude = 12.57))) {
                 val repository = ControlledFleetRepository()
                 val destination = mutableStateOf(AppDestination.NearbyVehicleMap)
-                tabContent(repository, destination).testFlow {
+                nearbyTabContent(repository, destination).testFlow {
                     // given
                     val loaded = resolveLocation(repository, loadedAtMillis = Long.MAX_VALUE)
                     destination.value = AppDestination.NativeHome
@@ -89,7 +79,7 @@ class NearbyTabLifetimeTest {
                 for (reason in RiderLocationBlockedReason.entries) {
                     val repository = ControlledFleetRepository()
                     val destination = mutableStateOf(AppDestination.NearbyVehicleMap)
-                    tabContent(repository, destination).testFlow {
+                    nearbyTabContent(repository, destination).testFlow {
                         // given
                         val ready = readyState(repository, hasSnapshot)
                         ready.eventSink(NearbyVehicleMapScreenEvent.LocationAccessBlocked(reason))
@@ -129,7 +119,7 @@ class NearbyTabLifetimeTest {
             for (hasSnapshot in listOf(false, true)) {
                 val repository = ControlledFleetRepository()
                 val destination = mutableStateOf(AppDestination.NearbyVehicleMap)
-                tabContent(repository, destination).testFlow {
+                nearbyTabContent(repository, destination).testFlow {
                     // given
                     readyState(
                         repository,
@@ -162,7 +152,7 @@ class NearbyTabLifetimeTest {
             for (hasSnapshot in listOf(false, true)) {
                 val repository = ControlledFleetRepository()
                 val destination = mutableStateOf(AppDestination.NearbyVehicleMap)
-                tabContent(repository, destination).testFlow {
+                nearbyTabContent(repository, destination).testFlow {
                     // given
                     startRefresh(repository, hasSnapshot)
                     val request = repository.requests.receive()
@@ -207,7 +197,7 @@ class NearbyTabLifetimeTest {
         runTest {
             val repository = ControlledFleetRepository()
             val destination = mutableStateOf(AppDestination.NearbyVehicleMap)
-            tabContent(repository, destination).testFlow {
+            nearbyTabContent(repository, destination).testFlow {
                 // given
                 resolveLocation(repository)
                 advanceTimeBy(REFRESH_INTERVAL_MILLIS)
@@ -252,7 +242,7 @@ class NearbyTabLifetimeTest {
         runTest {
             val repository = ControlledFleetRepository()
             val destination = mutableStateOf(AppDestination.NearbyVehicleMap)
-            tabContent(repository, destination).testFlow {
+            nearbyTabContent(repository, destination).testFlow {
                 // given
                 resolveLocation(repository).eventSink(NearbyVehicleMapScreenEvent.ManualRefreshRequested(nowMillis = 0))
                 awaitItem()
@@ -289,7 +279,7 @@ class NearbyTabLifetimeTest {
         runTest {
             val repository = ControlledFleetRepository()
             val destination = mutableStateOf(AppDestination.NearbyVehicleMap)
-            tabContent(repository, destination).testFlow {
+            nearbyTabContent(repository, destination).testFlow {
                 // given
                 resolveLocation(repository)
                 destination.value = AppDestination.NativeHome
@@ -319,7 +309,7 @@ class NearbyTabLifetimeTest {
         runTest {
             val repository = LateCompletingFleetRepository()
             val destination = mutableStateOf(AppDestination.NearbyVehicleMap)
-            tabContent(repository, destination).testFlow {
+            nearbyTabContent(repository, destination).testFlow {
                 try {
                     // given
                     resolveLocation(
@@ -370,19 +360,5 @@ class NearbyTabLifetimeTest {
         awaitItem()
         repository.requests.receive().complete(Result.failure(NearbyFleetRepositoryException()))
         return awaitItem()
-    }
-
-    private fun TestScope.tabContent(
-        repository: NearbyFleetRepository,
-        destination: State<AppDestination>,
-    ): Flow<NearbyVehicleMapScreenState> {
-        val defaults = SharedDependencies.createDefaultGraph()
-        val graph =
-            object : SharedApplicationGraph by defaults {
-                override val nearbyFleetRepository = repository
-            }
-        return nativeTabContent(destination, graph)
-            .filterIsInstance<NativeTabState.Nearby>()
-            .map { it.state }
     }
 }
