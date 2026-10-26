@@ -2,8 +2,8 @@
 
 package studio.mekate.mobi.nearbyvehiclemap
 
-import app.cash.molecule.RecompositionMode
-import app.cash.molecule.moleculeFlow
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import app.cash.turbine.ReceiveTurbine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
@@ -12,18 +12,23 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.job
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.withContext
+import studio.mekate.mobi.AppDestination
+import studio.mekate.mobi.NativeTabState
+import studio.mekate.mobi.TabContentOwner
 import studio.mekate.mobi.core.FleetSnapshot
 import studio.mekate.mobi.core.NearbyFleetRepository
 import studio.mekate.mobi.core.NearbyFleetRequest
 import studio.mekate.mobi.core.RiderLocation
+import studio.mekate.mobi.di.SharedApplicationGraph
+import studio.mekate.mobi.di.SharedDependencies
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
-import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFreshnessPolicy
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleSnapshotState
+import studio.mekate.mobi.nativeTabContent
 import kotlin.test.assertIs
 
 internal suspend fun ReceiveTurbine<NearbyVehicleMapScreenState>.startRefresh(
@@ -44,11 +49,22 @@ internal suspend fun ReceiveTurbine<NearbyVehicleMapScreenState>.startRefresh(
     }
 }
 
-internal fun TestScope.queuedPresenter(repository: NearbyFleetRepository): Flow<NearbyVehicleMapScreenState> {
-    val presenter = presenter(repository)
-    // Queue presenter launches so Turbine's eager collector cannot hide admission races.
-    return moleculeFlow(RecompositionMode.Immediate) { presenter.present() }
-        .flowOn(StandardTestDispatcher(testScheduler))
+internal fun TestScope.queuedPresenter(repository: NearbyFleetRepository): Flow<NearbyVehicleMapScreenState> =
+    nearbyTabContent(repository)
+
+internal fun TestScope.nearbyTabContent(
+    repository: NearbyFleetRepository,
+    destination: State<AppDestination> = mutableStateOf(AppDestination.NearbyVehicleMap),
+    owner: TabContentOwner? = null,
+): Flow<NearbyVehicleMapScreenState> {
+    val defaults = SharedDependencies.createDefaultGraph()
+    val graph =
+        object : SharedApplicationGraph by defaults {
+            override val nearbyFleetRepository = repository
+        }
+    return nativeTabContent(destination, graph, owner)
+        .filterIsInstance<NativeTabState.Nearby>()
+        .map { it.state }
 }
 
 internal suspend fun ReceiveTurbine<NearbyVehicleMapScreenState>.resolveLocation(
@@ -65,11 +81,6 @@ internal suspend fun ReceiveTurbine<NearbyVehicleMapScreenState>.resolveLocation
     requests.receive().complete(Result.success(snapshot(sequence = 1, loadedAtMillis = loadedAtMillis)))
     return awaitItem().also { assertIs<NearbyVehicleSnapshotState.Loaded>(it.featureState.snapshotState) }
 }
-
-internal fun presenter(repository: NearbyFleetRepository) =
-    NearbyVehicleMapPresenter(
-        NearbyVehicleMapFeatureService(repository, NearbyVehicleMapFreshnessPolicy()),
-    )
 
 internal fun snapshot(
     sequence: Long,

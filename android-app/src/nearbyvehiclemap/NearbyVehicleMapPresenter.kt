@@ -1,12 +1,12 @@
 package studio.mekate.mobi.nearbyvehiclemap
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.LifecycleStartEffect
 import com.slack.circuit.retained.rememberRetained
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.Navigator
@@ -76,17 +76,24 @@ class NearbyVehicleMapPresenter(
             }
         }
 
-        LaunchedEffect(stateProducer) {
-            while (isActive) {
-                delay(NearbyVehicleMapFeatureService.REFRESH_INTERVAL_MILLIS.milliseconds)
-                refreshScope
-                    .launch {
-                        val nowMillis = System.currentTimeMillis()
-                        if (featureState.canRequestRefresh() && stateProducer.shouldRefresh(featureState, nowMillis)) {
-                            refresh(nowMillis)
-                        }
-                    }.join()
-            }
+        val timerScope = rememberCoroutineScope()
+        LifecycleStartEffect(stateProducer, timerScope) {
+            val timer =
+                timerScope.launch {
+                    while (isActive) {
+                        delay(NearbyVehicleMapFeatureService.REFRESH_INTERVAL_MILLIS.milliseconds)
+                        refreshScope
+                            .launch {
+                                val nowMillis = System.currentTimeMillis()
+                                if (featureState.canRequestRefresh() &&
+                                    stateProducer.shouldRefresh(featureState, nowMillis)
+                                ) {
+                                    refresh(nowMillis)
+                                }
+                            }.join()
+                    }
+                }
+            onStopOrDispose { timer.cancel() }
         }
 
         return remember(featureState, stateProducer, refreshScope) {

@@ -1,6 +1,6 @@
 # ADR 0013: Android Home request ownership while the host is visible
 
-Status: Proposed for review with the Home visible-lifetime change.
+Status: Accepted via [PR #69](https://github.com/Mekate-Studio/Mobi/pull/69).
 
 ## Decision
 
