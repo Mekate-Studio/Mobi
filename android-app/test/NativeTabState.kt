@@ -41,22 +41,23 @@ internal sealed interface NativeTabState {
 internal fun TestScope.nativeTabContent(
     destination: State<AppDestination>,
     sharedGraph: SharedApplicationGraph,
+    owner: TabContentOwner? = null,
 ): Flow<NativeTabState> =
     channelFlow {
         val graph = recordingAppGraph(sharedGraph) { trySend(it) }
-        val owner = TabContentOwner()
+        val contentOwner = owner ?: TabContentOwner()
         try {
             moleculeFlow(RecompositionMode.Immediate) {
                 CompositionLocalProvider(
-                    LocalLifecycleOwner provides owner,
-                    LocalViewModelStoreOwner provides owner,
+                    LocalLifecycleOwner provides contentOwner,
+                    LocalViewModelStoreOwner provides contentOwner,
                 ) {
                     AppDestinationContent(destination.value, graph, sharedGraph.homeFeatureService)
                 }
             }.collect()
         } finally {
-            owner.lifecycle.currentState = Lifecycle.State.DESTROYED
-            owner.viewModelStore.clear()
+            contentOwner.lifecycle.currentState = Lifecycle.State.DESTROYED
+            contentOwner.viewModelStore.clear()
         }
     }.flowOn(StandardTestDispatcher(testScheduler))
 
@@ -102,12 +103,13 @@ private fun recordingAppGraph(
     }
 }
 
-private class TabContentOwner :
-    LifecycleOwner,
+internal class TabContentOwner(
+    initialState: Lifecycle.State = Lifecycle.State.RESUMED,
+) : LifecycleOwner,
     ViewModelStoreOwner {
     override val viewModelStore = ViewModelStore()
     override val lifecycle =
         LifecycleRegistry.createUnsafe(this).apply {
-            currentState = Lifecycle.State.RESUMED
+            currentState = initialState
         }
 }

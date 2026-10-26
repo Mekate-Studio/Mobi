@@ -59,7 +59,7 @@ remain separate from this increment's source and simulator test evidence.
 
 ## Follow-up: failure aging on re-entry
 
-Proposed for review with the failure-aging increment.
+Accepted via [PR #68](https://github.com/Mekate-Studio/Mobi/pull/68).
 
 Before beginning a new location check, the reducer sends a visible-location state
 through the existing shared `stateAfterTimePasses` policy. The client adds only

@@ -466,6 +466,8 @@ Navigation should remain native.
   in keyed Circuit providers while refresh work remains composition-owned
   ([ADR 0010](../adr/0010-android-home-tab-state-lifetime.md),
   [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md))
+- Native Home additionally scopes requests to each STARTED host lifetime and
+  restores ready data on stop ([ADR 0013](../adr/0013-android-home-visible-work-lifetime.md))
 - shared modules emit intents or outputs, not navigation framework objects
 
 ### iOS

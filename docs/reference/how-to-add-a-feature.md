@@ -269,7 +269,12 @@ coroutine scopes remain composition-owned. The content owner remembers Circuit,
 keeping its service/factory identities stable across tab recomposition. Retained
 values must not capture jobs, callbacks or UI objects.
 
-Home retains its exact last ready state. Nearby stores its existing shared
+Home retains its exact last ready state. Its requests use one child scope per
+STARTED host lifetime, with synchronous stop/disposal cleanup through the existing
+LifecycleStartEffect API. The ephemeral callback-to-scope handle is not retained
+feature state. A request's recovery guard must inspect its captured owner, not a
+newer scope created after restart. See [ADR 0013](../adr/0013-android-home-visible-work-lifetime.md)
+for the explicit ownership cost and qualification limits. Nearby stores its existing shared
 cancellation-normalized value and revalidates location on return. A cached snapshot
 can be shown while Resolving, with actions disabled; known blocked decisions stay
 blocked. Apply shared time/failure policy to a retained visible-location failure

@@ -1,6 +1,6 @@
 # Cross-platform mobile feature follow-ups
 
-Reviewed against `8bf05c737beee9854957bca2f3e878c8ae730405` on 2026-10-24.
+Reviewed against `faa7e4adaf8466d967fb52d4931106ce113c872b` on 2026-10-25.
 The iOS changes below are merged. Android source review identifies applicability;
 only the named executable checks qualify a counterpart. This list tracks ordinary
 application improvements separately from the [interop workaround registry](interop-workarounds.md).
@@ -14,7 +14,7 @@ application improvements separately from the [interop workaround registry](inter
 | MOB-03 | Let active work finish across visible timer ticks, [#53](https://github.com/Mekate-Studio/Mobi/pull/53) | Implemented: a composition-owned timer checks shared admission/freshness and awaits each automatic request | Actual Circuit presenter regressions under Robolectric/API 36 cover loading recomposition, a slow automatic request and subsequent refresh, a pending manual request, blocked location, a snapshot not due, and cancellation on composition disposal. This qualifies host Compose ownership; device interaction and navigation lifetime are outside this check. |
 | MOB-04 | Deliberate cancellation recovery, [#42](https://github.com/Mekate-Studio/Mobi/pull/42)/[#51](https://github.com/Mekate-Studio/Mobi/pull/51) | Native Home/Nearby implemented for their recorded ownership cases; optional Shared Home remains open | Home checks cover exact previous-state recovery and retry for repository-thrown and owned-job cancellation. Nearby checks cover active-job repository cancellation, retained/absent snapshots, earlier failures, degraded/blocked location, retry, timer survival and obsolete-request rejection. Supersession/disposal cancel Nearby jobs and skip recovery. A future independent cancel action while Nearby remains owned needs its own policy/runtime checks; optional Shared Home needs its own rendering-runtime qualification. |
 | MOB-05 | Manual refresh admission, [#49](https://github.com/Mekate-Studio/Mobi/pull/49)/[#50](https://github.com/Mekate-Studio/Mobi/pull/50) | Native Home/Nearby implemented: admission and loading share a nonsuspending segment after dispatch. Home resolves its current counter there; Nearby uses shared `canRequestRefresh`. Optional `SharedHomeScreen` still checks before launching; that source-observed risk is unqualified | Nearby checks cover rapid/busy callbacks, completion, blocked/resolving location and retry. Home checks cover queued duplicates, busy rejection, completion, retained callbacks using current values, repository-failure retry with absent/previous values, and disposal. Shared Compose Home admission needs its own rendering-runtime check. Android automatic refresh uses the presenter-owned timer and shared freshness; its unused `VisibleRefreshDue` UI event is removed. iOS still emits its own visible-refresh action. |
-| MOB-06 | Feature lifetime across view re-entry, [#47](https://github.com/Mekate-Studio/Mobi/pull/47)/[#48](https://github.com/Mekate-Studio/Mobi/pull/48) | Native Home/Nearby tab-state lifetime implemented for recorded cases; optional Shared Home remains open | Actual tab-content checks cover Home ready-state restoration and Nearby snapshot/decision retention, location revalidation, failure expiry, hidden-request/timer cancellation and restart, retry, queued location ordering, and rejection of old responses/callbacks. See [ADR 0010](../adr/0010-android-home-tab-state-lifetime.md) and [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md). iOS action gating and failure aging on return are implemented for the recorded reducer/store cases below. Foreground/recreation/process restoration and device interaction still need qualification. |
+| MOB-06 | Feature lifetime across view re-entry, [#47](https://github.com/Mekate-Studio/Mobi/pull/47)/[#48](https://github.com/Mekate-Studio/Mobi/pull/48) | Native Home/Nearby tab-state lifetime implemented for recorded cases; optional Shared Home remains open | Actual tab-content checks cover Home ready-state restoration and Nearby snapshot/decision retention, location revalidation, failure expiry, hidden-request/timer cancellation and restart, retry, queued location ordering, and rejection of old responses/callbacks. See [ADR 0010](../adr/0010-android-home-tab-state-lifetime.md) and [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md). iOS action gating and failure aging on return are implemented for the recorded reducer/store cases below. Home STARTED-owner stop/start is qualified by the recorded host checks below. Nearby/iOS foreground lifetime, recreation/process restoration and device interaction still need qualification. |
 | MOB-07 | Swift-export errors, service captures and generated support | Platform-specific: Android calls Kotlin directly | Keep IOS-prefixed bridge exceptions and retirement checks in the interop registry. Shared repository error/freshness rules already reach both platforms; Swift `KotlinError` handling and TCA executor constraints need no literal Android port. |
 
 MOB-03 follows the documented
@@ -72,7 +72,7 @@ location delivery is not qualified by the host checks.
 MOB-04's native Home check runs both cancellation modes from initial state,
 loaded zero/positive values, and repository/unexpected errors with absent or
 retained values. The presenter captures its previous typed state at admission,
-restores it only while its composition-owned scope remains
+restores it only while its captured request-owner scope remains
 [`active`](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/is-active.html),
 then rethrows cancellation. The owning scope and the individual request job have
 different lifetimes: a cancelled child can recover the visible state while its
@@ -158,8 +158,26 @@ Android's existing entry guard. Healthy and snapshot-absent states keep shared
 policy. This completes the recorded iOS return-aging counterpart, without changing
 shared thresholds or adding an interop workaround.
 CoreLocation delivery, SwiftUI rendering, actual tab-task scheduling, optional
-Shared Home, Activity/scene foreground, recreation and process restoration remain
-separate qualification work.
+Shared Home, Nearby/iOS foreground lifetime, recreation and process restoration
+remain separate qualification work.
+
+MOB-06's [Home host-lifetime checks](../../android-app/test/home/HomeForegroundLifetimeTest.kt)
+use the same real Metro/Circuit content with a controllable host LifecycleRegistry.
+Home keeps ready values and uses LifecycleStartEffect to own one child request
+scope per STARTED lifetime. ON_STOP cancels requests synchronously, clears the
+callback handle and restores ready data; paused-but-visible STARTED work continues.
+Old callbacks while stopped do not start work. On restart, intent callbacks use
+the current value and owner without automatically fetching. An old noncooperative
+response cannot restore earlier data over a new pending/completed refresh because
+its captured owner remains cancelled. Individual owned-job cancellation while
+visible still recovers the previous state. See [ADR 0013](../adr/0013-android-home-visible-work-lifetime.md)
+for the extra ephemeral handle and the simpler-owner alternative.
+
+The Home fixture now exercises the production factories for the existing presenter
+checks too. This qualifies host event ownership, not actual OS Activity delivery,
+Activity recreation or process restoration. Nearby's foreground timer/location
+policy and iOS scene work lifetime remain open; optional Shared Home stays separate.
+No new interop workaround or dependency is introduced.
 
 ## AND-01: Presenter host-test harness simplification
 
