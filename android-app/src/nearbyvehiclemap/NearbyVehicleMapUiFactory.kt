@@ -1,7 +1,5 @@
 package studio.mekate.mobi.nearbyvehiclemap
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,11 +18,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.slack.circuit.runtime.CircuitContext
 import com.slack.circuit.runtime.screen.Screen
@@ -61,23 +57,7 @@ private fun NearbyVehicleMapContent(
     modifier: Modifier = Modifier,
 ) {
     val presentation = state.featureState.toNearbyVehicleMapPresentation()
-    val context = LocalContext.current
-    val permissionLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
-            state.eventSink(
-                AndroidNearbyVehicleLocationResolver
-                    .resolvePermissionResult(context = context, grants = grants)
-                    .toScreenEvent(),
-            )
-        }
-
-    LaunchedEffect(context) {
-        val result = AndroidNearbyVehicleLocationResolver.resolveCurrentLocation(context)
-        state.eventSink(result.toScreenEvent())
-        if (result == AndroidNearbyVehicleLocationResult.PermissionRequired) {
-            permissionLauncher.launch(AndroidNearbyVehicleLocationResolver.locationPermissions)
-        }
-    }
+    NearbyVehicleLocationEffects(state)
 
     MaterialTheme {
         Column(

@@ -34,20 +34,6 @@ object AndroidNearbyVehicleLocationResolver {
         }
     }
 
-    fun resolvePermissionResult(
-        context: Context,
-        grants: Map<String, Boolean>,
-    ): AndroidNearbyVehicleLocationResult {
-        val fineGranted = grants[Manifest.permission.ACCESS_FINE_LOCATION] == true
-        val coarseGranted = grants[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-
-        return when {
-            fineGranted -> context.preciseLocationResult()
-            coarseGranted -> AndroidNearbyVehicleLocationResult.Blocked(RiderLocationBlockedReason.ApproximateOnly)
-            else -> AndroidNearbyVehicleLocationResult.Blocked(RiderLocationBlockedReason.AccessDenied)
-        }
-    }
-
     private fun Context.preciseLocationResult(): AndroidNearbyVehicleLocationResult {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as? LocationManager
         val provider = locationManager?.enabledProvider()

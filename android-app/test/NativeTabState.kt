@@ -1,5 +1,6 @@
 package studio.mekate.mobi
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
@@ -42,9 +43,10 @@ internal fun TestScope.nativeTabContent(
     destination: State<AppDestination>,
     sharedGraph: SharedApplicationGraph,
     owner: TabContentOwner? = null,
+    nearbyEffects: @Composable (NearbyVehicleMapScreenState) -> Unit = {},
 ): Flow<NativeTabState> =
     channelFlow {
-        val graph = recordingAppGraph(sharedGraph) { trySend(it) }
+        val graph = recordingAppGraph(sharedGraph, nearbyEffects) { trySend(it) }
         val contentOwner = owner ?: TabContentOwner()
         try {
             moleculeFlow(RecompositionMode.Immediate) {
@@ -63,6 +65,7 @@ internal fun TestScope.nativeTabContent(
 
 private fun recordingAppGraph(
     sharedGraph: SharedApplicationGraph,
+    nearbyEffects: @Composable (NearbyVehicleMapScreenState) -> Unit,
     onState: (NativeTabState) -> Unit,
 ): AndroidAppGraph {
     val productionGraph = AndroidDependencies.createGraph(sharedGraph)
@@ -90,6 +93,7 @@ private fun recordingAppGraph(
                                         state,
                                         _,
                                         ->
+                                        nearbyEffects(state)
                                         SideEffect { onState(NativeTabState.Nearby(state)) }
                                     }
                                 }
