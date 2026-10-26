@@ -20,13 +20,15 @@ Current ADRs:
 
 - [ADR 0013: Android Home request ownership while the host is visible](0013-android-home-visible-work-lifetime.md)
 
+- [ADR 0014: Android Nearby requests and location across host stop/start](0014-android-nearby-visible-request-lifetime.md)
+
 Proposed, without changing the accepted decisions:
 
 - [ADR 0007: Direct iOS transition requires measured capability evidence](0007-direct-ios-transition-requires-capability-evidence.md)
 - [ADR 0008: Explicit iOS projections and direct development builds](0008-explicit-ios-projections-and-direct-development-builds.md)
 - [ADR 0009: Generated Swift export for native features](0009-generated-swift-export-for-native-features.md)
 
-- [ADR 0014: Android Nearby requests and location across host stop/start](0014-android-nearby-visible-request-lifetime.md)
+- [ADR 0015: iOS Home refresh lifetime when its scene backgrounds](0015-ios-home-background-refresh-lifetime.md)
 
 Use a new ADR when a decision changes one of these:
 

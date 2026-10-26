@@ -1,6 +1,6 @@
 # ADR 0014: Android Nearby requests and location across host stop/start
 
-Status: Proposed for review.
+Status: Accepted via [PR #71](https://github.com/Mekate-Studio/Mobi/pull/71).
 
 ## Decision
 
