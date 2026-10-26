@@ -2,6 +2,7 @@
 
 package studio.mekate.mobi.nearbyvehiclemap
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import app.cash.turbine.ReceiveTurbine
@@ -56,13 +57,14 @@ internal fun TestScope.nearbyTabContent(
     repository: NearbyFleetRepository,
     destination: State<AppDestination> = mutableStateOf(AppDestination.NearbyVehicleMap),
     owner: TabContentOwner? = null,
+    locationEffects: @Composable (NearbyVehicleMapScreenState) -> Unit = {},
 ): Flow<NearbyVehicleMapScreenState> {
     val defaults = SharedDependencies.createDefaultGraph()
     val graph =
         object : SharedApplicationGraph by defaults {
             override val nearbyFleetRepository = repository
         }
-    return nativeTabContent(destination, graph, owner)
+    return nativeTabContent(destination, graph, owner, locationEffects)
         .filterIsInstance<NativeTabState.Nearby>()
         .map { it.state }
 }

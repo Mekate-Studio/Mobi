@@ -469,8 +469,9 @@ Navigation should remain native.
 - Native Home additionally scopes requests to each STARTED host lifetime and
   restores ready data on stop ([ADR 0013](../adr/0013-android-home-visible-work-lifetime.md))
 - Native Nearby schedules timer ticks only while STARTED, restarting a full delay
-  on return; admitted requests and location callbacks still follow composition
-  lifetime ([ADR 0011 host-timer follow-up](../adr/0011-android-nearby-tab-state-lifetime.md#host-timer-follow-up-proposed-for-review))
+  on return. It also cancels requests on stop and rechecks current location/access
+  on START, retaining the cached map while checking
+  ([ADR 0014](../adr/0014-android-nearby-visible-request-lifetime.md))
 - shared modules emit intents or outputs, not navigation framework objects
 
 ### iOS

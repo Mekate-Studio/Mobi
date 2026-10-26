@@ -69,6 +69,8 @@ class NearbyForegroundTimerTest {
                     assertTrue(repository.requests.tryReceive().isFailure)
                     expectNoEvents()
                     owner.lifecycle.currentState = Lifecycle.State.STARTED
+                    awaitItem().eventSink(NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable)
+                    awaitItem()
                     runCurrent()
                     advanceTimeBy(REFRESH_INTERVAL_MILLIS - 1)
                     runCurrent()
@@ -89,13 +91,17 @@ class NearbyForegroundTimerTest {
         }
 
     @Test
-    fun `should wait for the first START before scheduling automatic refresh`() =
+    fun `should wait for location revalidation before restarting timer refresh`() =
         runTest {
-            // given: location callbacks retain their existing composition-owned behavior.
+            // given
             val repository = ControlledFleetRepository()
-            val owner = TabContentOwner(Lifecycle.State.CREATED)
+            val owner = TabContentOwner()
             nearbyTabContent(repository, owner = owner).testFlow {
                 resolveLocation(repository)
+                owner.lifecycle.currentState = Lifecycle.State.CREATED
+                runCurrent()
+                owner.lifecycle.currentState = Lifecycle.State.STARTED
+                val checking = awaitItem()
 
                 // when
                 advanceTimeBy(REFRESH_INTERVAL_MILLIS * 3)
@@ -103,69 +109,14 @@ class NearbyForegroundTimerTest {
 
                 // then
                 assertTrue(repository.requests.tryReceive().isFailure)
-                expectNoEvents()
-                owner.lifecycle.currentState = Lifecycle.State.STARTED
-                runCurrent()
-                advanceTimeBy(REFRESH_INTERVAL_MILLIS - 1)
-                runCurrent()
-                assertTrue(repository.requests.tryReceive().isFailure)
-                advanceTimeBy(1)
+                checking.eventSink(NearbyVehicleMapScreenEvent.LocationTemporarilyUnavailable)
+                awaitItem()
+                advanceTimeBy(REFRESH_INTERVAL_MILLIS)
                 runCurrent()
                 assertIs<NearbyVehicleSnapshotState.Refreshing>(awaitItem().featureState.snapshotState)
                 repository.requests.receive().complete(Result.success(snapshot(sequence = 2)))
                 assertIs<NearbyVehicleSnapshotState.Loaded>(awaitItem().featureState.snapshotState)
                 cancelAndIgnoreRemainingEvents()
-            }
-        }
-
-    @Test
-    fun `should preserve an admitted request across STOP without duplicate work on restart`() =
-        runTest {
-            for (completeWhileStopped in listOf(false, true)) {
-                // given
-                val repository = ControlledFleetRepository()
-                val owner = TabContentOwner()
-                nearbyTabContent(repository, owner = owner).testFlow {
-                    resolveLocation(repository)
-                    advanceTimeBy(REFRESH_INTERVAL_MILLIS)
-                    runCurrent()
-                    assertIs<NearbyVehicleSnapshotState.Refreshing>(awaitItem().featureState.snapshotState)
-                    val automatic = repository.requests.receive()
-
-                    // when
-                    owner.lifecycle.currentState = Lifecycle.State.CREATED
-                    runCurrent()
-                    assertFalse(automatic.isCancelled)
-                    if (completeWhileStopped) {
-                        automatic.complete(Result.success(snapshot(sequence = 2)))
-                        assertIs<NearbyVehicleSnapshotState.Loaded>(awaitItem().featureState.snapshotState)
-                    }
-                    advanceTimeBy(REFRESH_INTERVAL_MILLIS * 3)
-                    runCurrent()
-
-                    // then
-                    assertTrue(repository.requests.tryReceive().isFailure)
-                    expectNoEvents()
-                    owner.lifecycle.currentState = Lifecycle.State.STARTED
-                    runCurrent()
-                    advanceTimeBy(REFRESH_INTERVAL_MILLIS - 1)
-                    runCurrent()
-                    assertTrue(repository.requests.tryReceive().isFailure)
-                    if (!completeWhileStopped) {
-                        advanceTimeBy(REFRESH_INTERVAL_MILLIS * 2)
-                        runCurrent()
-                        assertTrue(repository.requests.tryReceive().isFailure)
-                        expectNoEvents()
-                        automatic.complete(Result.success(snapshot(sequence = 2)))
-                        assertIs<NearbyVehicleSnapshotState.Loaded>(awaitItem().featureState.snapshotState)
-                    }
-                    advanceTimeBy(1)
-                    runCurrent()
-                    assertIs<NearbyVehicleSnapshotState.Refreshing>(awaitItem().featureState.snapshotState)
-                    repository.requests.receive().complete(Result.success(snapshot(sequence = 3)))
-                    assertIs<NearbyVehicleSnapshotState.Loaded>(awaitItem().featureState.snapshotState)
-                    cancelAndIgnoreRemainingEvents()
-                }
             }
         }
 }
