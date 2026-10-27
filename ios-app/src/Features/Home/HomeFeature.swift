@@ -8,6 +8,16 @@ struct HomeFeature {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
+            case .scenePhaseChanged(.background):
+                if let previousState = state.refreshPreviousState {
+                    state.counterLoadable = previousState
+                    state.refreshPreviousState = nil
+                }
+                return .none
+
+            case .scenePhaseChanged:
+                return .none
+
             case .task:
                 guard case .initial = state.counterLoadable else { return .none }
                 state.counterLoadable = homeFeatureClient.initialState()
@@ -16,6 +26,7 @@ struct HomeFeature {
             case .refreshTapped:
                 guard !state.counterLoadable.isLoading else { return .none }
                 let previousState = state.counterLoadable
+                state.refreshPreviousState = previousState
                 let currentCounterValue = previousState.currentValueForRefresh
                 state.counterLoadable = homeFeatureClient.loadingState(currentCounterValue)
                 return .run { send in
@@ -25,6 +36,7 @@ struct HomeFeature {
 
             case let .refreshResponse(counterLoadable):
                 state.counterLoadable = counterLoadable
+                state.refreshPreviousState = nil
                 return .none
             }
         }

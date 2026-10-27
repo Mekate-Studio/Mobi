@@ -348,8 +348,18 @@ returning it to the reducer. Its generated-case mapping is private to that clien
 Home's reducer, actions and presentation state use native values. Refresh receives
 the native value captured before entering loading, so a client-level
 `CancellationError` restores that exact value and preserves retry. Kotlin domain
-failures remain typed failures. TCA still suppresses sends from cancelled effects;
-a future UI cancel operation needs its own reducer transition.
+failures remain typed failures. Home's scene root owns its actual StoreTask
+through HomeRefreshLifetime, covering cancellation before effect startup as well
+as active work. The button dispatches through that owner. Background cancels it
+and restores one native pre-refresh value; inactive/active changes do not cancel
+or fetch. Loading's integer alone
+cannot restore an earlier error exactly, so the pending value is cleared on both
+completion and background recovery. The retained store's root observes scenePhase
+regardless of the selected tab. See [ADR 0015](../adr/0015-ios-home-background-refresh-lifetime.md)
+for the explicit native state/runtime ownership cost and remaining qualification.
+MOB-08 requires reevaluating the small lifetime adapter on TCA/SwiftUI updates.
+TCA still suppresses sends from cancelled effects; a future independent UI cancel
+operation needs its own reducer transition.
 
 Keep business transitions in Kotlin. Nearby distinguishes client cancellation
 from other thrown errors: cancellation restores a retryable shared state; other

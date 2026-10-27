@@ -51,9 +51,8 @@ extension NativeFeatureTests.HomeFeatureTests {
         #expect(store.state == HomeFeatureTestFactory.expectedState(loadable: .initial))
 
         await store.send(.refreshTapped) {
-            $0 = HomeFeatureTestFactory.expectedState(
-                loadable: .loading(previousValue: nil),
-            )
+            $0.counterLoadable = .loading(previousValue: nil)
+            $0.refreshPreviousState = .initial
         }
 
         // when / then
@@ -94,6 +93,7 @@ extension NativeFeatureTests.HomeFeatureTests {
             }
             await store.send(.refreshTapped) {
                 $0.counterLoadable = .loading(previousValue: 8)
+                $0.refreshPreviousState = .loaded(value: 8)
             }
 
             // when
@@ -101,14 +101,17 @@ extension NativeFeatureTests.HomeFeatureTests {
             completion.continuation.finish()
             await store.receive(.refreshResponse(result)) {
                 $0.counterLoadable = result
+                $0.refreshPreviousState = nil
             }
 
             // then
             await store.send(.refreshTapped) {
                 $0.counterLoadable = .loading(previousValue: result.currentValueForRefresh)
+                $0.refreshPreviousState = result
             }
             await store.receive(.refreshResponse(result)) {
                 $0.counterLoadable = result
+                $0.refreshPreviousState = nil
             }
             await store.finish()
         }
@@ -129,9 +132,8 @@ extension NativeFeatureTests.HomeFeatureTests {
         #expect(store.state == HomeFeatureTestFactory.expectedState(loadable: .initial))
 
         await store.send(.refreshTapped) {
-            $0 = HomeFeatureTestFactory.expectedState(
-                loadable: .loading(previousValue: nil),
-            )
+            $0.counterLoadable = .loading(previousValue: nil)
+            $0.refreshPreviousState = .initial
         }
 
         // when / then
@@ -202,18 +204,22 @@ extension NativeFeatureTests.HomeFeatureTests {
         // when
         await store.send(.refreshTapped) {
             $0.counterLoadable = loadingState
+            $0.refreshPreviousState = previousState
         }
         await store.receive(.refreshResponse(previousState)) {
             $0.counterLoadable = previousState
+            $0.refreshPreviousState = nil
         }
 
         // then
         #expect(!store.state.counterLoadable.isLoading)
         await store.send(.refreshTapped) {
             $0.counterLoadable = loadingState
+            $0.refreshPreviousState = previousState
         }
         await store.receive(.refreshResponse(.loaded(value: 21))) {
             $0.counterLoadable = .loaded(value: 21)
+            $0.refreshPreviousState = nil
         }
     }
 

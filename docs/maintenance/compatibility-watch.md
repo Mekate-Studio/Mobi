@@ -161,6 +161,14 @@ producer endpoint override also requires a cold check of the unmodified Maven
 Central route before removal. This is another
 manual adoption-review step, outside the automated iOS retirement report.
 
+TCA, SwiftUI, Swift and Xcode update reviews must also assess
+[MOB-08](mobile-feature-follow-ups.md#mob-08-home-scene-task-ownership-simplification):
+try supported scene/effect APIs against the actual Home background timing and
+late-result checks before removing the StoreTask owner. Record retained,
+removal-ready or incomplete with executed evidence in the update PR. This manual
+native-lifetime simplification check is outside automated Swift-export retirement
+reports; the watch does not qualify it automatically.
+
 ## Primary references
 
 - [GitHub releases API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28): release metadata and pagination boundaries.
