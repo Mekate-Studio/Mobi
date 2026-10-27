@@ -1,6 +1,6 @@
 # ADR 0015: iOS Home refresh lifetime when its scene backgrounds
 
-Status: Proposed for review.
+Status: Accepted via [PR #72](https://github.com/Mekate-Studio/Mobi/pull/72).
 
 ## Decision
 

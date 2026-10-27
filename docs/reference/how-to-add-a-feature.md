@@ -333,6 +333,14 @@ that aged state through temporary-location fallback. Known blocked decisions
 bypass aging and remain blocked. See
 [ADR 0012](../adr/0012-ios-nearby-location-revalidation.md); platform location delivery
 and scene/process lifetime remain separate qualification work.
+Nearby's timer now uses a dedicated ViewModifier and SwiftUI task identity based
+only on background status. Its standard Clock defaults to ContinuousClock; tests
+inject virtual time through the same modifier. Inactive changes preserve cadence;
+background/view removal cancels the loop and returning waits a full interval.
+The original one-shot location task stays separate. Already admitted requests can
+finish while stopped; request/location ownership remains a later slice. See
+[ADR 0016](../adr/0016-ios-nearby-scene-timer-lifetime.md) for that explicit boundary
+and the test-only clock product linking requirement.
 
 For native iOS, export sealed states through the generated feature modules and
 switch directly on `value.sealedType()`. Kotlin enum reasons are generated Swift

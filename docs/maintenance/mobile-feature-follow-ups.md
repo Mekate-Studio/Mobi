@@ -1,6 +1,6 @@
 # Cross-platform mobile feature follow-ups
 
-Reviewed against `0e6b16f1b824750deb41a1c82a9090e8a1f0f8d6` on 2026-10-26.
+Reviewed against `f58d817f6f1fdaa3089ace1c6991c787ed863dd3` on 2026-10-27.
 The iOS changes below are merged. Android source review identifies applicability;
 only the named executable checks qualify a counterpart. This list tracks ordinary
 application improvements separately from the [interop workaround registry](interop-workarounds.md).
@@ -14,7 +14,7 @@ application improvements separately from the [interop workaround registry](inter
 | MOB-03 | Let active work finish across visible timer ticks, [#53](https://github.com/Mekate-Studio/Mobi/pull/53) | Implemented: a composition-owned timer checks shared admission/freshness and awaits each automatic request | Actual Circuit presenter regressions under Robolectric/API 36 cover loading recomposition, a slow automatic request and subsequent refresh, a pending manual request, blocked location, a snapshot not due, and cancellation on composition disposal. This qualifies host Compose ownership; device interaction and navigation lifetime are outside this check. |
 | MOB-04 | Deliberate cancellation recovery, [#42](https://github.com/Mekate-Studio/Mobi/pull/42)/[#51](https://github.com/Mekate-Studio/Mobi/pull/51) | Native Home/Nearby implemented for their recorded ownership cases; optional Shared Home remains open | Home checks cover exact previous-state recovery and retry for repository-thrown and owned-job cancellation. Nearby checks cover active-job repository cancellation, retained/absent snapshots, earlier failures, degraded/blocked location, retry, timer survival and obsolete-request rejection. Supersession/disposal cancel Nearby jobs and skip recovery. A future independent cancel action while Nearby remains owned needs its own policy/runtime checks; optional Shared Home needs its own rendering-runtime qualification. |
 | MOB-05 | Manual refresh admission, [#49](https://github.com/Mekate-Studio/Mobi/pull/49)/[#50](https://github.com/Mekate-Studio/Mobi/pull/50) | Native Home/Nearby implemented: admission and loading share a nonsuspending segment after dispatch. Home resolves its current counter there; Nearby uses shared `canRequestRefresh`. Optional `SharedHomeScreen` still checks before launching; that source-observed risk is unqualified | Nearby checks cover rapid/busy callbacks, completion, blocked/resolving location and retry. Home checks cover queued duplicates, busy rejection, completion, retained callbacks using current values, repository-failure retry with absent/previous values, and disposal. Shared Compose Home admission needs its own rendering-runtime check. Android automatic refresh uses the presenter-owned timer and shared freshness; its unused `VisibleRefreshDue` UI event is removed. iOS still emits its own visible-refresh action. |
-| MOB-06 | Feature lifetime across view re-entry, [#47](https://github.com/Mekate-Studio/Mobi/pull/47)/[#48](https://github.com/Mekate-Studio/Mobi/pull/48) | Native Home/Nearby tab-state lifetime implemented for recorded cases; optional Shared Home remains open | Actual tab-content checks cover Home ready-state restoration and Nearby snapshot/decision retention, location revalidation, failure expiry, hidden-request/timer cancellation and restart, retry, queued location ordering, and rejection of old responses/callbacks. See [ADR 0010](../adr/0010-android-home-tab-state-lifetime.md) and [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md). iOS action gating and failure aging on return are implemented for the recorded reducer/store cases below. Home STARTED-owner stop/start is qualified by the recorded host checks below. Nearby STARTED timer/request cancellation and location revalidation are qualified by the host checks below, including current-permission callback handling. iOS Home background cancellation and exact-state recovery are qualified by the store checks below. Nearby scene lifetime, OS scene delivery, recreation/process restoration and device interaction still need qualification. |
+| MOB-06 | Feature lifetime across view re-entry, [#47](https://github.com/Mekate-Studio/Mobi/pull/47)/[#48](https://github.com/Mekate-Studio/Mobi/pull/48) | Native Home/Nearby tab-state lifetime implemented for recorded cases; optional Shared Home remains open | Actual tab-content checks cover Home ready-state restoration and Nearby snapshot/decision retention, location revalidation, failure expiry, hidden-request/timer cancellation and restart, retry, queued location ordering, and rejection of old responses/callbacks. See [ADR 0010](../adr/0010-android-home-tab-state-lifetime.md) and [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md). iOS action gating and failure aging on return are implemented for the recorded reducer/store cases below. Home STARTED-owner stop/start is qualified by the recorded host checks below. Nearby STARTED timer/request cancellation and location revalidation are qualified by the host checks below, including current-permission callback handling. iOS Home background cancellation and exact-state recovery are qualified by the store checks below. iOS Nearby timer scheduling is qualified by the SwiftUI host checks below. Nearby request/location lifetime, OS scene delivery, recreation/process restoration and device interaction still need qualification. |
 | MOB-07 | Swift-export errors, service captures and generated support | Platform-specific: Android calls Kotlin directly | Keep IOS-prefixed bridge exceptions and retirement checks in the interop registry. Shared repository error/freshness rules already reach both platforms; Swift `KotlinError` handling and TCA executor constraints need no literal Android port. |
 | MOB-08 | Home background cancellation before effect startup | Native iOS uses a scene-owned StoreTask adapter; Android has its separate STARTED child owner | A cancellation-ID control failed the pre-start timing check on TCA 1.26.0. Recheck the adapter on TCA/SwiftUI updates using the checks below; record retained/removal-ready/incomplete in the update PR. This is separate from Swift-export retirement probes. |
 
@@ -208,7 +208,7 @@ not retained alongside a new protocol. Shared API/business rules and interop
 workarounds are unchanged; AND-01 continues to track the reused host harness.
 These checks do not qualify OS Activity-event delivery, permission dialogs/settings
 interaction, native rendering, Activity recreation or process restoration. iOS
-scene lifetime and optional Shared Home remain separate work.
+request/location lifetime, OS scene delivery and optional Shared Home remain separate work.
 
 MOB-06's [Home scene checks](../../ios-app/tests/Features/Home/HomeBackgroundLifetimeTests.swift)
 use the production HomeRefreshLifetime and TCA stores with controlled Sendable
@@ -228,9 +228,31 @@ counterpart under ADR 0013; Nearby cancellation normalization remains different.
 
 These are store/simulator checks with explicitly driven scene inputs. Actual OS
 scene notifications, interactive backgrounding, pre-existing background action
-admission, tab-exit work policy, iOS Nearby scene/location/timer lifetime and
+admission, tab-exit work policy, iOS Nearby request/location lifetime and
 recreation/process restoration remain separate work. Optional Shared Home stays
 outside the native-first slice.
+
+MOB-06's [iOS Nearby timer checks](../../ios-app/tests/Features/NearbyVehicleMap/NearbyTimerLifetimeTests.swift)
+run the actual NearbyRefreshTimer modifier in a UIHostingController with controlled
+scene input and a virtual TestClock. Background cancels the loop; inactive/active
+changes preserve cadence. Returning or re-entering the view waits a full interval
+without replaying missed ticks. Recomposition and repeated transitions keep one
+timer. A production-store check proves an admitted refresh can finish while the
+timer is paused, retaining the map and permitting a later automatic request.
+
+[ADR 0016](../adr/0016-ios-nearby-scene-timer-lifetime.md) records the 17-line net
+runtime cost, standard Clock seam and explicit scheduling-only boundary. The
+MobiIOSTestDependencies product links the already pinned Clocks/ConcurrencyExtras
+APIs in appTests; the app product does not depend on this test-only product.
+No dependency versions or shared policies change. This uses supported SwiftUI
+lifetime APIs, with no custom task registry or new interop workaround.
+
+Already launched requests, manual/location callbacks and the original view-entry
+location check keep their current behavior. Coordinated Nearby request cancellation
+and location revalidation remain next work, including MOB-08's pre-start cancellation
+lesson. Actual OS scene events, interactive backgrounding, CoreLocation, map
+rendering, device/minimum-OS and recreation/process restoration remain unqualified.
+The update workflow's existing MOB-08 native lifetime review remains in place.
 
 ## MOB-08: Home scene-task ownership simplification
 

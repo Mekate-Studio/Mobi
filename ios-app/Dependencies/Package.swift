@@ -12,6 +12,10 @@ let package = Package(
             name: "MobiIOSDependencies",
             targets: ["MobiIOSDependencies"],
         ),
+        .library(
+            name: "MobiIOSTestDependencies",
+            targets: ["MobiIOSTestDependencies"],
+        ),
     ],
     dependencies: [
         .package(
@@ -22,12 +26,21 @@ let package = Package(
             url: "https://github.com/pointfreeco/swift-dependencies",
             exact: "1.12.0",
         ),
+        .package(url: "https://github.com/pointfreeco/swift-clocks", exact: "1.0.6"),
+        .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", exact: "1.3.2"),
         .package(
             url: "https://github.com/maplibre/maplibre-gl-native-distribution",
             exact: "6.27.0",
         ),
     ],
     targets: [
+        .target(
+            name: "MobiIOSTestDependencies",
+            dependencies: [
+                .product(name: "Clocks", package: "swift-clocks"),
+                .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
+            ],
+        ),
         .target(
             name: "MobiIOSDependencies",
             dependencies: [

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E5F100012FA10001001664A3 /* MobiIOSTestDependencies in Frameworks */ = {isa = PBXBuildFile; productRef = E5F100022FA10001001664A3 /* MobiIOSTestDependencies */; };
 		D3A100012FA10001001664A3 /* MobiIOSDependencies in Frameworks */ = {isa = PBXBuildFile; productRef = D3A100042FA10001001664A3 /* MobiIOSDependencies */; };
 		D3A100022FA10001001664A3 /* MobiIOSDependencies in Frameworks */ = {isa = PBXBuildFile; productRef = D3A100042FA10001001664A3 /* MobiIOSDependencies */; };
 		D3A100052FA10001001664A3 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = D3A1000B2FA10001001664A3 /* ComposableArchitecture */; };
@@ -71,6 +72,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3A100022FA10001001664A3 /* MobiIOSDependencies in Frameworks */,
+				E5F100012FA10001001664A3 /* MobiIOSTestDependencies in Frameworks */,
 				D3A100082FA10001001664A3 /* ComposableArchitecture in Frameworks */,
 				D3A100092FA10001001664A3 /* Dependencies in Frameworks */,
 				D3A1000A2FA10001001664A3 /* MapLibre in Frameworks */,
@@ -475,6 +477,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E5F100022FA10001001664A3 /* MobiIOSTestDependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3A100032FA10001001664A3 /* XCLocalSwiftPackageReference "Dependencies" */;
+			productName = MobiIOSTestDependencies;
+		};
 		D3A100042FA10001001664A3 /* MobiIOSDependencies */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D3A100032FA10001001664A3 /* XCLocalSwiftPackageReference "Dependencies" */;
