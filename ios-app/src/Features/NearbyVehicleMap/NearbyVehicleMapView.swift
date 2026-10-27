@@ -42,16 +42,10 @@ struct NearbyVehicleMapView: View {
             locationClient.requestPreciseLocation { result in
                 store.send(.locationResolutionResponse(result))
             }
-            await runVisibleRefreshLoop()
         }
-    }
-
-    private func runVisibleRefreshLoop() async {
-        while !Task.isCancelled {
-            try? await Task.sleep(nanoseconds: 10_000_000_000)
-            guard !Task.isCancelled else { return }
+        .modifier(NearbyRefreshTimer {
             store.send(.visibleRefreshDue(nowMillis: currentTimeMillis()))
-        }
+        })
     }
 
     private func currentTimeMillis() -> Int64 {
