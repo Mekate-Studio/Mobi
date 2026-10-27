@@ -482,8 +482,10 @@ Navigation should remain native.
   changes preserve work and do not fetch
   ([ADR 0015](../adr/0015-ios-home-background-refresh-lifetime.md))
 - Nearby's SwiftUI timer stops in background, continues through inactive changes
-  and restarts a full delay on return. Admitted refresh/location work retains its
-  current lifetime ([ADR 0016](../adr/0016-ios-nearby-scene-timer-lifetime.md))
+  and restarts a full delay on return ([ADR 0016](../adr/0016-ios-nearby-scene-timer-lifetime.md)).
+  Its request owner cancels pending fleet/location work on background or removal,
+  retains the snapshot and revalidates location before enabling actions on return
+  ([ADR 0017](../adr/0017-ios-nearby-scene-request-lifetime.md))
 - Nearby's retained store distinguishes cached content under location revalidation
   from ready content; refresh and interactions wait for the current location result
   ([ADR 0012](../adr/0012-ios-nearby-location-revalidation.md))

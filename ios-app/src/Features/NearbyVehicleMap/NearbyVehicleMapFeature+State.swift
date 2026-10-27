@@ -82,6 +82,10 @@ extension NearbyVehicleMapFeature {
             }
         }
 
+        var hasCachedRiderLocation: Bool {
+            riderLocation != nil
+        }
+
         var hasResolvedRiderLocation: Bool {
             guard case .ready = content else { return false }
             return riderLocation != nil

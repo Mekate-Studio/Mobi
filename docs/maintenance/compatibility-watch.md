@@ -163,8 +163,12 @@ manual adoption-review step, outside the automated iOS retirement report.
 
 TCA, SwiftUI, Swift and Xcode update reviews must also assess
 [MOB-08](mobile-feature-follow-ups.md#mob-08-home-scene-task-ownership-simplification):
-try supported scene/effect APIs against the actual Home background timing and
-late-result checks before removing the StoreTask owner. Record retained,
+try supported scene/effect APIs against the actual Home and Nearby timing and
+late-result checks before removing either StoreTask owner. Nearby also requires
+location-to-refresh ownership, all request triggers, gated stopped callbacks,
+SwiftUI background/removal/re-entry and failure-aging checks. Review Apple
+CoreLocation async API/diagnostic evolution on native SDK updates; the supported
+one-result reader is separate from the TCA timing adapter. Record retained,
 removal-ready or incomplete with executed evidence in the update PR. This manual
 native-lifetime simplification check is outside automated Swift-export retirement
 reports; the watch does not qualify it automatically.

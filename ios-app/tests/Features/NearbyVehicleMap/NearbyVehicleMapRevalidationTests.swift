@@ -214,6 +214,31 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     }
 
     @MainActor
+    @Test("should reject a Nearby result when revalidation precedes effect startup", .timeLimit(.minutes(1)))
+    func shouldRejectNearbyResultWhenRevalidationPrecedesEffectStartup() async {
+        // given
+        var client = Factory.makeClient()
+        client.refresh = { _, _ in Factory.loadedSharedState(sequence: 99, vehicles: []) }
+        let previous = Factory.loadedState()
+        let store = runtimeStore(state: previous, client: client)
+
+        // when: the old effect has not had a turn to register its cancellation ID.
+        var lifetime = NearbyVehicleMapLifetime()
+        await lifetime.start(in: store).finish()
+        await store.send(.locationResolutionResponse(.temporarilyUnavailable)).finish()
+        let refresh = lifetime.send(.refreshTapped, in: store)
+        let revalidation = lifetime.start(in: store)
+        let resolved = store.send(.locationResolutionResponse(.temporarilyUnavailable))
+        await revalidation.finish()
+        await resolved.finish()
+        await refresh?.finish()
+
+        // then
+        #expect(store.mapContent == previous.mapContent)
+        #expect(store.canRequestRefresh)
+    }
+
+    @MainActor
     @Test("should reject a pre-revalidation response without losing retry", .timeLimit(.minutes(1)))
     func shouldRejectResponseFromBeforeRevalidation() async throws {
         // given
@@ -226,11 +251,15 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         }
         let previous = Factory.loadedState()
         let store = runtimeStore(state: previous, client: client)
-        let oldTask = store.send(.refreshTapped)
+        var lifetime = NearbyVehicleMapLifetime()
+        await lifetime.start(in: store).finish()
+        await store.send(.locationResolutionResponse(.temporarilyUnavailable)).finish()
+        let oldTaskOptional = lifetime.send(.refreshTapped, in: store)
+        let oldTask = try #require(oldTaskOptional)
         let oldRequest = try #require(await pending.next())
 
         // when: the old provider ignores cancellation and completes after the new location check.
-        await store.send(.task).finish()
+        await lifetime.start(in: store).finish()
         #expect(!store.canInteractWithVehicles)
         await store.send(.locationResolutionResponse(.temporarilyUnavailable)).finish()
         oldRequest.resume(returning: Factory.loadedSharedState(sequence: 99, vehicles: []))

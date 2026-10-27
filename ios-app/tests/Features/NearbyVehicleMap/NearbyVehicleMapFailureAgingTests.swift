@@ -15,7 +15,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         nowMillis: Int64,
         reason: NearbyVehicleMapFailureReason,
     ) async throws {
-        for degraded in [false, true] {
+        for (degraded, suspended) in [(false, false), (true, false), (false, true), (true, true)] {
             // given: the snapshot was loaded at 1000; failure initially remains inside the stale window.
             let service = IosInteropTestServices.shared.uncaughtFailureNearbyService()
             var client = NearbyVehicleMapFeatureClient(service: service)
@@ -31,7 +31,10 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
             retained.apply(sharedState: failed)
             let store = agingStore(state: retained, client: client, nowMillis: nowMillis)
 
-            // when
+            // when: a backgrounded view already has checking content before it returns.
+            if suspended {
+                await store.send(.suspend).finish()
+            }
             await store.send(.task).finish()
 
             // then: aging updates shared policy before the checking presentation hides that overlay.

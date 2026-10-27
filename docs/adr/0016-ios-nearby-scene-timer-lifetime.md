@@ -1,6 +1,6 @@
 # ADR 0016: iOS Nearby timer scheduling across scene backgrounding
 
-Status: Proposed for review.
+Status: Accepted via [PR #73](https://github.com/Mekate-Studio/Mobi/pull/73).
 
 ## Decision
 
@@ -38,13 +38,14 @@ build workaround. The runner and hosted workflow remain unchanged.
 
 ## Deliberate boundary
 
-Only timer scheduling changes. Already launched refresh effects remain owned by
-the retained store and can complete while backgrounded, updating the displayed
-snapshot. Manual and location callbacks keep their current behavior. The location
-entry task is separate, so timer resumption does not begin another location check
-or cancel an admitted request. Request cancellation and location revalidation need
-one coordinated subsequent slice, including the pre-start cancellation lesson in
-MOB-08. No Home-style exact-state recovery policy is applied to Nearby here.
+This decision changed timer scheduling only. The subsequent request/location
+ownership decision is recorded in [ADR 0017](0017-ios-nearby-scene-request-lifetime.md).
+At that scheduling-only stage, already launched refresh effects remained owned by
+the retained store and could complete while backgrounded, updating the displayed
+snapshot. Manual and location callbacks retained their behavior. The location
+entry task remained separate, so timer resumption did not begin another location
+check or cancel an admitted request. ADR 0017 supersedes that request/location
+boundary; the timer identity, delay and test dependency decisions remain.
 
 ## Qualification
 

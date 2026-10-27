@@ -4,9 +4,8 @@ import MobiIOSDependencies
 @Reducer
 struct NearbyVehicleMapFeature {
     @Dependency(\.nearbyVehicleMapFeatureClient) private var client
+    @Dependency(\.nearbyVehicleMapLocationClient) private var locationClient
     @Dependency(\.date.now) private var now
-
-    private enum CancelID { case refresh }
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -15,11 +14,19 @@ struct NearbyVehicleMapFeature {
                 if state.sharedState == nil {
                     state.apply(sharedState: client.initialState())
                 }
-                if state.hasResolvedRiderLocation, let sharedState = state.sharedState {
+                if state.hasCachedRiderLocation, let sharedState = state.sharedState {
                     state.apply(sharedState: client.stateAfterTimePasses(sharedState, currentTimeMillis()))
                 }
                 state.beginLocationResolution()
-                return .cancel(id: CancelID.refresh)
+                return .run { send in
+                    if let result = await locationClient.resolve() {
+                        await send(.locationResolutionResponse(result))
+                    }
+                }
+
+            case .suspend:
+                state.beginLocationResolution()
+                return .none
 
             case let .locationResolutionResponse(result):
                 guard let sharedState = state.sharedState else { return .none }
@@ -76,7 +83,6 @@ struct NearbyVehicleMapFeature {
             loadedState.apply(sharedState: sharedState)
             await send(.sharedStateLoaded(loadedState))
         }
-        .cancellable(id: CancelID.refresh, cancelInFlight: true)
     }
 
     private func currentTimeMillis() -> Int64 {
