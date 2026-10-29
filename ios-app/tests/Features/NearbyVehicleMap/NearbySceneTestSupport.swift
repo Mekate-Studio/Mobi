@@ -86,6 +86,7 @@ final class NearbySceneHost {
     private var visible = true
     private let window: UIWindow
     private weak var previousKeyWindow: UIWindow?
+    private let rendered = AsyncStream<NearbySceneInput>.makeStream()
     private lazy var controller = UIHostingController(rootView: content)
 
     init(store: StoreOf<NearbyVehicleMapFeature>, phase: ScenePhase = .active) throws {
@@ -97,31 +98,40 @@ final class NearbySceneHost {
     }
 
     private var content: NearbySceneTestView {
-        NearbySceneTestView(store: store, phase: phase, visible: visible) { [weak self] send in
-            self?.send = send
-        }
+        NearbySceneTestView(
+            store: store,
+            input: NearbySceneInput(phase: phase, visible: visible),
+            onSend: { [weak self] send in self?.send = send },
+            onRender: { [rendered] input in rendered.continuation.yield(input) },
+        )
     }
 
     func start() async {
         window.rootViewController = controller
         window.makeKeyAndVisible()
-        render()
-        await Task.megaYield()
+        await render()
     }
 
     func setPhase(_ phase: ScenePhase) async {
         self.phase = phase
-        render()
-        await Task.megaYield()
+        await render()
     }
 
     func setVisible(_ visible: Bool) async {
         self.visible = visible
-        render()
-        await Task.megaYield()
+        await render()
     }
 
-    private func render() {
+    private func render() async {
+        let expected = NearbySceneInput(phase: phase, visible: visible)
+        updateRoot()
+        for await input in rendered.stream where input == expected {
+            return
+        }
+        Issue.record("Hosted Nearby view did not consume its scene/visibility input")
+    }
+
+    private func updateRoot() {
         controller.rootView = content
         controller.view.setNeedsLayout()
         controller.view.layoutIfNeeded()
@@ -129,7 +139,8 @@ final class NearbySceneHost {
 
     func close() {
         visible = false
-        render()
+        updateRoot()
+        rendered.continuation.finish()
         send = nil
         window.isHidden = true
         window.rootViewController = nil
@@ -143,17 +154,24 @@ final class NearbySceneHost {
 
 private struct NearbySceneTestView: View {
     let store: StoreOf<NearbyVehicleMapFeature>
-    let phase: ScenePhase
-    let visible: Bool
+    let input: NearbySceneInput
     let onSend: (@escaping (NearbyVehicleMapFeature.Action) -> Void) -> Void
+    let onRender: (NearbySceneInput) -> Void
 
     var body: some View {
         Group {
-            if visible {
+            if input.visible {
                 NearbyVehicleMapLifecycle(store: store) { send in
                     Text(store.message).onAppear { onSend(send) }
                 }
             }
-        }.environment(\.scenePhase, phase)
+        }
+        .environment(\.scenePhase, input.phase)
+        .onChange(of: input, initial: true) { _, input in onRender(input) }
     }
+}
+
+private struct NearbySceneInput: Equatable {
+    let phase: ScenePhase
+    let visible: Bool
 }

@@ -85,6 +85,16 @@ explicit phase/removal/re-entry updates, using controlled async clients. Reader
 checks exercise nil updates, first-result termination, cancellation and errors.
 Existing timer, interop, reducer and shared cancellation checks remain.
 
+The host waits for SwiftUI onChange to acknowledge each scene/visibility input
+before advancing to the next transition. Executor yields are not evidence that
+SwiftUI consumed an update. The initial hosted run had 152 passing cases and a
+one-minute timeout in the combined location-lifetime test; replacing the rendering
+yield assumption with this acknowledgement passed 30 focused local repetitions
+on the same iPhone Air/iOS 26.5 configuration. It changes test synchronization,
+not the production lifetime policy or the one-minute test limit. The hosted
+manual-request check also requires its dispatch callback before sending, so a
+missing callback fails immediately rather than becoming a missing-request wait.
+
 These checks do not synthesize CLLocationUpdate diagnostics or qualify real
 CoreLocation delivery, permission dialogs/settings, OS scene delivery, map
 rendering, device/minimum-OS execution or process restoration. They compile the
