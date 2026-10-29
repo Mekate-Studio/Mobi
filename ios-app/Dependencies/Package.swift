@@ -30,7 +30,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", exact: "1.3.2"),
         .package(
             url: "https://github.com/maplibre/maplibre-gl-native-distribution",
-            exact: "6.27.0",
+            exact: "6.31.0",
         ),
     ],
     targets: [
