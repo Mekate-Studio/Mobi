@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "date": "2026-10-29",
+  "reviewed_base": "3ef0e2a35378efb3c44a00d7951a9af7c6b868f7",
+  "toolchain": {
+    "version": "0.13.0",
+    "wrapper_sha256": "8e5972c57ee6cb277ea3ec48a7b5ace1f19983e5f4373f3f29752b31082d340b",
+    "distribution_sha256": "fa82b9872dcfa04d26c8f800f33d597c99fbffd747a0e9bbce3a9e4424b3a588"
+  },
+  "observed_stale_model": {
+    "candidate_revision": "613db12ba438ec30155c53ed769774b0422a6e6d",
+    "normalized_project_sha256": "ef3b907eeac7b1c46396a050693989cb9520180b821e15ea97ba166307198d0d",
+    "observed_project_equals_candidate_model": true,
+    "attribution": "Consistent with a stale project-model save across branch switching; the live IDE writer was not traced."
+  },
+  "probes": [
+    {
+      "fixture": "current",
+      "command": [
+        "./kotlin",
+        "ide-integration",
+        "manage-xcode",
+        "--project-dir",
+        "<owned-probe>"
+      ],
+      "exit": 1,
+      "before_project_sha256": "e0a885cf17ac87950f02ab29d9a98249001b6527e0efc2bf11181d5db2ce9f6d",
+      "after_project_sha256": "e0a885cf17ac87950f02ab29d9a98249001b6527e0efc2bf11181d5db2ce9f6d",
+      "project_changed": false,
+      "has_framework_integration_command": false,
+      "control_comment_retained": false
+    },
+    {
+      "fixture": "managed-control",
+      "command": [
+        "./kotlin",
+        "ide-integration",
+        "manage-xcode",
+        "--project-dir",
+        "<owned-probe>"
+      ],
+      "exit": 0,
+      "before_project_sha256": "db47ee252ff6354b7d750e5fb24d9723f8dbad7622cc737f30485b7d402d5035",
+      "after_project_sha256": "439eeaf01914be13a12c93009e12f46125d4882147f908d41b7b15528061f202",
+      "project_changed": true,
+      "has_framework_integration_command": true,
+      "control_comment_retained": false
+    }
+  ],
+  "scope": "Pinned IDE-management command in disposable source copies; no live IDE session or native build invoked by the probe.",
+  "sources": [
+    "https://github.com/JetBrains/kotlin-toolchain/blob/v0.13.0/sources/amper-cli/src/org/jetbrains/amper/tasks/ios/ManageXCodeProjectTask.kt"
+  ],
+  "limits": [
+    "The management-marker control is deliberate and is not the observed current-main project.",
+    "The full stale-session IDE interaction remains unqualified; do not attribute the user incident to this command.",
+    "A project preflight detects persisted drift; it cannot prevent IDE writes or repair source automatically."
+  ],
+  "project_preflight_controls": [
+    {
+      "fixture": "current",
+      "exit": 0,
+      "project_changed_by_preflight": false
+    },
+    {
+      "fixture": "managed-control",
+      "exit": 78,
+      "project_changed_by_preflight": false
+    }
+  ]
+}

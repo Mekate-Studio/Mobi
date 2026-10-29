@@ -30,3 +30,6 @@ if [[ "${scope}" == signed-release || "${xcode_delivery}" == true ]]; then
   printf 'Development, tests and unsigned assessments remain available.\n' >&2
   exit 69
 fi
+
+project_root="$(cd "$(dirname "$0")/../.." && pwd)"
+/usr/bin/ruby "${project_root}/scripts/ci/check_ios_project.rb"
