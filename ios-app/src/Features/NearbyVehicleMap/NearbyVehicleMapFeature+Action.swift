@@ -20,6 +20,7 @@ extension NearbyVehicleMapFeature {
 
     enum Action: Equatable {
         case task
+        case suspend
         case locationResolutionResponse(LocationResolutionResult)
         case refreshTapped
         case visibleRefreshDue(nowMillis: Int64)

@@ -1,105 +1,62 @@
-import Combine
 import CoreLocation
-import Foundation
+import MobiIOSDependencies
 
-@MainActor
-final class NearbyVehicleMapLocationClient: NSObject, ObservableObject {
-    private let locationManager = CLLocationManager()
-    private var completion: ((NearbyVehicleMapFeature.LocationResolutionResult) -> Void)?
+struct NearbyVehicleMapLocationClient {
+    typealias Result = NearbyVehicleMapFeature.LocationResolutionResult
+    var resolve: @Sendable () async -> Result?
 
-    override init() {
-        super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-    }
-
-    func requestPreciseLocation(
-        completion: @escaping (NearbyVehicleMapFeature.LocationResolutionResult) -> Void,
-    ) {
-        self.completion = completion
-
-        switch locationManager.authorizationStatus {
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .authorizedAlways, .authorizedWhenInUse:
-            requestCurrentPreciseLocation()
-        case .denied:
-            complete(.blocked(.accessDenied))
-        case .restricted:
-            complete(.blocked(.accessRestricted))
-        @unknown default:
-            complete(.blocked(.accessRestricted))
+    static func firstResult<Updates: AsyncSequence>(
+        in updates: Updates,
+    ) async -> Result? where Updates.Element == Result? {
+        guard !Task.isCancelled else { return nil }
+        do {
+            for try await result in updates {
+                guard !Task.isCancelled else { return nil }
+                if let result {
+                    return result
+                }
+            }
+        } catch {
+            return Task.isCancelled ? nil : .temporarilyUnavailable
         }
+        return Task.isCancelled ? nil : .temporarilyUnavailable
     }
 
-    private func requestCurrentPreciseLocation() {
-        guard locationManager.accuracyAuthorization == .fullAccuracy else {
-            complete(.blocked(.approximateOnly))
-            return
+    private static func result(for update: CLLocationUpdate) -> Result? {
+        if update.authorizationDeniedGlobally {
+            return .blocked(.servicesDisabled)
         }
-
-        locationManager.requestLocation()
-    }
-
-    private func complete(_ result: NearbyVehicleMapFeature.LocationResolutionResult) {
-        completion?(result)
-        completion = nil
+        if update.authorizationRestricted {
+            return .blocked(.accessRestricted)
+        }
+        if update.authorizationDenied {
+            return .blocked(.accessDenied)
+        }
+        if update.accuracyLimited {
+            return .blocked(.approximateOnly)
+        }
+        if update.authorizationRequestInProgress || update.insufficientlyInUse {
+            return nil
+        }
+        if let location = update.location {
+            return .precise(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        }
+        return update.locationUnavailable ? .temporarilyUnavailable : nil
     }
 }
 
-extension NearbyVehicleMapLocationClient: CLLocationManagerDelegate {
-    nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        let authorizationStatus = manager.authorizationStatus
-
-        Task { @MainActor in
-            switch authorizationStatus {
-            case .authorizedAlways, .authorizedWhenInUse:
-                requestCurrentPreciseLocation()
-            case .denied:
-                complete(.blocked(.accessDenied))
-            case .restricted:
-                complete(.blocked(.accessRestricted))
-            case .notDetermined:
-                break
-            @unknown default:
-                complete(.blocked(.accessRestricted))
-            }
-        }
+extension NearbyVehicleMapLocationClient: DependencyKey {
+    static let liveValue = Self {
+        guard !Task.isCancelled else { return nil }
+        return await firstResult(in: CLLocationUpdate.liveUpdates().map { result(for: $0) })
     }
 
-    nonisolated func locationManager(
-        _: CLLocationManager,
-        didUpdateLocations locations: [CLLocation],
-    ) {
-        guard let location = locations.last else {
-            Task { @MainActor in complete(.temporarilyUnavailable) }
-            return
-        }
+    static let testValue = Self { nil }
+}
 
-        let latitude = location.coordinate.latitude
-        let longitude = location.coordinate.longitude
-
-        Task { @MainActor in
-            complete(
-                .precise(
-                    latitude: latitude,
-                    longitude: longitude,
-                ),
-            )
-        }
-    }
-
-    nonisolated func locationManager(
-        _: CLLocationManager,
-        didFailWithError error: Error,
-    ) {
-        let result: NearbyVehicleMapFeature.LocationResolutionResult =
-            if let locationError = error as? CLError, locationError.code == .denied {
-                .blocked(.servicesDisabled)
-            } else {
-                .temporarilyUnavailable
-            }
-
-        Task { @MainActor in complete(result) }
+extension DependencyValues {
+    var nearbyVehicleMapLocationClient: NearbyVehicleMapLocationClient {
+        get { self[NearbyVehicleMapLocationClient.self] }
+        set { self[NearbyVehicleMapLocationClient.self] = newValue }
     }
 }

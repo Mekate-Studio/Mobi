@@ -4,48 +4,43 @@ import SwiftUI
 
 struct NearbyVehicleMapView: View {
     let store: StoreOf<NearbyVehicleMapFeature>
-    @StateObject private var locationClient = NearbyVehicleMapLocationClient()
 
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 18) {
-                Text(store.title)
-                    .font(.largeTitle.bold())
-                Text(store.message)
-                    .font(.body)
-                    .foregroundStyle(.secondary)
+        NearbyVehicleMapLifecycle(store: store) { send in
+            NavigationStack {
+                VStack(alignment: .leading, spacing: 18) {
+                    Text(store.title)
+                        .font(.largeTitle.bold())
+                    Text(store.message)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
 
-                NearbyVehicleCoordinateMap(
-                    mapContent: store.mapContent,
-                    overlay: store.overlay,
-                )
+                    NearbyVehicleCoordinateMap(
+                        mapContent: store.mapContent,
+                        overlay: store.overlay,
+                    )
 
-                HStack {
-                    Button("Refresh nearby vehicles") {
-                        store.send(.refreshTapped)
+                    HStack {
+                        Button("Refresh nearby vehicles") {
+                            send(.refreshTapped)
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(!store.canRequestRefresh)
+                    }
+
+                    Button("Simulate temporary location loss") {
+                        send(.locationResolutionResponse(.temporarilyUnavailable))
                     }
                     .buttonStyle(.bordered)
-                    .disabled(!store.canRequestRefresh)
+                    .disabled(!store.canInteractWithVehicles)
                 }
-
-                Button("Simulate temporary location loss") {
-                    store.send(.locationResolutionResponse(.temporarilyUnavailable))
-                }
-                .buttonStyle(.bordered)
-                .disabled(!store.canInteractWithVehicles)
+                .padding(20)
+                .navigationTitle("Nearby Map")
             }
-            .padding(20)
-            .navigationTitle("Nearby Map")
+            .modifier(NearbyRefreshTimer {
+                send(.visibleRefreshDue(nowMillis: currentTimeMillis()))
+            })
         }
-        .task {
-            store.send(.task)
-            locationClient.requestPreciseLocation { result in
-                store.send(.locationResolutionResponse(result))
-            }
-        }
-        .modifier(NearbyRefreshTimer {
-            store.send(.visibleRefreshDue(nowMillis: currentTimeMillis()))
-        })
     }
 
     private func currentTimeMillis() -> Int64 {

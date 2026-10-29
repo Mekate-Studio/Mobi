@@ -184,40 +184,42 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         client.refresh = { _, _ in
             await withCheckedContinuation { requests.continuation.yield($0) }
         }
-        let store = NearbyVehicleMapFeatureTestFactory.makeStore(client: client)
-        await store.send(.task) {
-            $0 = NearbyVehicleMapFeatureTestFactory.initialState()
+        let store = Store(initialState: NearbyVehicleMapFeature.State()) {
+            NearbyVehicleMapFeature()
+        } withDependencies: {
+            $0.nearbyVehicleMapFeatureClient = client
+            $0.date.now = Date(timeIntervalSince1970: 11)
         }
-        let earlierTask = await store.send(.locationResolutionResponse(.precise(
+        var lifetime = NearbyVehicleMapLifetime()
+        await lifetime.start(in: store).finish()
+        let earlierTaskOptional = lifetime.send(.locationResolutionResponse(.precise(
             latitude: 55.6761,
             longitude: 12.5683,
-        ))) {
-            $0 = NearbyVehicleMapFeatureTestFactory.loadingState()
-        }
+        )), in: store)
+        let earlierTask = try #require(earlierTaskOptional)
         let earlierRequest = try #require(await pending.next())
         let newerState = NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2, vehicles: [])
         do {
             defer { earlierRequest.resume(returning: NearbyVehicleMapFeatureTestFactory.loadedSharedState()) }
-            let newerTask = await store.send(.locationResolutionResponse(.precise(
+            await lifetime.start(in: store).finish()
+            let newerTaskOptional = lifetime.send(.locationResolutionResponse(.precise(
                 latitude: 55.6761,
                 longitude: 12.5683,
-            )))
+            )), in: store)
+            let newerTask = try #require(newerTaskOptional)
             let newerRequest = try #require(await pending.next())
             let newerSharedState = try #require(newerState.sharedState)
 
             // when
             newerRequest.resume(returning: newerSharedState)
-            await store.receive(.sharedStateLoaded(newerState)) {
-                $0 = newerState
-            }
             await newerTask.finish()
         }
         await earlierTask.finish()
-        await store.finish()
 
         // then
-        #expect(store.state.mapContent == newerState.mapContent)
-        #expect(store.state.message == "Showing 0 vehicles around the rider.")
+        #expect(store.mapContent == newerState.mapContent)
+        #expect(store.message == "Showing 0 vehicles around the rider.")
+        await lifetime.stop(in: store).finish()
     }
 
     @MainActor

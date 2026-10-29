@@ -326,20 +326,26 @@ value distinguishes preparing, checking with retained shared data, and ready.
 A cached map stays visible during checking, but manual/timer refresh and interactions
 wait for a current location result. Keeping the previous shared value inside the
 checking case preserves temporary-loss fallback even without a snapshot. A new
-check normalizes loading through shared cancellation policy and cancels the prior
-refresh effect. Before checking a previously visible location, apply the shared
+check normalizes loading through shared cancellation policy; the lifetime owner
+cancels the prior request before dispatching the check. Before checking a previously visible location, apply the shared
 failure-aging policy using the reducer's injected date. The checking value keeps
 that aged state through temporary-location fallback. Known blocked decisions
 bypass aging and remain blocked. See
 [ADR 0012](../adr/0012-ios-nearby-location-revalidation.md); platform location delivery
-and scene/process lifetime remain separate qualification work.
+and OS scene/process delivery remain separate qualification work.
+
 Nearby's timer now uses a dedicated ViewModifier and SwiftUI task identity based
 only on background status. Its standard Clock defaults to ContinuousClock; tests
 inject virtual time through the same modifier. Inactive changes preserve cadence;
 background/view removal cancels the loop and returning waits a full interval.
-The original one-shot location task stays separate. Already admitted requests can
-finish while stopped; request/location ownership remains a later slice. See
-[ADR 0016](../adr/0016-ios-nearby-scene-timer-lifetime.md) for that explicit boundary
+The timer stays separate from request ownership. NearbyVehicleMapLifecycle supplies
+all view intents with a dispatch closure backed by one StoreTask owner. Background
+or view removal cancels fleet/location work; return revalidates location with a
+one-result CLLocationUpdate reader before admitting refresh. Inactive changes keep
+work alive. Reuse shared cancellation/freshness and the existing checkingLocation
+content instead of adding payload caches or phase flags. The native task owner has
+a MOB-08 simplification review; see [ADR 0017](../adr/0017-ios-nearby-scene-request-lifetime.md).
+See [ADR 0016](../adr/0016-ios-nearby-scene-timer-lifetime.md) for that explicit boundary
 and the test-only clock product linking requirement.
 
 For native iOS, export sealed states through the generated feature modules and
