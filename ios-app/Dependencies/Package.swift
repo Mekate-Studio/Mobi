@@ -20,11 +20,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/pointfreeco/swift-composable-architecture",
-            exact: "1.26.0",
+            exact: "1.26.2",
         ),
         .package(
             url: "https://github.com/pointfreeco/swift-dependencies",
-            exact: "1.12.0",
+            exact: "1.17.2",
         ),
         .package(url: "https://github.com/pointfreeco/swift-clocks", exact: "1.0.6"),
         .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", exact: "1.3.2"),
