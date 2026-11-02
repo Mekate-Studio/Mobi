@@ -6,6 +6,7 @@ extension HomeFeature {
         case scenePhaseChanged(ScenePhase)
         case task
         case refreshTapped
+        case refreshCancelled
         case refreshResponse(HomeCounterLoadable)
     }
 }

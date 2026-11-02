@@ -367,10 +367,13 @@ through HomeRefreshLifetime, covering cancellation before effect startup as well
 as active work. The button dispatches through that owner. Background cancels it
 and restores one native pre-refresh value; inactive/active changes do not cancel
 or fetch. Loading's integer alone
-cannot restore an earlier error exactly, so the pending value is cleared on both
-completion and background recovery. The retained store's root observes scenePhase
-regardless of the selected tab. See [ADR 0015](../adr/0015-ios-home-background-refresh-lifetime.md)
-for the explicit native state/runtime ownership cost and remaining qualification.
+cannot restore an earlier error exactly, so the pending value is cleared on
+completion or lifetime recovery. HomeRefreshLifecycle observes scenePhase and
+explicit tab selection around the TabView. Leaving Home cancels its owned
+refresh and restores the same exact ready/error value; returning does not fetch.
+See [ADR 0018](../adr/0018-ios-home-tab-refresh-lifetime.md) for tab ownership and
+[ADR 0015](../adr/0015-ios-home-background-refresh-lifetime.md) for exact-state
+recovery, their code costs and qualification limits.
 MOB-08 requires reevaluating the small lifetime adapter on TCA/SwiftUI updates.
 TCA still suppresses sends from cancelled effects; a future independent UI cancel
 operation needs its own reducer transition.

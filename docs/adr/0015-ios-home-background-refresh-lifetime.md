@@ -4,6 +4,9 @@ Status: Accepted via [PR #72](https://github.com/Mekate-Studio/Mobi/pull/72).
 
 ## Decision
 
+[ADR 0018](0018-ios-home-tab-refresh-lifetime.md) supersedes the tab-switch work
+policy below; the background and exact-state recovery decisions remain.
+
 Home cancels an owned refresh when its scene becomes background and restores the
 exact native state from before loading, including zero values and failure reason.
 Inactive and active scene changes leave work alone. Returning does not fetch
