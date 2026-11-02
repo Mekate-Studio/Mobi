@@ -22,6 +22,7 @@ module MobiSwiftExport
 
     def initialize
       @root = File.expand_path('../..', __dir__)
+      abort 'iOS project preflight failed' unless system('/usr/bin/ruby', File.join(@root, 'scripts/ci/check_ios_project.rb'))
       @platform = ENV.fetch('PLATFORM_NAME', 'iphonesimulator')
       @target = { 'iphonesimulator' => 'iosSimulatorArm64', 'iphoneos' => 'iosArm64' }.fetch(@platform)
       abort 'Unknown producer option' unless (ARGV - %w[--strict-support --runtime-assertions]).empty?

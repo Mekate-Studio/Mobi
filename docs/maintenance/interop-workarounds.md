@@ -20,7 +20,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | IOS-07 | Closed generated API, whole-feature module placement and experimental import checker | Supported narrow module/import enforcement; remove unnecessary placement and flag coupling |
 | IOS-08 | Swift 5 coroutine-support module | Strict Swift 6 after the actual generated support graph passes without suppression or fallback |
 | IOS-09 | TCA client `assumeIsolated` assertions and cancellation relay | Compiler-expressed isolation and simpler feature effects; this is also a TCA/design constraint |
-| IOS-10 | Custom exporter, bridge producer and module/profile plumbing | Supported Toolchain/build integration; keep validation, remove replaced custom production machinery |
+| IOS-10 | Custom exporter, bridge producer, module/profile plumbing and Xcode project-integrity preflight | Supported Toolchain/build integration preserving native app/tests and IDE reopen/resync/branch-switch behavior; keep validation, remove replaced custom production machinery |
 | IOS-11 | Explicit macro-validation invocation override | Reliable validation in the scoped environment; keep exact approvals and negative refusal control |
 | IOS-12 | Private JVM temp handling for affected tool inputs | Exact-graph dependency remediation/risk review; temp handling does not fix unrelated vulnerabilities |
 | IOS-13 | Serialized Home/Nearby test suite | Parallel execution after TCA provides per-test executor isolation; preserve overlapping-request regression checks |
@@ -47,6 +47,24 @@ removing an exception. Reports are in `build/logs/swift-export-checks/` and uplo
 when the checks pass.
 The release watch marks these checks `available_in_ci`; it does not pretend to
 have run them or turn a passing probe into retirement authorization.
+
+IOS-10 also includes the read-only
+[project preflight](../../scripts/ci/check_ios_project.rb). It protects the reviewed
+producer/search/link graph and shared test scheme from persisted IDE/project
+rewrites. See [recovery and reproduction evidence](../reference/local-development.md#ios-project-integrity).
+The guard detects drift; it does not make Toolchain-managed framework integration
+a supported Swift-export path or automatically repair project files.
+
+When reviewing Toolchain, its IDE plugin, Xcode or Swift-export updates, run project
+management only in disposable copies. Then qualify actual IDE reopen, resync and
+branch switching with an already-open project, preserving both app and appTests,
+the local clock-test product, explicit test plans, supported generated modules and
+one Kotlin runtime in Debug/Release builds. Record **retained**, **removal-ready**
+or **incomplete**, with the exact tuple, before/after project model, commands and
+native results. Remove replaced custom producer/preflight assumptions only after
+supported integration replaces their contracts and the normal gates pass. Preserve
+ordinary app/test/scheme regression assertions. The live IDE writer remains unattributed in the current evidence; command-line
+management controls alone do not close that interactive check.
 
 ## Changes with a different purpose
 

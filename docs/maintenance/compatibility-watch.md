@@ -161,6 +161,16 @@ producer endpoint override also requires a cold check of the unmodified Maven
 Central route before removal. This is another
 manual adoption-review step, outside the automated iOS retirement report.
 
+Toolchain, its IDE plugin, Xcode and Swift-export update reviews must also assess
+[IOS-10 project integration](interop-workarounds.md): use disposable command-line
+management controls, then actual IDE reopen/resync and branch switching with a
+project left open. Preserve the producer, app/test module linkage and shared test
+plans, qualify Debug/Release native results and one Kotlin runtime, and record
+retained/removal-ready/incomplete with source/tool identities. The preflight can
+be simplified with the custom producer only after supported integration replaces
+both contracts; retain ordinary app/test/scheme assertions. The watch does not reproduce interactive IDE writes or remove
+this protection automatically.
+
 TCA, SwiftUI, Swift and Xcode update reviews must also assess
 [MOB-08](mobile-feature-follow-ups.md#mob-08-home-scene-task-ownership-simplification):
 try supported scene/effect APIs against the actual Home and Nearby timing and

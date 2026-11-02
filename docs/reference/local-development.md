@@ -314,6 +314,65 @@ up automatically. They do not install dependencies or change the caller's index.
 /usr/bin/ruby scripts/dev/test_quality_real.rb
 ```
 
+## iOS project integrity
+
+The checked-in `ios-app/module.xcodeproj` owns Mobi's reviewed Swift-export build
+phase, generated-module search/link settings, native test-product linkage and
+shared `app` scheme. Until Toolchain owns this complete integration, use
+`just ios-open` and the shared `app` scheme for native running/debugging. The
+Toolchain's framework-oriented iOS project management is not a Swift-export
+replacement; do not add its managed integration marker to the custom producer.
+This is part of [IOS-10](../maintenance/interop-workarounds.md).
+
+Run the read-only preflight directly:
+
+```bash
+/usr/bin/ruby scripts/ci/check_ios_project.rb
+```
+
+`just ios-open`, `just doctor`, the iOS CI/build/test entry points and the existing
+Xcode `Validate Kotlin Builder` phase use this check. The producer also checks
+before creating output. It rejects missing producer/preflight wiring, Swift-export
+search paths or libraries, the test-only package product, and the app scheme's
+launch/test-plan wiring. Framework embedding or Toolchain ownership markers also
+refuse. It parses the project and scheme; formatting, comments without an ownership
+marker and personal scheme ordering are allowed. It never edits project files,
+resolves packages, runs a compiler or starts an IDE.
+
+If it reports IOS-10 integration drift:
+
+1. Close Mobi in Android Studio and Xcode before changing branches or restoring
+   project configuration. A still-open IDE may save an earlier project model.
+2. Preserve intended staged, unstaged and untracked work in a named stash or an
+   independently verified backup. For example:
+
+   ```bash
+   git stash push --include-untracked -m "before-ios-project-recovery"
+   git stash list
+   ```
+
+   Keep the stash and its originating branch until reviewed. `git stash apply
+   --index` restores staging too; review historical project settings on their
+   original branch rather than applying them wholesale over current main.
+3. Confirm the intended revision and clean reviewed project configuration. A stash
+   already restores tracked files to that checkout's HEAD. Switch branches normally
+   if needed, then rerun the preflight. Keep unrelated work recoverable.
+4. Open with `just ios-open`, select `app`, rebuild, and repeat the affected native
+   check. If another writer changes the project, stop and preserve its diff before
+   restoring it.
+
+The guard detects persisted drift at these entry points, not a write racing a
+build. A generated project that also removes the guard phase can bypass a bare
+Xcode open; the repository open/build commands remain the explicit check. No
+automatic repair, file locking or permission changes are introduced.
+
+[The management evidence](../maintenance/evidence/2026-10-29-ios-project-management.json)
+records that the observed rewritten project model matched the old candidate
+exactly. In disposable copies, the pinned IDE-management command refused current
+main without rewriting it; a deliberately marked control reset its managed phase.
+That distinguishes a verified writer capability from the untraced live IDE
+interaction. It does not prove which IDE saved the user's stale model.
+
 ## IntelliJ commit checks
 
 IntelliJ IDEA's `Analyze code` commit check runs the IDE inspection profile,

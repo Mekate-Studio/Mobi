@@ -152,10 +152,10 @@ else
   fail "Shared run configs directory missing"
 fi
 
-if [[ -f "${project_root}/ios-app/module.xcodeproj/project.pbxproj" ]]; then
-  pass "iOS Xcode project present"
+if /usr/bin/ruby "${project_root}/scripts/ci/check_ios_project.rb"; then
+  pass "iOS Swift-export project and test scheme intact"
 else
-  fail "iOS Xcode project missing"
+  fail "iOS project integration drift; see the recovery instructions above"
 fi
 
 print_android_devices
