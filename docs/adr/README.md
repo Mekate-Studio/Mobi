@@ -35,6 +35,8 @@ Proposed, without changing the accepted decisions:
 
 - [ADR 0017: iOS Nearby request and location lifetime](0017-ios-nearby-scene-request-lifetime.md)
 
+- [ADR 0018: iOS Home refresh lifetime across tab switches](0018-ios-home-tab-refresh-lifetime.md)
+
 Use a new ADR when a decision changes one of these:
 
 - module boundaries

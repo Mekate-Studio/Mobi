@@ -8,7 +8,7 @@ struct HomeFeature {
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-            case .scenePhaseChanged(.background):
+            case .scenePhaseChanged(.background), .refreshCancelled:
                 if let previousState = state.refreshPreviousState {
                     state.counterLoadable = previousState
                     state.refreshPreviousState = nil

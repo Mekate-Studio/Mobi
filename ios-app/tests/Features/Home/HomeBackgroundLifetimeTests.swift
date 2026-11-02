@@ -188,7 +188,7 @@ extension NativeFeatureTests.HomeFeatureTests {
     }
 }
 
-private final class HomeBackgroundFixture: Sendable {
+final class HomeBackgroundFixture: Sendable {
     static let readyStates: [HomeCounterLoadable] = [
         .initial, .loaded(value: 0), .loaded(value: 8),
         .error(previousValue: nil, reason: .repositoryUnavailable),
@@ -236,7 +236,7 @@ private final class HomeBackgroundFixture: Sendable {
     }
 }
 
-private final class PendingHomeRefresh: Sendable {
+final class PendingHomeRefresh: Sendable {
     let previous: HomeCounterLoadable
     private let completion: Mutex<CheckedContinuation<HomeCounterLoadable, Never>?>
 

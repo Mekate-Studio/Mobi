@@ -17,9 +17,15 @@ struct HomeRefreshLifetime {
     @discardableResult
     mutating func scenePhaseChanged(_ phase: ScenePhase, in store: StoreOf<HomeFeature>) -> StoreTask {
         if phase == .background {
-            refreshTask?.cancel()
-            refreshTask = nil
+            return stop(in: store)
         }
         return store.send(.scenePhaseChanged(phase))
+    }
+
+    @discardableResult
+    mutating func stop(in store: StoreOf<HomeFeature>) -> StoreTask {
+        refreshTask?.cancel()
+        refreshTask = nil
+        return store.send(.refreshCancelled)
     }
 }

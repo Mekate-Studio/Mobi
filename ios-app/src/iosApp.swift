@@ -14,8 +14,6 @@ struct IOSApp: App {
 
 private struct AppRootView: View {
     let appServices: AppServices
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var homeRefreshLifetime = HomeRefreshLifetime()
     @StateObject private var homeStore: StoreOf<HomeFeature>
     @StateObject private var nearbyStore: StoreOf<NearbyVehicleMapFeature>
     @SceneStorage("selectedAppDestination") private var selectedDestination = AppDestination.nearbyMap
@@ -27,29 +25,26 @@ private struct AppRootView: View {
     }
 
     var body: some View {
-        TabView(selection: $selectedDestination) {
-            HomeView(store: homeStore) {
-                homeRefreshLifetime.refresh(in: homeStore)
-            }
-            .tabItem {
-                Label("Native Home", systemImage: "iphone")
-            }
-            .tag(AppDestination.nativeHome)
+        HomeRefreshLifecycle(store: homeStore, isHomeSelected: selectedDestination == .nativeHome) { refresh in
+            TabView(selection: $selectedDestination) {
+                HomeView(store: homeStore) { refresh() }
+                    .tabItem {
+                        Label("Native Home", systemImage: "iphone")
+                    }
+                    .tag(AppDestination.nativeHome)
 
-            NearbyVehicleMapView(store: nearbyStore)
-                .tabItem {
-                    Label("Nearby Map", systemImage: "map")
-                }
-                .tag(AppDestination.nearbyMap)
+                NearbyVehicleMapView(store: nearbyStore)
+                    .tabItem {
+                        Label("Nearby Map", systemImage: "map")
+                    }
+                    .tag(AppDestination.nearbyMap)
 
-            SharedHomeDemoView(makeViewController: appServices.makeSharedHomeViewController)
-                .tabItem {
-                    Label("Shared UI", systemImage: "square.stack.3d.up")
-                }
-                .tag(AppDestination.sharedUI)
-        }
-        .onChange(of: scenePhase, initial: true) { _, phase in
-            homeRefreshLifetime.scenePhaseChanged(phase, in: homeStore)
+                SharedHomeDemoView(makeViewController: appServices.makeSharedHomeViewController)
+                    .tabItem {
+                        Label("Shared UI", systemImage: "square.stack.3d.up")
+                    }
+                    .tag(AppDestination.sharedUI)
+            }
         }
     }
 }

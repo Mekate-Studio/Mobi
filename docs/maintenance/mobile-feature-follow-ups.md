@@ -265,6 +265,15 @@ restoration remain unqualified. Optional Shared Home stays separate. The native
 task owner joins MOB-08; this introduces no Swift-export workaround or dependency
 version change. Runtime code cost is 20 net lines, including one task handle.
 
+MOB-06's Home tab ownership now follows [ADR 0018](../adr/0018-ios-home-tab-refresh-lifetime.md):
+deselection cancels the existing owned task and restores the exact prior native
+state; return preserves it without fetching and permits manual retry. The
+[tab host checks](../../ios-app/tests/Features/Home/HomeTabLifetimeTests.swift)
+exercise the production lifetime wrapper around actual SwiftUI tabs. Android
+Home already has its hidden-work counterpart under ADR 0010. Optional Shared
+Home, actual tab-button interaction and process restoration remain separate.
+This extends MOB-08's native ownership checks, without a new interop workaround.
+
 ## MOB-08: Home scene-task ownership simplification
 
 HomeRefreshLifetime retains the actual StoreTask outside feature state and binds
@@ -276,7 +285,8 @@ The prior-value cache separately preserves exact ready/error state.
 
 On TCA, SwiftUI, Swift or Xcode updates, review the supported effect/scene lifetime
 APIs against the [background regressions](../../ios-app/tests/Features/Home/HomeBackgroundLifetimeTests.swift).
-Try the simpler cancellable-effect route in the actual root without the adapter.
+Try the simpler cancellable-effect route in the actual root without the adapter. Include the Home tab-host regressions for
+deselection/re-entry, retained errors, retry and old results against newer work.
 Require pre-start cancellation, observed client cancellation, duplicate admission,
 inactive/active continuity, exact recovery, retry, and noncooperative old results
 while newer work is pending or complete. If all pass, remove the adapter and its
