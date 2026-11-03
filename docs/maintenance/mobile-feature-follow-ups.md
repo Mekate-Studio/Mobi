@@ -274,6 +274,16 @@ Home already has its hidden-work counterpart under ADR 0010. Optional Shared
 Home, actual tab-button interaction and process restoration remain separate.
 This extends MOB-08's native ownership checks, without a new interop workaround.
 
+Home callback admission extends the same native boundary: a retained UI callback
+must be ignored while Home is hidden/backgrounded or its wrapper is removed.
+HomeRefreshLifecycle keeps one private SwiftUI-managed availability value; the
+existing feature state, previous-state recovery and StoreTask owner are unchanged.
+The [tab-host checks](../../ios-app/tests/Features/Home/HomeTabLifetimeTests.swift)
+exercise captured callbacks rather than replacing them after each render, including
+return without fetching and inactive continuity. Android Home already reads its
+current request-scope handle and ignores stopped callbacks. Optional Shared Home
+remains separate; this is an ordinary native correctness change.
+
 ## MOB-08: Home scene-task ownership simplification
 
 HomeRefreshLifetime retains the actual StoreTask outside feature state and binds
@@ -287,6 +297,10 @@ On TCA, SwiftUI, Swift or Xcode updates, review the supported effect/scene lifet
 APIs against the [background regressions](../../ios-app/tests/Features/Home/HomeBackgroundLifetimeTests.swift).
 Try the simpler cancellable-effect route in the actual root without the adapter. Include the Home tab-host regressions for
 deselection/re-entry, retained errors, retry and old results against newer work.
+Also require old callbacks to observe current admission after hiding, background,
+initial unavailable inputs, removal/re-entry and return. Try removing the wrapper's
+private admission value only when these runtime cases pass with the supported
+replacement; a render-time selection snapshot alone is not qualification.
 Require pre-start cancellation, observed client cancellation, duplicate admission,
 inactive/active continuity, exact recovery, retry, and noncooperative old results
 while newer work is pending or complete. If all pass, remove the adapter and its

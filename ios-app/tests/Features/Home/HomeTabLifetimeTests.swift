@@ -22,7 +22,7 @@ extension NativeFeatureTests.HomeFeatureTests {
         defer { host.close() }
         await host.start()
         let refresh = try #require(host.refresh)
-        let task = refresh()
+        let task = try #require(refresh())
         let pending = try #require(await requests.next())
 
         // when
@@ -56,7 +56,7 @@ extension NativeFeatureTests.HomeFeatureTests {
         defer { host.close() }
         await host.start()
         let refresh = try #require(host.refresh)
-        let oldTask = refresh()
+        let oldTask = try #require(refresh())
         let older = try #require(await requests.next())
         await host.selectHome(false)
         await host.selectHome(true)
@@ -71,7 +71,7 @@ extension NativeFeatureTests.HomeFeatureTests {
 
         // when
         let retryRefresh = try #require(host.refresh)
-        let retry = retryRefresh()
+        let retry = try #require(retryRefresh())
         let newer = try #require(await requests.next())
         #expect(newer.previous == previous)
         if newerComplete {
@@ -108,7 +108,7 @@ extension NativeFeatureTests.HomeFeatureTests {
         defer { host.close() }
         await host.start()
         let refresh = try #require(host.refresh)
-        let task = refresh()
+        let task = try #require(refresh())
         let pending = try #require(await requests.next())
 
         // when
@@ -134,17 +134,18 @@ extension NativeFeatureTests.HomeFeatureTests {
 }
 
 @MainActor
-private final class HomeTabHost {
+final class HomeTabHost {
     let store: StoreOf<HomeFeature>
-    var refresh: (() -> StoreTask)?
-    private var input = HomeTabInput()
+    var refresh: (() -> StoreTask?)?
+    private var input: HomeTabInput
     private let window: UIWindow
     private weak var previousKeyWindow: UIWindow?
     private let rendered = AsyncStream<HomeTabInput>.makeStream()
     private lazy var controller = UIHostingController(rootView: content)
 
-    init(store: StoreOf<HomeFeature>) throws {
+    init(store: StoreOf<HomeFeature>, selected: Bool = true, phase: ScenePhase = .active) throws {
         self.store = store
+        input = HomeTabInput(selected: selected, phase: phase)
         let scene = try #require(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
         window = UIWindow(windowScene: scene)
         previousKeyWindow = scene.windows.first { $0.isKeyWindow }
@@ -177,6 +178,12 @@ private final class HomeTabHost {
         await render()
     }
 
+    func setMounted(_ mounted: Bool) async {
+        guard input.mounted != mounted else { return }
+        input.mounted = mounted
+        await render()
+    }
+
     private func render() async {
         controller.rootView = content
         controller.view.setNeedsLayout()
@@ -200,24 +207,29 @@ private final class HomeTabHost {
 private struct HomeTabInput: Equatable {
     var selected = true
     var phase = ScenePhase.active
+    var mounted = true
 }
 
 private struct HomeTabTestView: View {
     let store: StoreOf<HomeFeature>
     let input: HomeTabInput
-    let onRefresh: (@escaping () -> StoreTask) -> Void
+    let onRefresh: (@escaping () -> StoreTask?) -> Void
     let onRender: (HomeTabInput) -> Void
 
     var body: some View {
-        HomeRefreshLifecycle(store: store, isHomeSelected: input.selected) { refresh in
-            TabView(selection: .constant(input.selected)) {
-                Text(store.counterLoadable.supportingText)
+        Group {
+            if input.mounted {
+                HomeRefreshLifecycle(store: store, isHomeSelected: input.selected) { refresh in
+                    TabView(selection: .constant(input.selected)) {
+                        Text(store.counterLoadable.supportingText)
+                            .tabItem { Text("Home") }
+                            .tag(true)
+                        Text("Other")
+                            .tabItem { Text("Other") }
+                            .tag(false)
+                    }
                     .onAppear { onRefresh(refresh) }
-                    .tabItem { Text("Home") }
-                    .tag(true)
-                Text("Other")
-                    .tabItem { Text("Other") }
-                    .tag(false)
+                }
             }
         }
         .environment(\.scenePhase, input.phase)
