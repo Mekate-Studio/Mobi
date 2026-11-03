@@ -187,7 +187,7 @@ final class HomeTabHost {
     private func render() async {
         controller.rootView = content
         controller.view.setNeedsLayout()
-        controller.view.layoutIfNeeded()
+        // Await SwiftUI's input acknowledgement without forcing synchronous TabView layout.
         for await value in rendered.stream where value == input {
             await Task.megaYield()
             return
