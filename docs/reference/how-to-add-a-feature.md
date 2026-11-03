@@ -371,6 +371,10 @@ cannot restore an earlier error exactly, so the pending value is cleared on
 completion or lifetime recovery. HomeRefreshLifecycle observes scenePhase and
 explicit tab selection around the TabView. Leaving Home cancels its owned
 refresh and restores the same exact ready/error value; returning does not fetch.
+Its UI dispatch also checks one SwiftUI-managed admission value at invocation,
+so an old callback cannot restart work while hidden/backgrounded or removed.
+This value stays in the view wrapper, outside feature state, and shares MOB-08's
+simplification checks. Inactive visible Home remains eligible.
 See [ADR 0018](../adr/0018-ios-home-tab-refresh-lifetime.md) for tab ownership and
 [ADR 0015](../adr/0015-ios-home-background-refresh-lifetime.md) for exact-state
 recovery, their code costs and qualification limits.

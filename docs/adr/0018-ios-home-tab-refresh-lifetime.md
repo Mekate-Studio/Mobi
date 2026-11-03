@@ -1,6 +1,6 @@
 # ADR 0018: iOS Home refresh lifetime across tab switches
 
-Status: Proposed.
+Status: Tab lifetime accepted via [PR #76](https://github.com/Mekate-Studio/Mobi/pull/76); callback-admission extension proposed.
 
 ## Decision
 
@@ -20,8 +20,9 @@ The scene root retains the existing Home store. HomeRefreshLifecycle observes
 the selected-tab input and scene phase around the actual TabView and owns the
 existing HomeRefreshLifetime value. Deselection stops its StoreTask before
 sending the reducer's recovery action. The reducer reuses refreshPreviousState;
-no additional payload cache, lifecycle flag, request registry or shared API is
-introduced. The existing scene owner is moved into this wrapper rather than
+the tab-cancellation slice added no payload cache, lifecycle flag, request
+registry or shared API. The callback-admission extension below describes its
+separate native UI value. The existing scene owner is moved into this wrapper rather than
 kept alongside another owner.
 
 Observing explicit tab selection avoids relying on whether SwiftUI retains a
@@ -35,9 +36,39 @@ host the production lifecycle around real SwiftUI tabs. Its dispatch closure
 uses the same owner as the production Home button. It does not introduce a
 platform-independent lifecycle abstraction or change dependency versions.
 
-The runtime delta is 25 net lines across five files, including the 23-line
+PR #76 added 25 net runtime lines across five files, including the 23-line
 wrapper, one cancellation action and a shared stop operation. The root loses
 its separate owner and scene observer. Existing recovery state is unchanged.
+
+## Callback admission extension
+
+A retained Home UI callback must not start a refresh while Home is deselected,
+its scene is backgrounded, or its containing view has been removed. Returning
+reopens manual admission without fetching. Inactive visible Home remains eligible.
+The boundary is HomeRefreshLifecycle's dispatch closure; shared business policy,
+feature state and the existing StoreTask owner stay unchanged.
+
+The proposed implementation keeps one private SwiftUI-managed admission Boolean,
+initially false, in the existing view wrapper. Its transition uses the combined
+selection/non-background input and closes admission before cancelling work.
+Disappearance closes it too. A captured callback must read the managed value
+when invoked, rather than a selection snapshot from the render that created it.
+This is native UI lifetime state, with no request ID, registry or payload cache.
+See Apple's [State storage contract](https://developer.apple.com/documentation/swiftui/state).
+Actual retained-callback checks, not source resemblance, qualify that behavior.
+
+The baseline at `7369135` and a shorter control that guarded only the render's
+selection/scene inputs both failed the retained-callback-after-tab-exit case.
+The managed-value implementation is qualified through the same host. The runtime
+change is seven net lines in the existing wrapper, including one Boolean. The
+callback returns an optional StoreTask so refusal does not manufacture a task or
+send a reducer action. The earlier exact-state recovery and owner remain intact.
+
+This cost belongs to MOB-08's supported-lifetime simplification review. A supported
+route that reads current availability without this extra value may replace it
+only after the same old-callback, initial-hidden/background, removal, inactive
+continuity and return/retry checks pass. This is an ordinary native correctness
+change; it introduces no Swift-export workaround or dependency version change.
 
 ## Qualification and simplification
 
@@ -55,8 +86,8 @@ checks pass. The prior-value cache has its separate exact-recovery purpose.
 
 These are simulator host checks with driven selection and scene inputs. Actual
 user tab taps, OS scene-event delivery, device/minimum-OS behavior and
-scene/process restoration remain outside that evidence. Programmatic refresh
-callbacks issued after their UI lifetime ends remain a separate admission
-qualification; this change cancels work owned at the selection boundary.
+scene/process restoration remain outside that evidence. Retained UI callbacks
+are qualified at the production dispatch boundary; direct reducer sends bypass
+that UI boundary and remain the caller's responsibility.
 Optional Shared Home stays separate. This is an application lifecycle change,
 not a Swift-export workaround.
