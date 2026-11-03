@@ -1,7 +1,6 @@
 @testable import app
 import MobiIOSDependencies
 import MobiIOSTestDependencies
-import Observation
 import SwiftUI
 import Testing
 import UIKit
@@ -138,7 +137,7 @@ extension NativeFeatureTests.HomeFeatureTests {
 final class HomeTabHost {
     let store: StoreOf<HomeFeature>
     var refresh: (() -> StoreTask?)?
-    private let model: HomeTabModel
+    private var input: HomeTabInput
     private let window: UIWindow
     private weak var previousKeyWindow: UIWindow?
     private let rendered = AsyncStream<HomeTabInput>.makeStream()
@@ -146,7 +145,7 @@ final class HomeTabHost {
 
     init(store: StoreOf<HomeFeature>, selected: Bool = true, phase: ScenePhase = .active) throws {
         self.store = store
-        model = HomeTabModel(input: HomeTabInput(selected: selected, phase: phase))
+        input = HomeTabInput(selected: selected, phase: phase)
         let scene = try #require(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
         window = UIWindow(windowScene: scene)
         previousKeyWindow = scene.windows.first { $0.isKeyWindow }
@@ -155,7 +154,7 @@ final class HomeTabHost {
     private var content: HomeTabTestView {
         HomeTabTestView(
             store: store,
-            model: model,
+            input: input,
             onRefresh: { [weak self] in self?.refresh = $0 },
             onRender: { [rendered] in rendered.continuation.yield($0) },
         )
@@ -168,30 +167,28 @@ final class HomeTabHost {
     }
 
     func selectHome(_ selected: Bool) async {
-        guard model.input.selected != selected else { return }
-        model.input.selected = selected
+        guard input.selected != selected else { return }
+        input.selected = selected
         await render()
     }
 
     func setPhase(_ phase: ScenePhase) async {
-        guard model.input.phase != phase else { return }
-        model.input.phase = phase
+        guard input.phase != phase else { return }
+        input.phase = phase
         await render()
     }
 
     func setMounted(_ mounted: Bool) async {
-        guard model.input.mounted != mounted else { return }
-        model.input.mounted = mounted
+        guard input.mounted != mounted else { return }
+        input.mounted = mounted
         await render()
     }
 
     private func render() async {
-        let expected = model.input
-        Attachment.record("Waiting for \(expected)", named: "Home-render-wait.txt")
-        for await value in rendered.stream where value == expected {
-            Attachment.record("Consumed \(value); awaiting scheduler yields", named: "Home-render-consumed.txt")
-            await Task.megaYield()
-            Attachment.record("Finished \(value)", named: "Home-render-finished.txt")
+        controller.rootView = content
+        controller.view.setNeedsLayout()
+        controller.view.layoutIfNeeded()
+        for await value in rendered.stream where value == input {
             return
         }
         Issue.record("Hosted Home tabs did not consume their input")
@@ -206,16 +203,6 @@ final class HomeTabHost {
     }
 }
 
-@MainActor
-@Observable
-private final class HomeTabModel {
-    var input: HomeTabInput
-
-    init(input: HomeTabInput) {
-        self.input = input
-    }
-}
-
 private struct HomeTabInput: Equatable {
     var selected = true
     var phase = ScenePhase.active
@@ -224,15 +211,15 @@ private struct HomeTabInput: Equatable {
 
 private struct HomeTabTestView: View {
     let store: StoreOf<HomeFeature>
-    @Bindable var model: HomeTabModel
+    let input: HomeTabInput
     let onRefresh: (@escaping () -> StoreTask?) -> Void
     let onRender: (HomeTabInput) -> Void
 
     var body: some View {
         Group {
-            if model.input.mounted {
-                HomeRefreshLifecycle(store: store, isHomeSelected: model.input.selected) { refresh in
-                    TabView(selection: $model.input.selected) {
+            if input.mounted {
+                HomeRefreshLifecycle(store: store, isHomeSelected: input.selected) { refresh in
+                    TabView(selection: .constant(input.selected)) {
                         Text(store.counterLoadable.supportingText)
                             .tabItem { Text("Home") }
                             .tag(true)
@@ -244,7 +231,7 @@ private struct HomeTabTestView: View {
                 }
             }
         }
-        .environment(\.scenePhase, model.input.phase)
-        .onChange(of: model.input, initial: true) { _, value in onRender(value) }
+        .environment(\.scenePhase, input.phase)
+        .onChange(of: input, initial: true) { _, value in onRender(value) }
     }
 }
