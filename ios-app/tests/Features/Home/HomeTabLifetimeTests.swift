@@ -187,8 +187,11 @@ final class HomeTabHost {
 
     private func render() async {
         let expected = model.input
+        Attachment.record("Waiting for \(expected)", named: "Home-render-wait.txt")
         for await value in rendered.stream where value == expected {
+            Attachment.record("Consumed \(value); awaiting scheduler yields", named: "Home-render-consumed.txt")
             await Task.megaYield()
+            Attachment.record("Finished \(value)", named: "Home-render-finished.txt")
             return
         }
         Issue.record("Hosted Home tabs did not consume their input")
