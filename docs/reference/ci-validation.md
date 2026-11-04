@@ -17,7 +17,11 @@ and the changed-path policy lives in
 The pull-request workflow is always triggered. It does not use top-level path
 filters because a skipped required workflow can remain pending in GitHub branch
 protection. Individual jobs use classifier outputs, and the final
-`Pull request gate` fails if any selected job fails or is cancelled.
+[`Pull request gate`](../../scripts/ci/check_pr_gate.sh) requires the classifier
+and every selected job to report `success`. Unselected jobs must report `skipped`.
+Missing selections, missing results and other outcomes (including `abandoned`)
+fail the gate. The policy is exercised through the workflow's actual gate command
+by `ruby scripts/ci/test_pr_gate.rb`, also included in the quality contracts.
 
 Configure branch protection to require only `Pull request gate` after the new
 workflow has completed successfully at least once.
