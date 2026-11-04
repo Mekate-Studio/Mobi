@@ -249,6 +249,7 @@ jobs:
       - ios_build
     runs-on: ubuntu-slim
     steps:
+      - uses: actions/checkout@v7
       - name: Require selected jobs to pass
         env:
           CLASSIFY_RESULT: ${{ needs.classify.result }}
@@ -257,21 +258,9 @@ jobs:
           IOS_TEST_RESULT: ${{ needs.ios_test.result }}
           ANDROID_BUILD_RESULT: ${{ needs.android_build.result }}
           IOS_BUILD_RESULT: ${{ needs.ios_build.result }}
-        run: |
-          results=(
-            "${CLASSIFY_RESULT}"
-            "${QUALITY_RESULT}"
-            "${ANDROID_TEST_RESULT}"
-            "${IOS_TEST_RESULT}"
-            "${ANDROID_BUILD_RESULT}"
-            "${IOS_BUILD_RESULT}"
-          )
-
-          for result in "${results[@]}"; do
-            if [[ "${result}" == "failure" || "${result}" == "cancelled" ]]; then
-              printf 'Selected validation did not pass: %s\n' "${results[*]}" >&2
-              exit 1
-            fi
-          done
-
-          printf 'Selected validation passed: %s\n' "${results[*]}"
+          DOCS_ONLY: ${{ needs.classify.outputs.docs_only }}
+          ANDROID_TESTS: ${{ needs.classify.outputs.android_tests }}
+          IOS_TESTS: ${{ needs.classify.outputs.ios_tests }}
+          ANDROID_BUILD: ${{ needs.classify.outputs.android_build }}
+          IOS_BUILD: ${{ needs.classify.outputs.ios_build }}
+        run: ./scripts/ci/check_pr_gate.sh
