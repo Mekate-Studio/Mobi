@@ -26,19 +26,20 @@ module Maintenance
           raise Failure, 'provider_invalid_response' unless data.is_a?(Array) && !data.empty? && data.size <= 30
           newer = data.filter_map do |release|
             raise Failure, 'provider_invalid_release' unless release.is_a?(Hash) && [true, false].include?(release['draft']) && [true, false].include?(release['prerelease'])
-            next if release['draft'] || release['prerelease']
+            next if release['draft']
             version = release.fetch('tag_name').delete_prefix('v')
-            # Some upstream RC releases are not flagged prerelease by GitHub.
-            next if version.match?(/\A\d+\.\d+\.\d+-[0-9A-Za-z][0-9A-Za-z.-]*\z/)
-            raise Failure, 'provider_unrecognized_stable_tag' unless version.match?(/\A\d+\.\d+\.\d+\z/)
+            raise Failure, 'provider_unrecognized_release_tag' unless version.match?(/\A\d+\.\d+\.\d+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?\z/)
+            # A published prerelease is a review lead, including mislabeled RCs.
+            # This does not select a new compatibility/rehearsal candidate.
+            channel = release['prerelease'] || version.include?('-') ? 'prerelease' : 'stable'
             published = Time.iso8601(release.fetch('published_at'))
             raise Failure, 'provider_future_release' if published > @now
-            next unless Gem::Version.new(version) > Gem::Version.new(pins.fetch(name))
-            { 'version' => version, 'published_at' => published.utc.iso8601,
+            next unless Gem::Version.new(version.downcase) > Gem::Version.new(pins.fetch(name).downcase)
+            { 'version' => version, 'channel' => channel, 'published_at' => published.utc.iso8601,
               'age_state' => @now - published >= config['minimum_release_age_days'] * 86_400 ? 'eligible_for_review' : 'age_blocked',
               'major_change' => version.split('.').first != pins[name].split('.').first }
           end
-          newer.sort_by! { |r| Gem::Version.new(r['version']) }
+          newer.sort_by! { |r| Gem::Version.new(r['version'].downcase) }
           value = { 'state' => 'observed', 'reviewed_version' => pins[name], 'newer' => newer.uniq,
                     'coverage' => 'first_30_release_records_not_full_interval', 'source' => source }
         rescue Failure, JSON::ParserError, KeyError, ArgumentError, NoMethodError, TypeError => error

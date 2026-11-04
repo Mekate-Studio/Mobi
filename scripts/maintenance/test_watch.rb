@@ -100,13 +100,15 @@ module WatchTest
     end
   end
 
-  test('release evidence preserves age blocks major changes source identities and no adoption') do
+  test('stable and prerelease evidence preserves age blocks major changes and source identities') do
     fetcher = Fetcher.new([release, release('98.0.0', age: 2), release('100.0.0').merge('prerelease' => true), release('101.0.0-RC1')])
     result = Maintenance::KotlinReleaseWatch.new(fetcher: fetcher).discover(config)
     assert(result.keys.sort == %w[kotlin metro skie toolchain])
     result.each_value do |provider|
       assert(provider['state'] == 'observed' && provider['source']['sha256'].size == 64)
-      assert(provider['newer'].map { |r| r['age_state'] } == %w[age_blocked eligible_for_review])
+      assert(provider['newer'].map { |r| r['version'] } == %w[98.0.0 99.0.0 100.0.0 101.0.0-RC1])
+      assert(provider['newer'].map { |r| r['channel'] } == %w[stable stable prerelease prerelease])
+      assert(provider['newer'].map { |r| r['age_state'] } == %w[age_blocked eligible_for_review eligible_for_review eligible_for_review])
       assert(provider['newer'].all? { |r| r['major_change'] })
     end
     assert(fetcher.calls.all? { |_url, token| token.nil? })
@@ -114,12 +116,57 @@ module WatchTest
 
   test('rate limits malformed releases missing dates future releases and digest mismatch are incomplete') do
     fetcher = Fetcher.new([]); fetcher.error = 'provider_http_403'
-    [fetcher, Fetcher.new({}), Fetcher.new([release.reject { |key, _| key == 'published_at' }]), Fetcher.new([release(age: -1)])].each do |provider|
+    [fetcher, Fetcher.new({}), Fetcher.new([release.reject { |key, _| key == 'published_at' }]), Fetcher.new([release(age: -1)]),
+     Fetcher.new([release('99.0.0-Beta2').reject { |key, _| key == 'published_at' }]),
+     Fetcher.new([release('99.0.0-RC1', age: -1)]), Fetcher.new([release('next').merge('prerelease' => true)]),
+     Fetcher.new([release('99.0.0-Beta2..3')])].each do |provider|
       result = Maintenance::KotlinReleaseWatch.new(fetcher: provider).discover(config)
       assert(result.values.all? { |r| r['state'] == 'incomplete' && r['reason'] })
     end
     fetcher = Fetcher.new([release]); fetcher.bad_hash = true
     assert(Maintenance::KotlinReleaseWatch.new(fetcher: fetcher).discover(config).values.all? { |r| r['reason'] == 'provider_evidence_mismatch' })
+  end
+
+  test('release ordering retains all newer prerelease channels and excludes drafts and older previews') do
+    versions = %w[2.5.0-beta10 2.5.0-Beta2 2.5.0-Alpha1 2.5.0-RC1 2.5.0 2.5.1-dev-123 2.5.1-EAP1 2.4.20-RC2]
+    fetcher = Fetcher.new(versions.map { |version| release(version) } + [release('2.6.0-Beta1').merge('draft' => true)])
+    result = Maintenance::KotlinReleaseWatch.new(fetcher: fetcher, now: NOW).discover(config, direct: true)
+    assert(result.keys.sort == %w[kotlin metro toolchain])
+    newer = result.fetch('kotlin').fetch('newer')
+    assert(newer.map { |r| r['version'] } == %w[2.5.0-Alpha1 2.5.0-Beta2 2.5.0-beta10 2.5.0-RC1 2.5.0 2.5.1-dev-123 2.5.1-EAP1])
+    assert(newer.reject { |r| r['version'] == '2.5.0' }.all? { |r| r['channel'] == 'prerelease' })
+    assert(newer.find { |r| r['version'] == '2.5.0' }['channel'] == 'stable')
+  end
+
+  test('prerelease artifacts expose experimental review and aging without repeated notifications or adoption') do
+    fixture do |root|
+      fetcher = Fetcher.new([release('2.5.0-Beta2', age: 2).merge('prerelease' => true)])
+      watcher = Maintenance::CompatibilityWatch.new(root, now: NOW, fetcher: fetcher, probe: ->(_source) { probe })
+      first = watcher.run
+      row = first.dig('snapshot', 'observation', 'releases', 'kotlin', 'newer').first
+      assert(row['version'] == '2.5.0-Beta2' && row['channel'] == 'prerelease' && row['age_state'] == 'age_blocked')
+      assert(File.read(File.join(watcher.output, 'summary.md')).include?('2.5.0-Beta2 (experimental prerelease, age_blocked)'))
+      assert(first.dig('snapshot', 'observation', 'workarounds', 'IOS-08', 'recheck_state') == 'review_required')
+      previous = File.join(watcher.output, 'snapshot.json')
+      repeated = Maintenance::CompatibilityWatch.new(root, now: NOW, previous: previous, fetcher: fetcher, probe: ->(_source) { probe })
+      assert(!repeated.run.dig('notification', 'notify'))
+      aged = Maintenance::CompatibilityWatch.new(root, now: NOW + 6 * 86_400, previous: previous, fetcher: fetcher, probe: ->(_source) { probe })
+      result = aged.run
+      assert(result.dig('notification', 'notify'))
+      assert(result.dig('snapshot', 'observation', 'workarounds', 'IOS-08', 'release_leads', 'kotlin') == ['2.5.0-Beta2'])
+      assert(result['adoption_authorized'] == false)
+      assert(result.dig('snapshot', 'observation', 'workarounds', 'IOS-08', 'retirement_authorized') == false)
+      assert(JSON.parse(File.read(File.join(root, 'maintenance-compatibility.json')))['candidate'] == config['candidate'])
+      fetcher.data << release('2.5.0-Beta3', age: 0).merge('prerelease' => true)
+      next_watch = Maintenance::CompatibilityWatch.new(root, now: NOW + 6 * 86_400,
+                                                    previous: File.join(aged.output, 'snapshot.json'), fetcher: fetcher, probe: ->(_source) { probe })
+      changed = next_watch.run
+      assert(changed.dig('notification', 'notify'))
+      assert(changed.dig('notification', 'changes').any? { |change| change['kind'] == 'release_evidence_changed' })
+      repeated = Maintenance::CompatibilityWatch.new(root, now: NOW + 6 * 86_400,
+                                                   previous: File.join(next_watch.output, 'snapshot.json'), fetcher: fetcher, probe: ->(_source) { probe })
+      assert(!repeated.run.dig('notification', 'notify'))
+    end
   end
 
   test('optional public-provider authentication stays out of reports') do
