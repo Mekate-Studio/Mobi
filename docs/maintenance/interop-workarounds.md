@@ -18,7 +18,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | IOS-05 | Nearby state IDs, owner UUIDs and adopt/release calls | Qualify retained actor-owned state; delete the state dictionary and manual ownership protocol |
 | IOS-06 | Custom polling/completion/listener and drain transport | Qualified async ownership; remove redundant transport while preserving unfinished-work accounting |
 | IOS-07 | Closed generated API, whole-feature module placement and experimental import checker | Supported narrow module/import enforcement; remove unnecessary placement and flag coupling |
-| IOS-08 | Swift 5 coroutine-support module | Strict Swift 6 after the actual generated support graph passes without suppression or fallback |
+| IOS-08 | Swift 5 coroutine-support module | Strict Swift 6 after the actual generated support graph passes without suppression or fallback; [2026-11-04 recheck: retained](evidence/2026-11-04-ios08-strict-support.md) |
 | IOS-09 | TCA client `assumeIsolated` assertions and cancellation relay | Compiler-expressed isolation and simpler feature effects; this is also a TCA/design constraint |
 | IOS-10 | Custom exporter, bridge producer, module/profile plumbing and Xcode project-integrity preflight | Supported Toolchain/build integration preserving native app/tests and IDE reopen/resync/branch-switch behavior; keep validation, remove replaced custom production machinery |
 | IOS-11 | Explicit macro-validation invocation override | Reliable validation in the scoped environment; keep exact approvals and negative refusal control |
@@ -186,6 +186,18 @@ before updating expected output. A refreshed golden file is not a behavior check
   [KT-80971](https://youtrack.jetbrains.com/issue/KT-80971) work. Those links are
   investigation leads; this review has not verified an exact matching issue/fix
   for Mobi's SwiftJob inheritance or KotlinError sendability findings.
+
+### IOS-08 source and compilation recheck recorded 2026-11-04
+
+The [focused recheck](evidence/2026-11-04-ios08-strict-support.md) retains IOS-08:
+the actual Kotlin 2.4.20 support graph fails strict Swift 6 compilation on Xcode
+27.1, while the unchanged producer builds all eight Debug modules. The matching
+upstream [KT-90266](https://youtrack.jetbrains.com/issue/KT-90266) is In Progress
+with no available version recorded. Its ownership/sendability diagnostics now
+provide a specific removal lead beyond the fixed coroutine milestones. The
+official sample has moved to 2.5.0-Beta2; its new integration does not qualify
+this exception's removal or Mobi's Toolchain path. The evidence records the exact
+tuple, source revisions, separate module controls and required removal gates.
 
 For every subsequent review, record the review date, source URLs and immutable
 commits/content digests, selected Kotlin/Toolchain/coroutines/Swift/Xcode versions,
