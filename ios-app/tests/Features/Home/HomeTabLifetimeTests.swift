@@ -189,7 +189,6 @@ final class HomeTabHost {
         controller.view.setNeedsLayout()
         controller.view.layoutIfNeeded()
         for await value in rendered.stream where value == input {
-            await Task.megaYield()
             return
         }
         Issue.record("Hosted Home tabs did not consume their input")

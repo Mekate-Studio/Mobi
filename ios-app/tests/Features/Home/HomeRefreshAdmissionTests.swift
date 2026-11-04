@@ -21,13 +21,16 @@ extension NativeFeatureTests.HomeFeatureTests {
 
         // when
         let ignored: StoreTask? = retainedRefresh()
-        await Task.megaYield()
 
         // then
         #expect(ignored == nil)
         #expect(store.counterLoadable == previous)
         #expect(probe.requestCount == 0)
         // Complete a baseline's incorrectly admitted client instead of hanging.
+        if ignored != nil {
+            var requests = probe.requests.stream.makeAsyncIterator()
+            _ = await requests.next()
+        }
         probe.finish()
         await ignored?.finish()
     }
@@ -49,7 +52,6 @@ extension NativeFeatureTests.HomeFeatureTests {
         // when
         await host.setPhase(.background)
         let ignored = retainedRefresh()
-        await Task.megaYield()
 
         // then
         #expect(ignored == nil)
@@ -91,7 +93,6 @@ extension NativeFeatureTests.HomeFeatureTests {
 
         // when
         let ignored = retainedRefresh()
-        await Task.megaYield()
 
         // then
         #expect(ignored == nil)
@@ -126,7 +127,6 @@ extension NativeFeatureTests.HomeFeatureTests {
         // when
         await host.setMounted(false)
         let ignored = removedRefresh()
-        await Task.megaYield()
 
         // then
         #expect(ignored == nil)
