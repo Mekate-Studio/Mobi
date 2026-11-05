@@ -117,9 +117,13 @@ module Maintenance
                '', 'This is a bounded observation; adoption is not authorized and bridge retirement remains deferred.', '',
                '| Capability | Result |', '| --- | --- |']
       observation.fetch('matrix').sort.each { |key, value| lines << '| `' + key + '` | `' + value + '` |' }
-      lines += ['', '| Release provider | Status | Newer stable releases observed |', '| --- | --- | --- |']
+      lines += ['', 'Prereleases are experimental review leads; they do not change the reviewed candidate or run its retirement checks.',
+                '', '| Release provider | Status | Newer releases observed |', '| --- | --- | --- |']
       observation.fetch('releases').sort.each do |name, provider|
-        versions = provider.fetch('newer', []).map { |r| r['version'] + ' (' + r['age_state'] + ')' }.join(', ')
+        versions = provider.fetch('newer', []).map do |release|
+          channel = release.fetch('channel', 'stable') == 'prerelease' ? 'experimental prerelease' : 'stable'
+          release['version'] + ' (' + channel + ', ' + release['age_state'] + ')'
+        end.join(', ')
         finding = provider['state'] == 'observed' ? (versions.empty? ? 'None observed in this bounded response' : versions) : 'Unknown: provider evidence is incomplete'
         lines << '| ' + name + ' | `' + provider['state'] + '` | ' + finding + ' |'
       end

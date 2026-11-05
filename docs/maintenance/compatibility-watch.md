@@ -35,18 +35,35 @@ index unchanged while a probe runs; all transformations happen in owned copies.
 ## Evidence and meaning
 
 The Kotlin adapter queries the first 30 GitHub release records for Toolchain,
-Kotlin, Metro and SKIE. It excludes drafts, GitHub prereleases and semantic
-prerelease tags, including RC tags incorrectly marked stable upstream. Unknown
-tag formats, absent timestamps, future dates, rate limits, malformed responses
+Kotlin and Metro; the historical bridge path also queries SKIE. It includes newer
+stable and prerelease versions, including Alpha, Beta, RC, EAP and dev tags.
+Drafts are excluded. Either GitHub's prerelease flag or a version suffix marks
+the release as an **experimental prerelease** review lead, including RC tags
+incorrectly marked stable upstream. Unknown tag formats, absent timestamps,
+future dates, rate limits, malformed responses
 and network failures yield explicit incomplete provider evidence. Each available
 response has its URL, UTC retrieval time, content digest and HTTPS client digest.
 The system HTTPS client verifies certificates; credentials used for hosted history and releases
 are supplied through standard input, never command arguments. The pinned Ruby
 runtime does not have an OpenSSL extension.
 
-Newer stable versions are classified against the reviewed tuple and configurable
-seven-day age policy. Major changes and versions still too young are visible.
-An eligible release is only a review lead. This bounded page is **not a complete
+Newer versions are compared against the reviewed tuple, with numeric preview
+ordering (Beta2 precedes Beta10) and case-insensitive labels. The configurable
+seven-day age policy applies to both channels. New prereleases are visible
+immediately with `age_blocked`; when eligible, they request rechecks of affected
+workarounds. Major changes remain visible. A changed version, channel or age state
+can notify; the same semantic observation stays quiet.
+
+Discovery changes neither the reviewed candidate nor the stable-only selection
+policy for normal rehearsal/adoption. Prerelease review requires the same official
+source review and actual-code qualification before any separate adoption decision.
+The watch's native probe still exercises the reviewed tuple; it does not build
+discovered versions or run their retirement checks automatically.
+
+An eligible release is only a review lead. The
+[GitHub releases API](https://docs.github.com/en/rest/releases/releases#list-releases)
+does not include tags without a release; Maven-only/nightly builds, sample changes,
+documentation and YouTrack changes are not polled. This bounded page is **not a complete
 release interval, dependency graph, vulnerability audit or semantic migration
 assessment**. The watch does not refresh OS release policy or direct-integration
 documentation; those require the separate support and compatibility assessments.
