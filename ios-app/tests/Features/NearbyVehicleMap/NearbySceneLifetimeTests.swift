@@ -261,6 +261,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         let probe = NearbySceneProbe()
         defer { probe.finish() }
         var locations = probe.locations.stream.makeAsyncIterator()
+        var cancellations = probe.locationCancellationEvents.stream.makeAsyncIterator()
         let previous = Factory.loadedState()
         let store = probe.store(previous)
         let host = try NearbySceneHost(store: store, phase: .background)
@@ -273,23 +274,26 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         #expect(probe.locationCount == 1)
         #expect(probe.locationCancellations.withLock { $0 } == 0)
         await host.setPhase(.background)
+        try #require(await cancellations.next() != nil)
         #expect(probe.locationCancellations.withLock { $0 } == 1)
         await host.setPhase(.active)
         let second = try #require(await locations.next())
-        first.complete(.blocked(.accessDenied))
-        await Task.megaYield()
+        // Late-result ordering is covered separately by awaiting the old StoreTask.
         #expect(!store.canRequestRefresh)
         #expect(store.mapContent == previous.mapContent)
+        first.complete(.blocked(.accessDenied))
         second.complete(.temporarilyUnavailable)
-        await Task.megaYield()
+        await host.waitUntil { store.canRequestRefresh }
         #expect(store.canRequestRefresh)
+        #expect(store.mapContent == previous.mapContent)
         await host.setVisible(false)
+        await host.waitUntil { !store.canRequestRefresh }
         #expect(!store.canRequestRefresh)
         await host.setVisible(true)
         let third = try #require(await locations.next())
         #expect(probe.locationCount == 3)
         third.complete(.blocked(.approximateOnly))
-        await Task.megaYield()
+        await host.waitUntil { store.mapContent == .waitingForRider }
         #expect(!store.canRequestRefresh)
         #expect(store.mapContent == .waitingForRider)
         await host.stop()
@@ -308,7 +312,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         await host.start()
         let location = try #require(await locations.next())
         location.complete(.temporarilyUnavailable)
-        await Task.megaYield()
+        await host.waitUntil { store.canRequestRefresh }
         let send = try #require(host.send)
         send(.refreshTapped)
         let refresh = try #require(await refreshes.next())
@@ -321,7 +325,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         let returned = try #require(await locations.next())
         #expect(!store.canRequestRefresh)
         returned.complete(.temporarilyUnavailable)
-        await Task.megaYield()
+        await host.waitUntil { store.canRequestRefresh }
         #expect(snapshotMatches(store.sharedState, Factory.loadedSharedState()))
         #expect(store.canRequestRefresh)
         await host.stop()

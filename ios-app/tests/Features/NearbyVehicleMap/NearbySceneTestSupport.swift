@@ -3,6 +3,7 @@ import Foundation
 import MobiIOSDependencies
 import MobiIOSTestDependencies
 @preconcurrency import MobiNearby
+import Observation
 import SwiftUI
 import Synchronization
 import Testing
@@ -118,11 +119,13 @@ final class NearbySceneHost {
     }
 
     func setPhase(_ phase: ScenePhase) async {
+        guard self.phase != phase else { return }
         self.phase = phase
         await render()
     }
 
     func setVisible(_ visible: Bool) async {
+        guard self.visible != visible else { return }
         self.visible = visible
         await render()
     }
@@ -142,6 +145,13 @@ final class NearbySceneHost {
         controller.view.layoutIfNeeded()
     }
 
+    func waitUntil(_ predicate: @escaping @MainActor @Sendable () -> Bool) async {
+        for await satisfied in Observations(predicate) where satisfied {
+            return
+        }
+        Issue.record("Hosted Nearby state observation ended before its condition")
+    }
+
     func close() {
         visible = false
         updateRoot()
@@ -153,7 +163,8 @@ final class NearbySceneHost {
     }
 
     func stop() async {
-        close(); await Task.megaYield()
+        await setVisible(false)
+        close()
     }
 }
 

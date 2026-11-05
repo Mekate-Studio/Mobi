@@ -161,6 +161,7 @@ private final class NearbyTimerHost {
     private let onTick: @MainActor () -> Void
     private let window: UIWindow
     private weak var previousKeyWindow: UIWindow?
+    private let rendered = AsyncStream<NearbyTimerInput>.makeStream()
     private lazy var controller = UIHostingController(rootView: content)
 
     init(phase: ScenePhase = .active, onTick: @escaping @MainActor () -> Void = {}) throws {
@@ -172,34 +173,47 @@ private final class NearbyTimerHost {
     }
 
     private var content: NearbyTimerTestView {
-        NearbyTimerTestView(phase: phase, visible: visible, ticks: ticks, clock: clock) { [weak self] in
-            guard let self else { return }
-            ticks += 1
-            onTick()
-            render()
-        }
+        NearbyTimerTestView(
+            input: NearbyTimerInput(phase: phase, visible: visible, ticks: ticks),
+            clock: clock,
+            onTick: { [weak self] in
+                guard let self else { return }
+                ticks += 1
+                onTick()
+                updateRoot()
+            },
+            onRender: { [rendered] in rendered.continuation.yield($0) },
+        )
     }
 
     func start() async {
         window.rootViewController = controller
         window.makeKeyAndVisible()
-        render()
-        await Task.megaYield()
+        await render()
     }
 
     func setPhase(_ phase: ScenePhase) async {
+        guard self.phase != phase else { return }
         self.phase = phase
-        render()
-        await Task.megaYield()
+        await render()
     }
 
     func setVisible(_ visible: Bool) async {
+        guard self.visible != visible else { return }
         self.visible = visible
-        render()
-        await Task.megaYield()
+        await render()
     }
 
-    private func render() {
+    private func render() async {
+        let expected = NearbyTimerInput(phase: phase, visible: visible, ticks: ticks)
+        updateRoot()
+        for await input in rendered.stream where input == expected {
+            return
+        }
+        Issue.record("Hosted Nearby timer did not consume its scene/visibility input")
+    }
+
+    private func updateRoot() {
         controller.rootView = content
         controller.view.setNeedsLayout()
         controller.view.layoutIfNeeded()
@@ -207,32 +221,39 @@ private final class NearbyTimerHost {
 
     func close() {
         visible = false
-        render()
+        updateRoot()
+        rendered.continuation.finish()
         window.isHidden = true
         window.rootViewController = nil
         previousKeyWindow?.makeKeyAndVisible()
     }
 
     func stop() async {
+        await setVisible(false)
         close()
-        await Task.megaYield()
     }
 }
 
-private struct NearbyTimerTestView: View {
+private struct NearbyTimerInput: Equatable {
     let phase: ScenePhase
     let visible: Bool
     let ticks: Int
+}
+
+private struct NearbyTimerTestView: View {
+    let input: NearbyTimerInput
     let clock: TestClock<Duration>
     let onTick: @MainActor () -> Void
+    let onRender: (NearbyTimerInput) -> Void
 
     var body: some View {
         Group {
-            if visible {
-                Text("Ticks: \(ticks)")
+            if input.visible {
+                Text("Ticks: \(input.ticks)")
                     .modifier(NearbyRefreshTimer(clock: clock, onTick: onTick))
             }
         }
-        .environment(\.scenePhase, phase)
+        .environment(\.scenePhase, input.phase)
+        .onChange(of: input, initial: true) { _, input in onRender(input) }
     }
 }
