@@ -39,7 +39,7 @@ extension NearbyVehicleMapFeature {
 
         mutating func beginLocationResolution() {
             guard hasResolvedRiderLocation, let sharedState else { return }
-            content = .checkingLocation(cancelledRefreshState(sharedState))
+            content = .checkingLocation(sharedState.cancelledRefreshState())
         }
 
         mutating func applyRefreshResult(_ result: State) {

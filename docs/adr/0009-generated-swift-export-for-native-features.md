@@ -5,7 +5,10 @@ The qualification bounds below still apply.
 
 ## Decision
 
-Native Home and Nearby consume Kotlin 2.4.20 Swift export together. Kotlin
+Native Home and Nearby consume Kotlin 2.5.0-Beta2 Swift export together. The
+initial integration in #44 selected 2.4.20; the
+[Beta2/IOS-15 update](../maintenance/evidence/2026-11-05-beta2-ios15.md) records
+the current development tuple, required Metro 1.5.0 companion and code cost. Kotlin
 Toolchain 0.13.0 compiles and resolves the KLib graph. Xcode's existing app and
 test targets call `scripts/ios/build_swift_export.rb` to generate Swift APIs,
 compile the Kotlin bridges into one static archive and compile the Swift modules.
@@ -43,9 +46,11 @@ exported as a second public feature API or loaded as a second Kotlin runtime.
   the typed Kotlin repository exception needed by the existing characterization.
   Production error interpretation is unchanged. Remove this restriction when a
   native stub round-trip preserves the tested failure and cancellation meanings.
-- **IOS-15:** test-only state constructors compensate for internal generated
-  nested case aliases. Remove those factories when ordinary nested constructors
-  compile publicly. Do not patch generated code or depend on mangled class names.
+- **IOS-15 removed:** Beta2 exposes public nested case aliases. Native tests now
+  construct those cases directly; the Kotlin constructor helper and runner
+  registration are deleted. The normal iOS gate requires public constructors
+  and preserves existing equality, cancellation, failure/retry and lifetime checks.
+  Generated source remains unmodified and consumers use ordinary nested names.
 
 Debug delivery includes the Kotlin test-support KLib in the same archive; the
 hosted test bundle links only its Swift test-support module. Release excludes the

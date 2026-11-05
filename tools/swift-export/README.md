@@ -1,6 +1,6 @@
 # Swift-export producer
 
-This JVM build tool invokes the Kotlin 2.4.20 standalone exporter. It generates
+This JVM build tool invokes the Kotlin 2.5.0-Beta2 standalone exporter. It generates
 Swift sources, Kotlin/C bridges and a module graph from compiled KLibs. It does
 not compile the generated bridges, link a second Kotlin runtime or copy the app.
 The maintained Xcode app calls `scripts/ios/build_swift_export.rb`, which compiles
@@ -29,15 +29,16 @@ succeed without analysis-worker exceptions. No generated source is patched.
 **IOS-12:** the launcher gives its JVMs private temporary storage. This preserves
 the existing control; it does not resolve upstream dependency vulnerabilities.
 
-Review the [official implementation documentation](https://github.com/JetBrains/kotlin/tree/v2.4.20/docs/swift-export)
+Review the [official implementation documentation](https://github.com/JetBrains/kotlin/tree/v2.5.0-Beta2/docs/swift-export)
 and [current Swift-export guide](https://kotlinlang.org/docs/native-swift-export.html)
-on updates. Alpha API changes require recompiling this tool and qualifying the
+on updates. Experimental API changes require recompiling this tool and qualifying the
 actual app before changing delivery or retiring any workaround.
 
 The normal `ios-test` job also runs `scripts/ios/check_swift_export.rb` against
 those modules. Six complete generated switches must compile, and six omitted
 case controls must fail with exhaustive-switch diagnostics. The same command
-reports public nested-constructor availability and strict generated-support
+requires public nested constructors after IOS-15's native-test helper removal,
+and reports strict generated-support
 compilation as retirement candidates or blockers; it never removes workarounds.
 Its report and diagnostics live under `build/logs/swift-export-checks/` for the
 existing CI artifact upload.

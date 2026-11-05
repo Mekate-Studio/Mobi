@@ -223,7 +223,7 @@
       "id": "IOS-10",
       "scope": "default",
       "title": "Custom Swift-export producer and profile plumbing",
-      "reason": "The maintained producer supplies standalone generation, exact Toolchain task-record inputs, native bridge compilation and Swift module ordering. Its explicit IntelliJ coroutines runtime supplies classes missing from the selected exporter POM runtime graph.",
+      "reason": "The maintained producer supplies standalone generation, exact Toolchain task-record inputs, native bridge compilation and Swift module ordering. Its explicit IntelliJ coroutines runtime addressed missing analysis-worker classes on the original exporter graph; it remains pending a separate generation check without that dependency on the selected Beta2 graph.",
       "paths": [
         "scripts/maintenance/lib/swift_export/produce.rb",
         "scripts/maintenance/lib/swift_export/assemble.rb",
@@ -319,7 +319,7 @@
       "id": "IOS-14",
       "scope": "default",
       "title": "Kotlin-owned live-client repository fixtures",
-      "reason": "The generated reverse async bridge wraps Swift NSError failures in SwiftException, so Kotlin test sources construct the original typed failures and cancellation directly. Production error policy is unchanged; Release excludes test fixtures.",
+      "reason": "The original 2.4.20 reverse async bridge wrapped Swift NSError failures in SwiftException, so Kotlin test sources construct typed failures and cancellation directly. These fixtures remain pending a separate Beta2 reverse-error round-trip; their original limitation is not assumed fixed or reproduced by the constructor check. Production error policy is unchanged; Release excludes test fixtures.",
       "paths": [
         "shared-ios-app/test@ios/IosInteropTestServices.kt",
         "ios-app/tests/Features/Home/HomeFeatureTests.swift",
@@ -343,8 +343,8 @@
     {
       "id": "IOS-15",
       "scope": "default",
-      "title": "Test constructors for internal generated nested aliases",
-      "reason": "Kotlin 2.4.20 generates internal nested sealed-case aliases. Test-only Kotlin constructors avoid mangled Swift names and generated-source patches.",
+      "title": "Test constructors replaced by public generated nested cases",
+      "reason": "The Beta2 app update removes the former Kotlin constructor helper and runner registration. Existing native tests now use public generated nested cases; the normal iOS gate requires their visibility. The retained paths identify the removed mechanism and its consumers; see docs/maintenance/evidence/2026-11-05-beta2-ios15.md for qualification and remaining scope.",
       "paths": [
         "shared-ios-app/test@ios/IosInteropTestStates.kt",
         "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift",

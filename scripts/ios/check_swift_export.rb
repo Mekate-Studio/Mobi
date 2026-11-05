@@ -136,10 +136,9 @@ Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
     }
   SWIFT
   good, diagnostic = compile.call('nested-constructors', constructor_source)
-  unless good || diagnostic.include?("inaccessible due to 'internal' protection level")
-    abort "Unexpected constructor probe failure:\n#{diagnostic}"
-  end
-  report['nested_constructors'] = good ? 'retirement_candidate' : 'blocked_by_internal_aliases'
+  # IOS-15: the native tests now use these constructors; visibility is required.
+  abort "Public generated constructors regressed:\n#{diagnostic}" unless good
+  report['nested_constructors'] = 'passed'
   puts '[swift-export] IOS-15: ' + report.fetch('nested_constructors')
 
   report['strict_support'] = %w[KotlinRuntimeSupport KotlinCoroutineSupport].to_h do |name|

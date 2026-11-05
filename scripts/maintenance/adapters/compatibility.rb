@@ -37,9 +37,14 @@ module Maintenance
       end
       releases = @config.fetch('candidate').fetch('releases')
       raise Failure, 'Incomplete compatibility tuple' unless releases.keys.sort == %w[kotlin metro skie]
-      thresholds = []
+      thresholds = []; experimental_tuple = false
       releases.each_value do |release|
-        raise Failure, 'Unsupported release version' unless release.fetch('version').match?(/\A\d+\.\d+\.\d+\z/)
+        version = release.fetch('version')
+        preview = version.match?(/\A\d+\.\d+\.\d+-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*\z/)
+        # A reviewed tuple may explicitly select a preview; discovery cannot.
+        supported = version.match?(/\A\d+\.\d+\.\d+\z/) || (preview && release['review_channel'] == 'experimental')
+        raise Failure, 'Unsupported release version' unless supported
+        experimental_tuple ||= preview
         raise Failure, 'Candidate lacks captured release evidence' unless sources.any? { |s| s['id'] == release.fetch('source_id') }
         published = Time.iso8601(release.fetch('published_at'))
         raise Failure, 'Compatibility release publication is in the future' if published > now
@@ -51,7 +56,7 @@ module Maintenance
       eligible_at = thresholds.max
       blocked = now < eligible_at
       raise Failure, 'Compatibility candidate is age-blocked' if blocked && !experimental
-      @selection = { 'mode' => experimental ? 'experimental' : 'normal', 'age_state' => blocked ? 'age_blocked' : 'age_eligible',
+      @selection = { 'mode' => experimental || experimental_tuple ? 'experimental' : 'normal', 'age_state' => blocked ? 'age_blocked' : 'age_eligible',
                      'assessed_at' => now.iso8601, 'eligible_at' => eligible_at.iso8601, 'adoption_authorized' => false }
       unless @config.fetch('direct_paths').keys.sort == %w[skie swift-export] && @config['direct_paths'].values.all? { |p| p['status'] == 'missing' && p['reason'].is_a?(String) && !p.fetch('sources').empty? && (p['sources'] - sources.map { |s| s['id'] }).empty? }
         raise Failure, 'Unsupported direct prerequisite assessment; review the adapter before enabling a new path'
@@ -69,7 +74,7 @@ module Maintenance
                  'missing_capabilities' => UNPROVEN, 'bridge_retirement' => 'defer', 'adoption_authorized' => false }
       source.verify!
       unless source.files.key?(CATALOG)
-        result['historical_retained_candidate'] = result['candidate']
+        result['unselected_historical_releases'] = config['candidate']['releases'].slice('skie')
         result['candidate'] = { 'releases' => config['candidate']['releases'].reject { |key, _| key == 'skie' } }
         result['baseline_scope'] = 'adopted_direct_development_tests_unsigned'
       end
@@ -85,7 +90,7 @@ module Maintenance
       else
         paths = source.files.keys.select { |p| p.end_with?('/module.yaml') }
         declarations = paths.flat_map { |p| File.read(File.join(source.root, p)).scan(/dev\.zacsweers\.metro:(?:runtime|compiler):([^\s]+)/).flatten }
-        raise Failure, 'Direct Metro baseline differs from reviewed tuple' unless !declarations.empty? && declarations.uniq == [config.fetch('baseline').fetch('metro')]
+        raise Failure, 'Direct Metro baseline differs from reviewed tuple' unless !declarations.empty? && declarations.uniq == [config.fetch('candidate').fetch('releases').fetch('metro').fetch('version')]
         raise Failure, 'Unexpected retained bridge on direct source' if File.exist?(File.join(source.root, 'gradle-bridge'))
       end
       version = File.read(File.join(source.root, 'kotlin'))[/^kotlin_cli_version=(.+)$/, 1]

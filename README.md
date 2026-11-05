@@ -29,7 +29,11 @@ architecture itself and the documentation around it.
 
 ## Clean-Clone Quickstart
 
-The reviewed baseline is Kotlin Toolchain 0.13.0. iOS development requires an
+The reviewed build tool is Kotlin Toolchain 0.13.0. The development graph explicitly
+selects Kotlin **2.5.0-Beta2** and Metro **1.5.0**, with a matching standalone
+Swift exporter. This is a reviewed experimental tuple; release/signing gates
+remain separate. See the [Beta2 integration and IOS-15 removal](docs/maintenance/evidence/2026-11-05-beta2-ios15.md).
+iOS development requires an
 Apple Silicon Mac; shared Kotlin targets `iosArm64` devices and
 `iosSimulatorArm64` simulators. Intel iOS simulators are outside Mobi's support
 policy. App minimums are iOS 26.0 and Android 16/API 36; Android compile SDK is API 37; target SDK
