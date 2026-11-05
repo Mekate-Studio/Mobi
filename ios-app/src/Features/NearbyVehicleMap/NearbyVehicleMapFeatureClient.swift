@@ -59,7 +59,7 @@ extension NearbyVehicleMapFeatureClient {
                         nowMillis: nowMillis,
                     )
                 } catch is CancellationError {
-                    return cancelledRefreshState(currentState)
+                    return currentState.cancelledRefreshState()
                 } catch {
                     return service.failedState(
                         currentState: currentState,

@@ -125,7 +125,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
 
         // then
         let request = try #require(await pending.next())
-        #expect(request.riderLocationState == IosInteropTestStates.shared.riderAvailable(
+        #expect(request.riderLocationState == RiderLocationState.Available(
             location: RiderLocation(latitude: 56, longitude: 13),
         ))
         let resolved = try #require(store.sharedState)

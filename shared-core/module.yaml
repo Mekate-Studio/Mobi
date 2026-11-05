@@ -3,7 +3,7 @@ product:
   platforms: [android, iosArm64, iosSimulatorArm64]
 
 dependencies:
-  - dev.zacsweers.metro:runtime:1.4.5
+  - dev.zacsweers.metro:runtime:1.5.0
   - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0
 
 test-dependencies:
@@ -11,6 +11,7 @@ test-dependencies:
 
 settings:
   kotlin:
+    version: 2.5.0-Beta2
     compilerPlugins:
       - id: dev.zacsweers.metro.compiler
-        dependency: dev.zacsweers.metro:compiler:1.4.5
+        dependency: dev.zacsweers.metro:compiler:1.5.0

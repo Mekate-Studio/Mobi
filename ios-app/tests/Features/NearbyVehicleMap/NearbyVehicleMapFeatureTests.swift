@@ -291,11 +291,11 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         #expect(state.canRequestRefresh)
         let retriedState = await client.refresh(client.loadingState(failedState), 11001)
         #expect(
-            retriedState.snapshotState == IosInteropTestStates.shared.snapshotLoaded(
+            retriedState.snapshotState == NearbyVehicleSnapshotState.Loaded(
                 snapshot: NearbyVehicleMapFeatureTestFactory.snapshot(),
             ),
         )
-        #expect(retriedState.mapOverlayState == IosInteropTestStates.shared.overlayNone)
+        #expect(retriedState.mapOverlayState == NearbyVehicleMapOverlayState.None.shared)
     }
 
     @MainActor
@@ -644,14 +644,14 @@ enum NearbyVehicleMapFeatureTestFactory {
         NearbyVehicleMapFeatureClient(
             initialState: {
                 makeSharedState(
-                    riderLocationState: IosInteropTestStates.shared.riderResolving,
-                    snapshotState: IosInteropTestStates.shared.snapshotInitial,
-                    overlayState: IosInteropTestStates.shared.overlayNone,
+                    riderLocationState: RiderLocationState.Resolving.shared,
+                    snapshotState: NearbyVehicleSnapshotState.Initial.shared,
+                    overlayState: NearbyVehicleMapOverlayState.None.shared,
                 )
             },
             preciseLocationResolvedState: { currentState, latitude, longitude in
                 makeSharedState(
-                    riderLocationState: IosInteropTestStates.shared.riderAvailable(
+                    riderLocationState: RiderLocationState.Available(
                         location: RiderLocation(latitude: latitude, longitude: longitude),
                     ),
                     snapshotState: currentState.snapshotState,
@@ -663,8 +663,7 @@ enum NearbyVehicleMapFeatureTestFactory {
             },
             locationTemporarilyUnavailableState: { currentState in
                 makeSharedState(
-                    riderLocationState: IosInteropTestStates.shared
-                        .riderTemporarilyUnavailable(location: riderLocation()),
+                    riderLocationState: RiderLocationState.TemporarilyUnavailable(location: riderLocation()),
                     snapshotState: currentState.snapshotState,
                     overlayState: currentState.mapOverlayState,
                 )
@@ -674,10 +673,10 @@ enum NearbyVehicleMapFeatureTestFactory {
                 return makeSharedState(
                     riderLocationState: currentState.riderLocationState,
                     snapshotState: snapshot
-                        .map { IosInteropTestStates.shared.snapshotRefreshing(snapshot: $0) } ??
-                        IosInteropTestStates.shared.snapshotLoading,
-                    overlayState: snapshot == nil ? IosInteropTestStates.shared.overlayNone : IosInteropTestStates
-                        .shared.overlayRefreshing,
+                        .map { NearbyVehicleSnapshotState.Refreshing(snapshot: $0) } ??
+                        NearbyVehicleSnapshotState.Loading.shared,
+                    overlayState: snapshot == nil ? NearbyVehicleMapOverlayState.None
+                        .shared : NearbyVehicleMapOverlayState.RefreshingIndicator.shared,
                 )
             },
             refresh: { currentState, _ in
@@ -697,9 +696,9 @@ enum NearbyVehicleMapFeatureTestFactory {
         var state = NearbyVehicleMapFeature.State()
         state.apply(
             sharedState: makeSharedState(
-                riderLocationState: IosInteropTestStates.shared.riderResolving,
-                snapshotState: IosInteropTestStates.shared.snapshotInitial,
-                overlayState: IosInteropTestStates.shared.overlayNone,
+                riderLocationState: RiderLocationState.Resolving.shared,
+                snapshotState: NearbyVehicleSnapshotState.Initial.shared,
+                overlayState: NearbyVehicleMapOverlayState.None.shared,
             ),
         )
         return state
@@ -709,9 +708,9 @@ enum NearbyVehicleMapFeatureTestFactory {
         var state = NearbyVehicleMapFeature.State()
         state.apply(
             sharedState: makeSharedState(
-                riderLocationState: IosInteropTestStates.shared.riderAvailable(location: riderLocation()),
-                snapshotState: IosInteropTestStates.shared.snapshotInitial,
-                overlayState: IosInteropTestStates.shared.overlayNone,
+                riderLocationState: RiderLocationState.Available(location: riderLocation()),
+                snapshotState: NearbyVehicleSnapshotState.Initial.shared,
+                overlayState: NearbyVehicleMapOverlayState.None.shared,
             ),
         )
         return state
@@ -721,9 +720,9 @@ enum NearbyVehicleMapFeatureTestFactory {
         var state = NearbyVehicleMapFeature.State()
         state.apply(
             sharedState: makeSharedState(
-                riderLocationState: IosInteropTestStates.shared.riderAvailable(location: riderLocation()),
-                snapshotState: IosInteropTestStates.shared.snapshotLoading,
-                overlayState: IosInteropTestStates.shared.overlayNone,
+                riderLocationState: RiderLocationState.Available(location: riderLocation()),
+                snapshotState: NearbyVehicleSnapshotState.Loading.shared,
+                overlayState: NearbyVehicleMapOverlayState.None.shared,
             ),
         )
         return state
@@ -733,9 +732,9 @@ enum NearbyVehicleMapFeatureTestFactory {
         var state = NearbyVehicleMapFeature.State()
         state.apply(
             sharedState: makeSharedState(
-                riderLocationState: IosInteropTestStates.shared.riderAvailable(location: riderLocation()),
-                snapshotState: IosInteropTestStates.shared.snapshotRefreshing(snapshot: snapshot()),
-                overlayState: IosInteropTestStates.shared.overlayRefreshing,
+                riderLocationState: RiderLocationState.Available(location: riderLocation()),
+                snapshotState: NearbyVehicleSnapshotState.Refreshing(snapshot: snapshot()),
+                overlayState: NearbyVehicleMapOverlayState.RefreshingIndicator.shared,
             ),
         )
         return state
@@ -763,10 +762,9 @@ enum NearbyVehicleMapFeatureTestFactory {
         var state = NearbyVehicleMapFeature.State()
         state.apply(
             sharedState: makeSharedState(
-                riderLocationState: IosInteropTestStates.shared
-                    .riderTemporarilyUnavailable(location: riderLocation()),
-                snapshotState: IosInteropTestStates.shared.snapshotLoaded(snapshot: snapshot()),
-                overlayState: IosInteropTestStates.shared.overlayNone,
+                riderLocationState: RiderLocationState.TemporarilyUnavailable(location: riderLocation()),
+                snapshotState: NearbyVehicleSnapshotState.Loaded(snapshot: snapshot()),
+                overlayState: NearbyVehicleMapOverlayState.None.shared,
             ),
         )
         return state
@@ -777,12 +775,12 @@ enum NearbyVehicleMapFeatureTestFactory {
         vehicles: [NearbyVehicle]? = nil,
     ) -> NearbyVehicleMapFeatureState {
         makeSharedState(
-            riderLocationState: IosInteropTestStates.shared.riderAvailable(location: riderLocation()),
-            snapshotState: IosInteropTestStates.shared.snapshotLoaded(snapshot: snapshot(
+            riderLocationState: RiderLocationState.Available(location: riderLocation()),
+            snapshotState: NearbyVehicleSnapshotState.Loaded(snapshot: snapshot(
                 sequence: sequence,
                 vehicles: vehicles,
             )),
-            overlayState: IosInteropTestStates.shared.overlayNone,
+            overlayState: NearbyVehicleMapOverlayState.None.shared,
         )
     }
 
@@ -794,12 +792,12 @@ enum NearbyVehicleMapFeatureTestFactory {
         makeSharedState(
             riderLocationState:
             reason == .accessDenied
-                ? IosInteropTestStates.shared.riderDenied
-                : IosInteropTestStates.shared.riderBlocked(reason: reason.sharedReason),
-            snapshotState: IosInteropTestStates.shared.snapshotFailedWithout(
+                ? RiderLocationState.Denied.shared
+                : RiderLocationState.Blocked(reason: reason.sharedReason),
+            snapshotState: NearbyVehicleSnapshotState.FailedWithoutSnapshot(
                 reason: NearbyVehicleMapFailureReason.RiderLocationUnavailable,
             ),
-            overlayState: IosInteropTestStates.shared.overlayBlocking,
+            overlayState: NearbyVehicleMapOverlayState.BlockingFailure.shared,
         )
     }
 

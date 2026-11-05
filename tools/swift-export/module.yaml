@@ -7,11 +7,12 @@ repositories:
 
 dependencies:
   - com.intellij.platform:kotlinx-coroutines-core-jvm:1.8.0-intellij-13: runtime-only
-  - org.jetbrains.kotlin:swift-export-embeddable:2.4.20
-  - org.jetbrains.kotlin:kotlin-native-utils:2.4.20
-  - org.jetbrains.kotlin:kotlin-compiler-embeddable:2.4.20
+  - org.jetbrains.kotlin:swift-export-embeddable:2.5.0-Beta2
+  - org.jetbrains.kotlin:kotlin-native-utils:2.5.0-Beta2
+  - org.jetbrains.kotlin:kotlin-compiler-embeddable:2.5.0-Beta2
 
 settings:
   kotlin:
+    version: 2.5.0-Beta2
     optIns:
       - org.jetbrains.kotlin.analysis.api.KaExperimentalApi

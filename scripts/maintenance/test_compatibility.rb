@@ -25,6 +25,13 @@ module CompatibilityTest
       unless File.exist?(File.join(root, 'gradle/libs.versions.toml'))
         FileUtils.mkdir_p(File.join(root, 'gradle'))
         FileUtils.cp(File.join(ROOT, 'scripts/maintenance/fixtures/historical-bridge/catalog.toml.template'), File.join(root, 'gradle/libs.versions.toml'))
+        # These transform-only fixtures retain the historical bridge baseline;
+        # the real direct source follows its separately reviewed candidate.
+        metro = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG))).fetch('baseline').fetch('metro')
+        Dir.glob(File.join(root, '*/module.yaml')).each do |path|
+          content = File.read(path).gsub(/(dev\.zacsweers\.metro:(?:runtime|compiler):)[^\s]+/) { Regexp.last_match(1) + metro }
+          File.write(path, content)
+        end
         FileUtils.mkdir_p(File.join(root, 'gradle-bridge'))
         File.write(File.join(root, 'gradle-bridge/gradlew'), "#!/bin/sh\nexit 97 # nonfunctional historical contract sentinel\n")
         File.chmod(0o755, File.join(root, 'gradle-bridge/gradlew'))
@@ -163,6 +170,26 @@ end
       reject(/explicit boolean/) { Maintenance::Compatibility.new(root, experimental: 'true') }
       config(root) { |c| c['candidate']['releases']['skie']['published_at'] = (now + 60).iso8601 }
       reject(/publication is in the future/) { Maintenance::Compatibility.new(root, now: now, experimental: true) }
+    end
+  end
+
+  test('a reviewed prerelease tuple stays experimental and cannot silently waive age or adoption') do
+    fixture do |root|
+      config(root) do |c|
+        c['candidate']['releases']['kotlin']['version'] = '2.5.0-Beta2'
+        c['candidate']['releases']['kotlin']['review_channel'] = 'experimental'
+      end
+      adapter = Maintenance::Compatibility.new(root)
+      assert(adapter.selection['mode'] == 'experimental' && !adapter.selection['adoption_authorized'])
+      config(root) { |c| c['candidate']['releases']['kotlin'].delete('review_channel') }
+      reject(/Unsupported release version/) { Maintenance::Compatibility.new(root, experimental: true) }
+      now = Time.now.utc
+      config(root) do |c|
+        c['candidate']['releases']['kotlin']['review_channel'] = 'experimental'
+        c['candidate']['releases']['kotlin']['published_at'] = now.iso8601
+      end
+      reject(/age-blocked/) { Maintenance::Compatibility.new(root, now: now) }
+      assert(Maintenance::Compatibility.new(root, now: now, experimental: true).selection['age_state'] == 'age_blocked')
     end
   end
 

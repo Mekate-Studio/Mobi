@@ -25,7 +25,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | IOS-12 | Private JVM temp handling for affected tool inputs | Exact-graph dependency remediation/risk review; temp handling does not fix unrelated vulnerabilities |
 | IOS-13 | Serialized Home/Nearby test suite | Parallel execution after TCA provides per-test executor isolation; preserve overlapping-request regression checks |
 | IOS-14 | Kotlin-owned live-client repository fixtures | Recheck native error round-trips; preserve typed Kotlin failure meaning and cancellation coverage |
-| IOS-15 | Test-only Kotlin constructors for internal generated nested aliases | Public generated case constructors; delete the helper constructors without mangled aliases |
+| IOS-15 | Former test-only Kotlin constructors, removed with Beta2 | [Public generated constructors in the actual native tests](evidence/2026-11-05-beta2-ios15.md); compiler visibility is now required by the iOS gate |
 
 “Facade” is a pattern name, not a defect category. The request/wire facades above
 compensate for integration limitations or candidate representation choices.
@@ -35,8 +35,8 @@ compiler checking, package locks and macro approvals are not removal targets
 merely because a temporary bridge uses them.
 
 The normal iOS test job checks the actual generated modules. It verifies complete
-switches and omitted-case rejection, then reports strict generated-support and
-nested-constructor availability. IOS-02 also checks the real native Home value,
+switches and omitted-case rejection, requires public nested constructors after
+IOS-15's removal, and reports strict generated-support availability. IOS-02 also checks the real native Home value,
 generated service/raw-state Sendable captures and a Home actor-owned async call.
 These partial isolation checks emit SIL so ownership diagnostics run; type checking
 alone can miss an unsafe async transfer. An actor annotation by itself does not
@@ -198,6 +198,18 @@ provide a specific removal lead beyond the fixed coroutine milestones. The
 official sample has moved to 2.5.0-Beta2; its new integration does not qualify
 this exception's removal or Mobi's Toolchain path. The evidence records the exact
 tuple, source revisions, separate module controls and required removal gates.
+
+### IOS-15 removal with the reviewed Beta2 tuple — 2026-11-05
+
+The [actual app update](evidence/2026-11-05-beta2-ios15.md) replaces the 43-line
+Kotlin constructor helper with ordinary public generated constructors in the
+existing Swift tests. The same compile contract refuses the retained 2.4.20
+modules and passes on Beta2. It is now a required regression check. The update
+uses Toolchain's supported compiler setting and Metro's minimum supported 1.5.0
+companion, with the configuration and maintenance-review cost visible in that
+record. Other interop mechanisms remain separately tracked; constructor
+availability does not qualify their removal. Native results are recorded in the
+app PR. Automatic inventory reports still do not authorize retirement.
 
 For every subsequent review, record the review date, source URLs and immutable
 commits/content digests, selected Kotlin/Toolchain/coroutines/Swift/Xcode versions,

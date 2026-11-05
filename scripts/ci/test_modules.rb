@@ -7,7 +7,6 @@ module HostTests
   # ios-test. This is not support for running arbitrary Kotlin/Native test roots.
   IOS_CLIENT_FIXTURES = %w[
     shared-ios-app/test@ios/IosInteropTestServices.kt
-    shared-ios-app/test@ios/IosInteropTestStates.kt
   ].freeze
 
   def self.modules(paths: nil)

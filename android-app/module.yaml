@@ -9,7 +9,7 @@ dependencies:
   - androidx.activity:activity-compose:1.13.0
   - androidx.lifecycle:lifecycle-runtime-compose:2.9.4
   - com.slack.circuit:circuit-foundation:0.34.0
-  - dev.zacsweers.metro:runtime:1.4.5
+  - dev.zacsweers.metro:runtime:1.5.0
   - org.maplibre.gl:android-sdk:13.3.0
 
 test-dependencies:
@@ -26,9 +26,10 @@ settings:
         # Robolectric loads native Android runtime code in host tests.
         - --enable-native-access=ALL-UNNAMED
   kotlin:
+    version: 2.5.0-Beta2
     compilerPlugins:
       - id: dev.zacsweers.metro.compiler
-        dependency: dev.zacsweers.metro:compiler:1.4.5
+        dependency: dev.zacsweers.metro:compiler:1.5.0
   android:
     namespace: studio.mekate.mobi
     applicationId: studio.mekate.mobi

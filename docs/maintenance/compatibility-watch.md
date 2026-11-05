@@ -54,9 +54,14 @@ immediately with `age_blocked`; when eligible, they request rechecks of affected
 workarounds. Major changes remain visible. A changed version, channel or age state
 can notify; the same semantic observation stays quiet.
 
-Discovery changes neither the reviewed candidate nor the stable-only selection
-policy for normal rehearsal/adoption. Prerelease review requires the same official
-source review and actual-code qualification before any separate adoption decision.
+Discovery does not change the reviewed candidate. A separately reviewed tuple may
+explicitly select a prerelease with `review_channel: experimental` on that release;
+the compatibility adapter then reports experimental selection. A CLI age waiver
+alone cannot select a prerelease. The seven-day age gate, captured source evidence
+and `adoption_authorized: false` remain enforced. The ordinary release/adoption
+policy remains stable-only. The current
+[Beta2 tuple](evidence/2026-11-05-beta2-ios15.md) uses this explicit review path.
+Prerelease review requires official source review and actual-code qualification.
 The watch's native probe still exercises the reviewed tuple; it does not build
 discovered versions or run their retirement checks automatically.
 
