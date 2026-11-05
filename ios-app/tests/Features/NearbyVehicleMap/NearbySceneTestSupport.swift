@@ -16,6 +16,7 @@ final class NearbySceneProbe: Sendable {
     let locations = AsyncStream<NearbyPending<NearbyVehicleMapFeature.LocationResolutionResult?>>.makeStream()
     let refreshes = AsyncStream<NearbyPending<NearbyVehicleMapFeatureState>>.makeStream()
     let locationCancellations = Mutex(0)
+    let locationCancellationEvents = AsyncStream<Void>.makeStream()
     let refreshCancellations = Mutex(0)
     private let pendingLocations = Mutex<[NearbyPending<LocationResult?>]>([])
     private let pendingRefreshes = Mutex<[NearbyPending<NearbyVehicleMapFeatureState>]>([])
@@ -49,7 +50,10 @@ final class NearbySceneProbe: Sendable {
                         self.pendingLocations.withLock { $0.append(request) }
                         self.locations.continuation.yield(request)
                     }
-                } onCancel: { self.locationCancellations.withLock { $0 += 1 } }
+                } onCancel: {
+                    self.locationCancellations.withLock { $0 += 1 }
+                    self.locationCancellationEvents.continuation.yield(())
+                }
             }
             $0.date.now = Date(timeIntervalSince1970: 11)
         }
@@ -59,6 +63,7 @@ final class NearbySceneProbe: Sendable {
         pendingLocations.withLock { $0 }.forEach { $0.complete(nil) }
         pendingRefreshes.withLock { $0 }.forEach { $0.complete(Factory.loadedSharedState()) }
         locations.continuation.finish()
+        locationCancellationEvents.continuation.finish()
         refreshes.continuation.finish()
     }
 }
