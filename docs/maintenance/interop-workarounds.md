@@ -26,6 +26,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | IOS-13 | Serialized Home/Nearby test suite | Parallel execution after TCA provides per-test executor isolation; preserve overlapping-request regression checks |
 | IOS-14 | Kotlin-owned live-client repository fixtures | Recheck native error round-trips; preserve typed Kotlin failure meaning and cancellation coverage |
 | IOS-15 | Former test-only Kotlin constructors, removed with Beta2 | [Public generated constructors in the actual native tests](evidence/2026-11-05-beta2-ios15.md); compiler visibility is now required by the iOS gate |
+| IOS-16 | Explicit closure for native test observation on hosted Swift 6.3.3 | Recheck direct function conversion on Swift/Xcode updates; optimized actual test-module compilation and lifecycle tests must pass on all supported compilers. [Failure evidence and warning follow-ups](compiler-warning-follow-ups.md). |
 
 “Facade” is a pattern name, not a defect category. The request/wire facades above
 compensate for integration limitations or candidate representation choices.

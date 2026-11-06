@@ -146,7 +146,8 @@ final class NearbySceneHost {
     }
 
     func waitUntil(_ predicate: @escaping @MainActor @Sendable () -> Bool) async {
-        for await satisfied in Observations(predicate) where satisfied {
+        // IOS-16: recheck direct function conversion when hosted Swift is updated.
+        for await satisfied in Observations({ predicate() }) where satisfied {
             return
         }
         Issue.record("Hosted Nearby state observation ended before its condition")

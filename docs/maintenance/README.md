@@ -1,5 +1,10 @@
 # Quality and dependency maintenance
 
+The [compiler warning follow-ups](compiler-warning-follow-ups.md) record the
+open native/generated/Android warning backlog from the Beta2 integration, with
+ownership and closure checks. Warning cleanup follows the integration/CI repair
+as focused changes; the separate IOS-16 compiler failure remains tracked there.
+
 Current baseline: [approved direct iOS development/test/unsigned integration](direct-default-integration.md)
 is merged through PR #35. A separately authorized [physical bridge removal](bridge-removal.md)
 is in progress. Signed delivery remains held and risk acceptance retains its original expiry.

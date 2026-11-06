@@ -365,6 +365,26 @@
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",
       "probe_report": "build/logs/swift-export-checks/report.json"
+    },
+    {
+      "id": "IOS-16",
+      "scope": "default",
+      "title": "Explicit closure for native test observation",
+      "reason": "Hosted Xcode 26.6 / Swift 6.3.3 crashes during IR generation for the test helper's direct Observations(predicate) function conversion, before any tests run. Local Xcode 27.1 / Swift 6.4 compiles that form. The helper uses an explicit closure while retaining native observation and MainActor ownership; this is a Swift compiler compatibility measure, not a Kotlin export limitation. See docs/maintenance/compiler-warning-follow-ups.md for the exact hosted evidence and qualification status.",
+      "paths": [
+        "ios-app/tests/Features/NearbyVehicleMap/NearbySceneTestSupport.swift"
+      ],
+      "recheck_on": [
+        "swift",
+        "xcode"
+      ],
+      "replacement": "Requalify direct Observations(predicate) in the actual test module when the supported hosted and local Swift compilers change; remove this compatibility note and registry exception when all supported compilers accept it.",
+      "retirement_checks": [
+        "Compile the actual appTests module with the direct function form under its existing optimized settings on every supported compiler; typecheck alone does not exercise the failing IR generation.",
+        "Run the unchanged hosted Nearby lifecycle and timer tests with their existing assertions and one-minute limits; do not replace observation with scheduler drains.",
+        "Record exact Swift/Xcode versions, normal versus direct-form outcomes and the upstream issue/fix if verified. No exact upstream issue attribution is currently verified."
+      ],
+      "probe_state": "not_automated"
     }
   ]
 }
