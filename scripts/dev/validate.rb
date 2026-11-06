@@ -47,7 +47,7 @@ module Precommit
 
   class Runner
     # Native tool locations/settings only. No signing/provider credentials or CI identity.
-    ENV_KEYS = %w[PATH HOME USER LOGNAME LANG LC_ALL TMPDIR JAVA_HOME ANDROID_HOME ANDROID_SDK_ROOT DEVELOPER_DIR IOS_SIMULATOR_DESTINATION].freeze
+    ENV_KEYS = %w[PATH HOME USER LOGNAME LANG LC_ALL TMPDIR JAVA_HOME ANDROID_HOME ANDROID_SDK_ROOT DEVELOPER_DIR IOS_SIMULATOR_DESTINATION KOTLIN_DEFAULT_MAVEN_CENTRAL_URL].freeze
 
     def initialize(plan, job_timeout: 2700, cleanup_timeout: 5, shutdown_timeout: 30)
       @plan = plan.data

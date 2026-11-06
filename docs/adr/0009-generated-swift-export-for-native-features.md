@@ -28,8 +28,10 @@ exported as a second public feature API or loaded as a second Kotlin runtime.
 ## Costs and review decisions
 
 - **IOS-10:** the standalone exporter API and the Toolchain task-record reader
-  are custom build integration. A normal JVM tool module owns exporter dependencies;
-  its explicit IntelliJ coroutines runtime prevents analysis-worker exceptions.
+  are custom build integration. A normal JVM tool module owns exporter dependencies.
+  Its extra IntelliJ coroutines runtime and repository were removed after the
+  [Beta2 generation recheck](../maintenance/evidence/2026-11-06-ios10-exporter-runtime.md);
+  the selected compiler graph supplies the runtime needed by this app's exporter.
   Delete replaced machinery when supported Toolchain integration passes the same
   app, cold-build and delivery checks. Keep delegated Android bootstrap.
 - **IOS-07/08:** generated implementation-only imports need the compiler's
