@@ -250,13 +250,14 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
             NearbyVehicleMapFeatureTestFactory.loadedState(),
             NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState(),
         ],
-        [NearbyVehicleMapFailureReason.Unexpected, .RepositoryUnavailable],
+        [NearbySnapshotFailureScenario.unexpected, .repositoryUnavailable],
     )
     func shouldPreserveNearbyFailureMeaningAndAllowRetry(
         previousState: NearbyVehicleMapFeature.State,
-        reason: NearbyVehicleMapFailureReason,
+        failure: NearbySnapshotFailureScenario,
     ) async throws {
         // given
+        let reason = failure.reason
         let service = reason == .Unexpected
             ? IosInteropTestServices.shared.uncaughtFailureNearbyService()
             : IosInteropTestServices.shared.repositoryUnavailableNearbyService()
@@ -325,13 +326,14 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
             NearbyVehicleMapFeatureTestFactory.readyState(),
             NearbyVehicleMapFeatureTestFactory.loadedState(),
         ],
-        [NearbyVehicleMapFailureReason.RepositoryUnavailable, .Unexpected],
+        [NearbySnapshotFailureScenario.repositoryUnavailable, .unexpected],
     )
     func shouldExplainSnapshotFailuresWithoutBlamingPreciseLocation(
         previousState: NearbyVehicleMapFeature.State,
-        reason: NearbyVehicleMapFailureReason,
+        failure: NearbySnapshotFailureScenario,
     ) async throws {
         // given
+        let reason = failure.reason
         let service = reason == .RepositoryUnavailable
             ? IosInteropTestServices.shared.repositoryUnavailableNearbyService()
             : IosInteropTestServices.shared.uncaughtFailureNearbyService()
@@ -620,6 +622,19 @@ private extension NearbyVehicleMapFeature.LocationBlockedReason {
             .ApproximateOnly
         case .temporarilyUnavailable:
             .TemporarilyUnavailable
+        }
+    }
+}
+
+/// Swift Testing transports native inputs; Kotlin values are created only on the test actor.
+enum NearbySnapshotFailureScenario: Sendable {
+    case repositoryUnavailable, unexpected
+
+    @MainActor
+    var reason: NearbyVehicleMapFailureReason {
+        switch self {
+        case .repositoryUnavailable: .RepositoryUnavailable
+        case .unexpected: .Unexpected
         }
     }
 }

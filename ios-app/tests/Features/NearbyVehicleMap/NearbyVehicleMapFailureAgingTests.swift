@@ -9,12 +9,13 @@ import Testing
 extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     @MainActor
     @Test("should age retained failures at the shared stale-window boundary", arguments: [Int64(31000), 31001], [
-        NearbyVehicleMapFailureReason.RepositoryUnavailable, .Unexpected,
+        NearbySnapshotFailureScenario.repositoryUnavailable, .unexpected,
     ])
     func shouldAgeRetainedFailureOnReturn(
         nowMillis: Int64,
-        reason: NearbyVehicleMapFailureReason,
+        failure: NearbySnapshotFailureScenario,
     ) async throws {
+        let reason = failure.reason
         for (degraded, suspended) in [(false, false), (true, false), (false, true), (true, true)] {
             // given: the snapshot was loaded at 1000; failure initially remains inside the stale window.
             let service = IosInteropTestServices.shared.uncaughtFailureNearbyService()
@@ -97,10 +98,11 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
 
     @MainActor
     @Test("should leave healthy and snapshot-absent states under existing shared policy", arguments: [
-        NearbyVehicleMapFailureReason.RepositoryUnavailable, .Unexpected,
+        NearbySnapshotFailureScenario.repositoryUnavailable, .unexpected,
     ])
-    func shouldKeepHealthyAndSnapshotAbsentStatesUnchanged(reason: NearbyVehicleMapFailureReason) async throws {
+    func shouldKeepHealthyAndSnapshotAbsentStatesUnchanged(failure: NearbySnapshotFailureScenario) async throws {
         // given
+        let reason = failure.reason
         let service = IosInteropTestServices.shared.uncaughtFailureNearbyService()
         let client = NearbyVehicleMapFeatureClient(service: service)
         let loaded = Factory.loadedState()
@@ -126,9 +128,10 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
 
     @MainActor
     @Test("should allow manual retry after retained failure expires", arguments: [
-        NearbyVehicleMapFailureReason.RepositoryUnavailable, .Unexpected,
+        NearbySnapshotFailureScenario.repositoryUnavailable, .unexpected,
     ])
-    func shouldRetryExpiredRetainedFailure(reason: NearbyVehicleMapFailureReason) async throws {
+    func shouldRetryExpiredRetainedFailure(failure: NearbySnapshotFailureScenario) async throws {
+        let reason = failure.reason
         try await confirmation("One manual retry uses the current injected date", expectedCount: 1) { requested in
             // given
             let service = IosInteropTestServices.shared.uncaughtFailureNearbyService()
