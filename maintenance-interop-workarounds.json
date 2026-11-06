@@ -318,8 +318,8 @@
     {
       "id": "IOS-14",
       "scope": "default",
-      "title": "Kotlin-owned live-client repository fixtures",
-      "reason": "The original 2.4.20 reverse async bridge wrapped Swift NSError failures in SwiftException, so Kotlin test sources construct typed failures and cancellation directly. These fixtures remain pending a separate Beta2 reverse-error round-trip; their original limitation is not assumed fixed or reproduced by the constructor check. Production error policy is unchanged; Release excludes test fixtures.",
+      "title": "Typed repository-failure fixtures and Kotlin-origin bridge controls",
+      "reason": "Home success and ordinary unexpected-error repositories are now Swift doubles qualified through the actual Kotlin service and native client. The typed repository-unavailable fixture remains: CounterRepositoryException is not reachable in the current private/transitive MobiCore export, and exposing it through a test typealias adds a ninth KotlinStdlib Swift module rejected by the reviewed graph guard. That expanded graph is unqualified. Nearby's domain fixture remains separate. Kotlin-origin delayed work, cancellation and uncaught-error controls intentionally qualify the forward bridge; native doubles do not replace their purpose. Release excludes all test fixtures. See docs/maintenance/evidence/2026-11-06-ios14-home-repositories.md.",
       "paths": [
         "shared-ios-app/test@ios/IosInteropTestServices.kt",
         "ios-app/tests/Features/Home/HomeFeatureTests.swift",
@@ -328,14 +328,16 @@
       ],
       "recheck_on": [
         "kotlin",
+        "toolchain",
         "coroutines",
         "swift",
         "xcode"
       ],
-      "replacement": "Use native repository doubles again if the selected bridge preserves the failure identity required by the client characterization, or retain Kotlin fixtures as an explicit test-design choice.",
+      "replacement": "Use Swift repository doubles for outcomes expressible by the reviewed export graph. Requalify Swift-created typed domain failures after an explicit exception/export-surface review; preserve Kotlin-origin controls that independently test the forward bridge.",
       "retirement_checks": [
-        "Run a Swift repository error round-trip through the real Kotlin Home service; repository-unavailable and unexpected failures must remain distinct.",
-        "Preserve cancellation recovery, snapshot identity, retry and the existing live-client assertions.",
+        "Run Swift-created typed domain failures through the real Kotlin service before the native client's fallback; repository-unavailable and unexpected failures must remain distinct.",
+        "Record generated module count and bindings. Qualify any KotlinStdlib export expansion separately, including actual app/test linkage and one Kotlin runtime; do not bypass the current graph guard to retire a fixture.",
+        "Preserve Kotlin-origin cancellation and uncaught-error controls, cancellation recovery, snapshot identity, retry and the existing live-client assertions.",
         "Remove the corresponding IOS_CLIENT_FIXTURES runner registration when its Kotlin fixture file is deleted; unknown native tests must still refuse."
       ],
       "probe_state": "not_automated"

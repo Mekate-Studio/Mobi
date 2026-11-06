@@ -24,7 +24,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | IOS-11 | Explicit macro-validation invocation override | Reliable validation in the scoped environment; keep exact approvals and negative refusal control |
 | IOS-12 | Private JVM temp handling for affected tool inputs | Exact-graph dependency remediation/risk review; temp handling does not fix unrelated vulnerabilities |
 | IOS-13 | Serialized Home/Nearby test suite | Parallel execution after TCA provides per-test executor isolation; preserve overlapping-request regression checks |
-| IOS-14 | Kotlin-owned live-client repository fixtures | Recheck native error round-trips; preserve typed Kotlin failure meaning and cancellation coverage |
+| IOS-14 | Typed repository-failure fixtures and Kotlin-origin bridge controls | [Home success/unexpected helpers removed](evidence/2026-11-06-ios14-home-repositories.md); typed domain exceptions need a separate export-surface qualification. Preserve Kotlin-origin controls. |
 | IOS-15 | Former test-only Kotlin constructors, removed with Beta2 | [Public generated constructors in the actual native tests](evidence/2026-11-05-beta2-ios15.md); compiler visibility is now required by the iOS gate |
 | IOS-16 | Explicit closure for native test observation on hosted Swift 6.3.3 | Recheck direct function conversion on Swift/Xcode updates; optimized actual test-module compilation and lifecycle tests must pass on all supported compilers. [Failure evidence and warning follow-ups](compiler-warning-follow-ups.md). |
 
@@ -211,6 +211,19 @@ companion, with the configuration and maintenance-review cost visible in that
 record. Other interop mechanisms remain separately tracked; constructor
 availability does not qualify their removal. Native results are recorded in the
 app PR. Automatic inventory reports still do not authorize retirement.
+
+### IOS-14 Home fixture simplification — 2026-11-06
+
+The [Home-only recheck](evidence/2026-11-06-ios14-home-repositories.md) moves
+success and ordinary unexpected-error repository doubles to Swift. The existing
+tests check the actual Kotlin service result before native client fallback,
+then check native payloads. Their Kotlin helper branches are removed.
+IOS-14 remains open for typed repository-unavailable fixtures: exposing the
+exception introduces a ninth Swift module in the measured candidate graph.
+That broader export surface needs its own review and validation. Kotlin-origin
+delayed work, cancellation and uncaught-error controls remain intentional bridge
+tests. The file and its runner registration remain; no complete retirement or
+new compiler capability compared with 2.4.20 is claimed.
 
 For every subsequent review, record the review date, source URLs and immutable
 commits/content digests, selected Kotlin/Toolchain/coroutines/Swift/Xcode versions,
