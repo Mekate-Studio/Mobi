@@ -296,11 +296,12 @@
       "id": "IOS-13",
       "scope": "default",
       "title": "Serialized native feature tests",
-      "reason": "The pinned TCA 1.26.0 TestStore installs and restores a process-wide executor hook. Concurrent store lifetimes make these tests depend on shared scheduler state.",
+      "reason": "The pinned TCA 1.26.0 TestStore installs and restores a process-wide executor hook. Concurrent store lifetimes make these tests depend on shared scheduler state. The timer fixture also scopes TestClock 1.0.6 advances with the existing withMainSerialExecutor API after a hosted cadence timeout; its background-yield scheduling remains a test-library constraint. The parent suite stays serialized so these global scopes do not overlap. See docs/maintenance/evidence/2026-11-06-ios10-exporter-runtime.md.",
       "paths": [
         "ios-app/tests/NativeFeatureTests.swift",
         "ios-app/tests/Features/Home/HomeFeatureTests.swift",
-        "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift"
+        "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift",
+        "ios-app/tests/Features/NearbyVehicleMap/NearbyTimerLifetimeTests.swift"
       ],
       "recheck_on": [
         "native_dependencies",
@@ -308,10 +309,11 @@
         "xcode",
         "design"
       ],
-      "replacement": "Run the native feature suites concurrently when TCA provides per-test executor isolation; remove the serialized parent after qualifying the actual tests.",
+      "replacement": "Use supported per-test executor isolation for native feature and clock-driven SwiftUI tests; remove the serialized parent and scoped clock-advance helper after qualifying the actual tests.",
       "retirement_checks": [
         "Cold local and hosted runs plus repeated parallel Home/Nearby execution pass with the original time limits and exhaustive assertions.",
-        "Removing effect cancellation still fails the out-of-order completion test; cancellation or assertion failure leaves no pending test continuation."
+        "Removing effect cancellation still fails the out-of-order completion test; cancellation or assertion failure leaves no pending test continuation.",
+        "Requalify the actual timer tests with ordinary TestClock advances on Swift Clocks/Concurrency Extras/TCA/Swift/Xcode updates before removing their executor scope. Keep all cadence, background, reentry and admitted-request assertions and their original one-minute limits; no scheduler-count or timeout increase is a substitute."
       ],
       "probe_state": "not_automated"
     },

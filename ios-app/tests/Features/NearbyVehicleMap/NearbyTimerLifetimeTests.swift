@@ -15,18 +15,18 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         let host = try NearbyTimerHost()
         defer { host.close() }
         await host.start()
-        await host.clock.advance(by: .seconds(5))
+        await host.advance(by: .seconds(5))
 
         // when
         await host.setPhase(.inactive)
-        await host.clock.advance(by: .seconds(5))
+        await host.advance(by: .seconds(5))
 
         // then: each tick also re-renders the host, as a loading state would.
         #expect(host.ticks == 1)
-        await host.clock.advance(by: .seconds(10))
+        await host.advance(by: .seconds(10))
         #expect(host.ticks == 2)
         await host.setPhase(.active)
-        await host.clock.advance(by: .seconds(10))
+        await host.advance(by: .seconds(10))
         #expect(host.ticks == 3)
         await host.stop()
     }
@@ -39,19 +39,19 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         defer { host.close() }
         await host.start()
         for expectedTicks in 1 ... 3 {
-            await host.clock.advance(by: .seconds(5))
+            await host.advance(by: .seconds(5))
 
             // when
             await host.setPhase(.background)
-            await host.clock.advance(by: .seconds(30))
+            await host.advance(by: .seconds(30))
 
             // then
             #expect(host.ticks == expectedTicks - 1)
             await host.setPhase(.active)
             #expect(host.ticks == expectedTicks - 1)
-            await host.clock.advance(by: .milliseconds(9999))
+            await host.advance(by: .milliseconds(9999))
             #expect(host.ticks == expectedTicks - 1)
-            await host.clock.advance(by: .milliseconds(1))
+            await host.advance(by: .milliseconds(1))
             #expect(host.ticks == expectedTicks)
         }
         await host.stop()
@@ -66,15 +66,15 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         await host.start()
 
         // when
-        await host.clock.advance(by: .seconds(30))
+        await host.advance(by: .seconds(30))
 
         // then
         #expect(host.ticks == 0)
         await host.setPhase(.inactive)
-        await host.clock.advance(by: .milliseconds(9999))
+        await host.advance(by: .milliseconds(9999))
         #expect(host.ticks == 0)
         await host.setPhase(.active)
-        await host.clock.advance(by: .milliseconds(1))
+        await host.advance(by: .milliseconds(1))
         #expect(host.ticks == 1)
         await host.stop()
     }
@@ -86,17 +86,17 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         let host = try NearbyTimerHost()
         defer { host.close() }
         await host.start()
-        await host.clock.advance(by: .seconds(10))
+        await host.advance(by: .seconds(10))
         #expect(host.ticks == 1)
 
         // when
         await host.setVisible(false)
-        await host.clock.advance(by: .seconds(30))
+        await host.advance(by: .seconds(30))
 
         // then
         #expect(host.ticks == 1)
         await host.setVisible(true)
-        await host.clock.advance(by: .seconds(10))
+        await host.advance(by: .seconds(10))
         #expect(host.ticks == 2)
         await host.stop()
     }
@@ -123,7 +123,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         }
         defer { host.close() }
         await host.start()
-        await host.clock.advance(by: .seconds(10))
+        await host.advance(by: .seconds(10))
         let first = try #require(await pending.next())
         let admitted = try #require(refresh)
         #expect(!store.canRequestRefresh)
@@ -131,7 +131,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
 
         // when
         await host.setPhase(.background)
-        await host.clock.advance(by: .seconds(30))
+        await host.advance(by: .seconds(30))
 
         // then
         #expect(host.ticks == 1)
@@ -141,9 +141,9 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         #expect(store.mapContent == NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2).mapContent)
         #expect(store.canRequestRefresh)
         await host.setPhase(.active)
-        await host.clock.advance(by: .milliseconds(9999))
+        await host.advance(by: .milliseconds(9999))
         #expect(host.ticks == 1)
-        await host.clock.advance(by: .milliseconds(1))
+        await host.advance(by: .milliseconds(1))
         let second = try #require(await pending.next())
         second.resume(returning: NearbyVehicleMapFeatureTestFactory.loadedSharedState(sequence: 3))
         await refresh?.finish()
@@ -154,7 +154,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
 
 @MainActor
 private final class NearbyTimerHost {
-    let clock = TestClock<Duration>()
+    private let clock = TestClock<Duration>()
     private(set) var ticks = 0
     private var phase: ScenePhase
     private var visible = true
@@ -190,6 +190,13 @@ private final class NearbyTimerHost {
         window.rootViewController = controller
         window.makeKeyAndVisible()
         await render()
+    }
+
+    func advance(by duration: Duration) async {
+        // IOS-13: scope TestClock's background yields to the serialized test executor.
+        await withMainSerialExecutor {
+            await clock.advance(by: duration)
+        }
     }
 
     func setPhase(_ phase: ScenePhase) async {

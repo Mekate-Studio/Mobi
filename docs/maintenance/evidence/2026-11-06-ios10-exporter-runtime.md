@@ -67,6 +67,27 @@ Toolchain 0.13.0's [configuration source](https://github.com/JetBrains/kotlin-to
 blob `e5ef018fc0366b139788f60b7325916bc3b3a7e4`, confirms the setting. This is
 local build configuration propagation, separate from the retired IOS-10 runtime.
 
+## Hosted timer fixture correction — IOS-13
+
+[CI #589](https://github.com/Mekate-Studio/Mobi/actions/runs/42286184688) builds
+the app successfully but times out the existing timer-cadence test at its
+one-minute limit; the other 169 test runs pass. Local executions pass in 2.538
+and 3.329 seconds. That timer fixture does not call the shared services. The
+timeout alone does not identify which await stalled or establish an exporter
+regression; qualify the scheduling correction against the actual suite.
+
+The pinned [TestClock implementation](https://github.com/pointfreeco/swift-clocks/blob/cc46202b53476d64e824e0b6612da09d84ffde8e/Sources/Clocks/TestClock.swift)
+advances time using background-task yields. Keep the existing clock and route
+its advances through Point-Free's existing
+[`withMainSerialExecutor` API](https://github.com/pointfreeco/swift-concurrency-extras/blob/5a3825302b1a0d744183200915a47b508c828e6f/Sources/ConcurrencyExtras/MainSerialExecutor.swift).
+The parent suite is already serialized under IOS-13. The library scope restores
+the prior setting on return, but uses a process-wide runtime hook; this is a
+visible test-library constraint, not compiler-checked isolation. Requalify and
+remove the clock scope when supported per-test scheduling makes it redundant.
+Keep all five timer scenarios, assertions and their original one-minute limits.
+No scheduler-count override, retry policy, new dependency or app change is added.
+Final local and hosted qualification of this correction is recorded in the PR.
+
 ## Sources and update observability
 
 The [official implementation README at Beta2](https://github.com/JetBrains/kotlin/blob/v2.5.0-Beta2/docs/swift-export/README.md)
