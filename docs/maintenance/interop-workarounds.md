@@ -20,7 +20,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | IOS-07 | Closed generated API, whole-feature module placement and experimental import checker | Supported narrow module/import enforcement; remove unnecessary placement and flag coupling |
 | IOS-08 | Swift 5 coroutine-support module | Strict Swift 6 after the actual generated support graph passes without suppression or fallback; [2026-11-04 recheck: retained](evidence/2026-11-04-ios08-strict-support.md) |
 | IOS-09 | TCA client `assumeIsolated` assertions and cancellation relay | Compiler-expressed isolation and simpler feature effects; this is also a TCA/design constraint |
-| IOS-10 | Custom exporter, bridge producer, module/profile plumbing and Xcode project-integrity preflight | Supported Toolchain/build integration preserving native app/tests and IDE reopen/resync/branch-switch behavior; keep validation, remove replaced custom production machinery |
+| IOS-10 | Custom exporter, bridge producer, module/profile plumbing and Xcode project-integrity preflight | [Extra exporter runtime/repository removed](evidence/2026-11-06-ios10-exporter-runtime.md); supported Toolchain/build integration must still qualify removal of the producer/preflight machinery |
 | IOS-11 | Explicit macro-validation invocation override | Reliable validation in the scoped environment; keep exact approvals and negative refusal control |
 | IOS-12 | Private JVM temp handling for affected tool inputs | Exact-graph dependency remediation/risk review; temp handling does not fix unrelated vulnerabilities |
 | IOS-13 | Serialized Home/Nearby test suite | Parallel execution after TCA provides per-test executor isolation; preserve overlapping-request regression checks |
@@ -224,6 +224,18 @@ That broader export surface needs its own review and validation. Kotlin-origin
 delayed work, cancellation and uncaught-error controls remain intentional bridge
 tests. The file and its runner registration remain; no complete retirement or
 new compiler capability compared with 2.4.20 is claimed.
+
+### IOS-10 exporter runtime simplification — 2026-11-06
+
+The [actual producer comparison](evidence/2026-11-06-ios10-exporter-runtime.md)
+removes the explicit IntelliJ coroutines runtime and its repository. Beta2
+generation succeeds using the compiler's standard transitive runtime, with
+identical Swift/Kotlin/C bindings, the same eight Debug modules and the same
+verified Kotlin archive. The resolved exporter graph excludes the extra runtime.
+This retires one dependency workaround; IOS-10 remains open for custom build
+integration. On updates, require clean generation logs and actual app checks;
+do not reintroduce a runtime override automatically. No upstream fix or new
+capability relative to an older Kotlin version is claimed.
 
 For every subsequent review, record the review date, source URLs and immutable
 commits/content digests, selected Kotlin/Toolchain/coroutines/Swift/Xcode versions,

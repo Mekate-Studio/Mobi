@@ -177,6 +177,9 @@ declarations, install analyzers/Bundler, rewrite Android versions, or copy ignor
 credentials from the caller. Android validation uses synthetic debug signing.
 Only declared host-tool environment settings reach jobs; native tools and the
 simulator remain host resources. This is source isolation, not a machine sandbox.
+Toolchain's `KOTLIN_DEFAULT_MAVEN_CENTRAL_URL` setting also reaches native jobs.
+Set it before the gate to use a reviewed public Maven Central mirror; when unset,
+Toolchain keeps its default. See the [AND-02 source note](../maintenance/mobile-feature-follow-ups.md#and-02-toolchain-distribution-download-header-limit).
 Native jobs can take minutes on a cold cache; each has a 45-minute timeout.
 
 Success reports source/index identities and completed jobs. Failure diagnostics

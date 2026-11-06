@@ -22,9 +22,12 @@ background class-loading failures, even when the process exits successfully.
 
 **IOS-10:** replace this tool and its orchestration when supported Toolchain
 integration passes the registry's app and delivery checks. The explicitly
-selected IntelliJ coroutines runtime and repository can be removed separately
-when upstream dependency metadata provides a working runtime: generation must
-succeed without analysis-worker exceptions. No generated source is patched.
+selected IntelliJ coroutines runtime and repository were removed after the
+[Beta2 generation recheck](../../docs/maintenance/evidence/2026-11-06-ios10-exporter-runtime.md).
+The current resolved compiler graph supplies its own standard coroutines runtime;
+the actual app graph generates identical bindings without worker exceptions.
+Keep checking generation logs on updates, including failures that exit zero;
+do not restore an extra runtime as an automatic fallback. No generated source is patched.
 
 **IOS-12:** the launcher gives its JVMs private temporary storage. This preserves
 the existing control; it does not resolve upstream dependency vulnerabilities.

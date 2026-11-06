@@ -56,7 +56,8 @@ module InventoryTest
     config = JSON.parse(File.read(File.join(ROOT, 'renovate.json')))
     manager = config.fetch('customManagers').find { |m| m['description'].include?('Maven coordinates declared in Kotlin Toolchain module') }
     pattern = Regexp.new(manager.fetch('matchStrings').first)
-    text = File.read(File.join(ROOT, 'tools/swift-export/module.yaml'))
+    # Keep scoped-dependency parsing covered independently of current app declarations.
+    text = "dependencies:\n  - com.intellij.platform:kotlinx-coroutines-core-jvm:1.8.0-intellij-13: runtime-only\n"
     match = nil
     text.to_enum(:scan, pattern).each do
       candidate = Regexp.last_match
@@ -180,7 +181,7 @@ module InventoryTest
     config.fetch('packageRules').each { |r| r['allowedVersions'] = '<1.2.0' if r['allowedVersions'] && r.fetch('matchPackageNames', []).include?('/^dev\\.zacsweers\\.metro:/') }
     result = Maintenance::Kotlin.new(ROOT, source.files, native, config).inventory
     assert(result['modules'].size == 9)
-    assert(result['components'].any? { |c| c['name'] == 'com.intellij.platform:kotlinx-coroutines-core-jvm' && c['version'] == '1.8.0-intellij-13' && c['source'] == 'tools/swift-export/module.yaml' })
+    assert(result['components'].any? { |c| c['name'] == 'org.jetbrains.kotlin:swift-export-embeddable' && c['source'] == 'tools/swift-export/module.yaml' })
     assert(result['resolved_inputs'].map { |r| r['id'].split(':').first }.sort == %w[npm rubygems swift])
     assert(result['resolved_inputs'].find { |r| r['id'].start_with?('swift:') }['packages'].size == 15)
     assert(result['components'].any? { |c| c['name'] == 'Kotlin Toolchain' && c['artifact_sha256'].size == 64 })

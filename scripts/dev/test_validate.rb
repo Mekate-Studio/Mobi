@@ -65,12 +65,14 @@ module ValidationTest
   test('behavior runs static once and only selected native tests in a cleaned source copy') do |f|
     log = base(f)
     before = File.binread(File.join(f.root, '.git/index'))
-    ok, output = f.run('./scripts/dev/check.sh', extra_env: { 'ANDROID_KEYSTORE_BASE64' => 'fixture-secret', 'VERSION_CODE' => '999', 'GITHUB_TOKEN' => 'fixture-secret' })
+    mirror = 'https://maven.example.invalid/central'
+    ok, output = f.run('./scripts/dev/check.sh', extra_env: { 'ANDROID_KEYSTORE_BASE64' => 'fixture-secret', 'VERSION_CODE' => '999', 'GITHUB_TOKEN' => 'fixture-secret', 'KOTLIN_DEFAULT_MAVEN_CENTRAL_URL' => mirror })
     assert(ok, output)
     records = jobs(log)
     assert(records.map { |job| job['job'] } == ['android-test'], records.inspect)
     assert(records.all? { |job| job['cwd'] != f.root && !Dir.exist?(job['cwd']) }, 'snapshot escaped or leaked')
     assert(records.none? { |job| %w[GITHUB_TOKEN ANDROID_KEYSTORE_BASE64 VERSION_CODE].any? { |key| job['env'].key?(key) } }, 'credentials or version override inherited')
+    assert(records.all? { |job| job['env']['KOTLIN_DEFAULT_MAVEN_CENTRAL_URL'] == mirror }, 'configured Maven mirror was dropped')
     assert(f.calls.size == 5, 'static checks duplicated')
     assert(before == File.binread(File.join(f.root, '.git/index')), 'caller index changed')
     assert(output.include?('[validation] passed='), output)
