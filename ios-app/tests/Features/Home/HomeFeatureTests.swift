@@ -1,5 +1,6 @@
 @testable import app
 import Foundation
+import KotlinRuntime
 @preconcurrency import MobiCore
 @preconcurrency import MobiHome
 import MobiIOSDependencies
@@ -153,7 +154,7 @@ extension NativeFeatureTests.HomeFeatureTests {
     @Test("should create Shared UI from the injected app composition")
     func shouldCreateSharedUIFromInjectedAppComposition() async {
         let services = AppServices(
-            homeFeatureService: IosInteropTestServices.shared.successfulHomeService(),
+            homeFeatureService: HomeFeatureTestFactory.makeService(),
             nearbyVehicleMapFeatureService: IosInteropTestServices.shared.cancellingNearbyService(),
         )
         let controller = services.makeSharedHomeViewController()
@@ -234,7 +235,7 @@ extension NativeFeatureTests.HomeFeatureTests {
     @Test("should preserve live Home client states and payloads", arguments: [0, 8])
     func shouldPreserveLiveHomeClientStatesAndPayloads(counterValue: Int) async {
         // given
-        let client = HomeFeatureClient(service: IosInteropTestServices.shared.successfulHomeService())
+        let client = HomeFeatureClient(service: HomeFeatureTestFactory.makeService())
 
         // when / then
         #expect(client.initialState() == .initial)
@@ -253,18 +254,28 @@ extension NativeFeatureTests.HomeFeatureTests {
     func shouldPreserveLiveHomeRepositoryFailuresAndPreviousValues(
         counterValue: Int,
         reason: HomeCounterLoadFailureReason,
-    ) async {
+    ) async throws {
         // given
         let service = switch reason {
         case .repositoryUnavailable: IosInteropTestServices.shared.repositoryUnavailableHomeService()
-        case .unexpected: IosInteropTestServices.shared.unexpectedFailureHomeService()
+        case .unexpected: HomeFeatureTestFactory.makeService(result: .failure(HomeRepositoryTestError.unexpected))
         }
         let client = HomeFeatureClient(service: service)
 
         // when
+        // Check the reverse bridge before the client's fallback can map a thrown error.
+        let shared = try await service.refresh(counterValue: Int32(counterValue))
         let refreshed = await client.refresh(counterValue > 0 ? .loaded(value: counterValue) : .initial)
 
         // then
+        let sharedReason: CounterLoadFailureReason = switch reason {
+        case .repositoryUnavailable: .RepositoryUnavailable.shared
+        case .unexpected: .Unexpected.shared
+        }
+        #expect(shared.counterLoadable == CounterLoadable.Error(
+            previousValue: counterValue > 0 ? Int32(counterValue) : nil,
+            reason: sharedReason,
+        ))
         #expect(
             refreshed
                 == .error(previousValue: counterValue > 0 ? counterValue : nil, reason: reason),
@@ -273,6 +284,10 @@ extension NativeFeatureTests.HomeFeatureTests {
 }
 
 private enum HomeFeatureTestFactory {
+    static func makeService(result: Result<Int32, any Error> = .success(21)) -> HomeFeatureService {
+        HomeFeatureService(counterRepository: SwiftHomeCounterRepository(result: result))
+    }
+
     @MainActor
     static func makeStore(
         refreshResult: HomeCounterLoadable = .loaded(value: 1),
@@ -297,4 +312,21 @@ private enum HomeFeatureTestFactory {
     static func expectedState(loadable: HomeCounterLoadable) -> HomeFeature.State {
         HomeFeature.State(counterLoadable: loadable)
     }
+}
+
+private final class SwiftHomeCounterRepository: KotlinBase, CounterRepository {
+    private let result: Result<Int32, any Error>
+
+    init(result: Result<Int32, any Error>) {
+        self.result = result
+        super.init()
+    }
+
+    func fetchNextCounterValue(currentCounterValue _: Int32) async throws -> Int32 {
+        try result.get()
+    }
+}
+
+private enum HomeRepositoryTestError: Error {
+    case unexpected
 }

@@ -11,20 +11,17 @@ import studio.mekate.mobi.core.NearbyFleetRequest
 import studio.mekate.mobi.core.NearbyVehicle
 import studio.mekate.mobi.core.VehicleId
 import studio.mekate.mobi.core.VehicleLocation
-import studio.mekate.mobi.feature.home.CounterLoadFailureReason
 import studio.mekate.mobi.feature.home.HomeFeatureService
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFeatureService
 import studio.mekate.mobi.feature.nearbyvehiclemap.NearbyVehicleMapFreshnessPolicy
 import kotlin.coroutines.cancellation.CancellationException
 
-// IOS-14: Kotlin-owned domain-failure fixtures preserve their identity at the client seam.
-// The selected generated reverse async bridge wraps Swift errors in SwiftException.
-// Recheck native repository stubs when that round-trip is faithful.
+// IOS-14: Home success and unexpected-error doubles now live in Swift.
+// The typed repository failure stays here until its exception is available
+// without expanding the reviewed export graph. Recheck on Kotlin/Toolchain updates.
 // Kotlin-origin cancellation/uncaught-error controls also qualify the forward bridge;
 // retain those controls when IOS-14 is retired. Release excludes all these test fixtures.
 object IosInteropTestServices {
-    fun successfulHomeService(): HomeFeatureService = homeService(null)
-
     fun delayedHomeService(): HomeFeatureService =
         HomeFeatureService(
             FakeCounterRepository(
@@ -35,23 +32,10 @@ object IosInteropTestServices {
         )
 
     fun repositoryUnavailableHomeService(): HomeFeatureService =
-        homeService(CounterLoadFailureReason.RepositoryUnavailable)
-
-    fun unexpectedFailureHomeService(): HomeFeatureService = homeService(CounterLoadFailureReason.Unexpected)
-
-    private fun homeService(failure: CounterLoadFailureReason?): HomeFeatureService =
         HomeFeatureService(
             object : CounterRepository {
                 override suspend fun fetchNextCounterValue(currentCounterValue: Int): Int =
-                    when (failure) {
-                        null -> 21
-
-                        CounterLoadFailureReason.RepositoryUnavailable -> throw CounterRepositoryException(
-                            "Test failure",
-                        )
-
-                        CounterLoadFailureReason.Unexpected -> error("Unexpected test failure")
-                    }
+                    throw CounterRepositoryException("Test failure")
             },
         )
 
