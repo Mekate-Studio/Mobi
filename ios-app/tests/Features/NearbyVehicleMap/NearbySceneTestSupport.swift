@@ -2,7 +2,7 @@
 import Foundation
 import MobiIOSDependencies
 import MobiIOSTestDependencies
-@preconcurrency import MobiNearby
+import MobiNearby
 import Observation
 import SwiftUI
 import Synchronization
@@ -69,13 +69,13 @@ final class NearbySceneProbe: Sendable {
     }
 }
 
-final class NearbyPending<Value: Sendable>: Sendable {
+final class NearbyPending<Value>: Sendable {
     private let completion: Mutex<CheckedContinuation<Value, Never>?>
     init(_ completion: CheckedContinuation<Value, Never>) {
         self.completion = Mutex(completion)
     }
 
-    func complete(_ value: Value) {
+    func complete(_ value: sending Value) {
         let pending = completion.withLock { completion in
             defer { completion = nil }
             return completion

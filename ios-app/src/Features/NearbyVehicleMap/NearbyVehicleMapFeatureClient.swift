@@ -3,8 +3,6 @@ import MobiCore
 import MobiIOSDependencies
 import MobiNearby
 
-extension NearbyVehicleMapFeatureState: @unchecked @retroactive Sendable {}
-
 struct NearbyVehicleMapFeatureClient: Sendable {
     var initialState: @MainActor @Sendable () -> NearbyVehicleMapFeatureState
     var preciseLocationResolvedState: @MainActor @Sendable (

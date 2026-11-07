@@ -202,7 +202,7 @@ Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
   SWIFT
   good, diagnostic = compile.call('nearby-client-allowed', nearby_allowed, extra: native_imports)
   abort "Actor-bound Nearby client calls failed:\n#{diagnostic}" unless good
-  report['nearby_client_isolation'] = { 'allowed_calls' => 'passed', 'raw_state_sendability' => 'unchecked_retained' }
+  report['nearby_client_isolation'] = { 'allowed_calls' => 'passed', 'raw_state_sendability' => 'non_sendable_actor_owned' }
   [
     ['initial_state_off_actor', 'client: NearbyVehicleMapFeatureClient', 'client.initialState()', 'call to main actor-isolated function'],
     ['loading_state_off_actor', 'client: NearbyVehicleMapFeatureClient, _ state: NearbyVehicleMapFeatureState', 'client.loadingState(state)', 'call to main actor-isolated function'],
@@ -212,6 +212,33 @@ Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
     text = "@testable import app\nimport MobiNearby\nfunc crossing(_ #{parameter}) { _ = #{expression} }\n"
     good, diagnostic = compile.call('nearby-' + name, text, extra: native_imports)
     abort "Off-actor Nearby access was not rejected precisely:\n#{diagnostic}" unless !good && diagnostic.include?(expected)
+    report['nearby_client_isolation'][name] = 'rejected'
+  end
+  # State stays in the real Store/client's MainActor region. Do not substitute a
+  # globally Sendable state wrapper or accept an unrelated compiler error.
+  state_imports = "@testable import app\nimport MobiIOSDependencies\nimport MobiNearby\n"
+  actor_state_read = state_imports + <<~SWIFT
+    @MainActor func read(_ store: Store<NearbyVehicleMapFeature.State, NearbyVehicleMapFeature.Action>) -> Bool {
+      let state = store.state
+      _ = state.sharedState
+      return state.canRequestRefresh
+    }
+  SWIFT
+  good, diagnostic = compile.call('nearby-state-actor-read', actor_state_read, extra: native_imports)
+  abort "Actor-owned Nearby state read failed:\n#{diagnostic}" unless good
+  report['nearby_client_isolation']['state_actor_read'] = 'passed'
+  [
+    ['client_state_transfer', 'func crossing(_ client: NearbyVehicleMapFeatureClient) async { _ = await client.initialState() }',
+     ['non-Sendable', 'NearbyVehicleMapFeatureState', 'main actor-isolated function to nonisolated context']],
+    ['store_state_transfer', 'func crossing(_ store: Store<NearbyVehicleMapFeature.State, NearbyVehicleMapFeature.Action>) async { let state = await store.state; _ = state.sharedState }',
+     ['non-Sendable', 'NearbyVehicleMapFeature.State', 'cannot exit main actor-isolated context']],
+    ['unsafe_state_container', 'struct UnsafeStateBox: Sendable { let value: NearbyVehicleMapFeatureState }',
+     ["stored property 'value'", 'non-Sendable type', 'NearbyVehicleMapFeatureState']]
+  ].each do |name, source, expected|
+    good, diagnostic = compile.call('nearby-' + name, state_imports + source + "\n", extra: native_imports)
+    unless !good && expected.all? { |message| diagnostic.include?(message) }
+      abort "Unsafe Nearby state crossing was not rejected precisely:\n#{diagnostic}"
+    end
     report['nearby_client_isolation'][name] = 'rejected'
   end
   report['nearby_client_isolation']['caller_isolated_modules'] = report.fetch('home_client_isolation').fetch('caller_isolated_modules')

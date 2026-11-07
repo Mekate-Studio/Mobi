@@ -35,8 +35,8 @@
     {
       "id": "IOS-02",
       "scope": "default",
-      "title": "Unchecked retained-state crossings and explicit async profile",
-      "reason": "Home and Nearby now use checked MainActor service client closures and isolated Reducer conformances, with normal service imports. The caller-isolated async profile covers generated Home, Nearby, Core and coroutine support. Nearby still retains its unchecked raw-state Sendable declaration and raw-state preconcurrency imports; generated services/states remain non-Sendable. See docs/maintenance/evidence/2026-11-07-nearby-service-isolation.md.",
+      "title": "Explicit caller-isolated async profile",
+      "reason": "Home and Nearby use checked MainActor service clients and isolated Reducer conformances. Nearby retained state is non-Sendable; its unchecked conformance and raw-state preconcurrency imports are removed. The remaining workaround is the four-module caller-isolated async profile for generated Home, Nearby, Core and coroutine support. Generated services/states remain non-Sendable. See docs/maintenance/evidence/2026-11-07-nearby-raw-state-isolation.md.",
       "paths": [
         "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeatureClient.swift",
         "ios-app/src/Features/Home/HomeFeatureClient.swift",
@@ -52,13 +52,13 @@
         "xcode",
         "design"
       ],
-      "replacement": "Qualify checked ownership, equality and lifetime for retained Nearby raw state before removing its unchecked Sendable/raw-state import exceptions. Keep native service actor contracts; retire explicit four-module caller-isolation flags when selected upstream output or language defaults supply equivalent semantics, with the whole graph rebuilt and tested.",
+      "replacement": "Keep checked native actor ownership. Retire explicit four-module caller-isolation flags when selected upstream output or language defaults supply equivalent semantics, with the whole graph rebuilt and tested.",
       "retirement_checks": [
-        "An off-actor raw state read and an unsafe Sendable container are rejected.",
+        "Actual-app MainActor Store state reads compile; awaited client-state and Store-state transfers to a nonisolated caller, and an unsafe Sendable container, are rejected with state-specific diagnostics. Report raw_state_sendability as non_sendable_actor_owned.",
         "Actual feature transitions, equality and cross-runtime lifetime pass without unchecked Sendable.",
         "The actual Home client accepts actor-bound synchronous calls and off-actor awaited refresh, but rejects synchronous off-actor initial/loading and reducer calls. Home actor-owned generated refresh must compile; report the exact caller-isolated module profile.",
         "Requalify the complete generated graph when simplifying the four-module profile. Home-only fails at withKotlinContinuation; Home plus coroutine support fails at reverse repository calls; Nearby needs its own async module setting. Preserve actual native/Shared Compose composition, cancellation/error/retry/lifetime tests and one runtime; an actor-only micro-check does not qualify adoption.",
-        "The actual Nearby client accepts all eight actor-bound operations and rejects synchronous off-actor initial/loading/refresh-query calls and reducer access. Generated actor-owned Nearby refresh must compile. Report raw_state_sendability as unchecked_retained until its separate removal is qualified."
+        "The actual Nearby client accepts all eight actor-bound operations and rejects synchronous off-actor initial/loading/refresh-query calls and reducer access. Generated actor-owned Nearby refresh must compile, without restoring unchecked state conformance or raw-state preconcurrency imports."
       ],
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",
