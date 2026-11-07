@@ -38,11 +38,13 @@ exported as a second public feature API or loaded as a second Kotlin runtime.
   `CheckImplementationOnly` check, and generated coroutine support uses Swift 5.
   The app uses Swift 6. `--strict-support` makes strict generated-support compilation
   an explicit update check; it never selects a fallback automatically.
-- **IOS-02:** Nearby's preconcurrency imports and unchecked raw-state sendability
+- **IOS-02:** Nearby's raw-state preconcurrency imports and unchecked sendability
   remain. [ADR 0019](0019-ios-home-checked-service-isolation.md) replaces Home's
   service captures with checked actor ownership and documents the required
   caller-isolated async profile across Home, Core and coroutine support. Generated
-  services remain non-Sendable; this does not retire Nearby's exceptions or IOS-08.
+  services remain non-Sendable. The [Nearby service follow-up](../maintenance/evidence/2026-11-07-nearby-service-isolation.md)
+  applies the same actor contract and extends the profile to four modules;
+  raw-state exceptions and IOS-08 remain.
 - **IOS-14:** live-client repositories move from Swift stubs to Kotlin test sources.
   The selected reverse async bridge wraps Swift errors as `SwiftException`, losing
   the typed Kotlin repository exception needed by the existing characterization.

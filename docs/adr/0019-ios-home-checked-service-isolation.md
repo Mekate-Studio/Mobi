@@ -1,6 +1,6 @@
 # ADR 0019: Checked iOS Home service isolation
 
-Status: Proposed for review, 2026-11-07. Extends ADR 0009 and IOS-02.
+Status: Accepted in [PR #91](https://github.com/Mekate-Studio/Mobi/pull/91), 2026-11-07. Extends ADR 0009 and IOS-02.
 
 ## Decision and code cost
 
@@ -38,8 +38,9 @@ review point, not a reason to alter the shared repository in this increment.
 supports the actor-isolated conformance. The pinned [TCA Reducer protocol](https://github.com/pointfreeco/swift-composable-architecture/blob/e2fa1df6cd9eec6fa6314aa20513e47da576f24e/Sources/ComposableArchitecture/Reducer.swift)
 is nonisolated. Explicitly isolating Home's conformance lets its synchronous
 reduction call the client safely. Reducer construction/body use now requires
-MainActor, matching AppServices and the actual Store owners. Other reducers keep
-their existing contracts. This Swift-only change has no Android behavior delta.
+MainActor, matching AppServices and the actual Store owners. At Home adoption,
+other reducers retained their contracts; the later Nearby follow-up is linked below.
+This Swift-only change has no Android behavior delta.
 
 ## Actual graph qualification
 
@@ -65,7 +66,7 @@ Final staged and hosted qualification is reported on the implementation PR.
 
 ## Remaining scope and simplification
 
-IOS-02 remains open for Nearby. Generated service/state objects are still
+The later [Nearby service qualification](../maintenance/evidence/2026-11-07-nearby-service-isolation.md) extends the profile and service actor contract. IOS-02 remains open for retained Nearby state. Generated service/state objects are still
 non-Sendable; raw Sendable-capture controls continue to reject them. IOS-08's
 Swift 5 support exception and IOS-17's Kotlin Job inheritance warning remain.
 Support-profile changes also affect generated Flow/reverse-async surfaces;

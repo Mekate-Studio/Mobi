@@ -35,13 +35,15 @@
     {
       "id": "IOS-02",
       "scope": "default",
-      "title": "Unchecked shared-state and service crossings",
-      "reason": "Home now uses checked MainActor client closures and an isolated Reducer conformance, with no preconcurrency service import. Its supported caller-isolated async setting also covers generated MobiCore and coroutine support because narrower profiles fail at the bridge/repository boundaries. Nearby retains preconcurrency imports and unchecked raw-state sendability; generated services remain non-Sendable. See docs/adr/0019-ios-home-checked-service-isolation.md.",
+      "title": "Unchecked retained-state crossings and explicit async profile",
+      "reason": "Home and Nearby now use checked MainActor service client closures and isolated Reducer conformances, with normal service imports. The caller-isolated async profile covers generated Home, Nearby, Core and coroutine support. Nearby still retains its unchecked raw-state Sendable declaration and raw-state preconcurrency imports; generated services/states remain non-Sendable. See docs/maintenance/evidence/2026-11-07-nearby-service-isolation.md.",
       "paths": [
         "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeatureClient.swift",
         "ios-app/src/Features/Home/HomeFeatureClient.swift",
         "ios-app/src/Features/Home/HomeFeature.swift",
-        "scripts/ios/build_swift_export.rb"
+        "scripts/ios/build_swift_export.rb",
+        "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature.swift",
+        "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeature+State.swift"
       ],
       "recheck_on": [
         "kotlin",
@@ -50,12 +52,13 @@
         "xcode",
         "design"
       ],
-      "replacement": "Complete checked ownership for the remaining Nearby boundary. Keep Home actor isolation; retire explicit producer caller-isolation flags when the selected upstream output or language default supplies equivalent semantics, with the actual graph rebuilt and tested.",
+      "replacement": "Qualify checked ownership, equality and lifetime for retained Nearby raw state before removing its unchecked Sendable/raw-state import exceptions. Keep native service actor contracts; retire explicit four-module caller-isolation flags when selected upstream output or language defaults supply equivalent semantics, with the whole graph rebuilt and tested.",
       "retirement_checks": [
         "An off-actor raw state read and an unsafe Sendable container are rejected.",
         "Actual feature transitions, equality and cross-runtime lifetime pass without unchecked Sendable.",
         "The actual Home client accepts actor-bound synchronous calls and off-actor awaited refresh, but rejects synchronous off-actor initial/loading and reducer calls. Home actor-owned generated refresh must compile; report the exact caller-isolated module profile.",
-        "Requalify the whole generated graph when simplifying the three-module profile: Home-only fails at withKotlinContinuation; Home plus coroutine support fails at reverse repository calls. Preserve actual native/Shared Compose composition, cancellation/error/retry/lifetime tests and one runtime; an actor-only micro-check does not qualify adoption."
+        "Requalify the complete generated graph when simplifying the four-module profile. Home-only fails at withKotlinContinuation; Home plus coroutine support fails at reverse repository calls; Nearby needs its own async module setting. Preserve actual native/Shared Compose composition, cancellation/error/retry/lifetime tests and one runtime; an actor-only micro-check does not qualify adoption.",
+        "The actual Nearby client accepts all eight actor-bound operations and rejects synchronous off-actor initial/loading/refresh-query calls and reducer access. Generated actor-owned Nearby refresh must compile. Report raw_state_sendability as unchecked_retained until its separate removal is qualified."
       ],
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",

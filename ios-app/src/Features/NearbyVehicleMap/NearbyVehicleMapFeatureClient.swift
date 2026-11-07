@@ -1,34 +1,36 @@
 import Foundation
-@preconcurrency import MobiCore
+import MobiCore
 import MobiIOSDependencies
-@preconcurrency import MobiNearby
+import MobiNearby
 
 extension NearbyVehicleMapFeatureState: @unchecked @retroactive Sendable {}
 
-struct NearbyVehicleMapFeatureClient {
-    var initialState: @Sendable () -> NearbyVehicleMapFeatureState
-    var preciseLocationResolvedState: @Sendable (
+struct NearbyVehicleMapFeatureClient: Sendable {
+    var initialState: @MainActor @Sendable () -> NearbyVehicleMapFeatureState
+    var preciseLocationResolvedState: @MainActor @Sendable (
         _ currentState: NearbyVehicleMapFeatureState,
         _ latitude: Double,
         _ longitude: Double,
     ) -> NearbyVehicleMapFeatureState
-    var locationBlockedState: @Sendable (
+    var locationBlockedState: @MainActor @Sendable (
         _ currentState: NearbyVehicleMapFeatureState,
         _ reason: NearbyVehicleMapFeature.LocationBlockedReason,
     ) -> NearbyVehicleMapFeatureState
-    var locationTemporarilyUnavailableState: @Sendable (_ currentState: NearbyVehicleMapFeatureState)
+    var locationTemporarilyUnavailableState: @MainActor @Sendable (_ currentState: NearbyVehicleMapFeatureState)
         -> NearbyVehicleMapFeatureState
-    var loadingState: @Sendable (_ currentState: NearbyVehicleMapFeatureState) -> NearbyVehicleMapFeatureState
-    var refresh: @Sendable (_ currentState: NearbyVehicleMapFeatureState, _ nowMillis: Int64) async
+    var loadingState: @MainActor @Sendable (_ currentState: NearbyVehicleMapFeatureState)
         -> NearbyVehicleMapFeatureState
-    var shouldRefresh: @Sendable (_ currentState: NearbyVehicleMapFeatureState, _ nowMillis: Int64) -> Bool
-    var stateAfterTimePasses: @Sendable (
+    var refresh: @MainActor @Sendable (_ currentState: NearbyVehicleMapFeatureState, _ nowMillis: Int64) async
+        -> NearbyVehicleMapFeatureState
+    var shouldRefresh: @MainActor @Sendable (_ currentState: NearbyVehicleMapFeatureState, _ nowMillis: Int64) -> Bool
+    var stateAfterTimePasses: @MainActor @Sendable (
         _ currentState: NearbyVehicleMapFeatureState,
         _ nowMillis: Int64,
     ) -> NearbyVehicleMapFeatureState
 }
 
 extension NearbyVehicleMapFeatureClient {
+    @MainActor
     init(service: NearbyVehicleMapFeatureService) {
         self.init(
             initialState: {

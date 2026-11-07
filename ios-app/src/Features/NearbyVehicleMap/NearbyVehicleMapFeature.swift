@@ -1,8 +1,8 @@
 import Foundation
 import MobiIOSDependencies
 
-@Reducer
-struct NearbyVehicleMapFeature {
+@MainActor
+struct NearbyVehicleMapFeature: @MainActor Reducer {
     @Dependency(\.nearbyVehicleMapFeatureClient) private var client
     @Dependency(\.nearbyVehicleMapLocationClient) private var locationClient
     @Dependency(\.date.now) private var now
