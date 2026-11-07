@@ -20,8 +20,9 @@ For reproduction, download artifact `13445502557`, read
 by relative path, line, column and message. Preserve the full message and source
 ownership; generated-code warnings are not authored-code warnings.
 
-The counts below partition those 52 diagnostics. Android warnings are additional
-examples from the same commit's build/test jobs, outside that count.
+The WARN-01 through WARN-09 counts below partition those 52 diagnostics. Android
+warnings are additional examples from the same commit's build/test jobs, outside
+that count. WARN-10 comes from a later successful build and is not part of those 52.
 
 ## Follow-up slices
 
@@ -36,6 +37,7 @@ examples from the same commit's build/test jobs, outside that count.
 | WARN-07 | 1 authored unused `StoreTask?` result in `ios-app/src/iosApp.swift:30`; Android also reports unused `Unit` in `NearbyVehicleMapUiFactory.kt:193` | Small native-source cleanup after integration | Make the intended return/discard behavior explicit and preserve native lifetime/admission tests. |
 | WARN-08 | Android declares lifecycle-runtime-compose 2.9.4 but resolves 2.11.0-beta01 | Dependency graph alignment; inspect actual Toolchain resolution and Compose/Circuit compatibility before changing the declaration. | Record why the resolved version is selected, make declarations consistent with the reviewed graph, and run Android presenter/lifetime/build gates. This note authorizes no version adoption. |
 | WARN-09 | Android SDK Manager CLI deprecation and missing `cmdline-tools;latest/package.xml` followed by redownload | Runner provisioning / delegated Android bootstrap | Review supported Android CLI/Toolchain integration in a separate script change; qualify cold-runner SDK/license setup and preserve delegated bootstrap. |
+| WARN-10 | 8 authored `Store.withState` reads in `NearbySceneLifetimeTests.swift`; successful CI #595 emitted 48 repeated deprecation annotations | Direct `store.state` reads use the existing `@ObservableState` and pinned TCA API; see [evidence](#warn-10-observable-store-reads-in-lifetime-tests). This is test API maintenance. | Preserve callback rejection and late location/fleet result matrices; run the actual iOS suite on local/hosted compilers and require zero `withState` deprecation diagnostics. |
 
 Start with small owned-source and dependency-alignment slices; review concurrency
 boundaries explicitly, then qualify upstream-generated changes through the
@@ -125,3 +127,30 @@ reason gains a checked Sendable conformance, try passing it directly again in
 these six tests, remove this helper, and require the same matrices to compile
 without these warnings and run on both supported compiler tuples. A release
 note alone does not establish that the exported enum is safe to transfer.
+
+## WARN-10: observable store reads in lifetime tests
+
+Recorded 2026-11-07. The successful [CI #595 iOS job](https://github.com/Mekate-Studio/Mobi/actions/runs/42298968724/job/128171536334)
+at `6c26c599e2dad82f6411188ff47bbfce0fa27970` emitted 48 repeated `withState`
+deprecation annotations from eight authored calls. The same code's successful
+local Xcode 27.1 / Swift 6.4 build emitted 24 complete diagnostic lines for this
+category. Counts are repeated emissions, not numbers of distinct source sites;
+compare each supported compiler separately. Other categories remain open.
+
+TCA **1.26.0**, pinned at `e2fa1df6cd9eec6fa6314aa20513e47da576f24e`,
+[exposes `Store.state` for `ObservableState`](https://github.com/pointfreeco/swift-composable-architecture/blob/e2fa1df6cd9eec6fa6314aa20513e47da576f24e/Sources/ComposableArchitecture/Observation/Store%2BObservation.swift#L22-L35)
+and [deprecates `withState`](https://github.com/pointfreeco/swift-composable-architecture/blob/e2fa1df6cd9eec6fa6314aa20513e47da576f24e/Sources/ComposableArchitecture/Internal/Deprecations.swift#L255-L270).
+Nearby already has `@ObservableState`, and all three affected test functions
+run on `@MainActor`. Replace each identity closure with `store.state`; retain
+the captured previous values, comparison timing and existing assertions.
+
+The preserved scenarios are callback rejection outside the lifetime (one test),
+old location results with the newer check pending/resolved (two parameter cases),
+and old fleet success/failure with newer work pending/complete (four parameter
+cases). Require all seven executions and the full native suite to pass, with zero
+deprecation diagnostics on both local and hosted compilers. Final qualification
+and counts are recorded on the review PR containing this change.
+
+This removes eight closures and adds no helper, dependency or workaround.
+App behavior and the IOS-02, IOS-13 and IOS-16 boundaries stay separate. This
+Swift test API change has no Android behavior delta.

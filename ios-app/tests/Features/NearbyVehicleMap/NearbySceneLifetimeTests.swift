@@ -80,7 +80,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         defer { probe.finish() }
         let store = probe.store(Factory.loadedState())
         var lifetime = NearbyVehicleMapLifetime()
-        let previous = store.withState { $0 }
+        let previous = store.state
         for action in [
             NearbyVehicleMapFeature.Action.refreshTapped,
             .visibleRefreshDue(nowMillis: 11000),
@@ -88,13 +88,13 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         ] {
             let ignored = lifetime.send(action, in: store)
             #expect(ignored == nil)
-            #expect(store.withState { $0 } == previous)
+            #expect(store.state == previous)
         }
         await lifetime.stop(in: store).finish()
-        let stopped = store.withState { $0 }
+        let stopped = store.state
         let ignored = lifetime.send(.locationResolutionResponse(.temporarilyUnavailable), in: store)
         #expect(ignored == nil)
-        #expect(store.withState { $0 } == stopped)
+        #expect(store.state == stopped)
         #expect(probe.locationCount == 0)
         #expect(probe.refreshCount == 0)
     }
@@ -194,12 +194,12 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
             current.complete(.blocked(.approximateOnly))
             await newTask.finish()
         }
-        let before = store.withState { $0 }
+        let before = store.state
 
         // A noncooperative old location provider cannot replace pending/current permission.
         old.complete(.precise(latitude: 1, longitude: 2))
         await oldTask.finish()
-        #expect(store.withState { $0 } == before)
+        #expect(store.state == before)
         #expect(probe.refreshCount == 0)
         if !newerResolved {
             current.complete(.blocked(.accessDenied))
@@ -239,10 +239,10 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
             current.complete(Factory.loadedSharedState(sequence: 2))
             await newTask.finish()
         }
-        let before = store.withState { $0 }
+        let before = store.state
         old.complete(oldFailure ? Factory.deniedSharedState() : Factory.loadedSharedState(sequence: 99, vehicles: []))
         await oldTask.finish()
-        #expect(store.withState { $0 } == before)
+        #expect(store.state == before)
         if !newerComplete {
             current.complete(Factory.loadedSharedState(sequence: 2))
             await newTask.finish()
