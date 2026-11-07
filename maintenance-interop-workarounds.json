@@ -389,6 +389,30 @@
         "Record exact Swift/Xcode versions, normal versus direct-form outcomes and the upstream issue/fix if verified. No exact upstream issue attribution is currently verified."
       ],
       "probe_state": "not_automated"
+    },
+    {
+      "id": "IOS-17",
+      "scope": "default",
+      "title": "Generated SwiftJob uses unsupported Job inheritance",
+      "reason": "The selected Kotlin 2.5.0-Beta2 coroutine template delegates Job, while coroutines 1.11.0 warns that Job inheritance is unsupported and will become an error. Current Kotlin master emits the same template, and official Gradle integration uses the same three compiler opt-ins as Mobi. The warning remains visible; this entry tracks an upstream contract constraint, not an added suppression. See docs/maintenance/evidence/2026-11-07-coroutine-inheritance.md.",
+      "paths": [
+        "scripts/ios/check_swift_export.rb",
+        "tools/swift-export/module.yaml"
+      ],
+      "recheck_on": [
+        "kotlin",
+        "coroutines",
+        "toolchain"
+      ],
+      "replacement": "Use an upstream-supported cancellation bridge and coroutine inheritance contract. Review source and compiler settings even if a new version stops emitting the warning; an added opt-in or diagnostic suppression alone does not qualify retirement.",
+      "retirement_checks": [
+        "Inspect the selected Kotlin coroutine template, official integration and coroutines Job contract. Identify the applicable upstream fix or supported replacement; no exact upstream issue is currently verified.",
+        "Regenerate the actual app graph and inspect coroutine_inheritance in the normal iOS report, including source hash, delegation, diagnostic count and compiler flags. Do not hand-edit generated code or add an inheritance opt-in merely to hide the warning.",
+        "Run real Home/Nearby success, Kotlin-origin uncaught-error and cancellation controls, cancellation recovery, late completion and lifetime tests. Preserve one Kotlin runtime and qualify both supported local and hosted compilers."
+      ],
+      "probe_state": "available_in_ci",
+      "probe_command": "ruby scripts/ios/check_swift_export.rb",
+      "probe_report": "build/logs/swift-export-checks/report.json"
     }
   ]
 }

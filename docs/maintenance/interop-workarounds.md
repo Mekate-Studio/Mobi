@@ -27,6 +27,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | IOS-14 | Typed repository-failure fixtures and Kotlin-origin bridge controls | [Home success/unexpected helpers removed](evidence/2026-11-06-ios14-home-repositories.md); typed domain exceptions need a separate export-surface qualification. Preserve Kotlin-origin controls. |
 | IOS-15 | Former test-only Kotlin constructors, removed with Beta2 | [Public generated constructors in the actual native tests](evidence/2026-11-05-beta2-ios15.md); compiler visibility is now required by the iOS gate |
 | IOS-16 | Explicit closure for native test observation on hosted Swift 6.3.3 | Recheck direct function conversion on Swift/Xcode updates; optimized actual test-module compilation and lifecycle tests must pass on all supported compilers. [Failure evidence and warning follow-ups](compiler-warning-follow-ups.md). |
+| IOS-17 | Upstream-generated `SwiftJob` uses unsupported Job inheritance | [Warning retained, actual Native diagnostic receipt added](evidence/2026-11-07-coroutine-inheritance.md); qualify an upstream-supported bridge/contract on Kotlin and coroutines updates. No inheritance opt-in or generated-source patch is added. |
 
 “Facade” is a pattern name, not a defect category. The request/wire facades above
 compensate for integration limitations or candidate representation choices.
@@ -46,6 +47,9 @@ candidate: actual reducer transitions, shared Home/Compose service ownership,
 equality, cancellation and cross-runtime lifetime still need qualification before
 removing an exception. Reports are in `build/logs/swift-export-checks/` and uploaded from PR jobs even
 when the checks pass.
+IOS-17 records the actual generated coroutine source hash, Job delegation,
+inheritance diagnostic count and compiler opt-ins/diagnostic controls. A missing
+warning requests source and contract review; it does not prove safe inheritance.
 The release watch marks these checks `available_in_ci`; it does not pretend to
 have run them or turn a passing probe into retirement authorization.
 
@@ -146,6 +150,7 @@ reproducer and proposed report for review before publishing upstream.
 | IOS-01, IOS-03 | Sealed-state mapping, generated cases and real sample consumers | Actual feature uses exhaustive generated handling without handwritten tags/visitors |
 | IOS-02, IOS-05, IOS-09 | Generated reference ownership, Swift concurrency, selected Swift/TCA contracts | Real reducer/map/equality/lifetime and off-actor rejection; handle/relay machinery justified separately |
 | IOS-04, IOS-06, IOS-08 | Coroutine docs and KT-80305; follow cancellation/exception issues, not just the parent status | Real success/error/cancellation/late completion, strict support compilation and unfinished-work ownership |
+| IOS-17 | Selected coroutine template, official integration and coroutines Job inheritance contract | Inspect actual Native diagnostic receipt and any new opt-in; qualify an upstream-supported replacement with real error/cancellation/lifetime tests |
 | IOS-07, IOS-10 | Architecture, standalone execution, compiler bridges, module export and sample build configuration | Narrow generated API, one Kotlin image, correct module graph and supported cold Toolchain delivery |
 | IOS-11, IOS-12 | Relevant Xcode/macro documentation and exact dependency/advisory evidence | These environment/risk controls cannot be retired from Swift-export milestones alone |
 | IOS-14, IOS-15 | Reverse async exception identity and public generated nested constructors | Real repository-failure round-trip and native tests after deleting compensating fixtures |
