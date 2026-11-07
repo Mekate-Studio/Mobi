@@ -219,8 +219,7 @@ Native packaging or delegated Gradle graph fingerprints. The normal native
 build/test gates separately qualify the actual integration. Final warning
 counts and local/hosted results are recorded on the review PR.
 
-**Next version review:** [Android's official release notes](https://developer.android.com/jetpack/androidx/releases/lifecycle#2.11.0)
-list stable 2.11.0, released June 17, 2026. Moving to it changes the effective
-graph and needs a separate Circuit/Compose/JetBrains-Lifecycle compatibility
-review and lifetime qualification. This increment makes the existing beta
-selection visible; it adds no API adaptation or interop workaround.
+**Stable-version follow-up:** the separate [2.11.0 qualification](evidence/2026-11-07-lifecycle-2.11-stable.md)
+records the effective AndroidX upgrade, reviewed release interval, remaining
+JetBrains version split and native lifetime/build checks. The original alignment
+above only made the existing beta selection visible.
