@@ -164,6 +164,7 @@ extension NativeFeatureTests.HomeFeatureTests {
         #expect(refreshed == .loaded(value: 21))
     }
 
+    @MainActor
     @Test(
         "should restore previous Home state when a Swift Task is cancelled",
         .timeLimit(.minutes(1)),
@@ -175,7 +176,7 @@ extension NativeFeatureTests.HomeFeatureTests {
     )
     func shouldRestorePreviousHomeStateWhenSwiftTaskIsCancelled(previousState: HomeCounterLoadable) async {
         let client = HomeFeatureClient(service: IosInteropTestServices.shared.delayedHomeService())
-        let refresh = Task { await client.refresh(previousState) }
+        let refresh = Task.detached { await client.refresh(previousState) }
         refresh.cancel()
         let result = await refresh.value
         #expect(result == previousState)
@@ -224,6 +225,7 @@ extension NativeFeatureTests.HomeFeatureTests {
         }
     }
 
+    @MainActor
     @Test("should preserve fallback for uncaught Kotlin failure", arguments: [0, 8])
     func shouldPreserveFallbackForUncaughtKotlinFailure(counterValue: Int) async {
         let client = HomeFeatureClient(service: IosInteropTestServices.shared.uncaughtFailureHomeService())
@@ -232,6 +234,7 @@ extension NativeFeatureTests.HomeFeatureTests {
         #expect(refreshed == .error(previousValue: counterValue > 0 ? counterValue : nil, reason: .unexpected))
     }
 
+    @MainActor
     @Test("should preserve live Home client states and payloads", arguments: [0, 8])
     func shouldPreserveLiveHomeClientStatesAndPayloads(counterValue: Int) async {
         // given
@@ -247,6 +250,7 @@ extension NativeFeatureTests.HomeFeatureTests {
         #expect(refreshed == .loaded(value: 21))
     }
 
+    @MainActor
     @Test(
         "should preserve live Home repository failures and previous values",
         arguments: [0, 8], [HomeCounterLoadFailureReason.repositoryUnavailable, .unexpected],

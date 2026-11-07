@@ -139,6 +139,8 @@ module MobiSwiftExport
                 # IOS-07: generated implementation-only imports need this check.
                 '-enable-experimental-feature', 'CheckImplementationOnly', m.fetch('swift')]
         args += [@configuration == 'Debug' ? '-g' : '-O']
+        # IOS-02: Home and reverse repository calls must retain Swift caller isolation.
+        args += ['-enable-upcoming-feature', 'NonisolatedNonsendingByDefault'] if %w[KotlinCoroutineSupport MobiCore MobiHome].include?(name)
         args += ['-warnings-as-errors'] if ARGV.include?('--strict-support')
         command('swift-' + name, args)
         compiled << name

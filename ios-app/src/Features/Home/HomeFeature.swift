@@ -1,8 +1,8 @@
 import Foundation
 import MobiIOSDependencies
 
-@Reducer
-struct HomeFeature {
+@MainActor
+struct HomeFeature: @MainActor Reducer {
     @Dependency(\.homeFeatureClient) private var homeFeatureClient
 
     var body: some ReducerOf<Self> {

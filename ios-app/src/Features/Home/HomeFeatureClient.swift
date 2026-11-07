@@ -1,14 +1,15 @@
 import Foundation
-@preconcurrency import MobiHome
+import MobiHome
 import MobiIOSDependencies
 
 struct HomeFeatureClient: Sendable {
-    var initialState: @Sendable () -> HomeCounterLoadable
-    var loadingState: @Sendable (_ counterValue: Int) -> HomeCounterLoadable
-    var refresh: @Sendable (_ previousState: HomeCounterLoadable) async -> HomeCounterLoadable
+    var initialState: @MainActor @Sendable () -> HomeCounterLoadable
+    var loadingState: @MainActor @Sendable (_ counterValue: Int) -> HomeCounterLoadable
+    var refresh: @MainActor @Sendable (_ previousState: HomeCounterLoadable) async -> HomeCounterLoadable
 }
 
 extension HomeFeatureClient {
+    @MainActor
     init(service: HomeFeatureService) {
         self.init(
             initialState: {

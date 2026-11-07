@@ -77,10 +77,10 @@ report['coroutine_inheritance'] = {
 Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
   base = ['/usr/bin/xcrun', 'swiftc', '-sdk', sdk, '-target', triple,
           '-I', package, '-module-cache-path', File.join(temporary, 'cache'), '-swift-version', '6']
-  compile = lambda do |name, text, sources = []|
+  compile = lambda do |name, text, sources = [], extra: []|
     path = File.join(temporary, name + '.swift')
     File.write(path, text)
-    diagnostic, status = Open3.capture2e(*(base + ['-warnings-as-errors', '-emit-sil', '-whole-module-optimization', '-parse-as-library', '-o', File.join(temporary, name + '.sil'), path] + sources))
+    diagnostic, status = Open3.capture2e(*(base + extra + ['-warnings-as-errors', '-emit-sil', '-whole-module-optimization', '-parse-as-library', '-o', File.join(temporary, name + '.sil'), path] + sources))
     File.write(File.join(logs, name + '.log'), diagnostic)
     [status.success?, diagnostic]
   end
@@ -134,11 +134,39 @@ Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
     }
   SWIFT
   good, diagnostic = compile.call('home-actor-refresh', actor_source)
-  unless good || diagnostic.include?("sending 'self.service' risks causing data races")
-    abort "Unexpected Home actor ownership probe failure:\n#{diagnostic}"
-  end
-  report['isolation']['home_actor_refresh'] = good ? 'retirement_candidate' : 'blocked_by_async_service_transfer'
+  abort "Home actor-owned refresh regressed:\n#{diagnostic}" unless good
+  report['isolation']['home_actor_refresh'] = 'passed'
   puts '[swift-export] IOS-02 partial isolation checks: ' + JSON.generate(report.fetch('isolation'))
+
+  # Check the actual app boundary, not a substitute client or reducer.
+  products = File.join(root, 'build/xcode-derived-data-cli-tests/Build/Products', configuration + '-' + platform)
+  native_imports = ['-I', products, '-F', File.join(products, 'PackageFrameworks')]
+  allowed = <<~SWIFT
+    @testable import app
+    @MainActor func synchronous(_ client: HomeFeatureClient) {
+      _ = client.initialState(); _ = client.loadingState(0); _ = HomeFeature().body
+    }
+    func asynchronous(_ client: HomeFeatureClient) async -> HomeCounterLoadable {
+      await client.refresh(.initial)
+    }
+  SWIFT
+  good, diagnostic = compile.call('home-client-allowed', allowed, extra: native_imports)
+  abort "Actor-bound Home client calls failed:\n#{diagnostic}" unless good
+  report['home_client_isolation'] = { 'allowed_calls' => 'passed' }
+  [
+    ['initial_state_off_actor', 'client: HomeFeatureClient', 'client.initialState()', 'call to main actor-isolated function'],
+    ['loading_state_off_actor', 'client: HomeFeatureClient', 'client.loadingState(0)', 'call to main actor-isolated function'],
+    ['reducer_off_actor', 'reducer: HomeFeature', 'reducer.body', "main actor-isolated property 'body'"]
+  ].each do |name, parameter, expression, expected|
+    text = "@testable import app\nfunc crossing(_ #{parameter}) { _ = #{expression} }\n"
+    good, diagnostic = compile.call('home-' + name, text, extra: native_imports)
+    abort "Off-actor Home access was not rejected precisely:\n#{diagnostic}" unless !good && diagnostic.include?(expected)
+    report['home_client_isolation'][name] = 'rejected'
+  end
+  report['home_client_isolation']['caller_isolated_modules'] = commands.select do |command|
+    command.fetch('argv').each_cons(2).include?(['-enable-upcoming-feature', 'NonisolatedNonsendingByDefault'])
+  end.map { |command| command.fetch('name').delete_prefix('swift-') }.sort
+  puts '[swift-export] Home client actor contracts: ' + JSON.generate(report.fetch('home_client_isolation'))
 
   constructor_source = <<~SWIFT
     import MobiCore
@@ -170,6 +198,8 @@ Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
     args = base + ['-warnings-as-errors', '-package-name', 'MobiShared', '-emit-module', '-parse-as-library',
                    '-module-name', name, '-emit-module-path', File.join(temporary, name + '.swiftmodule'),
                    '-enable-experimental-feature', 'CheckImplementationOnly', mod.fetch('swift')]
+    producer_args = commands.find { |command| command.fetch('name') == 'swift-' + name }.fetch('argv')
+    producer_args.each_cons(2) { |flag, value| args += [flag, value] if flag == '-enable-upcoming-feature' }
     diagnostic, status = Open3.capture2e(*args)
     File.write(File.join(logs, name + '-strict.log'), diagnostic)
     [name, status.success? ? 'retirement_candidate' : 'blocked']
