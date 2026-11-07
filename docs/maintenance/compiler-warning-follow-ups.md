@@ -35,7 +35,7 @@ that count. WARN-10 comes from a later successful build and is not part of those
 | WARN-05 | 15 generated Kotlin diagnostics: coroutine inheritance opt-in (1), redundant Elvis (1), unchecked casts (5), unused expressions (8) | Coroutine/exporter support and generated bridges. Prioritize the inheritance warning: its diagnostic says it will become an error in a future release. | Review official Kotlin/coroutines changes; regenerate the actual graph and run async error/cancellation tests. Record upstream applicability and any remaining diagnostics; do not hand-edit generated files. |
 | WARN-06 | 9 generated Swift diagnostics: unreachable defaults (6), ineffective/optional casts (2), unused error (1); generated Native C++ mixed initializer extension (1) | Swift exporter and Kotlin/Native output | Selected upstream output reduces the diagnostics while complete switches and omission controls still behave correctly. Keep the generator/source version and exact before/after warning evidence. |
 | WARN-07 | 1 authored unused `StoreTask?` result in `ios-app/src/iosApp.swift:30`; Android also reports unused `Unit` in `NearbyVehicleMapUiFactory.kt:193` | Explicit discard at the Home UI callback boundary; empty Android no-overlay branch. See [evidence](#warn-07-unused-native-results). | Preserve native lifetime/admission behavior, run both platform test/build gates and require the two targeted authored diagnostics to be absent. |
-| WARN-08 | Android declares lifecycle-runtime-compose 2.9.4 but resolves 2.11.0-beta01 | Dependency graph alignment; inspect actual Toolchain resolution and Compose/Circuit compatibility before changing the declaration. | Record why the resolved version is selected, make declarations consistent with the reviewed graph, and run Android presenter/lifetime/build gates. This note authorizes no version adoption. |
+| WARN-08 | Android declares lifecycle-runtime-compose 2.9.4 but resolves 2.11.0-beta01 | Circuit 0.34.0 already selects the beta through JetBrains Lifecycle. The direct declaration now matches that selection; see [graph evidence](#warn-08-lifecycle-declaration-alignment). | Before/after main/test compile/runtime graphs preserve selected versions and edges; qualify native lifetime tests and Debug builds. Review a future effective version change separately. |
 | WARN-09 | Android SDK Manager CLI deprecation and missing `cmdline-tools;latest/package.xml` followed by redownload | Runner provisioning / delegated Android bootstrap | Review supported Android CLI/Toolchain integration in a separate script change; qualify cold-runner SDK/license setup and preserve delegated bootstrap. |
 | WARN-10 | 8 authored `Store.withState` reads in `NearbySceneLifetimeTests.swift`; successful CI #595 emitted 48 repeated deprecation annotations | Direct `store.state` reads use the existing `@ObservableState` and pinned TCA API; see [evidence](#warn-10-observable-store-reads-in-lifetime-tests). This is test API maintenance. | Preserve callback rejection and late location/fleet result matrices; run the actual iOS suite on local/hosted compilers and require zero `withState` deprecation diagnostics. |
 
@@ -180,3 +180,47 @@ Home/Nearby presenter/lifetime checks, plus both Debug builds, qualify the chang
 The Android host tests do not establish device rendering or OS delivery behavior.
 Final local/hosted results and targeted warning counts are recorded on the review
 PR containing this change. Other warning categories remain in the backlog.
+
+## WARN-08: Lifecycle declaration alignment
+
+Recorded 2026-11-07, against main `217694fcef92b56a118bb7499d5a870365c641ea`.
+The Android declaration changes from `2.9.4` to the already resolved
+`2.11.0-beta01`. Home and Nearby directly import `LifecycleStartEffect`, so the
+app keeps an explicit dependency for the API it uses.
+
+The source of the beta is [Circuit 0.34.0's pinned Lifecycle version](https://github.com/slackhq/circuit/blob/0.34.0/gradle/libs.versions.toml).
+Its published Android POMs show these paths, also present in Mobi's resolved graph:
+
+- `circuit-foundation-android:0.34.0` → JetBrains `lifecycle-viewmodel-compose:2.11.0-beta01` → AndroidX ViewModel Compose → AndroidX `lifecycle-runtime-compose:2.11.0-beta01`.
+- `circuit-retained-android:0.34.0` → JetBrains `lifecycle-runtime-compose:2.11.0-beta01` → AndroidX `lifecycle-runtime-compose:2.11.0-beta01`.
+
+Toolchain 0.13.0 separately [defaults Compose to 1.12.1](https://github.com/JetBrains/kotlin-toolchain/blob/v0.13.0/sources/frontend-api/src/org/jetbrains/amper/frontend/schema/DefaultVersions.kt).
+The compiler remains Mobi's explicit Kotlin 2.5.0-Beta2. Neither tuple changes.
+
+Before/after `./kotlin show dependencies --all-modules --include-tests` output was
+parsed with the existing `Maintenance::KotlinEvidence.graphs` parser for 0.13.0.
+Both captures have **104 roots across nine modules**, with 19,247 printed nodes
+and edges each, including request/repeated nodes rather than distinct artifacts.
+Every root's module, usage, scope, platforms, edges and selected versions are
+unchanged. The full parsed JSON differs at exactly 12 scalar fields: the direct
+request label, selected-artifact display label and requested-version field in
+each of Android's main/test × compile/runtime roots. All other raw fields match.
+
+| Capture | Parsed JSON SHA-256 |
+| --- | --- |
+| Baseline | `579538b3b01205ef382586d1e16d25c2fe97a217c0b2250d3a95c98ac670d48b` |
+| Candidate | `d1432aec1a8c7b5f50dd9b4e67478a75c47c3c6124ee5ef6c1e9e1b380111787` |
+
+After omitting parsed requested-version fields/display labels and normalizing
+only that direct request fragment label, both otherwise complete graphs have
+SHA-256 `3bcdd74261104198e299fdf79324f1e1f77901f297c1b6aba0c3c6d697c2658c`
+(sorted-key compact JSON). These are Toolchain Maven-graph comparisons, not
+Native packaging or delegated Gradle graph fingerprints. The normal native
+build/test gates separately qualify the actual integration. Final warning
+counts and local/hosted results are recorded on the review PR.
+
+**Next version review:** [Android's official release notes](https://developer.android.com/jetpack/androidx/releases/lifecycle#2.11.0)
+list stable 2.11.0, released June 17, 2026. Moving to it changes the effective
+graph and needs a separate Circuit/Compose/JetBrains-Lifecycle compatibility
+review and lifetime qualification. This increment makes the existing beta
+selection visible; it adds no API adaptation or interop workaround.
