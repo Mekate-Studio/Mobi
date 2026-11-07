@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest'
 require 'fileutils'
 require 'json'
 require 'open3'
@@ -49,6 +50,29 @@ triple = app_compile.fetch(app_compile.index('-target') + 1)
 sdk = app_compile.fetch(app_compile.index('-sdk') + 1)
 report = { 'schema' => 1, 'scope' => 'actual_delivery_compile_contracts', 'target' => triple,
            'sdk' => sdk, 'retirement_authorized' => false, 'checks' => [] }
+
+# IOS-17: observe the upstream inheritance contract without suppressing it.
+# A missing diagnostic can also mean a changed message or opt-in, not a fix.
+coroutine_source = modules.find { |mod| mod.fetch('name') == 'KotlinCoroutineSupport' }.fetch('kotlin')
+coroutine_text = File.read(coroutine_source)
+native_arguments = JSON.parse(File.read(File.join(output, 'native-cache.json'))).fetch('argv')
+compiler_opt_ins = native_arguments.each_cons(2).map { |flag, value| value if flag == '-opt-in' }.compact
+compiler_opt_ins += native_arguments.grep(/\A-opt-in=/).map { |flag| flag.delete_prefix('-opt-in=') }
+inheritance_diagnostics = File.readlines(File.join(output, 'native.log')).select do |line|
+  line.match?(/KotlinCoroutineSupport\.kt:\d+:\d+: warning:/) && line.include?('not intended to be inherited from')
+end.map { |line| line.sub(root + '/', '') }
+File.write(File.join(logs, 'coroutine-inheritance.log'), inheritance_diagnostics.join)
+report['coroutine_inheritance'] = {
+  'scope' => 'actual_generated_native_compilation',
+  'state' => inheritance_diagnostics.empty? ? 'diagnostic_not_reported_review_required' : 'diagnostic_reported',
+  'diagnostic_count' => inheritance_diagnostics.size,
+  'generated_source_sha256' => Digest::SHA256.hexdigest(coroutine_text),
+  'uses_job_delegation' => coroutine_text.match?(/class SwiftJob\b[^\n]*: Job by Job\(\)/),
+  'source_mentions_inheritance_marker' => coroutine_text.include?('InternalForInheritanceCoroutinesApi'),
+  'compiler_opt_ins' => compiler_opt_ins,
+  'diagnostic_control_flags' => native_arguments.grep(/\A(?:-nowarn|-Xsuppress-warning|-Xwarning-level)/),
+  'retirement_authorized' => false
+}
 
 Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
   base = ['/usr/bin/xcrun', 'swiftc', '-sdk', sdk, '-target', triple,
