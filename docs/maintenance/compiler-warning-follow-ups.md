@@ -34,7 +34,7 @@ that count. WARN-10 comes from a later successful build and is not part of those
 | WARN-04 | 7 generated Swift modules use `@_implementationOnly` without library evolution | Exporter output/runtime packaging; review with IOS-07/08/10 on Kotlin/Swift updates. | Supported producer output eliminates the diagnostics while preserving one runtime, module visibility and the real app's link/test behavior. Do not enable library evolution merely to hide the warnings. |
 | WARN-05 | 15 generated Kotlin diagnostics: coroutine inheritance opt-in (1), redundant Elvis (1), unchecked casts (5), unused expressions (8) | Coroutine/exporter support and generated bridges. Prioritize the inheritance warning: its diagnostic says it will become an error in a future release. | Review official Kotlin/coroutines changes; regenerate the actual graph and run async error/cancellation tests. Record upstream applicability and any remaining diagnostics; do not hand-edit generated files. |
 | WARN-06 | 9 generated Swift diagnostics: unreachable defaults (6), ineffective/optional casts (2), unused error (1); generated Native C++ mixed initializer extension (1) | Swift exporter and Kotlin/Native output | Selected upstream output reduces the diagnostics while complete switches and omission controls still behave correctly. Keep the generator/source version and exact before/after warning evidence. |
-| WARN-07 | 1 authored unused `StoreTask?` result in `ios-app/src/iosApp.swift:30`; Android also reports unused `Unit` in `NearbyVehicleMapUiFactory.kt:193` | Small native-source cleanup after integration | Make the intended return/discard behavior explicit and preserve native lifetime/admission tests. |
+| WARN-07 | 1 authored unused `StoreTask?` result in `ios-app/src/iosApp.swift:30`; Android also reports unused `Unit` in `NearbyVehicleMapUiFactory.kt:193` | Explicit discard at the Home UI callback boundary; empty Android no-overlay branch. See [evidence](#warn-07-unused-native-results). | Preserve native lifetime/admission behavior, run both platform test/build gates and require the two targeted authored diagnostics to be absent. |
 | WARN-08 | Android declares lifecycle-runtime-compose 2.9.4 but resolves 2.11.0-beta01 | Dependency graph alignment; inspect actual Toolchain resolution and Compose/Circuit compatibility before changing the declaration. | Record why the resolved version is selected, make declarations consistent with the reviewed graph, and run Android presenter/lifetime/build gates. This note authorizes no version adoption. |
 | WARN-09 | Android SDK Manager CLI deprecation and missing `cmdline-tools;latest/package.xml` followed by redownload | Runner provisioning / delegated Android bootstrap | Review supported Android CLI/Toolchain integration in a separate script change; qualify cold-runner SDK/license setup and preserve delegated bootstrap. |
 | WARN-10 | 8 authored `Store.withState` reads in `NearbySceneLifetimeTests.swift`; successful CI #595 emitted 48 repeated deprecation annotations | Direct `store.state` reads use the existing `@ObservableState` and pinned TCA API; see [evidence](#warn-10-observable-store-reads-in-lifetime-tests). This is test API maintenance. | Preserve callback rejection and late location/fleet result matrices; run the actual iOS suite on local/hosted compilers and require zero `withState` deprecation diagnostics. |
@@ -154,3 +154,29 @@ and counts are recorded on the review PR containing this change.
 This removes eight closures and adds no helper, dependency or workaround.
 App behavior and the IOS-02, IOS-13 and IOS-16 boundaries stay separate. This
 Swift test API change has no Android behavior delta.
+
+## WARN-07: unused native results
+
+Recorded 2026-11-07. The [successful CI #600 iOS job](https://github.com/Mekate-Studio/Mobi/actions/runs/42372565618/job/128403566003)
+at `aa9048eb8e6d4edc32e2ce0c759b79adb27d5464` emitted one unused `StoreTask?`
+return warning at the Home button callback. The [successful CI #590 Android test job](https://github.com/Mekate-Studio/Mobi/actions/runs/42292771869/job/128150281754)
+and [Debug build job](https://github.com/Mekate-Studio/Mobi/actions/runs/42292771869/job/128150281904)
+at `c8ed8540ec49be932ae11e9ba49015e72b2a9241` each emitted one unused-expression
+diagnostic at the explicit `Unit` in `NativeMapOverlay`'s `None` branch.
+That Android source and its selected build configuration are unchanged between
+this baseline and the cleanup's main base, `8a3d3ec84afcb5d9919bcbf20ad709a22e63ec97`.
+These are targeted source diagnostics, not the total remaining warning count.
+
+The Home UI callback now explicitly discards its return with `_ = refresh()`.
+`HomeRefreshLifetime.refresh` still retains the admitted task, and its stop path
+still cancels that task. The callback still invokes refresh once; rejection,
+background/tab cancellation and late-result policy stay with the existing owner.
+Android's `None` branch is an empty block, with the same no-content behavior;
+banner and blocking branches are unchanged.
+
+This is ordinary native-source maintenance. It adds no helper, dependency,
+annotation or interop workaround. Existing iOS Home lifetime/admission and Android
+Home/Nearby presenter/lifetime checks, plus both Debug builds, qualify the change.
+The Android host tests do not establish device rendering or OS delivery behavior.
+Final local/hosted results and targeted warning counts are recorded on the review
+PR containing this change. Other warning categories remain in the backlog.

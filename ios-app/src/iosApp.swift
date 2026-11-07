@@ -27,7 +27,7 @@ private struct AppRootView: View {
     var body: some View {
         HomeRefreshLifecycle(store: homeStore, isHomeSelected: selectedDestination == .nativeHome) { refresh in
             TabView(selection: $selectedDestination) {
-                HomeView(store: homeStore) { refresh() }
+                HomeView(store: homeStore) { _ = refresh() }
                     .tabItem {
                         Label("Native Home", systemImage: "iphone")
                     }

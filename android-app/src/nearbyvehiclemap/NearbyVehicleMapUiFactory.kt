@@ -189,9 +189,7 @@ private fun NativeMapHeader() {
 @Composable
 private fun BoxScope.NativeMapOverlay(overlay: NearbyVehicleMapOverlayPresentation) {
     when (overlay) {
-        NearbyVehicleMapOverlayPresentation.None -> {
-            Unit
-        }
+        NearbyVehicleMapOverlayPresentation.None -> {}
 
         is NearbyVehicleMapOverlayPresentation.Banner -> {
             NativeMapOverlayCard(
