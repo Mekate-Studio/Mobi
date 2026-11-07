@@ -142,13 +142,14 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
 
     @MainActor
     @Test("should preserve shared failure meaning through a location check", arguments: [false, true], [
-        NearbyVehicleMapFailureReason.RepositoryUnavailable, .Unexpected,
+        NearbySnapshotFailureScenario.repositoryUnavailable, .unexpected,
     ])
     func shouldPreserveFailureThroughLocationCheck(
         hasSnapshot: Bool,
-        reason: NearbyVehicleMapFailureReason,
+        failure: NearbySnapshotFailureScenario,
     ) async throws {
         // given
+        let reason = failure.reason
         let service = IosInteropTestServices.shared.uncaughtFailureNearbyService()
         let client = NearbyVehicleMapFeatureClient(service: service)
         let previous = hasSnapshot ? Factory.loadedState() : Factory.readyState()
