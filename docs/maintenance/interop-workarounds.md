@@ -12,7 +12,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | ID | Mechanism | Retirement or simplification target |
 | --- | --- | --- |
 | IOS-01 | Former Kotlin visitors and Swift projections, removed by the app integration | Generated exhaustive state handling in real consumers; delete both handwritten layers |
-| IOS-02 | Nearby unchecked raw-state sendability and preconcurrency captures; Home uses checked actor ownership | [Home isolation and the three-module async profile](../adr/0019-ios-home-checked-service-isolation.md); qualify remaining Nearby ownership and retire redundant producer flags when upstream/default semantics replace them |
+| IOS-02 | Nearby unchecked raw-state sendability/raw-state imports; native service calls use checked actor ownership | [Nearby service isolation and the four-module profile](evidence/2026-11-07-nearby-service-isolation.md); qualify raw-state ownership separately and retire redundant producer flags when upstream/default semantics replace them |
 | IOS-03 | Pilot numeric tags, wire facades and decoders | Delete the duplicate protocol as actual feature slices replace it; no upstream release is needed to reject this design |
 | IOS-04 | Home/Nearby request-owner facades | Qualified direct async or a smaller operation owner; remove redundant request registries and facade API |
 | IOS-05 | Nearby state IDs, owner UUIDs and adopt/release calls | Qualify retained actor-owned state; delete the state dictionary and manual ownership protocol |
@@ -42,7 +42,11 @@ IOS-15's removal, and reports strict generated-support availability. IOS-02 also
 generated service/raw-state Sendable captures and a Home actor-owned async call.
 These partial isolation checks emit SIL so ownership diagnostics run; type checking
 alone can miss an unsafe async transfer. An actor annotation by itself does not
-qualify the generated async boundary. Home now requires actor-owned refresh to compile and checks its actual app client/reducer with legal and rejected off-actor calls. The report records its caller-isolated module profile; the strict-support check retains the producer's upcoming-feature settings while testing Swift 6. Passing results only identify a retirement
+qualify the generated async boundary. Home and Nearby now require actor-owned
+refresh to compile and check their actual app clients/reducers with legal and
+rejected off-actor calls. The report records the four-module profile and explicitly
+retains Nearby unchecked state; the strict-support check retains the producer's
+upcoming-feature settings while testing Swift 6. Passing results only identify a retirement
 candidate: actual reducer transitions, shared Home/Compose service ownership,
 equality, cancellation and cross-runtime lifetime still need qualification before
 removing an exception. Reports are in `build/logs/swift-export-checks/` and uploaded from PR jobs even

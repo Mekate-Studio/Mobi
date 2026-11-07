@@ -136,6 +136,21 @@ Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
   good, diagnostic = compile.call('home-actor-refresh', actor_source)
   abort "Home actor-owned refresh regressed:\n#{diagnostic}" unless good
   report['isolation']['home_actor_refresh'] = 'passed'
+  nearby_actor_source = <<~SWIFT
+    import MobiCore
+    import MobiNearby
+    @MainActor final class NearbyOwner {
+      private let service: NearbyVehicleMapFeatureService
+      init(service: NearbyVehicleMapFeatureService) { self.service = service }
+      func refresh() async throws {
+        let state = service.riderLocationAvailable(currentState: service.initialState(), location: RiderLocation(latitude: 0, longitude: 0))
+        _ = try await service.refreshSnapshot(currentState: state, nowMillis: 0)
+      }
+    }
+  SWIFT
+  good, diagnostic = compile.call('nearby-actor-refresh', nearby_actor_source)
+  abort "Nearby actor-owned refresh regressed:\n#{diagnostic}" unless good
+  report['isolation']['nearby_actor_refresh'] = 'passed'
   puts '[swift-export] IOS-02 partial isolation checks: ' + JSON.generate(report.fetch('isolation'))
 
   # Check the actual app boundary, not a substitute client or reducer.
@@ -167,6 +182,40 @@ Dir.mktmpdir('mobi-swift-export-checks-') do |temporary|
     command.fetch('argv').each_cons(2).include?(['-enable-upcoming-feature', 'NonisolatedNonsendingByDefault'])
   end.map { |command| command.fetch('name').delete_prefix('swift-') }.sort
   puts '[swift-export] Home client actor contracts: ' + JSON.generate(report.fetch('home_client_isolation'))
+
+  nearby_allowed = <<~SWIFT
+    @testable import app
+    import MobiNearby
+    @MainActor func synchronous(_ client: NearbyVehicleMapFeatureClient, _ state: NearbyVehicleMapFeatureState) {
+      _ = client.initialState()
+      _ = client.preciseLocationResolvedState(state, 0, 0)
+      _ = client.locationBlockedState(state, .accessDenied)
+      _ = client.locationTemporarilyUnavailableState(state)
+      _ = client.loadingState(state)
+      _ = client.shouldRefresh(state, 0)
+      _ = client.stateAfterTimePasses(state, 0)
+      _ = NearbyVehicleMapFeature().body
+    }
+    @MainActor func asynchronous(_ client: NearbyVehicleMapFeatureClient, _ state: NearbyVehicleMapFeatureState) async {
+      _ = await client.refresh(state, 0)
+    }
+  SWIFT
+  good, diagnostic = compile.call('nearby-client-allowed', nearby_allowed, extra: native_imports)
+  abort "Actor-bound Nearby client calls failed:\n#{diagnostic}" unless good
+  report['nearby_client_isolation'] = { 'allowed_calls' => 'passed', 'raw_state_sendability' => 'unchecked_retained' }
+  [
+    ['initial_state_off_actor', 'client: NearbyVehicleMapFeatureClient', 'client.initialState()', 'call to main actor-isolated function'],
+    ['loading_state_off_actor', 'client: NearbyVehicleMapFeatureClient, _ state: NearbyVehicleMapFeatureState', 'client.loadingState(state)', 'call to main actor-isolated function'],
+    ['refresh_query_off_actor', 'client: NearbyVehicleMapFeatureClient, _ state: NearbyVehicleMapFeatureState', 'client.shouldRefresh(state, 0)', 'call to main actor-isolated function'],
+    ['reducer_off_actor', 'reducer: NearbyVehicleMapFeature', 'reducer.body', "main actor-isolated property 'body'"]
+  ].each do |name, parameter, expression, expected|
+    text = "@testable import app\nimport MobiNearby\nfunc crossing(_ #{parameter}) { _ = #{expression} }\n"
+    good, diagnostic = compile.call('nearby-' + name, text, extra: native_imports)
+    abort "Off-actor Nearby access was not rejected precisely:\n#{diagnostic}" unless !good && diagnostic.include?(expected)
+    report['nearby_client_isolation'][name] = 'rejected'
+  end
+  report['nearby_client_isolation']['caller_isolated_modules'] = report.fetch('home_client_isolation').fetch('caller_isolated_modules')
+  puts '[swift-export] Nearby client actor contracts: ' + JSON.generate(report.fetch('nearby_client_isolation'))
 
   constructor_source = <<~SWIFT
     import MobiCore
