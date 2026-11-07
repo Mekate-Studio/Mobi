@@ -29,13 +29,14 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     @Test(
         "should preserve blocked or unresolved Nearby state when the view task runs again",
         arguments: [
-            NearbyVehicleMapFeatureTestFactory.initialState(),
-            NearbyVehicleMapFeatureTestFactory.deniedState(),
-            NearbyVehicleMapFeatureTestFactory.approximateOnlyState(),
+            NearbyStateFixture.initial,
+            .denied,
+            .approximateOnly,
         ],
     )
-    func shouldPreserveBlockedOrUnresolvedStateWhenViewTaskRunsAgain(state: NearbyVehicleMapFeature.State) async {
+    func shouldPreserveBlockedOrUnresolvedStateWhenViewTaskRunsAgain(fixture: NearbyStateFixture) async {
         // given
+        let state = fixture.state
         let store = NearbyVehicleMapFeatureTestFactory.makeStore(initialState: state)
 
         // when
@@ -49,12 +50,13 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     @Test(
         "should ignore manual refresh while location is blocked or a snapshot is loading",
         arguments: [
-            NearbyVehicleMapFeatureTestFactory.deniedState(),
-            NearbyVehicleMapFeatureTestFactory.loadingState(),
-            NearbyVehicleMapFeatureTestFactory.refreshingState(),
+            NearbyStateFixture.denied,
+            .loading,
+            .refreshing,
         ],
     )
-    func shouldIgnoreManualRefreshWhileBlockedOrLoading(state: NearbyVehicleMapFeature.State) async {
+    func shouldIgnoreManualRefreshWhileBlockedOrLoading(fixture: NearbyStateFixture) async {
+        let state = fixture.state
         await confirmation("No manual refresh work reaches the client", expectedCount: 0) { requested in
             // given
             var client = NearbyVehicleMapFeatureTestFactory.makeClient()
@@ -246,17 +248,18 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     @Test(
         "should preserve Nearby failure meaning and allow retry",
         arguments: [
-            NearbyVehicleMapFeatureTestFactory.readyState(),
-            NearbyVehicleMapFeatureTestFactory.loadedState(),
-            NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState(),
+            NearbyStateFixture.ready,
+            .loaded,
+            .temporarilyUnavailable,
         ],
         [NearbySnapshotFailureScenario.unexpected, .repositoryUnavailable],
     )
     func shouldPreserveNearbyFailureMeaningAndAllowRetry(
-        previousState: NearbyVehicleMapFeature.State,
+        fixture: NearbyStateFixture,
         failure: NearbySnapshotFailureScenario,
     ) async throws {
         // given
+        let previousState = fixture.state
         let reason = failure.reason
         let service = reason == .Unexpected
             ? IosInteropTestServices.shared.uncaughtFailureNearbyService()
@@ -323,16 +326,17 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     @Test(
         "should explain snapshot failures without blaming precise location",
         arguments: [
-            NearbyVehicleMapFeatureTestFactory.readyState(),
-            NearbyVehicleMapFeatureTestFactory.loadedState(),
+            NearbyStateFixture.ready,
+            .loaded,
         ],
         [NearbySnapshotFailureScenario.repositoryUnavailable, .unexpected],
     )
     func shouldExplainSnapshotFailuresWithoutBlamingPreciseLocation(
-        previousState: NearbyVehicleMapFeature.State,
+        fixture: NearbyStateFixture,
         failure: NearbySnapshotFailureScenario,
     ) async throws {
         // given
+        let previousState = fixture.state
         let reason = failure.reason
         let service = reason == .RepositoryUnavailable
             ? IosInteropTestServices.shared.repositoryUnavailableNearbyService()
@@ -622,6 +626,25 @@ private extension NearbyVehicleMapFeature.LocationBlockedReason {
             .ApproximateOnly
         case .temporarilyUnavailable:
             .TemporarilyUnavailable
+        }
+    }
+}
+
+/// Fixture names cross Swift Testing's boundary; retained Kotlin state stays on MainActor.
+enum NearbyStateFixture: Sendable {
+    case initial, denied, approximateOnly, loading, refreshing, ready, loaded, temporarilyUnavailable
+
+    @MainActor
+    var state: NearbyVehicleMapFeature.State {
+        switch self {
+        case .initial: NearbyVehicleMapFeatureTestFactory.initialState()
+        case .denied: NearbyVehicleMapFeatureTestFactory.deniedState()
+        case .approximateOnly: NearbyVehicleMapFeatureTestFactory.approximateOnlyState()
+        case .loading: NearbyVehicleMapFeatureTestFactory.loadingState()
+        case .refreshing: NearbyVehicleMapFeatureTestFactory.refreshingState()
+        case .ready: NearbyVehicleMapFeatureTestFactory.readyState()
+        case .loaded: NearbyVehicleMapFeatureTestFactory.loadedState()
+        case .temporarilyUnavailable: NearbyVehicleMapFeatureTestFactory.temporarilyUnavailableState()
         }
     }
 }

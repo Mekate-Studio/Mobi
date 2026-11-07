@@ -1,6 +1,6 @@
-@preconcurrency import MobiCore
+import MobiCore
 import MobiIOSDependencies
-@preconcurrency import MobiNearby
+import MobiNearby
 
 extension NearbyVehicleMapFeature {
     private enum Content {
