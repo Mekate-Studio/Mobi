@@ -36,21 +36,26 @@
       "id": "IOS-02",
       "scope": "default",
       "title": "Unchecked shared-state and service crossings",
-      "reason": "Nearby retains its unchecked raw-state Sendable declaration. Home and Nearby keep preconcurrency service imports; generated Swift service captures warn about non-Sendable ownership. This does not provide compiler-checked isolation.",
+      "reason": "Home now uses checked MainActor client closures and an isolated Reducer conformance, with no preconcurrency service import. Its supported caller-isolated async setting also covers generated MobiCore and coroutine support because narrower profiles fail at the bridge/repository boundaries. Nearby retains preconcurrency imports and unchecked raw-state sendability; generated services remain non-Sendable. See docs/adr/0019-ios-home-checked-service-isolation.md.",
       "paths": [
         "ios-app/src/Features/NearbyVehicleMap/NearbyVehicleMapFeatureClient.swift",
-        "ios-app/src/Features/Home/HomeFeatureClient.swift"
+        "ios-app/src/Features/Home/HomeFeatureClient.swift",
+        "ios-app/src/Features/Home/HomeFeature.swift",
+        "scripts/ios/build_swift_export.rb"
       ],
       "recheck_on": [
         "kotlin",
+        "toolchain",
         "swift",
         "xcode",
         "design"
       ],
-      "replacement": "Use compiler-checked actor ownership/native values or an upstream-supported safe state crossing; remove unchecked/preconcurrency declarations that are no longer needed.",
+      "replacement": "Complete checked ownership for the remaining Nearby boundary. Keep Home actor isolation; retire explicit producer caller-isolation flags when the selected upstream output or language default supplies equivalent semantics, with the actual graph rebuilt and tested.",
       "retirement_checks": [
         "An off-actor raw state read and an unsafe Sendable container are rejected.",
-        "Actual feature transitions, equality and cross-runtime lifetime pass without unchecked Sendable."
+        "Actual feature transitions, equality and cross-runtime lifetime pass without unchecked Sendable.",
+        "The actual Home client accepts actor-bound synchronous calls and off-actor awaited refresh, but rejects synchronous off-actor initial/loading and reducer calls. Home actor-owned generated refresh must compile; report the exact caller-isolated module profile.",
+        "Requalify the whole generated graph when simplifying the three-module profile: Home-only fails at withKotlinContinuation; Home plus coroutine support fails at reverse repository calls. Preserve actual native/Shared Compose composition, cancellation/error/retry/lifetime tests and one runtime; an actor-only micro-check does not qualify adoption."
       ],
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",

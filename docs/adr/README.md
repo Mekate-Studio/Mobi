@@ -37,6 +37,8 @@ Proposed, without changing the accepted decisions:
 
 - [ADR 0018: iOS Home refresh lifetime across tab switches](0018-ios-home-tab-refresh-lifetime.md)
 
+- [ADR 0019: Checked iOS Home service isolation](0019-ios-home-checked-service-isolation.md)
+
 Use a new ADR when a decision changes one of these:
 
 - module boundaries
