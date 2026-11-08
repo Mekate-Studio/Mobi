@@ -329,10 +329,11 @@
       "id": "IOS-14",
       "scope": "default",
       "title": "Typed repository-failure fixtures and Kotlin-origin bridge controls",
-      "reason": "Home success and ordinary unexpected-error repositories are now Swift doubles qualified through the actual Kotlin service and native client. The typed repository-unavailable fixture remains: CounterRepositoryException is not reachable in the current private/transitive MobiCore export, and exposing it through a test typealias adds a ninth KotlinStdlib Swift module rejected by the reviewed graph guard. That expanded graph is unqualified. Nearby's domain fixture remains separate. Kotlin-origin delayed work, cancellation and uncaught-error controls intentionally qualify the forward bridge; native doubles do not replace their purpose. Release excludes all test fixtures. See docs/maintenance/evidence/2026-11-06-ios14-home-repositories.md.",
+      "reason": "Home success and ordinary unexpected-error repositories, plus Nearby success, use Swift doubles qualified through the actual Kotlin service and native client. Nearby success returns a fresh reference-valued FleetSnapshot from the received request without retaining Kotlin objects in the double. Typed repository-unavailable fixtures remain: CounterRepositoryException is not reachable in the current private/transitive MobiCore export, and a test typealias adds a ninth KotlinStdlib Swift module rejected by the reviewed graph guard. Nearby ordinary Swift errors and typed exception identity require separate qualification. Kotlin-origin delayed work, cancellation and uncaught-error controls intentionally qualify the forward bridge; native doubles do not replace their purpose. Release excludes all test fixtures. See docs/maintenance/evidence/2026-11-06-ios14-home-repositories.md and docs/maintenance/evidence/2026-11-08-ios14-nearby-success.md.",
       "paths": [
         "shared-ios-app/test@ios/IosInteropTestServices.kt",
         "ios-app/tests/Features/Home/HomeFeatureTests.swift",
+        "ios-app/tests/Features/NearbyVehicleMap/NearbyRepositoryInteropTests.swift",
         "ios-app/tests/Features/NearbyVehicleMap/NearbyVehicleMapFeatureTests.swift",
         "scripts/ci/test_modules.rb"
       ],
@@ -348,7 +349,8 @@
         "Run Swift-created typed domain failures through the real Kotlin service before the native client's fallback; repository-unavailable and unexpected failures must remain distinct.",
         "Record generated module count and bindings. Qualify any KotlinStdlib export expansion separately, including actual app/test linkage and one Kotlin runtime; do not bypass the current graph guard to retire a fixture.",
         "Preserve Kotlin-origin cancellation and uncaught-error controls, cancellation recovery, snapshot identity, retry and the existing live-client assertions.",
-        "Remove the corresponding IOS_CLIENT_FIXTURES runner registration when its Kotlin fixture file is deleted; unknown native tests must still refuse."
+        "Remove the corresponding IOS_CLIENT_FIXTURES runner registration when its Kotlin fixture file is deleted; unknown native tests must still refuse.",
+        "Preserve the actual Swift Nearby repository success round trip: request coordinates/time, snapshot sequence and vehicle IDs, direct loaded service result before native fallback, native map payload and checked ownership. Requalify any simplification on the supported local/hosted compilers without adding Sendable exceptions or expanding the reviewed module graph."
       ],
       "probe_state": "not_automated"
     },
