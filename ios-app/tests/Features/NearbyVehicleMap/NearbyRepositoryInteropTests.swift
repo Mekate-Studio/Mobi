@@ -7,6 +7,60 @@ import Testing
 extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     @MainActor
     @Test(
+        "should preserve Swift repository failures and retained Nearby content",
+        .timeLimit(.minutes(1)),
+        arguments: [false, true],
+    )
+    func shouldPreserveSwiftRepositoryFailuresAndRetainedContent(hasSnapshot: Bool) async throws {
+        // given
+        let previous = hasSnapshot
+            ? NearbyVehicleMapFeatureTestFactory.loadedState()
+            : NearbyVehicleMapFeatureTestFactory.readyState()
+        let retained = try #require(previous.sharedState)
+        let snapshot = NearbyVehicleMapFeatureTestFactory.currentSnapshot(from: retained.snapshotState)
+        let service = NearbyVehicleMapFeatureService(
+            nearbyFleetRepository: SwiftNearbyFleetRepository(failure: .unexpected),
+            freshnessPolicy: NearbyVehicleMapFreshnessPolicy(),
+        )
+        let loading = service.loadingState(currentState: retained)
+        let expected: any NearbyVehicleSnapshotState = if let snapshot {
+            NearbyVehicleSnapshotState.FailedWithSnapshot(snapshot: snapshot, reason: .Unexpected)
+        } else {
+            NearbyVehicleSnapshotState.FailedWithoutSnapshot(reason: .Unexpected)
+        }
+        let nowMillis: Int64 = 11000
+
+        // when: a thrown bridge error must fail here, before the native client's fallback.
+        let sharedFailure = try await service.refreshSnapshot(currentState: loading, nowMillis: nowMillis)
+
+        // then
+        #expect(sharedFailure.snapshotState == expected)
+        #expect(sharedFailure.riderLocationState == retained.riderLocationState)
+
+        // when
+        let client = NearbyVehicleMapFeatureClient(service: service)
+        let nativeFailure = await client.refresh(loading, nowMillis)
+        var state = NearbyVehicleMapFeature.State()
+        state.apply(sharedState: nativeFailure)
+
+        // then
+        #expect(nativeFailure == sharedFailure)
+        #expect(state.mapContent == previous.mapContent)
+        #expect(state.hasResolvedRiderLocation)
+        #expect(state.canRequestRefresh)
+        #expect(state.canInteractWithVehicles == hasSnapshot)
+        if hasSnapshot {
+            #expect(state.overlay == .stale)
+        } else {
+            #expect(state.overlay == .blocking(
+                headline: "Map unavailable",
+                message: "Something went wrong while loading nearby vehicles. Try refreshing again.",
+            ))
+        }
+    }
+
+    @MainActor
+    @Test(
         "should load a Swift repository snapshot through the Kotlin service and native client",
         .timeLimit(.minutes(1)),
     )
@@ -57,9 +111,23 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     }
 }
 
+private enum NearbyRepositoryTestError: Error {
+    case unexpected
+}
+
 private final class SwiftNearbyFleetRepository: KotlinBase, NearbyFleetRepository {
+    private let failure: NearbyRepositoryTestError?
+
+    init(failure: NearbyRepositoryTestError? = nil) {
+        self.failure = failure
+        super.init()
+    }
+
     func fetchNearbyFleetSnapshot(request: NearbyFleetRequest) async throws -> FleetSnapshot {
-        FleetSnapshot(
+        if let failure {
+            throw failure
+        }
+        return FleetSnapshot(
             sequence: 41,
             riderLocation: request.riderLocation,
             vehicles: [

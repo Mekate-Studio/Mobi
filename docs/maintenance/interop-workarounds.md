@@ -24,7 +24,7 @@ its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-ex
 | IOS-11 | Explicit macro-validation invocation override | Reliable validation in the scoped environment; keep exact approvals and negative refusal control |
 | IOS-12 | Private JVM temp handling for affected tool inputs | Exact-graph dependency remediation/risk review; temp handling does not fix unrelated vulnerabilities |
 | IOS-13 | Serialized Home/Nearby test suite and scoped virtual-clock advances | Per-test executor isolation; preserve timer and overlapping-request regression checks with original time limits |
-| IOS-14 | Typed repository-failure fixtures and Kotlin-origin bridge controls | [Home success/unexpected helpers removed](evidence/2026-11-06-ios14-home-repositories.md); [Nearby Swift success round trip](evidence/2026-11-08-ios14-nearby-success.md). Typed domain exceptions need a separate export-surface qualification; preserve Kotlin-origin controls. |
+| IOS-14 | Typed repository-failure fixtures and Kotlin-origin bridge controls | [Home success/unexpected helpers removed](evidence/2026-11-06-ios14-home-repositories.md); [Nearby Swift success](evidence/2026-11-08-ios14-nearby-success.md) and [ordinary-error round trips](evidence/2026-11-08-ios14-nearby-swift-errors.md). Typed domain exceptions need a separate export-surface qualification; preserve Kotlin-origin controls. |
 | IOS-15 | Former test-only Kotlin constructors, removed with Beta2 | [Public generated constructors in the actual native tests](evidence/2026-11-05-beta2-ios15.md); compiler visibility is now required by the iOS gate |
 | IOS-16 | Explicit closure for native test observation on hosted Swift 6.3.3 | Recheck direct function conversion on Swift/Xcode updates; optimized actual test-module compilation and lifecycle tests must pass on all supported compilers. [Failure evidence and warning follow-ups](compiler-warning-follow-ups.md). |
 | IOS-17 | Upstream-generated `SwiftJob` uses unsupported Job inheritance | [Warning retained, actual Native diagnostic receipt added](evidence/2026-11-07-coroutine-inheritance.md); qualify an upstream-supported bridge/contract on Kotlin and coroutines updates. No inheritance opt-in or generated-source patch is added. |
@@ -244,6 +244,16 @@ the native client and map presentation preserve the request-derived payload.
 This adds success-path coverage; no Kotlin fixture is removed. Ordinary Swift
 errors and typed domain failures need their own qualification, while Kotlin-origin
 cancellation and uncaught-error controls continue to test the forward bridge.
+
+### IOS-14 Nearby ordinary Swift errors — 2026-11-08
+
+The [error qualification](evidence/2026-11-08-ios14-nearby-swift-errors.md)
+extends the existing Swift double with immutable native error configuration.
+The direct Kotlin service must return typed Unexpected state before native
+fallback, for both snapshot-absent and cached states. Native presentation retains
+cached content and manual retry availability. This qualifies another reverse
+bridge path; typed domain exceptions and Kotlin-origin cancellation/uncaught-error
+controls retain their separate purpose and no Kotlin fixture is removed.
 
 ### IOS-10 exporter runtime simplification — 2026-11-06
 
