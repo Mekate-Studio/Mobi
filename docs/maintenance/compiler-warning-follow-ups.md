@@ -1,8 +1,9 @@
 # Compiler warning follow-ups
 
-Status: open, recorded 2026-11-06. Address these in focused follow-up PRs after
-the Beta2 integration and its failing CI are resolved. This note does not suppress
-warnings, change compiler settings or qualify a warning as harmless.
+Status: remaining categories are open. The original snapshot was recorded
+2026-11-06; later authored-source closures and findings are recorded below.
+This note does not suppress warnings, change compiler settings or qualify a
+warning as harmless.
 
 ## Evidence and scope
 
@@ -22,13 +23,14 @@ ownership; generated-code warnings are not authored-code warnings.
 
 The WARN-01 through WARN-09 counts below partition those 52 diagnostics. Android
 warnings are additional examples from the same commit's build/test jobs, outside
-that count. WARN-10 comes from a later successful build and is not part of those 52.
+that count. WARN-10 and WARN-11 come from later successful builds and are not
+part of those 52.
 
 ## Follow-up slices
 
 | ID | Observed warnings | Ownership and next review | Closure evidence |
 | --- | --- | --- | --- |
-| WARN-01 | 11 native service captures are non-Sendable: Home client at lines 15/18/23; Nearby client at lines 35/38/44/50/53/57/72/78 | Home's three sites use [checked actor ownership](../adr/0019-ios-home-checked-service-isolation.md); Nearby's eight follow the same contract in the [service-isolation qualification](evidence/2026-11-07-nearby-service-isolation.md). Raw-state sendability remains open under IOS-02; generated services remain non-Sendable. | Actual client/reducer cancellation, failure, identity and lifetime checks pass; emit SIL under strict Swift 6 and recheck IOS-02 before removing exceptions. |
+| WARN-01 | 11 native service captures are non-Sendable: Home client at lines 15/18/23; Nearby client at lines 35/38/44/50/53/57/72/78 | Closed for the native service clients by checked actor ownership. [Nearby raw-state qualification](evidence/2026-11-07-nearby-raw-state-isolation.md), merged in [PR #93](https://github.com/Mekate-Studio/Mobi/pull/93), also removes its unchecked state conformance and compatibility imports. Generated services/states remain non-Sendable; IOS-02 now tracks the explicit caller-isolated profile. | [CI #636](https://github.com/Mekate-Studio/Mobi/actions/runs/42496252191) passed actual client/reducer cancellation, failure, payload/lifetime tests and Swift 6 SIL ownership controls with zero service-capture warnings. Requalify those contracts on compiler/profile updates. |
 | WARN-02 | 6 Swift Testing argument sites pass generated `NearbyVehicleMapFailureReason`, which is non-Sendable | Authored tests in failure-aging, feature and revalidation suites. Native scenario inputs now keep Kotlin reasons on the test actor; see [implementation evidence](#warn-02-native-swift-testing-arguments). | Same parameter matrix and failure assertions run on the supported local/hosted compiler tuple, without new unchecked conformance. |
 | WARN-03 | 2 generated support diagnostics: `KotlinError.wrapped` stores non-Sendable `KotlinBase`, and the runtime import requests preconcurrency handling | Generated KotlinRuntimeSupport; IOS-08 already tracks strict-support removal. | Recheck official selected Kotlin sources/issues and the real strict support graph; remove the Swift 5 exception only after that graph and app tests pass. |
 | WARN-04 | 7 generated Swift modules use `@_implementationOnly` without library evolution | Exporter output/runtime packaging; review with IOS-07/08/10 on Kotlin/Swift updates. | Supported producer output eliminates the diagnostics while preserving one runtime, module visibility and the real app's link/test behavior. Do not enable library evolution merely to hide the warnings. |
@@ -38,6 +40,7 @@ that count. WARN-10 comes from a later successful build and is not part of those
 | WARN-08 | Android declares lifecycle-runtime-compose 2.9.4 but resolves 2.11.0-beta01 | Circuit 0.34.0 already selects the beta through JetBrains Lifecycle. The direct declaration now matches that selection; see [graph evidence](#warn-08-lifecycle-declaration-alignment). | Before/after main/test compile/runtime graphs preserve selected versions and edges; qualify native lifetime tests and Debug builds. Review a future effective version change separately. |
 | WARN-09 | Android SDK Manager CLI deprecation and missing `cmdline-tools;latest/package.xml` followed by redownload | Runner provisioning / delegated Android bootstrap | Review supported Android CLI/Toolchain integration in a separate script change; qualify cold-runner SDK/license setup and preserve delegated bootstrap. |
 | WARN-10 | 8 authored `Store.withState` reads in `NearbySceneLifetimeTests.swift`; successful CI #595 emitted 48 repeated deprecation annotations | Direct `store.state` reads use the existing `@ObservableState` and pinned TCA API; see [evidence](#warn-10-observable-store-reads-in-lifetime-tests). This is test API maintenance. | Preserve callback rejection and late location/fleet result matrices; run the actual iOS suite on local/hosted compilers and require zero `withState` deprecation diagnostics. |
+| WARN-11 | Redundant `await send(...)` in Nearby's MainActor refresh effect, observed after the ownership migration | The pinned TCA Send API is synchronous on MainActor; use its direct call. See [qualification](#warn-11-mainactor-effect-response). | Preserve the actor contract and response/cancellation/lifetime tests; require the targeted diagnostic to be absent on both supported compilers. |
 
 Start with small owned-source and dependency-alignment slices; review concurrency
 boundaries explicitly, then qualify upstream-generated changes through the
@@ -223,3 +226,29 @@ counts and local/hosted results are recorded on the review PR.
 records the effective AndroidX upgrade, reviewed release interval, remaining
 JetBrains version split and native lifetime/build checks. The original alignment
 above only made the existing beta selection visible.
+
+## WARN-11: MainActor effect response
+
+Recorded 2026-11-08. Base: main
+`ea9bd19b0789c1e4e777d050c90f6c20f5712034`, after
+[PR #94](https://github.com/Mekate-Studio/Mobi/pull/94).
+The successful [CI #641 native job](https://github.com/Mekate-Studio/Mobi/actions/runs/42505971868/job/128808608669)
+emitted one redundant-await annotation at NearbyVehicleMapFeature.swift:84.
+The same site emits one complete diagnostic in the normal staged local build on
+Xcode 27.2 / Swift 6.4.2; source-excerpt repeats are not separate findings.
+Hosted Xcode 26.6 reports `no 'async' operations occur within 'await' expression`.
+
+The effect already runs on MainActor after PR #93. The pinned TCA 1.26.0
+[Send.callAsFunction](https://github.com/pointfreeco/swift-composable-architecture/blob/e2fa1df6cd9eec6fa6314aa20513e47da576f24e/Sources/ComposableArchitecture/Effect.swift#L180-L194)
+is a synchronous MainActor method, including its existing Task.isCancelled guard.
+Call `send(.sharedStateLoaded(loadedState))` directly. The service refresh remains
+awaited, and the effect's actor annotation, cancellation ID and response handling
+remain. This removes an unnecessary effect marker; it adds no interop workaround.
+
+Require the same native response, cancellation/retry, supersession, scene/tab/timer
+lifetime and reverse-repository tests to pass with their existing assertions and
+limits, together with the actual-app positive/negative ownership controls. Inspect
+the local and hosted compiler logs for zero occurrences of this targeted warning;
+passing tests alone do not close it. Final head, test counts and hosted evidence
+are recorded in the review PR. Other warning categories and IOS-02/08/17 remain
+separately tracked; this is not a warning-free-build claim.

@@ -81,7 +81,7 @@ struct NearbyVehicleMapFeature: @MainActor Reducer {
             let sharedState = await client.refresh(loadingState, nowMillis)
             var loadedState = State()
             loadedState.apply(sharedState: sharedState)
-            await send(.sharedStateLoaded(loadedState))
+            send(.sharedStateLoaded(loadedState))
         }
     }
 
