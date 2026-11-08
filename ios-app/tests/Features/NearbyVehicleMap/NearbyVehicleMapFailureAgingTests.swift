@@ -1,8 +1,8 @@
 @testable import app
 import Foundation
-@preconcurrency import MobiCore
+import MobiCore
 import MobiIOSDependencies
-@preconcurrency import MobiNearby
+import MobiNearby
 import MobiTestSupport
 import Testing
 
