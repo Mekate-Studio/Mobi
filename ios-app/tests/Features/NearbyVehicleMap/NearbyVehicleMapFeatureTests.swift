@@ -2,9 +2,9 @@
 // swiftlint:disable file_length
 @testable import app
 import Foundation
-@preconcurrency import MobiCore
+import MobiCore
 import MobiIOSDependencies
-@preconcurrency import MobiNearby
+import MobiNearby
 import MobiTestSupport
 import Testing
 
@@ -200,7 +200,7 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         )), in: store)
         let earlierTask = try #require(earlierTaskOptional)
         let earlierRequest = try #require(await pending.next())
-        let newerState = NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2, vehicles: [])
+        let expectedMapContent = NearbyVehicleMapFeatureTestFactory.loadedState(sequence: 2, vehicles: []).mapContent
         do {
             defer { earlierRequest.resume(returning: NearbyVehicleMapFeatureTestFactory.loadedSharedState()) }
             await lifetime.start(in: store).finish()
@@ -210,16 +210,18 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
             )), in: store)
             let newerTask = try #require(newerTaskOptional)
             let newerRequest = try #require(await pending.next())
-            let newerSharedState = try #require(newerState.sharedState)
 
             // when
-            newerRequest.resume(returning: newerSharedState)
+            newerRequest.resume(returning: NearbyVehicleMapFeatureTestFactory.loadedSharedState(
+                sequence: 2,
+                vehicles: [],
+            ))
             await newerTask.finish()
         }
         await earlierTask.finish()
 
         // then
-        #expect(store.mapContent == newerState.mapContent)
+        #expect(store.mapContent == expectedMapContent)
         #expect(store.message == "Showing 0 vehicles around the rider.")
         await lifetime.stop(in: store).finish()
     }

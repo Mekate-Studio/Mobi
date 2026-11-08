@@ -37,9 +37,19 @@ Sendable. It stores only a checked Sendable continuation under a Mutex, consumes
 it once, and accepts a `sending` result. Tests pass fresh fixture results without
 retaining aliases across transfer. This follows
 [SE-0430](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0430-transferring-parameters-and-results.md),
-the same contract used by CheckedContinuation.resume(returning:). The helper's
-preconcurrency import is removed; no unchecked test conformance is added.
+the same contract used by CheckedContinuation.resume(returning:). All Nearby native
+test files now use normal imports; no unchecked test conformance is added.
 Cancellation counters, late-result controls, completion cleanup and limits remain.
+
+Two existing test transports also need checked ownership. The late-result test
+resumes its continuation with a fresh fixture result and retains only the native
+expected map content for its later assertion. The location revalidation test
+records requests in an actor-local array and inspects them after the refresh effect
+finishes; it no longer sends Store-owned state through AsyncStream. It preserves
+the request/location assertions and also requires exactly one request. These
+changes remove the two data-race diagnostics exposed by the hosted compiler when
+the global state conformance is removed. Require no Nearby native-test data-race
+diagnostics in the final compiler logs, with the same suite and limits.
 
 The normal iOS gate emits Swift 6 SIL against the actual compiled app and generated
 modules, with warnings as errors. It requires actor-owned Store state reads and

@@ -1,8 +1,8 @@
 @testable import app
 import Foundation
-@preconcurrency import MobiCore
+import MobiCore
 import MobiIOSDependencies
-@preconcurrency import MobiNearby
+import MobiNearby
 import MobiTestSupport
 import Testing
 
@@ -108,12 +108,10 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
     @Test("should finish location checking and refresh from the current precise result")
     func shouldRefreshFromCurrentPreciseResult() async throws {
         // given
-        let requests = AsyncStream<NearbyVehicleMapFeatureState>.makeStream()
-        defer { requests.continuation.finish() }
-        var pending = requests.stream.makeAsyncIterator()
+        var requests: [NearbyVehicleMapFeatureState] = []
         var client = Factory.makeClient()
         client.refresh = { state, _ in
-            requests.continuation.yield(state)
+            requests.append(state)
             return Factory.loadedSharedState(sequence: 2)
         }
         let store = runtimeStore(state: Factory.loadedState(), client: client)
@@ -124,7 +122,8 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         await store.send(.locationResolutionResponse(.precise(latitude: 56, longitude: 13))).finish()
 
         // then
-        let request = try #require(await pending.next())
+        #expect(requests.count == 1)
+        let request = try #require(requests.first)
         #expect(request.riderLocationState == RiderLocationState.Available(
             location: RiderLocation(latitude: 56, longitude: 13),
         ))

@@ -2,7 +2,7 @@
 import Foundation
 import MobiIOSDependencies
 import MobiIOSTestDependencies
-@preconcurrency import MobiNearby
+import MobiNearby
 import SwiftUI
 import Testing
 import UIKit
