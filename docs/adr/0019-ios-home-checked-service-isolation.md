@@ -66,9 +66,14 @@ Final staged and hosted qualification is reported on the implementation PR.
 
 ## Remaining scope and simplification
 
-The later [Nearby service qualification](../maintenance/evidence/2026-11-07-nearby-service-isolation.md) extends the profile and service actor contract. IOS-02 remains open for retained Nearby state. Generated service/state objects are still
-non-Sendable; raw Sendable-capture controls continue to reject them. IOS-08's
-Swift 5 support exception and IOS-17's Kotlin Job inheritance warning remain.
+The later [Nearby service qualification](../maintenance/evidence/2026-11-07-nearby-service-isolation.md)
+extends the profile and service actor contract to four modules.
+[Nearby raw-state qualification](../maintenance/evidence/2026-11-07-nearby-raw-state-isolation.md),
+merged in PR #93, removes its unchecked state conformance and test compatibility
+imports. IOS-02 now tracks the explicit caller-isolated profile. Generated
+service/state objects remain non-Sendable; raw Sendable-capture controls continue
+to reject them. IOS-08's Swift 5 support exception and IOS-17's Kotlin Job
+inheritance warning remain.
 Support-profile changes also affect generated Flow/reverse-async surfaces;
 Mobi's app checks do not qualify general Flow usage outside this app.
 
@@ -79,3 +84,25 @@ failure/retry/ordering/lifetime and native/Shared Compose composition tests on a
 supported compilers. Keep the actor ownership contract; remove redundant producer
 configuration when upstream integration supplies it. The release watch requests
 reassessment; passing a compiler micro-check never authorizes retirement.
+
+## Home test import qualification — 2026-11-08
+
+Base: main `2f5f7b9710cfc4a80f47fe83463a71e4f75581ca`, after
+[PR #96](https://github.com/Mekate-Studio/Mobi/pull/96).
+HomeFeatureTests now uses ordinary MobiCore and MobiHome imports. This removes
+two remaining consumer compatibility annotations; test bodies, parameter matrices,
+fixture ownership, assertions and time limits are unchanged.
+
+Require the full native suite on supported local and hosted compilers, with no
+new ownership diagnostics. In particular, retain the detached-task cancellation
+call through the checked Sendable client, Kotlin-origin cancellation/retry and
+uncaught errors, Swift repository success/failure, typed domain-failure fixtures
+and native/Shared Compose composition. The actual-app legal/off-actor SIL controls
+must keep passing, including the checked Nearby retained-state boundary.
+Final head, test counts and compiler results are recorded in the review PR.
+
+This is test-import simplification under the existing actor contract. It does not
+retire the four-module async profile or strict-support exceptions. On
+Kotlin/Toolchain/Swift/Xcode updates, requalify these existing tests and generated
+signatures; address any new crossing at its owner rather than restoring broad
+import exemptions or adding unchecked conformance by default.

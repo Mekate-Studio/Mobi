@@ -1,8 +1,8 @@
 @testable import app
 import Foundation
 import KotlinRuntime
-@preconcurrency import MobiCore
-@preconcurrency import MobiHome
+import MobiCore
+import MobiHome
 import MobiIOSDependencies
 import MobiTestSupport
 import Testing
