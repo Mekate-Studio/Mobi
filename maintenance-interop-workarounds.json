@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "reviewed_at": "2026-10-19",
+  "reviewed_at": "2026-11-09",
   "owner": "Mobi maintainers",
   "scope": "Mobi iOS interop: maintained direct code plus unmerged pilot/candidate mechanisms",
   "external_scope": {
@@ -30,7 +30,12 @@
       ],
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",
-      "probe_report": "build/logs/swift-export-checks/report.json"
+      "probe_report": "build/logs/swift-export-checks/report.json",
+      "disposition": "removed",
+      "disposition_note": "Visitors and projection adapters were deleted from the actual Home/Nearby integration; exhaustive generated-case checks remain.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/44"
+      ]
     },
     {
       "id": "IOS-02",
@@ -62,7 +67,15 @@
       ],
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",
-      "probe_report": "build/logs/swift-export-checks/report.json"
+      "probe_report": "build/logs/swift-export-checks/report.json",
+      "disposition": "active",
+      "disposition_note": "Four-module caller-isolated async flags remain. Checked clients and retained state replaced unchecked crossings; Home test import exceptions are also removed.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/91",
+        "https://github.com/Mekate-Studio/Mobi/pull/92",
+        "https://github.com/Mekate-Studio/Mobi/pull/93",
+        "https://github.com/Mekate-Studio/Mobi/pull/97"
+      ]
     },
     {
       "id": "IOS-03",
@@ -83,7 +96,12 @@
         "No feature meaning depends on ordinal/tag tables.",
         "The adopted app has one maintained path; historical evidence remains separately retained."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "historical",
+      "disposition_note": "Unmerged pilot wire protocol; never adopted by the maintained app. Source absence is not a qualified removal.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/37"
+      ]
     },
     {
       "id": "IOS-04",
@@ -105,7 +123,13 @@
         "Real service success, domain failure, cancellation and late completion preserve behavior.",
         "No non-Sendable Kotlin result/error escapes isolation; unfinished work remains owned until completion."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "historical",
+      "disposition_note": "Unmerged candidate request-owner facades; the maintained app uses direct generated async clients.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/38",
+        "https://github.com/Mekate-Studio/Mobi/pull/44"
+      ]
     },
     {
       "id": "IOS-05",
@@ -127,7 +151,13 @@
         "Actual TCA state/equality and the full map presentation compile without unsafe state crossing.",
         "Replacement, cancellation and dropped results release references correctly; no lifetime/resource regression."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "historical",
+      "disposition_note": "Unmerged candidate state-handle dictionary and UUID ownership; the maintained app retains actor-owned generated state.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/38",
+        "https://github.com/Mekate-Studio/Mobi/pull/93"
+      ]
     },
     {
       "id": "IOS-06",
@@ -152,7 +182,13 @@
         "Cancelling a waiter or ending a route cannot abandon unfinished backend work.",
         "No polling loop/listener/drain registry remains solely for a retired bridge path."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "historical",
+      "disposition_note": "Unmerged candidate completion/drain transport; its experimental accounting policy was not adopted by the maintained app.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/38",
+        "https://github.com/Mekate-Studio/Mobi/pull/44"
+      ]
     },
     {
       "id": "IOS-07",
@@ -175,7 +211,12 @@
         "Raw API escape and invalid hidden-layout controls are rejected by the replacement recipe.",
         "Actual consumer compile/link works without exposing Kotlin types or weakening diagnostics."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "active",
+      "disposition_note": "CheckImplementationOnly remains in the maintained producer; candidate whole-feature placement was not adopted.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/44"
+      ]
     },
     {
       "id": "IOS-08",
@@ -202,7 +243,13 @@
       ],
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",
-      "probe_report": "build/logs/swift-export-checks/report.json"
+      "probe_report": "build/logs/swift-export-checks/report.json",
+      "disposition": "active",
+      "disposition_note": "Generated support still requires the Swift 5 exception. Strict Swift 6 support remains blocked; no suppression or fallback qualifies removal.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/80",
+        "https://github.com/Mekate-Studio/Mobi/pull/82"
+      ]
     },
     {
       "id": "IOS-09",
@@ -225,7 +272,14 @@
         "The actual pinned TCA reducer/client compiles with checked isolation.",
         "Cancellation reaches the intended feature without retaining its route or losing state restoration."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "historical",
+      "disposition_note": "Unmerged candidate TCA runtime assertions and cancellation relay; current clients use checked actor ownership. The MapLibre delegate contract is separate.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/38",
+        "https://github.com/Mekate-Studio/Mobi/pull/91",
+        "https://github.com/Mekate-Studio/Mobi/pull/92"
+      ]
     },
     {
       "id": "IOS-10",
@@ -254,7 +308,14 @@
         "Keep the extra IntelliJ runtime and repository retired while the selected compiler graph generates the actual app bindings without analysis-worker exceptions, including failures that otherwise exit zero. Review a new dependency requirement explicitly; do not restore an override automatically.",
         "Recheck --runtime-assertions on Kotlin/Compose updates. The current optional full-app probe aborts in Compose class_addProtocol; normal delivery retains the baseline assertion mode."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "active",
+      "disposition_note": "Custom generation/build integration and project preflight remain. The extra exporter runtime dependency and repository are removed.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/44",
+        "https://github.com/Mekate-Studio/Mobi/pull/75",
+        "https://github.com/Mekate-Studio/Mobi/pull/84"
+      ]
     },
     {
       "id": "IOS-11",
@@ -275,7 +336,12 @@
         "An unapproved locked macro is refused before the approved build succeeds.",
         "No global preference change or skip-validation fallback is used."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "historical",
+      "disposition_note": "Unmerged candidate invocation override; maintained package locks, macro approvals and refusal checks remain ordinary build controls.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/38"
+      ]
     },
     {
       "id": "IOS-12",
@@ -298,7 +364,13 @@
         "Fresh selected-graph/advisory evidence supports the disposition.",
         "Every affected JVM launch/descendant is accounted for; unrelated vulnerability findings are not marked fixed by temp handling."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "active",
+      "disposition_note": "Private JVM temporary directories remain a scoped dependency-risk control; no fresh graph/advisory clearance is claimed.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/39",
+        "https://github.com/Mekate-Studio/Mobi/pull/44"
+      ]
     },
     {
       "id": "IOS-13",
@@ -323,7 +395,13 @@
         "Removing effect cancellation still fails the out-of-order completion test; cancellation or assertion failure leaves no pending test continuation.",
         "Requalify the actual timer tests with ordinary TestClock advances on Swift Clocks/Concurrency Extras/TCA/Swift/Xcode updates before removing their executor scope. Keep all cadence, background, reentry and admitted-request assertions and their original one-minute limits; no scheduler-count or timeout increase is a substitute."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "active",
+      "disposition_note": "Serialized TestStore lifetimes and scoped virtual-clock advances remain native test-library constraints.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/43",
+        "https://github.com/Mekate-Studio/Mobi/pull/84"
+      ]
     },
     {
       "id": "IOS-14",
@@ -353,7 +431,14 @@
         "Preserve the actual Swift Nearby repository success round trip: request coordinates/time, snapshot sequence and vehicle IDs, direct loaded service result before native fallback, native map payload and checked ownership. Requalify any simplification on the supported local/hosted compilers without adding Sendable exceptions or expanding the reviewed module graph.",
         "Preserve both Swift Nearby ordinary-error cases: the direct Kotlin service returns typed Unexpected failure without throwing, before native client fallback; cached snapshot/location/map content and manual retry availability remain. Keep the separate Kotlin-origin uncaught-error and cancellation/recovery controls."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "active",
+      "disposition_note": "Swift repository success and ordinary-error paths are qualified. Typed domain-failure fixtures remain; Kotlin-origin cancellation/uncaught-error controls retain a separate purpose.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/83",
+        "https://github.com/Mekate-Studio/Mobi/pull/94",
+        "https://github.com/Mekate-Studio/Mobi/pull/96"
+      ]
     },
     {
       "id": "IOS-15",
@@ -379,7 +464,12 @@
       ],
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",
-      "probe_report": "build/logs/swift-export-checks/report.json"
+      "probe_report": "build/logs/swift-export-checks/report.json",
+      "disposition": "removed",
+      "disposition_note": "Kotlin test-only state constructors and runner registration were deleted with Beta2; public generated-constructor checks remain mandatory.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/82"
+      ]
     },
     {
       "id": "IOS-16",
@@ -399,7 +489,12 @@
         "Run the unchanged hosted Nearby lifecycle and timer tests with their existing assertions and one-minute limits; do not replace observation with scheduler drains.",
         "Record exact Swift/Xcode versions, normal versus direct-form outcomes and the upstream issue/fix if verified. No exact upstream issue attribution is currently verified."
       ],
-      "probe_state": "not_automated"
+      "probe_state": "not_automated",
+      "disposition": "active",
+      "disposition_note": "The explicit Observations closure remains for the supported hosted compiler IR-generation failure; the original test behavior is preserved.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/82"
+      ]
     },
     {
       "id": "IOS-17",
@@ -423,7 +518,12 @@
       ],
       "probe_state": "available_in_ci",
       "probe_command": "ruby scripts/ios/check_swift_export.rb",
-      "probe_report": "build/logs/swift-export-checks/report.json"
+      "probe_report": "build/logs/swift-export-checks/report.json",
+      "disposition": "active",
+      "disposition_note": "Generated SwiftJob still delegates unsupported Job inheritance. The diagnostic receipt and update checks remain; no new inheritance opt-in is used.",
+      "disposition_evidence": [
+        "https://github.com/Mekate-Studio/Mobi/pull/90"
+      ]
     }
   ]
 }

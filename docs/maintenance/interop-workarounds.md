@@ -7,27 +7,68 @@ It includes the maintained direct app and unmerged work from PRs #37/#38;
 listing a candidate mechanism does not adopt it. The actual app integration and
 its selected defaults are described in [ADR 0009](../adr/0009-generated-swift-export-for-native-features.md).
 
-## Workarounds first
+## Recorded status after PR #97 — 2026-11-09
 
-| ID | Mechanism | Retirement or simplification target |
+The registry records **9 active requirements, 2 qualified removals and 6 historical
+experiments**. These are reviewed dispositions, supported by the linked PRs,
+not results of a fresh toolchain or upstream-source qualification. An active
+entry can contain a completed simplification while its remaining mechanism
+still needs requalification. Counts describe registry items, not equal amounts
+of code or maintenance cost.
+
+`disposition`, `disposition_note` and `disposition_evidence` are maintained in
+`maintenance-interop-workarounds.json` and carried into `workarounds.json`,
+digest-bound watch snapshots and the dependency-update summary. `scope` retains
+its original app/pilot/candidate meaning. Source presence, an eligible release
+or an available CI check never assigns or changes a disposition.
+
+### Active app requirements
+
+| ID | Mechanism and recorded disposition | Evidence |
 | --- | --- | --- |
-| IOS-01 | Former Kotlin visitors and Swift projections, removed by the app integration | Generated exhaustive state handling in real consumers; delete both handwritten layers |
-| IOS-02 | Explicit four-module caller-isolated async profile; native service/state ownership is checked | [Nearby raw-state exception removal](evidence/2026-11-07-nearby-raw-state-isolation.md); retire redundant producer flags when upstream/default semantics replace them |
-| IOS-03 | Pilot numeric tags, wire facades and decoders | Delete the duplicate protocol as actual feature slices replace it; no upstream release is needed to reject this design |
-| IOS-04 | Home/Nearby request-owner facades | Qualified direct async or a smaller operation owner; remove redundant request registries and facade API |
-| IOS-05 | Nearby state IDs, owner UUIDs and adopt/release calls | Qualify retained actor-owned state; delete the state dictionary and manual ownership protocol |
-| IOS-06 | Custom polling/completion/listener and drain transport | Qualified async ownership; remove redundant transport while preserving unfinished-work accounting |
-| IOS-07 | Closed generated API, whole-feature module placement and experimental import checker | Supported narrow module/import enforcement; remove unnecessary placement and flag coupling |
-| IOS-08 | Swift 5 coroutine-support module | Strict Swift 6 after the actual generated support graph passes without suppression or fallback; [2026-11-04 recheck: retained](evidence/2026-11-04-ios08-strict-support.md) |
-| IOS-09 | TCA client `assumeIsolated` assertions and cancellation relay | Compiler-expressed isolation and simpler feature effects; this is also a TCA/design constraint |
-| IOS-10 | Custom exporter, bridge producer, module/profile plumbing and Xcode project-integrity preflight | [Extra exporter runtime/repository removed](evidence/2026-11-06-ios10-exporter-runtime.md); supported Toolchain/build integration must still qualify removal of the producer/preflight machinery |
-| IOS-11 | Explicit macro-validation invocation override | Reliable validation in the scoped environment; keep exact approvals and negative refusal control |
-| IOS-12 | Private JVM temp handling for affected tool inputs | Exact-graph dependency remediation/risk review; temp handling does not fix unrelated vulnerabilities |
-| IOS-13 | Serialized Home/Nearby test suite and scoped virtual-clock advances | Per-test executor isolation; preserve timer and overlapping-request regression checks with original time limits |
-| IOS-14 | Typed repository-failure fixtures and Kotlin-origin bridge controls | [Home success/unexpected helpers removed](evidence/2026-11-06-ios14-home-repositories.md); [Nearby Swift success](evidence/2026-11-08-ios14-nearby-success.md) and [ordinary-error round trips](evidence/2026-11-08-ios14-nearby-swift-errors.md). Typed domain exceptions need a separate export-surface qualification; preserve Kotlin-origin controls. |
-| IOS-15 | Former test-only Kotlin constructors, removed with Beta2 | [Public generated constructors in the actual native tests](evidence/2026-11-05-beta2-ios15.md); compiler visibility is now required by the iOS gate |
-| IOS-16 | Explicit closure for native test observation on hosted Swift 6.3.3 | Recheck direct function conversion on Swift/Xcode updates; optimized actual test-module compilation and lifecycle tests must pass on all supported compilers. [Failure evidence and warning follow-ups](compiler-warning-follow-ups.md). |
-| IOS-17 | Upstream-generated `SwiftJob` uses unsupported Job inheritance | [Warning retained, actual Native diagnostic receipt added](evidence/2026-11-07-coroutine-inheritance.md); qualify an upstream-supported bridge/contract on Kotlin and coroutines updates. No inheritance opt-in or generated-source patch is added. |
+| IOS-02 | Explicit caller-isolated async profile: Four-module caller-isolated async flags remain. Checked clients and retained state replaced unchecked crossings; Home test import exceptions are also removed. | [#91](https://github.com/Mekate-Studio/Mobi/pull/91), [#92](https://github.com/Mekate-Studio/Mobi/pull/92), [#93](https://github.com/Mekate-Studio/Mobi/pull/93), [#97](https://github.com/Mekate-Studio/Mobi/pull/97) |
+| IOS-07 | Generated implementation-only import checking: CheckImplementationOnly remains in the maintained producer; candidate whole-feature placement was not adopted. | [#44](https://github.com/Mekate-Studio/Mobi/pull/44) |
+| IOS-08 | Swift 5 coroutine-support compilation: Generated support still requires the Swift 5 exception. Strict Swift 6 support remains blocked; no suppression or fallback qualifies removal. | [#80](https://github.com/Mekate-Studio/Mobi/pull/80), [#82](https://github.com/Mekate-Studio/Mobi/pull/82) |
+| IOS-10 | Custom Swift-export producer and profile plumbing: Custom generation/build integration and project preflight remain. The extra exporter runtime dependency and repository are removed. | [#44](https://github.com/Mekate-Studio/Mobi/pull/44), [#75](https://github.com/Mekate-Studio/Mobi/pull/75), [#84](https://github.com/Mekate-Studio/Mobi/pull/84) |
+| IOS-12 | Private JVM temporary directories: Private JVM temporary directories remain a scoped dependency-risk control; no fresh graph/advisory clearance is claimed. | [#39](https://github.com/Mekate-Studio/Mobi/pull/39), [#44](https://github.com/Mekate-Studio/Mobi/pull/44) |
+| IOS-13 | Serialized native feature tests: Serialized TestStore lifetimes and scoped virtual-clock advances remain native test-library constraints. | [#43](https://github.com/Mekate-Studio/Mobi/pull/43), [#84](https://github.com/Mekate-Studio/Mobi/pull/84) |
+| IOS-14 | Typed repository-failure fixtures and Kotlin-origin bridge controls: Swift repository success and ordinary-error paths are qualified. Typed domain-failure fixtures remain; Kotlin-origin cancellation/uncaught-error controls retain a separate purpose. | [#83](https://github.com/Mekate-Studio/Mobi/pull/83), [#94](https://github.com/Mekate-Studio/Mobi/pull/94), [#96](https://github.com/Mekate-Studio/Mobi/pull/96) |
+| IOS-16 | Explicit closure for native test observation: The explicit Observations closure remains for the supported hosted compiler IR-generation failure; the original test behavior is preserved. | [#82](https://github.com/Mekate-Studio/Mobi/pull/82) |
+| IOS-17 | Generated SwiftJob uses unsupported Job inheritance: Generated SwiftJob still delegates unsupported Job inheritance. The diagnostic receipt and update checks remain; no new inheritance opt-in is used. | [#90](https://github.com/Mekate-Studio/Mobi/pull/90) |
+
+### Qualified removals
+
+| ID | Mechanism and recorded disposition | Evidence |
+| --- | --- | --- |
+| IOS-01 | Handwritten sealed-state visitors replaced in the app: Visitors and projection adapters were deleted from the actual Home/Nearby integration; exhaustive generated-case checks remain. | [#44](https://github.com/Mekate-Studio/Mobi/pull/44) |
+| IOS-15 | Test constructors replaced by public generated nested cases: Kotlin test-only state constructors and runner registration were deleted with Beta2; public generated-constructor checks remain mandatory. | [#82](https://github.com/Mekate-Studio/Mobi/pull/82) |
+
+### Historical experiments (not adopted)
+
+| ID | Mechanism and recorded disposition | Evidence |
+| --- | --- | --- |
+| IOS-03 | Numeric wire tags and decoders: Unmerged pilot wire protocol; never adopted by the maintained app. Source absence is not a qualified removal. | [#37](https://github.com/Mekate-Studio/Mobi/pull/37) |
+| IOS-04 | Request-owner facades around suspend calls: Unmerged candidate request-owner facades; the maintained app uses direct generated async clients. | [#38](https://github.com/Mekate-Studio/Mobi/pull/38), [#44](https://github.com/Mekate-Studio/Mobi/pull/44) |
+| IOS-05 | Opaque Nearby state handles: Unmerged candidate state-handle dictionary and UUID ownership; the maintained app retains actor-owned generated state. | [#38](https://github.com/Mekate-Studio/Mobi/pull/38), [#93](https://github.com/Mekate-Studio/Mobi/pull/93) |
+| IOS-06 | Custom completion and drain transport: Unmerged candidate completion/drain transport; its experimental accounting policy was not adopted by the maintained app. | [#38](https://github.com/Mekate-Studio/Mobi/pull/38), [#44](https://github.com/Mekate-Studio/Mobi/pull/44) |
+| IOS-09 | Runtime MainActor assertions and cancellation relay: Unmerged candidate TCA runtime assertions and cancellation relay; current clients use checked actor ownership. The MapLibre delegate contract is separate. | [#38](https://github.com/Mekate-Studio/Mobi/pull/38), [#91](https://github.com/Mekate-Studio/Mobi/pull/91), [#92](https://github.com/Mekate-Studio/Mobi/pull/92) |
+| IOS-11 | Explicit macro-validation invocation override: Unmerged candidate invocation override; maintained package locks, macro approvals and refusal checks remain ordinary build controls. | [#38](https://github.com/Mekate-Studio/Mobi/pull/38) |
+
+Removed mechanisms keep their replacement targets, release triggers and
+executable regression checks in the registry. Partial removals remain visible
+under the active item: IOS-02 retains its async profile, IOS-10 retains build
+integration, and IOS-14 retains typed domain-failure fixtures. The historical
+entries describe unmerged PRs #37/#38; their absent source is not a qualified
+removal and does not imply that an equivalent mechanism exists in the app.
+
+`retirement_state: unverified` and `retirement_authorized: false` describe this
+watch run: it executed no retirement probes and grants no new removal approval.
+They do not erase the recorded removal evidence. Eligible releases still request
+reassessment for every declared trigger, including regressions in replacements;
+unknown provider coverage stays explicit. Dispositions and evidence participate
+in the existing digest and comparison rules: registry edits change the source
+scope and request a fresh observation; unchanged same-scope observations stay
+quiet. No history, schedule or notification policy is replaced.
 
 “Facade” is a pattern name, not a defect category. The request/wire facades above
 compensate for integration limitations or candidate representation choices.
@@ -89,9 +130,11 @@ management controls alone do not close that interactive check.
 | Mutex serialization versus Main confinement | Concurrency policy | Choose from repository behavior; Main isolation does not serialize suspension |
 | Evidence receipts, probes, duplicated pilot/candidate files | Assessment infrastructure | Useful evidence is not an adopted app improvement or a permanent second app |
 
-The maintainer tolerates the interim guarded implementation while requiring a
-readability improvement. This is not blanket approval of production adoption,
-bridge diagnostics, dependency risk or experimental policies.
+The historical candidate included admission, handle and drain policies that were
+not adopted by the maintained app. The app now uses generated cases and direct
+async clients with checked ownership; its remaining integration costs are listed
+above. Development-test qualification does not grant signed-delivery or dependency risk
+approval.
 
 Android applicability and executable follow-ups for ordinary application
 improvements are tracked in [cross-platform mobile feature follow-ups](mobile-feature-follow-ups.md).
@@ -101,8 +144,9 @@ consumer does not qualify the other consumer's lifecycle or effects.
 ## Readable Swift is an acceptance condition
 
 `guard`, `try` and `do/catch` are normal Swift tools; their number is not evidence
-of safety or modern design. The current reducer spreads transport failures,
-state-handle checks and cleanup across feature branches. That is a cost to remove.
+of safety or modern design. The historical candidate spread transport failures,
+state-handle checks and cleanup across feature branches. That cost must not be
+reintroduced into the maintained reducers.
 
 The real-app readability slice should:
 
@@ -313,22 +357,14 @@ For each tool/dependency/design update:
    settings and documentation in an actual app/build slice. Preserve behavior,
    source-bound recovery and explicit adoption/risk decisions where applicable.
 
-## Small PR sequence against maintained code
+## Review increments against maintained code
 
-1. **This PR:** classify the mechanisms and expose retirement work in the current
-   update/watch path. No application behavior changes or interop copies.
-2. **Nearby correctness/readability:** fix one demonstrated stale-response or
-   swallowed-failure case in the existing reducer/client with its regression
-   test. Keep product policy and export migration out of that diff.
-3. **State boundary:** replace one real feature's visitor consumption, including
-   the smallest supported state ownership. Retire applicable IDs in that slice;
-   do not add a parallel application tree as the review target.
-4. **Async boundary:** qualify and simplify actual refresh ownership, keeping
-   cancellation and noncooperative-work checks. Retire applicable facade/listener
-   code with the same change.
-5. **Build integration/strict modes:** replace one custom producer/profile
-   workaround as the supported capability becomes demonstrable. Shared UI and
-   one-delivery qualification remain requirements when affected.
+The original sequence has delivered generated state/async boundaries and focused
+correctness, ownership and lifetime improvements in the actual app. The tables
+above replace that sequence as the current maintenance view. Future increments
+should select one active mechanism and its existing replacement/removal checks,
+or requalify a removed mechanism's replacement on an updated tuple. Historical
+candidate machinery is not an adoption backlog.
 
 Each PR explains its concrete before/after behavior and cost, and includes
 short author comments on changed lines for non-obvious choices. Every workaround

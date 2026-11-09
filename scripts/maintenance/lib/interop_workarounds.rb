@@ -34,7 +34,9 @@ module Maintenance
         end
         # Absence can mean an unmerged candidate, not successful removal.
         source_state = present.empty? ? 'not_in_checkout' : present.size == entry['paths'].size ? 'present' : 'partially_present'
-        row = entry.slice('title', 'scope', 'replacement', 'retirement_checks', 'probe_state', 'probe_command', 'probe_report').merge(
+        # Recorded adoption/removal evidence is independent of this watch's probes.
+        row = entry.slice('title', 'scope', 'disposition', 'disposition_note', 'disposition_evidence',
+                          'replacement', 'retirement_checks', 'probe_state', 'probe_command', 'probe_report').merge(
           'source_state' => source_state, 'present_paths' => present,
           'source_sha256' => Maintenance.digest(present.sort.to_h { |path| [path, source_files.fetch(path)] }),
           'recheck_state' => leads.empty? ? 'review_required' : 'release_review_due',
@@ -52,9 +54,15 @@ module Maintenance
     def validate!(entry)
       raise Failure, 'Invalid interop workaround entry' unless entry.is_a?(Hash)
 
-      required = %w[id scope title reason replacement]
+      required = %w[id scope title reason replacement disposition_note]
       valid = required.all? { |key| entry[key].is_a?(String) && !entry[key].empty? && !entry[key].match?(/[\r\n|]/) }
       valid &&= entry['id'].match?(/\AIOS-\d{2}\z/) && %w[default pilot candidate].include?(entry['scope'])
+      valid &&= %w[active removed historical].include?(entry['disposition'])
+      valid &&= (entry['disposition'] == 'historical') == (entry['scope'] != 'default')
+      evidence = entry['disposition_evidence']
+      valid &&= evidence.is_a?(Array) && !evidence.empty? && evidence.all? do |url|
+        url.is_a?(String) && url.match?(%r{\Ahttps://github.com/Mekate-Studio/Mobi/pull/[1-9]\d*\z})
+      end
       %w[paths recheck_on retirement_checks].each do |key|
         value = entry[key]
         valid &&= value.is_a?(Array) && !value.empty? && value.all? { |item| item.is_a?(String) && !item.empty? }
@@ -74,10 +82,17 @@ module Maintenance
       return [] if entries.empty?
 
       lines = ['', '## Interop workaround retirement', '',
-               'Release leads request reassessment. This watch did not run retirement probes; available CI checks are pointers, not removal evidence.', '',
-               '| ID | Scope | Source | Recheck | Probe |', '| --- | --- | --- | --- | --- |']
-      entries.sort.each do |id, row|
-        lines << '| ' + [id, row.fetch('scope'), row.fetch('source_state'), row.fetch('recheck_state'), row.fetch('probe_state')].join(' | ') + ' |'
+               'Recorded dispositions cite reviewed PRs. Release leads request reassessment. This watch did not run retirement probes; available CI checks are pointers, not fresh removal evidence.',
+               'Qualified removals retain their regression checks and release triggers. Historical experiments were not adopted by the maintained app.']
+      { 'active' => 'Active app requirements', 'removed' => 'Qualified removals', 'historical' => 'Historical experiments (not adopted)' }.each do |disposition, heading|
+        rows = entries.sort.select { |_id, row| row.fetch('disposition') == disposition }
+        lines += ['', '### ' + heading + ' (' + rows.size.to_s + ')', '',
+                  '| ID | Mechanism and recorded disposition | Evidence | Recheck | Probe |', '| --- | --- | --- | --- | --- |']
+        rows.each do |id, row|
+          evidence = row.fetch('disposition_evidence').map { |url| '[#' + url.split('/').last + '](' + url + ')' }.join(', ')
+          description = row.fetch('title') + ': ' + row.fetch('disposition_note')
+          lines << '| ' + [id, description, evidence, row.fetch('recheck_state'), row.fetch('probe_state')].join(' | ') + ' |'
+        end
       end
       gaps = entries.values.flat_map { |row| row.fetch('coverage_gaps') }.uniq.sort
       lines << '' << 'Unobserved trigger coverage: ' + (gaps.empty? ? 'none in the configured provider set' : gaps.join(', ')) + '.'
