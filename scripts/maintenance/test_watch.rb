@@ -311,6 +311,40 @@ module WatchTest
     assert(result['retirement_authorized'] == false)
   end
 
+  test('recorded dispositions stay separate from source presence and release leads') do
+    source = Maintenance::Source.new(ROOT)
+    entries = Maintenance::InteropWorkarounds.observe(ROOT, releases: {}, source_files: source.files).fetch('entries')
+    assert(entries.values.group_by { |row| row.fetch('disposition') }.transform_values(&:size) ==
+           { 'active' => 9, 'removed' => 2, 'historical' => 6 })
+    assert(entries['IOS-01']['disposition'] == 'removed' && entries['IOS-15']['disposition'] == 'removed')
+    assert(entries['IOS-05']['disposition'] == 'historical')
+    assert(entries['IOS-02']['disposition'] == 'active' && entries['IOS-14']['disposition'] == 'active')
+    assert(entries['IOS-01']['disposition_evidence'].include?('https://github.com/Mekate-Studio/Mobi/pull/44'))
+    assert(!entries['IOS-15']['retirement_checks'].empty? && entries['IOS-15']['probe_state'] == 'available_in_ci')
+
+    releases = { 'kotlin' => { 'state' => 'observed', 'newer' => [{ 'version' => '99.0.0', 'age_state' => 'eligible_for_review' }] } }
+    changed = Maintenance::InteropWorkarounds.observe(ROOT, releases: releases, source_files: {}).fetch('entries')
+    entries.each do |id, row|
+      assert(changed[id].slice('disposition', 'disposition_note', 'disposition_evidence') == row.slice('disposition', 'disposition_note', 'disposition_evidence'))
+    end
+    assert(changed['IOS-15']['recheck_state'] == 'release_review_due')
+    assert(changed.values.all? { |row| row['retirement_state'] == 'unverified' && row['retirement_authorized'] == false })
+  end
+
+  test('summary separates current requirements, qualified removals and unadopted history with evidence') do
+    entries = Maintenance::InteropWorkarounds.observe(ROOT, releases: {}, source_files: {}).fetch('entries')
+    summary = Maintenance::InteropWorkarounds.summary(entries).join("\n")
+    active, removed = summary.split('### Qualified removals', 2)
+    removed, historical = removed.split('### Historical experiments (not adopted)', 2)
+    assert(active.include?('### Active app requirements (9)') && active.include?('| IOS-02 |'))
+    assert(!active.include?('| IOS-01 |') && !active.include?('| IOS-05 |'))
+    assert(removed.include?('| IOS-01 |') && removed.include?('| IOS-15 |') && !removed.include?('| IOS-05 |'))
+    assert(historical.include?('| IOS-05 |') && !historical.include?('| IOS-15 |'))
+    assert(summary.include?('[#44](https://github.com/Mekate-Studio/Mobi/pull/44)'))
+    assert(summary.include?(entries['IOS-02']['disposition_note']))
+    assert(summary.include?('did not run retirement probes') && summary.include?('regression'))
+  end
+
   test('an eligible release requests recheck only for its declared workaround triggers') do
     releases = { 'kotlin' => { 'state' => 'observed', 'newer' => [{ 'version' => '99.0.0', 'age_state' => 'eligible_for_review' }] } }
     result = Maintenance::InteropWorkarounds.observe(ROOT, releases: releases, source_files: {})
@@ -340,7 +374,10 @@ module WatchTest
       reject(/Cannot observe/) { Maintenance::InteropWorkarounds.observe(root, releases: {}, source_files: {}) }
       registry = JSON.parse(File.read(File.join(ROOT, Maintenance::InteropWorkarounds::REGISTRY)))
       [nil, registry['entries'].first.merge('retirement_checks' => []), registry['entries'].first.merge('probe_state' => 'passed'),
-       registry['entries'].first.merge('paths' => ['../escape'])].each do |bad|
+       registry['entries'].first.merge('paths' => ['../escape']), registry['entries'].first.merge('disposition' => 'probably_removed'),
+       registry['entries'].first.merge('disposition' => 'historical'), registry['entries'].first.merge('disposition_note' => ''),
+       registry['entries'].first.merge('disposition_evidence' => []),
+       registry['entries'].first.merge('disposition_evidence' => ['https://example.com/unreviewed'])].each do |bad|
         File.write(File.join(root, Maintenance::InteropWorkarounds::REGISTRY), JSON.generate(registry.merge('entries' => [bad])))
         reject(/Invalid/) { Maintenance::InteropWorkarounds.observe(root, releases: {}, source_files: {}) }
       end
@@ -355,8 +392,20 @@ module WatchTest
       assert(first.dig('snapshot', 'observation', 'missing_capabilities').include?('interop_retirement_probes'))
       summary = File.read(File.join(output, 'summary.md'))
       assert(summary.include?('Interop workaround retirement') && summary.include?('not_automated') && summary.include?('xcode:not_observed'))
+      assert(detail['entries']['IOS-15']['disposition'] == 'removed')
+      assert(first.dig('snapshot', 'observation', 'workarounds', 'IOS-05', 'disposition') == 'historical')
+      assert(summary.include?('### Active app requirements (9)') && summary.include?('### Qualified removals (2)') && summary.include?('### Historical experiments (not adopted) (6)'))
       second, = run_watch(root, previous: File.join(output, 'snapshot.json'))
       assert(!second['notification']['notify'])
+
+      registry_path = File.join(root, Maintenance::InteropWorkarounds::REGISTRY)
+      registry = JSON.parse(File.read(registry_path))
+      entry = registry['entries'].find { |item| item['id'] == 'IOS-15' }
+      entry['disposition_note'] += ' Reviewed replacement regression evidence.'
+      File.write(registry_path, JSON.pretty_generate(registry))
+      updated, = run_watch(root, previous: File.join(output, 'snapshot.json'))
+      assert(updated['notification']['notify'] && updated['notification']['continuity'] == 'scope_changed')
+      assert(updated.dig('snapshot', 'observation', 'workarounds', 'IOS-15', 'disposition_note') == entry['disposition_note'])
     end
   end
 
