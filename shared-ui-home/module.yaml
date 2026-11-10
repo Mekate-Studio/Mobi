@@ -7,6 +7,19 @@ dependencies:
   - $compose.foundation: exported
   - $compose.material3: exported
 
+test-dependencies@android:
+  - ../shared-core
+  - androidx.compose.ui:ui-test-junit4:1.12.1
+  - org.robolectric:robolectric:4.16
+  - org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0
+
+test-settings@android:
+  junit: junit-4
+  jvm:
+    test:
+      freeJvmArgs:
+        - --enable-native-access=ALL-UNNAMED
+
 settings:
   kotlin:
     version: 2.5.0-Beta2

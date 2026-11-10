@@ -123,6 +123,13 @@ jobs:
       - uses: android-actions/setup-android@v4
       - name: Run Android and shared tests
         run: ./scripts/ci/run_job.sh android-test
+      - name: Upload Android UI test evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-ui-tests-${{ github.sha }}
+          if-no-files-found: ignore
+          path: build/logs/android-ui-tests
       - name: Upload failure diagnostics
         if: failure()
         uses: actions/upload-artifact@v7

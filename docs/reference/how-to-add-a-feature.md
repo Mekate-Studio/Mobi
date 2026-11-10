@@ -471,6 +471,17 @@ include a location decision changing before queued work starts.
 Recheck [AND-01](../maintenance/mobile-feature-follow-ups.md#and-01-presenter-host-test-harness-simplification)
 on relevant dependency updates to remove this harness cost when supported.
 
+For an actual Shared Compose screen, put Android component tests in the qualified
+`shared-ui-home/test@android` root and run `./scripts/ci/run_job.sh android-ui-test`.
+The test-only AGP target supplies Android resources missing from the current
+Toolchain host runner; ordinary `android-test` includes it. Use the real screen
+and service with a controlled repository boundary. Queue rapid callbacks through
+Compose testing v2 before draining its scheduler, then assert rendered state and
+repository admission. New modules need their own explicit input/routing review;
+unknown native test roots still refuse. See
+[ADR 0020](../adr/0020-android-shared-ui-test-target.md) and
+[AND-03](../maintenance/mobile-feature-follow-ups.md#and-03-resource-enabled-android-ui-tests).
+
 ### 8. Document only the delta
 
 If the feature follows the established pattern, lightweight docs are enough.

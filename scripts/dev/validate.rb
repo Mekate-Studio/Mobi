@@ -38,7 +38,8 @@ module Precommit
         jobs << 'android-build-debug' if flags['android_build'] == 'true'
         jobs << 'ios-build-debug' if flags['ios_build'] == 'true'
         @data = { 'schema' => 1, 'base_commit' => base, 'index_sha256' => index, 'paths' => paths, 'selection' => flags,
-                  'jobs' => jobs, 'host_test_modules' => jobs.include?('android-test') ? HostTests.modules(paths: Quality.git('ls-files', '--cached', '-z').split("\0")) : [] }
+                  'jobs' => jobs, 'host_test_modules' => jobs.include?('android-test') ? HostTests.modules(paths: Quality.git('ls-files', '--cached', '-z').split("\0")) : [],
+                  'android_ui_test_sources' => jobs.include?('android-test') ? HostTests.ui_sources(paths: Quality.git('ls-files', '--cached', '-z').split("\0")) : [] }
       end
       raise Quality::Failure, 'Index changed while planning' unless guard.snapshot == index
       raise Quality::Failure, 'Base commit changed while planning' unless Precommit.head == base

@@ -3,6 +3,18 @@
 require_relative '../dev/quality'
 
 module HostTests
+  # AND-03: these module-owned component tests run through the resource-enabled
+  # AGP target. Keep unknown native test roots refusing below.
+  ANDROID_UI_ROOT = 'shared-ui-home/test@android/'
+
+  def self.ui_test?(path)
+    path.start_with?(ANDROID_UI_ROOT) && path.end_with?('.kt')
+  end
+
+  def self.ui_sources(paths: nil)
+    (paths || Dir.glob(ANDROID_UI_ROOT + '**/*.kt')).select { |path| ui_test?(path) }.sort
+  end
+
   # These Kotlin fixture libraries are exercised by the hosted Swift tests in
   # ios-test. This is not support for running arbitrary Kotlin/Native test roots.
   IOS_CLIENT_FIXTURES = %w[
@@ -19,13 +31,13 @@ module HostTests
               end
       tests.each do |path|
         Quality.source_path!(path)
-        next if IOS_CLIENT_FIXTURES.include?(path)
+        next if IOS_CLIENT_FIXTURES.include?(path) || ui_test?(path)
         source_root = path.delete_prefix(name + '/').split('/').first
         unless %w[test test@android].include?(source_root)
           raise Quality::Failure, "Uncovered Kotlin test target: #{path}; add an explicit native test runner before claiming coverage"
         end
       end
-      next false if (tests - IOS_CLIENT_FIXTURES).empty?
+      next false if tests.all? { |path| IOS_CLIENT_FIXTURES.include?(path) || ui_test?(path) }
 
       product = graph.configs.fetch(name).fetch('product')
       android = product == 'android/app' || product == 'android/lib' ||

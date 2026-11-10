@@ -186,6 +186,26 @@ module ValidationTest
     end
   end
 
+  test('module-owned Android UI tests route through AGP while unknown native roots refuse') do |f|
+    base(f)
+    f.write('project.yaml', "modules: [feature, android-app, shared-ui-home]\n")
+    f.write('shared-ui-home/module.yaml', "product:\n  type: kmp/lib\n  platforms: [android, iosArm64]\n")
+    f.write('shared-ui-home/test@android/ScreenTest.kt', 'class ScreenTest')
+    f.stage
+    data = plan(f)
+    assert(data['host_test_modules'] == ['android-app'], 'UI tests sent to the resource-less Toolchain runner')
+    assert(data['jobs'].include?('android-test'), 'UI test change omitted Android validation')
+    assert(data['android_ui_test_sources'] == ['shared-ui-home/test@android/ScreenTest.kt'], 'UI test source omitted from staged plan')
+    f.write('shared-ui-home/test@ios/UncoveredTest.kt', 'class UncoveredTest')
+    f.stage
+    begin
+      plan(f)
+      raise 'uncovered UI native tests accepted'
+    rescue Quality::Failure => error
+      assert(error.message.include?('Uncovered Kotlin test target'), error.message)
+    end
+  end
+
   test('iOS client fixtures select the hosted runner while unknown native tests still refuse') do |f|
     base(f)
     f.write('project.yaml', "modules: [feature, android-app, shared-ios-app]\n")

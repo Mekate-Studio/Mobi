@@ -13,7 +13,7 @@ application improvements separately from the [interop workaround registry](inter
 | MOB-02 | Reject obsolete refresh results and preserve current location decisions, [#40](https://github.com/Mekate-Studio/Mobi/pull/40)/[#41](https://github.com/Mekate-Studio/Mobi/pull/41)/[#46](https://github.com/Mekate-Studio/Mobi/pull/46) | Native Nearby implemented: completion preserves current location decisions, and a new precise location supersedes earlier refresh work | Actual presenter checks cover blocked/degraded completion and overlapping requests, including repeated coordinates, changed coordinates, queued location events, old/new success or failure, late noncooperative completion, manual cancellation/retry and timer survival. Host checks qualify native result ownership; device location delivery is outside this evidence. |
 | MOB-03 | Let active work finish across visible timer ticks, [#53](https://github.com/Mekate-Studio/Mobi/pull/53) | Implemented: a composition-owned timer checks shared admission/freshness and awaits each automatic request | Actual Circuit presenter regressions under Robolectric/API 36 cover loading recomposition, a slow automatic request and subsequent refresh, a pending manual request, blocked location, a snapshot not due, and cancellation on composition disposal. This qualifies host Compose ownership; device interaction and navigation lifetime are outside this check. |
 | MOB-04 | Deliberate cancellation recovery, [#42](https://github.com/Mekate-Studio/Mobi/pull/42)/[#51](https://github.com/Mekate-Studio/Mobi/pull/51) | Native Home/Nearby implemented for their recorded ownership cases; optional Shared Home remains open | Home checks cover exact previous-state recovery and retry for repository-thrown and owned-job cancellation. Nearby checks cover active-job repository cancellation, retained/absent snapshots, earlier failures, degraded/blocked location, retry, timer survival and obsolete-request rejection. Supersession/disposal cancel Nearby jobs and skip recovery. A future independent cancel action while Nearby remains owned needs its own policy/runtime checks; optional Shared Home needs its own rendering-runtime qualification. |
-| MOB-05 | Manual refresh admission, [#49](https://github.com/Mekate-Studio/Mobi/pull/49)/[#50](https://github.com/Mekate-Studio/Mobi/pull/50) | Native Home/Nearby implemented: admission and loading share a nonsuspending segment after dispatch. Home resolves its current counter there; Nearby uses shared `canRequestRefresh`. Optional `SharedHomeScreen` still checks before launching; that source-observed risk is unqualified | Nearby checks cover rapid/busy callbacks, completion, blocked/resolving location and retry. Home checks cover queued duplicates, busy rejection, completion, retained callbacks using current values, repository-failure retry with absent/previous values, and disposal. Shared Compose Home admission needs its own rendering-runtime check. Android automatic refresh uses the presenter-owned timer and shared freshness; its unused `VisibleRefreshDue` UI event is removed. iOS still emits its own visible-refresh action. |
+| MOB-05 | Manual refresh admission, [#49](https://github.com/Mekate-Studio/Mobi/pull/49)/[#50](https://github.com/Mekate-Studio/Mobi/pull/50) | Native Home/Nearby implemented: admission and loading share a nonsuspending segment after dispatch. Home resolves its current counter there; Nearby uses shared `canRequestRefresh`. Shared Home also checks after dispatch; its actual Android screen regression qualifies the queued-callback case | Nearby checks cover rapid/busy callbacks, completion, blocked/resolving location and retry. Home checks cover queued duplicates, busy rejection, completion, retained callbacks using current values, repository-failure retry with absent/previous values, and disposal. The Shared Home component check covers queued duplicates, busy rejection, rendered loading, completion and retained callbacks using the current counter; iOS component rendering remains separate. Android automatic refresh uses the presenter-owned timer and shared freshness; its unused `VisibleRefreshDue` UI event is removed. iOS still emits its own visible-refresh action. |
 | MOB-06 | Feature lifetime across view re-entry, [#47](https://github.com/Mekate-Studio/Mobi/pull/47)/[#48](https://github.com/Mekate-Studio/Mobi/pull/48) | Native Home/Nearby tab-state lifetime implemented for recorded cases; optional Shared Home remains open | Actual tab-content checks cover Home ready-state restoration and Nearby snapshot/decision retention, location revalidation, failure expiry, hidden-request/timer cancellation and restart, retry, queued location ordering, and rejection of old responses/callbacks. See [ADR 0010](../adr/0010-android-home-tab-state-lifetime.md) and [ADR 0011](../adr/0011-android-nearby-tab-state-lifetime.md). iOS action gating and failure aging on return are implemented for the recorded reducer/store cases below. Home STARTED-owner stop/start is qualified by the recorded host checks below. Nearby STARTED timer/request cancellation and location revalidation are qualified by the host checks below, including current-permission callback handling. iOS Home background cancellation and exact-state recovery are qualified by the store checks below. iOS Nearby timer scheduling is qualified by the SwiftUI host checks below. Nearby request/location ownership is qualified by the store/SwiftUI checks below. OS scene and CoreLocation delivery, recreation/process restoration and device interaction still need qualification. |
 | MOB-07 | Swift-export errors, service captures and generated support | Platform-specific: Android calls Kotlin directly | Keep IOS-prefixed bridge exceptions and retirement checks in the interop registry. Shared repository error/freshness rules already reach both platforms; Swift `KotlinError` handling and TCA executor constraints need no literal Android port. |
 | MOB-08 | Native iOS cancellation before effect startup | Home and Nearby use owned StoreTask adapters; Android has its separate STARTED child owner | A cancellation-ID control failed the pre-start timing check on TCA 1.26.0. Recheck the adapter on TCA/SwiftUI updates using the checks below; record retained/removal-ready/incomplete in the update PR. This is separate from Swift-export retirement probes. |
@@ -35,8 +35,11 @@ admission checks run the real presenters on a queued test dispatcher. They read
 current state after dispatch and qualify admission-to-loading without a suspension
 in between. Home's native callback carries refresh intent; an older screen callback
 cannot supply an obsolete counter value. The iOS Home reducer already reads its
-current value in the admitted action. Optional Shared Home still needs its own
-runtime qualification; native presenter checks do not qualify its UI callback.
+current value in the admitted action. Shared Home now has its own Android component regression in
+`shared-ui-home/test@android`, using its real rendered screen and feature service.
+Admission and loading share a nonsuspending coroutine segment. Its recorded case
+qualifies queued/busy callbacks and current-value refresh after completion;
+iOS component rendering, cancellation recovery and retention remain separate.
 Manual refresh and repository-failure retry still bypass
 freshness; the automatic timer retains its existing freshness check. Android's
 [UI](../../android-app/src/nearbyvehiclemap/NearbyVehicleMapUiFactory.kt) emits
@@ -346,6 +349,39 @@ Record **retained**, **ready for removal** or **incomplete**, with the executed
 checks, in the update PR. This is a manual adoption-review step; the iOS interop
 watch does not emit AND-01 assessments or poll Circuit/Robolectric releases.
 
+## AND-03: Resource-enabled Android UI tests
+
+The test-only [AGP target](../../tools/android-ui-tests/build.gradle.kts) renders
+Shared Home using actual Toolchain-built JARs and the module's resolved test
+runtime, including AAR resources. The normal Toolchain 0.13.0 host route fails
+before feature assertions because a dependency R class is missing. Existing
+presenter tests remain on their own runner. See
+[ADR 0020](../adr/0020-android-shared-ui-test-target.md) for the measured bug,
+public Android APIs, complete input/export cost and supported entry command.
+
+The repository owns the second test build and its **version-bound Toolchain
+incremental-record reader**. It is an Android test-integration accommodation,
+separate from Swift export. Test declarations stay in the module manifest;
+there is no second handwritten app dependency graph. Each UI run records binary
+and test-source hashes, selected compiler/AGP/Gradle and production-to-test graph
+substitutions. PR CI uploads the receipt, JUnit result and logs on every result.
+No new release-discovery schedule or automatic retirement is added.
+
+On Toolchain/AGP/Gradle/Compose/Robolectric/Kotlin/test-JDK updates, review the
+supported resource-enabled host-test recipe. Run the same Shared Home UI
+assertions through that replacement, preserving the queued duplicate control,
+busy rejection, completion and current-value callback case. Require local,
+cold/relocated and hosted evidence before removing the AGP target, input exporter
+and special source routing. Retain the UI tests and normal repo-owned gate.
+Record **retained**, **removal-ready** or **incomplete** in the actual update PR;
+a passing presenter or service test does not qualify this replacement.
+
+Evaluate alternative runners for future acceptance coverage using the actual
+scenarios and measured cold/warm execution cost, CI resource use, repeatability,
+diagnostics and platform fidelity. Preserve behavior assertions while replacing
+runner/Activity fixtures as needed. OS/device acceptance and iOS rendering need
+their appropriate runtime; this component fixture does not claim that coverage.
+
 ## AND-02: Toolchain distribution download header limit
 
 On 2026-10-24, Toolchain 0.13.0's automatic Temurin 25 download failed before
@@ -399,8 +435,8 @@ The Android surfaces are:
 - [Home presenter](../../android-app/src/home/HomePresenter.kt),
   [Home state producer](../../android-app/src/home/HomePresenterStateProducer.kt)
   and [app shell](../../android-app/src/AppShell.kt).
-- [Optional Shared Home](../../shared-ui-home/src/HomeContent.kt), whose admission
-  callback remains a source-only follow-up.
+- [Optional Shared Home](../../shared-ui-home/src/HomeContent.kt), whose Android
+  component admission is qualified; cancellation recovery and retention remain open.
 
 ## Keep the assessment current
 

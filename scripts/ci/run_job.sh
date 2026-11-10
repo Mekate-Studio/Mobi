@@ -53,6 +53,11 @@ case "${job_name}" in
     cd "${CI_PROJECT_DIR}"
     ./scripts/ci/run_android_tests.sh "$@"
     ;;
+  android-ui-test)
+    ci_prepare_android_validation_job
+    cd "${CI_PROJECT_DIR}"
+    ./scripts/ci/run_android_ui_tests.sh "$@"
+    ;;
   ios-build-debug)
     ci_prepare_ios_job
     cd "${CI_PROJECT_DIR}"
@@ -117,6 +122,7 @@ case "${job_name}" in
       android-build-release \
       android-build-release-candidate \
       android-test \
+      android-ui-test \
       ios-build-debug \
       ios-test \
       ios-build-release \
