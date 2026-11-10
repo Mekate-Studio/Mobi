@@ -78,6 +78,11 @@ Run the main local smoke path:
 That path is the fastest way to validate that a clean clone can exercise the
 same repo-owned jobs used by CI.
 
+`android-test` includes Shared Home's actual Compose screen regression through a
+test-only resource-enabled AGP target. Run it alone with
+`./scripts/ci/run_job.sh android-ui-test`; see the
+[build ownership and maintenance cost](docs/adr/0020-android-shared-ui-test-target.md).
+
 For the Android smoke jobs, the repository generates ignored local debug
 signing files under `android-app/` if no Android signing material has been
 provided. Release-oriented Android jobs still expect explicit signing inputs.

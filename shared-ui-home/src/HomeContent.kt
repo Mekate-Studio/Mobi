@@ -43,8 +43,8 @@ fun SharedHomeScreen(
         state = state,
         modifier = modifier,
         onEvent = { event ->
-            if (state.counterLoadable !is CounterLoadable.Loading) {
-                scope.launch {
+            scope.launch {
+                if (state.counterLoadable !is CounterLoadable.Loading) {
                     val currentCounterValue = state.counterLoadable.currentValueForRefresh()
                     state = service.loadingState(counterValue = currentCounterValue)
                     state = service.refresh(counterValue = currentCounterValue)

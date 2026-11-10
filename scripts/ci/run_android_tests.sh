@@ -13,3 +13,5 @@ fi
 while IFS= read -r module_name; do
   ./scripts/ci/run_kotlin_with_logs.sh test -m "${module_name}" -p android "$@"
 done <<<"${module_list}"
+
+./scripts/ci/run_android_ui_tests.sh

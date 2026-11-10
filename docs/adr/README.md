@@ -39,6 +39,8 @@ Proposed, without changing the accepted decisions:
 
 - [ADR 0019: Checked iOS Home service isolation](0019-ios-home-checked-service-isolation.md)
 
+- [ADR 0020: Android Shared UI tests through a resource-enabled AGP target](0020-android-shared-ui-test-target.md)
+
 Use a new ADR when a decision changes one of these:
 
 - module boundaries

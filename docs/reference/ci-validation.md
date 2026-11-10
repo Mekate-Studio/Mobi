@@ -70,6 +70,11 @@ tests:
 - `shared-di`
 - `android-app`
 
+It then runs `shared-ui-home/test@android` through the resource-enabled AGP UI
+target. Its inputs are the actual Toolchain-built libraries and resolved test
+graph. The staged plan lists these UI sources separately from host-test modules.
+See [ADR 0020](../adr/0020-android-shared-ui-test-target.md) for ownership and cost.
+
 Run that contract locally with:
 
 ```bash
@@ -78,6 +83,13 @@ Run that contract locally with:
 
 This compiles the production code needed by the tests but does not explicitly
 assemble an APK or AAB. App builds remain separate and run only when selected.
+
+For the UI target alone, use `./scripts/ci/run_job.sh android-ui-test`. The command
+rebuilds and exports its inputs before invoking AGP; it does not reuse an assumed
+prebuilt developer artifact. `build/logs/android-ui-tests/` contains the input
+receipt, graph substitutions, runner log, JUnit XML and result summary. PR CI
+uploads that directory on success and failure. Changed input hashes, no discovered
+tests, failures or skips cannot become a passing UI result.
 
 The macOS quality job bootstraps only missing lint tools through the repo-owned
 `scripts/ci/install_quality_tools.sh` helper. Homebrew download caching avoids
