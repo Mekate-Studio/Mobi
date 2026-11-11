@@ -429,6 +429,20 @@ separately; a local pass cannot qualify hosted cold downloads.
 The explicit matching JDK declaration is a normal build prerequisite that can
 remain useful after the download limitation is fixed.
 
+The [Kotlin 2.5.0-RC qualification](evidence/2026-11-11-kotlin-250-rc-qualification.md)
+exposes a second limitation: the mirror returns 404 for the newly published RC
+stdlib POM/checksum, and hosted iOS build/tests fail before compilation. The
+producer now defaults to canonical `https://repo.maven.apache.org/maven2` through
+the same supported setting, preserving explicit overrides and normal checksum
+verification. The paired local RC jobs already used that endpoint; final staged
+and hosted results qualify the maintained default separately. No automatic
+endpoint fallback, injected cache or custom downloader is added. AND-02 remains
+open for automatic JDK provisioning and eventual removal of the producer's
+explicit endpoint default; a canonical endpoint pass does not qualify the
+unmodified upstream default. Recheck both cold distribution and dependency
+downloads on future Toolchain/HTTP-client/provider changes, including newly
+published previews whose mirror replication may lag.
+
 On Toolchain/bundled HTTP-client or provider changes, review the pinned upstream
 provisioning requirements and recheck automatic JDK provisioning from empty caches
 without a matching installed `JAVA_HOME`, and recheck the default Maven Central
