@@ -597,5 +597,18 @@
   },
   "adoption_authorized": false,
   "security_cleared": false,
-  "signed_delivery_qualified": false
+  "signed_delivery_qualified": false,
+  "paired_candidate_commit": "770d2a9b1beb2577a5faaa4f0492e48b837c91aa",
+  "first_hosted_run": {
+    "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/43099522873",
+    "commit": "770d2a9b1beb2577a5faaa4f0492e48b837c91aa",
+    "android_build": "passed",
+    "android_tests": "passed",
+    "ios_build": "failed_before_compilation",
+    "ios_tests": "failed_before_compilation",
+    "cause": "Existing producer Google mirror default cannot resolve RC stdlib POM/module checksums",
+    "artifact_id": 13892695666,
+    "artifact_zip_sha256": "d0bc8c038a321d632fbcba0b7c471b7741f0d5012320b303b2e22846f0794bb0",
+    "followup": "Use canonical Maven Central as the existing producer default; preserve explicit overrides and checksum verification; no fallback logic."
+  }
 }

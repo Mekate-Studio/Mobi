@@ -153,8 +153,8 @@ module MobiSwiftExport
         options = [ENV['JAVA_TOOL_OPTIONS'], %Q(-Djava.io.tmpdir="#{temporary}")].compact.join(' ')
         @environment = {
           'TMPDIR' => temporary, 'JAVA_TOOL_OPTIONS' => options,
-          # AND-02: use Toolchain's supported Maven Central mirror setting.
-          'KOTLIN_DEFAULT_MAVEN_CENTRAL_URL' => ENV.fetch('KOTLIN_DEFAULT_MAVEN_CENTRAL_URL', 'https://maven-central.storage-download.googleapis.com/maven2')
+          # AND-02: canonical Central serves new previews before the mirror; recheck the upstream default on updates.
+          'KOTLIN_DEFAULT_MAVEN_CENTRAL_URL' => ENV.fetch('KOTLIN_DEFAULT_MAVEN_CENTRAL_URL', 'https://repo.maven.apache.org/maven2')
         }
         inputs = libraries
         generate(inputs)

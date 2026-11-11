@@ -107,6 +107,18 @@ difference and warm dependency seeding preclude controlled build-time or
 byte-equivalence claims. A baseline setup interruption was discarded before the
 successful complete rerun. Partial attempts are not passes.
 
+The first [hosted run, CI #677](https://github.com/Mekate-Studio/Mobi/actions/runs/43099522873),
+on candidate `770d2a9b1beb2577a5faaa4f0492e48b837c91aa`, passes Android build/tests
+but fails iOS build/tests before compilation: the producer's existing mirror
+default cannot resolve the RC stdlib POM/module checksums. The retained raw iOS
+diagnostic artifact confirms the endpoint and failure; no test pass is claimed
+for those jobs. The local explicit canonical endpoint had masked that default.
+The follow-up changes only the producer's existing default URL to canonical
+Central, keeping caller overrides and checksum verification. AND-02 tracks the
+remaining upstream-default/JDK retirement checks. Final exact-staged and hosted
+results for that correction are recorded in the PR; the paired evidence above
+retains its original effective endpoint and source scope.
+
 ## Review and recovery
 
 The actual-app PR carries the candidate changes and author comments at the age
