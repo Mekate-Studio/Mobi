@@ -240,6 +240,14 @@ without replaying missed ticks. Recomposition and repeated transitions keep one
 timer. A production-store check proves an admitted refresh can finish while the
 timer is paused, retaining the map and permitting a later automatic request.
 
+The first [PR #99 native CI run](https://github.com/Mekate-Studio/Mobi/actions/runs/42888555623/job/130083362028)
+failed the unchanged removal/reentry timer fixture: its initial ten-second advance
+observed zero ticks. The unchanged diagnostic rerun passed. Timer-task startup
+before clock advancement is a suspected fixture gap, not a confirmed cause or a
+fixed issue. Preserve that failure when qualifying an explicit startup boundary;
+do not add sleeps, assertion retries or weaken cadence/cancellation checks. This
+native test reliability follow-up is separate from AND-03 and Swift-export removal.
+
 [ADR 0016](../adr/0016-ios-nearby-scene-timer-lifetime.md) records the 17-line net
 runtime cost, standard Clock seam and explicit scheduling-only boundary. The
 MobiIOSTestDependencies product links the already pinned Clocks/ConcurrencyExtras
@@ -345,6 +353,49 @@ runtime assertions; do not replace them with state-producer delegation tests.
 Record **retained**, **ready for removal** or **incomplete**, with the executed
 checks, in the update PR. This is a manual adoption-review step; the iOS interop
 watch does not emit AND-01 assessments or poll Circuit/Robolectric releases.
+
+## AND-03: Shared Compose UI test gap — candidate deferred
+
+Reviewed 2026-11-11. Toolchain 0.13.0's normal Android host route fails to render
+the actual Shared Home screen because dependency resource classes are absent
+(`androidx/customview/poolingcontainer/R$id`). Presenter and shared service tests
+remain useful, but do not qualify this screen's queued callbacks, cancellation
+or view lifetime. MOB-04/05/06 therefore remain open for this consumer.
+
+[Draft PR #99](https://github.com/Mekate-Studio/Mobi/pull/99) demonstrated a
+resource-enabled AGP/Robolectric target using actual compiled Mobi libraries.
+Its queued-duplicate test failed before the two-line admission change and passed
+afterward, locally and on hosted macOS. The maintainer deferred the proposal:
+24 files and 736 added lines, including another Gradle test build and a reader of
+private Toolchain incremental records, were disproportionate to this slice.
+Neither the runner nor the application fix is adopted. The draft preserves the
+investigation; do not cherry-pick its infrastructure or count it as main coverage.
+AND-03 records a capability gap, not an active workaround awaiting removal.
+
+On Toolchain, Kotlin, Compose, Circuit, Robolectric, AGP, Gradle or test-JDK updates,
+evaluate these candidate families through the dependency review playbook:
+
+| Candidate / official source | Required evaluation |
+| --- | --- |
+| [Toolchain testing](https://kotlin-toolchain.org/latest/user-guide/testing/) and supported Android integration | Prefer a documented resource-enabled runner or public artifact API that fits the existing modules and gate. A new release alone does not establish this capability. |
+| [Compose Multiplatform common UI tests](https://kotlinlang.org/docs/multiplatform/compose-test.html) | Assess the experimental API against the selected versions and current targets. Record rendering differences; a desktop/common result does not qualify Android resource handling. Adding a platform solely for tests must earn its maintenance cost. |
+| [Compose Android tests](https://developer.android.com/develop/ui/compose/testing) and [build-managed devices](https://developer.android.com/studio/test/managed-devices) | Evaluate supported emulator/device execution for Android UI and future acceptance scenarios. Prove Toolchain delivery without private metadata adapters or duplicated app sources/graphs. Measure provisioning cost as well as test execution. |
+| [Robolectric's supported integration](https://robolectric.org/getting-started/) and alternative maintained runners | Reconsider host execution when supported integration lowers the total cost. Do not assume a different runner is faster, equivalent or a drop-in replacement. |
+
+Each relevant update PR records **deferred**, **candidate for qualification** or
+**qualified**, with exact versions, primary source links and unresolved gaps.
+Compare maintained code/build definitions, supported APIs, dependency ownership,
+local/hosted setup, cold/warm wall time, resource use, reliability, diagnostics
+and platform fidelity. Preserve the actual screen's queued-duplicate negative
+control, busy rejection, completion and retained-callback/current-value checks.
+Cancellation and lifetime need their own scenarios; device/OS acceptance needs
+appropriate platform execution. Require cold/relocated and hosted evidence before
+adoption, in a small real-app PR with inline rationale and any new workaround's
+replacement checks. Test success alone does not reverse the complexity decision.
+
+This is a manual update-review requirement. The current release watch does not
+poll Compose/Circuit/Robolectric/AGP/Gradle/JDK, compare runners or execute these
+checks. Do not present this checklist as implemented automatic discovery.
 
 ## AND-02: Toolchain distribution download header limit
 
