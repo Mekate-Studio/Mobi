@@ -50,6 +50,11 @@ is not approval to adopt, remove architecture, commit, push or publish.
    sealed-state adapters, native tests, factories, optional UI, architectures,
    clean-clone flow and release packaging; a compile or announcement is narrow
    evidence only.
+   For relevant Android/Compose/test-tool updates, assess
+   [AND-01 and AND-03](mobile-feature-follow-ups.md#and-03-shared-compose-ui-test-gap--candidate-deferred).
+   Keep the deferred #99 infrastructure separate from main. Evaluate supported
+   runner candidates, total code/build cost and measured cold/warm behavior;
+   record the disposition and missing capabilities in the actual update PR.
 6. Run an unchanged baseline and then the candidate in owned isolated copies.
    Scope caches, databases and simulator resources; exclude ordinary signing
    and provider credentials. Capture commands, exit codes, logs, resolved
@@ -79,6 +84,7 @@ is not approval to adopt, remove architecture, commit, push or publish.
 | Resolution | Direct/transitive diff including artifact/variant changes; coverage gaps |
 | Validation | Paired base/candidate commands, outcomes and artifacts; what was not tested |
 | Compatibility | Matrix cell changes; interop, native tests, onboarding and release limits |
+| UI test runner review | When relevant: AND-01/03 disposition, supported integration, candidate alternatives, maintenance/performance evidence and uncovered platform behavior |
 | Recovery | Owned resources, interruptions, cleanup disposition and rollback |
 | Human review | Exact proposed adoption scope; remaining authorization and blockers |
 

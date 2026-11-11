@@ -175,6 +175,16 @@ record retained/removal-ready/incomplete status and actual host-test evidence in
 the update PR. This manual check is outside the iOS interop retirement report;
 the watch does not poll Circuit/Robolectric or automatically qualify this harness.
 
+The same manual update review must assess
+[AND-03](mobile-feature-follow-ups.md#and-03-shared-compose-ui-test-gap--candidate-deferred):
+the Shared Home rendering gap remains open and draft #99's private-metadata/AGP
+integration was deferred for complexity. Evaluate lower-cost supported Toolchain,
+Compose common/Android, host and device runner candidates using the
+[review playbook](dependency-review-playbook.md). Record versions, primary sources,
+maintenance cost, measured performance/reliability and qualification gaps in the
+update PR. This adds no runner, provider, scheduled search or automated benchmark;
+release discovery and an executed replacement assessment remain separate evidence.
+
 Toolchain and bundled HTTP-client update reviews must also assess
 [AND-02](mobile-feature-follow-ups.md#and-02-toolchain-distribution-download-header-limit):
 record installed-JDK native results separately from automatic cold provisioning.
