@@ -1,12 +1,12 @@
 product: jvm/app
 
 dependencies:
-  - org.jetbrains.kotlin:swift-export-embeddable:2.5.0-Beta2
-  - org.jetbrains.kotlin:kotlin-native-utils:2.5.0-Beta2
-  - org.jetbrains.kotlin:kotlin-compiler-embeddable:2.5.0-Beta2
+  - org.jetbrains.kotlin:swift-export-embeddable:2.5.0-RC
+  - org.jetbrains.kotlin:kotlin-native-utils:2.5.0-RC
+  - org.jetbrains.kotlin:kotlin-compiler-embeddable:2.5.0-RC
 
 settings:
   kotlin:
-    version: 2.5.0-Beta2
+    version: 2.5.0-RC
     optIns:
       - org.jetbrains.kotlin.analysis.api.KaExperimentalApi

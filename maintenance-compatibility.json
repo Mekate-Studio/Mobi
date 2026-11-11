@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "reviewed_at": "2026-11-05T16:28:16.138315+00:00",
+  "reviewed_at": "2026-11-11T19:46:31Z",
   "toolchain": "0.13.0",
   "baseline": {
     "kotlin": "2.4.20",
@@ -9,14 +9,22 @@
     "compose": "1.9.0"
   },
   "candidate": {
-    "id": "kotlin-2-5-0-beta2-metro-1-5-0",
+    "id": "kotlin-2-5-0-rc-metro-1-5-0",
     "releases": {
       "kotlin": {
-        "version": "2.5.0-Beta2",
-        "published_at": "2026-10-21T10:43:18Z",
-        "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.5.0-Beta2",
-        "source_id": "kotlin-beta2-release",
-        "review_channel": "experimental"
+        "version": "2.5.0-RC",
+        "published_at": "2026-11-11T10:19:34Z",
+        "release_url": "https://github.com/JetBrains/kotlin/releases/tag/v2.5.0-RC",
+        "source_id": "kotlin-250-rc-release",
+        "review_channel": "experimental",
+        "age_waiver": {
+          "approved": true,
+          "scope": "candidate_qualification",
+          "version": "2.5.0-RC",
+          "published_at": "2026-11-11T10:19:34Z",
+          "reason": "Maintainer authorized early qualification of this RC candidate on 2026-11-11.",
+          "decision": "docs/maintenance/evidence/2026-11-11-kotlin-250-rc-qualification.md"
+        }
       },
       "metro": {
         "version": "1.5.0",
@@ -221,6 +229,12 @@
       "url": "https://api.github.com/repos/ZacSweers/metro/releases/tags/1.5.0",
       "retrieved_at": "2026-11-05T16:25:02.798567+00:00",
       "sha256": "1b0d859b84f0d1a64f630e7af7c38912045c0e9b919d138530fde6442660f551"
+    },
+    {
+      "id": "kotlin-250-rc-release",
+      "url": "https://api.github.com/repos/JetBrains/kotlin/releases/tags/v2.5.0-RC",
+      "retrieved_at": "2026-11-11T19:46:31Z",
+      "sha256": "60c494b2a9163d9a7a7c462e53ada65e7b1c85045f6c74ec3798b9198d583607"
     }
   ],
   "direct_paths": {

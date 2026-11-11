@@ -37,8 +37,8 @@ module Maintenance
       end
       releases = @config.fetch('candidate').fetch('releases')
       raise Failure, 'Incomplete compatibility tuple' unless releases.keys.sort == %w[kotlin metro skie]
-      thresholds = []; experimental_tuple = false
-      releases.each_value do |release|
+      thresholds = []; experimental_tuple = false; age_waivers = []
+      releases.each do |name, release|
         version = release.fetch('version')
         preview = version.match?(/\A\d+\.\d+\.\d+-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*\z/)
         # A reviewed tuple may explicitly select a preview; discovery cannot.
@@ -48,6 +48,17 @@ module Maintenance
         raise Failure, 'Candidate lacks captured release evidence' unless sources.any? { |s| s['id'] == release.fetch('source_id') }
         published = Time.iso8601(release.fetch('published_at'))
         raise Failure, 'Compatibility release publication is in the future' if published > now
+        if (waiver = release['age_waiver'])
+          valid_waiver = preview && release['review_channel'] == 'experimental' && waiver.is_a?(Hash) &&
+                         waiver.keys.sort == %w[approved decision published_at reason scope version] && waiver['approved'] == true &&
+                         waiver['scope'] == 'candidate_qualification' && waiver['version'] == version && waiver['published_at'] == release['published_at'] &&
+                         waiver['reason'].is_a?(String) && !waiver['reason'].strip.empty? && waiver['decision'].is_a?(String) &&
+                         waiver['decision'].match?(%r{\Adocs/maintenance/evidence/[a-z0-9-]+\.md\z}) && File.file?(File.join(root, waiver['decision'])) &&
+                         !File.symlink?(File.join(root, waiver['decision']))
+          raise Failure, 'Invalid or mismatched qualification age waiver' unless valid_waiver
+
+          age_waivers << name
+        end
         thresholds << published + @config['minimum_release_age_days'] * 86_400
       end
       unless File.file?(File.join(root, CATALOG))
@@ -55,9 +66,14 @@ module Maintenance
       end
       eligible_at = thresholds.max
       blocked = now < eligible_at
-      raise Failure, 'Compatibility candidate is age-blocked' if blocked && !experimental
+      selected_releases = File.file?(File.join(root, CATALOG)) ? releases : releases.reject { |name, _| name == 'skie' }
+      unwaived_blocked = selected_releases.any? do |name, release|
+        !age_waivers.include?(name) && now < Time.iso8601(release.fetch('published_at')) + @config['minimum_release_age_days'] * 86_400
+      end
+      raise Failure, 'Compatibility candidate is age-blocked' if unwaived_blocked && !experimental
       @selection = { 'mode' => experimental || experimental_tuple ? 'experimental' : 'normal', 'age_state' => blocked ? 'age_blocked' : 'age_eligible',
                      'assessed_at' => now.iso8601, 'eligible_at' => eligible_at.iso8601, 'adoption_authorized' => false }
+      @selection['age_waivers'] = age_waivers unless age_waivers.empty?
       unless @config.fetch('direct_paths').keys.sort == %w[skie swift-export] && @config['direct_paths'].values.all? { |p| p['status'] == 'missing' && p['reason'].is_a?(String) && !p.fetch('sources').empty? && (p['sources'] - sources.map { |s| s['id'] }).empty? }
         raise Failure, 'Unsupported direct prerequisite assessment; review the adapter before enabling a new path'
       end
@@ -68,7 +84,7 @@ module Maintenance
     def assessment(source = Source.new(root))
       verify_baseline!(source)
       result = { 'schema' => 1, 'state' => 'assessed', 'source_sha256' => Maintenance.digest(source.files),
-                 'config_sha256' => Maintenance.file_sha(File.join(root, CONFIG)), 'candidate' => config['candidate'],
+                 'config_sha256' => Maintenance.file_sha(File.join(root, CONFIG)), 'candidate' => config['candidate'], 'candidate_selection' => selection,
                  'newer_releases' => config.fetch('newer_releases', []).map { |r| r.merge('age_state' => Time.now.utc - Time.iso8601(r.fetch('published_at')) >= config['minimum_release_age_days'] * 86_400 ? 'age_eligible_unrehearsed' : 'age_blocked') },
                  'direct_paths' => config['direct_paths'], 'capability_observations' => config.fetch('capability_observations', []), 'evidence_kind' => 'reviewed_sources_and_declarations',
                  'missing_capabilities' => UNPROVEN, 'bridge_retirement' => 'defer', 'adoption_authorized' => false }

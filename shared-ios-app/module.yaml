@@ -8,6 +8,6 @@ dependencies:
 
 settings:
   kotlin:
-    version: 2.5.0-Beta2
+    version: 2.5.0-RC
     optIns:
       - kotlinx.cinterop.ExperimentalForeignApi

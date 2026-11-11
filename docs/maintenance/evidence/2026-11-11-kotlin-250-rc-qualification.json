@@ -1,0 +1,601 @@
+{
+  "schema": 1,
+  "scope": "local_candidate_qualification",
+  "source_base": "909c8333eafb93721a02cbf37c8aadeb8fce9c4b",
+  "kotlin_release_published_at": "2026-11-11T10:19:34Z",
+  "normal_age_eligible_at": "2026-11-18T10:19:34Z",
+  "age_waiver_scope": "candidate_qualification",
+  "toolchain": "0.13.0",
+  "metro": "1.5.0",
+  "coroutines": "1.11.0",
+  "local_xcode": "27.2",
+  "local_swift": "6.4.2",
+  "simulator_runtime": "26.5",
+  "cache_scope": "isolated_download_seeds_no_application_output_reuse",
+  "phases": {
+    "baseline": {
+      "compiler": "2.5.0-Beta2",
+      "mobile_jobs": [
+        "android-test",
+        "ios-test",
+        "android-build-debug",
+        "ios-build-debug",
+        "ios-build-release"
+      ],
+      "android_shared_tests": 94,
+      "native_functions": 79,
+      "native_executions": 173,
+      "native_failures": 0,
+      "native_skips": 0,
+      "module_count": 9,
+      "graph_roots": 104,
+      "named_maven_queries": 357,
+      "native_compiler_outputs": [
+        {
+          "output": "build/tasks/_shared-ui-home_compileIosSimulatorArm64Debug/shared-ui-home.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "73f4af152dca545e654b53b16e13a7c99b6eb77422f7d63e03a65f9b1ffa0111"
+        },
+        {
+          "output": "build/tasks/_shared-ios-app_compileIosSimulatorArm64Release/shared-ios-app.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "d669137d2286fac7b5e5d5ca1182345c01742bfe5979fa6c0c7fcc4fbb8685bb"
+        },
+        {
+          "output": "build/tasks/_shared-ios-app_compileIosSimulatorArm64TestDebug/shared-ios-app_test.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "9c03b5176eb66a90ff26f51815a1733d2ef9447f6a42789c8e9b906f631e13a9"
+        },
+        {
+          "output": "build/tasks/_shared-di_compileIosSimulatorArm64Debug/shared-di.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "b76ec592a11eae5e0c36bd13a3229878d6d63aced67eb18dc9a2405d58888731"
+        },
+        {
+          "output": "build/tasks/_shared-core_compileIosSimulatorArm64Release/shared-core.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "69b701b6c42f83e22b238620ee5ef2ffba1be6b2b29bd179907eabb02708a959"
+        },
+        {
+          "output": "build/tasks/_shared-core_compileIosSimulatorArm64Debug/shared-core.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "b17ac2578b9545ce0de0b85bd5878c18872cc50f22dc1d5e3d99a6660686d08b"
+        },
+        {
+          "output": "build/tasks/_shared-feature-home_compileIosSimulatorArm64Debug/shared-feature-home.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "3b6e38ac327777ffc729b8c463af3fa90f9e9629f02af57857727bc01fef20d3"
+        },
+        {
+          "output": "build/tasks/_shared-ios-app_compileIosSimulatorArm64TestRelease/shared-ios-app_test.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "39f17bddf387b1bf423aff917587c1b57b6af56b3bfb9b039932e4c8b5a422ae"
+        },
+        {
+          "output": "build/tasks/_shared-ios-app_compileIosSimulatorArm64Debug/shared-ios-app.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "38ef588ed582af93af1037b6eb6db209c7389d508be241a2fda651d385be7a9b"
+        },
+        {
+          "output": "build/tasks/_shared-ui-home_compileIosSimulatorArm64Release/shared-ui-home.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "21823f0e0a1ffaf7a0f889f5374f42de60a9c4ba522bf2c7e4dedd0ee3721a80"
+        },
+        {
+          "output": "build/tasks/_shared-feature-nearby-vehicle-map_compileIosSimulatorArm64Release/shared-feature-nearby-vehicle-map.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "c122f5feb120051f70fbe65469384e2b22a57b383315ff9948ae344c39d6cafb"
+        },
+        {
+          "output": "build/tasks/_shared-feature-nearby-vehicle-map_compileIosSimulatorArm64Debug/shared-feature-nearby-vehicle-map.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "75e0c96013fc00f4bdb1a0b06b271f793e5e3debbf0f5adc43fc13864109224b"
+        },
+        {
+          "output": "build/tasks/_shared-di_compileIosSimulatorArm64Release/shared-di.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "c2fb57e59cc6856446196eb203c81c1127f6bf9477d891ba770f68a9273a12d8"
+        },
+        {
+          "output": "build/tasks/_shared-feature-home_compileIosSimulatorArm64Release/shared-feature-home.klib",
+          "compiler": "2.5.0-Beta2",
+          "record_sha256": "c65105ab8fe8f7f33a17db4bfddcd1d3fd18f7460839224db495bcca6c4b8634"
+        }
+      ],
+      "release_anchor": "00000000000016c0 (__TEXT,__text) private external _KotlinRuntimeSupport_linkAnchor",
+      "raw_evidence_sha256": {
+        "result.json": "188aad48a82fe44155815a5da513a3c606293fa3c02ed2d86b0535305262fdda",
+        "ios-summary.json": "36617154c7cb3d262e92456af8b31a549578027888962b4a1787a8efcf697c29",
+        "effective-settings.json": "93f16d325bb0adfeff0d2f53ade098bc0e94044e76debb6e6764075786ad95d0",
+        "resolved-graphs.json": "cfdd087792c2ba4cdd677c2285d47e58bcd356e0becc51910fc49cd4cedcba96",
+        "advisory-queries.json": "b31c95c505c2cb89663f5de5b6c7fc3c51a2af22d9e6919556c40b0211c57c21",
+        "native-compiler-inputs.json": "761eece2f0f05a53462302d061591aa6c9eddcd02c6f2aedec94ff56137fe982",
+        "release-anchor-symbol.txt": "d1fbdd8d0aeba94d0d398a1091d856a95c4998acd4e6b7f3ba1e194187e7acaf",
+        "swift-export-checks.json": "48649398f1f3c1eda269698a90d5b766ddb6c3dbaccb61180ba1f338f8a3941b",
+        "osv-batches.json": "f133535e2bf2c79d5e8c5645530321c6d58d6232a176c28f579074f5812927b6",
+        "osv-records.json": "27925ae139b2fc05a95b864069d7b4e90c4bd480af8cbddd1a877dacd55ca408",
+        "android-test.log": "d4a7e758ccd4effdd6cd767190190833b199e1764974c2513a64c740bce5f8ac",
+        "ios-test.log": "8e950fc57af26623223595f543d5df9320307047fe4f618281d55ea52a89d428",
+        "android-build-debug.log": "b397ff65299b2eba631262d7a7fea1f672ddbed8e8a26b7cff53e359c3ea2f6b",
+        "ios-build-debug.log": "f58adc010cc845e2bbda4358630b0c517d115140136611b92caa076c4d27d789",
+        "ios-build-release.log": "04bfc7951289ed27ccdb512b73c1b5ca6cd97e947b68362bc89684ddf4165be1",
+        "export-debug/commands.json": "98a262895206d1a6a6e8c42a970b5e59913cbf4d87512321e77c9a2de818afbb",
+        "export-debug/modules.json": "1bb988ef4727d6008ac7f6d97df7b884dfaac1bfa4a36972debce17860c32d1e",
+        "export-debug/native-cache.json": "3a2b1dd5a08ee5524209a1fe2638b497a560db05297373f3e7d89babd4634938",
+        "export-release/commands.json": "db15a540fbc89460f4354201d0f45627b6f56c04eebc2fd72e92b8e38c24ba36",
+        "export-release/modules.json": "0d2046509c98f3e99bab7cb0df917a372317800742f440de95dbbbfca259aeba",
+        "export-release/native-cache.json": "e478fb8c6aad164650e7702a933f226ef202707f94acfa213759724f2d4a2ac3"
+      }
+    },
+    "candidate": {
+      "compiler": "2.5.0-RC",
+      "mobile_jobs": [
+        "android-test",
+        "ios-test",
+        "android-build-debug",
+        "ios-build-debug",
+        "ios-build-release"
+      ],
+      "android_shared_tests": 94,
+      "native_functions": 79,
+      "native_executions": 173,
+      "native_failures": 0,
+      "native_skips": 0,
+      "module_count": 9,
+      "graph_roots": 104,
+      "named_maven_queries": 357,
+      "native_compiler_outputs": [
+        {
+          "output": "build/tasks/_shared-ui-home_compileIosSimulatorArm64Debug/shared-ui-home.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "3c3a7289beeb4337bcdc020faba540d6a3ca066f454b5745b720ab6023678eba"
+        },
+        {
+          "output": "build/tasks/_shared-ios-app_compileIosSimulatorArm64Release/shared-ios-app.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "8051b66f42ee69d31e6f7fecc5b7b562a87e8c9d33a03f6dafb6dfbb5238f92d"
+        },
+        {
+          "output": "build/tasks/_shared-ios-app_compileIosSimulatorArm64TestDebug/shared-ios-app_test.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "63df4e832461c8d148ca0f8e072458fa3c9fbdc0fdfcb70a386fab6f255139b0"
+        },
+        {
+          "output": "build/tasks/_shared-di_compileIosSimulatorArm64Debug/shared-di.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "3fef29942c19731025fc99c79ca6cbc254d4c8ec1872774fae52c3d5ccc3e828"
+        },
+        {
+          "output": "build/tasks/_shared-core_compileIosSimulatorArm64Release/shared-core.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "020f528534eb8bcfa1aadc2b6bcd5d8319c0d9201b5834ead678505203d6313a"
+        },
+        {
+          "output": "build/tasks/_shared-core_compileIosSimulatorArm64Debug/shared-core.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "55b7983d8f6f45184549e17ff79e2f8c3d67b4cc7718717bbe7fe2bc2462045f"
+        },
+        {
+          "output": "build/tasks/_shared-feature-home_compileIosSimulatorArm64Debug/shared-feature-home.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "e0b9a92f106e3f39f0af4f3b1965d6352d1e36bf77b5c7c3c7d84e541b485aa1"
+        },
+        {
+          "output": "build/tasks/_shared-ios-app_compileIosSimulatorArm64TestRelease/shared-ios-app_test.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "886904909e175177a17c953bffd4c116addbe021c4a46f603317ec92b98bbe70"
+        },
+        {
+          "output": "build/tasks/_shared-ios-app_compileIosSimulatorArm64Debug/shared-ios-app.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "31f2e9666991b22857257764551afe96b958113d110898aa2dea52f04f3fc43f"
+        },
+        {
+          "output": "build/tasks/_shared-ui-home_compileIosSimulatorArm64Release/shared-ui-home.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "c3428c5ba68fb85e7da64ccdca51bb17b317f7e6a377fc1fc671f15b0dce675e"
+        },
+        {
+          "output": "build/tasks/_shared-feature-nearby-vehicle-map_compileIosSimulatorArm64Release/shared-feature-nearby-vehicle-map.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "abcbfa449b2d20216ff81badb67d2b4d7991ca721ad43eccea80bad378f30d27"
+        },
+        {
+          "output": "build/tasks/_shared-feature-nearby-vehicle-map_compileIosSimulatorArm64Debug/shared-feature-nearby-vehicle-map.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "74c0be111657b5f5381a834ee39c34d214bd9aa82b5638fb3ac2b0c0303f0f33"
+        },
+        {
+          "output": "build/tasks/_shared-di_compileIosSimulatorArm64Release/shared-di.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "48e76066176c7cbb8a1168108a9cd42b6c88551c3cf9744fceee592170c9755f"
+        },
+        {
+          "output": "build/tasks/_shared-core_compileIosSimulatorArm64TestDebug/shared-core_test.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "a8a83776a3272d8abee7a7dd4c8848636e5100ede979ddcb0073ff029a0887fe"
+        },
+        {
+          "output": "build/tasks/_shared-feature-home_compileIosSimulatorArm64Release/shared-feature-home.klib",
+          "compiler": "2.5.0-RC",
+          "record_sha256": "85371baf52e7b0af799c80fb1b2721cc0a5f971f45898f8130b6a7f16b6dd532"
+        }
+      ],
+      "release_anchor": "00000000000016c0 (__TEXT,__text) external [no dead strip] _KotlinRuntimeSupport_linkAnchor",
+      "raw_evidence_sha256": {
+        "result.json": "195df099ccd8083f5d1bca703e427e31fee0967fecbee3163a6515b83a810d99",
+        "ios-summary.json": "c02476ff41023886cc71ab6e2c0eabd64e8c24e741723a4ef7fb707fb72b6398",
+        "effective-settings.json": "cb73a03f59c1387f90c72e38d1bdcb2767fc0080d14d2adcc8731af661cd6050",
+        "resolved-graphs.json": "0947d43e8d2938306ee5699fbce9ad13baa72ba77762ae301549acd2b47bc97c",
+        "advisory-queries.json": "547e2e9a705f894e42bacaa055cda7afece46a3819fdebb7ce7d3f20ce05bab4",
+        "native-compiler-inputs.json": "326b3a520cc9b32d1ba10a434d9fd01b06343fff60c1e76466bc1f24fe8a2c66",
+        "release-anchor-symbol.txt": "c16402c6b9aea0c83d596d9312b1f6f31340a36f34227eedc7a2fec8e86aff56",
+        "swift-export-checks.json": "48649398f1f3c1eda269698a90d5b766ddb6c3dbaccb61180ba1f338f8a3941b",
+        "osv-batches.json": "4209a54754b9fea8bb1a81bfce88cffec1d2a3f3b30772e594b5940d9a944f36",
+        "osv-records.json": "2e60a4799945da38a868b5fedafeec949f69face29a87dd3786220d6f00960ff",
+        "android-test.log": "d6c34576bb1f905e35a176679144a16efc7d1ea3ec93021497c7bf3512648ba4",
+        "ios-test.log": "c4b04ba8ebe73e3d9751dcedb5884c1a9edbed2a82b23ac55a827efc22922991",
+        "android-build-debug.log": "4644051698e658c5df0833f28dc8ca6e112137fe908ed0395f956d9f7a27f4bb",
+        "ios-build-debug.log": "b9a4ca6c2cbd7bd07d285f4a757646137967849f9035b8b25b7b37f2843a6dce",
+        "ios-build-release.log": "4a2d47857383994a5aeed3715c0839a2259d801f87a901ab4ef3981cfad444af",
+        "export-debug/commands.json": "eb913df483cb876b467aee1b510478e416e0b3990018ff23136ab8b34b72ed66",
+        "export-debug/modules.json": "7299fff548bec30d88665091b8a934a43dd8a48f51e6d3acaa0c629f8de57b05",
+        "export-debug/native-cache.json": "19434ba7ffaed4dd07c8ee3abbee1bbcf182211811c36f4c086d56b52dbb930f",
+        "export-release/commands.json": "64110d8ec243090446b5cb776c9d7aaa74f989e78afdd95ec08d06bfa74cc0e0",
+        "export-release/modules.json": "3c6d3ec34da134ed272dc585ef12ee6474b89b92cd40dd33448c8acda0654b70",
+        "export-release/native-cache.json": "31120c9fcc8957d12972404d65edd2117ac2094b2dabe558acb56252683b4750"
+      }
+    }
+  },
+  "package_version_delta": {
+    "removed": [
+      [
+        "org.jetbrains.kotlin:kotlin-build-tools-api",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-compiler-embeddable",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-daemon-embeddable",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-native-utils",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-stdlib",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-stdlib-common",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk7",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-test",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-test-annotations-common",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-test-junit",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-test-junit5",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-util-io",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-util-klib",
+        "2.5.0-Beta2"
+      ],
+      [
+        "org.jetbrains.kotlin:swift-export-embeddable",
+        "2.5.0-Beta2"
+      ]
+    ],
+    "added": [
+      [
+        "org.jetbrains.kotlin:kotlin-build-tools-api",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-compiler-embeddable",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-daemon-embeddable",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-native-utils",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-stdlib",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-stdlib-common",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk7",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-test",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-test-annotations-common",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-test-junit",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-test-junit5",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-util-io",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:kotlin-util-klib",
+        "2.5.0-RC"
+      ],
+      [
+        "org.jetbrains.kotlin:swift-export-embeddable",
+        "2.5.0-RC"
+      ]
+    ],
+    "scope": "named resolved Maven package/version sets; raw graphs retain edges"
+  },
+  "advisory_comparison": {
+    "scope": "named_public_toolchain_maven_graphs_only",
+    "queries_per_phase": 357,
+    "baseline": [
+      {
+        "id": "GHSA-574f-3g2m-x479",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-9pwp-9qqc-pr26",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-c3fc-8qff-9hwx",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-ccrj-gw8r-854m",
+        "package": "io.opentelemetry:opentelemetry-api",
+        "version": "1.41.0"
+      },
+      {
+        "id": "GHSA-p93r-85wp-75v3",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-qp49-qgx5-5m26",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "package": "io.opentelemetry:opentelemetry-api",
+        "version": "1.41.0"
+      },
+      {
+        "id": "GHSA-xxph-c9ww-hj94",
+        "package": "com.google.guava:guava",
+        "version": "33.4.8-jre"
+      }
+    ],
+    "candidate": [
+      {
+        "id": "GHSA-574f-3g2m-x479",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-9pwp-9qqc-pr26",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-c3fc-8qff-9hwx",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-ccrj-gw8r-854m",
+        "package": "io.opentelemetry:opentelemetry-api",
+        "version": "1.41.0"
+      },
+      {
+        "id": "GHSA-p93r-85wp-75v3",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-qp49-qgx5-5m26",
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.81"
+      },
+      {
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "package": "io.opentelemetry:opentelemetry-api",
+        "version": "1.41.0"
+      },
+      {
+        "id": "GHSA-xxph-c9ww-hj94",
+        "package": "com.google.guava:guava",
+        "version": "33.4.8-jre"
+      }
+    ],
+    "unchanged_matches": true,
+    "candidate_root_occurrences": [
+      {
+        "package": "com.google.guava:guava",
+        "roots": [
+          {
+            "module": "android-app",
+            "usage": "test",
+            "scope": "compile",
+            "platforms": [
+              "android"
+            ]
+          },
+          {
+            "module": "android-app",
+            "usage": "test",
+            "scope": "runtime",
+            "platforms": [
+              "android"
+            ]
+          }
+        ]
+      },
+      {
+        "package": "io.opentelemetry:opentelemetry-api",
+        "roots": [
+          {
+            "module": "swift-export",
+            "usage": "main",
+            "scope": "runtime",
+            "platforms": [
+              "jvm"
+            ]
+          },
+          {
+            "module": "swift-export",
+            "usage": "test",
+            "scope": "runtime",
+            "platforms": [
+              "jvm"
+            ]
+          }
+        ]
+      },
+      {
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "roots": [
+          {
+            "module": "android-app",
+            "usage": "test",
+            "scope": "compile",
+            "platforms": [
+              "android"
+            ]
+          },
+          {
+            "module": "android-app",
+            "usage": "test",
+            "scope": "runtime",
+            "platforms": [
+              "android"
+            ]
+          }
+        ]
+      }
+    ],
+    "adoption_authorized": false
+  },
+  "finding_records": [
+    {
+      "id": "GHSA-574f-3g2m-x479",
+      "severity": "CRITICAL",
+      "summary": "Bouncy Castle for Java GOST 28147 CTR mode reuses keystream after 255 blocks",
+      "modified": "2026-09-24T15:30:06.452617383Z"
+    },
+    {
+      "id": "GHSA-9pwp-9qqc-pr26",
+      "severity": "CRITICAL",
+      "summary": "Bouncy Castle: Name Constraints bypass via trailing dot in rfc822Name and URI",
+      "modified": "2026-09-18T17:45:06.105254943Z"
+    },
+    {
+      "id": "GHSA-c3fc-8qff-9hwx",
+      "severity": "MODERATE",
+      "summary": "Bouncy Castle has an LDAP injection",
+      "modified": "2026-11-04T03:30:50.055788268Z"
+    },
+    {
+      "id": "GHSA-ccrj-gw8r-854m",
+      "severity": "MODERATE",
+      "summary": "opentelemetry-java: Quadratic CPU consumption in W3C tracestate parsing",
+      "modified": "2026-10-28T21:15:04.329194019Z"
+    },
+    {
+      "id": "GHSA-p93r-85wp-75v3",
+      "severity": "HIGH",
+      "summary": "Bouncy Castle Has Covert Timing Channel Vulnerability",
+      "modified": "2026-11-04T03:30:49.735916365Z"
+    },
+    {
+      "id": "GHSA-qp49-qgx5-5m26",
+      "severity": "HIGH",
+      "summary": "Bouncy Castle: Lazy ASN.1 sequence forcing resets nesting-depth guard",
+      "modified": "2026-09-18T17:45:06.096277818Z"
+    },
+    {
+      "id": "GHSA-rcgg-9c38-7xpx",
+      "severity": "MODERATE",
+      "summary": "OpenTelemetry Java SDK has Unbounded Memory Allocation in W3C Baggage Propagation",
+      "modified": "2026-06-09T02:15:07.364273115Z"
+    },
+    {
+      "id": "GHSA-xxph-c9ww-hj94",
+      "severity": "HIGH",
+      "summary": "Google Guava: CompactHashMap/CompactHashSet/MapMakerInternalMap deserialization triggers uncontrolled memory allocation",
+      "modified": "2026-10-27T14:45:04.803511466Z"
+    }
+  ],
+  "strict_support": {
+    "candidate_exit": 1,
+    "failed_module": "KotlinRuntimeSupport",
+    "reason": "KotlinError.wrapped KotlinBase sendability/import diagnostics",
+    "raw_log_sha256": "246d1d4e81f1e7432ab4e2cbeccacb865fbf3d15e63a6fe8ee3b0cb3f26b56b6",
+    "normal_control": "passed_separately",
+    "workaround_removed": false
+  },
+  "paired_compile_contract_reports_identical": true,
+  "warning_comparison": {
+    "scope": "normalized_warning_messages_from_five_job_logs",
+    "baseline_categories": 16,
+    "candidate_categories": 16,
+    "new_categories": [],
+    "complete_audit": false
+  },
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "signed_delivery_qualified": false
+}

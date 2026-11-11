@@ -178,6 +178,8 @@ end
       config(root) do |c|
         c['candidate']['releases']['kotlin']['version'] = '2.5.0-Beta2'
         c['candidate']['releases']['kotlin']['review_channel'] = 'experimental'
+        c['candidate']['releases']['kotlin']['published_at'] = '2026-10-21T10:43:18Z'
+        c['candidate']['releases']['kotlin'].delete('age_waiver')
       end
       adapter = Maintenance::Compatibility.new(root)
       assert(adapter.selection['mode'] == 'experimental' && !adapter.selection['adoption_authorized'])
@@ -190,6 +192,50 @@ end
       end
       reject(/age-blocked/) { Maintenance::Compatibility.new(root, now: now) }
       assert(Maintenance::Compatibility.new(root, now: now, experimental: true).selection['age_state'] == 'age_blocked')
+    end
+  end
+
+  test('a qualification age waiver is release-bound and cannot admit another young companion') do
+    fixture do |root|
+      now = Time.now.utc
+      config(root) do |c|
+        c['candidate']['releases'].each_value { |r| r['published_at'] = (now - (c['minimum_release_age_days'] + 1) * 86_400).iso8601 }
+        release = c['candidate']['releases']['kotlin']
+        release['version'] = '2.5.0-RC'
+        release['review_channel'] = 'experimental'
+        release['published_at'] = now.iso8601
+        release['age_waiver'] = {
+          'approved' => true, 'scope' => 'candidate_qualification',
+          'version' => release['version'], 'published_at' => release['published_at'],
+          'reason' => 'Maintainer approved this candidate qualification.',
+          'decision' => 'docs/maintenance/evidence/2026-11-11-kotlin-250-rc-qualification.md'
+        }
+      end
+      adapter = Maintenance::Compatibility.new(root, now: now)
+      selection = adapter.selection
+      assert(selection['mode'] == 'experimental' && selection['age_state'] == 'age_blocked')
+      assert(selection['age_waivers'] == ['kotlin'] && selection['adoption_authorized'] == false)
+      assert(adapter.assessment['candidate_selection'] == selection)
+      valid = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG)))
+      [{ 'approved' => false }, { 'scope' => 'adoption' }, { 'published_at' => (now - 60).iso8601 }].each do |invalid|
+        config(root) { |c| c['candidate']['releases']['kotlin']['age_waiver'] = valid['candidate']['releases']['kotlin']['age_waiver'].merge(invalid) }
+        reject(/age waiver/) { Maintenance::Compatibility.new(root, now: now) }
+      end
+      File.write(File.join(root, Maintenance::Compatibility::CONFIG), JSON.pretty_generate(valid))
+      config(root) { |c| c['candidate']['releases']['kotlin']['age_waiver']['version'] = '0.0.0' }
+      reject(/age waiver/) { Maintenance::Compatibility.new(root, now: now) }
+      config(root) do |c|
+        release = c['candidate']['releases']['kotlin']
+        release['age_waiver']['version'] = release['version']
+        c['candidate']['releases']['metro']['published_at'] = now.iso8601
+      end
+      reject(/age-blocked/) { Maintenance::Compatibility.new(root, now: now) }
+      config(root) do |c|
+        release = c['candidate']['releases']['kotlin']
+        release['published_at'] = (now + 60).iso8601
+        release['age_waiver']['published_at'] = release['published_at']
+      end
+      reject(/publication is in the future/) { Maintenance::Compatibility.new(root, now: now) }
     end
   end
 
