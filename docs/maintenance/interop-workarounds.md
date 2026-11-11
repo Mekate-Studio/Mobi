@@ -323,6 +323,13 @@ The release watch does not poll these repositories or YouTrack, or automatically
 complete this review. Changing a source or seeing a fixed issue requests a
 recheck; only the registry's actual removal checks can qualify simplification.
 
+### Kotlin 2.5.0-RC source assessment — 2026-11-11
+
+The [RC assessment](evidence/2026-11-11-kotlin-250-rc-assessment.md) maps the
+Beta2-to-RC source changes to the actual producer and all nine active mechanisms.
+It records the age gate, unverified Metro companion, unchanged coroutine support
+and a bounded qualification plan. No dependency or workaround removal is adopted.
+
 ## Observable retirement in the update workflow
 
 Run `./scripts/dev/dependency_updates.sh assess-interop-workarounds` for a local
