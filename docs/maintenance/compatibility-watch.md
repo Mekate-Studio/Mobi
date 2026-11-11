@@ -57,10 +57,16 @@ can notify; the same semantic observation stays quiet.
 Discovery does not change the reviewed candidate. A separately reviewed tuple may
 explicitly select a prerelease with `review_channel: experimental` on that release;
 the compatibility adapter then reports experimental selection. A CLI age waiver
-alone cannot select a prerelease. The seven-day age gate, captured source evidence
-and `adoption_authorized: false` remain enforced. The ordinary release/adoption
-policy remains stable-only. The current
-[Beta2 tuple](evidence/2026-11-05-beta2-ios15.md) uses this explicit review path.
+alone cannot select a prerelease. The seven-day age policy and captured source
+evidence remain enforced. A maintainer may explicitly waive age for qualification
+of one selected experimental release: `age_waiver` binds the approved decision
+record, version and publication timestamp. A future publication, mismatched
+waiver or another unwaived young companion still refuses. Reports retain the real
+`age_blocked`/`eligible_at` and `adoption_authorized: false`; the waiver neither
+accepts advisory risk nor grants adoption. The ordinary release/adoption policy
+remains stable-only. The current
+[RC qualification](evidence/2026-11-11-kotlin-250-rc-qualification.md) uses this
+release-bound exception; a later tuple requires its own decision if still young.
 Prerelease review requires official source review and actual-code qualification.
 The watch's native probe still exercises the reviewed tuple; it does not build
 discovered versions or run their retirement checks automatically.

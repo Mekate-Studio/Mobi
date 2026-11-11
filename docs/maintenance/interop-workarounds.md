@@ -330,6 +330,14 @@ Beta2-to-RC source changes to the actual producer and all nine active mechanisms
 It records the age gate, unverified Metro companion, unchanged coroutine support
 and a bounded qualification plan. No dependency or workaround removal is adopted.
 
+The subsequent [actual-app qualification](evidence/2026-11-11-kotlin-250-rc-qualification.md)
+uses an explicitly approved RC age waiver. Both tuples pass the same five mobile
+jobs, including unsigned Release. RC's runtime anchor gains retained external
+visibility, but strict support still fails at KotlinError/KotlinBase diagnostics.
+All nine active mechanisms remain; IOS-15's removed constructor workaround stays
+removed and its regression check passes. Unchanged advisory findings and missing
+coverage remain review inputs, separate from successful functional checks.
+
 ## Observable retirement in the update workflow
 
 Run `./scripts/dev/dependency_updates.sh assess-interop-workarounds` for a local
