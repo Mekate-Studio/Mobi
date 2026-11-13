@@ -448,14 +448,15 @@ needed for native request ordering, cancellation and lifecycle ownership.
 
 For Compose-owned work, use Circuit's version-matched `circuit-test` helpers to
 exercise the actual presenter, with coroutine virtual time and a controlled
-repository. The Android host runner uses Robolectric 4.17 at API 36, following the
+repository. The Android host runner uses Robolectric 4.18 at API 36, following the
 [pinned Toolchain's supported example](https://github.com/JetBrains/kotlin-toolchain/tree/v0.13.0/sources/test-integration/test-projects/android/robolectric).
 These are test-only dependencies; Circuit's helpers bring Molecule and Turbine,
 and Robolectric resolves an instrumented Android runtime on first execution.
-The app's `jvm.test.freeJvmArgs` enables native access for that runtime and the
-documented JDK package access needed by this runner. The latter is tracked under
+The app's `jvm.test.freeJvmArgs` enables native access for that runtime. The JDK
+package opening needed on 4.17 is removed after paired omission controls on 4.18.
+The retained native-access grant is tracked under
 [AND-01](../maintenance/mobile-feature-follow-ups.md#and-01-presenter-host-test-harness-simplification)
-with an option-omission removal check. This is
+with a native-access denial/omission removal check. This is
 host lifecycle evidence, not device rendering, navigation or permission testing.
 Keep effects keyed to their owner when their work changes observed state, and
 check both completion across recomposition and cancellation on disposal.

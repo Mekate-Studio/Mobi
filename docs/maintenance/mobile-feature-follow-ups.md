@@ -335,7 +335,7 @@ not claim it removed. No new polling or automatic removal is added.
 
 ## AND-01: Presenter host-test harness simplification
 
-`android-app/module.yaml` selects Robolectric 4.17 and native access for host tests;
+`android-app/module.yaml` selects Robolectric 4.18 and native access for host tests;
 the presenter suites select their runner and API 36 without app resources.
 This compensates for the pinned Toolchain's Android schema not exposing Circuit's
 [documented AGP stub-default setting](https://github.com/slackhq/circuit/blob/0.34.0/docs/testing.md).
@@ -344,20 +344,24 @@ logging/tracing stubs before qualifying feature behavior. The
 [Toolchain example](https://github.com/JetBrains/kotlin-toolchain/tree/v0.13.0/sources/test-integration/test-projects/android/robolectric)
 provides the supported current runner.
 
-The [4.17 dependency review](evidence/2026-11-13-robolectric-bc-review.md) selects
-the owner's Bouncy Castle 1.85 dependency through its published BOM. The new
-runner also needs test-JVM access to `java.base/jdk.internal.access` on JDK 25:
-without it, 54 Android tests fail in Robolectric's FileDescriptor setup before
-feature code. Mobi adds only the one observed package from Robolectric's
-[documented Java 17+ configuration](https://robolectric.org/getting-started/#running-with-java-17-and-higher),
-using the existing `jvm.test.freeJvmArgs` setting. It does not change application
-JVM access, Android SDK selection or runtime assertions.
+The [4.17 dependency review](evidence/2026-11-13-robolectric-bc-review.md) added
+`--add-opens=java.base/jdk.internal.access=ALL-UNNAMED` for its FileDescriptor setup
+on JDK 25. The [4.18 qualification](evidence/2026-11-13-robolectric-418-qualification.md)
+removes it: the same omission fails 54 Android tests on 4.17 and passes all 68 on
+4.18. Upstream's new `ApplicationSharedMemory.create()` shadow avoids that setup
+path. This qualifies Mobi's current API 36 suites, not every FileDescriptor use.
+No local replacement adapter is added.
 
-On each Robolectric/test-JDK update, run the API 36 host suite with this one
-`--add-opens` option omitted. Remove it when the selected runner uses accessible
-JDK APIs and the unchanged suite passes without the option, then run the normal
-gate. Keep a failed omission control and the source/versions in the update PR.
-This option's removal can qualify independently of removing Robolectric itself.
+Retain `--enable-native-access=ALL-UNNAMED` in `jvm.test.freeJvmArgs`: on 4.18,
+JDK 25's `--illegal-native-access=deny` control fails 54 tests without the native
+access grant and passes all 68 with it. The deny option is a qualification
+control only. Upstream [PR #11482](https://github.com/robolectric/robolectric/pull/11482)
+configures Robolectric's own tests; consumers still grant native access.
+On each runner/test-JDK update, repeat omission with native-access denial enforced
+where supported, preserve the failed and passing controls, and remove the grant
+only when native loading and the unchanged suite pass without it plus normal
+gates. A warning-only pass is insufficient. Keep the retired package opening
+absent unless a new, documented failure justifies reconsideration.
 
 Recheck AND-01 when updating Toolchain, Circuit, Compose, Robolectric or the test
 JDK. Review supported host configuration, then run all presenter lifecycle and
@@ -386,6 +390,11 @@ private Toolchain incremental records, were disproportionate to this slice.
 Neither the runner nor the application fix is adopted. The draft preserves the
 investigation; do not cherry-pick its infrastructure or count it as main coverage.
 AND-03 records a capability gap, not an active workaround awaiting removal.
+
+Robolectric 4.18's [native resource mode for API 36+](https://github.com/robolectric/robolectric/releases/tag/robolectric-4.18)
+is a lead for later qualification. This dependency update does not render Shared
+Home or establish that Toolchain delivers the missing dependency resource classes;
+the gap remains deferred. No machinery from #99 is adopted.
 
 On Toolchain, Kotlin, Compose, Circuit, Robolectric, AGP, Gradle or test-JDK updates,
 evaluate these candidate families through the dependency review playbook:

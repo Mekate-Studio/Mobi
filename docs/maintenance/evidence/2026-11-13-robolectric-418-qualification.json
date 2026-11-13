@@ -1,0 +1,507 @@
+{
+  "schema": 1,
+  "scope": "robolectric_owned_android_test_dependencies_and_AND_01_option_removal",
+  "base": "13284496abd4ce3933ba7f40f033f83e1b8b6eac",
+  "jdk": "25.0.4.1",
+  "test_sdk": 36,
+  "release": {
+    "version": "4.18",
+    "prerelease": false,
+    "published_at": "2026-11-13T18:14:14Z",
+    "ordinary_eligible_at": "2026-11-20T18:14:14Z",
+    "minimum_age_days": 7,
+    "age_waiver_at_qualification": {
+      "status": "pending",
+      "approved": false,
+      "decision_location": "PR discussion after qualification"
+    },
+    "automatic_adoption": false,
+    "adoption_approved": false,
+    "tag_object": "6e80e8b6b3a64313593c59575ba16060a81713d9",
+    "source_commit": "276b95bb8d65f5258781eb9e746a5c754b515c17",
+    "catalog_blob": "fc8651a106124d7fe10942bd31783ce81b735916"
+  },
+  "phases": {
+    "baseline": {
+      "robolectric": "4.17",
+      "modules": 9,
+      "public_roots": 104,
+      "named_queries": 358,
+      "android_shared_tests": {
+        "passed": 94,
+        "failed": 0,
+        "skipped": 0
+      },
+      "matches": [
+        {
+          "id": "GHSA-xxph-c9ww-hj94",
+          "package": "com.google.guava:guava",
+          "version": "33.6.0-jre"
+        },
+        {
+          "id": "GHSA-ccrj-gw8r-854m",
+          "package": "io.opentelemetry:opentelemetry-api",
+          "version": "1.41.0"
+        },
+        {
+          "id": "GHSA-rcgg-9c38-7xpx",
+          "package": "io.opentelemetry:opentelemetry-api",
+          "version": "1.41.0"
+        }
+      ],
+      "retrieved_at": [
+        "2026-11-13T18:24:43Z",
+        "2026-11-13T18:24:44Z",
+        "2026-11-13T18:24:44Z",
+        "2026-11-13T18:24:45Z"
+      ],
+      "raw_sha256": {
+        "settings.log": "24f4e0d94b8344460b12c429b586b0aef43b2a9ef02080ca2762735297dbe679",
+        "dependencies.log": "e8fc268632d7b76300f1cbdf15f228b2fe7d98ec35f2a5b8f9099e7272d4139f",
+        "android-test.log": "8f113a903dd34818a1957846e2e06e2cc96fb0970d71be2173a1bd33dd4342be",
+        "effective-settings.json": "9e676b45e989f15626410a10c19ca039783e79d1861b64189ee635056506390a",
+        "resolved-graphs.json": "518e466da5e334faeb21cadcb9ceb499924491e273f7f091d012a5e993497bfb",
+        "advisory-queries.json": "de3d73aaa8ec212646b30a9ddcbe1659cc11491f6d63ba4571c9d9e361b2ecef",
+        "osv-batches.json": "bda806729d4d266284ebd7d39665ca95a894f8e4eabfed4851b1f65184c4cd13",
+        "osv-records.json": "1db0869eabaa506123b8e5b6b7d0df4023fb845be8b4a28d73bcc3ac19b7e36b"
+      }
+    },
+    "candidate": {
+      "robolectric": "4.18",
+      "modules": 9,
+      "public_roots": 104,
+      "named_queries": 359,
+      "android_shared_tests": {
+        "passed": 94,
+        "failed": 0,
+        "skipped": 0
+      },
+      "matches": [
+        {
+          "id": "GHSA-ccrj-gw8r-854m",
+          "package": "io.opentelemetry:opentelemetry-api",
+          "version": "1.41.0"
+        },
+        {
+          "id": "GHSA-rcgg-9c38-7xpx",
+          "package": "io.opentelemetry:opentelemetry-api",
+          "version": "1.41.0"
+        }
+      ],
+      "retrieved_at": [
+        "2026-11-13T18:26:29Z",
+        "2026-11-13T18:26:30Z",
+        "2026-11-13T18:26:30Z",
+        "2026-11-13T18:26:31Z"
+      ],
+      "raw_sha256": {
+        "settings.log": "2fc022f41d936d916e62f171bf03cce6d3b1257f9469ce7be3a216fea7b8cd72",
+        "dependencies.log": "ba2a151faa3da64eabefd4803e25b34cbe0df1ca820ac341349538ece0fecaa5",
+        "android-test.log": "87045151942890ac4231b2e0087320dfc402867ec578d32066bca154953d2b9d",
+        "effective-settings.json": "7cfc4f011251325f64bf1556751ae964149021353f8e2ad6db650850ed2d36b4",
+        "resolved-graphs.json": "c18f1c1b293aaf12a2f585d9d5dfc0e4d0533f09551b6f0cbead6f32c191612c",
+        "advisory-queries.json": "32bc6379b30eb7e1a84f5d9984a9d8a6d4445d57e3dff34297c84cfd57f10896",
+        "osv-batches.json": "426911f8bdd76193534ea2c41ee54662de5dcdc987e5ed529012100a8a983b38",
+        "osv-records.json": "862e4dd831e31967aa487c162842d54c5a073bb56573b44d9bd63ff45da4cb9e"
+      }
+    }
+  },
+  "changed_public_roots": [
+    {
+      "module": "android-app",
+      "usage": "test",
+      "scope": "compile",
+      "platforms": [
+        "android"
+      ]
+    },
+    {
+      "module": "android-app",
+      "usage": "test",
+      "scope": "runtime",
+      "platforms": [
+        "android"
+      ]
+    }
+  ],
+  "unchanged_public_roots": 102,
+  "observed_public_query_delta": {
+    "removed": [
+      {
+        "package": "com.google.errorprone:error_prone_annotations",
+        "version": "2.47.0"
+      },
+      {
+        "package": "com.google.guava:guava",
+        "version": "33.6.0-jre"
+      },
+      {
+        "package": "com.google.testparameterinjector:test-parameter-injector",
+        "version": "1.22"
+      },
+      {
+        "package": "com.ibm.icu:icu4j",
+        "version": "78.3"
+      },
+      {
+        "package": "org.bouncycastle:bc-jdk18on-bom",
+        "version": "1.85"
+      },
+      {
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.85"
+      },
+      {
+        "package": "org.conscrypt:conscrypt-openjdk-uber",
+        "version": "2.6.2"
+      },
+      {
+        "package": "org.ow2.asm:asm",
+        "version": "9.10.1"
+      },
+      {
+        "package": "org.ow2.asm:asm-commons",
+        "version": "9.10.1"
+      },
+      {
+        "package": "org.ow2.asm:asm-tree",
+        "version": "9.10.1"
+      },
+      {
+        "package": "org.robolectric:annotations",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:junit",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:nativeruntime",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:nativeruntime-dist-compat",
+        "version": "1.0.19"
+      },
+      {
+        "package": "org.robolectric:pluginapi",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:plugins-maven-dependency-resolver",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:resources",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:robolectric",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:sandbox",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:shadowapi",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:shadows-framework",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:utils",
+        "version": "4.17"
+      },
+      {
+        "package": "org.robolectric:utils-reflector",
+        "version": "4.17"
+      },
+      {
+        "package": "org.yaml:snakeyaml",
+        "version": "2.6"
+      }
+    ],
+    "added": [
+      {
+        "package": "com.google.errorprone:error_prone_annotations",
+        "version": "2.50.0"
+      },
+      {
+        "package": "com.google.guava:guava",
+        "version": "33.7.2-jre"
+      },
+      {
+        "package": "com.google.testparameterinjector:test-parameter-injector",
+        "version": "1.25"
+      },
+      {
+        "package": "com.ibm.icu:icu4j",
+        "version": "79.1"
+      },
+      {
+        "package": "org.bouncycastle:bc-jdk18on-bom",
+        "version": "1.86.2"
+      },
+      {
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.86"
+      },
+      {
+        "package": "org.conscrypt:conscrypt-openjdk-uber",
+        "version": "2.8.0"
+      },
+      {
+        "package": "org.jspecify:jspecify",
+        "version": "1.0.1"
+      },
+      {
+        "package": "org.ow2.asm:asm",
+        "version": "9.11.1"
+      },
+      {
+        "package": "org.ow2.asm:asm-commons",
+        "version": "9.11.1"
+      },
+      {
+        "package": "org.ow2.asm:asm-tree",
+        "version": "9.11.1"
+      },
+      {
+        "package": "org.robolectric:annotations",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:junit",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:nativeruntime",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:nativeruntime-dist-compat",
+        "version": "1.0.20"
+      },
+      {
+        "package": "org.robolectric:pluginapi",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:plugins-maven-dependency-resolver",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:resources",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:robolectric",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:sandbox",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:shadowapi",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:shadows-framework",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:utils",
+        "version": "4.18"
+      },
+      {
+        "package": "org.robolectric:utils-reflector",
+        "version": "4.18"
+      },
+      {
+        "package": "org.yaml:snakeyaml",
+        "version": "2.7"
+      }
+    ]
+  },
+  "selected_owner_versions": {
+    "guava_reported": "33.7.2-jre",
+    "guava_android_jar": "33.7.2-android",
+    "bouncycastle_bom": "1.86.2",
+    "bcprov": "1.86",
+    "conscrypt": "2.8.0"
+  },
+  "guava_artifacts": {
+    "artifacts": [
+      {
+        "version": "33.6.0-android",
+        "sha256": "9532ca9ba8aceb4cd2067171f981c799988b7f5844e3e274811a3bb757034bc4",
+        "checksum_url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/33.6.0-android/guava-33.6.0-android.jar.sha256",
+        "published_checksum_verified": true
+      },
+      {
+        "version": "33.7.2-android",
+        "sha256": "b949fe975a32421c1a2633c07a4f1578b462f2f467668aa0a4023c5ff7c4a808",
+        "checksum_url": "https://repo.maven.apache.org/maven2/com/google/guava/guava/33.7.2-android/guava-33.7.2-android.jar.sha256",
+        "published_checksum_verified": true
+      }
+    ],
+    "candidate_task_record_sha256": "ffd5da5fd033a870834176bf7013dfc295b49c92c3d3ea7f38d61ef0aa4ce280",
+    "candidate_classpath_entries": {
+      "compileClasspath": [
+        "guava-33.7.2-android.jar"
+      ],
+      "runtimeClasspath": [
+        "guava-33.7.2-android.jar"
+      ]
+    },
+    "evidence_only_record_inspection": true
+  },
+  "guava_android_variant_metadata": [
+    {
+      "reported_version": "33.6.0-jre",
+      "selected_version": "33.6.0-android",
+      "module_sha256": "2baf73ce839ae48e4b9e0083e256b0e58fc3bf8fc78fc3fbe797bbc89011216e",
+      "variant_names": [
+        "androidApiElements",
+        "androidRuntimeElements"
+      ]
+    },
+    {
+      "reported_version": "33.7.2-jre",
+      "selected_version": "33.7.2-android",
+      "module_sha256": "7170b42bdc6a9cbfd78a2142d6dfb423473503c584bedbae85d24359dca5029f",
+      "variant_names": [
+        "androidApiElements",
+        "androidRuntimeElements"
+      ]
+    }
+  ],
+  "guava_fix": {
+    "commit": "b931fe9d6d5cf00bc55714ad3308d086f71850fe",
+    "reviewed_database_severity": "HIGH",
+    "vendor_advisory_severity": "MODERATE",
+    "bytecode": [
+      {
+        "version": "33.6.0-android",
+        "class": "CompactHashMap",
+        "method": "readObject",
+        "initial_allocation_bound_256": false,
+        "javap_sha256": "97b75bf697169733358f7e39b7f4ae8a9ecd9ed32c536123ec573bb2e5f6ba9f"
+      },
+      {
+        "version": "33.6.0-android",
+        "class": "CompactHashSet",
+        "method": "readObject",
+        "initial_allocation_bound_256": false,
+        "javap_sha256": "f8ab664364451be17eadff018173349a163e2cf5066663b9844045744b0bdd7c"
+      },
+      {
+        "version": "33.6.0-android",
+        "class": "MapMakerInternalMap$AbstractSerializationProxy",
+        "method": "readMapMaker",
+        "initial_allocation_bound_256": false,
+        "javap_sha256": "b258fa84d27a3649e72cf95381fbb51c8b17e66ffaf48b040ac077c8bbcb36df"
+      },
+      {
+        "version": "33.7.2-android",
+        "class": "CompactHashMap",
+        "method": "readObject",
+        "initial_allocation_bound_256": true,
+        "javap_sha256": "603fd8c1238b6fce86002d8fd021542246b6b1d7e6001ee0cf251712b387081e"
+      },
+      {
+        "version": "33.7.2-android",
+        "class": "CompactHashSet",
+        "method": "readObject",
+        "initial_allocation_bound_256": true,
+        "javap_sha256": "9a160cc19577fc02806eb217aa12009da247601eb20eb351130f3f79af4d55a3"
+      },
+      {
+        "version": "33.7.2-android",
+        "class": "MapMakerInternalMap$AbstractSerializationProxy",
+        "method": "readMapMaker",
+        "initial_allocation_bound_256": true,
+        "javap_sha256": "d03fdc365c0d5df67d3b4fc9176fe7cc1c37006db511422ece34fd7a207dc7a8"
+      }
+    ],
+    "exact_android_variant_queries": {
+      "count": 2,
+      "status": 200,
+      "retrieved_at": "2026-11-13T18:42:49Z",
+      "baseline_matches": [
+        "GHSA-xxph-c9ww-hj94"
+      ],
+      "candidate_matches": [],
+      "packet_sha256": "bfe8efd8f5d4ae6dd8e6d14284f21adb0fcca7c17a7f45ec3aa6dd6ba1bb080e"
+    }
+  },
+  "jvm_option_controls": [
+    {
+      "name": "baseline-omit-jdk-open",
+      "robolectric": "4.17",
+      "exit": 1,
+      "passed": 14,
+      "failed": 54,
+      "native_denial": false,
+      "shared_secrets_access_failure": true,
+      "log_sha256": "7ed1ce0242000ad76afb635a31f03f834f702d0b57792629a09ef24c8ae8c1d5",
+      "manifest_sha256": "6c08d44d4d8c046083d7992b3d9c7433c44f72a24b83493b5d45b565b17b5e2f"
+    },
+    {
+      "name": "omit-jdk-open",
+      "robolectric": "4.18",
+      "exit": 0,
+      "passed": 68,
+      "failed": 0,
+      "native_denial": false,
+      "shared_secrets_access_failure": false,
+      "log_sha256": "a20688a5fef9568bf9c6d8c0e22b7e3b50ee38e1bc8d5460d947b2f0855b8486",
+      "manifest_sha256": "aa623f7b38fb1dffab075fa234eabd46cd2dc260f12850274bcb27ff8fde2cd4"
+    },
+    {
+      "name": "final-deny-without-native",
+      "robolectric": "4.18",
+      "exit": 1,
+      "passed": 14,
+      "failed": 54,
+      "native_denial": true,
+      "shared_secrets_access_failure": false,
+      "log_sha256": "5294bf004c13ef716912f97cf7f8868b652b248c3bbc847196619727e909eaca",
+      "manifest_sha256": "cc19947e060d4f898e669dd571b901a6ad2fb8fc72f6e35b97d2e799a1df7db8"
+    },
+    {
+      "name": "final-deny-with-native",
+      "robolectric": "4.18",
+      "exit": 0,
+      "passed": 68,
+      "failed": 0,
+      "native_denial": false,
+      "shared_secrets_access_failure": false,
+      "log_sha256": "6b92688f39f5b8e2e8d9a668f0f48a797362b3ec623496c839cd9fb6216db832",
+      "manifest_sha256": "960e512dd486014a73371d9ad853cd1ea7cfad0f9d41c418e6dc94beda189ae3"
+    }
+  ],
+  "control_log_counting": "First actual console/JUnit summary only; exclude failure collector appended historical diagnostics. Raw hashes include the entire retained log.",
+  "final_jvm_test_options": [
+    "--enable-native-access=ALL-UNNAMED"
+  ],
+  "upstream_shared_memory_shadow": {
+    "baseline_blob": "f0082b573f26d081f2579c2237628bd56337c015",
+    "candidate_blob": "b84f4dca4442f2d2ec1352543261d5525bde39f9",
+    "native_access_pr": 11482
+  },
+  "initial_candidate_both_options_android_shared_passed": 94,
+  "initial_candidate_log_sha256": "7a7b72a048bdec53c58f7966730abd09d6cd62cc76f701bb5ae2cc6593faeef5",
+  "qualification_scope_limits": [
+    "Not a fully cold or controlled performance comparison; privately seeded downloads and reused candidate outputs",
+    "No Shared Home rendering/resource-class qualification or deferred draft #99 machinery",
+    "No full shaded/native/compiler-plugin/delegated-tool attribution; Swift/Ruby/npm and dynamic Android runtime downloads excluded",
+    "No APK absence, exploitability, complete security clearance, device or signed delivery claim",
+    "Historical risk receipts are not rebound",
+    "Final normal local/hosted gates and maintainer waiver decision recorded in PR"
+  ]
+}
