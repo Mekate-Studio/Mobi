@@ -86,7 +86,13 @@ cardinality and no pagination. Both tuples produce the same eight matches:
 | --- | --- | --- |
 | `org.bouncycastle:bcprov-jdk18on:1.81` | [GHSA-574f-3g2m-x479](https://osv.dev/vulnerability/GHSA-574f-3g2m-x479), **Critical**; [GHSA-9pwp-9qqc-pr26](https://osv.dev/vulnerability/GHSA-9pwp-9qqc-pr26), **Critical**; [GHSA-c3fc-8qff-9hwx](https://osv.dev/vulnerability/GHSA-c3fc-8qff-9hwx), Moderate; [GHSA-p93r-85wp-75v3](https://osv.dev/vulnerability/GHSA-p93r-85wp-75v3), High; [GHSA-qp49-qgx5-5m26](https://osv.dev/vulnerability/GHSA-qp49-qgx5-5m26), High | Android app **test** compile/runtime |
 | `com.google.guava:guava:33.4.8-jre` | [GHSA-xxph-c9ww-hj94](https://osv.dev/vulnerability/GHSA-xxph-c9ww-hj94), High | Android app **test** compile/runtime |
-| `io.opentelemetry:opentelemetry-api:1.41.0` | [GHSA-ccrj-gw8r-854m](https://osv.dev/vulnerability/GHSA-ccrj-gw8r-854m), Moderate; [GHSA-rcgg-9c38-7xpx](https://osv.dev/vulnerability/GHSA-rcgg-9c38-7xpx), Moderate | Standalone exporter JVM main/test compile |
+| `io.opentelemetry:opentelemetry-api:1.41.0` | [GHSA-ccrj-gw8r-854m](https://osv.dev/vulnerability/GHSA-ccrj-gw8r-854m), Moderate; [GHSA-rcgg-9c38-7xpx](https://osv.dev/vulnerability/GHSA-rcgg-9c38-7xpx), Moderate | Standalone exporter JVM main/test runtime |
+
+Correction, 2026-11-13: the original table mislabeled these OpenTelemetry roots
+as compile roots. The captured graph and fresh
+[owner assessment](2026-11-13-exporter-opentelemetry-review.md) identify runtime
+roots. The package/version and finding IDs are unchanged; the paired JSON already
+records runtime attribution.
 
 These matches require explicit triage of affected operations and build/test
 exposure. Root occurrence is not proof of exploitability, packaged app exposure,

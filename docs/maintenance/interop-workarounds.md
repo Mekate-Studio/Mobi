@@ -311,6 +311,13 @@ integration. On updates, require clean generation logs and actual app checks;
 do not reintroduce a runtime override automatically. No upstream fix or new
 capability relative to an older Kotlin version is claimed.
 
+The [OpenTelemetry owner assessment](evidence/2026-11-13-exporter-opentelemetry-review.md)
+retains the two named Moderate findings and distinguishes the external exporter
+dependency, compiler relocation and Toolchain launcher copy. On owner updates,
+apply its [manual checks](dependency-review-playbook.md#exporter-opentelemetry-owner-review)
+alongside generation/runtime qualification. No extra runtime or transitive override
+is introduced, and this triage does not retire IOS-10 or accept the findings.
+
 For every subsequent review, record the review date, source URLs and immutable
 commits/content digests, selected Kotlin/Toolchain/coroutines/Swift/Xcode versions,
 changes since the previous review, affected registry IDs, issue applicability,

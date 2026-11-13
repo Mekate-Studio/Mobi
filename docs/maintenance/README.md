@@ -5,6 +5,13 @@ open native/generated/Android warning backlog from the Beta2 integration, with
 ownership and closure checks. Warning cleanup follows the integration/CI repair
 as focused changes; the separate IOS-16 compiler failure remains tracked there.
 
+The [exporter OpenTelemetry assessment](evidence/2026-11-13-exporter-opentelemetry-review.md)
+traces the remaining two Moderate IDs to the exporter's runtime dependency and
+separately observes Toolchain's bundled copy. Kotlin's master fix is not in the
+selected RC artifacts. Findings remain open; the review adds owner-update checks
+without an override or risk acceptance. It also corrects the older compile-root
+attribution to runtime roots.
+
 The [Robolectric 4.18 qualification](evidence/2026-11-13-robolectric-418-qualification.md)
 updates the Android test owner to deliver patched Guava and removes the JDK
 package-opening accommodation after paired controls. Native access remains
