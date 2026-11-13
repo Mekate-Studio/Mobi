@@ -5,7 +5,15 @@ open native/generated/Android warning backlog from the Beta2 integration, with
 ownership and closure checks. Warning cleanup follows the integration/CI repair
 as focused changes; the separate IOS-16 compiler failure remains tracked there.
 
-The [Robolectric 4.17 dependency review](evidence/2026-11-13-robolectric-bc-review.md)
+The [Robolectric 4.18 qualification](evidence/2026-11-13-robolectric-418-qualification.md)
+updates the Android test owner to deliver patched Guava and removes the JDK
+package-opening accommodation after paired controls. Native access remains
+necessary. Only two exporter OpenTelemetry Moderate matches remain in the
+captured public graph; broader coverage remains incomplete. This release is
+younger than seven days: qualification does not approve its pending age waiver
+or adoption. The PR records the eventual maintainer decision.
+
+The historical [Robolectric 4.17 dependency review](evidence/2026-11-13-robolectric-bc-review.md)
 qualifies the Android test owner's Bouncy Castle update: five named matches,
 including two Critical findings, disappear in the fresh candidate lookup. Guava
 and exporter OpenTelemetry findings remain. The review records the required
