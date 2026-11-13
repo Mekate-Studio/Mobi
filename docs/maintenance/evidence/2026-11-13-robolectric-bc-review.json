@@ -1,0 +1,211 @@
+{
+  "schema": 1,
+  "scope": "robolectric_owned_android_test_dependencies",
+  "base": "dd30d637cd32c3375f9345fbe46eb9df9c5829e7",
+  "jdk": "25",
+  "test_sdk": 36,
+  "robolectric_release": {
+    "version": "4.17",
+    "published_at": "2026-09-10T21:00:44Z",
+    "source_commit": "0706415db828e1bdcf4f0c820784fa760d0185a2",
+    "catalog_blob": "aefa5478b7623b8acfe6a2a4341f0bded74e0306",
+    "owner_declaration_blob": "a338d16fb5c8401116208a0139ad87d033be6e69",
+    "test_environment_blob": "0c20ab2ef475b47c3d2018e20b4077c75e38cc53"
+  },
+  "phases": {
+    "baseline": {
+      "robolectric": "4.16",
+      "bcprov": "1.81",
+      "modules": 9,
+      "roots": 104,
+      "named_queries": 357,
+      "android_shared_tests": 94,
+      "failed_tests": 0,
+      "skipped_tests": 0,
+      "matches": [
+        {"id": "GHSA-xxph-c9ww-hj94","package": "com.google.guava:guava","version": "33.4.8-jre"},
+        {"id": "GHSA-ccrj-gw8r-854m","package": "io.opentelemetry:opentelemetry-api","version": "1.41.0"},
+        {"id": "GHSA-rcgg-9c38-7xpx","package": "io.opentelemetry:opentelemetry-api","version": "1.41.0"},
+        {"id": "GHSA-574f-3g2m-x479","package": "org.bouncycastle:bcprov-jdk18on","version": "1.81"},
+        {"id": "GHSA-9pwp-9qqc-pr26","package": "org.bouncycastle:bcprov-jdk18on","version": "1.81"},
+        {"id": "GHSA-c3fc-8qff-9hwx","package": "org.bouncycastle:bcprov-jdk18on","version": "1.81"},
+        {"id": "GHSA-p93r-85wp-75v3","package": "org.bouncycastle:bcprov-jdk18on","version": "1.81"},
+        {"id": "GHSA-qp49-qgx5-5m26","package": "org.bouncycastle:bcprov-jdk18on","version": "1.81"}
+      ],
+      "raw_sha256": {
+        "settings.log": "d154a8a641f3dc4ef8f5c7ac02a3e90f8cbc0449656c00a1ccc9b9d60c20f3d4",
+        "dependencies.log": "dfb866abc74873c860d8094207e68f22720993b45cefa6919761f23ae22c91b0",
+        "android-test.log": "6b96580e985c4e4555fcf32c04e54439f2f12ea171f3c9064238296e657fb826",
+        "effective-settings.json": "7cfc4f011251325f64bf1556751ae964149021353f8e2ad6db650850ed2d36b4",
+        "resolved-graphs.json": "0947d43e8d2938306ee5699fbce9ad13baa72ba77762ae301549acd2b47bc97c",
+        "advisory-queries.json": "2a24725e7ad1ca6cf1b3b5628fa024cfeb6567f860c8b099e014c9224e524f40",
+        "osv-batches.json": "8dac50509fbf73a89a4435966f3f138226d3c167e81fb77991267688984f9a4b",
+        "osv-records.json": "ad88ec758cb894338e03cab5c46fdb01a3cb9d45b1be51f35efd832c2c3be920"
+      },
+      "retrieved_at": [
+        "2026-11-13T16:57:43Z",
+        "2026-11-13T16:57:44Z",
+        "2026-11-13T16:57:44Z",
+        "2026-11-13T16:57:45Z"
+      ],
+      "android_module_sha256": "91ad4d6267a4cf8d330ea5b216a78281c221ca219d2989a7197f1b4843ff4d11"
+    },
+    "candidate": {
+      "robolectric": "4.17",
+      "bcprov": "1.85",
+      "modules": 9,
+      "roots": 104,
+      "named_queries": 358,
+      "android_shared_tests": 94,
+      "failed_tests": 0,
+      "skipped_tests": 0,
+      "matches": [
+        {"id": "GHSA-xxph-c9ww-hj94","package": "com.google.guava:guava","version": "33.6.0-jre"},
+        {"id": "GHSA-ccrj-gw8r-854m","package": "io.opentelemetry:opentelemetry-api","version": "1.41.0"},
+        {"id": "GHSA-rcgg-9c38-7xpx","package": "io.opentelemetry:opentelemetry-api","version": "1.41.0"}
+      ],
+      "raw_sha256": {
+        "settings.log": "20f7bd896aab859063e09f44d6bc267cb27f8558d4bedb058b1b21bd50eb4b80",
+        "dependencies.log": "13a29030229aaece18955045a3f4bc4a5226b27b2cc9012097eb33ef76df5d6f",
+        "android-test.log": "d5d8b1c01ca7b48fda39da2cc7b987d9e4f41eae879e39010fe5daa28e2ee358",
+        "effective-settings.json": "9e676b45e989f15626410a10c19ca039783e79d1861b64189ee635056506390a",
+        "resolved-graphs.json": "518e466da5e334faeb21cadcb9ceb499924491e273f7f091d012a5e993497bfb",
+        "advisory-queries.json": "de3d73aaa8ec212646b30a9ddcbe1659cc11491f6d63ba4571c9d9e361b2ecef",
+        "osv-batches.json": "0828d23f6866725e62520fda5cf717007c8b4b58aca838882f8c39928acbc49e",
+        "osv-records.json": "7f78c92189f354a0f1990104068ac6a192614360d09eceb8e008c17dcea9a8f6"
+      },
+      "retrieved_at": [
+        "2026-11-13T17:00:24Z",
+        "2026-11-13T17:00:24Z",
+        "2026-11-13T17:00:25Z",
+        "2026-11-13T17:00:25Z"
+      ],
+      "android_module_sha256": "50681a72008e7e493ea79b7e1884a425d7219fa7c8dd4385ef81afa7d30568c8"
+    }
+  },
+  "changed_roots": [
+    {"module": "android-app","usage": "test","scope": "compile","platforms": ["android"]},
+    {"module": "android-app","usage": "test","scope": "runtime","platforms": ["android"]}
+  ],
+  "package_version_delta": {
+    "removed": [
+      ["com.google.auto.value:auto-value-annotations","1.11.0"],
+      ["com.google.errorprone:error_prone_annotation","2.41.0"],
+      ["com.google.errorprone:error_prone_annotations","2.36.0"],
+      ["com.google.guava:guava","33.4.8-jre"],
+      ["com.google.j2objc:j2objc-annotations","3.0.0"],
+      ["com.google.testparameterinjector:test-parameter-injector","1.18"],
+      ["com.ibm.icu:icu4j","77.1"],
+      ["org.bouncycastle:bcprov-jdk18on","1.81"],
+      ["org.conscrypt:conscrypt-openjdk-uber","2.5.2"],
+      ["org.ow2.asm:asm","9.8"],
+      ["org.ow2.asm:asm-commons","9.8"],
+      ["org.ow2.asm:asm-tree","9.8"],
+      ["org.robolectric:annotations","4.16"],
+      ["org.robolectric:junit","4.16"],
+      ["org.robolectric:nativeruntime","4.16"],
+      ["org.robolectric:nativeruntime-dist-compat","1.0.18"],
+      ["org.robolectric:pluginapi","4.16"],
+      ["org.robolectric:plugins-maven-dependency-resolver","4.16"],
+      ["org.robolectric:resources","4.16"],
+      ["org.robolectric:robolectric","4.16"],
+      ["org.robolectric:sandbox","4.16"],
+      ["org.robolectric:shadowapi","4.16"],
+      ["org.robolectric:shadows-framework","4.16"],
+      ["org.robolectric:utils","4.16"],
+      ["org.robolectric:utils-reflector","4.16"],
+      ["org.yaml:snakeyaml","2.4"]
+    ],
+    "added": [
+      ["com.google.auto.value:auto-value-annotations","1.11.1"],
+      ["com.google.errorprone:error_prone_annotations","2.47.0"],
+      ["com.google.guava:guava","33.6.0-jre"],
+      ["com.google.j2objc:j2objc-annotations","3.1"],
+      ["com.google.testparameterinjector:test-parameter-injector","1.22"],
+      ["com.ibm.icu:icu4j","78.3"],
+      ["org.bouncycastle:bc-jdk18on-bom","1.85"],
+      ["org.bouncycastle:bcprov-jdk18on","1.85"],
+      ["org.conscrypt:conscrypt-openjdk-uber","2.6.2"],
+      ["org.jetbrains.kotlin:kotlin-reflect","2.4.0"],
+      ["org.ow2.asm:asm","9.10.1"],
+      ["org.ow2.asm:asm-commons","9.10.1"],
+      ["org.ow2.asm:asm-tree","9.10.1"],
+      ["org.robolectric:annotations","4.17"],
+      ["org.robolectric:junit","4.17"],
+      ["org.robolectric:nativeruntime","4.17"],
+      ["org.robolectric:nativeruntime-dist-compat","1.0.19"],
+      ["org.robolectric:pluginapi","4.17"],
+      ["org.robolectric:plugins-maven-dependency-resolver","4.17"],
+      ["org.robolectric:resources","4.17"],
+      ["org.robolectric:robolectric","4.17"],
+      ["org.robolectric:sandbox","4.17"],
+      ["org.robolectric:shadowapi","4.17"],
+      ["org.robolectric:shadows-framework","4.17"],
+      ["org.robolectric:utils","4.17"],
+      ["org.robolectric:utils-reflector","4.17"],
+      ["org.yaml:snakeyaml","2.6"]
+    ]
+  },
+  "selected_artifacts": [
+    {"coordinate": "org.robolectric:robolectric:4.16","file": "robolectric-4.16.jar","bytes": 165309,"sha256": "d5b073aa051c88995a621e13c9c0d2afd1be835800d59c80d58c1dbfd8eca19b"},
+    {"coordinate": "org.robolectric:robolectric:4.16","file": "robolectric-4.16.module","bytes": 8137,"sha256": "04840b605d7483a6eb372de65f22a1a0a16630e5b5efc750f8809a70cbb63d27","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.robolectric:robolectric:4.16","file": "robolectric-4.16.pom","bytes": 6236,"sha256": "570ed0d7b77d72c84786ca98a7f7491a53d520c7af77ea84500e664f2c28831e","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.robolectric:robolectric:4.17","file": "robolectric-4.17.jar","bytes": 172497,"sha256": "69e5bc128ba8d1fbb09d36bfb8a617018d6a3a418f77d44b36e7aca6747f14ea"},
+    {"coordinate": "org.robolectric:robolectric:4.17","file": "robolectric-4.17.module","bytes": 8502,"sha256": "bb9a5b95e2ffdf9a208426df42f16ff3f92a06d6ef53b3d1b82d01969e9ec650","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.robolectric:robolectric:4.17","file": "robolectric-4.17.pom","bytes": 6514,"sha256": "91450984a7e1b6cfec9c71573372dc0cbd1ccc10a76fbc768b0de499254dae20","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.bouncycastle:bcprov-jdk18on:1.81","file": "bcprov-jdk18on-1.81.jar","bytes": 8948201,"sha256": "249f396412b0c0ce67f25c8197da757b241b8be3ec4199386c00704a2457459b","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.bouncycastle:bcprov-jdk18on:1.81","file": "bcprov-jdk18on-1.81.pom","bytes": 1157,"sha256": "203990122be0fdd34bf12d0b788c0655161386a8e858ba43f06e3709c2cc74cc","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.bouncycastle:bcprov-jdk18on:1.85","file": "bcprov-jdk18on-1.85.jar","bytes": 10321819,"sha256": "20af26bf6060bb8005cc2389916812c1e0e998dc48d2ced7131b89461b54cff7","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.bouncycastle:bcprov-jdk18on:1.85","file": "bcprov-jdk18on-1.85.pom","bytes": 1160,"sha256": "a48e978d6b24c183c4832f5c49d71c1f84156b99c6fa9a410aafb373a254be7c","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.bouncycastle:bc-jdk18on-bom:1.85","file": "bc-jdk18on-bom-1.85.module","bytes": 3307,"sha256": "e875dd54bcaf36f38c0e9442b413e2ffd309ba1cde028c36e65aa0ef8c89158b","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "org.bouncycastle:bc-jdk18on-bom:1.85","file": "bc-jdk18on-bom-1.85.pom","bytes": 3074,"sha256": "d9628899e9fcb11a0751e7f2f0d42785ab729d1bb69831b9c63c3b1d05c3357b","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "com.google.guava:guava:33.4.8-jre","file": "guava-33.4.8-jre.module","bytes": 7127,"sha256": "58a3357303069a21930e7b9fe9b864de8bfb8bd4607433dbe48263459620cffc","published_checksum": {"algorithm": "sha1","verified": true}},
+    {"coordinate": "com.google.guava:guava:33.4.8-jre","file": "guava-33.4.8-jre.pom","bytes": 9610,"sha256": "04365d4b6ef22c8cf9349fe628069fc3e81a2c838351402ef4e95f9e757beebc","published_checksum": {"algorithm": "sha1","verified": true}},
+    {"coordinate": "com.google.guava:guava:33.6.0-jre","file": "guava-33.6.0-jre.module","bytes": 7121,"sha256": "2baf73ce839ae48e4b9e0083e256b0e58fc3bf8fc78fc3fbe797bbc89011216e","published_checksum": {"algorithm": "sha512","verified": true}},
+    {"coordinate": "com.google.guava:guava:33.6.0-jre","file": "guava-33.6.0-jre.pom","bytes": 9792,"sha256": "b45b78944280054311c53da9270809fb40dcabc408ce66ce55730099b4f57d32","published_checksum": {"algorithm": "sha512","verified": true}}
+  ],
+  "negative_control": {
+    "condition": "Robolectric 4.17 without jdk.internal.access opening",
+    "android_tests_passed": 14,
+    "android_tests_failed_before_feature_code": 54,
+    "failure": "IllegalAccessException for jdk.internal.access.SharedSecrets in FileDescriptorInterceptor",
+    "raw_log_sha256": "78d0463d07229bd4c1f8b4734ea00cf1acbc1415c5c0594703d7d832401e7080"
+  },
+  "critical_byte_checks": {
+    "scope": "static_multi_release_25_disassembly_of_resolved_bytes",
+    "counter": "single_byte_increment_replaced_by_carry_and_overflow_check",
+    "name_constraints": "email_and_URI_normalization_calls_present_in_1.85_absent_in_1.81",
+    "raw_sha256": {
+      "bc-1.81-counter.javap": "2fad2e1815b7d4acf934c00afb19c0b10a6eaeec679b4d5d093005de11eb8b36",
+      "bc-1.81-name-constraints.javap": "a4d990d5f656fd89fed75b7d90693f83d99c634374344d1056fe7cc41905aaeb",
+      "bc-1.85-counter.javap": "73e91162b76d8bfb000450f8a3668f034b2f4545e9e2f2382e31d9451fb82861",
+      "bc-1.85-name-constraints.javap": "aa00b14228a5cd02ef7a5a8a3baa36bfe9a2a9c00a3bfc712aa4ade8b4d9043f"
+    },
+    "exploitability_proven": false
+  },
+  "adoption_authorized": false,
+  "complete_security_clearance": false,
+  "contract_suite": {
+    "state": "passed",
+    "ruby": "4.0.6",
+    "raw_log_sha256": "426250b94f62656826aaa953d616196eac0a866adbae1606257c0eef6755d7a9"
+  },
+  "local_staged_gate": {
+    "code_commit": "0a9058de143e7110a1d402c2a952477af95cfb67",
+    "index_sha256": "de0f0c8e5955610594223d44570636d98abfb234dc07d2ef746a32777d37db98",
+    "inputs_sha256": "23a72388bb62358902fce5095cf87af874c428175c8955ce084df97506ec5ac0",
+    "completed": [
+      {"job": "android-test","seconds": 108.22},
+      {"job": "ios-test","seconds": 378.121},
+      {"job": "android-build-debug","seconds": 26.48},
+      {"job": "ios-build-debug","seconds": 63.122}
+    ],
+    "native_functions": 79,
+    "native_executions": 173,
+    "native_failures": 0,
+    "native_skips": 0,
+    "static_and_owned_cleanup": "passed",
+    "raw_log_sha256": "89370df3ec2db10e539ae1d49377f4d8b13a6a5adcbeab345de88244083c79d2",
+    "native_summary_sha256": "f9f905599cbd60ff37b3e055e4d4bb41b9e3708d009f29affd28875be996e24b"
+  }
+}

@@ -335,7 +335,7 @@ not claim it removed. No new polling or automatic removal is added.
 
 ## AND-01: Presenter host-test harness simplification
 
-`android-app/module.yaml` adds Robolectric 4.16 and native access for host tests;
+`android-app/module.yaml` selects Robolectric 4.17 and native access for host tests;
 the presenter suites select their runner and API 36 without app resources.
 This compensates for the pinned Toolchain's Android schema not exposing Circuit's
 [documented AGP stub-default setting](https://github.com/slackhq/circuit/blob/0.34.0/docs/testing.md).
@@ -344,11 +344,26 @@ logging/tracing stubs before qualifying feature behavior. The
 [Toolchain example](https://github.com/JetBrains/kotlin-toolchain/tree/v0.13.0/sources/test-integration/test-projects/android/robolectric)
 provides the supported current runner.
 
+The [4.17 dependency review](evidence/2026-11-13-robolectric-bc-review.md) selects
+the owner's Bouncy Castle 1.85 dependency through its published BOM. The new
+runner also needs test-JVM access to `java.base/jdk.internal.access` on JDK 25:
+without it, 54 Android tests fail in Robolectric's FileDescriptor setup before
+feature code. Mobi adds only the one observed package from Robolectric's
+[documented Java 17+ configuration](https://robolectric.org/getting-started/#running-with-java-17-and-higher),
+using the existing `jvm.test.freeJvmArgs` setting. It does not change application
+JVM access, Android SDK selection or runtime assertions.
+
+On each Robolectric/test-JDK update, run the API 36 host suite with this one
+`--add-opens` option omitted. Remove it when the selected runner uses accessible
+JDK APIs and the unchanged suite passes without the option, then run the normal
+gate. Keep a failed omission control and the source/versions in the update PR.
+This option's removal can qualify independently of removing Robolectric itself.
+
 Recheck AND-01 when updating Toolchain, Circuit, Compose, Robolectric or the test
 JDK. Review supported host configuration, then run all presenter lifecycle and
 admission checks and the full Android host suite without Robolectric. If they pass
 on the actual Android dependency variant, remove the redundant dependency, runner/SDK
-annotations and native-access flag, and rerun the normal gate. Preserve the
+annotations and native/module-access options, and rerun the normal gate. Preserve the
 runtime assertions; do not replace them with state-producer delegation tests.
 Record **retained**, **ready for removal** or **incomplete**, with the executed
 checks, in the update PR. This is a manual adoption-review step; the iOS interop
