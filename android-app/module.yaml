@@ -14,7 +14,7 @@ dependencies:
 
 test-dependencies:
   - com.slack.circuit:circuit-test:0.34.0
-  - org.robolectric:robolectric:4.16
+  - org.robolectric:robolectric:4.17
   - org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0
 
 settings:
@@ -25,6 +25,9 @@ settings:
       freeJvmArgs:
         # Robolectric loads native Android runtime code in host tests.
         - --enable-native-access=ALL-UNNAMED
+        # AND-01: Robolectric's FileDescriptor interceptor needs this JDK package.
+        # Recheck without it on Robolectric/JDK updates.
+        - --add-opens=java.base/jdk.internal.access=ALL-UNNAMED
   kotlin:
     version: 2.5.0-RC
     compilerPlugins:
