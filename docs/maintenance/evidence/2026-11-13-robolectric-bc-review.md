@@ -25,8 +25,8 @@ tests pass with no failures or skips. No test body or assertion changes.
 
 Robolectric's [official Java 17+ setup](https://robolectric.org/getting-started/#running-with-java-17-and-higher)
 documents package opening for JDK internals. Mobi selects the one observed
-requirement for its current JDK 25 / API 36 suites, rather than copying the
-entire list into every JVM. This is a runner/JDK accommodation under AND-01,
+requirement for its current JDK 25 / API 36 suites. This is a runner/JDK
+accommodation under AND-01,
 not a Toolchain bridge, new test target or resource-class adapter. Recheck on
 Robolectric/JDK updates by omitting this option, keeping the actual suites and
 assertions. Remove it when the updated runner no longer needs the package access
@@ -108,7 +108,7 @@ delegated Android tooling attribution, Swift/Ruby/npm and Robolectric's dynamic
 instrumented-Android runtime downloads are not cleared. Public test-root scope
 is not APK absence proof. This result does not rebind historical build-tool risk
 receipts or clear their separate findings. The
-[paired summary](2026-11-13-robolectric-bc-review.json) records exact queries,
+[paired summary](2026-11-13-robolectric-bc-review.json) records exact query hashes,
 changes, artifact identities, counts and raw receipt hashes within this scope.
 
 ## Validation and recovery
@@ -120,6 +120,14 @@ Candidate tests reused this checkout's baseline build cache, so this comparison
 is not a cold clean-clone or controlled performance measurement. Warning debt is
 retained. Final exact-staged source-copy and hosted gates are recorded in the PR;
 unsigned/signed release and device acceptance are separate scopes.
+
+The normal exact-staged gate for code commit
+`0a9058de143e7110a1d402c2a952477af95cfb67` passes static checks, 94 Android/shared
+tests, 79 native functions / 173 executions, both Debug builds and source/index/
+owned-cleanup checks. The retained native result has no failures or skips. This
+source-copy gate starts without this checkout's application outputs. The later
+documentation-only receipt update runs the normal static/source gate separately;
+final hosted results remain in the PR.
 
 Recovery restores the complete pre-update source, including the dependency pin,
 JVM option and linked guidance. On later owner updates, refresh actual selected

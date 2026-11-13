@@ -189,5 +189,23 @@
     "state": "passed",
     "ruby": "4.0.6",
     "raw_log_sha256": "426250b94f62656826aaa953d616196eac0a866adbae1606257c0eef6755d7a9"
+  },
+  "local_staged_gate": {
+    "code_commit": "0a9058de143e7110a1d402c2a952477af95cfb67",
+    "index_sha256": "de0f0c8e5955610594223d44570636d98abfb234dc07d2ef746a32777d37db98",
+    "inputs_sha256": "23a72388bb62358902fce5095cf87af874c428175c8955ce084df97506ec5ac0",
+    "completed": [
+      {"job": "android-test","seconds": 108.22},
+      {"job": "ios-test","seconds": 378.121},
+      {"job": "android-build-debug","seconds": 26.48},
+      {"job": "ios-build-debug","seconds": 63.122}
+    ],
+    "native_functions": 79,
+    "native_executions": 173,
+    "native_failures": 0,
+    "native_skips": 0,
+    "static_and_owned_cleanup": "passed",
+    "raw_log_sha256": "89370df3ec2db10e539ae1d49377f4d8b13a6a5adcbeab345de88244083c79d2",
+    "native_summary_sha256": "f9f905599cbd60ff37b3e055e4d4bb41b9e3708d009f29affd28875be996e24b"
   }
 }
