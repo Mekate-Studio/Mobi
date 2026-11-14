@@ -27,6 +27,12 @@ index extends acceptance or establishes repository-wide advisory clearance.
 
 ## Recent qualifications and remaining debt
 
+The [TCA/reporting-package assessment](evidence/2026-11-14-tca-reporting-assessment.md)
+reviews TCA 1.26.2 together with compatibility package 1.13.1 and canonical
+IssueReporting 2.1.2. The Swift 6.4 graph resolves without custom module glue;
+compiler-specific hosted results belong to the review PR. Existing lifetime
+owners, IOS-13 and the unresolved timer flake remain separate follow-ups.
+
 The [compiler warning follow-ups](compiler-warning-follow-ups.md) record the
 open native/generated/Android warning backlog from the Beta2 integration, with
 ownership and closure checks. Warning cleanup follows the integration/CI repair
