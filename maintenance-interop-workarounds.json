@@ -376,7 +376,7 @@
       "id": "IOS-13",
       "scope": "default",
       "title": "Serialized native feature tests",
-      "reason": "The pinned TCA 1.26.0 TestStore installs and restores a process-wide executor hook. Concurrent store lifetimes make these tests depend on shared scheduler state. The timer fixture also scopes TestClock 1.0.6 advances with the existing withMainSerialExecutor API after a hosted cadence timeout; its background-yield scheduling remains a test-library constraint. The parent suite stays serialized so these global scopes do not overlap. See docs/maintenance/evidence/2026-11-06-ios10-exporter-runtime.md.",
+      "reason": "The pinned TCA 1.26.0 TestStore installs and restores a process-wide executor hook. Concurrent store lifetimes make these tests depend on shared scheduler state. The five timer scenarios scope SwiftUI host creation, TestClock 1.0.6 advances and cleanup with the existing withMainSerialExecutor API; active renders also check that a clock sleep is scheduled. This keeps task creation inside the documented executor scope but does not prove the cause of the historical removal/reentry flake. The parent suite stays serialized so these global scopes do not overlap. See docs/maintenance/evidence/2026-11-14-nearby-timer-readiness.md.",
       "paths": [
         "ios-app/tests/NativeFeatureTests.swift",
         "ios-app/tests/Features/Home/HomeFeatureTests.swift",
@@ -389,7 +389,7 @@
         "xcode",
         "design"
       ],
-      "replacement": "Use supported per-test executor isolation for native feature and clock-driven SwiftUI tests; remove the serialized parent and scoped clock-advance helper after qualifying the actual tests.",
+      "replacement": "Use supported per-test executor isolation for native feature and clock-driven SwiftUI tests; remove the serialized parent and whole-scenario timer executor scopes after qualifying the actual tests. Retain useful clock-readiness assertions independently.",
       "retirement_checks": [
         "Cold local and hosted runs plus repeated parallel Home/Nearby execution pass with the original time limits and exhaustive assertions.",
         "Removing effect cancellation still fails the out-of-order completion test; cancellation or assertion failure leaves no pending test continuation.",
@@ -397,7 +397,7 @@
       ],
       "probe_state": "not_automated",
       "disposition": "active",
-      "disposition_note": "Serialized TestStore lifetimes and scoped virtual-clock advances remain native test-library constraints.",
+      "disposition_note": "Serialized TestStore lifetimes and whole-scenario timer executor scopes remain native test-library constraints; the historical timer flake is not attributed or closed.",
       "disposition_evidence": [
         "https://github.com/Mekate-Studio/Mobi/pull/43",
         "https://github.com/Mekate-Studio/Mobi/pull/84"

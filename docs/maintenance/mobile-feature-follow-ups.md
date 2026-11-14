@@ -248,6 +248,15 @@ fixed issue. Preserve that failure when qualifying an explicit startup boundary;
 do not add sleeps, assertion retries or weaken cadence/cancellation checks. This
 native test reliability follow-up is separate from AND-03 and Swift-export removal.
 
+The [2026-11-14 timer qualification](evidence/2026-11-14-nearby-timer-readiness.md)
+extends the existing executor scope across each complete timer scenario, including
+SwiftUI host creation and cleanup. Active rendered states also check for an
+actual scheduled clock sleep before the fixture returns. No custom clock or
+production hook is added. The historical flake was not reproduced, including
+by the earlier-readiness diagnostic; these checks do not establish its cause or
+close the reliability follow-up. IOS-13 still tracks the process-wide executor
+constraint and its removal checks.
+
 [ADR 0016](../adr/0016-ios-nearby-scene-timer-lifetime.md) records the 17-line net
 runtime cost, standard Clock seam and explicit scheduling-only boundary. The
 MobiIOSTestDependencies product links the already pinned Clocks/ConcurrencyExtras
