@@ -340,7 +340,10 @@ Record **retained**, **removal-ready** or **incomplete**, with the exact depende
 source revision, simulator/runtime and commands in the update PR. The
 [update workflow](compatibility-watch.md) requires this manual check. Automated
 Swift-export retirement reports do not assess this native TCA adapter and must
-not claim it removed. No new polling or automatic removal is added.
+not claim it removed. The existing release watch now requests MOB-08 review for
+eligible TCA leads, using the app lockfile version. Swift/SwiftUI/Xcode remain
+manual discovery gaps; the watch does not execute these runtime checks or
+authorize automatic removal.
 
 ## AND-01: Presenter host-test harness simplification
 

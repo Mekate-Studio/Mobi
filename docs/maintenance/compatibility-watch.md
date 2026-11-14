@@ -34,8 +34,9 @@ index unchanged while a probe runs; all transformations happen in owned copies.
 
 ## Evidence and meaning
 
-The Kotlin adapter queries the first 30 GitHub release records for Toolchain,
-Kotlin and Metro; the historical bridge path also queries SKIE. It includes newer
+The shared release reader queries the first 30 GitHub release records for
+Toolchain, Kotlin, Metro, TCA, Clocks and Concurrency Extras; the historical bridge
+path also queries SKIE. It includes newer
 stable and prerelease versions, including Alpha, Beta, RC, EAP and dev tags.
 Drafts are excluded. Either GitHub's prerelease flag or a version suffix marks
 the release as an **experimental prerelease** review lead, including RC tags
@@ -46,6 +47,22 @@ response has its URL, UTC retrieval time, content digest and HTTPS client digest
 The system HTTPS client verifies certificates; credentials used for hosted history and releases
 are supplied through standard input, never command arguments. The pinned Ruby
 runtime does not have an OpenSSL extension.
+
+The three native comparison versions come from the app's tracked
+`ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`,
+not duplicated configuration pins or a fresh package resolution. Missing,
+ambiguous, malformed, branch-only or mismatched repository/revision pins leave
+the affected provider incomplete; the reader does not guess a version or query
+that provider. These lockfile baselines do not establish compiler-specific build
+graphs. Other native packages and Swift/SwiftUI/Xcode discovery remain manual.
+
+`discovery.json` and the existing snapshot/summary expose the native providers,
+reviewed versions and `review_requests`. Eligible TCA leads request **IOS-13**
+timer/executor and **MOB-08** lifetime-owner reviews. Eligible Clocks and
+Concurrency Extras leads request **IOS-13**, including its timer checks.
+Age-blocked releases remain visible without issuing those requests; provider
+failure cannot produce a request. The broad `native_dependencies` coverage gap
+remains because these three feeds do not cover all native dependencies.
 
 Newer versions are compared against the reviewed tuple, with numeric preview
 ordering (Beta2 precedes Beta10) and case-insensitive labels. The configurable
@@ -217,9 +234,10 @@ location-to-refresh ownership, all request triggers, gated stopped callbacks,
 SwiftUI background/removal/re-entry and failure-aging checks. Review Apple
 CoreLocation async API/diagnostic evolution on native SDK updates; the supported
 one-result reader is separate from the TCA timing adapter. Record retained,
-removal-ready or incomplete with executed evidence in the update PR. This manual
-native-lifetime simplification check is outside automated Swift-export retirement
-reports; the watch does not qualify it automatically.
+removal-ready or incomplete with executed evidence in the update PR. Eligible
+TCA leads now request this review in the release table; the native-lifetime
+simplification check remains outside automated Swift-export retirement results.
+Discovery does not execute the check or qualify either owner's removal.
 
 ## Primary references
 

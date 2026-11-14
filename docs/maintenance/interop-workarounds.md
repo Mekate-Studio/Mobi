@@ -212,8 +212,10 @@ lifetimes from overlapping. The ordering test still runs two requests together
 and completes the newer request first; serializing test functions does not
 remove concurrency from the behavior being checked. Reassess the parent suite
 on TCA/Swift/Xcode updates, and remove it only after the registry's cold, parallel
-and negative-control checks pass. Native dependency release discovery remains an
-explicit coverage gap in the current watch.
+and negative-control checks pass. The existing watch discovers TCA, Clocks and
+Concurrency Extras releases and requests IOS-13 review for eligible leads.
+Other native dependencies and Swift/Xcode discovery remain coverage gaps;
+no per-test scheduling or removal qualification is inferred from a release.
 
 The implementation docs' symbol-stability guide is also relevant when an update
 changes generated symbol expectations: inspect whether the difference is intended

@@ -22,12 +22,13 @@ module WatchTest
     { 'tag_name' => 'v' + version, 'published_at' => (NOW - age * 86_400).iso8601, 'draft' => false, 'prerelease' => false }
   end
   class Fetcher
-    attr_accessor :data, :error, :bad_hash
+    attr_accessor :data, :error, :bad_hash, :failures
     attr_reader :calls
-    def initialize(data); @data = data; @calls = []; end
+    def initialize(data); @data = data; @calls = []; @failures = {}; end
     def get(url, token: nil)
       @calls << [url, token]
-      raise Maintenance::Failure, @error if @error
+      error = @failures[url] || @error
+      raise Maintenance::Failure, error if error
       body = JSON.generate(@data)
       { 'url' => url, 'retrieved_at' => Time.now.utc.iso8601, 'body' => body, 'sha256' => @bad_hash ? '0' * 64 : Digest::SHA256.hexdigest(body) }
     end
@@ -79,6 +80,26 @@ module WatchTest
     assert(result['changes'].none? { |c| c['kind'] == 'capability_regressed' })
   end
 
+  test('native release discovery reads adopted versions from the app lockfile') do
+    fixture do |root|
+      path = 'ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved'
+      lock = JSON.parse(File.read(File.join(root, path)))
+      lock['pins'].find { |pin| pin['identity'] == 'swift-clocks' }['state']['version'] = '9.8.7'
+      File.write(File.join(root, path), JSON.generate(lock))
+      source = Maintenance::Source.new(root)
+      result, output = run_watch(root)
+      releases = result.dig('snapshot', 'observation', 'releases')
+      assert(releases.keys.sort == %w[clocks concurrency_extras kotlin metro tca toolchain])
+      assert(releases.fetch('clocks')['reviewed_version'] == '9.8.7')
+      { 'tca' => 'swift-composable-architecture', 'concurrency_extras' => 'swift-concurrency-extras' }.each do |name, identity|
+        assert(releases.fetch(name)['reviewed_version'] == lock['pins'].find { |pin| pin['identity'] == identity }.fetch('state').fetch('version'))
+      end
+      assert(releases.values.all? { |provider| provider['state'] == 'observed' })
+      assert(File.read(File.join(output, 'summary.md')).include?('| clocks | `observed` | `9.8.7` |'))
+      source.verify!
+    end
+  end
+
   test('missing corrupt expired future and changed-scope history cannot suppress notifications') do
     Dir.mktmpdir('mobi-watch-history-') do |root|
       file = File.join(root, 'snapshot.json'); now = Time.now.utc
@@ -102,7 +123,7 @@ module WatchTest
 
   test('stable and prerelease evidence preserves age blocks major changes and source identities') do
     fetcher = Fetcher.new([release, release('98.0.0', age: 2), release('100.0.0').merge('prerelease' => true), release('101.0.0-RC1')])
-    result = Maintenance::KotlinReleaseWatch.new(fetcher: fetcher).discover(config)
+    result = Maintenance::ReleaseWatch.new(fetcher: fetcher).discover(config)
     assert(result.keys.sort == %w[kotlin metro skie toolchain])
     result.each_value do |provider|
       assert(provider['state'] == 'observed' && provider['source']['sha256'].size == 64)
@@ -120,11 +141,11 @@ module WatchTest
      Fetcher.new([release('99.0.0-Beta2').reject { |key, _| key == 'published_at' }]),
      Fetcher.new([release('99.0.0-RC1', age: -1)]), Fetcher.new([release('next').merge('prerelease' => true)]),
      Fetcher.new([release('99.0.0-Beta2..3')])].each do |provider|
-      result = Maintenance::KotlinReleaseWatch.new(fetcher: provider).discover(config)
+      result = Maintenance::ReleaseWatch.new(fetcher: provider).discover(config)
       assert(result.values.all? { |r| r['state'] == 'incomplete' && r['reason'] })
     end
     fetcher = Fetcher.new([release]); fetcher.bad_hash = true
-    assert(Maintenance::KotlinReleaseWatch.new(fetcher: fetcher).discover(config).values.all? { |r| r['reason'] == 'provider_evidence_mismatch' })
+    assert(Maintenance::ReleaseWatch.new(fetcher: fetcher).discover(config).values.all? { |r| r['reason'] == 'provider_evidence_mismatch' })
   end
 
   test('release ordering retains all newer prerelease channels and excludes drafts and older previews') do
@@ -132,7 +153,7 @@ module WatchTest
     fetcher = Fetcher.new(versions.map { |version| release(version) } + [release('2.6.0-Beta1').merge('draft' => true)])
     pins = config
     pins['candidate']['releases']['kotlin']['version'] = '2.4.20'
-    result = Maintenance::KotlinReleaseWatch.new(fetcher: fetcher, now: NOW).discover(pins, direct: true)
+    result = Maintenance::ReleaseWatch.new(fetcher: fetcher, now: NOW).discover(pins, direct: true)
     assert(result.keys.sort == %w[kotlin metro toolchain])
     newer = result.fetch('kotlin').fetch('newer')
     assert(newer.map { |r| r['version'] } == %w[2.5.0-Alpha1 2.5.0-Beta2 2.5.0-beta10 2.5.0-RC1 2.5.0 2.5.1-dev-123 2.5.1-EAP1])
@@ -147,6 +168,10 @@ module WatchTest
       first = watcher.run
       row = first.dig('snapshot', 'observation', 'releases', 'kotlin', 'newer').first
       assert(row['version'] == '99.0.0-Beta2' && row['channel'] == 'prerelease' && row['age_state'] == 'age_blocked')
+      %w[tca clocks concurrency_extras].each do |name|
+        native = first.dig('snapshot', 'observation', 'releases', name)
+        assert(native['newer'] == [row] && native['review_requests'].empty?)
+      end
       assert(File.read(File.join(watcher.output, 'summary.md')).include?('99.0.0-Beta2 (experimental prerelease, age_blocked)'))
       assert(first.dig('snapshot', 'observation', 'workarounds', 'IOS-08', 'recheck_state') == 'review_required')
       previous = File.join(watcher.output, 'snapshot.json')
@@ -156,6 +181,8 @@ module WatchTest
       result = aged.run
       assert(result.dig('notification', 'notify'))
       assert(result.dig('snapshot', 'observation', 'workarounds', 'IOS-08', 'release_leads', 'kotlin') == ['99.0.0-Beta2'])
+      assert(result.dig('snapshot', 'observation', 'releases', 'tca', 'review_requests') == %w[IOS-13 MOB-08])
+      assert(result.dig('snapshot', 'observation', 'workarounds', 'IOS-13', 'release_leads', 'clocks') == ['99.0.0-Beta2'])
       assert(result['adoption_authorized'] == false)
       assert(result.dig('snapshot', 'observation', 'workarounds', 'IOS-08', 'retirement_authorized') == false)
       assert(JSON.parse(File.read(File.join(root, 'maintenance-compatibility.json')))['candidate'] == config['candidate'])
@@ -173,9 +200,94 @@ module WatchTest
 
   test('optional public-provider authentication stays out of reports') do
     fetcher = Fetcher.new([release])
-    result = Maintenance::KotlinReleaseWatch.new(fetcher: fetcher, token: 'fixture-secret').discover(config)
+    result = Maintenance::ReleaseWatch.new(fetcher: fetcher, token: 'fixture-secret').discover(config)
     assert(fetcher.calls.size == 4 && fetcher.calls.all? { |_url, token| token == 'fixture-secret' })
     assert(!JSON.generate(result).include?('fixture-secret'))
+  end
+
+  test('eligible native updates request manual reviews without granting retirement') do
+    fixture do |root|
+      result, output = run_watch(root)
+      releases = result.dig('snapshot', 'observation', 'releases')
+      assert(releases.fetch('tca')['review_requests'] == %w[IOS-13 MOB-08])
+      %w[clocks concurrency_extras].each do |name|
+        assert(releases.fetch(name)['review_requests'] == ['IOS-13'])
+      end
+      ios13 = result.dig('snapshot', 'observation', 'workarounds', 'IOS-13')
+      assert(ios13['release_leads'] == { 'clocks' => ['99.0.0'], 'concurrency_extras' => ['99.0.0'], 'tca' => ['99.0.0'] })
+      assert(ios13['recheck_state'] == 'release_review_due')
+      assert(ios13['coverage_gaps'].include?('native_dependencies:not_observed'))
+      assert(ios13['retirement_state'] == 'unverified' && ios13['retirement_authorized'] == false)
+      summary = File.read(File.join(output, 'summary.md'))
+      assert(summary.include?('IOS-13, MOB-08') && summary.include?('manual reviews'))
+      assert(result['adoption_authorized'] == false)
+    end
+  end
+
+  test('unusable native pins stay incomplete without guessed release queries or review requests') do
+    fixture do |root|
+      path = File.join(root, 'ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved')
+      original = JSON.parse(File.read(path))
+      mutations = [
+        ->(lock) { lock['pins'].reject! { |pin| pin['identity'] == 'swift-clocks' } },
+        ->(lock) { lock['pins'] << lock['pins'].find { |pin| pin['identity'] == 'swift-clocks' } },
+        ->(lock) { lock['pins'].find { |pin| pin['identity'] == 'swift-clocks' }['location'] = 'https://github.com/other/swift-clocks' },
+        ->(lock) { lock['pins'].find { |pin| pin['identity'] == 'swift-clocks' }['kind'] = 'localSourceControl' },
+        ->(lock) { lock['pins'].find { |pin| pin['identity'] == 'swift-clocks' }['state'] = { 'branch' => 'main' } },
+        ->(lock) { lock['pins'].find { |pin| pin['identity'] == 'swift-clocks' }['state']['revision'] = 'not-a-commit' }
+      ]
+      mutations.each do |mutate|
+        lock = Marshal.load(Marshal.dump(original)); mutate.call(lock)
+        File.write(path, JSON.generate(lock))
+        fetcher = Fetcher.new([release])
+        result = Maintenance::CompatibilityWatch.new(root, fetcher: fetcher, probe: ->(_source) { probe }).run
+        row = result.dig('snapshot', 'observation', 'releases', 'clocks')
+        assert(row['state'] == 'incomplete' && row['reason'] == 'reviewed_pin_unavailable')
+        assert(row['reviewed_version'].nil? && row['newer'].empty? && row['review_requests'].empty?)
+        assert(fetcher.calls.none? { |url, _| url.include?('/swift-clocks/') })
+        assert(result.dig('snapshot', 'observation', 'releases', 'tca', 'state') == 'observed')
+        assert(result.dig('snapshot', 'observation', 'assessment_state') == 'incomplete')
+        assert(result.dig('snapshot', 'observation', 'workarounds', 'IOS-13', 'coverage_gaps').include?('clocks:provider_incomplete'))
+      end
+    end
+  end
+
+  test('missing malformed and unsupported lockfiles preserve native discovery gaps') do
+    fixture do |root|
+      path = File.join(root, 'ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved')
+      [nil, '{', '[]', JSON.generate('version' => 2, 'pins' => [])].each do |bytes|
+        bytes ? File.write(path, bytes) : File.delete(path)
+        result, = run_watch(root)
+        releases = result.dig('snapshot', 'observation', 'releases')
+        %w[tca clocks concurrency_extras].each do |name|
+          row = releases.fetch(name)
+          assert(row['state'] == 'incomplete' && row['reason'] == 'reviewed_pin_unavailable')
+          assert(row['review_requests'].empty?)
+        end
+        assert(releases.fetch('kotlin')['state'] == 'observed')
+        assert(result.dig('snapshot', 'observation', 'assessment_state') == 'incomplete')
+      end
+    end
+  end
+
+  test('native provider failure is isolated and quiet until its evidence changes') do
+    fixture do |root|
+      fetcher = Fetcher.new([release])
+      fetcher.failures['https://api.github.com/repos/pointfreeco/swift-clocks/releases?per_page=30'] = 'provider_http_429'
+      first = Maintenance::CompatibilityWatch.new(root, fetcher: fetcher, probe: ->(_source) { probe })
+      result = first.run
+      releases = result.dig('snapshot', 'observation', 'releases')
+      assert(releases.fetch('clocks')['reason'] == 'provider_http_429' && releases.fetch('clocks')['review_requests'].empty?)
+      assert(releases.reject { |name, _| name == 'clocks' }.values.all? { |row| row['state'] == 'observed' })
+      repeated = Maintenance::CompatibilityWatch.new(root, previous: File.join(first.output, 'snapshot.json'), fetcher: fetcher, probe: ->(_source) { probe })
+      assert(!repeated.run.dig('notification', 'notify'))
+      fetcher.failures.clear
+      recovered = Maintenance::CompatibilityWatch.new(root, previous: File.join(repeated.output, 'snapshot.json'), fetcher: fetcher, probe: ->(_source) { probe })
+      result = recovered.run
+      assert(result.dig('notification', 'notify'))
+      assert(result.dig('snapshot', 'observation', 'releases', 'clocks', 'review_requests') == ['IOS-13'])
+      assert(result.dig('snapshot', 'observation', 'assessment_state') == 'checks_passed')
+    end
   end
 
   test('provider failure remains incomplete with a passing probe and unchanged failure is quiet') do

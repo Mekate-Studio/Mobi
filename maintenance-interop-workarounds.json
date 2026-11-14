@@ -385,6 +385,9 @@
       ],
       "recheck_on": [
         "native_dependencies",
+        "tca",
+        "clocks",
+        "concurrency_extras",
         "swift",
         "xcode",
         "design"
