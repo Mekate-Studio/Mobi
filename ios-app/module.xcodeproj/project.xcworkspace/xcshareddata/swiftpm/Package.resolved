@@ -1,5 +1,5 @@
 {
-  "originHash" : "9c6b0cbe8fb439b49d9e2ca2323d434fef1730424cbda0b82ec5f8d6a9050dab",
+  "originHash" : "76b11953fc040b2d7557b20fc8655582ef3407b7f5f5cf60889c21a001183224",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "e2fa1df6cd9eec6fa6314aa20513e47da576f24e",
-        "version" : "1.26.0"
+        "revision" : "377da4061db10d26337a71bb279c506bb951f50f",
+        "version" : "1.26.2"
       }
     },
     {
@@ -89,6 +89,15 @@
       "state" : {
         "revision" : "322d9ffeeba85c9f7c4984b39422ec7cc3c56597",
         "version" : "1.1.1"
+      }
+    },
+    {
+      "identity" : "swift-issue-reporting",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-issue-reporting",
+      "state" : {
+        "revision" : "b23bb4493c439d3e05152bc167014235ba3d47fc",
+        "version" : "2.1.2"
       }
     },
     {
@@ -132,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "cb281f343fd953280336dcbd3822cdf47c182f5b",
-        "version" : "1.10.0"
+        "revision" : "d9308ad679143c26a30dec52daefe82f54af2b82",
+        "version" : "1.13.1"
       }
     }
   ],
