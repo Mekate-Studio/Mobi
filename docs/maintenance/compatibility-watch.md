@@ -51,9 +51,10 @@ runtime does not have an OpenSSL extension.
 The three native comparison versions come from the app's tracked
 `ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`,
 not duplicated configuration pins or a fresh package resolution. Missing,
-ambiguous, malformed, branch-only or mismatched repository/revision pins leave
-the affected provider incomplete; the reader does not guess a version or query
-that provider. These lockfile baselines do not establish compiler-specific build
+ambiguous, malformed, branch-only or repository-mismatched pins leave the
+affected provider incomplete; a revision must have the expected commit-ID format.
+The reader does not verify remote tag-to-commit correspondence, guess a version
+or query an unusable pin's provider. These baselines do not establish compiler-specific build
 graphs. Other native packages and Swift/SwiftUI/Xcode discovery remain manual.
 
 `discovery.json` and the existing snapshot/summary expose the native providers,
