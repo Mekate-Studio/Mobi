@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "scope": "WARN-09_main_android_smoke_sdk_package_ownership",
+  "base": "7c1aaacfb889d9a654415311cbf9d03b3081725c",
+  "changed_jobs": [
+    "android_test",
+    "android_build"
+  ],
+  "runtime_source_changed": false,
+  "sdk_root_changed": false,
+  "delegated_android_bootstrap_changed": false,
+  "setup_action": "android-actions/setup-android@v4",
+  "setup_action_commit": "be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd",
+  "action_packages_input": "",
+  "ci_license_policy_changed": false,
+  "local_new_licenses_accepted": false,
+  "local_license_scope": "Copied existing host license receipts; not empty-host license evidence",
+  "final_executable_patch": "Two empty packages inputs; four YAML lines added",
+  "final_cold_sdk_rehearsal": {
+    "initial_contents": [
+      "bootstrap command-line tools 22.0",
+      "copied existing host license receipts"
+    ],
+    "preinstalled_task_packages": false,
+    "phases": {
+      "delegated-android-test": {
+        "exit": 0,
+        "passed_tests": 94,
+        "failed_tests": 0,
+        "missing_metadata_warning": false,
+        "log_sha256": "739933d7c0d47ba34102873313935f142fe0e4a40c32db0d357708c593392847"
+      },
+      "delegated-android-build": {
+        "exit": 0,
+        "passed_tests": null,
+        "failed_tests": null,
+        "missing_metadata_warning": false,
+        "log_sha256": "10664cce07dd79e8ed139b1521b4c0f7b62e2872b1ddb6257e011f6d590340df"
+      },
+      "delegated-warm-build": {
+        "exit": 0,
+        "passed_tests": null,
+        "failed_tests": null,
+        "missing_metadata_warning": false,
+        "log_sha256": "10664cce07dd79e8ed139b1521b4c0f7b62e2872b1ddb6257e011f6d590340df"
+      }
+    },
+    "sdk_packages_provisioned_by_toolchain": [
+      {
+        "path": "build-tools;37.0.0",
+        "revision": {
+          "major": "37",
+          "minor": "0",
+          "micro": "0"
+        }
+      },
+      {
+        "path": "cmdline-tools;latest",
+        "revision": {
+          "major": "23",
+          "minor": "0"
+        }
+      },
+      {
+        "path": "platform-tools",
+        "revision": {
+          "major": "37",
+          "minor": "0",
+          "micro": "3"
+        }
+      },
+      {
+        "path": "platforms;android-37.0",
+        "revision": {
+          "major": "2"
+        }
+      }
+    ],
+    "elapsed_seconds": [
+      {
+        "phase": "delegated-android-test",
+        "exit": 0,
+        "seconds": 36.103
+      },
+      {
+        "phase": "delegated-android-build",
+        "exit": 0,
+        "seconds": 4.53
+      },
+      {
+        "phase": "delegated-warm-build",
+        "exit": 0,
+        "seconds": 1.342
+      }
+    ]
+  },
+  "baseline_observation": {
+    "exit": 0,
+    "passed_tests": 94,
+    "failed_tests": 0,
+    "missing_metadata_warning": true,
+    "toolchain_commandline_zip_downloads": 1,
+    "log_sha256": "7ffd61ae54e05e778fc8db7ac1dc02c05786d6025bc5bb0bc7adbe2a4145d040"
+  },
+  "alternatives_not_adopted": {
+    "occupied_sdk_package_request": {
+      "installer_exit": 0,
+      "actual_location": "cmdline-tools/latest-2",
+      "required_latest_metadata_present": false,
+      "source": "candidate-package-install.log",
+      "accepted": false
+    },
+    "job_private_registered_sdk": {
+      "commit": "e430a4f04ef39dbbb73159e8684b78adb4602098",
+      "run_id": 43582000313,
+      "android_test_job": 132408550034,
+      "android_debug_job": 132408550028,
+      "comparison": {
+        "baseline": {
+          "job_id": 132100422563,
+          "image": "20261102.0473.1",
+          "sdkmanager_deprecations": 2,
+          "metadata_warning": true,
+          "repo_step_tools_repair_downloads": 1,
+          "new_platform_downloads": [],
+          "passed_tests": 94,
+          "log_sha256": "b919c2c7dc104cb5e89f7faf14659126798fccb3e8cecccbc4281eea84a86b1e"
+        },
+        "candidate": {
+          "job_id": 132408550034,
+          "image": "20261102.0473.1",
+          "sdkmanager_deprecations": 3,
+          "metadata_warning": false,
+          "repo_step_tools_repair_downloads": 0,
+          "new_platform_downloads": [
+            "https://dl.google.com//android/repository/build-tools_r37_macosx.zip",
+            "https://dl.google.com//android/repository/platform-37.0_r02.zip"
+          ],
+          "passed_tests": 94,
+          "log_sha256": "bb4dcd2e998691f7c67cf9b3ec7f2e8c9c098c66227e3cf9c0576d6db3623099"
+        }
+      },
+      "setup_step_seconds": {
+        "baseline_test": 11,
+        "baseline_build": 11,
+        "private_test": 15,
+        "private_build": 14
+      },
+      "decision": "Do not retain root overrides or extra package input; extra cold downloads and deprecations"
+    }
+  },
+  "android_cli_review": {
+    "version": "1.1.16919734",
+    "selected_for_ci": false,
+    "private_android_user_home": true,
+    "bootstrap_source_tools": "22.0",
+    "help_only": true,
+    "deprecation_removed": false
+  },
+  "disposition": {
+    "redundant_action_package_install": "removed_for_main_android_smoke_jobs",
+    "sdkmanager_license_deprecation": "open_upstream",
+    "image_metadata_repair": "open_unchanged",
+    "other_workflows": "not_qualified_in_this_slice",
+    "new_workaround_added": false,
+    "update_review": "Recheck task package ownership, action defaults, supported CLI/license flow and image metadata on owner updates"
+  },
+  "primary_source_sha256": {
+    "setup-android-main.ts": "7fbdb7133722f41cd0abc5c70d0542bc588aa6498f846c87d13d2255497eb60b",
+    "setup-android-action.yml": "a7b8c79f7f9a3bde2e92e43713e3a670372856cabc92afdc11e6c0701b8a95a2",
+    "toolchain-sdk-provider.kt": "496196249621f218f570c6130a050b4e928aecea14c688a50594cf48ffbe879f"
+  },
+  "raw_receipt_sha256": {
+    "baseline-hosted-android.log": "b919c2c7dc104cb5e89f7faf14659126798fccb3e8cecccbc4281eea84a86b1e",
+    "baseline-android-test.log": "7ffd61ae54e05e778fc8db7ac1dc02c05786d6025bc5bb0bc7adbe2a4145d040",
+    "candidate-package-install.log": "2fdcba7e40240fe2f0ca024f6bacf482407666d9aa3fcb960dd433aa71871d9d",
+    "clean-package-install.log": "96f049e4ce9707b7584ac2fff74176d885a18c1cff31287e28e84946cfb1fdc9",
+    "candidate-android-test.log": "4128db9d41cfc3ddc3ba33448481000330d53974faf5d3d1a184642775f6f974",
+    "candidate-android-build.log": "34f213de01011e01a969660341399d0d11c47cbfa2a55d3139ad5e8e38e96c95",
+    "warm-android-build.log": "34f213de01011e01a969660341399d0d11c47cbfa2a55d3139ad5e8e38e96c95",
+    "warm-package-install.log": "96f049e4ce9707b7584ac2fff74176d885a18c1cff31287e28e84946cfb1fdc9",
+    "android-effective-version.log": "02b3e8d525b78a4750a29acb517202dee69ae53224ae3b28fd00d33377d9eb15",
+    "android-install-help-private.log": "839be89326161be1d362cb0b071c859f59ed8cfdb6e808f79cce71098da2c6f4",
+    "delegated-android-test.log": "739933d7c0d47ba34102873313935f142fe0e4a40c32db0d357708c593392847",
+    "delegated-android-build.log": "10664cce07dd79e8ed139b1521b4c0f7b62e2872b1ddb6257e011f6d590340df",
+    "delegated-warm-build.log": "10664cce07dd79e8ed139b1521b4c0f7b62e2872b1ddb6257e011f6d590340df",
+    "hosted-sdk-comparison.json": "8c7d0fd0d42f6fed88a276dc8ae3e73765a0c238f2790a0a5963b581adc17ca5"
+  },
+  "limits": [
+    "Fresh final-source gate and final hosted scope recorded in PR",
+    "No controlled timing/bandwidth or full tooling security clearance claim",
+    "Local copied licenses do not qualify empty-host license acceptance",
+    "Image SDK repair and remaining license call intentionally retained",
+    "Device, emulator, nightly, release and dependency-review tasks require separate qualification"
+  ],
+  "new_risk_acceptance": false,
+  "new_release_age_waiver": false
+}

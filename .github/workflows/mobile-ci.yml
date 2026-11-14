@@ -121,6 +121,8 @@ jobs:
         with:
           bundler-cache: true
       - uses: android-actions/setup-android@v4
+        with:
+          packages: ''
       - name: Run Android and shared tests
         run: ./scripts/ci/run_job.sh android-test
       - name: Upload failure diagnostics
@@ -205,6 +207,8 @@ jobs:
         with:
           bundler-cache: true
       - uses: android-actions/setup-android@v4
+        with:
+          packages: ''
       - name: Build Android debug
         run: ./scripts/ci/run_job.sh android-build-debug
 
