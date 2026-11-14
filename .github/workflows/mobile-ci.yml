@@ -120,13 +120,9 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Provision job-owned Android SDK
-        uses: android-actions/setup-android@v4
-        env:
-          ANDROID_HOME: ${{ runner.temp }}/mobi-android-sdk
-          ANDROID_SDK_ROOT: ${{ runner.temp }}/mobi-android-sdk
+      - uses: android-actions/setup-android@v4
         with:
-          packages: platform-tools cmdline-tools;latest
+          packages: ''
       - name: Run Android and shared tests
         run: ./scripts/ci/run_job.sh android-test
       - name: Upload failure diagnostics
@@ -210,13 +206,9 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Provision job-owned Android SDK
-        uses: android-actions/setup-android@v4
-        env:
-          ANDROID_HOME: ${{ runner.temp }}/mobi-android-sdk
-          ANDROID_SDK_ROOT: ${{ runner.temp }}/mobi-android-sdk
+      - uses: android-actions/setup-android@v4
         with:
-          packages: platform-tools cmdline-tools;latest
+          packages: ''
       - name: Build Android debug
         run: ./scripts/ci/run_job.sh android-build-debug
 
