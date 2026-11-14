@@ -183,7 +183,11 @@ module InventoryTest
     assert(result['modules'].size == 9)
     assert(result['components'].any? { |c| c['name'] == 'org.jetbrains.kotlin:swift-export-embeddable' && c['source'] == 'tools/swift-export/module.yaml' })
     assert(result['resolved_inputs'].map { |r| r['id'].split(':').first }.sort == %w[npm rubygems swift])
-    assert(result['resolved_inputs'].find { |r| r['id'].start_with?('swift:') }['packages'].size == 15)
+    swift = result['resolved_inputs'].find { |r| r['id'].start_with?('swift:') }
+    pins = JSON.parse(File.read(File.join(ROOT, swift.fetch('id').delete_prefix('swift:')))).fetch('pins')
+    expected = pins.map { |pin| [pin.fetch('identity'), pin.fetch('state')['version'], pin.fetch('state').fetch('revision'), pin.fetch('location')] }
+    actual = swift.fetch('packages').map { |package| package.values_at('name', 'version', 'revision', 'repository') }
+    assert(actual.sort == expected.sort, 'Swift inventory must preserve every locked identity, version, revision and repository')
     assert(result['components'].any? { |c| c['name'] == 'Kotlin Toolchain' && c['artifact_sha256'].size == 64 })
     assert(result['components'].any? { |c| c['name'] == 'dev.zacsweers.metro:compiler' && c['ceilings'] == ['<1.2.0'] })
     assert(result['components'].any? { |c| c['source'] == 'quality-tools.json' })

@@ -55,6 +55,10 @@ SwiftSyntax 601.0.1, remain identical. Local frozen resolution succeeds and
 the lockfile stays byte-identical through the normal Debug test build.
 No exclusion, forced module rename or custom lockfile selector is introduced.
 
+The existing inventory contract initially failed because it hard-coded 15 Swift
+packages. It now compares every identity, version, revision and repository with
+the reviewed lockfile. The inventory parser itself needs no change.
+
 ## Behavior qualification and limits
 
 The unchanged baseline is the immediately preceding PR #108 qualification.
