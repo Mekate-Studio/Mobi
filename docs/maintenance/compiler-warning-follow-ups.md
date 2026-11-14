@@ -38,7 +38,7 @@ part of those 52.
 | WARN-06 | 9 generated Swift diagnostics: unreachable defaults (6), ineffective/optional casts (2), unused error (1); generated Native C++ mixed initializer extension (1) | Swift exporter and Kotlin/Native output | Selected upstream output reduces the diagnostics while complete switches and omission controls still behave correctly. Keep the generator/source version and exact before/after warning evidence. |
 | WARN-07 | 1 authored unused `StoreTask?` result in `ios-app/src/iosApp.swift:30`; Android also reports unused `Unit` in `NearbyVehicleMapUiFactory.kt:193` | Explicit discard at the Home UI callback boundary; empty Android no-overlay branch. See [evidence](#warn-07-unused-native-results). | Preserve native lifetime/admission behavior, run both platform test/build gates and require the two targeted authored diagnostics to be absent. |
 | WARN-08 | Android declares lifecycle-runtime-compose 2.9.4 but resolves 2.11.0-beta01 | Circuit 0.34.0 already selects the beta through JetBrains Lifecycle. The direct declaration now matches that selection; see [graph evidence](#warn-08-lifecycle-declaration-alignment). | Before/after main/test compile/runtime graphs preserve selected versions and edges; qualify native lifetime tests and Debug builds. Review a future effective version change separately. |
-| WARN-09 | Android SDK Manager CLI deprecation and missing `cmdline-tools;latest/package.xml` followed by redownload | Runner provisioning / delegated Android bootstrap | Review supported Android CLI/Toolchain integration in a separate script change; qualify cold-runner SDK/license setup and preserve delegated bootstrap. |
+| WARN-09 | Android SDK Manager CLI deprecation and missing `cmdline-tools;latest/package.xml` followed by redownload | Main Android smoke jobs use a job-owned SDK and the action's standard package-registration input; deprecation and other workflows remain open. See [decision and rechecks](#warn-09-job-owned-sdk-metadata). | Qualify cold hosted setup/license flow, no metadata-repair download and warm reuse with actual tests/Debug build. Recheck image-root reuse and supported Android CLI adoption on owner updates; preserve delegated bootstrap. |
 | WARN-10 | 8 authored `Store.withState` reads in `NearbySceneLifetimeTests.swift`; successful CI #595 emitted 48 repeated deprecation annotations | Direct `store.state` reads use the existing `@ObservableState` and pinned TCA API; see [evidence](#warn-10-observable-store-reads-in-lifetime-tests). This is test API maintenance. | Preserve callback rejection and late location/fleet result matrices; run the actual iOS suite on local/hosted compilers and require zero `withState` deprecation diagnostics. |
 | WARN-11 | Redundant `await send(...)` in Nearby's MainActor refresh effect, observed after the ownership migration | The pinned TCA Send API is synchronous on MainActor; use its direct call. See [qualification](#warn-11-mainactor-effect-response). | Preserve the actor contract and response/cancellation/lifetime tests; require the targeted diagnostic to be absent on both supported compilers. |
 
@@ -48,6 +48,29 @@ boundaries explicitly, then qualify upstream-generated changes through the
 Each PR records warning categories/counts before and after, actual behavior checks
 and remaining warnings. New generated-source patches, blanket suppression or
 unqualified Sendable assertions do not close this backlog.
+
+## WARN-09: job-owned SDK metadata
+
+The [2026-11-14 qualification](evidence/2026-11-14-android-sdk-provisioning.md)
+changes only the main Android test/Debug-build setup steps. A clean SDK plus the
+action's documented `cmdline-tools;latest` package installs valid metadata at the
+path Toolchain 0.13.0 requires. Merely requesting the package in an already damaged
+image SDK installed `latest-2` and did not satisfy that path; the failed control
+is retained. No metadata patcher or directory-deletion workaround is added.
+
+The review tradeoff is extra cold provisioning in exchange for job ownership and
+a registered SDK. This does not promise reduced total downloads, cross-job reuse,
+or removal of `sdkmanager` deprecation. Local rehearsals passed 94 tests, Debug
+builds and the warm package operation; copied existing licenses do not establish
+empty-host parity. Final staged/hosted scope belongs in the PR.
+
+On setup-action, CLI/SDK, runner-image and Toolchain updates, try the image SDK
+again and remove the root overrides when cold/warm setup and actual smoke jobs
+reuse valid metadata with unchanged license policy. Remove the explicit package
+input separately when supported setup registers it by default. Qualify native
+Android CLI/license handling before replacing the action's deprecated calls.
+Other workflow surfaces remain unqualified. These are manual checks; WARN-09
+remains open for its remaining components.
 
 ## Separate blocking compiler failure: IOS-16
 

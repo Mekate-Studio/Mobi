@@ -55,6 +55,11 @@ is not approval to adopt, remove architecture, commit, push or publish.
    Keep the deferred #99 infrastructure separate from main. Evaluate supported
    runner candidates, total code/build cost and measured cold/warm behavior;
    record the disposition and missing capabilities in the actual update PR.
+   For setup-action, Android CLI/SDK, runner-image and Toolchain updates, also
+   recheck [WARN-09](compiler-warning-follow-ups.md#warn-09-job-owned-sdk-metadata):
+   qualify image SDK reuse and removal of the private-root/package configuration
+   independently. Preserve package-manager-owned metadata, license handling and
+   delegated Android bootstrap; compare cold setup cost and warm smoke behavior.
 6. Run an unchanged baseline and then the candidate in owned isolated copies.
    Scope caches, databases and simulator resources; exclude ordinary signing
    and provider credentials. Capture commands, exit codes, logs, resolved

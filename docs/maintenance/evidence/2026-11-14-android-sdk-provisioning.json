@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "scope": "WARN-09_main_android_test_and_debug_sdk_provisioning",
+  "base": "7c1aaacfb889d9a654415311cbf9d03b3081725c",
+  "changed_jobs": [
+    "android_test",
+    "android_build"
+  ],
+  "runtime_source_changed": false,
+  "delegated_android_bootstrap_changed": false,
+  "setup_action": "android-actions/setup-android@v4",
+  "sdk_root": "runner.temp/mobi-android-sdk",
+  "action_packages": [
+    "platform-tools",
+    "cmdline-tools;latest"
+  ],
+  "ci_license_policy_changed": false,
+  "local_new_licenses_accepted": false,
+  "local_license_scope": "Copied existing host license receipts; not empty-host license evidence",
+  "phases": {
+    "baseline-android-test": {
+      "exit": 0,
+      "passed_tests": 94,
+      "failed_tests": 0,
+      "missing_metadata_warning": true,
+      "toolchain_commandline_zip_downloads": 1,
+      "log_sha256": "7ffd61ae54e05e778fc8db7ac1dc02c05786d6025bc5bb0bc7adbe2a4145d040"
+    },
+    "candidate-android-test": {
+      "exit": 0,
+      "passed_tests": 94,
+      "failed_tests": 0,
+      "missing_metadata_warning": false,
+      "toolchain_commandline_zip_downloads": 0,
+      "log_sha256": "4128db9d41cfc3ddc3ba33448481000330d53974faf5d3d1a184642775f6f974"
+    },
+    "candidate-android-build": {
+      "exit": 0,
+      "passed_tests": null,
+      "failed_tests": null,
+      "missing_metadata_warning": false,
+      "toolchain_commandline_zip_downloads": 0,
+      "log_sha256": "34f213de01011e01a969660341399d0d11c47cbfa2a55d3139ad5e8e38e96c95"
+    },
+    "warm-android-build": {
+      "exit": 0,
+      "passed_tests": null,
+      "failed_tests": null,
+      "missing_metadata_warning": false,
+      "toolchain_commandline_zip_downloads": 0,
+      "log_sha256": "34f213de01011e01a969660341399d0d11c47cbfa2a55d3139ad5e8e38e96c95"
+    }
+  },
+  "sdk_packages": [
+    {
+      "path": "build-tools;37.0.0",
+      "revision": {
+        "major": "37",
+        "minor": "0",
+        "micro": "0"
+      }
+    },
+    {
+      "path": "cmdline-tools;latest",
+      "revision": {
+        "major": "23",
+        "minor": "0"
+      }
+    },
+    {
+      "path": "platform-tools",
+      "revision": {
+        "major": "37",
+        "minor": "0",
+        "micro": "1"
+      }
+    },
+    {
+      "path": "platforms;android-37.0",
+      "revision": {
+        "major": "2"
+      }
+    }
+  ],
+  "registered_cmdline_metadata_sha256": "28016cdf3d1aa6058655d9a2079b4657d82e5c4e88a16dd93ab149d8e2c26b41",
+  "platform_jar_sha256": "bf1b4387cc7ca94fc6ef684f040d9d16fbf16248e181819f020736ea2053f177",
+  "platform_jars_identical": true,
+  "rejected_existing_sdk_attempt": {
+    "installer_exit": 0,
+    "actual_location": "cmdline-tools/latest-2",
+    "required_latest_metadata_present": false,
+    "source": "candidate-package-install.log",
+    "accepted": false
+  },
+  "warm_package_operation": {
+    "exit": 0,
+    "alternate_directory_warning": false,
+    "required_metadata_present": true
+  },
+  "android_cli_review": {
+    "version": "1.1.16919734",
+    "selected_for_ci": false,
+    "private_android_user_home": true,
+    "bootstrap_source_tools": "22.0",
+    "help_only": true,
+    "deprecation_removed": false
+  },
+  "candidate_elapsed_seconds": [
+    {
+      "phase": "candidate-android-test",
+      "job": "android-test",
+      "exit": 0,
+      "seconds": 37.762
+    },
+    {
+      "phase": "candidate-android-build",
+      "job": "android-build-debug",
+      "exit": 0,
+      "seconds": 27.73
+    },
+    {
+      "phase": "warm-android-build",
+      "job": "android-build-debug",
+      "exit": 0,
+      "seconds": 1.433
+    }
+  ],
+  "disposition": {
+    "metadata_configuration": "candidate_qualified_locally",
+    "sdkmanager_deprecation": "open_upstream",
+    "other_workflows": "not_qualified_in_this_slice",
+    "private_root_retirement": "Requalify runner image root on setup-action, SDK/CLI, runner-image and Toolchain updates",
+    "package_input_retirement": "Remove when supported setup registers required package by default and cold/warm smoke jobs pass"
+  },
+  "tradeoffs": [
+    "Fresh SDK loses image platform/build-tools reuse and adds cold provisioning",
+    "No cross-job SDK cache or total-download/performance improvement claimed",
+    "No metadata writer, directory-deletion rule or custom SDK installer introduced",
+    "Baseline used host tools 23 with removed private XML, not the hosted image tools 16",
+    "Candidate iterations used seeded dependency caches and reused app outputs",
+    "Actual action empty-SDK license flow and final hosted checks recorded in PR",
+    "Nightly, release and dependency-review workflow setup unchanged"
+  ],
+  "primary_source_sha256": {
+    "setup-android-main.ts": "7fbdb7133722f41cd0abc5c70d0542bc588aa6498f846c87d13d2255497eb60b",
+    "setup-android-action.yml": "a7b8c79f7f9a3bde2e92e43713e3a670372856cabc92afdc11e6c0701b8a95a2",
+    "toolchain-sdk-provider.kt": "496196249621f218f570c6130a050b4e928aecea14c688a50594cf48ffbe879f"
+  },
+  "raw_receipt_sha256": {
+    "baseline-hosted-android.log": "b919c2c7dc104cb5e89f7faf14659126798fccb3e8cecccbc4281eea84a86b1e",
+    "baseline-android-test.log": "7ffd61ae54e05e778fc8db7ac1dc02c05786d6025bc5bb0bc7adbe2a4145d040",
+    "candidate-package-install.log": "2fdcba7e40240fe2f0ca024f6bacf482407666d9aa3fcb960dd433aa71871d9d",
+    "clean-package-install.log": "96f049e4ce9707b7584ac2fff74176d885a18c1cff31287e28e84946cfb1fdc9",
+    "candidate-android-test.log": "4128db9d41cfc3ddc3ba33448481000330d53974faf5d3d1a184642775f6f974",
+    "candidate-android-build.log": "34f213de01011e01a969660341399d0d11c47cbfa2a55d3139ad5e8e38e96c95",
+    "warm-android-build.log": "34f213de01011e01a969660341399d0d11c47cbfa2a55d3139ad5e8e38e96c95",
+    "warm-package-install.log": "96f049e4ce9707b7584ac2fff74176d885a18c1cff31287e28e84946cfb1fdc9",
+    "android-effective-version.log": "02b3e8d525b78a4750a29acb517202dee69ae53224ae3b28fd00d33377d9eb15",
+    "android-install-help-private.log": "839be89326161be1d362cb0b071c859f59ed8cfdb6e808f79cce71098da2c6f4"
+  },
+  "new_risk_acceptance": false,
+  "new_release_age_waiver": false,
+  "setup_action_commit": "be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd"
+}

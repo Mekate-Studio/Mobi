@@ -5,6 +5,12 @@ open native/generated/Android warning backlog from the Beta2 integration, with
 ownership and closure checks. Warning cleanup follows the integration/CI repair
 as focused changes; the separate IOS-16 compiler failure remains tracked there.
 
+The [WARN-09 SDK provisioning slice](evidence/2026-11-14-android-sdk-provisioning.md)
+uses the existing setup action with a job-owned SDK and standard package
+registration in the two main Android smoke jobs. Its cold-download cost and
+image-reuse simplification checks are explicit. SDK-manager deprecation and other
+workflows remain open; license policy and delegated Android bootstrap are preserved.
+
 The [exporter OpenTelemetry assessment](evidence/2026-11-13-exporter-opentelemetry-review.md)
 traces the remaining two Moderate IDs to the exporter's runtime dependency and
 separately observes Toolchain's bundled copy. Kotlin's master fix is not in the
