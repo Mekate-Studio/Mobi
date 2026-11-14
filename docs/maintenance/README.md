@@ -1,5 +1,32 @@
 # Quality and dependency maintenance
 
+## Development baseline and follow-ups
+
+The merged app uses generated Swift export for native Home and Nearby, with one
+Kotlin runtime including Shared UI. Toolchain compiles the Kotlin libraries;
+the tracked producer still owns Swift-export generation and assembly. Xcode
+owns native packages, app targets and tests. See
+[ADR 0009](../adr/0009-generated-swift-export-for-native-features.md) and the
+[current tuple and smoke commands](../../README.md#clean-clone-quickstart).
+The hand-maintained iOS Gradle bridge was removed in
+[PR #36](https://github.com/Mekate-Studio/Mobi/pull/36), followed by generated
+Swift-export adoption in [PR #44](https://github.com/Mekate-Studio/Mobi/pull/44).
+Android's delegated Gradle/AGP bootstrap remains.
+
+Use the [interop status and retirement checks](interop-workarounds.md) to
+distinguish active requirements, qualified removals and historical experiments.
+The [cross-platform feature follow-ups](mobile-feature-follow-ups.md) separately
+track native lifecycle behavior, Android counterparts and the deferred Shared
+Home UI-test runner. Draft [PR #99](https://github.com/Mekate-Studio/Mobi/pull/99)
+has not been adopted.
+
+Development/test and unsigned build evidence does not qualify signed delivery;
+credentialed archive/export/TestFlight remains held. Historical risk receipts
+retain their original scope and expiry. Neither a dependency update nor this
+index extends acceptance or establishes repository-wide advisory clearance.
+
+## Recent qualifications and remaining debt
+
 The [compiler warning follow-ups](compiler-warning-follow-ups.md) record the
 open native/generated/Android warning backlog from the Beta2 integration, with
 ownership and closure checks. Warning cleanup follows the integration/CI repair
@@ -22,9 +49,11 @@ The [Robolectric 4.18 qualification](evidence/2026-11-13-robolectric-418-qualifi
 updates the Android test owner to deliver patched Guava and removes the JDK
 package-opening accommodation after paired controls. Native access remains
 necessary. Only two exporter OpenTelemetry Moderate matches remain in the
-captured public graph; broader coverage remains incomplete. This release is
-younger than seven days: qualification does not approve its pending age waiver
-or adoption. The PR records the eventual maintainer decision.
+captured public graph; broader coverage remains incomplete. The maintainer
+[approved the version-specific age waiver](https://github.com/Mekate-Studio/Mobi/pull/104#issuecomment-6866007836)
+and merged [PR #104](https://github.com/Mekate-Studio/Mobi/pull/104). The
+qualification files preserve their original pending-at-capture status; the
+decision does not widen global policy or accept the remaining findings.
 
 The historical [Robolectric 4.17 dependency review](evidence/2026-11-13-robolectric-bc-review.md)
 qualifies the Android test owner's Bouncy Castle update: five named matches,
@@ -33,13 +62,13 @@ and exporter OpenTelemetry findings remain. The review records the required
 test-JDK package access and its AND-01 removal check; it does not clear bundled,
 delegated or application-wide security coverage.
 
-Current baseline: [approved direct iOS development/test/unsigned integration](direct-default-integration.md)
-is merged through PR #35. A separately authorized [physical bridge removal](bridge-removal.md)
-is in progress. Signed delivery remains held and risk acceptance retains its original expiry.
-Historical assessments and proposal receipts below describe their original snapshots;
-they do not override the current direct default or validate this removal source.
-
 ## Historical maintenance slices
+
+The assessments and proposal receipts below describe their original snapshots.
+The [direct-default integration](direct-default-integration.md) records PR #35;
+the later [physical bridge removal](bridge-removal.md) records PR #36. These
+milestones precede generated Swift export and the development tuple linked above.
+Their older bridge defaults, version sets and pending decisions are historical.
 
 Status: slices 1–8 integrated. Slice 7 was committed and pushed as `9d25553`;
 its [measured results](seventh-slice-validation.md) keep bridge upgrades separate
@@ -56,8 +85,8 @@ Its implementation is committed locally as `9f730ef`, with the full pre-commit g
 Slice 10 adds a manual [direct incremental/restoration profile](direct-roundtrip.md).
 Its [validation record](tenth-slice-validation.md) distinguishes implementation
 checks from passing local native incremental/restoration evidence and the
-remaining untested gates. Its original receipt predates integration. The transition ADR remains proposed and
-the retained bridge remains the default.
+remaining untested gates. Its original receipt predates integration; at that
+snapshot the transition ADR was proposed and the retained bridge was the default.
 
 The [retained-bridge adoption review](bridge-adoption-review.md) records a passing
 paired assessment for Kotlin 2.4.20 / Metro 1.4.5 / SKIE 0.10.15. The maintainer
@@ -66,9 +95,10 @@ admission and fresh checks passed, and the pins, bounded ceilings and matching
 maintenance baseline are applied. [Final local validation](bridge-adoption-validation.md)
 passed 204 contracts and all four native pre-commit jobs. Its measurement receipt predates integration; direct-path retirement and Elixir activation remain independent.
 
-Mobi's maintenance workflow starts with reproducible pre-commit checks and uses
-isolated evidence to assess Kotlin Toolchain upgrades. Upgrading the current iOS bridge and retiring it are separate decisions.
-Applicable removal validation and broader production/runtime gates are recorded separately in the current removal record.
+These slices established reproducible pre-commit checks and isolated evidence
+for Kotlin Toolchain upgrades, then separated bridge upgrades from retirement.
+The later removal validation and broader production/runtime gates are recorded
+in the [removal record](bridge-removal.md).
 
 The [Apple Silicon target assessment](apple-silicon-assessment.md) evaluates
 Toolchain 0.12.2 with upstream-supported iOS architectures. It keeps the bridge
