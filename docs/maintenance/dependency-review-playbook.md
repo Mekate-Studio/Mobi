@@ -73,6 +73,40 @@ is not approval to adopt, remove architecture, commit, push or publish.
    Preserve useful sanitized evidence. Do not claim success if cleanup or
    required checks failed; report resource blockers separately.
 
+## Exporter OpenTelemetry owner review
+
+This is a manual review step, not new release discovery, a scripted security
+check or risk acceptance. The [2026-11-13 assessment](evidence/2026-11-13-exporter-opentelemetry-review.md)
+separates the selected exporter's external API dependency, Kotlin compiler
+relocation and Toolchain's independently bundled launcher dependency.
+
+On Kotlin/exporter and Toolchain updates, including every published prerelease:
+
+- Check actual release artifacts against Kotlin's
+  [owner fix](https://github.com/JetBrains/kotlin/commit/41b42792aa1eeac687a69fe34189a7b964d45016).
+  A master change, closed issue or later publication date does not prove the
+  selected exporter POM/JAR contains it. Review the release interval and official
+  Swift-export sources required by the [interop workflow](interop-workarounds.md#required-upstream-source-review).
+- Capture public main/test compile/runtime graphs and inspect delivered bytes.
+  Attribute external, relocated and launcher copies separately. API 1.67.0 is
+  the first reference fixing both currently named findings; review context/common
+  and any other changed transitives as part of the owner's actual graph.
+  Refresh exact advisories and verify affected operations/fixes before claiming
+  remediation. The Toolchain launcher is not covered by the app's Maven roots.
+- Require actual KLib generation without analysis-worker/class-loading failures,
+  native success/error/cancellation/lifetime tests, existing complete/omitted-case
+  controls, one runtime and normal build/gate checks. Temporary class-loading
+  diagnostics can distinguish observed paths; absence is not universal safety.
+- Record each owner as **remediated**, **still affected**, **candidate for
+  qualification** or **incomplete**, with exact release/artifact evidence and
+  input boundaries. Any proposed override/exclusion needs visible compatibility
+  cost, actual consumer checks and a condition for removing it when an owner
+  release supplies the fix. Keep IOS-10's producer-retirement checks separate.
+
+The existing watch does not perform these bundled-byte or call-path checks.
+Do not report them as automated coverage. A passing build or age waiver does not
+accept these findings or rebind older tooling risk receipts.
+
 ## Review packet template
 
 | Field | Required content |

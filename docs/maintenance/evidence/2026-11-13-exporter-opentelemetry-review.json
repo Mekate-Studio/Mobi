@@ -1,0 +1,285 @@
+{
+  "schema": 1,
+  "scope": "exporter_opentelemetry_owner_and_observed_runtime_review",
+  "base": "28d5fb1dc615905b4174cc6ffa1bf4056ebf9d36",
+  "selected": {
+    "kotlin_exporter_native": "2.5.0-RC",
+    "toolchain": "0.13.0",
+    "exporter_api": "1.41.0",
+    "launcher_api": "1.60.1"
+  },
+  "disposition": {
+    "findings": "open",
+    "remediation": "await_qualified_owner_release",
+    "override_proposed": false,
+    "risk_acceptance": false,
+    "adoption_authorized": false,
+    "runtime_source_changed": false
+  },
+  "public_graph": {
+    "modules": 9,
+    "roots": 104,
+    "named_queries": 359,
+    "matches_104_qualified_graph": true,
+    "opentelemetry_roots": [
+      {
+        "module": "swift-export",
+        "usage": "main",
+        "scope": "runtime",
+        "platforms": [
+          "jvm"
+        ]
+      },
+      {
+        "module": "swift-export",
+        "usage": "test",
+        "scope": "runtime",
+        "platforms": [
+          "jvm"
+        ]
+      }
+    ],
+    "old_compile_root_attribution_corrected": true,
+    "fresh_full_advisory_rescan": false
+  },
+  "exact_advisory_queries": {
+    "count": 3,
+    "status": 200,
+    "retrieved_at": "2026-11-13T22:22:54Z",
+    "results": [
+      {
+        "version": "1.41.0",
+        "matches": [
+          "GHSA-ccrj-gw8r-854m",
+          "GHSA-rcgg-9c38-7xpx"
+        ]
+      },
+      {
+        "version": "1.60.1",
+        "matches": [
+          "GHSA-ccrj-gw8r-854m",
+          "GHSA-rcgg-9c38-7xpx"
+        ]
+      },
+      {
+        "version": "1.67.0",
+        "matches": []
+      }
+    ],
+    "full_records": [
+      {
+        "id": "GHSA-ccrj-gw8r-854m",
+        "modified": "2026-10-28T21:15:04.329194019Z",
+        "severity": "MODERATE",
+        "body_sha256": "20166011897b52cd2c579efc4d05679ea38a26c3f891407bcadbb4297b034665"
+      },
+      {
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "modified": "2026-06-09T02:15:07.364273115Z",
+        "severity": "MODERATE",
+        "body_sha256": "fc12ab412dcfb7a81381a7f724f5b99e10fffe52978f36df7f7ad8fd08ef6186"
+      }
+    ]
+  },
+  "inspected_artifacts": [
+    {
+      "name": "swift-export-embeddable-2.5.0-RC.pom",
+      "coordinate": "org.jetbrains.kotlin:swift-export-embeddable:2.5.0-RC",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/swift-export-embeddable/2.5.0-RC/swift-export-embeddable-2.5.0-RC.pom",
+      "sha256": "90b7f35fde3f9d62cd6d8abb9fe90b07231fb9d31fdb99f95c87779a1684ac29",
+      "size": 2557,
+      "published_checksum_algorithm": "sha1"
+    },
+    {
+      "name": "swift-export-embeddable-2.5.0-RC.jar",
+      "coordinate": "org.jetbrains.kotlin:swift-export-embeddable:2.5.0-RC",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/swift-export-embeddable/2.5.0-RC/swift-export-embeddable-2.5.0-RC.jar",
+      "sha256": "9f2c4be874862ab53d8e03bc210cedcfb0a32a8356eac93789974f770d4b2731",
+      "size": 11527103,
+      "published_checksum_algorithm": "sha1"
+    },
+    {
+      "name": "kotlin-compiler-embeddable-2.5.0-RC.pom",
+      "coordinate": "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.5.0-RC",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.5.0-RC/kotlin-compiler-embeddable-2.5.0-RC.pom",
+      "sha256": "86669ecb5fe2c29fd021a789459e87cad910de2598c647ff66855e953c326046",
+      "size": 2460,
+      "published_checksum_algorithm": "sha1"
+    },
+    {
+      "name": "kotlin-compiler-embeddable-2.5.0-RC.jar",
+      "coordinate": "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.5.0-RC",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.5.0-RC/kotlin-compiler-embeddable-2.5.0-RC.jar",
+      "sha256": "86c16fa65ce4e474d2b7b1100c3a26bac1d17c089a66178717190383c3ab2eb2",
+      "size": 59195768,
+      "published_checksum_algorithm": "sha1"
+    },
+    {
+      "name": "opentelemetry-api-1.41.0.pom",
+      "coordinate": "io.opentelemetry:opentelemetry-api:1.41.0",
+      "url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-api/1.41.0/opentelemetry-api-1.41.0.pom",
+      "sha256": "bc1ef0f77b3bd6db0b7a6f1652fdb421698a0e54374504a7419fb1beb4562993",
+      "size": 1779,
+      "published_checksum_algorithm": "sha256"
+    },
+    {
+      "name": "opentelemetry-api-1.41.0.jar",
+      "coordinate": "io.opentelemetry:opentelemetry-api:1.41.0",
+      "url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-api/1.41.0/opentelemetry-api-1.41.0.jar",
+      "sha256": "9336668f388de68a0a2c3e114154febd29db19a7644f27c4eba548f5de852258",
+      "size": 142638,
+      "published_checksum_algorithm": "sha256"
+    },
+    {
+      "name": "opentelemetry-context-1.41.0.pom",
+      "coordinate": "io.opentelemetry:opentelemetry-context:1.41.0",
+      "url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-context/1.41.0/opentelemetry-context-1.41.0.pom",
+      "sha256": "cb3b396259983429594d62e476675cc00bb252c90d314d647a9b56dec23e5526",
+      "size": 1573,
+      "published_checksum_algorithm": "sha256"
+    },
+    {
+      "name": "opentelemetry-context-1.41.0.jar",
+      "coordinate": "io.opentelemetry:opentelemetry-context:1.41.0",
+      "url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-context/1.41.0/opentelemetry-context-1.41.0.jar",
+      "sha256": "5e3432a4464a432abfdab73be7142e516d25a84aa8426fce1192ffb0532faa35",
+      "size": 47252,
+      "published_checksum_algorithm": "sha256"
+    }
+  ],
+  "toolchain_observed_api": {
+    "version": "1.60.1",
+    "sha256": "8e4ea94bbe9b94d823ac6e7dda7c74624659a1352caf0529a07f43f86b6ca0d5",
+    "size": 170144,
+    "published_checksum_url": "https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-api/1.60.1/opentelemetry-api-1.60.1.jar.sha256",
+    "published_sha256_verified": true
+  },
+  "bounded_class_scan": [
+    {
+      "jar": "swift-export-embeddable-2.5.0-RC.jar",
+      "parser_reference_classes": [],
+      "relocated_otel_class_count": 0
+    },
+    {
+      "jar": "opentelemetry-context-1.41.0.jar",
+      "parser_reference_classes": [],
+      "relocated_otel_class_count": 0
+    },
+    {
+      "jar": "opentelemetry-api-1.41.0.jar",
+      "parser_reference_classes": [
+        "io/opentelemetry/api/baggage/propagation/W3CBaggagePropagator.class",
+        "io/opentelemetry/api/trace/propagation/W3CTraceContextPropagator.class"
+      ],
+      "relocated_otel_class_count": 0
+    },
+    {
+      "jar": "kotlin-compiler-embeddable-2.5.0-RC.jar",
+      "parser_reference_classes": [],
+      "relocated_otel_class_count": 94
+    }
+  ],
+  "trace": {
+    "process_logs": 15,
+    "exporter_processes": 1,
+    "exporter_log_sha256": "341921c7571e7276eed5f52183bfc1f204be903e827b9d8c0cacdd8498af590f",
+    "exporter_loaded_otel": [
+      {
+        "class": "org.jetbrains.kotlin.io.opentelemetry.api.trace.Tracer",
+        "source_jar": "kotlin-compiler-embeddable-2.5.0-RC.jar"
+      },
+      {
+        "class": "org.jetbrains.kotlin.io.opentelemetry.api.trace.TracerProvider",
+        "source_jar": "kotlin-compiler-embeddable-2.5.0-RC.jar"
+      },
+      {
+        "class": "org.jetbrains.kotlin.io.opentelemetry.api.trace.DefaultTracerProvider",
+        "source_jar": "kotlin-compiler-embeddable-2.5.0-RC.jar"
+      },
+      {
+        "class": "org.jetbrains.kotlin.io.opentelemetry.api.trace.DefaultTracer",
+        "source_jar": "kotlin-compiler-embeddable-2.5.0-RC.jar"
+      },
+      {
+        "class": "org.jetbrains.kotlin.io.opentelemetry.api.trace.SpanBuilder",
+        "source_jar": "kotlin-compiler-embeddable-2.5.0-RC.jar"
+      }
+    ],
+    "exporter_affected_parsers_loaded": false,
+    "exporter_unshaded_api_loaded": false,
+    "launcher_tracecontext_parser_loaded": true,
+    "positive_control": {
+      "both_parsers_loaded": true,
+      "header_extraction_invoked": false,
+      "log_sha256": "5d9b64326bfde1f16f9b8430c1f76a5716758abe7ef3a50624aca054998a6e83"
+    },
+    "scope_limit": "Observed one successful actual KLib generation; class-load absence is not universal unreachability or risk acceptance. Class names were parsed separately from source paths.",
+    "diagnostics_committed": false
+  },
+  "ios_validation": {
+    "command": "JAVA_TOOL_OPTIONS=<temporary class-loading diagnostics> ./scripts/ci/run_job.sh ios-test",
+    "exit": 0,
+    "test_functions": 79,
+    "failed": 0,
+    "skipped": 0,
+    "complete_switches": 6,
+    "omission_controls_rejected": 6,
+    "kotlin_runtime_images": [
+      "ios-app.debug.dylib"
+    ],
+    "strict_support_retirement_authorized": false,
+    "candidate_version_change": false,
+    "cold_or_performance_claim": false
+  },
+  "owner_fix": {
+    "kotlin_selected_tag_commit": "4eeec3a1fba47a3fbd807dcb0f482535fa8503ce",
+    "kotlin_master_pr": 9547,
+    "kotlin_master_commit": "41b42792aa1eeac687a69fe34189a7b964d45016",
+    "master_api_version": "1.67.0",
+    "published_rc_api_version": "1.41.0",
+    "issue": "KT-91289",
+    "issue_page_retrieved": false,
+    "toolchain_selected_api_version": "1.60.1",
+    "toolchain_main_api_version": "1.66.0",
+    "newer_published_owner_candidate_verified": false,
+    "selected_and_current_swift_export_architecture_execution_docs_identical": true
+  },
+  "primary_source_receipt_sha256": {
+    "rc-catalog.toml": "4860bb1f22f2a1ef5011428c268c2f2cef87cd27015549b90b3968aa0f72b4e3",
+    "rc-exporter-build.gradle.kts": "2ec06aafcc9080e5b1b089aa6b2f79d54504a99fa30a16a0262768a1c1ce2e6e",
+    "rc-telemetry-provider.kt": "0bed16df5e6c8f1f6f70a959b9a22189bfd229e00dc92d8f2ee540cceadb3fa2",
+    "rc-statistics-service.kt": "54dd099045ff93b41b1b7af757ba336ff05d06a996298eae45326446de6af020",
+    "kotlin-owner-fix.json": "23d5ba21525d77dca428e931fc78bdba4a0d3587fc37daeaecdb474b994e490f",
+    "toolchain-telemetry-environment.kt": "6a64c4a9f308f12634cb0da277ba1742fb079173099f4f73ecae95399113cf0d",
+    "toolchain-child-telemetry.kt": "20d3e51ab51b0be55581e7977f81db137790962783516fbd812c0a2da8bff31c",
+    "toolchain-telemetry-setup.kt": "e5d61c2c0326d52e9fae2e95a9fe1db5d130cca299dc1e1fa73954452212f136",
+    "toolchain-013-catalog.toml": "386812ef2b21d1c125ba1eed9a47b8aefbe1501cda1277a4e9a1fc97374fa72b",
+    "kotlin-release-list.json": "357760ee4d418ec6a94f22ce547d83f7bd4ca59ecef4f6803119d917bc5a84e4",
+    "toolchain-release-list.json": "fa926c2b5e912563cbc49b29f86a61606a72c6b210543f5d578453a696282e96",
+    "kotlin-current-catalog.toml": "5f49e661ed6b65caa1e97628bcc538d9829b81dd8c30f7f8ab170a531fefd6c5",
+    "toolchain-current-catalog.toml": "e8687cf34a2b487f0c7d4cbba5eb30d6eb5a10faa002a0bcc0767464c977a73d"
+  },
+  "raw_receipt_sha256": {
+    "dependencies.log": "95a5724ca7e4d444f4f895cc2cecd884f518d5ac22e2f951c1e3eca5c20312a5",
+    "settings.log": "973b7078a2aa5e097b73056aba0c27aa49a1345c8f4b5176c47cdee43bf32d51",
+    "resolved-graphs.json": "c18f1c1b293aaf12a2f585d9d5dfc0e4d0533f09551b6f0cbead6f32c191612c",
+    "effective-settings.json": "cb73a03f59c1387f90c72e38d1bdcb2767fc0080d14d2adcc8731af661cd6050",
+    "advisory-queries.json": "cc406c6fc3c5371b43345c971df936858ebcfaca279134ab4a83fd74fac98c91",
+    "osv-versions.json": "e078b4eb29c82268feecdb84ce0a40a852214aa3f6b9baf0670cb6eb3f132bfe",
+    "osv-records.json": "eace6e1ff937e182532b44315443a0159bad73a04c36712cee2d0008838e3610",
+    "ios-test.log": "fa50f98c52210f8d0ff1821e0308754c998f3a2a211afea5b33ba8ba5fa4f257",
+    "native-test-summary.json": "1a6080c8e1f3b8638d593e741dc736b7cfea381b2e83701190450195a9567584",
+    "compile-contract-report.json": "48649398f1f3c1eda269698a90d5b766ddb6c3dbaccb61180ba1f338f8a3941b",
+    "classload-summary.json": "ab6ddc5f311d5e45f242d179f57af7e3f68ab32e0c88408e94740a43e5574aff",
+    "parser-positive-control.log": "5d9b64326bfde1f16f9b8430c1f76a5716758abe7ef3a50624aca054998a6e83",
+    "artifact-class-scan.json": "a23c387ddad19e687a0f16001cd5b91107630e3510dd90de3606f527a94f848e"
+  },
+  "limits": [
+    "Not a complete bundled/shaded/Native/Gradle inventory or application package absence proof",
+    "No malicious-header/parent-context extraction or denial-of-service test",
+    "No universal unreachability claim for arbitrary SDK/plugin/environment configurations",
+    "Current master/reference fix is not a qualified selected dependency update",
+    "No historical risk receipt renewed or rebound; no age/severity policy changed",
+    "Future final source/hosted checks are recorded in the review PR"
+  ]
+}
