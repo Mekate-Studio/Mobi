@@ -102,8 +102,10 @@ Swift-export producer for generated native Home/Nearby APIs. Xcode owns the app,
 native packages, tests and unsigned builds; one Kotlin archive also contains Shared UI. Gradle/unknown
 iOS builder overrides refuse; rollback restores complete content first.
 Credentialed iOS archive/export/TestFlight lanes are held pending separate
-signed-delivery evidence and authorization. The bridge has a separate removal change; complete published Git revisions
-preserve content rollback. See the [integration decision and trade-offs](docs/adr/0009-generated-swift-export-for-native-features.md).
+signed-delivery evidence and authorization. The hand-maintained iOS Gradle bridge
+was removed in [PR #36](https://github.com/Mekate-Studio/Mobi/pull/36); complete
+published Git revisions preserve content rollback. See the
+[integration decision and trade-offs](docs/adr/0009-generated-swift-export-for-native-features.md).
 
 ## Repository Shape
 
@@ -183,13 +185,20 @@ Renovate can manage them through its native Swift Package Manager support.
 Enable the Renovate GitHub App for hosted pull requests, or point a
 self-hosted Renovate runner at this repository.
 Metro runtime/compiler and Kotlin coroutines updates are grouped across Kotlin
-Toolchain modules. Reviewed ceilings remain Metro <=1.4.5 and Kotlin <=2.4.20.
-Toolchain 0.13.0 supplies Kotlin 2.4.20 and Compose 1.12.1. Android builds can
-still delegate to generated Gradle/AGP projects; the hand-maintained iOS bridge
-is removed separately. The scheduled compatibility watch measures the current
-direct mobile baseline and reports bounded release discovery and missing
-capabilities without adoption permission. Historical bridge receipts and
-contract fixtures retain their original scope. See the
+Toolchain modules. The checked-in Renovate ceilings remain Metro <=1.4.5 and
+Kotlin <=2.4.20. These limits on automated update proposals are separate from
+the explicitly selected development tuple above: Kotlin 2.5.0-RC, its matching
+exporter and Metro 1.5.0. Toolchain 0.13.0's defaults are Kotlin 2.4.20 and
+Compose 1.12.1; the app explicitly overrides the Kotlin version. The
+[RC qualification and merged review](https://github.com/Mekate-Studio/Mobi/pull/102)
+record that selection without widening Renovate's limits or global age policy.
+
+The scheduled [compatibility watch](docs/maintenance/compatibility-watch.md)
+measures the direct mobile baseline and reports bounded release discovery,
+including published prereleases, and missing capabilities. Discovery does not
+authorize adoption. Android builds retain Toolchain's delegated Gradle/AGP
+bootstrap; the hand-maintained iOS bridge is retired. Historical bridge receipts
+and contract fixtures retain their original scope. See the
 [removal and recovery record](docs/maintenance/bridge-removal.md).
 
 Install the pinned discovery tools once, then record a local inventory:
