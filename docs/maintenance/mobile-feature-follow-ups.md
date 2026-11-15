@@ -282,6 +282,17 @@ restoration remain unqualified. Optional Shared Home stays separate. The native
 task owner joins MOB-08; this introduces no Swift-export workaround or dependency
 version change. Runtime code cost is 20 net lines, including one task handle.
 
+The reader's cancellation checks distinguish a pending read from value delivery.
+The pending fixture signals inside an unfolding read before calling the inner
+iterator's `next()`, which observes cancellation even if it arrives before that
+call suspends. Signalling after a mapped element did not establish a pending
+read: the reader could correctly return through its cancellation guard while
+the test retained the stream and waited for an unpromised termination callback.
+A separate check rejects a meaningful value delivered after cancellation.
+Both keep their one-minute limits; production reader code is unchanged. These
+injected-sequence checks do not qualify OS location delivery or the historical
+SwiftUI timer flake.
+
 MOB-06's Home tab ownership now follows [ADR 0018](../adr/0018-ios-home-tab-refresh-lifetime.md):
 deselection cancels the existing owned task and restores the exact prior native
 state; return preserves it without fetching and permits manual retry. The

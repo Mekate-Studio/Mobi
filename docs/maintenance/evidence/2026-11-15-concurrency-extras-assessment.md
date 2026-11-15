@@ -24,7 +24,8 @@ with no new Mobi feature code, native adapter or local compiler exception.
 
 ## Package and compiler cost
 
-Only the existing exact declaration and Concurrency Extras lock pin change.
+The package update changes only the existing exact declaration and Concurrency
+Extras lock pin. The independent test prerequisite is described below.
 Xcode 27.2 / Swift 6.4.2 resolves 16 remote pins with the other 15 identical;
 frozen resolution succeeds. Both the old versioned manifest and the candidate's
 default manifest select tools version 6.0 locally. The candidate adds six
@@ -47,7 +48,8 @@ native gates and [CI #719](https://github.com/Mekate-Studio/Mobi/actions/runs/43
 The local Xcode 27.2 / Swift 6.4.2 / JDK 25 tuple is unchanged. This reuses the
 recorded baseline; it is not a newly executed baseline run.
 
-The candidate passes all 79 native test functions with zero failures/skips.
+Before the fixture repair below, the candidate passed all 79 native test
+functions locally with zero failures/skips.
 All five unchanged timer scenarios pass five configured iterations: 25 observed
 executions, retaining their one-minute limits and assertions, without retry-on-
 failure or scheduler-count overrides. These are not independent cold launches
@@ -56,6 +58,27 @@ pass. The successful Debug warning snapshot remains 29 file/line emissions at
 27 distinct locations after normalizing checkout/generated temporary paths;
 the existing warning backlog stays open. Release and final staged/hosted results
 are recorded in the review PR.
+
+The [first hosted attempt](https://github.com/Mekate-Studio/Mobi/actions/runs/43693564346)
+passed 78 functions; `shouldStopConsumingLocationOnCancellation()` exceeded its
+unchanged one-minute limit. Its mapped-element signal did not establish a
+pending read: the production guard could correctly return `nil` while the test
+retained the stream and waited for an unpromised termination callback. This is
+not attributed to Concurrency Extras or the separate historical timer flake.
+
+[PR #112](https://github.com/Mekate-Studio/Mobi/pull/112), commit
+`2bdcdfce12a2b300879a7382ab0f5fe19c98907c`, repairs coordination and separately
+tests a value delivered after cancellation. On the unchanged 1.3.2 pin, forcing
+the old map-to-guard window while retaining the stream reproduces the timeout;
+the repaired cases pass 20 configured executions, and two deliberate assertion
+controls fail. Its normal staged gate passes all 80 native functions. This is a
+controlled schedule, not a naturally reproduced unchanged baseline run.
+Production code, dependencies and time limits are unchanged in that prerequisite.
+The package branch carries the exact repair commit for requalification; review
+and merge #112 first. On 1.4.3, the repaired cases also pass 20 configured
+executions, and all five unchanged timer cases pass another 25 executions.
+Final staged and hosted results for the combined candidate are recorded in #111,
+retaining the failed first attempt.
 
 **IOS-13: retained.** The actual `MainSerialExecutor.swift` bytes are unchanged.
 The serialized suite and whole-scenario executor scopes remain; task-local test
