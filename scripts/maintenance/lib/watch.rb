@@ -118,15 +118,16 @@ module Maintenance
                '| Capability | Result |', '| --- | --- |']
       observation.fetch('matrix').sort.each { |key, value| lines << '| `' + key + '` | `' + value + '` |' }
       lines += ['', 'Prereleases are experimental review leads; they do not change the reviewed candidate or run its retirement checks.',
-                '', '| Release provider | Status | Newer releases observed |', '| --- | --- | --- |']
+                '', '| Release provider | Status | Reviewed version | Newer releases observed | Manual reviews requested |', '| --- | --- | --- | --- | --- |']
       observation.fetch('releases').sort.each do |name, provider|
         versions = provider.fetch('newer', []).map do |release|
           channel = release.fetch('channel', 'stable') == 'prerelease' ? 'experimental prerelease' : 'stable'
           release['version'] + ' (' + channel + ', ' + release['age_state'] + ')'
         end.join(', ')
         finding = provider['state'] == 'observed' ? (versions.empty? ? 'None observed in this bounded response' : versions) : 'Unknown: provider evidence is incomplete'
-        lines << '| ' + name + ' | `' + provider['state'] + '` | ' + finding + ' |'
+        lines << '| ' + name + ' | `' + provider['state'] + '` | `' + (provider['reviewed_version'] || 'unknown') + '` | ' + finding + ' | ' + provider.fetch('review_requests', []).join(', ') + ' |'
       end
+      lines += ['', 'Native release leads request manual reviews: [IOS-13 timer/executor checks](https://github.com/Mekate-Studio/Mobi/blob/main/docs/maintenance/interop-workarounds.md) and [MOB-08 lifetime-owner checks](https://github.com/Mekate-Studio/Mobi/blob/main/docs/maintenance/mobile-feature-follow-ups.md#mob-08-home-scene-task-ownership-simplification). No retirement check ran or removal was authorized.']
       observations = observation.fetch('capability_observations', [])
       unless observations.empty?
         lines += ['', '| Upstream capability observation | Scope | Evidence state |', '| --- | --- | --- |']

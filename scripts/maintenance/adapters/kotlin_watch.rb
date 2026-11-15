@@ -6,22 +6,31 @@ require_relative '../lib/compatibility_report'
 require 'rubygems/version'
 
 module Maintenance
-  class KotlinReleaseWatch
+  class ReleaseWatch
     REPOSITORIES = { 'toolchain' => 'JetBrains/kotlin-toolchain', 'kotlin' => 'JetBrains/kotlin', 'metro' => 'ZacSweers/metro', 'skie' => 'touchlab/SKIE' }.freeze
+    SWIFT_PACKAGES = { 'tca' => 'swift-composable-architecture', 'clocks' => 'swift-clocks', 'concurrency_extras' => 'swift-concurrency-extras' }.freeze
+    REVIEW_TARGETS = { 'tca' => %w[IOS-13 MOB-08], 'clocks' => ['IOS-13'], 'concurrency_extras' => ['IOS-13'] }.freeze
+    SWIFT_LOCK = 'ios-app/module.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved'
 
     def initialize(fetcher: WatchHTTP.new, now: Time.now.utc, token: nil)
       @fetcher, @now, @token = fetcher, now, token
     end
 
-    def discover(config, direct: false)
+    def discover(config, direct: false, source: nil)
       pins = { 'toolchain' => config['toolchain'] }.merge(config['candidate']['releases'].transform_values { |r| r['version'] })
-      REPOSITORIES.reject { |name, _| direct && name == 'skie' }.to_h do |name, repository|
+      repositories = REPOSITORIES.reject { |name, _| direct && name == 'skie' }
+      if source
+        repositories.merge!(SWIFT_PACKAGES.transform_values { |identity| 'pointfreeco/' + identity })
+        pins.merge!(swift_versions(source))
+      end
+      repositories.to_h do |name, repository|
         url = 'https://api.github.com/repos/' + repository + '/releases?per_page=30'
-        source = { 'url' => url, 'retrieved_at' => @now.iso8601 }
+        provider_source = { 'url' => url, 'retrieved_at' => @now.iso8601 }
         begin
+          raise Failure, 'reviewed_pin_unavailable' unless pins[name]
           response = @fetcher.get(url, token: @token)
           raise Failure, 'provider_evidence_mismatch' unless response['url'] == url && response['sha256'] == Digest::SHA256.hexdigest(response.fetch('body')) && Time.iso8601(response.fetch('retrieved_at')) <= Time.now.utc
-          source = response.slice('url', 'retrieved_at', 'sha256', 'transport_sha256')
+          provider_source = response.slice('url', 'retrieved_at', 'sha256', 'transport_sha256')
           data = JSON.parse(response.fetch('body'))
           raise Failure, 'provider_invalid_response' unless data.is_a?(Array) && !data.empty? && data.size <= 30
           newer = data.filter_map do |release|
@@ -41,14 +50,35 @@ module Maintenance
           end
           newer.sort_by! { |r| Gem::Version.new(r['version'].downcase) }
           value = { 'state' => 'observed', 'reviewed_version' => pins[name], 'newer' => newer.uniq,
-                    'coverage' => 'first_30_release_records_not_full_interval', 'source' => source }
+                    'coverage' => 'first_30_release_records_not_full_interval', 'source' => provider_source }
         rescue Failure, JSON::ParserError, KeyError, ArgumentError, NoMethodError, TypeError => error
           reason = error.is_a?(Failure) ? error.message : 'provider_malformed_data'
           value = { 'state' => 'incomplete', 'reviewed_version' => pins[name], 'reason' => reason, 'newer' => [],
-                    'source' => source }
+                    'source' => provider_source }
+        end
+        if REVIEW_TARGETS.key?(name)
+          value['review_requests'] = value['newer'].any? { |release| release['age_state'] == 'eligible_for_review' } ? REVIEW_TARGETS.fetch(name) : []
         end
         [name, value]
       end
+    end
+
+    def swift_versions(source)
+      return {} unless source.files.key?(SWIFT_LOCK)
+      lock = JSON.parse(File.read(File.join(source.root, SWIFT_LOCK)))
+      return {} unless lock['version'] == 3 && lock['pins'].is_a?(Array)
+      SWIFT_PACKAGES.filter_map do |name, identity|
+        matches = lock['pins'].select { |pin| pin.is_a?(Hash) && pin['identity'] == identity }
+        next unless matches.size == 1
+        pin = matches.first
+        next unless pin['kind'] == 'remoteSourceControl' && pin['location'].to_s.sub(/\.git$/, '') == 'https://github.com/pointfreeco/' + identity
+        state = pin['state']
+        next unless state.is_a?(Hash) && state['revision'].is_a?(String) && state['revision'].match?(/\A(?:[0-9a-f]{40}|[0-9a-f]{64})\z/)
+        version = state['version']
+        [name, version] if version.is_a?(String) && version.match?(/\A\d+\.\d+\.\d+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?\z/)
+      end.to_h
+    rescue JSON::ParserError, TypeError, NoMethodError
+      {}
     end
   end
 
@@ -99,7 +129,7 @@ module Maintenance
       source = Source.new(@root); adapter = Compatibility.new(@root, now: @now)
       assessment = adapter.assessment(source)
       direct = !source.files.key?(Compatibility::CATALOG)
-      releases = KotlinReleaseWatch.new(fetcher: @fetcher, now: @now, token: @token).discover(adapter.config, direct: direct)
+      releases = ReleaseWatch.new(fetcher: @fetcher, now: @now, token: @token).discover(adapter.config, direct: direct, source: source)
       RunStore.atomic(File.join(@output, 'discovery.json'), releases)
       workarounds = InteropWorkarounds.observe(@root, releases: releases, source_files: source.files)
       RunStore.atomic(File.join(@output, 'workarounds.json'), workarounds)
