@@ -42,20 +42,37 @@ extension NativeFeatureTests.NearbyVehicleMapFeatureTests {
         let ended = AsyncStream<Void>.makeStream()
         var starts = started.stream.makeAsyncIterator()
         var endings = ended.stream.makeAsyncIterator()
-        let updates = AsyncStream<LocationResult?> { continuation in
-            continuation.onTermination = { _ in ended.continuation.yield(()) }
-            continuation.yield(nil)
-        }.map { result in
-            started.continuation.yield(())
-            return result
+        let pending = AsyncStream<LocationResult?>.makeStream()
+        pending.continuation.onTermination = { _ in ended.continuation.yield(()) }
+        defer {
+            pending.continuation.finish()
+            started.continuation.finish()
+            ended.continuation.finish()
         }
+        // Signal inside the pending read so cancellation cannot bypass its next().
+        let updates = AsyncStream<LocationResult?>(unfolding: {
+            started.continuation.yield(())
+            var iterator = pending.stream.makeAsyncIterator()
+            return await iterator.next()
+        })
         let task = Task { await NearbyVehicleMapLocationClient.firstResult(in: updates) }
         _ = await starts.next()
         task.cancel()
         #expect(await task.value == nil)
         _ = await endings.next()
-        started.continuation.finish()
-        ended.continuation.finish()
+    }
+
+    @Test("should reject a location delivered after cancellation", .timeLimit(.minutes(1)))
+    func shouldRejectLocationDeliveredAfterCancellation() async {
+        let updates = AsyncStream<LocationResult?> { continuation in
+            continuation.yield(LocationResult.precise(latitude: 55, longitude: 12))
+            continuation.finish()
+        }.map { result in
+            withUnsafeCurrentTask { $0?.cancel() }
+            return result
+        }
+        let task = Task { await NearbyVehicleMapLocationClient.firstResult(in: updates) }
+        #expect(await task.value == nil)
     }
 
     @Test("should use existing temporary failure when location sequence fails or ends", arguments: [false, true])
