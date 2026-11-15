@@ -27,6 +27,12 @@ index extends acceptance or establishes repository-wide advisory clearance.
 
 ## Recent qualifications and remaining debt
 
+The [Concurrency Extras assessment](evidence/2026-11-15-concurrency-extras-assessment.md)
+reviews 1.4.3 against the actual native consumers and compiler profile. It keeps
+the optional test-support product unlinked and records IOS-13/MOB-08 as retained;
+the executor hook is unchanged. Final staged and hosted results belong to the
+review PR. This is library maintenance, not closure of the historical timer flake.
+
 The [TCA/reporting-package assessment](evidence/2026-11-14-tca-reporting-assessment.md)
 reviews TCA 1.26.2 together with compatibility package 1.13.1 and canonical
 IssueReporting 2.1.2. The Swift 6.4 graph resolves without custom module glue;
