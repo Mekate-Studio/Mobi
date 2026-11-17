@@ -376,7 +376,7 @@
       "id": "IOS-13",
       "scope": "default",
       "title": "Serialized native feature tests",
-      "reason": "The pinned TCA TestStore installs and restores a process-wide executor hook. Concurrent store lifetimes make these tests depend on shared scheduler state. The five timer scenarios scope SwiftUI host creation, TestClock 1.0.6 advances and cleanup with the existing withMainSerialExecutor API; active renders also check that a clock sleep is scheduled. This keeps task creation inside the documented executor scope but does not prove the cause of the historical removal/reentry flake. The parent suite stays serialized so these global scopes do not overlap. See docs/maintenance/evidence/2026-11-14-nearby-timer-readiness.md.",
+      "reason": "The pinned TCA TestStore installs and restores a process-wide executor hook. Concurrent store lifetimes make these tests depend on shared scheduler state. The five timer scenarios scope SwiftUI host creation, pinned TestClock advances and cleanup with the existing withMainSerialExecutor API; active renders also check that a clock sleep is scheduled. This keeps task creation inside the documented executor scope but does not prove the cause of the historical removal/reentry flake. The parent suite stays serialized so these global scopes do not overlap. See docs/maintenance/evidence/2026-11-14-nearby-timer-readiness.md and docs/maintenance/evidence/2026-11-15-clocks-assessment.md.",
       "paths": [
         "ios-app/tests/NativeFeatureTests.swift",
         "ios-app/tests/Features/Home/HomeFeatureTests.swift",

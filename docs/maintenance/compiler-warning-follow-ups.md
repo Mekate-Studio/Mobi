@@ -23,7 +23,7 @@ ownership; generated-code warnings are not authored-code warnings.
 
 The WARN-01 through WARN-09 counts below partition those 52 diagnostics. Android
 warnings are additional examples from the same commit's build/test jobs, outside
-that count. WARN-10 and WARN-11 come from later successful builds and are not
+that count. WARN-10 through WARN-12 come from later successful builds and are not
 part of those 52.
 
 ## Follow-up slices
@@ -41,6 +41,7 @@ part of those 52.
 | WARN-09 | Android SDK Manager CLI deprecation and missing `cmdline-tools;latest/package.xml` followed by redownload | Main Android smoke jobs skip the action's redundant default package install; Toolchain owns required SDK packages. License-call deprecation, metadata repair and other workflows remain open. See [decision and rechecks](#warn-09-sdk-package-ownership). | Qualify actual cold/warm SDK provisioning, license handling, tests/Debug build and remaining diagnostics. Recheck supported action/CLI/Toolchain behavior on updates; preserve delegated bootstrap. |
 | WARN-10 | 8 authored `Store.withState` reads in `NearbySceneLifetimeTests.swift`; successful CI #595 emitted 48 repeated deprecation annotations | Direct `store.state` reads use the existing `@ObservableState` and pinned TCA API; see [evidence](#warn-10-observable-store-reads-in-lifetime-tests). This is test API maintenance. | Preserve callback rejection and late location/fleet result matrices; run the actual iOS suite on local/hosted compilers and require zero `withState` deprecation diagnostics. |
 | WARN-11 | Redundant `await send(...)` in Nearby's MainActor refresh effect, observed after the ownership migration | The pinned TCA Send API is synchronous on MainActor; use its direct call. See [qualification](#warn-11-mainactor-effect-response). | Preserve the actor contract and response/cancellation/lifetime tests; require the targeted diagnostic to be absent on both supported compilers. |
+| WARN-12 | 20 package-framework linker diagnostics report a macOS 27 sysroot while targeting the iOS simulator in an inspection-prepared local native build | Swift/Xcode package-framework linking; see [Clocks qualification](evidence/2026-11-15-clocks-assessment.md). A fresh baseline Debug build passes without these diagnostics; cause and attribution remain unqualified. | On Swift/Xcode updates, compare normal fresh and inspection-prepared builds, inspect effective SDK/linker inputs, and retain native/link/runtime checks. A warning suppression or SDK override is not closure. |
 
 Start with small owned-source and dependency-alignment slices; review concurrency
 boundaries explicitly, then qualify upstream-generated changes through the
@@ -71,6 +72,18 @@ and actual cold/warm smoke jobs pass with unchanged license policy. The license
 call's deprecation and image metadata repair remain independent open checks.
 Other workflows/device tasks need their own qualification. These are manual
 review checks; this is not blanket WARN-09 closure or automated discovery.
+
+## WARN-12: package-framework linker diagnostics
+
+Recorded 2026-11-15 with Xcode 27.2 / Swift 6.4.2. The local Clocks candidate's
+inspection-prepared native run passes 80 tests but emits 20
+`-Wincompatible-sysroot` package-framework diagnostics. These have no source
+line/column and are additional to the unchanged 29 file/line emissions at 27
+distinct locations. A fresh baseline Debug build passes without them. That
+comparison does not isolate the cause or prove a dependency regression.
+Final fresh staged and hosted observations belong to the Clocks review PR.
+Preserve the original diagnostics; no suppression, SDK override or local build
+workaround is introduced. Other warning categories remain independent.
 
 ## Separate blocking compiler failure: IOS-16
 
