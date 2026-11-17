@@ -27,6 +27,12 @@ index extends acceptance or establishes repository-wide advisory clearance.
 
 ## Recent qualifications and remaining debt
 
+The [Swift Clocks assessment](evidence/2026-11-15-clocks-assessment.md) reviews
+1.1.1's actual compiler-specific graph and unchanged timer scenarios. It retains
+IOS-13, records the IssueReporting edge change without new local pins, and keeps
+the historical timer flake open. Fresh staged/hosted results belong to the review
+PR; package-framework linker diagnostics remain a separate warning follow-up.
+
 The [Concurrency Extras assessment](evidence/2026-11-15-concurrency-extras-assessment.md)
 reviews 1.4.3 against the actual native consumers and compiler profile. It keeps
 the optional test-support product unlinked and records IOS-13/MOB-08 as retained;
