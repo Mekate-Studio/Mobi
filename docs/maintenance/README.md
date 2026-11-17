@@ -27,6 +27,12 @@ index extends acceptance or establishes repository-wide advisory clearance.
 
 ## Recent qualifications and remaining debt
 
+The [Toolchain 0.14.0 source assessment](evidence/2026-11-17-toolchain-014-assessment.md)
+identifies a candidate for isolated qualification, not adoption. It records the
+producer's exact-version guard, changed Gradle ownership assumptions, bounded
+catalog advisory observations and a release-specific early-qualification decision.
+IOS-10 and the Shared Home UI-test gap remain; production selection is unchanged.
+
 The [Swift Clocks assessment](evidence/2026-11-15-clocks-assessment.md) reviews
 1.1.1's actual compiler-specific graph and unchanged timer scenarios. It retains
 IOS-13, records the IssueReporting edge change without new local pins, and keeps
