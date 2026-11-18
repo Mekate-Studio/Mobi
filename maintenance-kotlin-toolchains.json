@@ -1,8 +1,10 @@
 {
   "schema": 1,
-  "reviewed_on": "2026-10-04",
+  "reviewed_on": "2026-11-18",
   "baseline": "0.13.0",
-  "candidates": [],
+  "candidates": [
+    "0.14.0"
+  ],
   "versions": {
     "0.11.1": {
       "release_url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.11.1",
@@ -52,6 +54,23 @@
         "kotlin.bat": {
           "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.13.0/kotlin-cli-0.13.0-wrapper.bat",
           "sha256": "a83763d91ca43d9906e92e90aa6b93caeacc32b202343b61594e94de2d506dd8"
+        }
+      }
+    },
+    "0.14.0": {
+      "release_url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.14.0",
+      "published_at": "2026-11-16T14:49:08Z",
+      "release_api": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/tags/v0.14.0",
+      "release_response_sha256": "868e7aaca5507e5d169c25ef7f9151e0048576cb2d9d9c0c816bd4f79a6e5769",
+      "distribution_sha256": "69112cebc1fdb14c92a213244182d0834896e71b3d9411b8e8c18540da2884a6",
+      "wrappers": {
+        "kotlin": {
+          "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.14.0/kotlin-cli-0.14.0-wrapper",
+          "sha256": "855436c4b4222f57c561e7bfe2f7f223bd72710d0f52a101883434ecbf05b089"
+        },
+        "kotlin.bat": {
+          "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.14.0/kotlin-cli-0.14.0-wrapper.bat",
+          "sha256": "70cbbe654418987c58a3b7d9e39f73a394b71852cb8d61d63ce1ebf7e997db20"
         }
       }
     }

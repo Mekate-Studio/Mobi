@@ -40,7 +40,7 @@ module ValidationTest
     File.exist?(path) ? File.readlines(path).map { |line| JSON.parse(line) } : []
   end
 
-  def self.gradle_fixture(log, versions: %w[8.14.3], action: '')
+  def self.gradle_fixture(log, versions: %w[8.14.3], action: '', toolchain_cache: false)
     launcher = "#!#{QualityTest::RUBY}\nrequire 'json'\n" + <<~RUBY
       File.open(#{log.inspect}, 'a') { |file| file.puts JSON.generate('args' => ARGV, 'env' => ENV.to_h, 'pid' => Process.pid, 'cwd' => Dir.pwd, 'launcher' => $PROGRAM_NAME) }
       #{action}
@@ -51,6 +51,7 @@ module ValidationTest
         home = ENV.fetch('GRADLE_USER_HOME')
         FileUtils.mkdir_p(File.join(home, 'daemon', version))
         launcher = File.join(home, 'wrapper/dists', "gradle-\#{version}-bin/fixture/gradle-\#{version}/bin/gradle")
+        launcher = File.join(Dir.pwd, '.kotlin-user-home/Library/Caches/JetBrains/Kotlin/extract.cache', "fixture-gradle-\#{version}-bin.zip.123abc.d/bin/gradle") if #{toolchain_cache.inspect}
         FileUtils.mkdir_p(File.dirname(launcher))
         File.write(launcher, #{launcher.inspect})
         File.chmod(0755, launcher)
@@ -313,6 +314,17 @@ module ValidationTest
     assert(File.read(File.join(caller_home, 'sentinel')) == 'preserve', 'caller Gradle home changed')
   end
 
+  test('shutdown finds the root-stripped Toolchain distribution inside the owned snapshot') do |f|
+    shutdown_log = File.join(File.dirname(f.root), 'shutdown.jsonl')
+    log = base(f, gradle_fixture(shutdown_log, versions: ['9.8.0'], toolchain_cache: true))
+    ok, output = f.run('./scripts/dev/check.sh')
+    assert(ok && output.include?('stopping-gradle=9.8.0'), output)
+    records = jobs(shutdown_log)
+    assert(records.size == 1 && records.first['launcher'].include?('/extract.cache/'), records.inspect)
+    assert(records.first['args'] == ['--gradle-user-home', records.first['env']['GRADLE_USER_HOME'], '--offline', '--stop'], records.inspect)
+    assert(!Dir.exist?(jobs(log).first['cwd']), 'copy leaked')
+  end
+
   test('shutdown failure retains the owned workspace and cannot report success') do |f|
     shutdown_log = File.join(File.dirname(f.root), 'shutdown.jsonl')
     log = base(f, gradle_fixture(shutdown_log, action: 'exit 17'))
@@ -351,7 +363,7 @@ module ValidationTest
     path_gradle = File.join(f.env.fetch('PATH').split(':').first, 'gradle')
     File.write(path_gradle, "#!#{QualityTest::RUBY}\nFile.write(#{shutdown_log.inspect}, 'forbidden')\n")
     File.chmod(0755, path_gradle)
-    %w[missing symlink].each do |kind|
+    %w[missing symlink toolchain-symlink toolchain-parent-symlink toolchain-unknown].each do |kind|
       action = <<~RUBY
         require 'fileutils'
         home = ENV.fetch('GRADLE_USER_HOME')
@@ -360,6 +372,23 @@ module ValidationTest
           launcher = File.join(home, 'wrapper/dists/gradle-8.14.3-bin/fixture/gradle-8.14.3/bin/gradle')
           FileUtils.mkdir_p(File.dirname(launcher))
           File.symlink(#{path_gradle.inspect}, launcher)
+        end
+        if #{kind.inspect}.start_with?('toolchain-')
+          folder = File.join(Dir.pwd, '.kotlin-user-home/Library/Caches/JetBrains/Kotlin/extract.cache', 'fixture-gradle-8.14.3-bin.zip.123abc.d')
+          if #{kind.inspect} == 'toolchain-parent-symlink'
+            FileUtils.mkdir_p(File.dirname(folder))
+            FileUtils.mkdir_p(File.join(File.dirname(#{path_gradle.inspect}), 'bin'))
+            FileUtils.cp(#{path_gradle.inspect}, File.join(File.dirname(#{path_gradle.inspect}), 'bin/gradle'))
+            File.symlink(File.dirname(#{path_gradle.inspect}), folder)
+          else
+            folder += '-unknown' if #{kind.inspect} == 'toolchain-unknown'
+            FileUtils.mkdir_p(File.join(folder, 'bin'))
+            if #{kind.inspect} == 'toolchain-symlink'
+              File.symlink(#{path_gradle.inspect}, File.join(folder, 'bin/gradle'))
+            else
+              FileUtils.cp(#{path_gradle.inspect}, File.join(folder, 'bin/gradle'))
+            end
+          end
         end
       RUBY
       log = base(f, action)

@@ -4,6 +4,7 @@ require 'fileutils'
 require 'json'
 require 'open3'
 require 'tmpdir'
+require_relative '../ios/build_swift_export'
 
 # Execute refusal paths without native tools, signing material or provider keys.
 module IOSBuilderTest
@@ -32,6 +33,55 @@ module IOSBuilderTest
   end
   def self.write_model(project, model)
     File.write(File.join(project, 'ios-app/module.xcodeproj/project.pbxproj'), JSON.pretty_generate(model))
+  end
+  test('Swift-export records must match the reviewed selected Toolchain and one compiler') do
+    %w[0.13.0 0.14.0].each do |toolchain|
+      Dir.mktmpdir('mobi-export-records-') do |root|
+        File.write(File.join(root, 'kotlin'), "kotlin_cli_version=#{toolchain}\n")
+        build = MobiSwiftExport::Build.allocate
+        { root: root, target: 'iosSimulatorArm64', configuration: 'Debug', cache: root }.each { |key, value| build.instance_variable_set('@' + key.to_s, value) }
+        build.define_singleton_method(:command) { |_name, _args| '' }
+        records = File.join(root, 'build/incremental.state'); FileUtils.mkdir_p(records)
+        projects = MobiSwiftExport::Build::PROJECTS.keys + ['shared-ios-app_test']
+        projects.each_with_index do |name, index|
+          project = name.delete_suffix('_test')
+          task = name.end_with?('_test') ? 'TestDebug' : 'Debug'
+          output = File.join(root, "build/tasks/_#{project}_compileIosSimulatorArm64#{task}/#{name}.klib")
+          record = { 'codeVersion' => toolchain, 'outputFiles' => [output],
+                     'inputValues' => { 'kotlin.settings' => JSON.generate('compilerVersion' => '2.5.0-RC') },
+                     'inputFiles' => [File.join(root, 'kotlinx-coroutines-core-fixture.klib')] }
+          File.write(File.join(records, "_shared-#{index}-compile-hash"), JSON.generate(record))
+        end
+        inputs = build.libraries
+        assert(inputs.map { |item| item['name'] }.sort == %w[MobiIOS MobiHome MobiNearby MobiCore MobiDI MobiUI MobiTestSupport KotlinxCoroutinesCore].sort)
+        assert(build.instance_variable_get(:@compiler_version) == '2.5.0-RC')
+        file = File.join(records, '_shared-0-compile-hash')
+        record = JSON.parse(File.read(file)); record['codeVersion'] = toolchain == '0.13.0' ? '0.14.0' : '0.13.0'
+        File.write(file, JSON.generate(record))
+        begin
+          build.libraries
+          raise 'Mismatched task record accepted'
+        rescue SystemExit => error
+          assert(error.status != 0)
+        end
+        record['codeVersion'] = toolchain
+        record['inputValues']['kotlin.settings'] = JSON.generate('compilerVersion' => '2.4.20')
+        File.write(file, JSON.generate(record))
+        begin
+          build.libraries
+          raise 'Mixed compiler accepted'
+        rescue SystemExit => error
+          assert(error.status != 0)
+        end
+        File.write(File.join(root, 'kotlin'), "kotlin_cli_version=0.15.0\n")
+        begin
+          build.libraries
+          raise 'Unreviewed Toolchain accepted'
+        rescue SystemExit => error
+          assert(error.status != 0)
+        end
+      end
+    end
   end
   class Held < StandardError; end
   module UI

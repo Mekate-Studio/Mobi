@@ -1,0 +1,267 @@
+{
+  "schema": 1,
+  "state": "local_functional_checks_passed",
+  "candidate": "0.14.0",
+  "baseline": "0.13.0",
+  "source_baseline": "4f1974c324f55e6fe53a11cc3011889c36d76ce9",
+  "preparation_commit": "78de93ee5815dd3229828e17ff62e69876deeca8",
+  "selection": {
+    "version": "0.14.0",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-18T14:17:02Z",
+    "eligible_at": "2026-11-23T14:49:08Z",
+    "adoption_authorized": false,
+    "approved_scope": "candidate_qualification",
+    "evidence": "docs/maintenance/evidence/2026-11-18-toolchain-014-qualification.md",
+    "distribution_sha256": "69112cebc1fdb14c92a213244182d0834896e71b3d9411b8e8c18540da2884a6",
+    "preparation_commit": "78de93ee5815dd3229828e17ff62e69876deeca8"
+  },
+  "fixed_selections": {
+    "kotlin_and_exporter": "2.5.0-RC",
+    "metro": "1.5.0",
+    "swift_packages": "unchanged",
+    "platform_floors": "unchanged"
+  },
+  "inputs": {
+    "scope": "public_toolchain_module_graphs_only",
+    "run_id": "e736b701784a6fc0ee6c434f9cff883e",
+    "query_counts": {
+      "baseline": 359,
+      "candidate": 359
+    },
+    "same_queries": true,
+    "same_graphs": false,
+    "settings_changed_modules": [
+      "android-app",
+      "ios-app",
+      "shared-core",
+      "shared-di",
+      "shared-feature-home",
+      "shared-feature-nearby-vehicle-map",
+      "shared-ios-app",
+      "shared-ui-home",
+      "swift-export"
+    ],
+    "adoption_authorized": false
+  },
+  "phases": {
+    "baseline": {
+      "staged_gate": {
+        "index_sha256": "71b4c599e075b70ade52301ca27f13fffbaeeeddf84012daf2b60ab5b1210797",
+        "inputs_sha256": "562bf99fad3a9a66bc8d0c003e1d7afc382ef90cea081dd2137cd9eb8b76a12f",
+        "completed": [
+          {
+            "job": "android-test",
+            "seconds": 116.563
+          },
+          {
+            "job": "ios-test",
+            "seconds": 437.83
+          },
+          {
+            "job": "android-build-debug",
+            "seconds": 27.698
+          },
+          {
+            "job": "ios-build-debug",
+            "seconds": 65.604
+          }
+        ]
+      },
+      "raw_log_sha256": "e20929cb4ce3e0cd2647b16a695ada20301298ec076fa4a47eb2b485edd11b47",
+      "android_shared_tests": 94,
+      "ios_test_functions": 80,
+      "ios_test_executions": 174,
+      "ios_failures": 0,
+      "ios_skips": 0,
+      "ios_summary_sha256": "d31f51198dfdb168cf9a6568463d3c03fdb6617eda6174d75edfd9ec29c667b3",
+      "generated_modules": [
+        "ExportedKotlinPackages",
+        "KotlinCoroutineSupport",
+        "KotlinRuntimeSupport",
+        "MobiCore",
+        "MobiHome",
+        "MobiIOS",
+        "MobiNearby",
+        "MobiTestSupport"
+      ],
+      "native_project_records": 7,
+      "compiler": "2.5.0-RC",
+      "gradle_shutdown_version": "9.5.0",
+      "owned_workspace_cleanup": "passed",
+      "ios_tests_tree_sha256": "b387589c67b7d2b705a65aca5fecce1254505345f9f171e198a4bd99dfbfb019"
+    },
+    "candidate": {
+      "staged_gate": {
+        "index_sha256": "1c3457c77e16e1b656ade1686ded7506a5358324f432292a13b08b1a85207268",
+        "inputs_sha256": "4ea5ded5539d425d7b567b63a9fc8f67ae428359b18148b98ff4cf6509b01624",
+        "completed": [
+          {
+            "job": "android-test",
+            "seconds": 105.588
+          },
+          {
+            "job": "ios-test",
+            "seconds": 425.822
+          },
+          {
+            "job": "android-build-debug",
+            "seconds": 29.792
+          },
+          {
+            "job": "ios-build-debug",
+            "seconds": 70.465
+          }
+        ]
+      },
+      "raw_log_sha256": "99be0d4c9da7560515c5ce971cf234bc3f07b4d037eea8dc1b70720697b47afa",
+      "android_shared_tests": 94,
+      "ios_test_functions": 80,
+      "ios_test_executions": 174,
+      "ios_failures": 0,
+      "ios_skips": 0,
+      "ios_summary_sha256": "fc334307900094af301c21785720ccf6de578b98307a6078958e15e5833277e5",
+      "generated_modules": [
+        "ExportedKotlinPackages",
+        "KotlinCoroutineSupport",
+        "KotlinRuntimeSupport",
+        "MobiCore",
+        "MobiHome",
+        "MobiIOS",
+        "MobiNearby",
+        "MobiTestSupport"
+      ],
+      "native_project_records": 7,
+      "compiler": "2.5.0-RC",
+      "gradle_shutdown_version": "9.8.0",
+      "owned_workspace_cleanup": "passed",
+      "ios_tests_tree_sha256": "8d8411c571bef3caf77a41a96dcea6e276849e973eb15c2f6a5023a5be21c4d4"
+    }
+  },
+  "candidate_apk": {
+    "sha256": "1c9836e01f96b3742525fc2424fb247794ccb890b77939e447b545b1bc5757b8",
+    "application_id": "studio.mekate.mobi",
+    "min_sdk": 36,
+    "target_sdk": 36,
+    "compile_sdk": 37,
+    "tool": "aapt2 37.0.0",
+    "scope": "candidate_debug_apk_identity_only",
+    "security_cleared": false
+  },
+  "candidate_compile_contracts": {
+    "scope": "actual_delivery_compile_contracts",
+    "retirement_authorized": false,
+    "checks": [
+      {
+        "name": "counter",
+        "complete": "passed",
+        "omitted_case": "error",
+        "omission": "rejected"
+      },
+      {
+        "name": "counterFailure",
+        "complete": "passed",
+        "omitted_case": "unexpected",
+        "omission": "rejected"
+      },
+      {
+        "name": "rider",
+        "complete": "passed",
+        "omitted_case": "unavailable",
+        "omission": "rejected"
+      },
+      {
+        "name": "snapshot",
+        "complete": "passed",
+        "omitted_case": "failedWithoutSnapshot",
+        "omission": "rejected"
+      },
+      {
+        "name": "overlay",
+        "complete": "passed",
+        "omitted_case": "blockingFailure",
+        "omission": "rejected"
+      },
+      {
+        "name": "blockedReason",
+        "complete": "passed",
+        "omitted_case": "TemporarilyUnavailable",
+        "omission": "rejected"
+      }
+    ],
+    "strict_support": {
+      "KotlinRuntimeSupport": "blocked",
+      "KotlinCoroutineSupport": "blocked"
+    },
+    "kotlin_runtime_images": [
+      "ios-app.debug.dylib"
+    ],
+    "swift_export_mode": true
+  },
+  "module_advisories": {
+    "retrieved_at": "2026-11-18T13:35:54.047445+00:00",
+    "query_count": 359,
+    "response_count": 359,
+    "pagination": false,
+    "request_sha256": "80e11c36dc9738fabf2f2684a982610cff947b67519fb978050841bed84e188d",
+    "response_sha256": "7b6825f82476ad5eca9f877efa8fa57de383442bb7ab196794a9d8b3605fef6f",
+    "matches": [
+      {
+        "package": "io.opentelemetry:opentelemetry-api",
+        "version": "1.41.0",
+        "ids": [
+          "GHSA-ccrj-gw8r-854m",
+          "GHSA-rcgg-9c38-7xpx"
+        ]
+      }
+    ],
+    "scope": "public_resolved_module_maven_graph_only",
+    "security_cleared": false
+  },
+  "retained_failed_runs": [
+    {
+      "run_id": "fc304fc4918c43788e1614fd6ecf9cb4",
+      "outcome": "executor_failure",
+      "reason": "nested_module_refused_before_toolchain_execution"
+    },
+    {
+      "run_id": "c702475dcf4144d309e5a0b0d71cb370",
+      "outcome": "inconclusive",
+      "reason": "baseline_ios_libtool_disk_exhaustion_errno_28",
+      "candidate_native_started": false,
+      "cleanup": "quiescent_then_owned_cleanup"
+    }
+  ],
+  "missing_qualification": [
+    "toolchain_distribution_and_delegated_artifact_attribution_and_advisories",
+    "unsigned_release",
+    "cold_relocated_delivery",
+    "controlled_manifest_resource_invalidation",
+    "device_signed_delivery"
+  ],
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workarounds_removed": [],
+  "finding_records": [
+    {
+      "id": "GHSA-ccrj-gw8r-854m",
+      "severity": "MODERATE",
+      "record_sha256": "20166011897b52cd2c579efc4d05679ea38a26c3f891407bcadbb4297b034665"
+    },
+    {
+      "id": "GHSA-rcgg-9c38-7xpx",
+      "severity": "MODERATE",
+      "record_sha256": "fc12ab412dcfb7a81381a7f724f5b99e10fffe52978f36df7f7ad8fd08ef6186"
+    }
+  ],
+  "hosted_preparation_run": "https://github.com/Mekate-Studio/Mobi/actions/runs/44321876603",
+  "hosted_candidate_overlay_executed": false,
+  "hosted_preparation_run_state": "passed",
+  "transition_simplification_review": {
+    "trigger": "separate_0.14.0_adoption_and_no_old_layout_recovery_resources",
+    "review": "narrow_producer_version_acceptance_and_remove_obsolete_cache_discovery",
+    "whole_producer_retirement": "IOS-10_supported_replacement_and_real_delivery_regressions",
+    "removal_authorized": false
+  }
+}

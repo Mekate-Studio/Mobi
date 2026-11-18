@@ -60,7 +60,10 @@ module Maintenance
       # Toolchain's Tooling API replaces org.gradle.jvmargs. Its daemon still
       # executes from the private distribution rooted in this random run/phase.
       # Match a real classpath entry, not a PID or a broad process-name pattern.
-      jars = Dir.glob(File.join(data['gradle_home'], 'wrapper/dists/*/*/gradle-*/lib/gradle-daemon-main-*.jar'))
+      roots = [File.join(data['gradle_home'], 'wrapper/dists/*/*/gradle-*'),
+               File.join(data['workspace'], 'cache/toolchain/extract.cache/*gradle-*-bin.zip.*.d'),
+               File.join(data['workspace'], 'home/Library/Caches/JetBrains/Kotlin/extract.cache/*gradle-*-bin.zip.*.d')]
+      jars = roots.flat_map { |root| Dir.glob(File.join(root, 'lib/gradle-daemon-main-*.jar')) }
       jars.each do |jar|
         next unless File.file?(jar) && File.realpath(jar) == jar && jar.start_with?(data['workspace'] + '/')
         if %w[-cp -classpath --class-path].any? { |flag| identity['command'].include?(" #{flag} #{jar} ") }
@@ -78,7 +81,7 @@ module Maintenance
         pid, command = line.strip.split(/\s+/, 2)
         next unless command
         args = command.split
-        pid.to_i if args.include?(tag) || (args.include?('org.gradle.launcher.daemon.bootstrap.GradleDaemon') && command.include?(data['gradle_home'] + '/wrapper/dists/'))
+        pid.to_i if args.include?(tag) || (args.include?('org.gradle.launcher.daemon.bootstrap.GradleDaemon') && command.include?(data['workspace'] + '/'))
       end.compact
       registry = File.join(data['gradle_home'], 'daemon')
       raise Failure, 'Symlinked Gradle resource' if [data['gradle_home'], registry].any? { |p| File.symlink?(p) }

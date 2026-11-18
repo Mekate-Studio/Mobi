@@ -18,8 +18,10 @@ module Maintenance
       @report['target_policy'] = @host.fetch('target_policy', 'current')
       @manifest = tree(source)
       FileUtils.cp_r(source, @work)
-      @modules = YAML.safe_load(File.read(File.join(@work, 'project.yaml'))).fetch('modules')
-      raise Failure, 'Unsupported module declaration' unless @modules.is_a?(Array) && @modules.all? { |name| name.is_a?(String) && name.match?(/\A[A-Za-z0-9_-]+\z/) }
+      @module_paths = YAML.safe_load(File.read(File.join(@work, 'project.yaml'))).fetch('modules')
+      raise Failure, 'Unsupported module declaration' unless @module_paths.is_a?(Array) && @module_paths.all? { |name| name.is_a?(String) && name.match?(/\A[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*\z/) }
+      @modules = @module_paths.map { |path| File.basename(path) }
+      raise Failure, 'Duplicate module names' unless @modules.uniq.size == @modules.size
       @version = File.read(File.join(@work, 'kotlin'), encoding: 'UTF-8')[/^kotlin_cli_version=(.+)$/, 1]
       @env = ENV.to_h.merge('PATH' => File.dirname(@host.fetch('ruby')) + ':/usr/bin:/bin:/usr/sbin:/sbin',
                            'LANG' => 'en_US.UTF-8', 'LC_ALL' => 'en_US.UTF-8', 'NO_COLOR' => '1', 'TERM' => 'dumb',
@@ -45,7 +47,7 @@ module Maintenance
           raise Failure, 'Generated workspace changed an authored input'
         end
       end
-      roots = @modules.flat_map { |name| Dir.glob(File.join(@work, name, '{src,src@*,test,test@*,tests}/**/*.{kt,kts,swift}')) }
+      roots = @module_paths.flat_map { |name| Dir.glob(File.join(@work, name, '{src,src@*,test,test@*,tests}/**/*.{kt,kts,swift}')) }
       roots += Dir.glob(File.join(@work, 'ios-app/Dependencies/{Sources,Tests}/**/*.swift'))
       raise Failure, 'Generated workspace added authored source' unless (roots.map { |path| path.delete_prefix(@work + '/') } - @manifest.keys).empty?
     end

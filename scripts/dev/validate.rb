@@ -202,8 +202,12 @@ module Precommit
         unless version.match?(/\A[0-9][A-Za-z0-9.+-]*\z/) && !File.symlink?(File.join(registry, version))
           raise Quality::Failure, "Unrecognized owned Gradle registry: #{registry}; snapshot retained for recovery"
         end
-        launcher = Dir.glob(File.join(home, 'wrapper/dists/gradle-*/*', "gradle-#{version}/bin/gradle")).find do |path|
-          File.executable?(path) && File.realpath(path).start_with?(File.realpath(home) + '/')
+        # 0.13 uses wrapper/dists; 0.14 provisions a root-stripped distribution
+        # in this snapshot's private Toolchain extraction cache.
+        roots = [File.join(File.realpath(home), 'wrapper/dists/gradle-*/*', "gradle-#{version}"),
+                 File.join(File.realpath(copy), '.kotlin-user-home/Library/Caches/JetBrains/Kotlin/extract.cache', "*gradle-#{version}-bin.zip.*.d")]
+        launcher = roots.flat_map { |root| Dir.glob(File.join(root, 'bin/gradle')) }.find do |path|
+          File.executable?(path) && File.realpath(path) == path
         end
         raise Quality::Failure, "Cannot stop owned Gradle #{version}: installed launcher missing; snapshot retained at #{copy}" unless launcher
 
