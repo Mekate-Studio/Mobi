@@ -35,6 +35,11 @@ IOS-10 and the Shared Home UI-test gap remain; production selection is unchanged
 The [qualification record](evidence/2026-11-18-toolchain-014-qualification.md)
 binds the approved age exception and records passing input/native comparisons,
 the compatibility patch costs, retained disk failure and remaining qualification.
+The [dependency assessment](evidence/2026-11-18-toolchain-014-dependencies.md)
+measures the distribution and delegated Android owners, refreshes their advisory
+records, and preserves unassigned artifacts and the Gradle 9.8 transform-observer
+gap. Launcher updates do not repair retained integration or exporter dependencies;
+adoption remains unqualified.
 
 The [Swift Clocks assessment](evidence/2026-11-15-clocks-assessment.md) reviews
 1.1.1's actual compiler-specific graph and unchanged timer scenarios. It retains
