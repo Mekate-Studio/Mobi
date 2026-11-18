@@ -1,6 +1,6 @@
 # Toolchain 0.14.0 qualification — 2026-11-18
 
-Status: preparation and isolated qualification in progress; no adoption decision.
+Status: local functional checks passed; adoption remains unqualified.
 The [source assessment](2026-11-17-toolchain-014-assessment.md) was merged as
 `4f1974c324f55e6fe53a11cc3011889c36d76ce9` (PR #114).
 
@@ -33,7 +33,8 @@ and feature behavior remain fixed during comparison.
   refuse; recovery paths remain retained on uncertain cleanup.
 
 No new build project, general metadata adapter, dependency override or test runner
-is introduced. Qualification results and remaining gates will be recorded here.
+is introduced. The [structured receipt](2026-11-18-toolchain-014-qualification.json)
+binds the actual results, staged input identities and retained failure records.
 
 The existing input runner also needs a correction independent of Swift export:
 `tools/swift-export` is a nested module path, not a flat module name. Source guards
@@ -67,21 +68,72 @@ the executor did not start candidate native jobs. The failed run was verified
 quiescent and its disposable work cleaned through the owned recovery protocol.
 Raw logs, task records and input-run evidence remain retained.
 
-The next checks use the existing staged validation gate sequentially for 0.13.0
-and an isolated 0.14.0 wrapper overlay. This avoids retaining two full SDK/native
-workspaces together and introduces no additional runner or SDK-copy machinery.
-These are local host checks, not cold-host, device or signed-delivery evidence.
+## Completed local native comparison
+
+Both versions passed the existing staged validation gate sequentially. The
+baseline is preparation commit `78de93ee5815dd3229828e17ff62e69876deeca8`, whose
+normal commit hooks ran with the unchanged 0.13.0 wrappers. The candidate is that
+same code plus only the reviewed, LF-normalized 0.14.0 wrapper pair in an isolated
+checkout; the overlay was not committed or adopted. Staged index/input hashes and
+raw-log hashes are recorded in the receipt.
+
+| Existing check | 0.13.0 baseline | 0.14.0 candidate |
+| --- | --- | --- |
+| Android/shared tests | 94 passed | 94 passed |
+| iOS PullRequest plan | 80 functions / 174 executions; no failures or skips | Same counts; no failures or skips |
+| Android Debug build | Passed | Passed |
+| iOS Debug build | Passed | Passed |
+| Actual Native project records | Seven records, code version 0.13.0, Kotlin 2.5.0-RC | Seven records, code version 0.14.0, Kotlin 2.5.0-RC |
+| Generated Swift modules | Eight | Same eight |
+| Generated API and actor controls | Passed, including six omission rejections | Passed, including the same rejections |
+| Owned Gradle shutdown and copy cleanup | Passed; Gradle 9.5.0 | Passed; Gradle 9.8.0 in the new extraction cache |
+
+The actual candidate delivery report identifies one Kotlin runtime image and
+Swift-export mode. Both support-module strict probes remain blocked; these are
+not a successful full strict-support producer run or grounds to retire IOS-08.
+All active interop mechanisms remain. The full repository contract suite also
+passed, including 25 iOS builder, 32 validation and 29 rehearsal contracts.
+
+The candidate Debug APK was inspected with installed `aapt2` 37.0.0: application
+ID is `studio.mekate.mobi`, minimum/target APIs are 36 and compile API is 37.
+That verifies the expected identity/floors for the namespace migration, not full
+resource invalidation, binary equivalence or signed-release delivery.
+
+Sequential use of the existing staged gate avoids retaining two full SDK/native
+workspaces together and adds no runner or SDK-copy machinery. Unlike the initial
+paired executor attempt, it uses the standard local validation environment and
+host SDK. These are local host checks, not cold-host, device, minimum-runtime or
+signed-delivery evidence. The maintenance resource handler's new classpath roots
+are exercised by the existing real-process ownership contracts; the staged gate
+exercises the actual 9.8.0 launcher/shutdown path. The original paired mobile
+executor result remains inconclusive.
+
+Hosted validation of the preparation code with the selected 0.13.0 wrappers passed in
+[CI run 44321876603](https://github.com/Mekate-Studio/Mobi/actions/runs/44321876603).
+It does not independently execute the uncommitted 0.14.0 overlay.
+
+## Simplification rechecks
+
+The two-version acceptance is transitional qualification support. If 0.14.0 is
+separately adopted, recheck the selected wrapper and retained resource inventory:
+once no old-layout run needs recovery, review narrowing the producer to the
+selected version and removing obsolete wrapper-cache discovery. Full-revision
+rollback preserves the old implementation; this PR does not authorize removal.
+
+On each Toolchain update, the existing IOS-10 review must still check the official
+Swift-export docs, maintained sample and actual supported integration. A supported
+producer replacement plus real delivery/regression evidence remains the condition
+for removing the complete custom producer. Passing its 0.14.0 maintenance checks
+does not satisfy that replacement condition.
 
 ## Remaining qualification gates
 
-- Complete both staged native test/Debug-build gates, with actual test counts and
-  producer-record, generated API, actor and one-runtime controls.
 - Measure and attribute the Toolchain distribution and delegated Gradle graphs,
   then refresh their advisories. Module queries do not substitute for these owners.
-- Verify unsigned Release, cold/relocated delivery, APK identity/resources and a
+- Verify unsigned Release, cold/relocated delivery, resource behavior and a
   controlled manifest/resource invalidation case.
 - Preserve warning evidence; reduced default deprecation output is not WARN-09
   remediation. IOS-10 and AND-03 remain active/deferred respectively.
 
-No adoption or workaround-removal conclusion follows from the completed input
+No adoption or workaround-removal conclusion follows from these functional
 checks. Later qualification stages and their costs remain separately reviewable.

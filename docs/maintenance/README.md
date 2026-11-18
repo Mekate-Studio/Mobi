@@ -33,8 +33,8 @@ producer's exact-version guard, changed Gradle ownership assumptions, bounded
 catalog advisory observations and a release-specific early-qualification decision.
 IOS-10 and the Shared Home UI-test gap remain; production selection is unchanged.
 The [qualification record](evidence/2026-11-18-toolchain-014-qualification.md)
-binds the approved age exception, records the paired input comparison and exposes
-the compatibility patch costs, baseline disk failure and remaining native gates.
+binds the approved age exception and records passing input/native comparisons,
+the compatibility patch costs, retained disk failure and remaining qualification.
 
 The [Swift Clocks assessment](evidence/2026-11-15-clocks-assessment.md) reviews
 1.1.1's actual compiler-specific graph and unchanged timer scenarios. It retains
