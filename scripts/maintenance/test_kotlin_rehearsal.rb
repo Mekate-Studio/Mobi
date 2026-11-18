@@ -255,6 +255,38 @@ module KotlinRehearsalTest
     end
   end
 
+  test('nested module paths preserve source guards and reject traversal or duplicate names') do
+    Dir.mktmpdir('mobi-kotlin-modules-test-') do |root|
+      %w[source output home control].each { |name| Dir.mkdir(File.join(root, name)) }
+      source = File.join(root, 'source')
+      File.write(File.join(source, 'project.yaml'), "modules: [app, tools/swift-export]\n")
+      File.write(File.join(source, 'kotlin'), "kotlin_cli_version=0.14.0\n")
+      host = File.join(root, 'host.json'); File.write(host, JSON.generate('ruby' => RbConfig.ruby))
+      previous = ENV.to_h
+      begin
+        ENV.replace('HOME' => File.join(root, 'home'), 'TMPDIR' => root, 'MOBI_PHASE' => 'candidate', 'MOBI_RESULT_PATH' => File.join(root, 'control/check.json'))
+        create = lambda do
+          project = File.join(root, 'output/project')
+          FileUtils.remove_entry_secure(project) if Dir.exist?(project)
+          Maintenance::KotlinCheck.new(source, File.join(root, 'output'), File.join(root, 'cache'), host, 'inputs')
+        end
+        check = create.call
+        assert(check.instance_variable_get(:@modules) == %w[app swift-export])
+        nested = File.join(root, 'output/project/tools/swift-export/src/Unexpected.kt')
+        FileUtils.mkdir_p(File.dirname(nested)); File.write(nested, 'authored input')
+        reject(/added authored source/) { check.verify_source! }
+        ['../outside', 'tools/../outside', '/outside', 'tools//outside'].each do |path|
+          File.write(File.join(source, 'project.yaml'), YAML.dump('modules' => [path]))
+          reject(/Unsupported module/) { create.call }
+        end
+        File.write(File.join(source, 'project.yaml'), "modules: [app, tools/app]\n")
+        reject(/Duplicate module/) { create.call }
+      ensure
+        ENV.replace(previous)
+      end
+    end
+  end
+
   def self.resource_fixture
     Dir.mktmpdir('mobi-kotlin-resource-test-') do |root|
       store = Maintenance::RunStore.new(File.join(root, 'runs')); id = SecureRandom.hex(16)
@@ -384,22 +416,24 @@ module KotlinRehearsalTest
 
   test('Tooling API daemon ownership uses an exact private classpath when JVM options are replaced') do
     resource_fixture do |handler, workspace|
-      jar = File.join(handler.state['gradle_home'], 'wrapper/dists/gradle-8-bin/fixture/gradle-8/lib/gradle-daemon-main-8.jar')
-      FileUtils.mkdir_p(File.dirname(jar)); File.write(jar, 'fixture artifact')
-      pid = Process.spawn(RbConfig.ruby, '-e', 'trap("TERM") {}; sleep 60', '--', '-cp', jar, 'org.gradle.launcher.daemon.bootstrap.GradleDaemon', pgroup: true, out: File::NULL, err: File::NULL)
-      begin
-        owner = wait_for { handler.jvms.find { |current| current['pid'] == pid } }
-        assert(owner['ownership_proof']['kind'] == 'owned_gradle_classpath')
-        assert(owner['ownership_proof']['sha256'] == Maintenance.file_sha(jar))
-        handler.stop!; Process.wait(pid)
-        assert(handler.quiescent?)
-        outside = File.join(File.dirname(workspace), 'outside.jar'); File.write(outside, 'unowned')
-        File.unlink(jar); File.symlink(outside, jar)
-        identity = { 'uid' => Process.uid, 'command' => "java -cp #{jar} org.gradle.launcher.daemon.bootstrap.GradleDaemon 8" }
-        assert(handler.ownership_proof(identity).nil?, 'symlinked classpath authorized ownership')
-      ensure
-        Process.kill('KILL', pid) rescue Errno::ESRCH
-        Process.wait(pid) rescue Errno::ECHILD
+      %w[cache/gradle/wrapper/dists/gradle-8-bin/fixture/gradle-8 cache/toolchain/extract.cache/fixture-gradle-8-bin.zip.123abc.d home/Library/Caches/JetBrains/Kotlin/extract.cache/fixture-gradle-8-bin.zip.123abc.d].each do |relative|
+        jar = File.join(workspace, relative, 'lib/gradle-daemon-main-8.jar')
+        FileUtils.mkdir_p(File.dirname(jar)); File.write(jar, 'fixture artifact')
+        pid = Process.spawn(RbConfig.ruby, '-e', 'trap("TERM") {}; sleep 60', '--', '-cp', jar, 'org.gradle.launcher.daemon.bootstrap.GradleDaemon', pgroup: true, out: File::NULL, err: File::NULL)
+        begin
+          owner = wait_for { handler.jvms.find { |current| current['pid'] == pid } }
+          assert(owner['ownership_proof']['kind'] == 'owned_gradle_classpath')
+          assert(owner['ownership_proof']['sha256'] == Maintenance.file_sha(jar))
+          handler.stop!; Process.wait(pid)
+          assert(handler.quiescent?)
+          outside = File.join(File.dirname(workspace), 'outside.jar'); File.write(outside, 'unowned')
+          File.unlink(jar); File.symlink(outside, jar)
+          identity = { 'uid' => Process.uid, 'command' => "java -cp #{jar} org.gradle.launcher.daemon.bootstrap.GradleDaemon 8" }
+          assert(handler.ownership_proof(identity).nil?, 'symlinked classpath authorized ownership')
+        ensure
+          Process.kill('KILL', pid) rescue Errno::ESRCH
+          Process.wait(pid) rescue Errno::ECHILD
+        end
       end
     end
   end
