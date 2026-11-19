@@ -209,8 +209,10 @@
     "broader_assets_jni_release_inputs",
     "owner_specific_advisory_review_and_risk_decision",
     "attribution_and_transform_observer_gaps",
-    "device_signed_delivery",
-    "existing_src_res_starter_resource_cleanup"
+    "device_signed_delivery"
   ],
-  "application_id": "studio.mekate.mobi"
+  "application_id": "studio.mekate.mobi",
+  "follow_ups": [
+    "existing_src_res_starter_resource_cleanup"
+  ]
 }
