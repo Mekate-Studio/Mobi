@@ -1,0 +1,312 @@
+{
+  "schema": 1,
+  "state": "local_unsigned_release_checks_passed",
+  "source_baseline": "556ab821c0892fa7cab3cbe6d3d2194488a74bb6",
+  "selection": {
+    "version": "0.14.0",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-19T19:16:34Z",
+    "eligible_at": "2026-11-23T14:49:08Z",
+    "adoption_authorized": false
+  },
+  "fixed_selections": {
+    "kotlin_and_exporter": "2.5.0-RC",
+    "metro": "1.5.0",
+    "swift_packages": "unchanged"
+  },
+  "ios": {
+    "baseline": {
+      "schema": 1,
+      "phase": "baseline",
+      "toolchain": "0.13.0",
+      "scope": "unsigned_arm64_ios_simulator_release_only",
+      "bundle_identifier": "studio.mekate.mobi",
+      "minimum_ios": "26.0",
+      "architecture": "arm64",
+      "build_version": [
+        "7",
+        "26.0",
+        "27.2"
+      ],
+      "signing": "disabled_no_signature_or_profile",
+      "native_asset_sha256": "b15a3db72d22de105219443aa68c8b132f8f56d9e79c4caae4eef88664ad5ebb",
+      "app_icon_entries": 42,
+      "runtime_symbol_bearing_images": [
+        "ios-app"
+      ],
+      "direct_mode_observations": [
+        "not_observable_optimized_symbol_absent"
+      ],
+      "producer_swift_export_flag": true,
+      "generated_modules": [
+        "ExportedKotlinPackages",
+        "KotlinCoroutineSupport",
+        "KotlinRuntimeSupport",
+        "MobiCore",
+        "MobiHome",
+        "MobiIOS",
+        "MobiNearby"
+      ],
+      "project_klib_inputs": 6,
+      "kotlin_compiler": "2.5.0-RC",
+      "native_release_optimization": true,
+      "test_fixture_inputs": "absent",
+      "native_archive_sha256": "364f6059fddbd00b52104553d305c52b6dc45df01f9abbad628e102c6c48ae25",
+      "modules_json_sha256": "02ee20a3dfa066a7dff322f4e6d056984619088d2252886ade40585344cc8f36",
+      "inputs_json_sha256": "c5aea26797dea982a8eef303e7c2a554d43773802334c34f233e1b5477e30caf",
+      "app_binary_sha256": "ed73235b6622d69360b78b2e143f8d832b11bf50f737f92b28c27eb4d6632de0",
+      "adoption_authorized": false,
+      "security_cleared": false,
+      "product_receipt_sha256": "2bae78b977977c5ed0f327a3f06c4a269e835ea41f9d6bf3632f16a552b193e2",
+      "run_log_sha256": "36307601c6606491bb50b1e7dab99ccf6bcd1ef2041d44371c234a61572f70e9",
+      "raw_xcode_log_sha256": "f982aa8985cf5527c0524ee429b0f37113241417f2736b77e6c14fdcaa616624",
+      "manual_plan_sha256": "7a4a42b06813b72b1f8c24a8e0f13e0acbfe3c91f630d0883440b4239e482ab4",
+      "owned_snapshot_cleanup": "passed",
+      "source_and_index_guards": "passed"
+    },
+    "candidate": {
+      "schema": 1,
+      "phase": "candidate",
+      "toolchain": "0.14.0",
+      "scope": "unsigned_arm64_ios_simulator_release_only",
+      "bundle_identifier": "studio.mekate.mobi",
+      "minimum_ios": "26.0",
+      "architecture": "arm64",
+      "build_version": [
+        "7",
+        "26.0",
+        "27.2"
+      ],
+      "signing": "disabled_no_signature_or_profile",
+      "native_asset_sha256": "b15a3db72d22de105219443aa68c8b132f8f56d9e79c4caae4eef88664ad5ebb",
+      "app_icon_entries": 42,
+      "runtime_symbol_bearing_images": [
+        "ios-app"
+      ],
+      "direct_mode_observations": [
+        "not_observable_optimized_symbol_absent"
+      ],
+      "producer_swift_export_flag": true,
+      "generated_modules": [
+        "ExportedKotlinPackages",
+        "KotlinCoroutineSupport",
+        "KotlinRuntimeSupport",
+        "MobiCore",
+        "MobiHome",
+        "MobiIOS",
+        "MobiNearby"
+      ],
+      "project_klib_inputs": 6,
+      "kotlin_compiler": "2.5.0-RC",
+      "native_release_optimization": true,
+      "test_fixture_inputs": "absent",
+      "native_archive_sha256": "69f411891a6e2bfddf16a55cd9182780c50a13ff846314e809eb490eb76c05c5",
+      "modules_json_sha256": "3f32d15ce44bbf62759e2735950769359d11976035f8a4899b4d32f4123eaea9",
+      "inputs_json_sha256": "bf1e9209053c330d209e696266caab108d87676c6a3f2ad3440c25d6abec6dd3",
+      "app_binary_sha256": "c679948968523240ab3fb2cdaef50e47e43a27fb39588e4ae1f6591102d54b21",
+      "adoption_authorized": false,
+      "security_cleared": false,
+      "product_receipt_sha256": "2c81ef214cca5a41142ef24d252923775d74e33b2964f0a520a3b9ee973eb999",
+      "run_log_sha256": "fc3166c023e8cb38326ed43857a03b4f40b3da5aa5658db17abdf5f9f90c472b",
+      "raw_xcode_log_sha256": "0e23a416e84bd1de07d7bcef06dccbf78da47c509ab8debe67396227500fa4ec",
+      "manual_plan_sha256": "71e09d3d666779723d7858081c5d3afb09875fd64a62d11fdec649dbe807fe28",
+      "owned_snapshot_cleanup": "passed",
+      "source_and_index_guards": "passed"
+    }
+  },
+  "android": {
+    "baseline": {
+      "toolchain": "0.13.0",
+      "scope": "unsigned_android_release_apk_and_aab_only",
+      "signing_overlay": {
+        "path": "android-app/module.yaml",
+        "before_sha256": "217a4c4d425b241d19c6896421b27bb3cb144ff7735849ba7b06793d2ced6e40",
+        "after_sha256": "03ef754cdd34ee6aea6e0d17cdeecc1a372f103a71777d79a402cff2acc8fca8",
+        "setting": "settings.android.signing.enabled=false",
+        "scope": "both_disposable_copies_only"
+      },
+      "apk": {
+        "sha256": "f96f79b3ca67aebec6ca650be1a753d439030ce617d7c6a291d5bf9148bc2266",
+        "bytes": 49668941,
+        "application_id": "studio.mekate.mobi",
+        "minimum_sdk": 36,
+        "target_sdk": 36,
+        "compile_sdk": 37,
+        "debuggable": false,
+        "signature": "unsigned_missing_jar_manifest_and_verifier_refuses"
+      },
+      "aab": {
+        "artifact_selection": "documented_final_aab_excluding_gradle_intermediates",
+        "sha256": "eb62224ff2be22dac81b68f07977c60faf1314a7797edc8bcaff7ed66a8e4420",
+        "bytes": 19884879,
+        "required_entries": [
+          "BundleConfig.pb",
+          "base/manifest/AndroidManifest.xml",
+          "base/resources.pb"
+        ],
+        "dex_entries": [
+          "base/dex/classes.dex"
+        ],
+        "signature": "unsigned_no_certificate_metadata",
+        "r8_mappings": [
+          {
+            "sha256": "abc70bab5aeeed482290759031c12eb252a6b53b1019d943d76fed8281f5d967",
+            "bytes": 22698443
+          }
+        ]
+      },
+      "inspection_tool_sha256": "13a206c0b022ba3b92f21b6f142f3a4b2d0f3bb1ac0bddfa820ee2c6b00c4c99",
+      "authored_inputs_restored": true,
+      "evidence_sha256": "44051d6e80a00394aefa2b2f2f75c77c8d22479168e54c526b308b03d952a99b"
+    },
+    "candidate": {
+      "toolchain": "0.14.0",
+      "scope": "unsigned_android_release_apk_and_aab_only",
+      "signing_overlay": {
+        "path": "android-app/module.yaml",
+        "before_sha256": "217a4c4d425b241d19c6896421b27bb3cb144ff7735849ba7b06793d2ced6e40",
+        "after_sha256": "03ef754cdd34ee6aea6e0d17cdeecc1a372f103a71777d79a402cff2acc8fca8",
+        "setting": "settings.android.signing.enabled=false",
+        "scope": "both_disposable_copies_only"
+      },
+      "apk": {
+        "sha256": "f96f79b3ca67aebec6ca650be1a753d439030ce617d7c6a291d5bf9148bc2266",
+        "bytes": 49668941,
+        "application_id": "studio.mekate.mobi",
+        "minimum_sdk": 36,
+        "target_sdk": 36,
+        "compile_sdk": 37,
+        "debuggable": false,
+        "signature": "unsigned_missing_jar_manifest_and_verifier_refuses"
+      },
+      "aab": {
+        "artifact_selection": "documented_final_aab_excluding_gradle_intermediates",
+        "sha256": "ec138af60294e623d503393d503f4075bcbfdc39aaf848deed749e9392159d2e",
+        "bytes": 19884878,
+        "required_entries": [
+          "BundleConfig.pb",
+          "base/manifest/AndroidManifest.xml",
+          "base/resources.pb"
+        ],
+        "dex_entries": [
+          "base/dex/classes.dex"
+        ],
+        "signature": "unsigned_no_certificate_metadata",
+        "r8_mappings": [
+          {
+            "sha256": "abc70bab5aeeed482290759031c12eb252a6b53b1019d943d76fed8281f5d967",
+            "bytes": 22698443
+          }
+        ]
+      },
+      "inspection_tool_sha256": "13a206c0b022ba3b92f21b6f142f3a4b2d0f3bb1ac0bddfa820ee2c6b00c4c99",
+      "authored_inputs_restored": true,
+      "evidence_sha256": "7cd28907749dc6405e56c2d28b687e14da64aa5dcf51dbfcdfd842f454df8c94"
+    }
+  },
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workarounds_removed": [],
+  "android_execution": {
+    "run_id": "9a18fad50a19d0acd61fdde192fe05ac",
+    "result_sha256": "811b3c01f6e1b8536ad16297ebfd707f22797cf81f777edbc11f1a08507c7f46",
+    "source_sha256": "36658d02683925bee3e3b91fafff9e128696e9974d7cda493f70b05456387a24",
+    "cleanup": {
+      "schema": 1,
+      "operation": "cleanup",
+      "run_id": "9a18fad50a19d0acd61fdde192fe05ac",
+      "state": "cleaned",
+      "eligible": true,
+      "retention_due_at": "2026-11-26T19:41:33Z",
+      "paths": [
+        "work/baseline",
+        "work/candidate"
+      ],
+      "evidence_retained": true,
+      "recorded_outcome": "checks_passed",
+      "adoption_authorized": false
+    }
+  },
+  "initial_ios_attempt": {
+    "outcome": "baseline_build_succeeded_debug_marker_inspection_inconclusive",
+    "run_log_sha256": "01e1b95438eb48b74db2fcce28e94b93894166c107e3553a71df0e73e8a6576c",
+    "probe_sha256": "fcdfba4ef80691498ded0c222412964219f2ad50fbfc131ea4f89b1789d27dd7",
+    "owned_snapshot_cleanup": "completed",
+    "reason": "optimized_release_omits_debug_runtime_init_and_mode_symbols",
+    "resolution": "repeat_with_defined_runtime_symbol_image_observation_and_explicit_mode_visibility_limit"
+  },
+  "missing_capabilities": [
+    "unsigned_arm64_device_archive",
+    "signed_export_delivery",
+    "release_runtime_execution",
+    "cold_relocated_delivery",
+    "direct_optimized_image_mode_constant_readout",
+    "existing_fastlane_android_aab_helper_integration",
+    "advisory_risk_acceptance_and_remaining_attribution_gaps"
+  ],
+  "simplification_follow_up": {
+    "surface": "scripts/ci/build_android_aab.sh",
+    "candidate_replacement": "kotlin package -m android-app",
+    "qualification": "unsigned_apk_and_aab_on_both_versions_only",
+    "next_review": "wire_the_qualified_public_command_into_the_existing_release_lane_and_check_output_discovery_and_signing_policy",
+    "default_switched": false
+  },
+  "aab_payload_review": {
+    "scope": "same_source_follow_on_aab_builds_public_protobuf_decode",
+    "run_id": "38a0d24da03b5017330e2ad28816200c",
+    "result_sha256": "5291e576a9b2e76183ca7e5403fe6d2ed5d09facba37f3a00561b0c0043f0b05",
+    "source_sha256": "36658d02683925bee3e3b91fafff9e128696e9974d7cda493f70b05456387a24",
+    "matching_entry_payloads": 114,
+    "different_entry_payloads": [
+      "BUNDLE-METADATA/com.android.tools.build.libraries/dependencies.pb",
+      "base/resources.pb"
+    ],
+    "resource_data_except_developer_source_pool_match": true,
+    "dependency_messages_except_six_owned_project_prefixes_match": true,
+    "library_metadata_records": 113,
+    "digests_graph_repositories_and_unknown_fields_preserved": true,
+    "normalized_resource_proto_sha256": "5039d7e4cdec95cf5154ea07c1ebf8a9c4b41991a84029cc7622e452eedda6c4",
+    "normalized_dependency_proto_sha256": "a8de74007b4b65a3635c1448b6cb6ddff3fdf628ad23a4c99d8b4a5da72f10c1",
+    "full_and_follow_on_per_phase_payloads_match_except_run_root_dependency_inventory": true,
+    "bundle_sha256": {
+      "baseline": "a73ebc3b76b6e3721d670c26c82cfac00f1f73a003fd8bd62315dc3131297680",
+      "candidate": "af64086ae745156f57286a07740bd4f0310ed722092b3f04448b55fa5ac2b75f"
+    },
+    "manual_inspection_tool": {
+      "name": "official_bundletool_protobuf_classes",
+      "version": "1.18.3",
+      "sha256": "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29",
+      "publisher_digest_verified": true,
+      "publisher_release": "https://github.com/google/bundletool/releases/tag/1.18.3",
+      "read_only_assessment_tool_only": true
+    },
+    "reader_sha256": "fb8f9b33460b9fe452c72137ccc5db580c5e6871d8d6222e2e876db17d938844",
+    "schemas_sha256": {
+      "Resources.proto": "b3303bf8772e4a878fbc6c69613c798cdd4ab3631eef48dc28f4fb6e3e5ebddc",
+      "app_dependencies.proto": "63ed64d7c881257a50b794695b62f8e455d4a8ce7a54ac9f9a850e7163ab2eb5"
+    },
+    "cleanup": "cleaned",
+    "whole_archive_reproducibility_claimed": false
+  },
+  "android_retained_attempts": [
+    {
+      "run_id": "62f3dd4459f67f194b9c9b7208c1fe82",
+      "build": "apk_passed",
+      "observer": "minimum_sdk_field_name_mismatch",
+      "cleanup": "cleaned_evidence_retained"
+    },
+    {
+      "run_id": "5d644fafd0219f30bc7be2502f3dfb2b",
+      "build": "apk_and_aab_passed",
+      "observer": "intermediate_aab_counted_as_competing_product",
+      "cleanup": "cleaned_evidence_retained"
+    },
+    {
+      "run_id": "da91767f73005a97cdd43cffd5abf0e2",
+      "build": "aab_passed",
+      "observer": "coordinator_result_check_name_mismatch",
+      "cleanup": "cleaned_evidence_retained"
+    }
+  ]
+}
