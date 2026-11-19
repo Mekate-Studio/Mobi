@@ -1,0 +1,216 @@
+{
+  "schema": 1,
+  "state": "candidate_targeted_values_passed_with_baseline_stale_output",
+  "scope": "android_debug_warm_manifest_and_resource_invalidation_only",
+  "source_baseline": "d8b12d2898736d5f9ad6df3bf1f74c0f7dc5a938",
+  "source_sha256": "28ca05fe4de7bf8ea7c8259d120fd3d284603c4f6d373985f491d7e58fdbcad5",
+  "run_id": "ccda05bffe8a7b3b590d221a2f51fe79",
+  "result_sha256": "8b53c54c84dfd8099ac7092748ae1c3b27c582e808ea48e968173416f8bdd533",
+  "selection": {
+    "version": "0.14.0",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-19T18:01:05Z",
+    "eligible_at": "2026-11-23T14:49:08Z",
+    "adoption_authorized": false
+  },
+  "probe": {
+    "manifest": "android-app/src/AndroidManifest.xml",
+    "manifest_attribute": "android:label",
+    "manifest_values": [
+      "Mobi",
+      "Mobi manifest probe"
+    ],
+    "resource": "android-app/res/values/mobi_invalidation_probe.xml",
+    "resource_name": "mobi_invalidation_probe",
+    "resource_values": [
+      "Mobi resource baseline",
+      "Mobi resource probe"
+    ],
+    "fixture_scope": "created before the first build in both isolated copies; removed afterward; no tracked app edit"
+  },
+  "phases": {
+    "baseline": {
+      "toolchain": "0.13.0",
+      "evidence_sha256": "45d7f60a975e493fddef1c7040d0c1960e293a9938245ec96b73c32574d24afd",
+      "all_values_match": false,
+      "authored_inputs_restored": true,
+      "fixture_baseline_sha256": "a11d004ec177d849a19b6931840deeb5d6ec8dc5afaf6ee81bdae98cb8ed9157",
+      "inspector_sha256": "13a206c0b022ba3b92f21b6f142f3a4b2d0f3bb1ac0bddfa820ee2c6b00c4c99",
+      "stages": [
+        {
+          "stage": "initial",
+          "label": "Mobi",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": true,
+          "entries_match_initial": true,
+          "manifest_sha256": "df53b4c414774946cab92868ef5f23e336647bd143611337df8b0aebb219aaa3",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "413be88c2956b2766d511fb414367fa8125c41f9a9f4bf637046eb32f5e89fae"
+        },
+        {
+          "stage": "unchanged-warm",
+          "label": "Mobi",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": true,
+          "entries_match_initial": true,
+          "manifest_sha256": "df53b4c414774946cab92868ef5f23e336647bd143611337df8b0aebb219aaa3",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "413be88c2956b2766d511fb414367fa8125c41f9a9f4bf637046eb32f5e89fae"
+        },
+        {
+          "stage": "manifest-edit",
+          "label": "Mobi manifest probe",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": true,
+          "entries_match_initial": false,
+          "manifest_sha256": "1d6eb311ede951ae61c31a8b3a59407716db226fbc8710cf3c099f41a4cbb2e6",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "d932d8dfdece919892cdf78392432ee9b07ddf2f9fbda01e7478d1c1d97bc1ef"
+        },
+        {
+          "stage": "manifest-revert",
+          "label": "Mobi manifest probe",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": false,
+          "entries_match_initial": false,
+          "manifest_sha256": "1d6eb311ede951ae61c31a8b3a59407716db226fbc8710cf3c099f41a4cbb2e6",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "d932d8dfdece919892cdf78392432ee9b07ddf2f9fbda01e7478d1c1d97bc1ef"
+        },
+        {
+          "stage": "resource-edit",
+          "label": "Mobi manifest probe",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": false,
+          "entries_match_initial": false,
+          "manifest_sha256": "1d6eb311ede951ae61c31a8b3a59407716db226fbc8710cf3c099f41a4cbb2e6",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "d932d8dfdece919892cdf78392432ee9b07ddf2f9fbda01e7478d1c1d97bc1ef"
+        },
+        {
+          "stage": "resource-revert",
+          "label": "Mobi manifest probe",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": false,
+          "entries_match_initial": false,
+          "manifest_sha256": "1d6eb311ede951ae61c31a8b3a59407716db226fbc8710cf3c099f41a4cbb2e6",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "d932d8dfdece919892cdf78392432ee9b07ddf2f9fbda01e7478d1c1d97bc1ef"
+        }
+      ]
+    },
+    "candidate": {
+      "toolchain": "0.14.0",
+      "evidence_sha256": "92bcfcc04ae9486d9774a806579a36cd5e97bdb1978c35d673c9d7b3d8d1bb51",
+      "all_values_match": true,
+      "authored_inputs_restored": true,
+      "fixture_baseline_sha256": "a11d004ec177d849a19b6931840deeb5d6ec8dc5afaf6ee81bdae98cb8ed9157",
+      "inspector_sha256": "13a206c0b022ba3b92f21b6f142f3a4b2d0f3bb1ac0bddfa820ee2c6b00c4c99",
+      "stages": [
+        {
+          "stage": "initial",
+          "label": "Mobi",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": true,
+          "entries_match_initial": true,
+          "manifest_sha256": "df53b4c414774946cab92868ef5f23e336647bd143611337df8b0aebb219aaa3",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "413be88c2956b2766d511fb414367fa8125c41f9a9f4bf637046eb32f5e89fae"
+        },
+        {
+          "stage": "unchanged-warm",
+          "label": "Mobi",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": true,
+          "entries_match_initial": true,
+          "manifest_sha256": "df53b4c414774946cab92868ef5f23e336647bd143611337df8b0aebb219aaa3",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "413be88c2956b2766d511fb414367fa8125c41f9a9f4bf637046eb32f5e89fae"
+        },
+        {
+          "stage": "manifest-edit",
+          "label": "Mobi manifest probe",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": true,
+          "entries_match_initial": false,
+          "manifest_sha256": "1d6eb311ede951ae61c31a8b3a59407716db226fbc8710cf3c099f41a4cbb2e6",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "d932d8dfdece919892cdf78392432ee9b07ddf2f9fbda01e7478d1c1d97bc1ef"
+        },
+        {
+          "stage": "manifest-revert",
+          "label": "Mobi",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": true,
+          "entries_match_initial": true,
+          "manifest_sha256": "df53b4c414774946cab92868ef5f23e336647bd143611337df8b0aebb219aaa3",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "1a6b31564068ec6fff6db15f5f23369d23049a54d5312f509ce2ab8c511402c7"
+        },
+        {
+          "stage": "resource-edit",
+          "label": "Mobi",
+          "resource_value": "Mobi resource probe",
+          "expected_values_match": true,
+          "entries_match_initial": false,
+          "manifest_sha256": "df53b4c414774946cab92868ef5f23e336647bd143611337df8b0aebb219aaa3",
+          "resources_sha256": "38974d86b6ed81f53600ce2af6b7457e856986eac08cf87daff349699753c636",
+          "apk_sha256": "1c98ccab6e60ef12679cbf1a62b18704fabb20d143aaca68866c867cddd273c4"
+        },
+        {
+          "stage": "resource-revert",
+          "label": "Mobi",
+          "resource_value": "Mobi resource baseline",
+          "expected_values_match": true,
+          "entries_match_initial": true,
+          "manifest_sha256": "df53b4c414774946cab92868ef5f23e336647bd143611337df8b0aebb219aaa3",
+          "resources_sha256": "b095a7d21d520836cf596bfb15162172fc9c47b6df299f02892ad021289eb790",
+          "apk_sha256": "a454548ae34ff348c93670309e58c148ae17bdd8f76e979fa07ed502256ec627"
+        }
+      ]
+    }
+  },
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workarounds_removed": [],
+  "cleanup": {
+    "schema": 1,
+    "operation": "cleanup",
+    "run_id": "ccda05bffe8a7b3b590d221a2f51fe79",
+    "state": "cleaned",
+    "eligible": true,
+    "retention_due_at": "2026-11-26T18:06:56Z",
+    "paths": [
+      "work/baseline",
+      "work/candidate"
+    ],
+    "evidence_retained": true,
+    "recorded_outcome": "checks_passed",
+    "adoption_authorized": false
+  },
+  "retained_attempts": [
+    {
+      "run_id": "322098cd407ed9555735a3052d77d39f",
+      "outcome": "refused_before_build",
+      "reason": "one_off_observer_missing_yaml_import",
+      "cleanup": "cleaned_with_evidence_retained"
+    },
+    {
+      "run_id": "470cc851a127baf537bdff3fa8381ac7",
+      "outcome": "baseline_build_passed_inspection_inconclusive",
+      "reason": "existing_src_res_app_name_not_packaged_used_documented_res_fixture_in_completed_pair",
+      "cleanup": "cleaned_with_evidence_retained"
+    }
+  ],
+  "remaining_gates": [
+    "unsigned_release",
+    "cold_relocated_delivery",
+    "broader_assets_jni_release_inputs",
+    "owner_specific_advisory_review_and_risk_decision",
+    "attribution_and_transform_observer_gaps",
+    "device_signed_delivery",
+    "existing_src_res_starter_resource_cleanup"
+  ],
+  "application_id": "studio.mekate.mobi"
+}
