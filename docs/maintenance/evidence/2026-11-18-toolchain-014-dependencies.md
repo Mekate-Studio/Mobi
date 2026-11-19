@@ -126,9 +126,9 @@ Review priorities are explicit:
   The exporter's separate 1.41.0 still matches it and
   [the baggage finding](https://github.com/advisories/GHSA-rcgg-9c38-7xpx).
 - Candidate Jackson 2.13.5, retained LZ4, JDOM, jose4j, Guava and the remaining
-  Netty findings stay in the package-level triage queue. The findings table keeps
-  every measured package/version/ID and record digest, including High findings;
-  this assessment does not dismiss them based on a successful build.
+  Netty findings stay in the package-level triage queue. The full local assessment
+  retains every measured package/version/ID and record digest, including High
+  findings; a successful build does not dismiss them.
 
 ## Existing observer limitation and next decision
 
@@ -157,18 +157,16 @@ accept dependency risk, sign/publish an app or retire an interop workaround.
 
 ## Review evidence
 
-- [Structured receipt](2026-11-18-toolchain-014-dependencies.json): source/run,
-  archive identities, owner counts, cleanup, provider bindings and remaining gates.
-- [File inventory](2026-11-18-toolchain-014-dependencies-inventory.tsv): every
-  measured JAR's owner, digest/length and attribution state/reference.
-- [Query inventory](2026-11-18-toolchain-014-dependencies-queries.tsv): all 804
-  package/version pairs with baseline/candidate owner scopes.
-- [Finding inventory](2026-11-18-toolchain-014-dependencies-findings.tsv): all 86
-  matches with scopes, captured OSV severity, full-record digest/date and URL.
+The [compact receipt](2026-11-18-toolchain-014-dependencies.json) retains the
+source/run and archive identities, owner counts, provider bindings, cleanup and
+remaining gaps. Its selected artifact identities support the key change and
+ownership claims above; they are a deliberate subset of the complete inventory.
 
-Large raw graphs, command logs, archive metadata/source bodies and provider packets
-remain in ignored local assessment storage, with hashes in the receipt. The
-public tables permit inspection of the measured scope; they are not a claim that
-a clean clone contains those raw logs or a maintained one-command replay runner.
-The streamed archives and owned build workspaces were removed after evidence
-retention. A later refresh must bind new provider records and actual artifacts.
+The full file/query/finding inventories, raw graphs, command logs, archive
+metadata/source bodies and provider packets remain in ignored local assessment
+storage. Their hashes remain in the receipt. These generated captures are not
+app or workflow inputs and are not committed as bulk review tables. A clean clone
+contains the assessment and selected evidence, not the full raw captures or a
+maintained one-command replay runner. The streamed archives and owned build
+workspaces were removed after evidence retention. A later refresh must bind new
+provider records and actual artifacts.

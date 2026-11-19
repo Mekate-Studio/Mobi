@@ -112,30 +112,11 @@
         "agp": "9.3.1",
         "effective_jetifier_enabled": false,
         "jetifier_project_observations": 12,
-        "transforms": [
-          {
-            "state": "observed",
-            "reason": null,
-            "gradle": "9.5.0",
-            "interval": "init_script_to_build_finished",
-            "observer_api": "planned_identify_action_v1",
-            "planned_count": 0,
-            "identified_count": 2106,
-            "action_count": 169,
-            "events": []
-          },
-          {
-            "state": "observed",
-            "reason": null,
-            "gradle": "9.5.0",
-            "interval": "init_script_to_build_finished",
-            "observer_api": "planned_identify_action_v1",
-            "planned_count": 0,
-            "identified_count": 6899,
-            "action_count": 1388,
-            "events": []
-          }
-        ]
+        "transform_observer": {
+          "state": "observed",
+          "reason": null,
+          "observer_api": "planned_identify_action_v1"
+        }
       },
       "raw_attribution_sha256": "d02d2df9870bef7ba780dc18fe54f0c8c6271b1aa2043c5ee18c5253595d3e6b"
     },
@@ -236,30 +217,11 @@
         "agp": "9.3.1",
         "effective_jetifier_enabled": false,
         "jetifier_project_observations": 12,
-        "transforms": [
-          {
-            "state": "incomplete",
-            "reason": "unsupported_gradle_api",
-            "gradle": "9.8.0",
-            "interval": "init_script_to_build_finished",
-            "observer_api": "planned_identify_action_v1",
-            "planned_count": 0,
-            "identified_count": 0,
-            "action_count": 0,
-            "events": []
-          },
-          {
-            "state": "incomplete",
-            "reason": "unsupported_gradle_api",
-            "gradle": "9.8.0",
-            "interval": "init_script_to_build_finished",
-            "observer_api": "planned_identify_action_v1",
-            "planned_count": 0,
-            "identified_count": 0,
-            "action_count": 0,
-            "events": []
-          }
-        ]
+        "transform_observer": {
+          "state": "incomplete",
+          "reason": "unsupported_gradle_api",
+          "observer_api": "planned_identify_action_v1"
+        }
       },
       "raw_attribution_sha256": "0df3f69472ac0cba1e2a93de5590451ecee279f55e8ee2567fa8f52be967a20e"
     }
@@ -276,54 +238,7 @@
     "last_retrieved_at": "2026-11-18T22:21:14Z",
     "receipt_sha256": "99ea0f42265d2a2b7c660699b7da172de7697f8c5549baf6014ffff3a48d02b3",
     "input_evidence_sha256": "dfd0d436e818e2441db0f8f55fe8331a4c36440db305d4937e61cde4f519ecba",
-    "queries_sha256": "40c9bc471cc3d59138ff122f89e2ca141f66b4fd2c393cfaa2b47271aa8d66c3",
-    "batch_receipts": [
-      {
-        "retrieved_at": "2026-11-18T22:20:41Z",
-        "status": 200,
-        "response_sha256": "944db654f4a1bde30f0266bfad6de1f77f99d4db288b2d45764262cb91b25686"
-      },
-      {
-        "retrieved_at": "2026-11-18T22:20:42Z",
-        "status": 200,
-        "response_sha256": "13b9f1ae6623696e4f47d3d7f74d38d7a4ba8bd75e43bef99a6448f1fb97f2d9"
-      },
-      {
-        "retrieved_at": "2026-11-18T22:20:42Z",
-        "status": 200,
-        "response_sha256": "a748b52c4b011236405076a93884911300051c337bbe395093243a3d3bee31db"
-      },
-      {
-        "retrieved_at": "2026-11-18T22:20:43Z",
-        "status": 200,
-        "response_sha256": "675064bc546deed80f19e7102a3e0b2540e594eb261b2e917336691f296e3793"
-      },
-      {
-        "retrieved_at": "2026-11-18T22:20:43Z",
-        "status": 200,
-        "response_sha256": "1eb66d067bf3722eb9e5b672a9f3406923fc7fae452f8c71471d798b69fc214b"
-      },
-      {
-        "retrieved_at": "2026-11-18T22:20:44Z",
-        "status": 200,
-        "response_sha256": "b4a44a5aec785d0b2731911276bd0e807a624eea2a6c295df352be28a124cba7"
-      },
-      {
-        "retrieved_at": "2026-11-18T22:20:45Z",
-        "status": 200,
-        "response_sha256": "66a01d2b993cde9c65c285e447576cb1fb9056f0800b964d7ced113d2e7e3955"
-      },
-      {
-        "retrieved_at": "2026-11-18T22:20:45Z",
-        "status": 200,
-        "response_sha256": "713fc5514ab4fdfbedf16bc33f8d05484c3c71acfa4baa01e14a9a5eb1fc559c"
-      },
-      {
-        "retrieved_at": "2026-11-18T22:20:46Z",
-        "status": 200,
-        "response_sha256": "1d3b3028309f42f104f47f2023c84a49d3582b917a8eede35750fec991a596cf"
-      }
-    ]
+    "queries_sha256": "40c9bc471cc3d59138ff122f89e2ca141f66b4fd2c393cfaa2b47271aa8d66c3"
   },
   "cleanup": {
     "state": "cleaned",
@@ -337,20 +252,6 @@
   "adoption_authorized": false,
   "security_cleared": false,
   "workarounds_removed": [],
-  "public_evidence": {
-    "inventory": {
-      "path": "2026-11-18-toolchain-014-dependencies-inventory.tsv",
-      "sha256": "7ac2f488f626b6aacd48e164304b3f84de5910d092d8dc9c367b29afa89f63d4"
-    },
-    "queries": {
-      "path": "2026-11-18-toolchain-014-dependencies-queries.tsv",
-      "sha256": "dacc92770019ba3830db6f90510ef38f08f12ef1deaeb0f033ab0f27dfbb6a16"
-    },
-    "findings": {
-      "path": "2026-11-18-toolchain-014-dependencies-findings.tsv",
-      "sha256": "a927d44ffba5f183a283577725e6eb767c81be7b3ec8719c80fd23c3e4476531"
-    }
-  },
   "local_retained_evidence": {
     "assessment_inputs_sha256": "dfd0d436e818e2441db0f8f55fe8331a4c36440db305d4937e61cde4f519ecba",
     "archive_inventories": {
@@ -378,6 +279,11 @@
       "summarize.py": "bd1a8573115ba640e6ee8200c5da601228eea52e09f0916b603920ad91ccfa5a",
       "public_receipt.py": "2100b830f830369c524cdf3b59b8731ed5963a9944cb972a2f90ca53a6d61e1a",
       "advisories.rb": "2aa876e3a776e4cfc7f71631f67a8290bb286e192869c2e67cfbe76f76503cc2"
+    },
+    "table_snapshots": {
+      "2026-11-18-toolchain-014-dependencies-inventory.tsv": "7ac2f488f626b6aacd48e164304b3f84de5910d092d8dc9c367b29afa89f63d4",
+      "2026-11-18-toolchain-014-dependencies-queries.tsv": "dacc92770019ba3830db6f90510ef38f08f12ef1deaeb0f033ab0f27dfbb6a16",
+      "2026-11-18-toolchain-014-dependencies-findings.tsv": "a927d44ffba5f183a283577725e6eb767c81be7b3ec8719c80fd23c3e4476531"
     }
   },
   "missing_capabilities": [
@@ -391,5 +297,174 @@
     "cold_relocated_delivery",
     "controlled_manifest_resource_invalidation",
     "device_signed_delivery"
-  ]
+  ],
+  "selected_artifacts": [
+    {
+      "member": "extra/jars/bcpkix-jdk18on-1.79.jar",
+      "toolchain_versions": [
+        "0.13.0",
+        "0.14.0"
+      ],
+      "owner": "android_integration_distribution_classpath",
+      "maven": "org.bouncycastle:bcpkix-jdk18on:1.79",
+      "sha256": "3639a24ddf9ba4b7eba0659b44770e91eba816421888e571f285aadefe532cd6",
+      "bytes": 1134345
+    },
+    {
+      "member": "extra/jars/bcprov-jdk18on-1.79.jar",
+      "toolchain_versions": [
+        "0.13.0",
+        "0.14.0"
+      ],
+      "owner": "android_integration_distribution_classpath",
+      "maven": "org.bouncycastle:bcprov-jdk18on:1.79",
+      "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+      "bytes": 8575537
+    },
+    {
+      "member": "extra/jars/kotlin-gradle-plugin-2.2.10.jar",
+      "toolchain_versions": [
+        "0.13.0",
+        "0.14.0"
+      ],
+      "owner": "android_integration_distribution_classpath",
+      "maven": "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.10",
+      "sha256": "12e99741802f8e981341eda3f501f399d1a3dcada212da29b8d02cbfe9a073bf",
+      "bytes": 23185614
+    },
+    {
+      "member": "extra/jars/opentelemetry-api-1.60.1.jar",
+      "toolchain_versions": [
+        "0.13.0"
+      ],
+      "owner": "android_integration_distribution_classpath",
+      "maven": "io.opentelemetry:opentelemetry-api:1.60.1",
+      "sha256": "8e4ea94bbe9b94d823ac6e7dda7c74624659a1352caf0529a07f43f86b6ca0d5",
+      "bytes": 170144
+    },
+    {
+      "member": "extra/jars/opentelemetry-api-1.66.0.jar",
+      "toolchain_versions": [
+        "0.14.0"
+      ],
+      "owner": "android_integration_distribution_classpath",
+      "maven": "io.opentelemetry:opentelemetry-api:1.66.0",
+      "sha256": "b93c5e4b5d504e77670e85fdd8c258ab08bad808473c403a91ae65f1a393f0b7",
+      "bytes": 176425
+    },
+    {
+      "member": "lib/bcprov-jdk18on-1.84.jar",
+      "toolchain_versions": [
+        "0.13.0"
+      ],
+      "owner": "launcher",
+      "maven": "org.bouncycastle:bcprov-jdk18on:1.84",
+      "sha256": "64d6c5a6121fcd927152dd182cbed39afe0fda641a970d9bcc0c9cb1858b2731",
+      "bytes": 8919063
+    },
+    {
+      "member": "lib/bcprov-jdk18on-1.86.jar",
+      "toolchain_versions": [
+        "0.14.0"
+      ],
+      "owner": "launcher",
+      "maven": "org.bouncycastle:bcprov-jdk18on:1.86",
+      "sha256": "2af190b300cbb0b35e248ccf5f4a06b6072030aeb3da7a98ec73abe5b4cb371f",
+      "bytes": 7224011
+    },
+    {
+      "member": "lib/commons-compress-1.28.0.jar",
+      "toolchain_versions": [
+        "0.13.0",
+        "0.14.0"
+      ],
+      "owner": "launcher",
+      "maven": "org.apache.commons:commons-compress:1.28.0",
+      "sha256": "e1522945218456f3649a39bc4afd70ce4bd466221519dba7d378f2141a4642ca",
+      "bytes": 1117221
+    },
+    {
+      "member": "lib/jackson-annotations-2.13.5.jar",
+      "toolchain_versions": [
+        "0.14.0"
+      ],
+      "owner": "launcher",
+      "maven": "com.fasterxml.jackson.core:jackson-annotations:2.13.5",
+      "sha256": "80aea8ed7232db5040ced4b3f982f29da95bb3d802343dbf6fd82ccd98c21c4f",
+      "bytes": 75718
+    },
+    {
+      "member": "lib/jackson-core-2.13.5.jar",
+      "toolchain_versions": [
+        "0.14.0"
+      ],
+      "owner": "launcher",
+      "maven": "com.fasterxml.jackson.core:jackson-core:2.13.5",
+      "sha256": "48f36a025311d0464ad8dda4512a20c79e279a9550f63f3179d731d94482474b",
+      "bytes": 375186
+    },
+    {
+      "member": "lib/jackson-core-2.21.1.jar",
+      "toolchain_versions": [
+        "0.13.0"
+      ],
+      "owner": "launcher",
+      "maven": "com.fasterxml.jackson.core:jackson-core:2.21.1",
+      "sha256": "1edd5f2e49dca5f8e4519957c24b7b3050bd1c7ee883920da33cff031ff1f7c0",
+      "bytes": 594806
+    },
+    {
+      "member": "lib/jackson-databind-2.13.5.jar",
+      "toolchain_versions": [
+        "0.14.0"
+      ],
+      "owner": "launcher",
+      "maven": "com.fasterxml.jackson.core:jackson-databind:2.13.5",
+      "sha256": "5fedb24b2356491815d18267f65da9a21dd67413345ad7795f221afa25c78984",
+      "bytes": 1537543
+    },
+    {
+      "member": "lib/netty-handler-4.2.9.Final.jar",
+      "toolchain_versions": [
+        "0.13.0",
+        "0.14.0"
+      ],
+      "owner": "launcher",
+      "maven": "io.netty:netty-handler:4.2.9.Final",
+      "sha256": "e16126c711c1c8217342882cc0d9086007852cb0f99a351cfebe7725e8c7e100",
+      "bytes": 582132
+    },
+    {
+      "member": "lib/opentelemetry-api-1.60.1.jar",
+      "toolchain_versions": [
+        "0.13.0"
+      ],
+      "owner": "launcher",
+      "maven": "io.opentelemetry:opentelemetry-api:1.60.1",
+      "sha256": "8e4ea94bbe9b94d823ac6e7dda7c74624659a1352caf0529a07f43f86b6ca0d5",
+      "bytes": 170144
+    },
+    {
+      "member": "lib/opentelemetry-api-1.66.0.jar",
+      "toolchain_versions": [
+        "0.14.0"
+      ],
+      "owner": "launcher",
+      "maven": "io.opentelemetry:opentelemetry-api:1.66.0",
+      "sha256": "b93c5e4b5d504e77670e85fdd8c258ab08bad808473c403a91ae65f1a393f0b7",
+      "bytes": 176425
+    },
+    {
+      "member": "extra/jars/netty-handler-4.2.17.Final.jar",
+      "toolchain_versions": [
+        "0.13.0",
+        "0.14.0"
+      ],
+      "owner": "other_extra",
+      "maven": "io.netty:netty-handler:4.2.17.Final",
+      "sha256": "4df11c7520b556c5e2c84b939182699d48fcbb09e97a6bb5e1c0b6835227d126",
+      "bytes": 588756
+    }
+  ],
+  "selected_artifact_scope": "key ownership and change claims only; complete inventories retained locally"
 }
