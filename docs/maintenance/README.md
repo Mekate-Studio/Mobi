@@ -40,6 +40,10 @@ measures the distribution and delegated Android owners, refreshes their advisory
 records, and preserves unassigned artifacts and the Gradle 9.8 transform-observer
 gap. Launcher updates do not repair retained integration or exporter dependencies;
 adoption remains unqualified.
+The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
+shows 0.14.0 applying and reverting the checked manifest/resource changes while
+0.13.0 leaves stale packaged output. It also records an existing resource-layout
+cleanup; unsigned Release, cold/relocated delivery and risk decisions remain open.
 
 The [Swift Clocks assessment](evidence/2026-11-15-clocks-assessment.md) reviews
 1.1.1's actual compiler-specific graph and unchanged timer scenarios. It retains
