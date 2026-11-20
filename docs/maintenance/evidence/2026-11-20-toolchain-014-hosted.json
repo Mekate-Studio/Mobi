@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "state": "checks_passed",
+  "source_baseline": "492cd1032cfcd683b0d549ba8d5bf62b3e71da53",
+  "scope": "existing_hosted_jobs_without_declared_dependency_cache_restores",
+  "fixed_kotlin_and_exporter": "2.5.0-RC",
+  "fixed_metro": "1.5.0",
+  "selected_toolchain": "0.13.0",
+  "candidate_qualification_ref": "qualification/native-014-cache-free-20261120",
+  "candidate_qualification_ref_excluded_from_implementation_pr": true,
+  "wrapper_published_at": "2026-11-16T14:49:08Z",
+  "eligible_at": "2026-11-23T14:49:08Z",
+  "qualification_waiver": "2026-11-18-toolchain-014-qualification.md",
+  "phases": {
+    "baseline": {
+      "native_toolchain": "0.13.0",
+      "quality_source_toolchain": "0.13.0",
+      "source_commit": "5142687465a93fef1f5c687368d186a411f59571",
+      "run_id": 44804680213,
+      "conclusion": "success",
+      "jobs": {
+        "Classify changes": 136525465533,
+        "iOS debug build": 136525543458,
+        "Android and shared host tests": 136525543558,
+        "Quality checks": 136525543587,
+        "Android debug build": 136525543636,
+        "iOS PullRequest plan": 136525543676,
+        "Pull request gate": 136536206205
+      },
+      "absent_root_receipts": 30,
+      "skipped_cache_actions": 5,
+      "runner_image": "macos-26-arm64",
+      "image_versions_by_job": {
+        "ios-test": "20261117.0516.1",
+        "quality": "20261117.0516.1",
+        "android-build": "20261117.0516.1",
+        "android-test": "20261102.0473.1",
+        "ios-build": "20261117.0516.1"
+      },
+      "setup_java_observed": [
+        "25.0.5+8.0"
+      ],
+      "xcode_versions": [
+        "26.6"
+      ],
+      "swift_export_target": "arm64-apple-ios26.0-simulator",
+      "swift_export_sdk": "/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk",
+      "visible_passing_functions": 48,
+      "visible_function_set_sha256": "c7ed7b09d2330f4e179cd280c6515bba3e703b9f044f4caf45256c81c146f707",
+      "full_parameterized_execution_count": null,
+      "complete_switch_controls": 6,
+      "omission_controls_rejected": 6,
+      "kotlin_runtime_images": 1,
+      "swift_export_mode": true,
+      "strict_support": {
+        "KotlinRuntimeSupport": "blocked",
+        "KotlinCoroutineSupport": "blocked"
+      },
+      "coroutine_inheritance": "diagnostic_reported",
+      "swift_export_artifact_id": 14664660747,
+      "swift_export_artifact_digest": "sha256:51e1932618191c5c1c81adec539361396780078e76d6700cc35faab78610fc5b",
+      "swift_export_report_sha256": "1915ca7bb40d587b183527369f2bf04d6273d2cafbbae887cc0fc88918cd649a",
+      "job_log_sha256": {
+        "ios-test": "9be3c53bf639b1ef5c8cf14f3aa2a59160abcbe4ce306bc116946df42f2dd0d0",
+        "quality": "ddf2acb1db4f70b29b7d7f5f6bd0547ca1ac4469469c6306939a563681f827ac",
+        "android-build": "a8845e1b13fab9e9eeb86369e2b4d056f69b90b9ea6f3e46cdc61ede904098a6",
+        "android-test": "e53348bef5092b849704a2a22bfe933c8d988dc280f874577d8dddde64d42cd2",
+        "ios-build": "adbbb41658482b17365b4dfa97630123e964528f37ad10316827ed3fac7cf015"
+      }
+    },
+    "candidate": {
+      "native_toolchain": "0.14.0",
+      "quality_source_toolchain": "0.13.0",
+      "source_commit": "681987d9c91ef75488078fc7d74304e332adf7af",
+      "run_id": 44807242881,
+      "conclusion": "success",
+      "jobs": {
+        "Classify changes": 136534379273,
+        "Android debug build": 136534449205,
+        "iOS debug build": 136534449214,
+        "Quality checks": 136534449247,
+        "Android and shared host tests": 136534449285,
+        "iOS PullRequest plan": 136534449289,
+        "Pull request gate": 136546422974
+      },
+      "absent_root_receipts": 30,
+      "skipped_cache_actions": 5,
+      "runner_image": "macos-26-arm64",
+      "image_versions_by_job": {
+        "ios-test": "20261102.0473.1",
+        "quality": "20261102.0473.1",
+        "android-build": "20261102.0473.1",
+        "android-test": "20261117.0516.1",
+        "ios-build": "20261102.0473.1"
+      },
+      "setup_java_observed": [
+        "25.0.5+8.0"
+      ],
+      "xcode_versions": [
+        "26.6"
+      ],
+      "swift_export_target": "arm64-apple-ios26.0-simulator",
+      "swift_export_sdk": "/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk",
+      "visible_passing_functions": 48,
+      "visible_function_set_sha256": "c7ed7b09d2330f4e179cd280c6515bba3e703b9f044f4caf45256c81c146f707",
+      "full_parameterized_execution_count": null,
+      "complete_switch_controls": 6,
+      "omission_controls_rejected": 6,
+      "kotlin_runtime_images": 1,
+      "swift_export_mode": true,
+      "strict_support": {
+        "KotlinRuntimeSupport": "blocked",
+        "KotlinCoroutineSupport": "blocked"
+      },
+      "coroutine_inheritance": "diagnostic_reported",
+      "swift_export_artifact_id": 14664514964,
+      "swift_export_artifact_digest": "sha256:27de0579b4917d945f7339df4a255c04dbc934c3e0cebf43ded1ef583648153b",
+      "swift_export_report_sha256": "1915ca7bb40d587b183527369f2bf04d6273d2cafbbae887cc0fc88918cd649a",
+      "job_log_sha256": {
+        "ios-test": "a359d36957b2faf484dd48321cc675ed3293b7ee24e5a9225944ba19aa01c901",
+        "quality": "732056a93b0a1696a1f897650cceffa48d40a8181b9bc7c809417ac6fede31f9",
+        "android-build": "6dd4fee98d79c5bdb95205a435b051e59f2194b38bb258ee50a862f7b4857b45",
+        "android-test": "5026430a9a5b0b012fad6250960c17c93e6189462a0eb536788d556334752e28",
+        "ios-build": "df9270b82d8a9815fb529282609314ed3ee821c2d575e3c3884f92577f9077b0"
+      },
+      "applied_wrapper_sha256": {
+        "kotlin": "855436c4b4222f57c561e7bfe2f7f223bd72710d0f52a101883434ecbf05b089",
+        "kotlin.bat": "00a736b94ea095e7e697f17295e48bf969df026b917a482e52f993afe50194dc"
+      },
+      "age_state": "age_blocked"
+    }
+  },
+  "same_visible_function_set": true,
+  "source_parameterized_functions_not_listed_by_formatter": 32,
+  "source_contract_suites": 21,
+  "baseline_adoption_guard_retained": true,
+  "image_prerequisites_excluded_from_cache_claim": [
+    "installed_SDKs",
+    "installed_tools",
+    "tool_cache",
+    "system_caches"
+  ],
+  "local_staged_toolchain_jdk_observed": "25.0.5.1+2",
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workaround_retirement_authorized": false,
+  "signed_delivery_qualified": false,
+  "warning_debt_closed": false
+}
