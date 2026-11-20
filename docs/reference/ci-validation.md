@@ -26,6 +26,33 @@ by `ruby scripts/ci/test_pr_gate.rb`, also included in the quality contracts.
 Configure branch protection to require only `Pull request gate` after the new
 workflow has completed successfully at least once.
 
+## Manual validation without restored caches
+
+`Mobile CI` has an opt-in [Boolean workflow input](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onworkflow_dispatchinputs) named `cold_cache`. It selects every validation
+job even when the chosen revision changes only documentation. Normal pull-request,
+push and manual runs retain the existing changed-path and cache behavior.
+
+```bash
+gh workflow run mobile-ci.yml --ref <reviewed-branch> -F cold_cache=true
+```
+
+In this mode each build/test/quality job checks that its repository build/cache
+roots are absent immediately after checkout, before tool setup. Existing files
+cause refusal and are preserved. The receipt is printed in the job log and saved
+to `build/logs/cold-cache/preflight.log`. Actions dependency-cache restore/save and
+[Bundler caching](https://github.com/ruby/setup-ruby#caching-bundle-install-automatically) are skipped. Kotlin/Native uses a new job-local cache; both Xcode
+wrappers disable the shared package-repository cache and select a job-local
+package-support cache through supported `xcodebuild` options.
+
+This is a cache boundary on a fresh GitHub-hosted image, whose installed SDKs,
+Xcode, Java/Ruby distributions and system caches remain declared prerequisites.
+It does not provision a pristine operating system. Full cache-free runs download
+dependencies again and take longer, so use them for qualification. Review the actual runner/tool
+versions, cache-step outcomes, preflight receipts and native results together.
+A candidate qualification branch must preserve all other inputs and retain the
+real release-age/authorization state; a passing run does not select that version
+for the app or accept dependency risk. Existing signed-release holds still apply.
+
 ## Changed-path policy
 
 The classifier accumulates the impact of every changed path:

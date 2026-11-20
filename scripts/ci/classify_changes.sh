@@ -3,13 +3,16 @@
 set -euo pipefail
 
 usage() {
-  printf 'Usage: %s [--paths-file <path> | --paths0-file <path> | <base-revision> <head-revision>]\n' "$0" >&2
+  printf 'Usage: %s [--full | --paths-file <path> | --paths0-file <path> | <base-revision> <head-revision>]\n' "$0" >&2
 }
 
 paths_file=""
 read_options=(-d $'\n')
 
-if [[ "${1:-}" == "--paths-file" || "${1:-}" == "--paths0-file" ]]; then
+if [[ "${1:-}" == "--full" && $# -eq 1 ]]; then
+  paths_file="$(mktemp "${TMPDIR:-/tmp}/mobi-full-validation.XXXXXX")"
+  trap 'rm -f "${paths_file}"' EXIT
+elif [[ "${1:-}" == "--paths-file" || "${1:-}" == "--paths0-file" ]]; then
   [[ "$1" != --paths0-file ]] || read_options=(-d '')
   paths_file="${2:-}"
   if [[ -z "${paths_file}" || $# -ne 2 ]]; then

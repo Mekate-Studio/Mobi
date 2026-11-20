@@ -6,6 +6,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      cold_cache:
+        description: Run full validation without restored dependency caches
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -15,6 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  MOBI_COLD_VALIDATION: ${{ github.event_name == 'workflow_dispatch' && inputs.cold_cache && '1' || '0' }}
   DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
   KOTLIN_CLI_BOOTSTRAP_CACHE_DIR: ${{ github.workspace }}/.kotlin-cache
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
@@ -52,7 +58,11 @@ jobs:
             base_sha="$(git rev-parse "${head_sha}^")"
           fi
 
-          ./scripts/ci/classify_changes.sh "${base_sha}" "${head_sha}"
+          if [[ "${MOBI_COLD_VALIDATION}" == 1 ]]; then
+            ./scripts/ci/classify_changes.sh --full
+          else
+            ./scripts/ci/classify_changes.sh "${base_sha}" "${head_sha}"
+          fi
       - name: Summarize selection
         env:
           DOCS_ONLY: ${{ steps.changes.outputs.docs_only }}
@@ -85,7 +95,11 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+      - name: Verify cold cache boundary
+        if: env.MOBI_COLD_VALIDATION == '1'
+        run: ./scripts/ci/cold_cache_preflight.sh
       - uses: actions/cache@v6
+        if: env.MOBI_COLD_VALIDATION != '1'
         with:
           path: .quality
           key: ${{ runner.os }}-${{ runner.arch }}-macos26-quality-${{ hashFiles('quality-tools.json', 'scripts/quality_tools.rb') }}
@@ -104,7 +118,11 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
+      - name: Verify cold cache boundary
+        if: env.MOBI_COLD_VALIDATION == '1'
+        run: ./scripts/ci/cold_cache_preflight.sh
       - uses: actions/cache@v6
+        if: env.MOBI_COLD_VALIDATION != '1'
         with:
           path: |
             .kotlin-cache
@@ -119,7 +137,7 @@ jobs:
           java-version: "25"
       - uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true
+          bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
       - uses: android-actions/setup-android@v4
         with:
           packages: ''
@@ -146,7 +164,11 @@ jobs:
       KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
     steps:
       - uses: actions/checkout@v7
+      - name: Verify cold cache boundary
+        if: env.MOBI_COLD_VALIDATION == '1'
+        run: ./scripts/ci/cold_cache_preflight.sh
       - uses: actions/cache@v6
+        if: env.MOBI_COLD_VALIDATION != '1'
         with:
           path: |
             .kotlin-cache
@@ -161,7 +183,7 @@ jobs:
           java-version: "25"
       - uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true
+          bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
       - name: Run iOS pull-request tests
         run: ./scripts/ci/run_job.sh ios-test
       - name: Upload Swift-export checks
@@ -190,7 +212,11 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
+      - name: Verify cold cache boundary
+        if: env.MOBI_COLD_VALIDATION == '1'
+        run: ./scripts/ci/cold_cache_preflight.sh
       - uses: actions/cache@v6
+        if: env.MOBI_COLD_VALIDATION != '1'
         with:
           path: |
             .kotlin-cache
@@ -205,7 +231,7 @@ jobs:
           java-version: "25"
       - uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true
+          bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
       - uses: android-actions/setup-android@v4
         with:
           packages: ''
@@ -222,7 +248,11 @@ jobs:
       KOTLIN_IOS_BUILDER: ${{ vars.KOTLIN_IOS_BUILDER || 'kotlin' }}
     steps:
       - uses: actions/checkout@v7
+      - name: Verify cold cache boundary
+        if: env.MOBI_COLD_VALIDATION == '1'
+        run: ./scripts/ci/cold_cache_preflight.sh
       - uses: actions/cache@v6
+        if: env.MOBI_COLD_VALIDATION != '1'
         with:
           path: |
             .kotlin-cache
@@ -237,7 +267,7 @@ jobs:
           java-version: "25"
       - uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true
+          bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
       - name: Build iOS debug
         run: ./scripts/ci/run_job.sh ios-build-debug
 
