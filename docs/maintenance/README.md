@@ -49,8 +49,11 @@ both iOS simulator products and the documented Android APK/AAB command paths,
 with matching code/resource observations and explicit optimized-runtime limits.
 The [AAB helper integration](evidence/2026-11-20-android-aab-command.md) removes
 manual Gradle discovery/invocation and passes the existing fixture-signed lane
-and warm bundle checks on both versions. Cold/relocated delivery and risk
-decisions remain open.
+and warm bundle checks on both versions. The
+[local iOS delivery check](evidence/2026-11-20-toolchain-014-ios-delivery.md) passes
+the same native cases from empty private Kotlin caches and launches each copied
+tested app with its original producer paths unavailable. Fully cold hosted
+execution, broader delivery and risk decisions remain open.
 
 The [Swift Clocks assessment](evidence/2026-11-15-clocks-assessment.md) reviews
 1.1.1's actual compiler-specific graph and unchanged timer scenarios. It retains

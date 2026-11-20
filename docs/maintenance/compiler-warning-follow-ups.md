@@ -42,6 +42,7 @@ part of those 52.
 | WARN-10 | 8 authored `Store.withState` reads in `NearbySceneLifetimeTests.swift`; successful CI #595 emitted 48 repeated deprecation annotations | Direct `store.state` reads use the existing `@ObservableState` and pinned TCA API; see [evidence](#warn-10-observable-store-reads-in-lifetime-tests). This is test API maintenance. | Preserve callback rejection and late location/fleet result matrices; run the actual iOS suite on local/hosted compilers and require zero `withState` deprecation diagnostics. |
 | WARN-11 | Redundant `await send(...)` in Nearby's MainActor refresh effect, observed after the ownership migration | The pinned TCA Send API is synchronous on MainActor; use its direct call. See [qualification](#warn-11-mainactor-effect-response). | Preserve the actor contract and response/cancellation/lifetime tests; require the targeted diagnostic to be absent on both supported compilers. |
 | WARN-12 | 20 package-framework linker diagnostics report a macOS 27 sysroot while targeting the iOS simulator in an inspection-prepared local native build | Swift/Xcode package-framework linking; see [Clocks qualification](evidence/2026-11-15-clocks-assessment.md). A fresh baseline Debug build passes without these diagnostics; cause and attribution remain unqualified. | On Swift/Xcode updates, compare normal fresh and inspection-prepared builds, inspect effective SDK/linker inputs, and retain native/link/runtime checks. A warning suppression or SDK override is not closure. |
+| WARN-13 | Xcode reports iOS 27.1 build `24A94425` as `invalidDigitCount(94425)`; CoreSimulator bootstatus reports Safari data-migration failure with exit zero | Xcode 27.2 / iOS 27.1 iPhone Duo simulator. Native tests and relocated app launch pass on both Toolchains; see [local delivery evidence](evidence/2026-11-20-toolchain-014-ios-delivery.md). Host diagnostic cause remains unqualified. | On Xcode/runtime updates, repeat fresh owned-device boot, the native plan and app launch; require consistent boot status/diagnostics without suppression, runtime substitution or app workarounds. |
 
 Start with small owned-source and dependency-alignment slices; review concurrency
 boundaries explicitly, then qualify upstream-generated changes through the
@@ -288,3 +289,12 @@ the local and hosted compiler logs for zero occurrences of this targeted warning
 passing tests alone do not close it. Final head, test counts and hosted evidence
 are recorded in the review PR. Other warning categories and IOS-02/08/17 remain
 separately tracked; this is not a warning-free-build claim.
+
+## WARN-13: Xcode and simulator diagnostics
+
+The [local delivery pair](evidence/2026-11-20-toolchain-014-ios-delivery.md)
+retains both messages and the boot command's actual zero exit. The native plan
+and copied app launch still pass; that does not establish successful completion
+of every simulator migration. Review the installed Xcode/runtime pair and official
+Apple tooling changes on updates, retaining native test counts, generated-export
+controls and actual launch evidence. No host setting or app workaround is added.

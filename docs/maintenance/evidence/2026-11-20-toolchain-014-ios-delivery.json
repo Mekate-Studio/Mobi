@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "state": "checks_passed",
+  "source_baseline": "cdde1b91c9c6b92219f0cd0ae81e7c8a43874589",
+  "working_source_sha256": "315402dc8eec94b4471f63d513c97d0893da61065537a7c48a0a6dfae38369cf",
+  "run_id": "909a7d3155058d2f9628a1ecae52356c",
+  "result_sha256": "410ffcc8fbb27adbfdc27f8df84bef468ce7af2ec00031712943587737ed1ed3",
+  "plan_sha256": "dd5870b9cde06a0b76bc5958932e3dafbaa1828319604d1351eae70c41d92756",
+  "selection": {
+    "version": "0.14.0",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-20T17:14:31Z",
+    "eligible_at": "2026-11-23T14:49:08Z",
+    "adoption_authorized": false
+  },
+  "scope": "local_empty_private_kotlin_caches_and_relocated_tested_debug_simulator_app",
+  "fixed_tuple": {
+    "selected_toolchain": "0.13.0",
+    "kotlin_and_exporter": "2.5.0-RC",
+    "metro": "1.5.0",
+    "xcode": "27.2_27B52"
+  },
+  "phases": {
+    "baseline": {
+      "toolchain": "0.13.0",
+      "evidence_sha256": "d24ffcd984609de1e96ad1b554410dd3aeff434d2d26818eb67df604cecbacad",
+      "native_functions": 80,
+      "native_executions": 174,
+      "native_case_set_sha256": "7149c8e627aab291d99e3a25c40c76f252c9cb39feaee5656bea416027eebb2d",
+      "generated_switch_controls": 6,
+      "kotlin_runtime_images": 1,
+      "linked_swift_export_mode_verified": true,
+      "strict_support": {
+        "KotlinRuntimeSupport": "blocked",
+        "KotlinCoroutineSupport": "blocked"
+      },
+      "simulator": {
+        "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-1",
+        "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-Duo"
+      },
+      "copied_app_files": 319,
+      "copied_app_manifest_sha256": "ee6b594d68100e91ce96923ef18c3216080a35e6c49075f3ae51ca0240fba145",
+      "installed_binary_sha256": "f5f316b3ec9b204f00b82e659088edf786de5e08c96412c42cff7bb2c22aaaf0",
+      "relocated_launch_alive_seconds": 10,
+      "screenshot_sha256": "f05328f34c391c6b8b9dff390f3420dcdef1bbf1047c4ef54174fb4513c224d1",
+      "inspected_load_path_images": 49,
+      "load_paths_sha256": "068d69f18348832ec1cf650da386d7b4c9b45c4da8faa0567551c00c9715ba54",
+      "boot_migration_diagnostic_reported": true,
+      "source_and_index_preserved": true
+    },
+    "candidate": {
+      "toolchain": "0.14.0",
+      "evidence_sha256": "730664149628592207dab9b711c14a36f675b2a593e5f361a150e17eac11ce02",
+      "native_functions": 80,
+      "native_executions": 174,
+      "native_case_set_sha256": "7149c8e627aab291d99e3a25c40c76f252c9cb39feaee5656bea416027eebb2d",
+      "generated_switch_controls": 6,
+      "kotlin_runtime_images": 1,
+      "linked_swift_export_mode_verified": true,
+      "strict_support": {
+        "KotlinRuntimeSupport": "blocked",
+        "KotlinCoroutineSupport": "blocked"
+      },
+      "simulator": {
+        "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-27-1",
+        "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-Duo"
+      },
+      "copied_app_files": 319,
+      "copied_app_manifest_sha256": "29f9b86363173b359ae24408e9248e5675252509ce886eca9da84c380cc15587",
+      "installed_binary_sha256": "62bcafe879d838487f823ea81831760580e469a1e22a924627976eeb9cbe5c86",
+      "relocated_launch_alive_seconds": 10,
+      "screenshot_sha256": "5ced0fef773b53555e5cdbdfe32e6cfcb89228e60174500dfbbfa4e9d990333f",
+      "inspected_load_path_images": 49,
+      "load_paths_sha256": "068d69f18348832ec1cf650da386d7b4c9b45c4da8faa0567551c00c9715ba54",
+      "boot_migration_diagnostic_reported": true,
+      "source_and_index_preserved": true
+    }
+  },
+  "same_native_case_set": true,
+  "copied_bundle_scope": "Debug_test_host_including_test_plugin",
+  "host_caches_excluded_from_cold_claim": [
+    "SwiftPM",
+    "Xcode_SDKs",
+    "CoreSimulator",
+    "host_Ruby_and_JDK"
+  ],
+  "cleanup": "quiescent_owned_simulators_removed_and_workspaces_cleaned",
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workaround_retirement_authorized": false,
+  "warning_debt_closed": false,
+  "retained_attempt": {
+    "run_id": "aaad96b0657b6742a6f295c2fc278a00",
+    "state": "inconclusive",
+    "reason": "native_plan_passed_but_screenshot_required_explicit_display",
+    "cleanup": "quiescent_then_cleaned"
+  }
+}
