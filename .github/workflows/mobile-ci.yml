@@ -141,6 +141,20 @@ jobs:
       - uses: android-actions/setup-android@v4
         with:
           packages: ''
+      - name: Apply reviewed native qualification wrapper
+        run: |
+          ruby -r ./scripts/maintenance/lib/kotlin_wrappers.rb -e '
+            abort "Unexpected selected source wrapper" unless File.binread("kotlin").match?(/^kotlin_cli_version=0\.13\.0$/)
+            wrappers = Maintenance::KotlinWrappers.new(Dir.pwd)
+            wrappers.prepare!
+            selection = wrappers.selection("0.14.0", experimental: true)
+            applied = %w[kotlin kotlin.bat].to_h do |name|
+              bytes = File.binread(wrappers.wrapper("0.14.0", name)).gsub("\r\n", "\n")
+              File.binwrite(name, bytes)
+              [name, Digest::SHA256.hexdigest(bytes)]
+            end
+            puts JSON.generate("native_qualification" => selection, "applied_wrapper_sha256" => applied)
+          '
       - name: Run Android and shared tests
         run: ./scripts/ci/run_job.sh android-test
       - name: Upload failure diagnostics
@@ -184,6 +198,20 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
+      - name: Apply reviewed native qualification wrapper
+        run: |
+          ruby -r ./scripts/maintenance/lib/kotlin_wrappers.rb -e '
+            abort "Unexpected selected source wrapper" unless File.binread("kotlin").match?(/^kotlin_cli_version=0\.13\.0$/)
+            wrappers = Maintenance::KotlinWrappers.new(Dir.pwd)
+            wrappers.prepare!
+            selection = wrappers.selection("0.14.0", experimental: true)
+            applied = %w[kotlin kotlin.bat].to_h do |name|
+              bytes = File.binread(wrappers.wrapper("0.14.0", name)).gsub("\r\n", "\n")
+              File.binwrite(name, bytes)
+              [name, Digest::SHA256.hexdigest(bytes)]
+            end
+            puts JSON.generate("native_qualification" => selection, "applied_wrapper_sha256" => applied)
+          '
       - name: Run iOS pull-request tests
         run: ./scripts/ci/run_job.sh ios-test
       - name: Upload Swift-export checks
@@ -235,6 +263,20 @@ jobs:
       - uses: android-actions/setup-android@v4
         with:
           packages: ''
+      - name: Apply reviewed native qualification wrapper
+        run: |
+          ruby -r ./scripts/maintenance/lib/kotlin_wrappers.rb -e '
+            abort "Unexpected selected source wrapper" unless File.binread("kotlin").match?(/^kotlin_cli_version=0\.13\.0$/)
+            wrappers = Maintenance::KotlinWrappers.new(Dir.pwd)
+            wrappers.prepare!
+            selection = wrappers.selection("0.14.0", experimental: true)
+            applied = %w[kotlin kotlin.bat].to_h do |name|
+              bytes = File.binread(wrappers.wrapper("0.14.0", name)).gsub("\r\n", "\n")
+              File.binwrite(name, bytes)
+              [name, Digest::SHA256.hexdigest(bytes)]
+            end
+            puts JSON.generate("native_qualification" => selection, "applied_wrapper_sha256" => applied)
+          '
       - name: Build Android debug
         run: ./scripts/ci/run_job.sh android-build-debug
 
@@ -268,6 +310,20 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
+      - name: Apply reviewed native qualification wrapper
+        run: |
+          ruby -r ./scripts/maintenance/lib/kotlin_wrappers.rb -e '
+            abort "Unexpected selected source wrapper" unless File.binread("kotlin").match?(/^kotlin_cli_version=0\.13\.0$/)
+            wrappers = Maintenance::KotlinWrappers.new(Dir.pwd)
+            wrappers.prepare!
+            selection = wrappers.selection("0.14.0", experimental: true)
+            applied = %w[kotlin kotlin.bat].to_h do |name|
+              bytes = File.binread(wrappers.wrapper("0.14.0", name)).gsub("\r\n", "\n")
+              File.binwrite(name, bytes)
+              [name, Digest::SHA256.hexdigest(bytes)]
+            end
+            puts JSON.generate("native_qualification" => selection, "applied_wrapper_sha256" => applied)
+          '
       - name: Build iOS debug
         run: ./scripts/ci/run_job.sh ios-build-debug
 
