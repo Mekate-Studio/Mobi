@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "state": "checks_passed",
+  "source_baseline": "a233cb809a16a651a098a1fb54400e0dee536e77",
+  "working_source_sha256": "daa3e277a3bae9df7a709b303aa4b31b1a057caef9a17c075bc6fdc5cb293a2c",
+  "helper_sha256": "748fcb2888b3b7e61b4cbb19aecde36bfb9a301d3a60d497ce2d0fb0c72f0428",
+  "run_id": "47dea10eced3b8c6866249af0ceb12d8",
+  "result_sha256": "36bb8d09faaeeb2c0bef4880859a75c506ffb0d45b1d42dfcbee268936614bab",
+  "plan_sha256": "000fac61e672b61c6c3860f7ded349321bfd8b31f57d9959619c7a50c0c95fb2",
+  "selection": {
+    "version": "0.14.0",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-20T12:22:26Z",
+    "eligible_at": "2026-11-23T14:49:08Z",
+    "adoption_authorized": false
+  },
+  "scope": "existing_release_candidate_lane_and_signed_aab_warm_manifest_resource_checks",
+  "signing": "synthetic_android_debug_only_no_delivery",
+  "stages": [
+    "initial",
+    "manifest-edit",
+    "manifest-revert",
+    "resource-edit",
+    "resource-revert"
+  ],
+  "phases": {
+    "baseline": {
+      "toolchain": "0.13.0",
+      "evidence_sha256": "8e41161367d3c04b9935456d7e06bbf7349a0fae95a43f2c5b8d9df330f01a9b",
+      "lane_exit": 0,
+      "warm_stages_passed": 5,
+      "synthetic_signatures_verified": 5,
+      "initial_aab_sha256": "dbb35f75d34ecc932c5ff7f60a1621f8568f2da2ea8f2b41bd19a35585132942",
+      "restored_aab_sha256": "b149fcca50446bdd27744393ac77ccd8d9fe22b9eedd60d25c7904b41a2f2bcd",
+      "authored_inputs_restored": true,
+      "signing_configuration_unchanged": true
+    },
+    "candidate": {
+      "toolchain": "0.14.0",
+      "evidence_sha256": "ce2279f1cf65804b6d8d4ab4386e92da08000a2bc2bb8ce672c04ce2812ffd27",
+      "lane_exit": 0,
+      "warm_stages_passed": 5,
+      "synthetic_signatures_verified": 5,
+      "initial_aab_sha256": "ba16ec50c4de41be4a1d5b6f74ce7b3b5956fe5f24f4d0a7397eac2503c9de5b",
+      "restored_aab_sha256": "2d84611d68413d5d2e2bde4c4cf537cb4932477a1f85fc34c3ad692d051fe181",
+      "authored_inputs_restored": true,
+      "signing_configuration_unchanged": true
+    }
+  },
+  "inspection": {
+    "tool": "official_bundletool_1.18.3_and_jarsigner",
+    "bundletool_sha256": "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29",
+    "app_id": "studio.mekate.mobi",
+    "probe": "manifest_referenced_string/mobi_aab_probe"
+  },
+  "cleanup": "quiescent_then_cleaned_owned_workspaces",
+  "contract_suites": 20,
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "limits": [
+    "cold_host_and_relocated_delivery",
+    "production_signing_and_store_delivery",
+    "toolchain_014_adoption_and_dependency_risk"
+  ],
+  "retained_attempt": {
+    "run_id": "1abafaa2ff94ab9d724e605042c88253",
+    "state": "inconclusive",
+    "reason": "release_lane_passed_but_unreferenced_probe_absent",
+    "cleanup": "cleaned_with_diagnostic_logs_retained"
+  }
+}

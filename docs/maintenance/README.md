@@ -47,7 +47,9 @@ cleanup.
 The [unsigned Release check](evidence/2026-11-19-toolchain-014-release.md) passes
 both iOS simulator products and the documented Android APK/AAB command paths,
 with matching code/resource observations and explicit optimized-runtime limits.
-The existing Android AAB helper integration, cold/relocated delivery and risk
+The [AAB helper integration](evidence/2026-11-20-android-aab-command.md) removes
+manual Gradle discovery/invocation and passes the existing fixture-signed lane
+and warm bundle checks on both versions. Cold/relocated delivery and risk
 decisions remain open.
 
 The [Swift Clocks assessment](evidence/2026-11-15-clocks-assessment.md) reviews
