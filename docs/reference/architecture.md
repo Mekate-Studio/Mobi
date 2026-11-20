@@ -75,7 +75,8 @@ Examples:
 
 - Android `buildDebug` and `buildRelease` call `./kotlin build`
 - Android release also runs
-  [`scripts/ci/build_android_aab.sh`](../../scripts/ci/build_android_aab.sh)
+  [`scripts/ci/build_android_aab.sh`](../../scripts/ci/build_android_aab.sh), which
+  delegates bundling to `./kotlin package -m android-app`
   to produce an `.aab`
 - Android `internal` and promotion lanes call Play Store actions
 - iOS `buildRelease` creates a signed archive/export

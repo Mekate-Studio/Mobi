@@ -240,6 +240,15 @@ TCA leads now request this review in the release table; the native-lifetime
 simplification check remains outside automated Swift-export retirement results.
 Discovery does not execute the check or qualify either owner's removal.
 
+On Kotlin Toolchain updates, review the Android AAB helper against the official
+Android-app packaging documentation. Exercise the existing release-candidate
+lane with synthetic signing, verify its published bundle matches the final
+`kotlin package` artifact, and check warm manifest/resource edits and reverts.
+The documented artifact path is temporary: replace the helper's explicit locator
+when a supported artifact-reporting interface is available, after validating the
+same output/signing contracts. Do not restore Gradle cache-layout discovery.
+This manual check is separate from the automated Swift-export retirement report.
+
 ## Primary references
 
 - [GitHub releases API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28): release metadata and pagination boundaries.

@@ -99,14 +99,23 @@ Symptom:
 
 Fix:
 
-- confirm the generated Gradle project exists under `build/tasks`
-- confirm a Gradle binary is available
-- inspect
-  [`scripts/ci/build_android_aab.sh`](../../scripts/ci/build_android_aab.sh)
-  for the expected Gradle distribution and artifact path
+- inspect the `kotlin package -m android-app` logs; a Release APK build alone
+  does not produce the bundle
+- check the final Toolchain bundle at
+  `build/tasks/_android-app_bundleAndroid/gradle-project-release.aab`
+- use [`scripts/ci/build_android_aab.sh`](../../scripts/ci/build_android_aab.sh)
+  to package and copy that final bundle to
+  `build/releases/android/android-app-release.aab`
+- supply the existing signing configuration for release builds; the helper does
+  not create or change signing material
 
-This script is specific to the current Kotlin Toolchain-generated Android
-release flow.
+Toolchain owns delegated Gradle execution. Remove the retired `GRADLE_BIN`,
+`ANDROID_AAB_GRADLE_JVM_ARGS` and `ANDROID_AAB_MAX_WORKERS` overrides; the helper
+refuses nonempty values instead of silently ignoring them. Its former Gradle
+worker/heap defaults no longer apply. `GRADLE_USER_HOME` and `JAVA_HOME` remain
+supported. On Toolchain updates, recheck the documented final bundle path and
+exercise the release lane, signing and warm manifest/resource edits. Avoid
+selecting an intermediate bundle by globbing the build tree.
 
 ## Google Play upload fails on a draft app
 
