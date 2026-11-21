@@ -1,5 +1,9 @@
 # Native CI JDK selection — 2026-11-21
 
+Status at capture: local qualification passed; adoption decision remains separate.
+The [compact receipt](2026-11-21-native-ci-jdk.json) binds the source revisions,
+actual action controls, package identity, native gate and raw-log hashes.
+
 ## Scope and review decision
 
 The four GitHub Mobile CI native jobs currently request Temurin `25`.
@@ -58,9 +62,30 @@ directories with real JDK binaries. A copied older JDK seeded the tool cache.
 
 All commands exited successfully and preserved the older cache. No user tool
 cache, installed JDK or ordinary Maven home was changed. Local action probes
-used Node 26.5.1; the real hosted action's Node 24 path and native jobs still
-need their own evidence. Native qualification results follow after the existing
-local gate completes.
+used Node 26.5.1. The real hosted action's Node 24 path and selected JVM versions
+are verified by this PR's required Mobile CI checks and recorded in its final
+review comment; this receipt captures local qualification, not a future hosted
+result.
+
+## Actual native qualification
+
+The already-passing [baseline CI run](https://github.com/Mekate-Studio/Mobi/actions/runs/44910579849)
+uses source `c06c4d4c2f3e36d4f11956e68125ed591eb56668`, whose tree exactly matches
+the merged base `270bf5b1ccaad57ef6f9525ce8fa026a9be3d9e6`. All four native jobs
+reported the older cached `25.0.5+8.0` selection. That existing evidence establishes
+the baseline without another baseline run.
+
+The candidate passed the normal local commit gate with the exact action-selected
+JDK supplied through `JAVA_HOME`: 94 Android/shared tests, 80 iOS test functions /
+174 executions, and both Debug builds. All four jobs printed the actual
+`Temurin-25.0.5.1+2` runtime. The existing 21 contract suites also passed.
+Seven native records still identify Toolchain 0.13.0 and Kotlin 2.5.0-RC; the
+actual delivery report retains one Kotlin runtime, six successful complete-switch
+checks and six deliberate-omission rejections. Both support-module strict probes
+remain blocked. Gradle 9.5.0 shutdown and owned snapshot cleanup passed.
+
+These are Debug/host/simulator and action-selection observations, not signed
+delivery, full strict Swift support, or proof that every runtime owner is patched.
 
 ## Update and rollback
 
@@ -72,6 +97,12 @@ record selected `JAVA_HOME` and runtime versions separately from the managed
 CLI JRE. This remains a manual review step; the watch does not automatically
 discover or adopt CI JDK patches. Existing Android SDK, warning and interop
 follow-ups remain active.
+
+Follow-up scope is explicit: `nightly-mobile-candidate.yml` has four broad `25`
+selectors and `mobile-release.yml` has seven. Review applying the build there
+with their own candidate/delivery gates. The dependency-maintenance workflow's
+Java 21 selection is also independent. This slice does not qualify or change
+those selectors.
 
 Rollback restores the previous workflow constant/references and runtime-report
 line as a reviewed revision. Developer JDK selection, retained project JDK

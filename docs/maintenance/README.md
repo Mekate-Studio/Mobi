@@ -53,6 +53,10 @@ The [0.14.1 qualification](evidence/2026-11-21-toolchain-0141-qualification.md)
 binds that approved exception and the actual runtime/native observations.
 The app stays on 0.13.0. Explicit older-runtime overrides still take precedence;
 older project provisioning-cache migration and adoption remain separate checks.
+The [native CI JDK selection review](evidence/2026-11-21-native-ci-jdk.md)
+pins one reviewed Temurin build for the four Mobile CI test/Debug jobs and logs
+the selected JVM version. It records vendor selector mapping, real cache controls,
+local native results, release-age review and remaining nightly/release scope.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout
