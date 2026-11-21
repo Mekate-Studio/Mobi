@@ -61,5 +61,6 @@ ci_set_java_home() {
 
   if [[ -n "${JAVA_HOME:-}" ]]; then
     ci_log "JAVA_HOME=${JAVA_HOME}"
+    "${JAVA_HOME}/bin/java" -version
   fi
 }

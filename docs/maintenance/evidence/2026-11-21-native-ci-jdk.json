@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "state": "local_qualification_passed",
+  "scope": "four_Mobile_CI_native_test_and_debug_jobs",
+  "source_base": "270bf5b1ccaad57ef6f9525ce8fa026a9be3d9e6",
+  "preparation_commit": "0fd1e59d5f0eae7d10b4e83417c8f8892fcccc83",
+  "reviewed_runtime": {
+    "vendor": "Eclipse Temurin",
+    "java_runtime_version": "25.0.5.1+2-LTS",
+    "setup_java_selector": "25.0.5+100000002.0.LTS",
+    "published_at": "2026-11-18T19:34:09Z",
+    "normal_eligible_at": "2026-11-25T19:34:09Z",
+    "age_state_at_review": "age_blocked_for_adoption",
+    "macos_arm64_archive_sha256": "248353ea41be39d5d2c1c67c7ce0ae4d1668966aacd0c5308464bc1be42f677b",
+    "archive_bytes": 136452381
+  },
+  "reviewed_inputs": {
+    "action_commit": "b6effb05e454b25005698d916606bdc6ffcbf961",
+    "action_bundle_sha256": "fb752b406a248f3b1d6b2a475fdaa3ab38fd790e3e32013bb1babe957e7d50b8",
+    "adoptium_api_response_sha256": "d7bf4742031a4566b7de524cc42a4a7aa22f1def13650979e2d0e6265e9d358d"
+  },
+  "action_selection": {
+    "local_node": "26.5.1_diagnostic_only",
+    "controls": [
+      {
+        "name": "baseline-cached-major",
+        "selector": "25",
+        "java_runtime_version": "25.0.5+8-LTS",
+        "exit": 0,
+        "downloaded": false,
+        "log_sha256": "49278733d46f7eb6424180ecda6128cc6aeb3fd5f54349aef6387fa4f057991f",
+        "release_sha256": "154dee9c09ff29951caa56e47ce7ecf99b78bf9be2905bde552a336c7fe4820f"
+      },
+      {
+        "name": "pin-with-older-cache",
+        "selector": "25.0.5+100000002.0.LTS",
+        "java_runtime_version": "25.0.5.1+2-LTS",
+        "exit": 0,
+        "downloaded": true,
+        "log_sha256": "4b11b96f22145c7daec9ca431c41af27fb9cc56132f4184b0fe07f6ab8dfb97d",
+        "release_sha256": "7ece67b4a1e636798a0aeb7ceb1cbba624534149bfd247ba1391d628226c59bd"
+      },
+      {
+        "name": "pin-retained",
+        "selector": "25.0.5+100000002.0.LTS",
+        "java_runtime_version": "25.0.5.1+2-LTS",
+        "exit": 0,
+        "downloaded": false,
+        "log_sha256": "2b9c77ba2c2d8ef6717b8e328f3575f6c241ee63bf93f942620287a975b3fcfa",
+        "release_sha256": "7ece67b4a1e636798a0aeb7ceb1cbba624534149bfd247ba1391d628226c59bd"
+      }
+    ],
+    "older_cache_preserved": true,
+    "archive_digest_verified": true
+  },
+  "baseline_hosted": {
+    "run_id": 44910579849,
+    "head_sha": "c06c4d4c2f3e36d4f11956e68125ed591eb56668",
+    "state": "passed",
+    "jobs": {
+      "ios-test": {
+        "provided_jdk": [
+          "25.0.5+8.0"
+        ],
+        "log_sha256": "7013d09f93eb3a1132fe1423d78ffdefb1e93b60b3863e859abacf8cb5af9f0c"
+      },
+      "android-build": {
+        "provided_jdk": [
+          "25.0.5+8.0"
+        ],
+        "log_sha256": "464124483b7caaac83c5c5275cedb87b7d4a2bd63bd8001655bf797849c5c698"
+      },
+      "android-test": {
+        "provided_jdk": [
+          "25.0.5+8.0"
+        ],
+        "log_sha256": "dac6ae9dc4ec1e39a50b142755fb3bf333ee8769c12525429912de8fd57314b4"
+      },
+      "ios-build": {
+        "provided_jdk": [
+          "25.0.5+8.0"
+        ],
+        "log_sha256": "b26ad436e6fd8eb5ffdce8ffaeb5593008d5164ac29b394d96eb22718ef495c3"
+      }
+    }
+  },
+  "native_gate": {
+    "index_sha256": "ec72601d39abfeadc8d934a146a96bee1ff74e8f6c84c61f9dff10a2fff0a5f8",
+    "inputs_sha256": "88c502584570077d0ebb55501c2c1b32051ecb50c5d636de7af444d451a524fe",
+    "passed_jobs": [
+      "android-test",
+      "ios-test",
+      "android-build-debug",
+      "ios-build-debug"
+    ],
+    "raw_log_sha256": "20ce397c12366b36417581322aaf1ebd8ed3f0024d0cca7b230bda0307a70936",
+    "jdk_version_report_count": 4,
+    "android_shared_tests": 94,
+    "ios_functions": 80,
+    "ios_executions": 174,
+    "toolchain": "0.13.0",
+    "kotlin_exporter": "2.5.0-RC",
+    "native_records": 7,
+    "swift_export_report_sha256": "48649398f1f3c1eda269698a90d5b766ddb6c3dbaccb61180ba1f338f8a3941b",
+    "capture_sha256": "0aad02077b05a2d5cd8f472e59d153c75b3064e623a8caef3be88a10ecbbd5af",
+    "one_kotlin_runtime": true,
+    "strict_support": {
+      "KotlinRuntimeSupport": "blocked",
+      "KotlinCoroutineSupport": "blocked"
+    },
+    "gradle_stopped": [
+      "9.5.0"
+    ],
+    "owned_workspace_cleanup": "passed"
+  },
+  "existing_contracts": {
+    "suite_count": 21,
+    "state": "passed",
+    "log_sha256": "d15d9fd32440b3a298352f824e86c70289dd6933b501dc01fabdbbd233e7c004"
+  },
+  "hosted_candidate_verification": "required_Mobile_CI_checks_and_final_PR_review_comment_not_captured_by_this_local_receipt",
+  "follow_ups": [
+    "JDK_specific_age_exception_before_early_merge",
+    "eleven_nightly_and_release_JDK_selectors",
+    "developer_and_retained_project_JDK_selections",
+    "other_OS_CPU_architectures_and_signed_delivery"
+  ],
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "interop_retirement_authorized": false
+}

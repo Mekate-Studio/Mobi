@@ -193,6 +193,12 @@ owned-workspace checks; a new launcher pin alone does not verify every runtime.
 Include `setup-java`'s preinstalled tool-cache selection: repository cache-free
 mode excludes host tools. The [actual 0.14.1 qualification](evidence/2026-11-21-toolchain-0141-qualification.md)
 observes a patched managed CLI alongside an older hosted `JAVA_HOME`.
+The [native CI JDK review](evidence/2026-11-21-native-ci-jdk.md) qualifies one
+exact vendor selector for Mobile CI. On Temurin, setup-action or runner-image
+updates, review the package identity, release age and `version_data.semver`
+mapping before changing `NATIVE_CI_JAVA_VERSION`; repeat actual cache-selection
+controls and native jobs. JDK patch discovery/adoption is manual. Nightly and
+release workflow selectors remain a separate candidate/delivery review.
 
 ## Interop workaround retirement
 
