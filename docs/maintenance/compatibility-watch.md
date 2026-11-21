@@ -206,6 +206,11 @@ structured-output replacement; qualify complete module/target/test coverage and
 failure controls before retiring pretty-output parsing. Keep historical version
 cases only while retained replay/recovery needs them, using full-revision replay
 when simplifying old support.
+The [0.14.1 published-owner review](evidence/2026-11-21-toolchain-0141-dependencies.md)
+distinguishes fresh archive identities/provider records from retained graph
+captures. On updates, compare each owner's actual files, recheck changed consumer
+bytecode and refresh omitted delegated-only queries before an adoption decision;
+fewer queried packages or a JRE fix does not clear unchanged Maven findings.
 
 ## Interop workaround retirement
 
