@@ -199,6 +199,13 @@ updates, review the package identity, release age and `version_data.semver`
 mapping before changing `NATIVE_CI_JAVA_VERSION`; repeat actual cache-selection
 controls and native jobs. JDK patch discovery/adoption is manual. Nightly and
 release workflow selectors remain a separate candidate/delivery review.
+The [0.14.1 module-input review](evidence/2026-11-21-toolchain-0141-inputs.md)
+also binds the output-reader cost and module-advisory limits. On Toolchain
+updates, check documented settings/graph commands and actual help for a supported
+structured-output replacement; qualify complete module/target/test coverage and
+failure controls before retiring pretty-output parsing. Keep historical version
+cases only while retained replay/recovery needs them, using full-revision replay
+when simplifying old support.
 
 ## Interop workaround retirement
 

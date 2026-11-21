@@ -199,28 +199,34 @@ module KotlinRehearsalTest
   end
 
   test('effective settings preserve version-specific scalar and structured Android SDK values') do
-    %w[0.11.1 0.12.2].each do |version|
+    %w[0.11.1 0.12.2 0.13.0 0.14.0 0.14.1].each do |version|
       result = Maintenance::KotlinEvidence.settings(settings(version), modules: ['app'], version: version)
       sdk = result['app']['settings@android']['android']['compileSdk']
       assert(version == '0.11.1' ? sdk == 36 : sdk == { 'apiLevel' => 36 })
+      reject(/coverage differs/) { Maintenance::KotlinEvidence.settings(settings(version), modules: %w[app missing], version: version) }
     end
-    reject(/coverage differs/) { Maintenance::KotlinEvidence.settings(settings('0.12.2'), modules: %w[app missing], version: '0.12.2') }
     reject(/Unsupported/) { Maintenance::KotlinEvidence.settings(settings('0.12.2'), modules: ['app'], version: '9.9.9') }
   end
 
   test('graphs retain main/test scopes, requested/selected versions, edges and repeated branches') do
-    result = Maintenance::KotlinEvidence.graphs(graph, modules: ['app'], version: '0.12.2')
-    roots = result['graphs']; assert(roots.size == 4)
-    assert(roots[0]['nodes'][0]['coordinate'] == { 'group' => 'g', 'name' => 'library', 'requested' => '1.0', 'selected' => '2.0' })
-    assert(roots[0]['nodes'][1]['repeated'])
-    assert(roots[0]['edges'][1] == { 'from' => 0, 'to' => 1 })
-    assert(!roots[0]['nodes'][2].key?('coordinate'), 'implicit request node misreported as an artifact')
+    %w[0.12.2 0.13.0 0.14.0 0.14.1].each do |version|
+      result = Maintenance::KotlinEvidence.graphs(graph, modules: ['app'], version: version)
+      roots = result['graphs']; assert(roots.size == 4)
+      assert(roots[0]['nodes'][0]['coordinate'] == { 'group' => 'g', 'name' => 'library', 'requested' => '1.0', 'selected' => '2.0' })
+      assert(roots[0]['nodes'][1]['repeated'])
+      assert(roots[0]['edges'][1] == { 'from' => 0, 'to' => 1 })
+      assert(!roots[0]['nodes'][2].key?('coordinate'), 'implicit request node misreported as an artifact')
+    end
   end
 
   test('missing test graphs, malformed metadata and unresolved nodes cannot produce complete coverage') do
-    reject(/Missing main\/test/) { Maintenance::KotlinEvidence.graphs(graph.gsub("\u2502 - test", "\u2502 - main"), modules: ['app'], version: '0.12.2') }
-    reject(/Unknown dependency graph metadata/) { Maintenance::KotlinEvidence.graphs(graph.sub('scope = COMPILE', 'unknown = COMPILE'), modules: ['app'], version: '0.12.2') }
-    reject(/Unresolved/) { Maintenance::KotlinEvidence.graphs(graph.sub('g:library:1.0', 'FAILED g:library:1.0'), modules: ['app'], version: '0.12.2') }
+    %w[0.12.2 0.13.0 0.14.0 0.14.1].each do |version|
+      reject(/module coverage differs/) { Maintenance::KotlinEvidence.graphs(graph, modules: %w[app missing], version: version) }
+      reject(/Missing main\/test/) { Maintenance::KotlinEvidence.graphs(graph.gsub("\u2502 - test", "\u2502 - main"), modules: ['app'], version: version) }
+      reject(/Unknown dependency graph metadata/) { Maintenance::KotlinEvidence.graphs(graph.sub('scope = COMPILE', 'unknown = COMPILE'), modules: ['app'], version: version) }
+      reject(/Unresolved/) { Maintenance::KotlinEvidence.graphs(graph.sub('g:library:1.0', 'FAILED g:library:1.0'), modules: ['app'], version: version) }
+    end
+    reject(/Unsupported/) { Maintenance::KotlinEvidence.graphs(graph, modules: ['app'], version: '9.9.9') }
   end
 
   test('network and ambiguous exits remain inconclusive while attributable compilation failures are distinct') do

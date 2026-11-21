@@ -1,22 +1,24 @@
 # Kotlin Toolchain rehearsal
 
 Slice 6 adds an independent Kotlin adapter to the [common executor](executor-guide.md).
-The reviewed baseline is now Toolchain 0.12.2 with `apple-silicon` targets.
+The reviewed baseline is Toolchain 0.13.0; current input qualification keeps
+Kotlin/exporter 2.5.0-RC and Metro 1.5.0 fixed.
 Historical 0.11.1 → 0.12.2 receipts remain in the
 [measured validation](sixth-slice-validation.md) and
-[target assessment](apple-silicon-assessment.md). The manifest keeps both versions
-for provenance but has no pending candidate after adoption.
+[target assessment](apple-silicon-assessment.md). The manifest retains historical
+versions for provenance and separately reviewed 0.14.x qualification candidates;
+candidate selection is not adoption.
 
 ## Prepare and run
 
 Install the existing pinned quality tools first, following the [README](../../README.md).
-Preparation explicitly downloads the four reviewed consumer wrappers:
+Preparation explicitly downloads the reviewed consumer-wrapper pairs:
 
 ```bash
 ./scripts/dev/dependency_updates.sh prepare-kotlin
 # After reviewing and allowlisting a future version, replace VERSION with it:
-./scripts/dev/dependency_updates.sh rehearse-kotlin VERSION inputs
-./scripts/dev/dependency_updates.sh rehearse-kotlin VERSION mobile
+./scripts/dev/dependency_updates.sh rehearse-kotlin VERSION inputs current
+./scripts/dev/dependency_updates.sh rehearse-kotlin VERSION mobile current
 ```
 
 A future version needs verified wrapper/distribution pins, release evidence,
@@ -24,8 +26,9 @@ age eligibility and versioned output-parser coverage. The adopted baseline is
 not a pending update candidate. OS-only comparisons use `rehearse-support` from
 the [mobile support guide](mobile-support-policy.md).
 
-The default target policy comes from `maintenance-kotlin-toolchains.json` and is
-now `apple-silicon`. The historical migration recipe can remove `iosX64` from the
+Use explicit `current` when comparing Toolchains without target edits. The
+default target policy is `apple-silicon`, whose guarded historical migration
+recipe refuses the expanded current library set. The historical recipe can remove `iosX64` from the
 five shared module lists and the bridge target/source mapping in an isolated
 candidate. Already migrated declarations are verified without additional edits.
 Changed declaration shapes/new libraries require review. Candidate graphs must
@@ -58,12 +61,14 @@ After input capture, mobile runs the existing jobs in order:
 
 1. `android-test`: Android app and declared shared host tests.
 2. `android-build-debug`: debug application packaging.
-3. `ios-test`: Xcode's `PullRequest` test plan, using the Gradle bridge.
+3. `ios-test`: Xcode's `PullRequest` test plan, using the captured source's builder.
 4. `ios-build-debug`: Xcode debug application build.
 
-`MOBI_VALIDATION=1`, `KOTLIN_IOS_BUILDER=gradle`, `IOS_TEST_PLAN=PullRequest`,
+`MOBI_VALIDATION=1`, `IOS_TEST_PLAN=PullRequest`,
 `SKIP_MACRO_VALIDATION=YES` and `SWIFT_ENABLE_EXPLICIT_MODULES=NO` are explicit
-rehearsal settings. The adapter creates a uniquely owned simulator and passes its
+rehearsal settings. `KOTLIN_IOS_BUILDER` selects the current Kotlin producer;
+the Gradle choice applies only to historical captured bridge sources. The adapter
+creates a uniquely owned simulator and passes its
 destination to the existing jobs. Signed release/archive/upload jobs are outside
 this plan. A complete baseline must pass before the candidate is allocated.
 There are no automatic retries, dependency repairs or adoption steps.
@@ -98,7 +103,12 @@ Private records live at `.maintenance/runs/RUN_ID/steps/PHASE-toolchain-PROFILE/
 | Native job logs and `debug-products.json` | Attempted test/build diagnostics and successful debug product hashes |
 | `observed-jvms.json`, `native-resources.json` | Private process/device ownership evidence |
 
-The parser is deliberately limited to the two reviewed CLI versions. Missing
+The parser is deliberately limited to the exact reviewed CLI versions in
+`KotlinEvidence::VERSIONS`. The [0.14.1 qualification](evidence/2026-11-21-toolchain-0141-inputs.md)
+records actual output, age state, full current target-scope coverage and advisory
+limits. Approved early qualification used the existing Ruby adapter's
+`experimental: true` argument; the CLI shortcut does not expose that flag.
+Missing
 modules, missing main/test scopes, unresolved nodes and unfamiliar syntax fail
 closed. Repeated graph branches remain references to earlier printed branches;
 there is no invented expansion. These are Toolchain Maven graphs, not a complete
