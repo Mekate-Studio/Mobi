@@ -98,6 +98,19 @@ jobs:
       - name: Verify cold cache boundary
         if: env.MOBI_COLD_VALIDATION == '1'
         run: ./scripts/ci/cold_cache_preflight.sh
+      - name: Select adopted baseline for quality policy checks (qualification ref only)
+        run: |
+          ruby -r ./scripts/maintenance/lib/kotlin_wrappers <<'RUBY'
+          wrappers = Maintenance::KotlinWrappers.new(Dir.pwd)
+          wrappers.prepare!
+          selection = wrappers.selection('0.14.1', experimental: true)
+          %w[kotlin kotlin.bat].each do |name|
+            candidate = File.binread(wrappers.wrapper('0.14.1', name)).gsub("\r\n", "\n")
+            raise 'Unexpected qualification source wrapper' unless File.binread(name) == candidate
+            File.binwrite(name, File.binread(wrappers.wrapper('0.13.0', name)).gsub("\r\n", "\n"))
+          end
+          puts JSON.generate('quality_wrapper' => '0.13.0', 'native_selection' => selection)
+          RUBY
       - uses: actions/cache@v6
         if: env.MOBI_COLD_VALIDATION != '1'
         with:
