@@ -18,6 +18,12 @@ ci_require_cmd() {
 }
 
 ci_prepare_workspace() {
+  if [[ "${MOBI_COLD_VALIDATION:-0}" == 1 ]]; then
+    export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="${CI_PROJECT_DIR}/.kotlin-cache"
+    export KOTLIN_CLI_USER_HOME="${CI_PROJECT_DIR}/.kotlin-user-home"
+    export GRADLE_USER_HOME="${CI_PROJECT_DIR}/.gradle-user-home"
+    export KONAN_DATA_DIR="${CI_PROJECT_DIR}/build/cold-cache/konan"
+  fi
   export KOTLIN_CLI_USER_HOME="${KOTLIN_CLI_USER_HOME:-${CI_PROJECT_DIR}/.kotlin-user-home}"
   export KOTLIN_CLI_TMP_DIR="${KOTLIN_CLI_TMP_DIR:-${CI_PROJECT_DIR}/build/tmp/kotlin}"
   export KOTLIN_CLI_JAVA_OPTIONS="${KOTLIN_CLI_JAVA_OPTIONS:+${KOTLIN_CLI_JAVA_OPTIONS} }-Duser.home=${KOTLIN_CLI_USER_HOME} -Djava.io.tmpdir=${KOTLIN_CLI_TMP_DIR}"

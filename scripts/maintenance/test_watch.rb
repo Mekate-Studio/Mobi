@@ -37,11 +37,29 @@ module WatchTest
     [{ 'run_id' => id, 'state' => state, 'reason' => 'named_checks_passed', 'result_sha256' => id * 2, 'adoption_authorized' => false,
        'phases' => %w[baseline candidate].map { |phase| { 'phase' => phase, 'cells' => { 'native_library_compile' => { 'status' => 'passed' }, 'framework_link' => { 'status' => phase == 'candidate' ? status : 'passed' } } } } }, 'cleaned']
   end
-  def self.fixture
+  def self.fixture(source_root: ROOT)
     Dir.mktmpdir('mobi-watch-test-') do |root|
-      Maintenance::Source.new(ROOT).copy_to(root)
+      Maintenance::Source.new(source_root).copy_to(root)
+      # Watch scenarios own their declared assessment tuple; the caller may be
+      # qualifying another wrapper. These fixtures never execute a Toolchain.
+      toolchain = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG))).fetch('toolchain')
+      File.write(File.join(root, 'kotlin'), "#!/bin/sh\nkotlin_cli_version=#{toolchain}\nexit 97 # declaration-only fixture\n")
+      File.write(File.join(root, 'kotlin.bat'), "@echo off\nset kotlin_cli_version=#{toolchain}\nexit /b 97\n")
       _, status = Open3.capture2e('/usr/bin/git', 'init', '-q', root); assert(status.success?)
       yield root
+    end
+  end
+
+  test('watch fixtures keep their assessment tuple when the caller qualifies another wrapper') do
+    fixture do |caller|
+      path = File.join(caller, 'kotlin')
+      expected = JSON.parse(File.read(File.join(caller, Maintenance::Compatibility::CONFIG))).fetch('toolchain')
+      other = expected == '0.14.0' ? '0.13.0' : '0.14.0'
+      File.write(path, File.read(path).sub(/^kotlin_cli_version=.+$/, 'kotlin_cli_version=' + other))
+      fixture(source_root: caller) do |root|
+        version = File.read(File.join(root, 'kotlin'))[/^kotlin_cli_version=(.+)$/, 1]
+        assert(version == expected, 'Watch fixture inherited the current caller wrapper')
+      end
     end
   end
   def self.run_watch(root, **options)

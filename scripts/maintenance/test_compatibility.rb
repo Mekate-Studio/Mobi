@@ -18,9 +18,14 @@ module CompatibilityTest
   rescue Maintenance::Failure => error
     assert(error.message.match?(pattern), error.message)
   end
-  def self.fixture
+  def self.fixture(source_root: ROOT)
     Dir.mktmpdir('mobi-compatibility-contract-') do |root|
-      Maintenance::Source.new(ROOT).copy_to(root)
+      Maintenance::Source.new(source_root).copy_to(root)
+      # Declaration-only fixtures own their historical tuple, even when the
+      # caller is qualifying another wrapper. Never execute these sentinels.
+      toolchain = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG))).fetch('toolchain')
+      File.write(File.join(root, 'kotlin'), "#!/bin/sh\nkotlin_cli_version=#{toolchain}\nexit 97 # declaration-only fixture\n")
+      File.write(File.join(root, 'kotlin.bat'), "@echo off\nset kotlin_cli_version=#{toolchain}\nexit /b 97\n")
       # Historical declaration/transform contracts only; never used for native execution.
       unless File.exist?(File.join(root, 'gradle/libs.versions.toml'))
         FileUtils.mkdir_p(File.join(root, 'gradle'))
@@ -40,6 +45,19 @@ module CompatibilityTest
       _, status = Open3.capture2e('/usr/bin/git', 'init', '-q', root)
       assert(status.success?)
       yield root
+    end
+  end
+
+  test('historical declaration fixtures do not inherit a caller qualification wrapper') do
+    fixture do |caller|
+      path = File.join(caller, 'kotlin')
+      expected = JSON.parse(File.read(File.join(caller, Maintenance::Compatibility::CONFIG))).fetch('toolchain')
+      other = expected == '0.14.0' ? '0.13.0' : '0.14.0'
+      File.write(path, File.read(path).sub(/^kotlin_cli_version=.+$/, 'kotlin_cli_version=' + other))
+      fixture(source_root: caller) do |root|
+        version = File.read(File.join(root, 'kotlin'))[/^kotlin_cli_version=(.+)$/, 1]
+        assert(version == expected, 'Historical fixture inherited the current caller wrapper')
+      end
     end
   end
 # Only the historical integration-transform contracts need retained inputs.

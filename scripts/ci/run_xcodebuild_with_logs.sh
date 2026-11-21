@@ -33,6 +33,9 @@ skip_macro_validation="$(ci_resolve_skip_macro_validation)"
 echo "Using SKIP_MACRO_VALIDATION=${skip_macro_validation}"
 
 cmd=(xcodebuild)
+if [[ "${MOBI_COLD_VALIDATION:-0}" == 1 ]]; then
+  cmd+=(-disablePackageRepositoryCache -packageCachePath "${project_root}/build/cold-cache/swiftpm")
+fi
 
 # Xcode otherwise replaces the selected JDK with its own JAVA_HOME build setting.
 if [[ -n "${JAVA_HOME:-}" ]]; then

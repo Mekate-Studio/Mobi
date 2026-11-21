@@ -7,6 +7,12 @@ classifier="${project_root}/scripts/ci/classify_changes.sh"
 fixture_dir="$(mktemp -d "${TMPDIR:-/tmp}/mobi-classifier-tests.XXXXXX")"
 trap 'rm -rf "${fixture_dir}"' EXIT
 
+"${classifier}" --full >"${fixture_dir}/manual-full.output"
+for flag in shared_tests android_tests ios_tests android_build ios_build full_validation; do
+  grep -Fqx "${flag}=true" "${fixture_dir}/manual-full.output"
+done
+grep -Fqx 'docs_only=false' "${fixture_dir}/manual-full.output"
+
 assert_output() {
   local fixture_name="$1"
   local expected_key="$2"
