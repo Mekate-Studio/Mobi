@@ -186,6 +186,10 @@ records; static non-use in one consumer is not policy clearance. Assess a CLI
 JRE security release separately from `JAVA_HOME` and provisioned compiler JDKs,
 including retained caches. Release discovery neither transfers an older waiver
 nor authorizes cache deletion, dependency overrides or adoption.
+The [0.14.1 runtime-chain assessment](evidence/2026-11-21-toolchain-0141-jre.md)
+separates managed CLI JRE, explicit CLI override and compiler/project JDK.
+Record actual selected versions and vendor CPU conditions in fresh and retained
+owned-workspace checks; a new launcher pin alone does not verify every runtime.
 
 ## Interop workaround retirement
 

@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "state": "static_candidate_with_runtime_qualification_pending",
+  "source_baseline": "28e93e915e84ba92eab1ef88612296adfbf1793f",
+  "candidate": "0.14.1",
+  "tag_commit": "f53674bce744f0b5e9ff235110dcc1d565d2c114",
+  "published_at": "2026-11-19T17:46:59Z",
+  "assessed_at": "2026-11-21T09:34:23.674438+00:00",
+  "eligible_at": "2026-11-26T17:46:59+00:00",
+  "age_state": "age_blocked",
+  "prior_waiver_transferred": false,
+  "experimental_execution_authorized": false,
+  "release_response_sha256": "5703b6f16b84104efdff416739aa0008c32912e860d2cf81542aa1bd90278ee0",
+  "source_compare_sha256": "ac908a41eaf045234da55fa4d6947c73c5c5d5e67b239a180a50d98deee47270",
+  "source_commit_count": 4,
+  "source_changed_paths": [
+    "build-sources/project-commands/module.yaml",
+    "docs/mkdocs.yml",
+    "docs/src/index.md",
+    "safe-merge.json",
+    "sources/amper-wrapper/resources/wrappers/launcher.template.sh",
+    "sources/test-integration/amper-cli-test/test/org/jetbrains/amper/cli/test/compose/ComposeHotReloadMcpServerCommandTest.kt"
+  ],
+  "consumer_wrappers": {
+    "unix_sha256": "91d116a4ab534cb3b45ad505cf1c072c328703ab69a4880d8daa8b744cca594c",
+    "windows_raw_sha256": "01600fefffeb77b2ae1ccc59bd9c284c9a0acf6669f8f60be16bc68463e212ea",
+    "windows_LF_sha256": "f26e88753ce247d62f0a29b31a29b8204eb68d3a762eae4fbbb34d13cbd08749",
+    "only_selected_version_and_distribution_pin_changed": true,
+    "download_receipt_sha256": "3a1e72a5bbad99ba2cf2740373e7730e058e9b13f8bb51f5913a7a7999189757"
+  },
+  "distribution": {
+    "archive_sha256": "39fb5f7e0bd5148a02f5519e88d78752fb04e719ddb086258ff57e94d83c0fcb",
+    "archive_bytes": 420237101,
+    "members": 645,
+    "jars": 632,
+    "added_paths": 0,
+    "removed_paths": 0,
+    "changed_file_entries": 13,
+    "changed_jar_entries": 12,
+    "unchanged_jar_entries": 620,
+    "changed_class_entries": 24,
+    "changed_classes_non_utf8_bytes_equal": true,
+    "class_constant_changes_only_release_identity_substitutions": true,
+    "non_class_jar_change": "lib/amper-wrapper-jvm.jar!wrappers/launcher.template.sh",
+    "delta_sha256": "cb5dc2dbf31719140abd28569b926f3a8d1a235b9b53b771fc4926a42c115acc",
+    "entry_delta_sha256": "62b4e2ef925f250081d81f9e8ea2e6854d53a1ff20530a601f0c76fd830e7cea",
+    "unchanged_jackson_members": [
+      "lib/jackson-core-2.13.5.jar",
+      "lib/jackson-annotations-2.13.5.jar",
+      "lib/jackson-module-kotlin-2.13.5.jar",
+      "lib/jackson-databind-2.13.5.jar",
+      "lib/serialization-jackson-2.0.253.jar"
+    ]
+  },
+  "managed_cli_jre": {
+    "zulu_version": "25.38.201",
+    "java_pin": "25.0.5.1",
+    "launcher_sha256": "97bd2be697a647a48c02a6bf288a7d437f24927bb18f944ac21602d60399f9a1",
+    "verified_packages": [
+      {
+        "platform": "macosx_aarch64",
+        "url": "https://cdn.azul.com/zulu/bin/zulu25.38.201-ca-jre25.0.5.1-macosx_aarch64.tar.gz",
+        "sha256": "fd5472b22068508afa656ac46da8ea984e180500882dfab8f9fe6253a2acd70e",
+        "bytes": 56591046,
+        "retrieved_at": "2026-11-21T09:28:06.238985+00:00",
+        "runtime_version": "25.0.5.1+2-LTS",
+        "vendor_version": "Zulu25.38+201-CA",
+        "os_arch": "aarch64"
+      },
+      {
+        "platform": "linux_x64",
+        "url": "https://cdn.azul.com/zulu/bin/zulu25.38.201-ca-jre25.0.5.1-linux_x64.tar.gz",
+        "sha256": "12277af4957cd249dc7aa50017ddde967a826fa48971b2411752fefe48e5ca8b",
+        "bytes": 61180668,
+        "retrieved_at": "2026-11-21T09:28:07.006103+00:00",
+        "runtime_version": "25.0.5.1+2-LTS",
+        "vendor_version": "Zulu25.38+201-CA",
+        "os_arch": "x86_64"
+      }
+    ],
+    "executed": false
+  },
+  "cache_fixtures": {
+    "scope": "published_shell_logic_with_owned_sentinels_and_fake_java_network",
+    "results": [
+      {
+        "case": "baseline_retained_cache",
+        "exit": 0,
+        "selected_java": "<fixture>/cache/zulu25.38.109-ca-jre25.0.5.0.3-macosx_aarch64/Contents/Home/bin/java",
+        "requested_new_jre": false,
+        "old_cache_preserved": true
+      },
+      {
+        "case": "candidate_old_and_new_cache",
+        "exit": 0,
+        "selected_java": "<fixture>/cache/zulu25.38.201-ca-jre25.0.5.1-macosx_aarch64/Contents/Home/bin/java",
+        "requested_new_jre": false,
+        "old_cache_preserved": true
+      },
+      {
+        "case": "explicit_cli_java_override",
+        "exit": 0,
+        "selected_java": "<fixture>/cache/zulu25.38.109-ca-jre25.0.5.0.3-macosx_aarch64/Contents/Home/bin/java",
+        "requested_new_jre": false,
+        "old_cache_preserved": true
+      },
+      {
+        "case": "candidate_old_cache_only",
+        "exit": 9,
+        "selected_java": null,
+        "requested_new_jre": true,
+        "old_cache_preserved": true
+      }
+    ],
+    "real_java_executed": false,
+    "real_network_used": false,
+    "receipt_sha256": "46f16532f4a7c207a28431396f396203715303a2301a7c4195bdc21a0573b866",
+    "one_off_script_sha256": "7181f1a6ce4bd6c6edf49db15fc0534d1271b8b41ba139a365989cf75a8c50a1"
+  },
+  "cve": {
+    "id": "CVE-2026-114938",
+    "record_updated": "2026-11-19T20:34:31.184Z",
+    "primary_responses": [
+      {
+        "url": "https://support.azul.com/api/v2/help_center/en-us/articles/55793255806100.json",
+        "status": 200,
+        "exit": 0,
+        "retrieved_at": "2026-11-21T09:30:18.535665+00:00",
+        "sha256": "fdbd9848eca72700f6404ab95c6443f2089a71bd9ceff0ab8be9c44c8a9527da"
+      },
+      {
+        "url": "https://adoptium.net/news/2026/11/temurin-november-2026-cspu-java4shell",
+        "status": 200,
+        "exit": 0,
+        "retrieved_at": "2026-11-21T09:30:18.844868+00:00",
+        "sha256": "21d72338f3fcfba63bd91d8e12b7cd64e59db5a0bb8c0586941804afb102a026"
+      },
+      {
+        "url": "https://cveawg.mitre.org/api/cve/CVE-2026-114938",
+        "status": 200,
+        "exit": 0,
+        "retrieved_at": "2026-11-21T09:30:19.884814+00:00",
+        "sha256": "30e897d2d99430b6c7c9870e7e295f0ce3abccf8c5701b2edce2bcba0e91b32f"
+      }
+    ],
+    "host_architecture": "arm64",
+    "vendor_affected_architecture": "x86_64_with_AVX512_features",
+    "exploitability_demonstrated": false
+  },
+  "jdk_source_sha256": {
+    "JdkProvider.kt": "520fdc1fdb35adf545f8efdd4190f631c31d17c19395e53a31768b54228f1ce2",
+    "ProvideKotlinCompilerRuntimeTask.kt": "cdaa2ddf39209861d41ae9f662b4d814304d49a17891cb7a2b1b5e49208e86d5",
+    "jdkProvisioningExtensions.kt": "695625e4dc12bbd29ca946a60dbff9fc8838dc43ac87473911c594a67a1f2ec3"
+  },
+  "real_candidate_cli_jre_or_app_executed": false,
+  "app_selected_toolchain": "0.13.0",
+  "policy_changed": false,
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workaround_retirement_authorized": false,
+  "global_caches_modified": false,
+  "pending": [
+    "version_specific_qualification_age_decision",
+    "exact_candidate_pins_and_producer_case",
+    "real_cli_and_compiler_jdk_selection_in_owned_fresh_and_retained_workspaces",
+    "native_tests_builds_export_controls_and_cleanup",
+    "remaining_non_JRE_advisories_and_attribution"
+  ]
+}
