@@ -216,6 +216,11 @@ binds 0.14.1's observed settings classpath and named queries. Gradle 9.8 still
 reports an incomplete transform observer. Recheck supported instrumentation and
 event-coverage controls on owner updates before replacing that mechanism; a
 passing build or disabled AGP option does not fill missing observation coverage.
+The [retained JDK control](evidence/2026-11-21-toolchain-0141-jdk-cache.md)
+records a version-bound project-cache refresh and supported project clean.
+On owner updates, verify actual CLI/tool JDK versions and record code-version,
+hit/recalculation behavior and cleanup scope. Revisit this manual review when a
+supported freshness policy changes; explicit runtime overrides remain separate.
 
 ## Interop workaround retirement
 
