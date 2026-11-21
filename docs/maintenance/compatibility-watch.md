@@ -178,6 +178,15 @@ minimums, and present support loss or architectural tradeoffs to the maintainer.
 Adoption requires an explicit decision bound to the reviewed source and changes.
 Bridge retirement remains a separate deferred decision. Elixir stays dormant.
 
+Toolchain/FUS owner reviews must recheck the launcher dependency edge and
+serializer selection described in the
+[Jackson exposure review](evidence/2026-11-21-toolchain-014-jackson.md). Bind any
+removal or patched cohort to the actual published distribution and fresh advisory
+records; static non-use in one consumer is not policy clearance. Assess a CLI
+JRE security release separately from `JAVA_HOME` and provisioned compiler JDKs,
+including retained caches. Release discovery neither transfers an older waiver
+nor authorizes cache deletion, dependency overrides or adoption.
+
 ## Interop workaround retirement
 
 The same watch writes `workarounds.json` and a retirement table in the step

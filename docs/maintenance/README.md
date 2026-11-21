@@ -40,6 +40,11 @@ measures the distribution and delegated Android owners, refreshes their advisory
 records, and preserves unassigned artifacts and the Gradle 9.8 transform-observer
 gap. Launcher updates do not repair retained integration or exporter dependencies;
 adoption remains unqualified.
+The [Jackson owner review](evidence/2026-11-21-toolchain-014-jackson.md) traces the
+new launcher files to FUS, confirms Kotlin serializer selection in the delivered
+bytecode, and retains the findings and static-analysis limits. It also records
+0.14.1's CLI JRE security fix as the next assessment lead; neither release is
+adopted by that review.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout
