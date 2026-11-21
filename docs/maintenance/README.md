@@ -74,6 +74,10 @@ The [retained project-JDK check](evidence/2026-11-21-toolchain-0141-jdk-cache.md
 measures a real old cache hit, refresh on the first 0.14.1 default-JDK request,
 warm reuse and supported project clean. Its scoped result keeps explicit runtime
 overrides, other cache origins and delivery/adoption decisions separate.
+The [0.14.1 unsigned Release check](evidence/2026-11-21-toolchain-0141-release.md)
+passes both iOS simulator products, Android APKs and the current AAB helper.
+It records scoped payload agreement and unchanged warning output while retaining
+optimized-mode visibility, runtime/delivery and dependency-risk limits.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout

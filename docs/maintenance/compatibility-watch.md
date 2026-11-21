@@ -292,6 +292,11 @@ The documented artifact path is temporary: replace the helper's explicit locator
 when a supported artifact-reporting interface is available, after validating the
 same output/signing contracts. Do not restore Gradle cache-layout discovery.
 This manual check is separate from the automated Swift-export retirement report.
+The [0.14.1 unsigned Release record](evidence/2026-11-21-toolchain-0141-release.md)
+binds actual optimized products and unsigned helper publication; it does not
+replace warm/synthetic-signing or runtime delivery checks. On compiler/exporter
+updates, re-evaluate supported optimized-image mode observability while preserving
+optimization and one runtime; an absent constant is not an observed mode value.
 
 ## Primary references
 
