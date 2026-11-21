@@ -5,7 +5,7 @@ require 'yaml'
 
 module Maintenance
   module KotlinEvidence
-    VERSIONS = %w[0.11.1 0.12.2 0.13.0 0.14.0].freeze
+    VERSIONS = %w[0.11.1 0.12.2 0.13.0 0.14.0 0.14.1].freeze
 
     def self.clean(text, source: nil)
       value = text.gsub(/\e\[[0-9;]*m/, '')

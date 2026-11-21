@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "state": "input_checks_passed_module_advisories_require_triage",
+  "scope": "public_toolchain_module_settings_and_named_maven_dependencies_only",
+  "source_base": "4a1b9cc1a7cc6dad73222b4ad3d8bf0483726a1a",
+  "run_id": "55b1ac8a0509079fd21c419958c665d3",
+  "result_sha256": "63995e57f32bedad3c0055fcbb61575d6f53d7190fd555eb8c6c5e3108e772eb",
+  "source_sha256": "8415e51e9b43698d0b7cd9c7f31179706e4028678c71a74ca804699219af0fb8",
+  "implementation_sha256": "dbf6f53a0775e8e9f57e00729c4ef826842a1e0f4e1e2f4a61cdba1c3a63a4b6",
+  "selection": {
+    "version": "0.14.1",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-21T17:44:10Z",
+    "eligible_at": "2026-11-26T17:46:59Z",
+    "adoption_authorized": false
+  },
+  "distribution_sha256": "39fb5f7e0bd5148a02f5519e88d78752fb04e719ddb086258ff57e94d83c0fcb",
+  "qualification_exception": "0141_only_CLI_JDK_native_qualification_recorded_in_PR124_and_confirmed_Nov21",
+  "target_policy": "current_no_target_edits",
+  "fixed_kotlin_exporter": "2.5.0-RC",
+  "fixed_metro": "1.5.0",
+  "phases": {
+    "baseline": {
+      "version": "0.13.0",
+      "modules": [
+        "android-app",
+        "ios-app",
+        "shared-core",
+        "shared-di",
+        "shared-feature-home",
+        "shared-feature-nearby-vehicle-map",
+        "shared-ios-app",
+        "shared-ui-home",
+        "swift-export"
+      ],
+      "graph_roots": 104,
+      "queries": 359,
+      "settings_sha256": "cb73a03f59c1387f90c72e38d1bdcb2767fc0080d14d2adcc8731af661cd6050",
+      "graphs_sha256": "c18f1c1b293aaf12a2f585d9d5dfc0e4d0533f09551b6f0cbead6f32c191612c",
+      "queries_sha256": "3b1ed5ee94d1adf244ba9864da27be0c454d0f1a2002841810ab23dbc163c965",
+      "evidence_sha256": "4935476d80eaa57296062bdc7029e3e4fbfb2721324ccd126310b34e98f05ad5"
+    },
+    "candidate": {
+      "version": "0.14.1",
+      "modules": [
+        "android-app",
+        "ios-app",
+        "shared-core",
+        "shared-di",
+        "shared-feature-home",
+        "shared-feature-nearby-vehicle-map",
+        "shared-ios-app",
+        "shared-ui-home",
+        "swift-export"
+      ],
+      "graph_roots": 104,
+      "queries": 359,
+      "settings_sha256": "c217f71babe7bf57956adf9de206e2bf5e100af7f0f593e6ff187d5a905d55c9",
+      "graphs_sha256": "b4c7793f000910fa24ac6019f7c39e0eb3ab2c46cacd8d697b25edaa48f86702",
+      "queries_sha256": "3b1ed5ee94d1adf244ba9864da27be0c454d0f1a2002841810ab23dbc163c965",
+      "evidence_sha256": "fa555a87ff2d4da5d268a23e273833b2e57bf0853198dfb9ec328342dcedf3bd"
+    }
+  },
+  "raw_output_replay_verified_before_cleanup": true,
+  "declared_target_main_test_compile_runtime_coverage": "passed_all_modules",
+  "iosX64_roots": 0,
+  "comparison": {
+    "same_queries": true,
+    "same_settings": false,
+    "same_graphs": false,
+    "changed_graph_roots": [
+      [
+        "android-app",
+        "main",
+        "runtime",
+        [
+          "android"
+        ]
+      ],
+      [
+        "android-app",
+        "test",
+        "runtime",
+        [
+          "android"
+        ]
+      ]
+    ],
+    "removed_printed_constraint": "androidx.lifecycle:lifecycle-livedata:2.11.0 (c)",
+    "setting_change_rows": 44,
+    "new_disabled_settings": [
+      {
+        "path": "android.desugaring",
+        "modules": 6,
+        "enabled": false,
+        "configured_library": "com.android.tools:desugar_jdk_libs:2.1.5"
+      },
+      {
+        "path": "publishing.mavenCentral.notifyKlibsIo",
+        "modules": 9,
+        "value": false
+      }
+    ],
+    "full_settings_diff_sha256": "e9a3f94e35987dc99d9490aa679ca31657528a5c20f3e374a5f54ba967933a89"
+  },
+  "advisories": {
+    "retrieved_at": "2026-11-21T17:52:20Z",
+    "scope": "one_current_snapshot_of_the_identical_baseline_candidate_named_Maven_query_sets",
+    "query_count": 359,
+    "batch_count": 4,
+    "response_rows": 359,
+    "provider_complete": true,
+    "pagination": false,
+    "state": "triage_required",
+    "records": [
+      {
+        "id": "GHSA-ccrj-gw8r-854m",
+        "severity": "MODERATE",
+        "record_sha256": "0fd802e5143e6d32e6f3fba5c8749cf26c1e08febd40b3b4e25aa9b623d8381f"
+      },
+      {
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "severity": "MODERATE",
+        "record_sha256": "fcfaf1d58903e3ce691654504bd768a433a89d82e0ef428e64d86bd9b7f65f56"
+      }
+    ],
+    "receipt_sha256": "819db25bf2f6c53788fe48cbbe534f576cab5a92307d64ba79aba412aff68e3d",
+    "matches": [
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "io.opentelemetry:opentelemetry-api"
+          },
+          "version": "1.41.0"
+        },
+        "id": "GHSA-ccrj-gw8r-854m",
+        "triage": "required"
+      },
+      {
+        "query": {
+          "package": {
+            "ecosystem": "Maven",
+            "name": "io.opentelemetry:opentelemetry-api"
+          },
+          "version": "1.41.0"
+        },
+        "id": "GHSA-rcgg-9c38-7xpx",
+        "triage": "required"
+      }
+    ],
+    "compiler_distribution_and_delegated_Gradle_coverage": false
+  },
+  "contracts": {
+    "rehearsal_count": 29,
+    "suite_count": 21,
+    "state": "passed",
+    "red_log_sha256": "8651e82da814c1d0d2464db1ea5edaae0f9db55125af6d8ba06464770fe92ce4",
+    "green_log_sha256": "85264bad4aea02cd757ed4b911812986a0d5026058bf64f1754d497697c9c49f",
+    "all_contracts_sha256": "4a01509a2f7a9e50e27b844b749079a9e9258671c53d6270f9c8ebf5ee6a5f94"
+  },
+  "initial_constructor_refusal": {
+    "reason": "historical_apple_silicon_migration_module_set_changed",
+    "execution_allocated": false,
+    "log_sha256": "992a25cee9650d8ee45c101d10f16f01a7b46d6a9e0acfbebe6d1fa671bc57f5"
+  },
+  "normal_age_admission": "still_refused_before_Nov26",
+  "original_run_missing_capabilities": [
+    "authenticated_provider_evidence",
+    "complete_bridge_target_graph",
+    "signed_release_packaging",
+    "direct_toolchain_parity",
+    "intel_linux_hosted_execution",
+    "native_tests",
+    "native_builds",
+    "compiler_artifacts"
+  ],
+  "additional_review_gaps": [
+    "release_age",
+    "0141_distribution_and_delegated_owner_advisory_refresh",
+    "retained_project_JDK_cache_migration",
+    "0141_Release_resource_and_relocated_delivery"
+  ],
+  "owned_cleanup": {
+    "state": "cleaned",
+    "evidence_retained": true,
+    "receipt_sha256": "5d9a31b9bc169f10ef459e359f5a53b065aa5a0811b5e14741d68fa2d05564a1"
+  },
+  "parser_simplification_recheck": "documented_machine_readable_settings_and_graphs_plus_full_target_scope_and_refusal_controls_before_replacing_pretty_parser",
+  "cli_help_sha256": {
+    "settings": "538f96d3166a7a0591a2f78448ca6467ab1452911a2d59128a73c6effcfca20a",
+    "dependencies": "d162e8dda622b5c339ebd13bd2d0f656b5583132f7de2bb3fcd571f72c6bcbe3"
+  },
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workaround_retirement_authorized": false
+}

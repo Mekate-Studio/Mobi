@@ -57,6 +57,11 @@ The [native CI JDK selection review](evidence/2026-11-21-native-ci-jdk.md)
 pins one reviewed Temurin build for the four Mobile CI test/Debug jobs and logs
 the selected JVM version. It records vendor selector mapping, real cache controls,
 local native results, release-age review and remaining nightly/release scope.
+The [0.14.1 input qualification](evidence/2026-11-21-toolchain-0141-inputs.md)
+passes actual settings/dependency outputs for all nine modules and 104 roots.
+Its 359 named Maven queries match the baseline; fresh module advisories retain
+the two Moderate OpenTelemetry findings. Distribution/delegated-owner and
+adoption decisions remain separate.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout
