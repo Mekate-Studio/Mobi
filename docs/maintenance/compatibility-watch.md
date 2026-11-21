@@ -211,6 +211,11 @@ distinguishes fresh archive identities/provider records from retained graph
 captures. On updates, compare each owner's actual files, recheck changed consumer
 bytecode and refresh omitted delegated-only queries before an adoption decision;
 fewer queried packages or a JRE fix does not clear unchanged Maven findings.
+The [fresh delegated capture](evidence/2026-11-21-toolchain-0141-delegated.md)
+binds 0.14.1's observed settings classpath and named queries. Gradle 9.8 still
+reports an incomplete transform observer. Recheck supported instrumentation and
+event-coverage controls on owner updates before replacing that mechanism; a
+passing build or disabled AGP option does not fill missing observation coverage.
 
 ## Interop workaround retirement
 
