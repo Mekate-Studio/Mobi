@@ -24,6 +24,8 @@ env:
   DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
   KOTLIN_CLI_BOOTSTRAP_CACHE_DIR: ${{ github.workspace }}/.kotlin-cache
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
+  # Temurin 25.0.5.1+2, using Adoptium's version_data.semver selector.
+  NATIVE_CI_JAVA_VERSION: '25.0.5+100000002.0.LTS'
 
 jobs:
   classify:
@@ -134,7 +136,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "25"
+          java-version: ${{ env.NATIVE_CI_JAVA_VERSION }}
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
@@ -180,7 +182,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "25"
+          java-version: ${{ env.NATIVE_CI_JAVA_VERSION }}
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
@@ -228,7 +230,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "25"
+          java-version: ${{ env.NATIVE_CI_JAVA_VERSION }}
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
@@ -264,7 +266,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "25"
+          java-version: ${{ env.NATIVE_CI_JAVA_VERSION }}
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: ${{ env.MOBI_COLD_VALIDATION != '1' }}
