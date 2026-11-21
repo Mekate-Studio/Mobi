@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "state": "scoped_cache_upgrade_and_clean_controls_passed",
+  "scope": "actual_0130_retained_project_jdk_state_upgrade_to_0141_and_project_clean",
+  "source_base": "568deb38a15d8ee0c434b95bbfd77f312a112baa",
+  "source_sha256": "e994231afb923020f88d709e44c487018ce5c0da96ede36eef49c6d329eaf221",
+  "implementation_sha256": "1168f93989e13a93f758fc8c5136a054f94a67f35c8f648ee90ae1cf44ade51a",
+  "result_sha256": "659ca5d71575cf67b17f00e36fd6550a2fa7b6f372675836df549ef76df94953",
+  "selection": {
+    "version": "0.14.1",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-21T20:18:55Z",
+    "eligible_at": "2026-11-26T17:46:59Z",
+    "adoption_authorized": false
+  },
+  "seed": {
+    "kind": "relocated_authentic_0130_JDK_provisioning_and_list_records",
+    "original_JDK_version": "25.0.4.1",
+    "matching_JDK_files": 400,
+    "byte_size_and_mtime_preserved": true,
+    "relocation": "absolute_home_prefix_only_no_version_or_file_state_edits",
+    "source_record_sha256": "9a32786e1bd0b0ce5ea4d6b9de958a826c7b8ba63c0578317a128572f35248d4",
+    "source_list_record_sha256": "c9f681af6a5f0204fd4dc0f03118927b5c3eff079568bf0a5a56e64880cae83d",
+    "private_record_sha256": "02b8a709c64b17c5ba09d3962227ef8f6462cc89795d80a54267d65e5eb94381",
+    "source_release_sha256": "e5e50f3c36e9ce7ac50ccbc499c8299880e8fb8fee57bb3a7a2b890477ce8498",
+    "raw_seed_receipt_sha256": "7049c12c51b28a686b5d2642f1e08552fc9093f841687b5bd01f64b32105fb17"
+  },
+  "controls": [
+    {
+      "name": "baseline-version",
+      "exit": 0,
+      "runtime_versions_in_order": [
+        "25.0.2+10-LTS"
+      ],
+      "record_code_before": "0.13.0",
+      "record_code_after": "0.13.0",
+      "record_reused": true,
+      "log_sha256": "538a78d3c91e393efb07587bbaab35e1ee53189070215876a5e9baa7758232a5"
+    },
+    {
+      "name": "baseline-retained-jdk",
+      "exit": 0,
+      "runtime_versions_in_order": [
+        "25.0.2+10-LTS",
+        "25.0.4.1+1-LTS"
+      ],
+      "record_code_before": "0.13.0",
+      "record_code_after": "0.13.0",
+      "record_reused": true,
+      "log_sha256": "f32889755a3fc5ebd015e5e012b4616a79c54d0d6805c10f7c6fc8e4da9a80ab"
+    },
+    {
+      "name": "candidate-version",
+      "exit": 0,
+      "runtime_versions_in_order": [
+        "25.0.5.1+2-LTS"
+      ],
+      "record_code_before": "0.13.0",
+      "record_code_after": "0.13.0",
+      "record_reused": true,
+      "log_sha256": "1179be817f3792b9a78eab5f53909f2372f175b2b9b8f203922167e3f7c90ef5"
+    },
+    {
+      "name": "candidate-retained-jdk",
+      "exit": 0,
+      "runtime_versions_in_order": [
+        "25.0.5.1+2-LTS",
+        "25.0.5.1+2-LTS"
+      ],
+      "record_code_before": "0.13.0",
+      "record_code_after": "0.14.1",
+      "record_reused": false,
+      "log_sha256": "d27e21fe2cf855ca1b1f17bd633bf681f95331934cb894f58e4696de010130ed"
+    },
+    {
+      "name": "candidate-warm-jdk",
+      "exit": 0,
+      "runtime_versions_in_order": [
+        "25.0.5.1+2-LTS",
+        "25.0.5.1+2-LTS"
+      ],
+      "record_code_before": "0.14.1",
+      "record_code_after": "0.14.1",
+      "record_reused": true,
+      "log_sha256": "c8f30b4390c3fca4424354254b48acdbcbd0349a2ac8288e6721cad32071a5b2"
+    },
+    {
+      "name": "candidate-project-clean",
+      "exit": 0,
+      "runtime_versions_in_order": [
+        "25.0.5.1+2-LTS"
+      ],
+      "record_code_before": "0.14.1",
+      "record_code_after": null,
+      "record_reused": false,
+      "log_sha256": "ae3da2aa98e8b555a0a846ae42d2284076d92c89aef5f324ce691638a9b792ca"
+    },
+    {
+      "name": "candidate-after-clean-jdk",
+      "exit": 0,
+      "runtime_versions_in_order": [
+        "25.0.5.1+2-LTS",
+        "25.0.5.1+2-LTS"
+      ],
+      "record_code_before": null,
+      "record_code_after": "0.14.1",
+      "record_reused": false,
+      "log_sha256": "bc962ba5d8c71eb54147c6cadcfa7dad2227e5fb30c942b73191a58841ebda39"
+    }
+  ],
+  "observations": {
+    "baseline_real_cache_hit": true,
+    "candidate_version_command_alone_left_old_record": true,
+    "first_candidate_default_JDK_request_rebound_record": true,
+    "candidate_warm_real_cache_hit": true,
+    "project_clean_removed_provisioning_record": true,
+    "project_clean_preserved_shared_JDK": true,
+    "after_clean_same_patched_JDK_path_and_version": true,
+    "original_records_and_all_400_JDK_files_unchanged": true
+  },
+  "selected_JDK_identities": {
+    "retained_old": {
+      "release_sha256": "e5e50f3c36e9ce7ac50ccbc499c8299880e8fb8fee57bb3a7a2b890477ce8498"
+    },
+    "candidate": {
+      "release_sha256": "7ece67b4a1e636798a0aeb7ceb1cbba624534149bfd247ba1391d628226c59bd"
+    }
+  },
+  "source_evidence_sha256": {
+    "AmperVersion.kt": "d5458bd92e96705d1f8fe54cb8e97e0b4141f1cd983613587e88f16335485b10",
+    "CleanCommand.kt": "3acd74ad2167efe9ef8408c9055d75293f6e9ea17a6edc064ac201339ef8e0a8",
+    "IncrementalCache.kt": "4f49b3ff62bb469f0f61bff83b4055b47069ba707a1454ea86b02dab4161ae5d",
+    "JdkProvider.kt": "12f587d468828baae7825601b1b4d3f30139d7b9a1a9b68f4b06607fcfa8cbde",
+    "ProjectCliContext.kt": "6af451e52a8c7e4431e1b34bec15bb5fb592587f2afa149f782987dde53cc36c",
+    "baseline-JdkToolCommand.kt": "82db1aaf191f467303d004232eccd58f897a9e49a81c9273a3ee945c32c0109c"
+  },
+  "preflight_refusal": {
+    "before_any_CLI_execution": true,
+    "reason": "immutable_source_copy_guard_rejected_two_intentionally_seeded_build_state_files",
+    "receipt_sha256": "4f1f15e20b9f47325d3b5843c8b45af8e7f373d4bb99100704d42e441e5b8c07",
+    "subsequent_guard": "all_authored_files_verified_and_generated_paths_confined_to_private_build_directory",
+    "maintained_guard_changed": false
+  },
+  "cleanup": {
+    "state": "cleaned",
+    "evidence_retained": true,
+    "only_owned_workspace_removed": true,
+    "receipt_sha256": "eca037a7cbf47268a5ccdb56193349016547dd868d143b9d45d39ca4ccda9c63"
+  },
+  "remaining_gaps": [
+    "other_origins_criteria_vendors_and_architectures",
+    "full_project_Gradle_Native_and_SDK_cache_migration",
+    "explicit_JAVA_HOME_and_KOTLIN_CLI_JAVA_HOME_are_separate_owners",
+    "machine_wide_shared_cache_clean_not_exercised",
+    "affected_x64_CVE_path_and_security_clearance",
+    "0141_Release_resource_relocated_and_signed_delivery",
+    "retained_dependency_findings_and_Gradle_transform_visibility",
+    "release_age_and_adoption_decision"
+  ],
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workarounds_removed": []
+}
