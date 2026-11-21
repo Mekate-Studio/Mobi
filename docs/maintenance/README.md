@@ -48,8 +48,11 @@ adopted by that review.
 The [0.14.1 JRE assessment](evidence/2026-11-21-toolchain-0141-jre.md) verifies
 the delivered launcher pins and two vendor JRE archives, bounds the x64 CPU
 condition, and tests cache selection with fake Java. It recommends isolated
-qualification subject to a new version-specific age decision; real candidate
-runtime/native checks and compilation-JDK refresh remain unrun.
+qualification subject to a new version-specific age decision.
+The [0.14.1 qualification](evidence/2026-11-21-toolchain-0141-qualification.md)
+binds that approved exception and the actual runtime/native observations.
+The app stays on 0.13.0. Explicit older-runtime overrides still take precedence;
+older project provisioning-cache migration and adoption remain separate checks.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout

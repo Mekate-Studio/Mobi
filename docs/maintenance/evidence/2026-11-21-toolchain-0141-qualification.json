@@ -1,0 +1,273 @@
+{
+  "schema": 1,
+  "state": "local_and_cache_free_hosted_native_checks_passed",
+  "baseline": "0.13.0",
+  "candidate": "0.14.1",
+  "source_baseline": "15d42d515f5d3de92d1b396c3263c686ff8be695",
+  "preparation_commit": "1c573e341acfe889208df9fc6203ca42616e5ceb",
+  "candidate_commit": "f897d227507866b877b85553460561a8ef5a0f9b",
+  "selection": {
+    "version": "0.14.1",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-21T13:14:45Z",
+    "eligible_at": "2026-11-26T17:46:59Z",
+    "adoption_authorized": false
+  },
+  "admission_controls": {
+    "normal_admission": "refused_release_age",
+    "experimental": {
+      "version": "0.14.1",
+      "mode": "experimental",
+      "age_state": "age_blocked",
+      "assessed_at": "2026-11-21T13:23:39Z",
+      "eligible_at": "2026-11-26T17:46:59Z",
+      "adoption_authorized": false
+    }
+  },
+  "waiver": {
+    "decision": "explicit_yes_2026-11-21",
+    "scope": "0141_only_cli_jdk_and_native_qualification",
+    "published_at": "2026-11-19T17:46:59Z",
+    "distribution_sha256": "39fb5f7e0bd5148a02f5519e88d78752fb04e719ddb086258ff57e94d83c0fcb"
+  },
+  "fixed": {
+    "kotlin_exporter": "2.5.0-RC",
+    "metro": "1.5.0",
+    "swift_packages": "unchanged",
+    "platform_floors": "unchanged",
+    "feature_behavior": "unchanged"
+  },
+  "runtime": {
+    "host": "macos_arm64",
+    "scope": "fresh_and_same_version_retained_caches_plus_explicit_overrides",
+    "result_sha256": "b9d495a897715660c4acf3e23e9ac7869f1379addaace3f6698804e6495592cf",
+    "commands": [
+      {
+        "name": "fresh-version",
+        "exit": 0,
+        "java_runtime_versions": [
+          "25.0.5.1+2-LTS"
+        ],
+        "log_sha256": "60889c01533778c4977e343f4bbef0ecc65b15d2645cd6144ccdc9b7fa6cfad4"
+      },
+      {
+        "name": "fresh-default-jdk",
+        "exit": 0,
+        "java_runtime_versions": [
+          "25.0.5.1+2-LTS"
+        ],
+        "log_sha256": "dcd12de7c7d41f896fb381b4832a86182dfa8acee948f94c725daa3a01352822"
+      },
+      {
+        "name": "retained-version",
+        "exit": 0,
+        "java_runtime_versions": [
+          "25.0.5.1+2-LTS"
+        ],
+        "log_sha256": "bf82d77205b5ef5a7bb177cb8adeaf97ff8180befb9b8732c4bf089e9653811f"
+      },
+      {
+        "name": "retained-default-jdk",
+        "exit": 0,
+        "java_runtime_versions": [
+          "25.0.5.1+2-LTS"
+        ],
+        "log_sha256": "e99936f9b34d0007eccfced2180f838de2c06fc65773bb512d5d989242d24f91"
+      },
+      {
+        "name": "inspected-default-jdk",
+        "exit": 0,
+        "java_runtime_versions": [
+          "25.0.5.1+2-LTS",
+          "25.0.5.1+2-LTS"
+        ],
+        "log_sha256": "190b3ae64c34fb0354c043d75ed319e39c723089f7502f3fa52c2588d17018d3"
+      },
+      {
+        "name": "explicit-old-cli",
+        "exit": 0,
+        "java_runtime_versions": [
+          "25.0.5+8-LTS"
+        ],
+        "log_sha256": "db82c5eee86eb2b5744271574748d2cdfc30a2adb58e74093faf99e4a67895fa"
+      },
+      {
+        "name": "explicit-old-project-jdk",
+        "exit": 0,
+        "java_runtime_versions": [
+          "25.0.5.1+2-LTS",
+          "25.0.5+8-LTS"
+        ],
+        "log_sha256": "1f948cdd184ffa318cb25eb30a39aec222876e3911f8a42dd2e3ed81d700f9ed"
+      }
+    ],
+    "older_override_archive_sha256": "36dc14d797aaff6d89aab302cd053fdba6207dfdcf772052fa7b023a94b0e857",
+    "actual_native_runtime_capture_sha256": "317c8e14a285573189a3ceeabdfe9d5118633756a17385718082b9cddca159fa",
+    "actual_native_managed_cli_and_provisioned_jdk": "25.0.5.1+2-LTS",
+    "telemetry_disabled_for_diagnostics_only": true,
+    "retained_older_project_provisioning_cache": "not_measured"
+  },
+  "local": {
+    "baseline": {
+      "wrapper": "0.13.0",
+      "index_sha256": "6db460196bb30b15c8b49ec547b2892e9b83bc5abaeb1a3a01409db7970f54ee",
+      "inputs_sha256": "a72d35c6e6dc208ea39a94ea8629d576b4addfb1ab09a48d416d30fb044478ab",
+      "passed_jobs": [
+        "android-test",
+        "ios-test",
+        "android-build-debug",
+        "ios-build-debug"
+      ],
+      "raw_log_sha256": "284099683699c69acc6ebc259c7261a69061825b765297b804665f3f81ec2111",
+      "android_shared_tests": 94,
+      "ios_test_functions": 80,
+      "ios_test_executions": 174,
+      "native_record_versions": [
+        "0.13.0"
+      ],
+      "native_record_compilers": [
+        "2.5.0-RC"
+      ],
+      "native_record_count": 7,
+      "capture_sha256": "89ea75dd6c31f17c74a436b0c2f1a6ae10f9c3f0c6bc1e572a33919396e0be83",
+      "swift_export_report_sha256": "48649398f1f3c1eda269698a90d5b766ddb6c3dbaccb61180ba1f338f8a3941b",
+      "swift_export_controls": "six_complete_switches_passed_and_six_omissions_rejected",
+      "runtime_images": [
+        "ios-app.debug.dylib"
+      ],
+      "strict_support": {
+        "KotlinRuntimeSupport": "blocked",
+        "KotlinCoroutineSupport": "blocked"
+      },
+      "owned_workspace_cleanup": "passed",
+      "gradle_stopped": [
+        "9.5.0"
+      ]
+    },
+    "candidate": {
+      "wrapper": "0.14.1",
+      "index_sha256": "4327820d0a1669892a32578731df2ceb9f6fe21aedd24ba579bc576093042d9d",
+      "inputs_sha256": "ae3920bcc6eb642937069dec7e5011e4d74e458c4a44a80065916b87cb6a5dbd",
+      "passed_jobs": [
+        "android-test",
+        "ios-test",
+        "android-build-debug",
+        "ios-build-debug"
+      ],
+      "raw_log_sha256": "e00e223c3345af2806fc9257a690c69f8d5ad8bc4721e7cf5b321f02c046ecd7",
+      "android_shared_tests": 94,
+      "ios_test_functions": 80,
+      "ios_test_executions": 174,
+      "native_record_versions": [
+        "0.14.1"
+      ],
+      "native_record_compilers": [
+        "2.5.0-RC"
+      ],
+      "native_record_count": 7,
+      "capture_sha256": "22d16f92be6f85ad1ae4352ee756eb05c9cbc287340cc0368ce71b50b11b8068",
+      "swift_export_report_sha256": "48649398f1f3c1eda269698a90d5b766ddb6c3dbaccb61180ba1f338f8a3941b",
+      "swift_export_controls": "six_complete_switches_passed_and_six_omissions_rejected",
+      "runtime_images": [
+        "ios-app.debug.dylib"
+      ],
+      "strict_support": {
+        "KotlinRuntimeSupport": "blocked",
+        "KotlinCoroutineSupport": "blocked"
+      },
+      "owned_workspace_cleanup": "passed",
+      "gradle_stopped": [
+        "9.8.0"
+      ]
+    }
+  },
+  "hosted": {
+    "state": "passed",
+    "run_id": 44908920034,
+    "url": "https://github.com/Mekate-Studio/Mobi/actions/runs/44908920034",
+    "head_sha": "f897d227507866b877b85553460561a8ef5a0f9b",
+    "qualification_ref": "qualification/native-0141-20261121",
+    "native_wrapper": "0.14.1",
+    "quality_wrapper": "0.13.0",
+    "all_seven_jobs": "success",
+    "cold_absence_receipts": 30,
+    "cache_restore_steps_skipped": 5,
+    "host_tool_cache_excluded": true,
+    "hosted_java_supplied_by_setup_action": {
+      "android-test": [
+        "25.0.5+8.0"
+      ],
+      "android-build": [
+        "25.0.5+8.0"
+      ],
+      "ios-test": [
+        "25.0.5+8.0"
+      ],
+      "ios-build": [
+        "25.0.5+8.0"
+      ]
+    },
+    "managed_cli_download_observed_android": "Zulu 25.38.201",
+    "android_shared_tests": 94,
+    "ios_plan": "passed",
+    "visible_ios_named_functions": 48,
+    "hosted_execution_count": "not_inferred_from_formatter",
+    "swift_export_report_sha256": "1915ca7bb40d587b183527369f2bf04d6273d2cafbbae887cc0fc88918cd649a",
+    "swift_export_mode": true,
+    "runtime_images": [
+      "ios-app.debug.dylib"
+    ],
+    "switch_controls": "six_complete_passed_and_six_omissions_rejected",
+    "strict_support": {
+      "KotlinRuntimeSupport": "blocked",
+      "KotlinCoroutineSupport": "blocked"
+    },
+    "local_report_differences": [
+      "sdk"
+    ],
+    "artifact": {
+      "id": 14709347948,
+      "name": "swift-export-checks-f897d227507866b877b85553460561a8ef5a0f9b",
+      "digest": "sha256:3f5dd0ff5d07bbbdc99b0b0818788fa5ecc9bc64846eb7df7bacb49d9aff4b17",
+      "head_sha": "f897d227507866b877b85553460561a8ef5a0f9b"
+    },
+    "metadata_sha256": "1376f3f61245a80ad0f0b8869799997236343543150c5fb4c70de555dfec251a",
+    "raw_logs_sha256": {
+      "quality": "4ca879b9e0ca04a28e3200d9ceaee4063286cb60dd81d7b1b64b982b49a75f34",
+      "android-test": "6b91721e36b5f64aac4e87d984b939dd9d48f6792e60a188c2df999e9dbacfab",
+      "android-build": "b59aa6303a97cdac015c1c913bb56b4f948811699d3b9ef498b019b7b717586e",
+      "ios-test": "a95f162b7c533f988a8a3c4812e5838a57be1759146fce357f70aa2a80ed341e",
+      "ios-build": "d411a97fc3f6a9e37b3473d3470fe54e381264576e018698cf9bec61e2f6150f"
+    }
+  },
+  "qualification_workflow_quality_control": {
+    "suite_count": 21,
+    "contracts": "passed",
+    "static": "passed",
+    "quality_wrapper": "0.13.0",
+    "native_wrapper": "0.14.1",
+    "contract_log_sha256": "b72c79ed87e0b4ef868ae8b53c32a6d020464cadaba9fdd4840d1a3e556061f4",
+    "static_log_sha256": "c475efe58d784eaa5db473538ca4e0027222452f382f03d6bee1fc0d9172629c",
+    "selection_log_sha256": "c5a9de6bbd8fad4c69dc0690fa336aa55c0c8c7ece5ee209b7ef1c060af803e6"
+  },
+  "contracts": {
+    "suite_count": 21,
+    "state": "passed",
+    "raw_log_sha256": "072be816b9fc6e73829a92696f5a1c5510c7217e4b32a6a153f96169880410e2",
+    "exact_version_contract": "red_then_green_25_builder_contracts_neighbor_records_and_mixed_compilers_refused"
+  },
+  "limits": [
+    "older_project_provisioning_cache_migration",
+    "0141_module_graphs_and_dependency_advisory_refresh",
+    "0141_unsigned_release_resource_invalidation_and_relocated_delivery",
+    "x64_advisory_affected_cpu_path",
+    "device_and_signed_delivery",
+    "retained_dependency_findings_unassigned_artifacts_and_gradle_transform_observer_gap"
+  ],
+  "simplification_review": "narrow_accepted_versions_after_separate_adoption_and_closure_of_old_recovery_resources",
+  "producer_retirement": "IOS-10_supported_replacement_plus_actual_delivery_evidence",
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workarounds_removed": []
+}
