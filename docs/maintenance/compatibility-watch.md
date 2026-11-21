@@ -190,6 +190,9 @@ The [0.14.1 runtime-chain assessment](evidence/2026-11-21-toolchain-0141-jre.md)
 separates managed CLI JRE, explicit CLI override and compiler/project JDK.
 Record actual selected versions and vendor CPU conditions in fresh and retained
 owned-workspace checks; a new launcher pin alone does not verify every runtime.
+Include `setup-java`'s preinstalled tool-cache selection: repository cache-free
+mode excludes host tools. The [actual 0.14.1 qualification](evidence/2026-11-21-toolchain-0141-qualification.md)
+observes a patched managed CLI alongside an older hosted `JAVA_HOME`.
 
 ## Interop workaround retirement
 

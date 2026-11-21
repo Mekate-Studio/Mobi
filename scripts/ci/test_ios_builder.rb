@@ -35,7 +35,7 @@ module IOSBuilderTest
     File.write(File.join(project, 'ios-app/module.xcodeproj/project.pbxproj'), JSON.pretty_generate(model))
   end
   test('Swift-export records must match the reviewed selected Toolchain and one compiler') do
-    %w[0.13.0 0.14.0].each do |toolchain|
+    %w[0.13.0 0.14.0 0.14.1].each do |toolchain|
       Dir.mktmpdir('mobi-export-records-') do |root|
         File.write(File.join(root, 'kotlin'), "kotlin_cli_version=#{toolchain}\n")
         build = MobiSwiftExport::Build.allocate
@@ -56,7 +56,7 @@ module IOSBuilderTest
         assert(inputs.map { |item| item['name'] }.sort == %w[MobiIOS MobiHome MobiNearby MobiCore MobiDI MobiUI MobiTestSupport KotlinxCoroutinesCore].sort)
         assert(build.instance_variable_get(:@compiler_version) == '2.5.0-RC')
         file = File.join(records, '_shared-0-compile-hash')
-        record = JSON.parse(File.read(file)); record['codeVersion'] = toolchain == '0.13.0' ? '0.14.0' : '0.13.0'
+        record = JSON.parse(File.read(file)); record['codeVersion'] = toolchain == '0.14.0' ? '0.14.1' : '0.14.0'
         File.write(file, JSON.generate(record))
         begin
           build.libraries

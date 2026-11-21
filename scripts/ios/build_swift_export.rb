@@ -48,7 +48,7 @@ module MobiSwiftExport
 
     def libraries
       toolchain = File.read(File.join(@root, 'kotlin'))[/^kotlin_cli_version=(.+)$/, 1]
-      abort 'Unreviewed Swift-export Toolchain' unless %w[0.13.0 0.14.0].include?(toolchain)
+      abort 'Unreviewed Swift-export Toolchain' unless %w[0.13.0 0.14.0 0.14.1].include?(toolchain)
       command('klibs', [File.join(@root, 'kotlin'), '--shared-cache-dir', @cache,
                        'build', '-m', 'shared-ios-app', '-p', @target, '-v', @configuration.downcase])
       # IOS-10: pinned Toolchain task records identify the exact resolved KLibs.
