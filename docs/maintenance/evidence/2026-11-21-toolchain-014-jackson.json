@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "state": "review_complete_adoption_deferred",
+  "source_baseline": "88990740348928cd9bd199ddd808b204ba44b8fc",
+  "scope": "toolchain_014_launcher_jackson_owner_and_static_consumer_only",
+  "source_tag": "v0.14.0",
+  "source_commit": "95a158010b0afe7cda88251a9f1357dbeb731fac",
+  "archive": {
+    "sha256": "69112cebc1fdb14c92a213244182d0834896e71b3d9411b8e8c18540da2884a6",
+    "bytes": 420236123,
+    "retrieved_at": "2026-11-21T08:33:49.732019+00:00"
+  },
+  "prior_attribution_sha256": "0df3f69472ac0cba1e2a93de5590451ecee279f55e8ee2567fa8f52be967a20e",
+  "advisory": {
+    "queries": [
+      {
+        "package": "com.fasterxml.jackson.core:jackson-core",
+        "version": "2.21.1",
+        "ids": [
+          "GHSA-7hhh-6rmp-j9qf",
+          "GHSA-p6pp-m3f8-5c89",
+          "GHSA-r7wm-3cxj-wff9"
+        ]
+      },
+      {
+        "package": "com.fasterxml.jackson.core:jackson-core",
+        "version": "2.13.5",
+        "ids": [
+          "GHSA-7hhh-6rmp-j9qf",
+          "GHSA-h46c-h94j-95f3",
+          "GHSA-r7wm-3cxj-wff9"
+        ]
+      },
+      {
+        "package": "com.fasterxml.jackson.core:jackson-databind",
+        "version": "2.13.5",
+        "ids": [
+          "GHSA-3wrr-7qpf-2prh",
+          "GHSA-5gvw-p9qm-jgwh",
+          "GHSA-5jmj-h7xm-6q6v",
+          "GHSA-cxp5-3px4-pw24",
+          "GHSA-gx83-3vf8-gh7j",
+          "GHSA-hgj6-7826-r7m5",
+          "GHSA-j3rv-43j4-c7qm",
+          "GHSA-rmj7-2vxq-3g9f",
+          "GHSA-vvgp-rfg2-7rr6",
+          "GHSA-wjgm-6hv5-3cvf",
+          "GHSA-wv8q-qhhj-9h54"
+        ]
+      },
+      {
+        "package": "com.fasterxml.jackson.core:jackson-annotations",
+        "version": "2.13.5",
+        "ids": []
+      },
+      {
+        "package": "com.fasterxml.jackson.module:jackson-module-kotlin",
+        "version": "2.13.5",
+        "ids": []
+      }
+    ],
+    "query_count": 5,
+    "package_version_matches": 17,
+    "distinct_ids": 15,
+    "candidate_high_matches": 7,
+    "candidate_moderate_matches": 7,
+    "retrieved_from": "2026-11-21T08:29:42Z",
+    "retrieved_until": "2026-11-21T08:29:48Z",
+    "receipt_sha256": "4e18b6cb0cbd97a1369c752496ec65c9e4a5c0613ef8bec50ce6795757063c30",
+    "record_objects_equal_to_2026_11_18": true,
+    "fresh_record_body_sha256": {
+      "GHSA-3wrr-7qpf-2prh": "c5cd93a45cdf7cd9d227aacb1ecfd53a3cc42bffd26a62a228307b282a29e9b1",
+      "GHSA-5gvw-p9qm-jgwh": "9691c978af6d9aad599ea594411301942980bdc6398e610309974cc261db2be1",
+      "GHSA-5jmj-h7xm-6q6v": "f31992cb825ddc13f5f8fe539d655d1aef13b539c42e3c285f9889044f357e13",
+      "GHSA-7hhh-6rmp-j9qf": "2a0c940c25a80835b9d3f40d1192704efd9cfac7176757a085d4748cbaedcab1",
+      "GHSA-cxp5-3px4-pw24": "4c24c6270a0fbce356066366d7d8dd55f6f08ced2224308ce7c610e18f616415",
+      "GHSA-gx83-3vf8-gh7j": "e3ef1a6435be8daf5bacb7ab6305a1ebc9642a7d4778b4030b7e9d93327bd97b",
+      "GHSA-h46c-h94j-95f3": "773e51d6c62d17a6d0ac5aac95bcdf424a80e948d659f346207db3761106aeff",
+      "GHSA-hgj6-7826-r7m5": "507faab400da8a897b7c83197a83ffca2226e8a4a2c698e0bf9700dfdf7fa7b6",
+      "GHSA-j3rv-43j4-c7qm": "c7ae54042c2fbeb244191c44baf4e52b861b0898a533cd7a34bdf34f663aab47",
+      "GHSA-p6pp-m3f8-5c89": "18dd69d7dcd0eb6fc1c3d5ed2f7622fd632710f2c3fdb6e0eccdcdcbfd3c4055",
+      "GHSA-r7wm-3cxj-wff9": "8f1fd1118dcf14cec3bb7aaf9daec793fca6440828c1c84de4aa18cfb1be9a6a",
+      "GHSA-rmj7-2vxq-3g9f": "0ee12ba22b4df76e9c29079e62915e76c804c5a18161c41a2bf2c398d28cfdf0",
+      "GHSA-vvgp-rfg2-7rr6": "dd77d0de13717aee617253bf82930a0cb6aeb668fb08de5c5a12eecdea8db105",
+      "GHSA-wjgm-6hv5-3cvf": "9d0b9607980283c8e7548b7a78cdbda9056d2b1aeaf8e5cc3984a1bd60efce19",
+      "GHSA-wv8q-qhhj-9h54": "9ccb1ebd6ce9780a252a152f805093171b5f76a0792ade18314966bc4346d8f5"
+    }
+  },
+  "fus": {
+    "group": "com.jetbrains.fus.reporting",
+    "version": "2.0.253",
+    "published_metadata_receipt_sha256": "af79c082a6686faae4e01d1bb23740cf24f54d3a1c293d3ccb87829a638de7d3",
+    "artifact_receipt_sha256": "eeb5e180091130cfab20ff34f087bcc3db2d455062ddbf2b1e160feb9374745f",
+    "independent_archive_byte_matches": 9,
+    "selected_matches": [
+      {
+        "member": "lib/fus-api-jvm-2.0.253.jar",
+        "sha256": "51e99fa9334162ef57acefae4dd79ccbbf28b3ba2ba161a4a23530234e61ac6c",
+        "bytes": 126932,
+        "url": "https://packages.jetbrains.team/maven/p/apl/product-analytics-platform-public/com/jetbrains/fus/reporting/fus-api-jvm/2.0.253/fus-api-jvm-2.0.253.jar"
+      },
+      {
+        "member": "lib/serialization-jackson-2.0.253.jar",
+        "sha256": "fd05d5a2a2b64eb5499e14a0683957b3a06fe97f17b985d7c5d647b0bdfe66bf",
+        "bytes": 9760,
+        "url": "https://packages.jetbrains.team/maven/p/apl/product-analytics-platform-public/com/jetbrains/fus/reporting/serialization-jackson/2.0.253/serialization-jackson-2.0.253.jar"
+      },
+      {
+        "member": "lib/serialization-kotlin-2.0.253.jar",
+        "sha256": "efa97a03a25acd024fbce6c8ff225688ad9ef42cd6e19c42d0af40085ed2cad7",
+        "bytes": 237157,
+        "url": "https://packages.jetbrains.team/maven/p/apl/product-analytics-platform-public/com/jetbrains/fus/reporting/serialization-kotlin/2.0.253/serialization-kotlin-2.0.253.jar"
+      },
+      {
+        "member": "lib/ap-validation-all-2.0.253.jar",
+        "sha256": "e4e50b67f8616f9b132e4512ef43ff6ecb73d6a90347c7666b597aa3ed675fbe",
+        "bytes": 647968,
+        "url": "https://packages.jetbrains.team/maven/p/apl/product-analytics-platform-public/com/jetbrains/fus/reporting/ap-validation-all/2.0.253/ap-validation-all-2.0.253.jar"
+      }
+    ]
+  },
+  "static_inspection": {
+    "launcher_jars": 375,
+    "class_entries_enumerated": 74775,
+    "non_jackson_class_entries_parsed": 73782,
+    "external_jackson_referencing_classes": [
+      {
+        "class": "com/jetbrains/fus/reporting/serialization/FusJacksonSerializer.class",
+        "sha256": "bc68016cd9b872ece73bd2853922b74591621e924ffa968a5bb3415299e66349"
+      },
+      {
+        "class": "com/jetbrains/fus/reporting/serialization/CustomPrettyPrinter.class",
+        "sha256": "51cd1c601f1072f3b7ff28291bbdebf504f45fd5dea881984110676ca7b83c37"
+      }
+    ],
+    "other_jars_referencing_FusJacksonSerializer": 0,
+    "packaged_jackson_service_provider_entries": 3,
+    "selected_serializer": "FusKotlinSerializer",
+    "delivered_bytecode_confirms_constructor_and_provider": true,
+    "inspected_toolchain_jar_sha256": "0c95abe584dae6f86e4a855db41a115955247f18b7a244ac95007b035bcbba01",
+    "tagged_setup_source_sha256": "8052bc722955307723b5195cf16f815c151205debde0f44c37a3ae79a2354014",
+    "scan_sha256": "ee3c982924d0c8e796c5b78ca30223d7befa0eb7a7dfad822aa5dda7c5716cd2",
+    "one_off_scan_script_sha256": "6d982f4b68fd49823488ff68a532475e3893392846234c41078649ef3f00c9cf",
+    "javap_sha256": "d80ac587c226eade7457c90fcc7d6984efb4e1488131206c9aaf48dc54f82946",
+    "javap_host": "Temurin-26.0.1+8",
+    "runtime_call_graph_established": false,
+    "exploitability_established": false
+  },
+  "owner_update_lead": {
+    "version": "0.14.1",
+    "published_at": "2026-11-19T17:46:59Z",
+    "release_url": "https://github.com/JetBrains/kotlin-toolchain/releases/tag/v0.14.1",
+    "publisher_claim": "CLI_JRE_fix_for_CVE-2026-114938",
+    "source_fus_version": "2.0.253",
+    "catalog_blob": "ba2a6ed7da37bf9cd450deb5ee16981dd8ed0252",
+    "ordinary_eligible_at": "2026-11-26T17:46:59Z",
+    "prior_waiver_transferred": false,
+    "binary_distribution_assessed": false,
+    "observation_sha256": "2aba7166da6b9f36ab2cddbf43f1d99567b5857e5c2f40ff1faadb7814515978"
+  },
+  "application_or_toolchain_code_executed": false,
+  "app_selected_toolchain": "0.13.0",
+  "risk_accepted": false,
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workaround_retirement_authorized": false,
+  "unresolved": [
+    "reflection_and_dynamic_loading",
+    "delegated_or_project_loaded_code",
+    "non_Jackson_advisories_and_attribution",
+    "gradle_98_transform_observer",
+    "patched_owner_delivery_qualification"
+  ]
+}
