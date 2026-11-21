@@ -45,6 +45,11 @@ new launcher files to FUS, confirms Kotlin serializer selection in the delivered
 bytecode, and retains the findings and static-analysis limits. It also records
 0.14.1's CLI JRE security fix as the next assessment lead; neither release is
 adopted by that review.
+The [0.14.1 JRE assessment](evidence/2026-11-21-toolchain-0141-jre.md) verifies
+the delivered launcher pins and two vendor JRE archives, bounds the x64 CPU
+condition, and tests cache selection with fake Java. It recommends isolated
+qualification subject to a new version-specific age decision; real candidate
+runtime/native checks and compilation-JDK refresh remain unrun.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout
