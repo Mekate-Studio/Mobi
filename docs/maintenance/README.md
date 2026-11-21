@@ -62,6 +62,10 @@ passes actual settings/dependency outputs for all nine modules and 104 roots.
 Its 359 named Maven queries match the baseline; fresh module advisories retain
 the two Moderate OpenTelemetry findings. Distribution/delegated-owner and
 adoption decisions remain separate.
+The [0.14.1 published-owner review](evidence/2026-11-21-toolchain-0141-dependencies.md)
+verifies that the JRE release retains the attributed Maven bytes and findings.
+It refreshes distribution/module advisories, rechecks the changed telemetry setup
+bytecode, and keeps historical delegated graphs and unassigned files explicit.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout

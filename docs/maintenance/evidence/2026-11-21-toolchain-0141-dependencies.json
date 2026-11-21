@@ -1,0 +1,334 @@
+{
+  "schema": 1,
+  "state": "measured_with_open_findings_and_attribution_gaps",
+  "scope": "published_0141_distribution_and_retained_exact_byte_references_plus_PR126_module_queries",
+  "source_base": "f3dfd9bcbee05fc0b81bc3a8371e6de9b0058b6e",
+  "inspection_id": "9571c9c5-5df5-4497-8e24-60423e7def8e",
+  "candidate_archive": {
+    "url": "https://packages.jetbrains.team/maven/p/amper/amper/org/jetbrains/kotlin/kotlin-cli/0.14.1/kotlin-cli-0.14.1-dist.tgz",
+    "sha256": "39fb5f7e0bd5148a02f5519e88d78752fb04e719ddb086258ff57e94d83c0fcb",
+    "bytes": 420237101,
+    "retrieved_at": "2026-11-21T19:05:57.811429+00:00"
+  },
+  "baseline_reference": "retained_verified_0130_Nov18_inventory_not_new_execution",
+  "comparison_reference": "retained_verified_0140_inventory_and_checksum_verified_archive",
+  "archive_comparison": {
+    "jar_entries": 632,
+    "unique_jar_identities": 497,
+    "same_jar_paths": true,
+    "unchanged_jars": 620,
+    "changed_toolchain_owned_jars": 12,
+    "added_jars": 0,
+    "removed_jars": 0,
+    "unchanged_third_party_maven_references": 478,
+    "android_integration_index_unchanged": true,
+    "android_integration_jars": 215,
+    "android_integration_unchanged_jars": 211,
+    "android_integration_changed_source_jars": 4,
+    "new_delegated_build_or_transform_observation": false
+  },
+  "owners": {
+    "baseline": {
+      "launcher": {
+        "entries": 355,
+        "states": {
+          "maven_byte_reference": 265,
+          "source_module_correspondence": 22,
+          "unassigned": 67,
+          "ambiguous_maven_byte_reference": 1
+        },
+        "queries": 265,
+        "package_version_advisory_pairs": 56,
+        "distinct_advisory_ids": 54,
+        "severity_by_distinct_id": {
+          "CRITICAL": 2,
+          "HIGH": 26,
+          "LOW": 1,
+          "MODERATE": 25
+        }
+      },
+      "android_integration_distribution_classpath": {
+        "entries": 215,
+        "states": {
+          "source_module_correspondence": 23,
+          "maven_byte_reference": 192
+        },
+        "queries": 192,
+        "package_version_advisory_pairs": 23,
+        "distinct_advisory_ids": 23,
+        "severity_by_distinct_id": {
+          "CRITICAL": 2,
+          "HIGH": 11,
+          "LOW": 1,
+          "MODERATE": 9
+        }
+      },
+      "other_extra": {
+        "entries": 49,
+        "states": {
+          "unassigned": 25,
+          "maven_byte_reference": 24
+        },
+        "queries": 24,
+        "package_version_advisory_pairs": 0,
+        "distinct_advisory_ids": 0,
+        "severity_by_distinct_id": {}
+      },
+      "launcher_ambiguous_byte_versions": {
+        "queries": 2,
+        "package_version_advisory_pairs": 0,
+        "distinct_advisory_ids": 0,
+        "severity_by_distinct_id": {}
+      },
+      "public_modules_from_PR126": {
+        "queries": 359,
+        "package_version_advisory_pairs": 2,
+        "distinct_advisory_ids": 2,
+        "severity_by_distinct_id": {
+          "MODERATE": 2
+        }
+      }
+    },
+    "candidate": {
+      "launcher": {
+        "entries": 375,
+        "states": {
+          "maven_byte_reference": 268,
+          "unassigned": 84,
+          "source_module_correspondence": 22,
+          "ambiguous_maven_byte_reference": 1
+        },
+        "queries": 268,
+        "package_version_advisory_pairs": 64,
+        "distinct_advisory_ids": 62,
+        "severity_by_distinct_id": {
+          "CRITICAL": 1,
+          "HIGH": 29,
+          "LOW": 1,
+          "MODERATE": 31
+        }
+      },
+      "android_integration_distribution_classpath": {
+        "entries": 215,
+        "states": {
+          "maven_byte_reference": 192,
+          "source_module_correspondence": 23
+        },
+        "queries": 192,
+        "package_version_advisory_pairs": 19,
+        "distinct_advisory_ids": 19,
+        "severity_by_distinct_id": {
+          "CRITICAL": 2,
+          "HIGH": 8,
+          "LOW": 1,
+          "MODERATE": 8
+        }
+      },
+      "other_extra": {
+        "entries": 42,
+        "states": {
+          "unassigned": 24,
+          "maven_byte_reference": 18
+        },
+        "queries": 18,
+        "package_version_advisory_pairs": 0,
+        "distinct_advisory_ids": 0,
+        "severity_by_distinct_id": {}
+      },
+      "launcher_ambiguous_byte_versions": {
+        "queries": 2,
+        "package_version_advisory_pairs": 0,
+        "distinct_advisory_ids": 0,
+        "severity_by_distinct_id": {}
+      },
+      "public_modules_from_PR126": {
+        "queries": 359,
+        "package_version_advisory_pairs": 2,
+        "distinct_advisory_ids": 2,
+        "severity_by_distinct_id": {
+          "MODERATE": 2
+        }
+      }
+    }
+  },
+  "advisories": {
+    "state": "triage_required",
+    "provider_complete_for_listed_queries": true,
+    "queries": 768,
+    "batches": 8,
+    "response_rows": 768,
+    "full_records": 73,
+    "package_version_advisory_pairs": 83,
+    "pagination": false,
+    "first_retrieved_at": "2026-11-21T19:08:21Z",
+    "last_retrieved_at": "2026-11-21T19:08:55Z",
+    "same_matches_and_record_contents_for_refreshed_queries": true,
+    "older_delegated_only_queries_not_refreshed": 36,
+    "older_matches_not_refreshed": [
+      {
+        "package": "com.google.guava:guava",
+        "version": "33.4.0-jre",
+        "id": "GHSA-xxph-c9ww-hj94",
+        "disposition": "retained_not_cleared"
+      },
+      {
+        "package": "org.apache.commons:commons-lang3",
+        "version": "3.16.0",
+        "id": "GHSA-j288-q9x7-2f5v",
+        "disposition": "retained_not_cleared"
+      },
+      {
+        "package": "org.apache.httpcomponents:httpclient",
+        "version": "4.5.6",
+        "id": "GHSA-7r82-7xv7-xcpj",
+        "disposition": "retained_not_cleared"
+      }
+    ],
+    "receipt_sha256": "0da63d2d1b897beda6763cb68260bfd1619a3a7cb59d86fb88f3a32aca48b07d"
+  },
+  "jackson_consumer": {
+    "selected_serializer": "FusKotlinSerializer",
+    "actual_delivered_setup_disassembly_change": "product_version_string_only_0140_to_0141",
+    "static_call_graph_or_exploitability_established": false,
+    "old_and_new_javap_sha256": {
+      "0.14.0": "a8fbf1d3b730890dd662fc28417f2df8b8028500ada4ea7d9afd238d3c432186",
+      "0.14.1": "25161458f8b01211616e59a9ef2b25dcdb87d773334c388951588a9473d1bb2b"
+    }
+  },
+  "selected_artifacts": [
+    {
+      "member": "lib/bcprov-jdk18on-1.86.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "2af190b300cbb0b35e248ccf5f4a06b6072030aeb3da7a98ec73abe5b4cb371f",
+        "bytes": 7224011
+      },
+      "component": {
+        "kind": "maven",
+        "group": "org.bouncycastle",
+        "name": "bcprov-jdk18on",
+        "version": "1.86"
+      },
+      "evidence": "exact_whole_file_match_to_reviewed_0140_reference"
+    },
+    {
+      "member": "extra/jars/bcprov-jdk18on-1.79.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "0d81ecc3124536b539bce9aa3fe9621b7f84c9cee371b635a5b31c78b79ab1da",
+        "bytes": 8575537
+      },
+      "component": {
+        "kind": "maven",
+        "group": "org.bouncycastle",
+        "name": "bcprov-jdk18on",
+        "version": "1.79"
+      },
+      "evidence": "exact_whole_file_match_to_reviewed_0140_reference"
+    },
+    {
+      "member": "lib/netty-handler-4.2.9.Final.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "e16126c711c1c8217342882cc0d9086007852cb0f99a351cfebe7725e8c7e100",
+        "bytes": 582132
+      },
+      "component": {
+        "kind": "maven",
+        "group": "io.netty",
+        "name": "netty-handler",
+        "version": "4.2.9.Final"
+      },
+      "evidence": "exact_whole_file_match_to_reviewed_0140_reference"
+    },
+    {
+      "member": "lib/jackson-core-2.13.5.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "48f36a025311d0464ad8dda4512a20c79e279a9550f63f3179d731d94482474b",
+        "bytes": 375186
+      },
+      "component": {
+        "kind": "maven",
+        "group": "com.fasterxml.jackson.core",
+        "name": "jackson-core",
+        "version": "2.13.5"
+      },
+      "evidence": "exact_whole_file_match_to_reviewed_0140_reference"
+    },
+    {
+      "member": "lib/jackson-databind-2.13.5.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "5fedb24b2356491815d18267f65da9a21dd67413345ad7795f221afa25c78984",
+        "bytes": 1537543
+      },
+      "component": {
+        "kind": "maven",
+        "group": "com.fasterxml.jackson.core",
+        "name": "jackson-databind",
+        "version": "2.13.5"
+      },
+      "evidence": "exact_whole_file_match_to_reviewed_0140_reference"
+    },
+    {
+      "member": "extra/jars/kotlin-gradle-plugin-2.2.10.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "12e99741802f8e981341eda3f501f399d1a3dcada212da29b8d02cbfe9a073bf",
+        "bytes": 23185614
+      },
+      "component": {
+        "kind": "maven",
+        "group": "org.jetbrains.kotlin",
+        "name": "kotlin-gradle-plugin",
+        "version": "2.2.10"
+      },
+      "evidence": "exact_whole_file_match_to_reviewed_0140_reference"
+    },
+    {
+      "member": "lib/opentelemetry-api-1.66.0.jar",
+      "identity": {
+        "kind": "file",
+        "sha256": "b93c5e4b5d504e77670e85fdd8c258ab08bad808473c403a91ae65f1a393f0b7",
+        "bytes": 176425
+      },
+      "component": {
+        "kind": "maven",
+        "group": "io.opentelemetry",
+        "name": "opentelemetry-api",
+        "version": "1.66.0"
+      },
+      "evidence": "exact_whole_file_match_to_reviewed_0140_reference"
+    }
+  ],
+  "retained_raw_evidence_sha256": {
+    "assessment-inputs.json": "7a877021c78c1d91ce67bd44c9a3de051969a412bf7e535472332d9ec0324df4",
+    "0.14.1-inventory.json": "ec101e6e6ed8f9769f27b59ed465054bcbdd106830a81090dcd5df3d50a6fa07",
+    "0.14.1-attribution.json": "bcb40ecff332479545d6a9c5d4fe92b21aa077767d0f0d715f2e4f710ccbc83a",
+    "0.14.0-comparison.json": "d32ea10d8e70ab8243d6c1a5ac7278f2490d3826642c265e1ecd246ad8e506cc",
+    "changed-jar-entry-comparison.json": "97f63458888d4d8a29a5b7192030f8118b895e773186961b31ac420fcc107573",
+    "changed-jar-entry-identities.json": "6587f09762815f37e4c3074776e9dddb12b7f4cf17634b9cc75ac762e0e9c2f5",
+    "upstream-compare.json": "ac908a41eaf045234da55fa4d6947c73c5c5d5e67b239a180a50d98deee47270"
+  },
+  "remaining_gaps": [
+    "unassigned_launcher_and_other_extra_JARs",
+    "ambiguous_mordant_version_identity",
+    "shaded_code_and_native_internals",
+    "new_0141_delegated_graph_and_transform_observation",
+    "runtime_reachability_and_exploitability",
+    "retained_project_JDK_cache_migration",
+    "0141_Release_resource_and_relocated_delivery",
+    "device_signed_delivery",
+    "release_age_and_adoption_review"
+  ],
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workarounds_removed": [],
+  "owned_cleanup": {
+    "state": "cleaned",
+    "evidence_retained": true,
+    "receipt_sha256": "fa7c6b7af8e089ccf7ab7add42936be878ecc2dfb09facfb169d208efc1b2013",
+    "removed_file_count": 3
+  }
+}
