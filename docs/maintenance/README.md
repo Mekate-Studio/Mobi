@@ -66,6 +66,10 @@ The [0.14.1 published-owner review](evidence/2026-11-21-toolchain-0141-dependenc
 verifies that the JRE release retains the attributed Maven bytes and findings.
 It refreshes distribution/module advisories, rechecks the changed telemetry setup
 bytecode, and keeps historical delegated graphs and unassigned files explicit.
+The [fresh 0.14.1 delegated capture](evidence/2026-11-21-toolchain-0141-delegated.md)
+passes both actual Android Debug builds and binds observed settings classpaths
+to the published files. It refreshes all 83 named delegated queries, including
+the previously omitted 36, while retaining findings and transform-observer gaps.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout

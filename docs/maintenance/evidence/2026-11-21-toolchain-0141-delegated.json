@@ -1,0 +1,272 @@
+{
+  "schema": 1,
+  "state": "build_and_graph_checks_passed_advisories_require_triage",
+  "scope": "fresh_android_debug_delegated_settings_and_named_graphs_only",
+  "source_base": "807f1a71fca02a804d744f9a52fb8e144ea9f51f",
+  "run_id": "e93423fbc43c6fd1ed264adad95e637f",
+  "result_sha256": "074903cdd604c4f1c877d35ad1eeaae9555e5699e53973d5f6f441d810c96d72",
+  "source_sha256": "9a192c69c6e0c60c1d15fcf8808a640ef4e619736781a6e09d3d9689942fa548",
+  "implementation_sha256": "fbab6191933f28a41ead300628856bb6c00b7b07e9986a50ac6d4929cdfdb03d",
+  "selection": {
+    "version": "0.14.1",
+    "mode": "experimental",
+    "age_state": "age_blocked",
+    "assessed_at": "2026-11-21T19:49:37Z",
+    "eligible_at": "2026-11-26T17:46:59Z",
+    "adoption_authorized": false
+  },
+  "fixed_kotlin_exporter": "2.5.0-RC",
+  "fixed_metro": "1.5.0",
+  "phases": {
+    "baseline": {
+      "version": "0.13.0",
+      "gradle": [
+        "9.5.0"
+      ],
+      "capture_count": 2,
+      "configuration_rows": 1828,
+      "states": {
+        "resolved": 136,
+        "not_collected": 612,
+        "not_resolvable": 1080
+      },
+      "settings_files": 215,
+      "settings_archive_exact_set_match": true,
+      "archive_inventory_sha256": "2020b881ff5d97353f788559ddd90621bed9890567355e065fd9a99e849ff014",
+      "classpath_index_sha256": "60d3ebcd3eeafef9cd488b038886cb16755fa188a440fcba3145cd97cd17a595",
+      "delegated_graphs_sha256": "12b2a6db11639297a51d8773b22f7a5f0ce41ecc5f6832b499d30f61e85114cc",
+      "evidence_sha256": "34fe5448c773d66d526b527cfd5476709d95cd9bc2c2e183c1325d18fdba669f",
+      "agp": "9.3.1",
+      "effective_jetifier_enabled": false,
+      "jetifier_project_observations": 12,
+      "transforms": [
+        {
+          "state": "observed",
+          "reason": null,
+          "gradle": "9.5.0",
+          "interval": "init_script_to_build_finished",
+          "observer_api": "planned_identify_action_v1",
+          "planned_count": 0,
+          "identified_count": 6899,
+          "action_count": 1388,
+          "events": []
+        },
+        {
+          "state": "observed",
+          "reason": null,
+          "gradle": "9.5.0",
+          "interval": "init_script_to_build_finished",
+          "observer_api": "planned_identify_action_v1",
+          "planned_count": 0,
+          "identified_count": 2106,
+          "action_count": 169,
+          "events": []
+        }
+      ],
+      "module_graph_roots": 104,
+      "module_query_count": 359,
+      "host_JDK_self_report": "25.0.5.1+2-LTS",
+      "command_names": [
+        "java-version",
+        "version",
+        "settings",
+        "dependencies",
+        "android-build-debug"
+      ],
+      "all_commands_exit_zero": true,
+      "named_delegated_queries": 83
+    },
+    "candidate": {
+      "version": "0.14.1",
+      "gradle": [
+        "9.8.0"
+      ],
+      "capture_count": 2,
+      "configuration_rows": 1828,
+      "states": {
+        "resolved": 136,
+        "not_collected": 612,
+        "not_resolvable": 1080
+      },
+      "settings_files": 215,
+      "settings_archive_exact_set_match": true,
+      "archive_inventory_sha256": "ec101e6e6ed8f9769f27b59ed465054bcbdd106830a81090dcd5df3d50a6fa07",
+      "classpath_index_sha256": "32e817db33aa20f3d13e9e74e76feec056ab79a15167ca305ca75a4115268677",
+      "delegated_graphs_sha256": "b7939ae885d07c0fc13eb137396ec1ccf775890c7cc0eef53738a9fbde88a526",
+      "evidence_sha256": "48c2c8348473d3366dfb9cdfd0642fcdac32a0a5a63475041e049db6009cf7e8",
+      "agp": "9.3.1",
+      "effective_jetifier_enabled": false,
+      "jetifier_project_observations": 12,
+      "transforms": [
+        {
+          "state": "incomplete",
+          "reason": "unsupported_gradle_api",
+          "gradle": "9.8.0",
+          "interval": "init_script_to_build_finished",
+          "observer_api": "planned_identify_action_v1",
+          "planned_count": 0,
+          "identified_count": 0,
+          "action_count": 0,
+          "events": []
+        },
+        {
+          "state": "incomplete",
+          "reason": "unsupported_gradle_api",
+          "gradle": "9.8.0",
+          "interval": "init_script_to_build_finished",
+          "observer_api": "planned_identify_action_v1",
+          "planned_count": 0,
+          "identified_count": 0,
+          "action_count": 0,
+          "events": []
+        }
+      ],
+      "module_graph_roots": 104,
+      "module_query_count": 359,
+      "host_JDK_self_report": "25.0.5.1+2-LTS",
+      "command_names": [
+        "java-version",
+        "version",
+        "settings",
+        "dependencies",
+        "android-build-debug"
+      ],
+      "all_commands_exit_zero": true,
+      "named_delegated_queries": 83
+    }
+  },
+  "same_named_query_sets": true,
+  "candidate_named_queries_match_prior0140": true,
+  "advisories": {
+    "state": "triage_required",
+    "query_count": 83,
+    "batch_count": 1,
+    "response_rows": 83,
+    "full_records": 9,
+    "package_version_advisory_pairs": 9,
+    "severity_by_distinct_id": {
+      "CRITICAL": 2,
+      "HIGH": 3,
+      "MODERATE": 4
+    },
+    "pagination": false,
+    "first_retrieved_at": "2026-11-21T19:56:05Z",
+    "last_retrieved_at": "2026-11-21T19:56:09Z",
+    "receipt_sha256": "0ae7bc4c0f49331ae5ea69c3f51662f1e0f83c506b19f26d280fba48b58c31c8",
+    "queries_omitted_by_PR127_now_refreshed": 36,
+    "previously_omitted_findings_now_refreshed_and_retained": [
+      {
+        "package": "com.google.guava:guava",
+        "version": "33.4.0-jre",
+        "id": "GHSA-xxph-c9ww-hj94",
+        "disposition": "retained_not_cleared"
+      },
+      {
+        "package": "org.apache.commons:commons-lang3",
+        "version": "3.16.0",
+        "id": "GHSA-j288-q9x7-2f5v",
+        "disposition": "retained_not_cleared"
+      },
+      {
+        "package": "org.apache.httpcomponents:httpclient",
+        "version": "4.5.6",
+        "id": "GHSA-7r82-7xv7-xcpj",
+        "disposition": "retained_not_cleared"
+      }
+    ],
+    "findings": [
+      {
+        "package": "com.google.guava:guava",
+        "version": "33.4.0-jre",
+        "id": "GHSA-xxph-c9ww-hj94",
+        "severity": "HIGH",
+        "record_sha256": "a4767651feea43ee5c1b4776ebf20f7dda4515f18859bc9abab35f043e162d2c"
+      },
+      {
+        "package": "org.apache.commons:commons-lang3",
+        "version": "3.16.0",
+        "id": "GHSA-j288-q9x7-2f5v",
+        "severity": "MODERATE",
+        "record_sha256": "b963ca12d4e1b9c2552aa7f1b2e682353207015f067269721815ea078e160a7c"
+      },
+      {
+        "package": "org.apache.httpcomponents:httpclient",
+        "version": "4.5.6",
+        "id": "GHSA-7r82-7xv7-xcpj",
+        "severity": "MODERATE",
+        "record_sha256": "24cd878ab04cd49ebd53fe1197adbc5cd323db7695caa2bda2bb62da267ff5ac"
+      },
+      {
+        "package": "org.bouncycastle:bcpkix-jdk18on",
+        "version": "1.79",
+        "id": "GHSA-wg6q-6289-32hp",
+        "severity": "MODERATE",
+        "record_sha256": "f703c9bf7a61fe11d4ceab7740f8155d8b95cd092dd8436d684b9a64c5107ff4"
+      },
+      {
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.79",
+        "id": "GHSA-574f-3g2m-x479",
+        "severity": "CRITICAL",
+        "record_sha256": "31bb619e7c28105a73dc4211fcf1972ae16f7cd81b0adf0f9887bb289dac146f"
+      },
+      {
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.79",
+        "id": "GHSA-9pwp-9qqc-pr26",
+        "severity": "CRITICAL",
+        "record_sha256": "5497f4ded2286debf94238ba1e48fb43570b30e211abdcc2a9a317ff1f88fd98"
+      },
+      {
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.79",
+        "id": "GHSA-c3fc-8qff-9hwx",
+        "severity": "MODERATE",
+        "record_sha256": "12fe5768d605049c6eeb22591d0db3082019f9d1660c9cbcb8c2f170045c5028"
+      },
+      {
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.79",
+        "id": "GHSA-p93r-85wp-75v3",
+        "severity": "HIGH",
+        "record_sha256": "760032259d4139d89b6efe5cb1028fefac5ae601ba9658e1bb5257fbb09507f0"
+      },
+      {
+        "package": "org.bouncycastle:bcprov-jdk18on",
+        "version": "1.79",
+        "id": "GHSA-qp49-qgx5-5m26",
+        "severity": "HIGH",
+        "record_sha256": "174ec3fb8781343fbe4ca79db322a7169eb65386e827182172cae28b4c0c58af"
+      }
+    ]
+  },
+  "owned_cleanup": {
+    "state": "cleaned",
+    "evidence_retained": true,
+    "paths": [
+      "work/baseline",
+      "work/candidate"
+    ],
+    "receipt_sha256": "2776c727ade99bc71a519a0233484e70677eff1e4bdf0682cbbd43c3fa05ea4d"
+  },
+  "raw_evidence_sha256": {
+    "assessment-inputs.json": "ec69ec95134f4c816749bdfd3203ddc6dd66c4ff115345a65416896c075c38bc",
+    "analyze.rb": "9b3969403e08624820396321c7d74f7b29e6846e5bc371a01d42d75a12ee15ac",
+    "advisories.rb": "0f8eac7412878065d75578e5347759f9c918fe35ae7f2cd88fcfe8fb26d87259",
+    "recovery.json": "c392030e21bda3fc6112d557a80ecf243ae4c822423dba89f009929b81ab98e4"
+  },
+  "missing_capabilities": [
+    "gradle_9_8_transform_observer",
+    "delegated_configurations_outside_android_debug_main",
+    "loaded_class_or_vulnerable_call_reachability",
+    "unassigned_and_ambiguous_distribution_files",
+    "complete_shaded_and_native_internals",
+    "retained_project_JDK_cache_migration",
+    "0141_unsigned_Release_resource_and_relocated_delivery",
+    "native_tests_or_device_signed_delivery",
+    "release_age_and_adoption_risk_decision"
+  ],
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workarounds_removed": []
+}
