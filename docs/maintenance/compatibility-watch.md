@@ -297,6 +297,11 @@ binds actual optimized products and unsigned helper publication; it does not
 replace warm/synthetic-signing or runtime delivery checks. On compiler/exporter
 updates, re-evaluate supported optimized-image mode observability while preserving
 optimization and one runtime; an absent constant is not an observed mode value.
+The [0.14.1 Debug warm-build check](evidence/2026-11-21-toolchain-0141-invalidation.md)
+confirms actual manifest/string packaging and reverts without cleaning, while
+retaining stale baseline expectations. Repeat these packaged checks on updates;
+this result does not cover assets/JNI, Release inputs or the synthetic-signing
+and warm AAB lane. It introduces no app workaround to retire.
 
 ## Primary references
 

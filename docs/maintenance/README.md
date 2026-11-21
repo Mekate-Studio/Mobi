@@ -78,6 +78,10 @@ The [0.14.1 unsigned Release check](evidence/2026-11-21-toolchain-0141-release.m
 passes both iOS simulator products, Android APKs and the current AAB helper.
 It records scoped payload agreement and unchanged warning output while retaining
 optimized-mode visibility, runtime/delivery and dependency-risk limits.
+The [0.14.1 Android warm-build check](evidence/2026-11-21-toolchain-0141-invalidation.md)
+passes all six packaged manifest/string expectations and both revert identities;
+a fresh 0.13.0 sequence retains stale APK content. Synthetic Release signing,
+broader packaging inputs and cold/relocated delivery remain separate checks.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout
