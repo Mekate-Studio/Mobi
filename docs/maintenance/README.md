@@ -87,6 +87,11 @@ passes both existing candidate lanes and all six warm bundle stages per version,
 with actual certificate and published-artifact checks. Its one-off HTTP-429 cache
 seed does not qualify cache-free retrieval. Credentialed delivery,
 broader input invalidation and adoption remain separate.
+The [0.14.1 local delivery check](evidence/2026-11-22-toolchain-0141-delivery.md)
+passes the iOS native plan from empty private Kotlin caches and launches copied
+tested apps with original producer paths unavailable. Android unseeded retrieval
+is baseline-inconclusive under Maven's recorded Retry-After; its candidate did not
+run. Fully cold hosts and signed/device delivery remain separate.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout
