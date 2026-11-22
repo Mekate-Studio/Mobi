@@ -7,6 +7,8 @@ module Maintenance
   module RiskAcceptance
     OPERATIONS = %w[public_source_development_builds repository_tests isolated_compatibility_assessment].freeze
 
+    CANDIDATE_GAPS = %w[unassigned_or_ambiguous_files shaded_or_native_code configurations_outside_android_debug unsupported_transform_observer device_exact_floor_signed_delivery].freeze
+
     def self.evaluate(decision, evidence, now: Time.now.utc)
       raise Failure, 'Malformed manual risk review' unless decision.is_a?(Hash) && evidence.is_a?(Hash)
       reasons = []
@@ -17,8 +19,14 @@ module Maintenance
       reasons << 'operation_outside_scope' unless OPERATIONS.include?(evidence['operation']) && decision.fetch('allowed_operations').include?(evidence['operation'])
       %w[toolchain distribution_sha256 applied_patch_sha256 source_binding_sha256].each do |key|
         value = decision.fetch(key)
-        raise Failure, 'Invalid decision identity' unless key == 'toolchain' ? value == '0.13.0' : value.to_s.match?(/\A[0-9a-f]{64}\z/)
+        raise Failure, 'Invalid decision identity' unless key == 'toolchain' ? %w[0.13.0 0.14.1].include?(value) : value.to_s.match?(/\A[0-9a-f]{64}\z/)
         reasons << key + '_drift' unless value == evidence[key]
+      end
+      if evidence['toolchain'] == '0.14.1'
+        binding = decision['review_packet_sha256']
+        reasons << 'review_packet_drift' unless binding.to_s.match?(/\A[0-9a-f]{64}\z/) && binding == evidence['review_packet_sha256']
+        gaps = evidence['coverage_gaps']
+        reasons << 'coverage_gaps_not_acknowledged' unless gaps.is_a?(Array) && (CANDIDATE_GAPS - gaps).empty? && gaps == decision['acknowledged_coverage_gaps']
       end
       %w[release advisory].each do |key|
         provider = evidence.fetch(key)
@@ -52,12 +60,16 @@ module Maintenance
       raise Failure, 'Release publication is in the future' if published > now
       young = now < published + 7 * 86_400
       waiver = decision.fetch('age_exception')
+      waiver_valid = waiver['approved'] == true && waiver['version'] == evidence['toolchain'] && waiver['published_at'] == evidence['release']['published_at'] && waiver['decision_at'] == decision['starts_at']
       if young
-        reasons << 'age_exception_missing' unless waiver['approved'] == true && waiver['version'] == evidence['toolchain'] && waiver['published_at'] == evidence['release']['published_at'] && waiver['decision_at'] == decision['starts_at']
+        if evidence['toolchain'] == '0.14.1' && waiver['scope'] != 'scoped_manual_risk_use'
+          reasons << 'age_exception_scope_differs'; waiver_valid = false
+        end
+        reasons << 'age_exception_missing' unless waiver_valid
       end
       { 'schema' => 1, 'state' => reasons.empty? ? 'accepted_risk_for_scoped_manual_use' : 'blocked',
-        'reasons' => reasons.uniq.sort, 'accepted_risk_ids' => accepted.uniq.sort, 'findings' => observed,
-        'age_state' => young ? 'age_blocked_with_explicit_exception' : 'age_eligible', 'expires_at' => expiry.iso8601,
+        'reasons' => reasons.uniq.sort, 'accepted_risk_ids' => reasons.empty? ? accepted.uniq.sort : [], 'findings' => observed,
+        'age_state' => young ? (waiver_valid ? 'age_blocked_with_explicit_exception' : 'age_blocked') : 'age_eligible', 'expires_at' => expiry.iso8601,
         'dependency_surface' => 'bounded_measured_inputs', 'remediation_verified' => false,
         'adoption_authorized' => false, 'bridge_retirement' => 'defer' }
     rescue KeyError, TypeError, NoMethodError, ArgumentError

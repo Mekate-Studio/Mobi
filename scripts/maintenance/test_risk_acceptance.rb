@@ -29,6 +29,51 @@ module RiskAcceptanceTest
     d, e = fixture; r = Maintenance::RiskAcceptance.evaluate(d, e, now: NOW)
     assert(r['state'] == 'accepted_risk_for_scoped_manual_use' && r['findings'] == e['findings'] && !r['adoption_authorized'] && !r['remediation_verified'] && r['age_state'] == 'age_blocked_with_explicit_exception')
   end
+  def self.candidate_fixture
+    d, e = fixture
+    d['toolchain'] = e['toolchain'] = '0.14.1'
+    d['age_exception']['version'] = '0.14.1'
+    d['age_exception']['scope'] = 'scoped_manual_risk_use'
+    e['review_packet_sha256'] = d['review_packet_sha256'] = '1' * 64
+    e['coverage_gaps'] = d['acknowledged_coverage_gaps'] = %w[unassigned_or_ambiguous_files shaded_or_native_code configurations_outside_android_debug unsupported_transform_observer device_exact_floor_signed_delivery]
+    [d, e]
+  end
+  test('0.14.1 requires its own exact packet and explicit coverage-gap acknowledgement') do
+    d, e = candidate_fixture
+    r = Maintenance::RiskAcceptance.evaluate(d, e, now: NOW)
+    assert(r['state'] == 'accepted_risk_for_scoped_manual_use' && !r['adoption_authorized'])
+  end
+  test('0.14.1 cannot reuse an old approval or omit, change or hide packet coverage') do
+    d, e = candidate_fixture
+    old, = fixture
+    assert(Maintenance::RiskAcceptance.evaluate(old, e, now: NOW)['state'] == 'blocked')
+    [->(x) { x.delete('review_packet_sha256') }, ->(x) { x['review_packet_sha256'] = '2' * 64 },
+     ->(x) { x['acknowledged_coverage_gaps'] = [] }].each do |change|
+      decision = Marshal.load(Marshal.dump(d)); change.call(decision)
+      assert(Maintenance::RiskAcceptance.evaluate(decision, e, now: NOW)['state'] == 'blocked')
+    end
+    e['coverage_gaps'] = []
+    d['acknowledged_coverage_gaps'] = []
+    assert(Maintenance::RiskAcceptance.evaluate(d, e, now: NOW)['state'] == 'blocked')
+  end
+  test('qualification-only age waiver cannot authorize candidate manual risk use') do
+    d, e = candidate_fixture; d['age_exception']['scope'] = 'isolated_compatibility_assessment'
+    assert(Maintenance::RiskAcceptance.evaluate(d, e, now: NOW)['state'] == 'blocked')
+  end
+  test('a blocked candidate cannot claim an approved age exception or accepted risks') do
+    d, e = candidate_fixture; d['age_exception']['approved'] = false
+    r = Maintenance::RiskAcceptance.evaluate(d, e, now: NOW)
+    assert(r['state'] == 'blocked' && r['age_state'] == 'age_blocked' && r['accepted_risk_ids'].empty?)
+  end
+  test('nearby unqualified releases remain unsupported') do
+    %w[0.14.0 0.14.2 0.15.0].each do |version|
+      d, e = candidate_fixture; d['toolchain'] = e['toolchain'] = version
+      begin
+        Maintenance::RiskAcceptance.evaluate(d, e, now: NOW); raise 'Expected version refusal'
+      rescue Maintenance::Failure
+      end
+    end
+  end
   test('pending or revoked approval refuses') { blocked { |d, _| d['approved'] = false }; blocked { |d, _| d['revoked'] = true } }
   test('missing rationale or controls refuse') { blocked { |d, _| d['reason'] = '' }; blocked { |d, _| d['controls'] = [] } }
   test('expiry, future and oversized windows refuse') do

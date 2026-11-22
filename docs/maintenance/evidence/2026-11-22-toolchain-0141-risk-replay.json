@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "state": "blocked",
+  "scope": "read_only_join_of_retained_0141_inputs_providers_and_artifact_records",
+  "evaluated_at": "2026-11-22T14:51:09Z",
+  "candidate_source_head": "6a6ef4ef35fe72af28d7e2cf900c7e50fedc2bee",
+  "source_binding_sha256": "724d1db6a09b38c368f50c050046a295b58574cbb0ac9f8c657c397ae48fe460",
+  "review_packet_sha256": "b596270a94ddaa02ed2dfcd1ce5a47858cabba17adc246ba8b36fa687000d42c",
+  "replay_result_sha256": "874f6c27381ed7f62de5642be22687f86a99c99bb2a0efa473c1ec72bf0e3b23",
+  "reasons": [
+    "approval_missing_or_revoked",
+    "compatibility_not_reviewed"
+  ],
+  "query_count": 851,
+  "provider_comparison_finding_count": 75,
+  "candidate_findings_by_severity": {
+    "HIGH": 33,
+    "LOW": 1,
+    "MODERATE": 37,
+    "CRITICAL": 3
+  },
+  "unmapped_candidate_high_critical_ids": [],
+  "captures": {
+    "distribution": {
+      "inputs": {
+        "path": "distribution-inputs.json",
+        "sha256": "7a877021c78c1d91ce67bd44c9a3de051969a412bf7e535472332d9ec0324df4"
+      },
+      "advisories": {
+        "path": "distribution-advisories.json",
+        "sha256": "0da63d2d1b897beda6763cb68260bfd1619a3a7cb59d86fb88f3a32aca48b07d"
+      }
+    },
+    "delegated": {
+      "inputs": {
+        "path": "delegated-inputs.json",
+        "sha256": "ec69ec95134f4c816749bdfd3203ddc6dd66c4ff115345a65416896c075c38bc"
+      },
+      "advisories": {
+        "path": "delegated-advisories.json",
+        "sha256": "0ae7bc4c0f49331ae5ea69c3f51662f1e0f83c506b19f26d280fba48b58c31c8"
+      }
+    }
+  },
+  "attribution": {
+    "path": "attribution.json",
+    "sha256": "bcb40ecff332479545d6a9c5d4fe92b21aa077767d0f0d715f2e4f710ccbc83a"
+  },
+  "delegated_graphs": {
+    "path": "delegated-graphs.json",
+    "sha256": "b7939ae885d07c0fc13eb137396ec1ccf775890c7cc0eef53738a9fbde88a526"
+  },
+  "qualification_receipts": [
+    {
+      "path": "qualification.json",
+      "sha256": "b6bc24cb52b6617cd74ad3cf6cde1f9fff495df1a9af728948526fbc585c953d"
+    }
+  ],
+  "release": {
+    "url": "https://api.github.com/repos/JetBrains/kotlin-toolchain/releases/tags/v0.14.1",
+    "status": 200,
+    "retrieved_at": "2026-11-22T14:48:09Z",
+    "response_sha256": "7d76994aa36584452076c2025307d76d09a2e3d175fd661d9943088aaf274293"
+  },
+  "provider_retrieval_windows": {
+    "distribution": [
+      "2026-11-21T19:08:21Z",
+      "2026-11-21T19:08:55Z"
+    ],
+    "delegated": [
+      "2026-11-21T19:56:05Z",
+      "2026-11-21T19:56:09Z"
+    ]
+  },
+  "coverage_gaps": [
+    "unassigned_or_ambiguous_files",
+    "shaded_or_native_code",
+    "configurations_outside_android_debug",
+    "unsupported_transform_observer",
+    "device_exact_floor_signed_delivery"
+  ],
+  "compatibility_basis": "manual_review_of_hash_bound_qualification_receipts",
+  "new_native_builds_run": false,
+  "adoption_authorized": false,
+  "security_cleared": false,
+  "workarounds_removed": false
+}

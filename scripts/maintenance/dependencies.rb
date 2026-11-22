@@ -85,9 +85,16 @@ if $PROGRAM_NAME == __FILE__
       puts JSON.pretty_generate(result)
       exit code
     when 'review-toolchain-risk'
-      raise Maintenance::Failure, 'Usage: review-toolchain-risk' unless ARGV.empty?
-      require_relative 'lib/toolchain_risk_review'
-      result = Maintenance::ToolchainRiskReview.review(root)
+      if ARGV.empty?
+        require_relative 'lib/toolchain_risk_review'
+        result = Maintenance::ToolchainRiskReview.review(root)
+      else
+        unless [2, 4].include?(ARGV.size) && ARGV[0] == '--packet' && (ARGV.size == 2 || ARGV[2] == '--decision')
+          raise Maintenance::Failure, 'Usage: review-toolchain-risk [--packet FILE [--decision FILE]]'
+        end
+        require_relative 'lib/toolchain_risk_packet'
+        result = Maintenance::ToolchainRiskPacket.review(root, ARGV[1], decision_path: ARGV[3])
+      end
       puts JSON.pretty_generate(result)
       exit(result['state'] == 'accepted_risk_for_scoped_manual_use' ? 0 : 2)
     when 'evaluate'
