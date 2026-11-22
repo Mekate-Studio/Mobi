@@ -302,6 +302,13 @@ confirms actual manifest/string packaging and reverts without cleaning, while
 retaining stale baseline expectations. Repeat these packaged checks on updates;
 this result does not cover assets/JNI, Release inputs or the synthetic-signing
 and warm AAB lane. It introduces no app workaround to retire.
+The [0.14.1 synthetic-signing AAB check](evidence/2026-11-22-toolchain-0141-aab.md)
+separately passes the existing Release-candidate lane and six warm bundle stages
+on both versions, including generated-certificate identity and helper publication.
+Keep the explicit final-artifact locator under review against official packaging
+APIs; this result does not qualify production credentials or broader input edits.
+The one-off HTTP-429 JAR seed is qualification setup only: cold-delivery reviews
+must repeat dependency retrieval without it before claiming cache-free delivery.
 
 ## Primary references
 
