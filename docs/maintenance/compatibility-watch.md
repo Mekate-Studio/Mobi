@@ -310,6 +310,14 @@ APIs; this result does not qualify production credentials or broader input edits
 The one-off HTTP-429 JAR seed is qualification setup only: cold-delivery reviews
 must repeat dependency retrieval without it before claiming cache-free delivery.
 
+The [0.14.1 local delivery record](evidence/2026-11-22-toolchain-0141-delivery.md)
+separates empty private Kotlin caches from retained host tools/caches, and actual
+relocated-app launch from runpath inspection. Record absolute search paths rather
+than inferring runtime reliance or stripping them for a passing observation.
+Android unseeded retrieval is baseline-inconclusive: honor the recorded provider
+Retry-After before repeating it. iOS cannot close that independent gate; do not
+turn the historical one-file cache seed into maintained build policy.
+
 ## Primary references
 
 - [GitHub releases API](https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28): release metadata and pagination boundaries.
