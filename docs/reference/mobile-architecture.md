@@ -161,7 +161,7 @@ under `Debug-iphonesimulator` instead of the macOS host products directory,
 which broke `@Reducer` and `@ObservableState` expansion from the CLI. The
 repo's iOS CI and Fastlane entrypoints therefore disable explicit Swift modules
 by default while also letting Xcode choose the simulator architectures itself.
-The iOS development build uses Toolchain 0.13.0 to compile Kotlin libraries and a
+The iOS development build uses Toolchain 0.14.1 to compile Kotlin libraries and a
 tracked standalone Swift-export producer to generate the Home/Nearby APIs and
 one Kotlin archive. Xcode retains its app/test targets and native Swift packages.
 Native consumers use generated `sealedType()` cases; Kotlin keeps business state

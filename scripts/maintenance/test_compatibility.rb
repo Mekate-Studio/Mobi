@@ -332,6 +332,19 @@ end
     end
   end
 
+  test('a matching caller cannot self-authorize an unreviewed Toolchain') do
+    fixture do |root|
+      config(root) { |c| c['toolchain'] = '0.14.1' }
+      assert(Maintenance::Compatibility.new(root).config['toolchain'] == '0.14.1')
+      config(root) { |c| c['toolchain'] = '0.14.2' }
+      %w[kotlin kotlin.bat].each do |name|
+        file = File.join(root, name)
+        File.write(file, File.read(file).sub('kotlin_cli_version=0.14.1', 'kotlin_cli_version=0.14.2'))
+      end
+      reject(/Unsupported compatibility policy/) { Maintenance::Compatibility.new(root) }
+    end
+  end
+
   test('command failure keeps causal and infrastructure results distinct') do
     assert(Maintenance::KotlinEvidence.classify('Compilation failed: unresolved reference', 1) == 'failed')
     assert(Maintenance::KotlinEvidence.classify('Could not GET artifact: HTTP 503', 1) == 'infrastructure')

@@ -13,9 +13,9 @@ One of the goals of this CI design is that the same job contract works locally.
   private Ruby/Java runtimes and five analyzers; global analyzer installs are
   not required. Native jobs still use their own prerequisites above.
 
-Toolchain 0.13.0 defaults to JDK 25 and supports selecting an installed matching
+Toolchain 0.14.1 defaults to JDK 25 and supports selecting an installed matching
 JDK through `JAVA_HOME`, as described in its
-[pinned provisioning documentation](https://github.com/JetBrains/kotlin-toolchain/blob/v0.13.0/docs/src/user-guide/advanced/jdk-provisioning.md).
+[pinned provisioning documentation](https://github.com/JetBrains/kotlin-toolchain/blob/v0.14.1/docs/src/user-guide/advanced/jdk-provisioning.md).
 For example, after installing JDK 25 on macOS:
 
 ```bash
@@ -39,7 +39,7 @@ export KOTLIN_CLI_BOOTSTRAP_CACHE_DIR="$PWD/.kotlin-cache"
 
 ## Android SDK provisioning
 
-The pinned Toolchain 0.13.0 and Compose 1.12.1 require application compile SDK
+The pinned Toolchain 0.14.1 and Compose 1.12.1 require application compile SDK
 37. Android minimum and target remain API 36. With Android SDK command-line
 tools available, point `ANDROID_HOME` to a writable SDK directory and run:
 
@@ -133,7 +133,7 @@ The simulator Release smoke job remains unsigned; raw unsigned archive
 assessment is a separate capability check. See the
 [integration decision](../adr/0009-generated-swift-export-for-native-features.md).
 
-The reviewed Toolchain 0.13.0 targets Apple Silicon iOS simulators and ARM devices.
+The reviewed Toolchain 0.14.1 targets Apple Silicon iOS simulators and ARM devices.
 Physical/exact-floor execution, broader Compose/resources, empty-host onboarding
 and signed/export delivery remain distinct evidence gates. See the
 [compatibility matrix](../maintenance/kotlin-compatibility.md) and
