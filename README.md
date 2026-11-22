@@ -29,7 +29,8 @@ architecture itself and the documentation around it.
 
 ## Clean-Clone Quickstart
 
-The reviewed build tool is Kotlin Toolchain 0.13.0. The development graph explicitly
+This checkout selects Kotlin Toolchain 0.14.1. See the
+[draft adoption review and remaining decisions](docs/maintenance/evidence/2026-11-22-toolchain-0141-adoption.md). The development graph explicitly
 selects Kotlin **2.5.0-RC** and Metro **1.5.0**, with a matching standalone
 Swift exporter. This is a reviewed experimental tuple; release/signing gates
 remain separate. See the [RC qualification, scoped age waiver and remaining risks](docs/maintenance/evidence/2026-11-11-kotlin-250-rc-qualification.md).
@@ -188,8 +189,8 @@ Metro runtime/compiler and Kotlin coroutines updates are grouped across Kotlin
 Toolchain modules. The checked-in Renovate ceilings remain Metro <=1.4.5 and
 Kotlin <=2.4.20. These limits on automated update proposals are separate from
 the explicitly selected development tuple above: Kotlin 2.5.0-RC, its matching
-exporter and Metro 1.5.0. Toolchain 0.13.0's defaults are Kotlin 2.4.20 and
-Compose 1.12.1; the app explicitly overrides the Kotlin version. The
+exporter and Metro 1.5.0. The app explicitly selects its Kotlin version instead
+of inheriting the build tool's default. Compose 1.12.1 remains selected. The
 [RC qualification and merged review](https://github.com/Mekate-Studio/Mobi/pull/102)
 record that selection without widening Renovate's limits or global age policy.
 

@@ -1,5 +1,10 @@
 # Quality and dependency maintenance
 
+The [0.14.1 adoption proposal](evidence/2026-11-22-toolchain-0141-adoption.md)
+shows the actual launcher and selected-baseline changes for draft review.
+Release-age, retained dependency-risk, evidence freshness, Android unseeded
+retrieval and exact validation decisions remain open; this branch is not approval.
+
 ## Development baseline and follow-ups
 
 The merged app uses generated Swift export for native Home and Nearby, with one
