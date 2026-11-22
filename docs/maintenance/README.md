@@ -1,9 +1,20 @@
 # Quality and dependency maintenance
 
-The [0.14.1 adoption proposal](evidence/2026-11-22-toolchain-0141-adoption.md)
-shows the actual launcher and selected-baseline changes for draft review.
-Release-age, retained dependency-risk, evidence freshness, Android unseeded
-retrieval and exact validation decisions remain open; this branch is not approval.
+**New-release assessment is gated until automated assessment is operational.**
+No further manual assessment of new releases is authorized. Discovery or a
+notification does not satisfy this prerequisite. Normal validation of the
+already adopted tuple remains allowed. See the [ordered backlog](backlog.md)
+and [dependency-review rule](dependency-review-playbook.md#automation-prerequisite).
+
+Main adopted Toolchain 0.14.1 in [PR #134](https://github.com/Mekate-Studio/Mobi/pull/134),
+merge `fcc7fd9effd60d832a26f07a7e2d4dcccfc94ec7`. Kotlin/exporter 2.5.0-RC,
+Metro 1.5.0, platform floors and native behavior stayed fixed. The
+[dated proposal](evidence/2026-11-22-toolchain-0141-adoption.md) preserves its
+pre-decision state; the PR records the final disposition. The exact approved
+source/packet grant is conditional and does not transfer to new versions,
+sources, signing or IOS-10 retirement. Its decision cap is December 22 at
+16:57:19 UTC; provider freshness requires renewal after November 23 at
+16:06:32 UTC. This index does not renew either condition.
 
 ## Development baseline and follow-ups
 
@@ -30,7 +41,10 @@ credentialed archive/export/TestFlight remains held. Historical risk receipts
 retain their original scope and expiry. Neither a dependency update nor this
 index extends acceptance or establishes repository-wide advisory clearance.
 
-## Recent qualifications and remaining debt
+## Historical qualifications and remaining debt
+
+The following summaries describe the assessments at their recorded dates,
+before the adoption above. Their original scope and missing capabilities remain.
 
 The [Toolchain 0.14.0 source assessment](evidence/2026-11-17-toolchain-014-assessment.md)
 identifies a candidate for isolated qualification, not adoption. It records the
@@ -56,7 +70,7 @@ condition, and tests cache selection with fake Java. It recommends isolated
 qualification subject to a new version-specific age decision.
 The [0.14.1 qualification](evidence/2026-11-21-toolchain-0141-qualification.md)
 binds that approved exception and the actual runtime/native observations.
-The app stays on 0.13.0. Explicit older-runtime overrides still take precedence;
+At that qualification, the app stayed on 0.13.0. Explicit older-runtime overrides still take precedence;
 older project provisioning-cache migration and adoption remain separate checks.
 The [native CI JDK selection review](evidence/2026-11-21-native-ci-jdk.md)
 pins one reviewed Temurin build for the four Mobile CI test/Debug jobs and logs

@@ -12,6 +12,20 @@ probe entry point forwards to the isolated watch; its former mutating behavior
 is preserved only as a historical audit finding. The
 [slice-9 packet](ninth-slice-review.md) demonstrates review without adoption.
 
+## Automation prerequisite
+
+**No further manual assessment of new releases until automated assessment is
+operational.** This rule takes precedence over the manual procedure and owner
+review below. Discovery, notification and reminders are insufficient. Validation
+of cleanup on the already adopted tuple is allowed. Follow the
+[ordered implementation backlog](backlog.md); do not investigate open update
+candidates as a workaround for missing automation.
+
+The prerequisite closes only after an end-to-end automated assessment produces
+compact, source-bound, reviewable results, relevant qualification checks and
+explicit incomplete/blocked states. Adoption, age/risk exceptions, merges,
+signing/delivery and workaround retirement remain explicit human decisions.
+
 ## Purpose
 
 Assess whether a dependency/toolchain change improves this repository, map
