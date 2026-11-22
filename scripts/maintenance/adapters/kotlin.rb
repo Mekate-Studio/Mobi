@@ -129,11 +129,6 @@ module Maintenance
       checksum = wrapper[/^kotlin_cli_sha256=([0-9a-f]{64})$/, 1]
       raise Failure, 'Unsupported Kotlin Toolchain wrapper identity' unless version && checksum
       add('Kotlin Toolchain', version, 'kotlin', 'tool', artifact_sha256: checksum, stability: 'alpha')
-      path = 'scripts/ci/lib/android_generated_gradle.sh'
-      if @files.key?(path)
-        version = read(path)[/ANDROID_GENERATED_GRADLE_VERSION:-([^}]+)/, 1]
-        add('delegated Android Gradle fallback', version, path, 'tool', effective_version: 'unresolved')
-      end
     end
 
     def xcode

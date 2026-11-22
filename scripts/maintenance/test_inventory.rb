@@ -189,6 +189,9 @@ module InventoryTest
     actual = swift.fetch('packages').map { |package| package.values_at('name', 'version', 'revision', 'repository') }
     assert(actual.sort == expected.sort, 'Swift inventory must preserve every locked identity, version, revision and repository')
     assert(result['components'].any? { |c| c['name'] == 'Kotlin Toolchain' && c['artifact_sha256'].size == 64 })
+    # Gradle is selected by Toolchain; an obsolete repo fallback is not a declaration.
+    assert(result['components'].none? { |c| c['name'] == 'delegated Android Gradle fallback' })
+    assert(config.fetch('customManagers').none? { |m| m['datasourceTemplate'] == 'gradle-version' })
     assert(result['components'].any? { |c| c['name'] == 'dev.zacsweers.metro:compiler' && c['ceilings'] == ['<1.2.0'] })
     assert(result['components'].any? { |c| c['source'] == 'quality-tools.json' })
     assert(result['coverage'].any? { |r| r['id'] == 'resolved:kotlin-toolchain-targets' && r['state'] == 'incomplete' })

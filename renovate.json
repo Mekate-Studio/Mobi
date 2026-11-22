@@ -36,19 +36,6 @@
       ],
       "datasourceTemplate": "maven",
       "versioningTemplate": "gradle"
-    },
-    {
-      "customType": "regex",
-      "description": "Update the repo-owned generated Android Gradle distribution version.",
-      "managerFilePatterns": [
-        "/^scripts/ci/lib/android_generated_gradle\\.sh$/"
-      ],
-      "matchStrings": [
-        "android_generated_gradle_version=\"\\$\\{ANDROID_GENERATED_GRADLE_VERSION:-(?<currentValue>[^}]+)\\}\""
-      ],
-      "depNameTemplate": "gradle",
-      "datasourceTemplate": "gradle-version",
-      "versioningTemplate": "gradle"
     }
   ],
   "packageRules": [
