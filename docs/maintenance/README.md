@@ -82,6 +82,11 @@ The [0.14.1 Android warm-build check](evidence/2026-11-21-toolchain-0141-invalid
 passes all six packaged manifest/string expectations and both revert identities;
 a fresh 0.13.0 sequence retains stale APK content. Synthetic Release signing,
 broader packaging inputs and cold/relocated delivery remain separate checks.
+The [0.14.1 synthetic-signing Release/AAB check](evidence/2026-11-22-toolchain-0141-aab.md)
+passes both existing candidate lanes and all six warm bundle stages per version,
+with actual certificate and published-artifact checks. Its one-off HTTP-429 cache
+seed does not qualify cache-free retrieval. Credentialed delivery,
+broader input invalidation and adoption remain separate.
 The [Android warm-build check](evidence/2026-11-19-toolchain-014-invalidation.md)
 shows 0.14.0 applying and reverting the checked manifest/resource changes while
 0.13.0 leaves stale packaged output. It also records an existing resource-layout
