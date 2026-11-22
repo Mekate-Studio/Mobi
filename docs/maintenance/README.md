@@ -327,6 +327,7 @@ passing joins, fresh provider evidence and remaining retirement gates.
 
 - [Toolchain security decision packet, refreshed fix leads and adoption requirements](toolchain-security-decision.md)
 
+- [Toolchain 0.14.1 manual risk packets and blocked replay](toolchain-risk-packets.md)
 - [Adoption direction, exact draft and bounded residual-risk proposal](toolchain-adoption-risk-review.md)
 
 - [Approved direct iOS default integration](direct-default-integration.md)
