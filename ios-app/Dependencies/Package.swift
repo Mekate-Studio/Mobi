@@ -24,7 +24,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/pointfreeco/swift-dependencies",
-            exact: "1.12.0",
+            exact: "1.17.2",
         ),
         .package(url: "https://github.com/pointfreeco/swift-clocks", exact: "1.1.1"),
         .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", exact: "1.4.3"),
