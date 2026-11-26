@@ -53,6 +53,13 @@ locally/with CI artifacts and publish only compact decision evidence.
    passes both native phases and cleanup. Source-format, selected-input
    provenance and provider/catalog gaps keep this prerequisite open. Continue
    those automation slices; do not resume manual release assessment.
+
+   [PR #137](https://github.com/Mekate-Studio/Mobi/pull/137) merged the first
+   working assessment pipeline. Paired provider collection prioritizes both phases'
+   advisory queries and shared records before checksum leads, under the same
+   request cap. The [paired-stage check](evidence/2026-11-26-paired-advisory-collection.md)
+   completes advisory requests for both captured query sets. Source-format,
+   selected-owner provenance and catalog work remain.
 3. Revisit interop only through that automation: nine active entries, two
    qualified removals and six historical experiments. IOS-10 custom exporter,
    IOS-08 Swift 5 exception, IOS-02 caller-isolation profile and IOS-17 coroutine

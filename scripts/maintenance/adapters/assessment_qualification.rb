@@ -182,11 +182,12 @@ module Maintenance
         [phase, inputs.merge('graph_sha256' => Maintenance.digest(graphs), 'provenance_sha256' => Maintenance.digest(provenance))]
       end
       policy = JSON.parse(File.read(File.join(root, 'maintenance-policy.json')))
+      receipts = AssessmentSecurity.collect_pair(http, phase_inputs)
       summaries = %w[baseline candidate].to_h do |phase|
-        receipt = AssessmentSecurity.collect(http, phase_inputs.fetch(phase))
+        receipt = receipts.fetch(phase)
         path = File.join(store.path(id), 'assessment-advisories-' + phase + '.json')
         RunStore.atomic(path, receipt)
-        [phase, receipt.slice('state', 'queries_sha256', 'findings', 'reasons').merge('query_count' => receipt['queries'].size, 'receipt_sha256' => Maintenance.file_sha(path))]
+        [phase, receipt.slice('state', 'advisory_state', 'queries_sha256', 'findings', 'reasons').merge('query_count' => receipt['queries'].size, 'receipt_sha256' => Maintenance.file_sha(path))]
       end
       gaps = phase_inputs.values.flat_map { |inputs| inputs['gaps'] }
       gaps += summaries.values.flat_map { |summary| summary['reasons'] }

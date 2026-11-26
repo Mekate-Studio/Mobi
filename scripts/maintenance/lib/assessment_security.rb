@@ -98,7 +98,9 @@ module Maintenance
         end
       end
       { 'scope' => 'primary_published_maven_checksums_for_unambiguous_embedded_claims', 'references' => rows,
-        'gaps' => (claims.size > 32 ? ['maven_reference_budget'] : []) + (rows.any? { |row| row['state'] != 'published_checksum_matches' } ? ['unverified_maven_reference_bytes'] : []),
+        'gaps' => ((claims.size > 32 ? ['maven_reference_budget'] : []) +
+          (rows.any? { |row| row['state'] != 'published_checksum_matches' } ? ['unverified_maven_reference_bytes'] : []) +
+          rows.filter_map { |row| row['reason'] }).uniq,
         'selected_classpath_proven' => false }
     end
 
@@ -115,6 +117,44 @@ module Maintenance
     end
 
     def collect(http, inputs, now: nil)
+      collect_phases(http, { 'single' => inputs }, now: now).fetch('single')
+    end
+
+    def collect_pair(http, inputs, now: nil)
+      raise Failure, 'Expected baseline and candidate security phases' unless
+        inputs.is_a?(Hash) && inputs.size == 2 && %w[baseline candidate].all? { |phase| inputs.key?(phase) }
+      collect_phases(http, %w[baseline candidate].to_h { |phase| [phase, inputs.fetch(phase)] }, now: now)
+    end
+
+    def collect_phases(http, inputs, now:)
+      # Complete both query sets before optional byte-reference requests can
+      # consume the shared budget. Keep the original per-phase batch packets.
+      pending = inputs.transform_values { |input| query_receipt(http, input, now: now) }
+      records = pending.values.flat_map { |_receipt, ids| ids.keys }.uniq.sort.to_h do |id|
+        [id, finding_record(http, id, now: now)]
+      end
+      pending.each do |_phase, (receipt, ids)|
+        ids.sort.each do |id, matched|
+          record = records.fetch(id)
+          receipt['records'] << record['packet'] if record['packet']
+          receipt['reasons'].concat(record.fetch('errors'))
+          receipt['findings'] << record.fetch('finding').merge('queries' => matched.uniq) if record['errors'].empty?
+        end
+        receipt['reasons'] << 'finding_record_coverage_incomplete' unless receipt['findings'].map { |row| row['id'] }.sort == ids.keys.sort
+        receipt['advisory_state'] = receipt['reasons'].empty? ? 'complete' : 'incomplete'
+      end
+      # Every phase now has an advisory result, even if a checksum budget or
+      # provider failure leaves the broader provenance assessment incomplete.
+      pending.to_h do |phase, (receipt, _ids)|
+        receipt['byte_references'] = byte_references(http, inputs.fetch(phase).fetch('archive_claims', []))
+        receipt['reasons'].concat(receipt['byte_references']['gaps'])
+        receipt['reasons'] = receipt['reasons'].uniq.sort
+        receipt['state'] = receipt['reasons'].empty? ? 'provider_complete' : 'incomplete'
+        [phase, receipt]
+      end
+    end
+
+    def query_receipt(http, inputs, now:)
       queries = inputs.fetch('queries')
       raise Failure, 'Empty assessment security query set' if queries.empty?
       receipt = { 'schema' => 1, 'created_at' => (now || Time.now.utc).iso8601, 'queries' => queries, 'queries_sha256' => Maintenance.digest(queries),
@@ -148,30 +188,22 @@ module Maintenance
           receipt['reasons'] << (error.is_a?(Failure) ? error.message : 'malformed_provider_response')
         end
       end
-      ids.sort.each do |id, matched|
-        begin
-          packet = http.packet(AdvisoryReview::API + 'vulns/' + id, nil)
-          receipt['records'] << packet
-          data, errors = AdvisoryReview.packet(packet, AdvisoryReview::API + 'vulns/' + id, nil, now || Time.now.utc)
-          receipt['reasons'].concat(errors)
-          next unless errors.empty?
-          unless data['id'] == id && data['affected'].is_a?(Array) && !data['affected'].empty? && data['modified'].is_a?(String)
-            receipt['reasons'] << 'finding_record_mismatch'; next
-          end
-          severity = data.dig('database_specific', 'severity').to_s.downcase
-          severity = 'unknown' unless %w[low moderate medium high critical].include?(severity)
-          receipt['findings'] << { 'id' => id, 'severity' => severity, 'queries' => matched.uniq,
-            'exploitation_or_runtime_reachability' => 'not_established' }
-        rescue Failure, KeyError, TypeError => error
-          receipt['reasons'] << (error.is_a?(Failure) ? error.message : 'malformed_finding_record')
-        end
+      [receipt, ids]
+    end
+
+    def finding_record(http, id, now:)
+      packet = http.packet(AdvisoryReview::API + 'vulns/' + id, nil)
+      data, errors = AdvisoryReview.packet(packet, AdvisoryReview::API + 'vulns/' + id, nil, now || Time.now.utc)
+      return { 'packet' => packet, 'errors' => errors } unless errors.empty?
+      unless data['id'] == id && data['affected'].is_a?(Array) && !data['affected'].empty? && data['modified'].is_a?(String)
+        return { 'packet' => packet, 'errors' => ['finding_record_mismatch'] }
       end
-      receipt['reasons'] << 'finding_record_coverage_incomplete' unless receipt['findings'].map { |row| row['id'] }.sort == ids.keys.sort
-      receipt['byte_references'] = byte_references(http, inputs.fetch('archive_claims', []))
-      receipt['reasons'].concat(receipt['byte_references']['gaps'])
-      receipt['reasons'] = receipt['reasons'].uniq.sort
-      receipt['state'] = receipt['reasons'].empty? ? 'provider_complete' : 'incomplete'
-      receipt
+      severity = data.dig('database_specific', 'severity').to_s.downcase
+      severity = 'unknown' unless %w[low moderate medium high critical].include?(severity)
+      { 'packet' => packet, 'errors' => [], 'finding' => { 'id' => id, 'severity' => severity,
+        'exploitation_or_runtime_reachability' => 'not_established' } }
+    rescue Failure, KeyError, TypeError => error
+      { 'packet' => packet, 'errors' => [error.is_a?(Failure) ? error.message : 'malformed_finding_record'] }
     end
   end
 end
