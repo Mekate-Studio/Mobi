@@ -76,8 +76,9 @@ has 30 cases plus four archive-scanner cases.
    for protocol schemas, service registration, API dumps and JavaScript. Establish
    source/artifact roles before excluding fixture binaries from relevance.
 2. Establish missing selected owner/classpath provenance through
-   `lib/build_inputs.rb`, `assessment_provenance.py` and
-   `lib/assessment_security.rb`. Allocate provider requests across both phases
+   `scripts/maintenance/lib/build_inputs.rb`,
+   `scripts/maintenance/assessment_provenance.py` and
+   `scripts/maintenance/lib/assessment_security.rb`. Allocate provider requests across both phases
    before optional checksum leads; retain explicit bounds and incomplete states.
 3. Improve bounded catalog coverage and official prerelease metadata handling.
    Kotlin tag truncation/unreadable entries and Toolchain development versions
@@ -88,3 +89,13 @@ has 30 cases plus four archive-scanner cases.
 These are automation work, not permission for manual release investigation.
 Complete local assessment, exact-packet approval, one adoption PR and a separate
 merge decision remain the required adoption flow.
+
+## Implementation validation
+
+Implementation commit `4b339de18e06d54546c7b46f4ac51dc1840e4748` passed the
+unchanged full local commit hook: 94 Android/shared tests, the iOS PullRequest
+plan, both Debug builds, source/index validation and owned cleanup. All seven
+hosted checks passed in [Mobile CI run 45855840708](https://github.com/Mekate-Studio/Mobi/actions/runs/45855840708),
+including quality/contracts, both native test jobs, both builds and the PR gate.
+Strict OpenSpec validation also passed. These checks qualify the automation
+implementation; they do not close the assessment coverage gaps above.

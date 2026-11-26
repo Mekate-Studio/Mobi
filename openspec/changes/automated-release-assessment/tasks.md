@@ -14,7 +14,7 @@
 
 - [x] 3.1 Add meaningful contracts for interval gaps, prereleases, drift, provenance, baseline failure and recommendation refusal.
 - [x] 3.2 Demonstrate a real end-to-end automated assessment and record its actual coverage and limitations.
-- [ ] 3.3 Pass the normal local gate and hosted CI for the automation implementation PR.
+- [x] 3.3 Pass the normal local gate and hosted CI for the automation implementation PR.
 
 ## Current evidence and remaining work
 
@@ -24,7 +24,10 @@ records a real end-to-end run: complete 731-file official interval, both native
 phases passed, fresh security requests attempted and owned cleanup completed.
 Its incomplete result retains actual source-format, provenance and provider
 gaps. A guarded offline replay proves partial observations cannot clear findings.
-The normal commit/hosted gates are still pending.
+The unchanged normal native commit gate and all seven hosted checks passed on
+implementation commit `4b339de18e06d54546c7b46f4ac51dc1840e4748`; see the dated
+record for the CI receipt. Coverage gaps still keep the automation prerequisite
+open.
 
 Successful phase workspaces can now be released after quiescence, retaining
 evidence and reducing simultaneous disk use. Assessment requires 14 GiB free
