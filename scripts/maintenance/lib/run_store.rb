@@ -138,6 +138,45 @@ module Maintenance
       full
     end
 
+
+    # Called only after the coordinator has proved process/resource quiescence.
+    # Both ordinary recovery and evidence-only phase cleanup use the same marker,
+    # device/inode checks and deletion journal, including interruption recovery.
+    def resource_path(journal, resource)
+      raise Failure, 'Unsupported journal resource' unless resource['type'] == 'directory'
+      path = safe_path(journal, resource.fetch('path'))
+      return path unless File.exist?(path)
+      stat = File.stat(path)
+      raise Failure, 'Resource identity mismatch' unless stat.directory? && stat.ino == resource['inode'] && stat.dev == resource['device']
+      marker = File.join(path, '.resource-owner.json')
+      unless !File.exist?(marker) && %w[deleting cleanup_failed].include?(resource['state'])
+        expected = { 'run_id' => journal['id'], 'nonce' => resource['nonce'] }
+        raise Failure, 'Resource ownership marker mismatch' unless File.file?(marker) && !File.symlink?(marker) && JSON.parse(File.read(marker)) == expected
+      end
+      path
+    end
+
+    def remove_resources!(journal, resources)
+      raise Failure, 'Run is held for review' if journal['hold']
+      raise Failure, 'Unowned disposable resource' unless resources.all? { |resource| journal['resources'].include?(resource) && resource['disposable'] }
+      paths = resources.map { |resource| resource_path(journal, resource) }
+      resources.zip(paths).each do |resource, path|
+        next if resource['state'] == 'removed' && !File.exist?(path)
+        begin
+          resource['state'] = 'deleting'; save(journal)
+          event(journal, 'cleanup_planned', 'path' => resource['path'])
+          FileUtils.remove_entry_secure(path) if File.exist?(path)
+          resource['state'] = 'removed'; save(journal)
+          event(journal, 'resource_removed', 'path' => resource['path'])
+        rescue StandardError => error
+          resource['state'] = 'cleanup_failed'; save(journal)
+          event(journal, 'cleanup_failed', 'path' => resource['path'], 'class' => error.class.name)
+          return 'cleanup_failed'
+        end
+      end
+      'cleaned'
+    end
+
     def result(journal, value)
       target = path(journal.fetch('id'), '.result.json')
       raise Failure, 'Result already exists; append recovery history instead' if File.exist?(target)

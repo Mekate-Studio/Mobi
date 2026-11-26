@@ -18,25 +18,26 @@ module CompatibilityTest
   rescue Maintenance::Failure => error
     assert(error.message.match?(pattern), error.message)
   end
-  def self.fixture(source_root: ROOT)
+  def self.fixture(source_root: ROOT, direct: false)
     Dir.mktmpdir('mobi-compatibility-contract-') do |root|
       Maintenance::Source.new(source_root).copy_to(root)
       # Declaration-only fixtures own their historical tuple, even when the
       # caller is qualifying another wrapper. Never execute these sentinels.
-      toolchain = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG))).fetch('toolchain')
+      reviewed = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG)))
+      toolchain = reviewed.fetch('toolchain')
       File.write(File.join(root, 'kotlin'), "#!/bin/sh\nkotlin_cli_version=#{toolchain}\nexit 97 # declaration-only fixture\n")
       File.write(File.join(root, 'kotlin.bat'), "@echo off\nset kotlin_cli_version=#{toolchain}\nexit /b 97\n")
       # Historical declaration/transform contracts only; never used for native execution.
-      unless File.exist?(File.join(root, 'gradle/libs.versions.toml'))
+      metro = direct ? reviewed.fetch('candidate').fetch('releases').fetch('metro').fetch('version') : reviewed.fetch('baseline').fetch('metro')
+      Dir.glob(File.join(root, '*/module.yaml')).each do |path|
+        content = File.read(path).gsub(/(dev\.zacsweers\.metro:(?:runtime|compiler):)[^\s]+/) { Regexp.last_match(1) + metro }
+        File.write(path, content)
+      end
+      unless direct || File.exist?(File.join(root, 'gradle/libs.versions.toml'))
         FileUtils.mkdir_p(File.join(root, 'gradle'))
         FileUtils.cp(File.join(ROOT, 'scripts/maintenance/fixtures/historical-bridge/catalog.toml.template'), File.join(root, 'gradle/libs.versions.toml'))
         # These transform-only fixtures retain the historical bridge baseline;
         # the real direct source follows its separately reviewed candidate.
-        metro = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG))).fetch('baseline').fetch('metro')
-        Dir.glob(File.join(root, '*/module.yaml')).each do |path|
-          content = File.read(path).gsub(/(dev\.zacsweers\.metro:(?:runtime|compiler):)[^\s]+/) { Regexp.last_match(1) + metro }
-          File.write(path, content)
-        end
         FileUtils.mkdir_p(File.join(root, 'gradle-bridge'))
         File.write(File.join(root, 'gradle-bridge/gradlew'), "#!/bin/sh\nexit 97 # nonfunctional historical contract sentinel\n")
         File.chmod(0o755, File.join(root, 'gradle-bridge/gradlew'))
@@ -269,23 +270,43 @@ end
   end
 
   test('source assessment cannot prove local execution or authorize retirement') do
-    result = Maintenance::Compatibility.new(ROOT).assessment
-    assert(result['direct_paths'].values.all? { |p| p['status'] == 'missing' })
-    assert(result['evidence_kind'] == 'reviewed_sources_and_declarations')
-    assert(result['bridge_retirement'] == 'defer' && result['adoption_authorized'] == false)
+    fixture(direct: true) do |root|
+      result = Maintenance::Compatibility.new(root).assessment
+      assert(result['direct_paths'].values.all? { |p| p['status'] == 'missing' })
+      assert(result['evidence_kind'] == 'reviewed_sources_and_declarations')
+      assert(result['bridge_retirement'] == 'defer' && result['adoption_authorized'] == false)
+    end
   end
 
-  test('current direct source validates Metro and refuses historical execution before native setup') do
-    source = Maintenance::Source.new(ROOT)
-    adapter = Maintenance::Compatibility.new(ROOT)
-    assert(!source.files.key?(Maintenance::Compatibility::CATALOG))
-    %w[direct-mobile direct-resolution direct-build-inputs direct-ios-release direct-ios-archive].each { |profile| assert(adapter.edits(source, profile).empty?) }
-    %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip].each do |profile|
-      reject(/Historical bridge\/transform profile/) { adapter.edits(source, profile) }
+  test('direct-layout contract validates reviewed Metro and refuses historical execution before native setup') do
+    fixture(direct: true) do |root|
+      source = Maintenance::Source.new(root)
+      adapter = Maintenance::Compatibility.new(root)
+      assert(!source.files.key?(Maintenance::Compatibility::CATALOG))
+      %w[direct-mobile direct-resolution direct-build-inputs direct-ios-release direct-ios-archive].each { |profile| assert(adapter.edits(source, profile).empty?) }
+      %w[bridge-compile bridge-mobile bridge-review direct-facade direct-roundtrip].each do |profile|
+        reject(/Historical bridge\/transform profile/) { adapter.edits(source, profile) }
+      end
+      result = adapter.assessment(source)
+      assert(result['candidate']['releases'].keys.sort == %w[kotlin metro])
+      assert(result['baseline_scope'] == 'adopted_direct_development_tests_unsigned')
     end
-    result = adapter.assessment(source)
-    assert(result['candidate']['releases'].keys.sort == %w[kotlin metro])
-    assert(result['baseline_scope'] == 'adopted_direct_development_tests_unsigned')
+  end
+
+  test('a candidate Metro declaration cannot rewrite a historical review or its fixture baseline') do
+    fixture(direct: true) do |caller|
+      ledger = File.join(caller, Maintenance::Compatibility::CONFIG)
+      before = Maintenance.file_sha(ledger)
+      Dir.glob(File.join(caller, '*/module.yaml')).each do |path|
+        File.write(path, File.read(path).gsub(/(dev\.zacsweers\.metro:(?:runtime|compiler):)[^\s]+/) { Regexp.last_match(1) + '99.0.0' })
+      end
+      reject(/Direct Metro baseline differs/) { Maintenance::Compatibility.new(caller).assessment }
+      fixture(source_root: caller, direct: true) do |root|
+        assert(Maintenance::Compatibility.new(root).assessment['adoption_authorized'] == false)
+        assert(Maintenance.file_sha(File.join(root, Maintenance::Compatibility::CONFIG)) == before)
+      end
+      assert(Maintenance.file_sha(ledger) == before)
+    end
   end
 
   test('direct copy keeps native tests, schemes and targets while removing its bridge') do

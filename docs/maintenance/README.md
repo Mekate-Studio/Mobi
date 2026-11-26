@@ -5,6 +5,10 @@ No further manual assessment of new releases is authorized. Discovery or a
 notification does not satisfy this prerequisite. Normal validation of the
 already adopted tuple remains allowed. See the [ordered backlog](backlog.md)
 and [dependency-review rule](dependency-review-playbook.md#automation-prerequisite).
+The [local assessment command](release-assessment.md) records actual outcomes
+and gaps; its implementation does not itself close this gate.
+The [November 26 end-to-end result](evidence/2026-11-26-automated-release-assessment.md)
+records passing native phases, complete cleanup and the remaining coverage gaps.
 
 Main adopted Toolchain 0.14.1 in [PR #134](https://github.com/Mekate-Studio/Mobi/pull/134),
 merge `fcc7fd9effd60d832a26f07a7e2d4dcccfc94ec7`. Kotlin/exporter 2.5.0-RC,

@@ -26,6 +26,25 @@ compact, source-bound, reviewable results, relevant qualification checks and
 explicit incomplete/blocked states. Adoption, age/risk exceptions, merges,
 signing/delivery and workaround retirement remain explicit human decisions.
 
+## Local assessment, approval, then one adoption PR
+
+Complete the whole assessment locally in owned isolated copies before proposing
+adoption. Produce one exact source/patch-bound packet covering official interval
+changes, actual-code and graph applicability, security provenance/freshness,
+workaround implications, qualification, benefits, costs and remaining limits.
+The recommendation is adopt, defer, reject or incomplete. Missing evidence cannot
+silently become an adoption recommendation.
+
+Request human approval only for that concrete packet. After approval, revalidate
+source, patch, policy and evidence identities, apply only the approved patch,
+validate final contents and open one adoption PR. Hosted CI verifies integration;
+merge remains a separate decision. Drift requires revalidation. Assessment must
+not create a series of investigation PRs. Raw evidence stays ignored or in
+artifacts; the adoption PR carries the actual change and compact decision record.
+The assessment automation itself has its own implementation PR.
+Use the implemented [local command and packet verifier](release-assessment.md);
+its incomplete states keep the prerequisite above open.
+
 ## Purpose
 
 Assess whether a dependency/toolchain change improves this repository, map

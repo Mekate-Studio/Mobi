@@ -42,9 +42,14 @@ module WatchTest
       Maintenance::Source.new(source_root).copy_to(root)
       # Watch scenarios own their declared assessment tuple; the caller may be
       # qualifying another wrapper. These fixtures never execute a Toolchain.
-      toolchain = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG))).fetch('toolchain')
+      reviewed = JSON.parse(File.read(File.join(root, Maintenance::Compatibility::CONFIG)))
+      toolchain = reviewed.fetch('toolchain')
       File.write(File.join(root, 'kotlin'), "#!/bin/sh\nkotlin_cli_version=#{toolchain}\nexit 97 # declaration-only fixture\n")
       File.write(File.join(root, 'kotlin.bat'), "@echo off\nset kotlin_cli_version=#{toolchain}\nexit /b 97\n")
+      metro = reviewed.fetch('candidate').fetch('releases').fetch('metro').fetch('version')
+      Dir.glob(File.join(root, '*/module.yaml')).each do |path|
+        File.write(path, File.read(path).gsub(/(dev\.zacsweers\.metro:(?:runtime|compiler):)[^\s]+/) { Regexp.last_match(1) + metro })
+      end
       _, status = Open3.capture2e('/usr/bin/git', 'init', '-q', root); assert(status.success?)
       yield root
     end
@@ -56,9 +61,13 @@ module WatchTest
       expected = JSON.parse(File.read(File.join(caller, Maintenance::Compatibility::CONFIG))).fetch('toolchain')
       other = expected == '0.14.0' ? '0.13.0' : '0.14.0'
       File.write(path, File.read(path).sub(/^kotlin_cli_version=.+$/, 'kotlin_cli_version=' + other))
+      Dir.glob(File.join(caller, '*/module.yaml')).each do |file|
+        File.write(file, File.read(file).gsub(/(dev\.zacsweers\.metro:(?:runtime|compiler):)[^\s]+/) { Regexp.last_match(1) + '99.0.0' })
+      end
       fixture(source_root: caller) do |root|
         version = File.read(File.join(root, 'kotlin'))[/^kotlin_cli_version=(.+)$/, 1]
         assert(version == expected, 'Watch fixture inherited the current caller wrapper')
+        assert(Maintenance::Compatibility.new(root).assessment['adoption_authorized'] == false)
       end
     end
   end
@@ -411,6 +420,12 @@ module WatchTest
     assert(triggers['schedule'] == [{ 'cron' => '23 5 * * 1' }])
     assert(workflow['permissions'].values.all? { |value| value == 'read' })
     assert(workflow['concurrency']['cancel-in-progress'] == false)
+    steps = workflow['jobs'].values.flat_map { |job| job['steps'] }
+    assess = steps.select { |step| step['run'].to_s.include?(' assess-releases ') }
+    assert(assess.size == 1 && steps.none? { |step| step['run'].to_s.include?(' prepare-kotlin') })
+    java = steps.find { |step| step['uses'].to_s.start_with?('actions/setup-java@') }
+    mobile = YAML.safe_load(File.read(File.join(ROOT, '.github/workflows/mobile-ci.yml')))
+    assert(java.dig('with', 'java-version') == mobile.dig('env', 'NATIVE_CI_JAVA_VERSION'))
     shell = File.read(File.join(ROOT, 'scripts/ci/check_skie_kotlin_compatibility.sh'))
     assert(shell.include?('watch-compatibility') && !shell.include?('catalog_path'))
     uploads = workflow['jobs'].values.flat_map { |job| job['steps'] }.select { |step| step['uses'].to_s.start_with?('actions/upload-artifact') }

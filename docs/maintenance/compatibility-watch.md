@@ -1,5 +1,10 @@
 # Dependency compatibility watch
 
+The weekly caller now uses [local release assessment](release-assessment.md).
+This guide documents the retained reviewed-tuple watch and its historical
+qualification limits. New-release manual assessment remains gated by the
+[backlog rule](backlog.md).
+
 Slice 8 connects the existing weekly workflow and its manual entry point to the
 [isolated compatibility evaluator](compatibility-runner.md). It discovers public
 release leads and compares observations. It never selects a new candidate,

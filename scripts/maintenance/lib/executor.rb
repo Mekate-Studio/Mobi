@@ -41,6 +41,7 @@ module Maintenance
       valid = @plan['schema'] == 1 && @plan['id'].is_a?(String) && @plan['id'].match?(/\A[a-z][a-z0-9-]{1,63}\z/) &&
               @plan['scope'].is_a?(String) && @plan['missing_capabilities'].is_a?(Array) && @plan['missing_capabilities'].all? { |capability| capability.is_a?(String) } &&
               @plan['checks'].is_a?(Array) && !@plan['checks'].empty? && @plan['edits'].is_a?(Array) && @plan['resource_types'].is_a?(Array)
+      valid &&= [nil, 'retained', 'evidence_only'].include?(@plan['phase_workspace_retention'])
       raise Failure, 'Unsupported adapter protocol' unless valid
       @plan['checks'].each do |check|
         valid = check['id'].is_a?(String) && check['id'].match?(/\A[a-z][a-z0-9-]{1,63}\z/) && check['required'] == true &&
@@ -54,12 +55,7 @@ module Maintenance
     end
 
     def git_identity
-      env = { 'PATH' => '/usr/bin:/bin', 'LC_ALL' => 'C', 'GIT_CONFIG_GLOBAL' => File::NULL, 'GIT_CONFIG_NOSYSTEM' => '1', 'GIT_OPTIONAL_LOCKS' => '0' }
-      head, status = Open3.capture2(env, '/usr/bin/git', '-C', @source.root, 'rev-parse', '--verify', '--quiet', 'HEAD', unsetenv_others: true)
-      raise Failure, 'Cannot inspect source HEAD' unless status.success? || status.exitstatus == 1
-      index, status = Open3.capture2(env, '/usr/bin/git', '-C', @source.root, 'ls-files', '--stage', '-v', '-z', unsetenv_others: true)
-      raise Failure, 'Cannot inspect source index' unless status.success?
-      { 'head' => head.strip.empty? ? nil : head.strip, 'index_sha256' => Digest::SHA256.hexdigest(index) }
+      @source.git_identity
     end
 
     def verify_inputs!
@@ -114,7 +110,9 @@ module Maintenance
                                  'started_at' => @journal['created_at'], 'ended_at' => Time.now.utc.iso8601,
                                  'binding' => binding, 'steps' => @steps, 'attempts' => @journal['steps'].map { |step| step.select { |key, _| %w[id state process_exit output_sha256].include?(key) } }, 'scope' => @plan.fetch('scope'),
                                  'missing_capabilities' => @plan.fetch('missing_capabilities'), 'adoption_authorized' => false,
-                                 'resources' => 'retained_for_review', 'cleanup' => 'not_requested' })
+                                 'resources' => 'retained_for_review',
+                                 'released_phase_workspaces' => @journal['resources'].select { |resource| resource['disposable'] && resource['state'] == 'removed' }.map { |resource| resource['path'] },
+                                 'cleanup' => 'not_requested' })
       end
     end
 
@@ -155,6 +153,18 @@ module Maintenance
         end
       end
       @store.event(@journal, 'phase_passed', 'phase' => phase)
+      if @plan['phase_workspace_retention'] == 'evidence_only'
+        steps = @journal['steps'].select { |step| step['id'].start_with?(phase + '-') }
+        unless steps.all? { |step| step['state'] == 'stopped' && ResourceHandlers.quiescent?(step['managed_resources']) }
+          raise ExecutionStop.new('executor_failure', 'phase_resources_not_quiescent')
+        end
+        resources = @journal['resources'].select { |resource| resource['path'] == 'work/' + phase }
+        raise ExecutionStop.new('executor_failure', 'phase_workspace_identity_missing') unless resources.size == 1
+        unless @store.remove_resources!(@journal, resources) == 'cleaned'
+          raise ExecutionStop.new('executor_failure', 'phase_workspace_cleanup_incomplete')
+        end
+        @store.event(@journal, 'phase_workspace_released', 'phase' => phase)
+      end
     rescue Failure => error
       raise error if error.is_a?(ExecutionStop)
       raise ExecutionStop.new('refused', 'phase_source_drift') if error.message.start_with?('Copied source changed')

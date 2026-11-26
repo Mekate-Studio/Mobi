@@ -55,11 +55,14 @@ module ColdCacheTest
       bin = File.join(project, 'fake-bin'); FileUtils.mkdir_p(bin)
       File.write(File.join(bin, 'xcodebuild'), "#!/bin/bash\nprintf '%s\\n' \"$@\" > \"$CAPTURE_PATH\"\n")
       FileUtils.chmod(0o755, File.join(bin, 'xcodebuild'))
-      %w[0 1].each do |cold|
+      %w[normal shared cold].each do |mode|
+        cold = mode == 'cold' ? '1' : '0'
         capture = File.join(project, 'arguments')
         settings = env.merge('PATH' => bin + ':' + env.fetch('PATH'), 'CI_PROJECT_DIR' => project,
                              'MOBI_COLD_VALIDATION' => cold, 'CAPTURE_PATH' => capture,
                              'IOS_SIMULATOR_DESTINATION' => 'platform=iOS Simulator,id=fixture', 'SKIP_MACRO_VALIDATION' => 'NO')
+        packages = File.join(project, 'phase cache/packages')
+        settings['MOBI_XCODE_PACKAGES_DIR'] = packages unless mode == 'normal'
         args = ['/bin/bash', File.join(project, 'scripts/ci', wrapper)]
         args << 'Debug' if wrapper == 'run_xcodebuild_with_logs.sh'
         output, status = Open3.capture2e(settings, *args, unsetenv_others: true)
@@ -69,9 +72,15 @@ module ColdCacheTest
           assert(actual.include?('-disablePackageRepositoryCache'), "Shared package cache still enabled: #{wrapper}")
           index = actual.index('-packageCachePath')
           assert(index && actual[index + 1] == File.join(project, 'build/cold-cache/swiftpm'), 'Package cache path was split or escaped')
+          assert(!actual.include?('-clonedSourcePackagesDirPath'), 'Cold validation reused an inherited package checkout')
         else
           assert(!actual.include?('-packageCachePath') && !actual.include?('-disablePackageRepositoryCache'), 'Normal Xcode package behavior changed')
+          index = actual.index('-clonedSourcePackagesDirPath')
+          assert(mode == 'shared' ? index && actual[index + 1] == packages : index.nil?, 'Assessment package checkout path was split or leaked into normal builds')
         end
+        index = actual.index('-derivedDataPath')
+        suffix = wrapper == 'run_xcode_tests_with_logs.sh' ? 'tests' : 'debug'
+        assert(index && actual[index + 1] == File.join(project, 'build/xcode-derived-data-cli-' + suffix), 'Assessment package sharing changed build isolation')
       end
     end
   end

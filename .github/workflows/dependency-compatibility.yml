@@ -28,10 +28,9 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "21"
+          # Same reviewed native build as Mobile CI; assessment does not select a JDK update.
+          java-version: '25.0.5+100000002.0.LTS'
       - uses: android-actions/setup-android@v4
-      - name: Prepare reviewed Kotlin distributions
-        run: ./scripts/dev/dependency_updates.sh prepare-kotlin
       - name: Locate previous same-branch observation
         id: history
         env:
@@ -47,12 +46,12 @@ jobs:
           path: .maintenance/watch-previous
           github-token: ${{ github.token }}
           run-id: ${{ steps.history.outputs.run_id }}
-      - name: Observe reviewed compatibility and meaningful changes
+      - name: Assess official releases against the current app
         env:
           MOBI_WATCH_GITHUB_TOKEN: ${{ github.token }}
           MOBI_WATCH_HISTORY: ${{ steps.history.outputs.state == 'found' && steps.restore.outcome != 'success' && 'incomplete' || steps.history.outputs.state }}
           MOBI_WATCH_SCOPE: ${{ github.repository }}:${{ github.ref_name }}
-        run: ./scripts/ci/check_skie_kotlin_compatibility.sh --previous .maintenance/watch-previous/snapshot.json --output .maintenance/watch-reports/current
+        run: ./scripts/dev/dependency_updates.sh assess-releases --previous .maintenance/watch-previous/snapshot.json --output .maintenance/watch-reports/current
       - name: Retain observation for the next run
         if: always() && hashFiles('.maintenance/watch-reports/current/snapshot.json') != ''
         uses: actions/upload-artifact@v7
