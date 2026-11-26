@@ -68,6 +68,67 @@ module ExecutorTest
     end
   end
 
+  test('evidence-only phases release owned builds before candidate while retaining check evidence') do
+    fixture do |_root, source, adapter, store, _executor|
+      adapter.plan['phase_workspace_retention'] = 'evidence_only'
+      executor = Maintenance::Executor.new(source: source, adapter: adapter, store: store, policy: policy)
+      original = executor.method(:run_phase)
+      executor.define_singleton_method(:run_phase) do |phase|
+        if phase == 'candidate'
+          raise 'baseline workspace retained' if File.exist?(File.join(journal['root'], 'work/baseline'))
+        end
+        original.call(phase)
+      end
+      result = executor.run
+      assert(result['state'] == 'checks_passed', result.inspect)
+      assert(result['released_phase_workspaces'] == %w[work/baseline work/candidate])
+      %w[baseline candidate].each do |phase|
+        assert(!File.exist?(File.join(store.path(result['run_id']), 'work', phase)))
+        assert(File.file?(File.join(store.path(result['run_id']), 'steps', phase + '-behavior', 'check.json')))
+      end
+      recovery = Maintenance::Recovery.new(store)
+      assert(recovery.recover(result['run_id'])['state'] == 'quiescent')
+      assert(recovery.cleanup(result['run_id'], apply: true, discard: true)['state'] == 'cleaned')
+      source.verify!
+    end
+  end
+
+  test('evidence-only failure retains failed phase and original attribution') do
+    fixture(scenario: 'candidate-failure') do |_root, source, adapter, store, _executor|
+      adapter.plan['phase_workspace_retention'] = 'evidence_only'
+      result = Maintenance::Executor.new(source: source, adapter: adapter, store: store, policy: policy).run
+      assert(result['state'] == 'incompatible' && result['reason'] == 'candidate_regression')
+      assert(!File.exist?(File.join(store.path(result['run_id']), 'work/baseline')))
+      assert(File.directory?(File.join(store.path(result['run_id']), 'work/candidate')))
+      assert(result['released_phase_workspaces'] == ['work/baseline'])
+    end
+  end
+
+  test('phase cleanup refuses changed ownership before allocation of a candidate') do
+    fixture do |_root, source, adapter, store, _executor|
+      adapter.plan['phase_workspace_retention'] = 'evidence_only'
+      executor = Maintenance::Executor.new(source: source, adapter: adapter, store: store, policy: policy)
+      original = executor.method(:run_check)
+      executor.define_singleton_method(:run_check) do |phase, check, workspace|
+        result = original.call(phase, check, workspace)
+        File.unlink(File.join(workspace, '.resource-owner.json'))
+        result
+      end
+      result = executor.run
+      assert(result['state'] == 'executor_failure', result.inspect)
+      assert(File.directory?(File.join(store.path(result['run_id']), 'work/baseline')))
+      assert(!File.exist?(File.join(store.path(result['run_id']), 'work/candidate')))
+      source.verify!
+    end
+  end
+
+  test('unknown phase retention refuses before resource allocation') do
+    fixture do |_root, source, adapter, store, _executor|
+      adapter.plan['phase_workspace_retention'] = 'silently-delete-everything'
+      reject(/adapter protocol/) { Maintenance::Executor.new(source: source, adapter: adapter, store: store, policy: policy) }
+    end
+  end
+
   test('baseline failure stops candidate and retains original failure evidence') do
     fixture(scenario: 'baseline-failure') do |_root, _source, _adapter, store, executor|
       result = executor.run

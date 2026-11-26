@@ -73,10 +73,14 @@ module Maintenance
         puts "#{name}: exit #{code}"; $stdout.flush
         verify_source!
         text = File.read(log, encoding: 'UTF-8', invalid: :replace, undef: :replace)
-        classified = KotlinEvidence.classify(text, code)
+        classified = classify_command(name, text, code)
         throw :outcome, classified unless classified == 'passed'
         text
       end
+    end
+
+    def classify_command(_name, text, code)
+      KotlinEvidence.classify(text, code)
     end
 
     def cli(name, *args)

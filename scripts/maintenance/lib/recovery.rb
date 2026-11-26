@@ -9,17 +9,7 @@ module Maintenance
     end
 
     def resource_path(journal, resource)
-      raise Failure, 'Unsupported journal resource' unless resource['type'] == 'directory'
-      path = @store.safe_path(journal, resource.fetch('path'))
-      return path unless File.exist?(path)
-      stat = File.stat(path)
-      raise Failure, 'Resource identity mismatch' unless stat.directory? && stat.ino == resource['inode'] && stat.dev == resource['device']
-      marker = File.join(path, '.resource-owner.json')
-      unless !File.exist?(marker) && %w[deleting cleanup_failed].include?(resource['state'])
-        expected = { 'run_id' => journal['id'], 'nonce' => resource['nonce'] }
-        raise Failure, 'Resource ownership marker mismatch' unless File.file?(marker) && !File.symlink?(marker) && JSON.parse(File.read(marker)) == expected
-      end
-      path
+      @store.resource_path(journal, resource)
     end
 
     def process_state(journal, step)
@@ -90,22 +80,7 @@ module Maintenance
         eligible = discard || now >= due_at
         state = 'dry_run'
         if apply && eligible
-          state = 'cleaned'
-          resources.zip(paths).each do |resource, path|
-            next if resource['state'] == 'removed' && !File.exist?(path)
-            begin
-              resource['state'] = 'deleting'; @store.save(journal)
-              @store.event(journal, 'cleanup_planned', 'path' => resource['path'])
-              FileUtils.remove_entry_secure(path) if File.exist?(path)
-              resource['state'] = 'removed'; @store.save(journal)
-              @store.event(journal, 'resource_removed', 'path' => resource['path'])
-            rescue StandardError => error
-              resource['state'] = 'cleanup_failed'; @store.save(journal)
-              @store.event(journal, 'cleanup_failed', 'path' => resource['path'], 'class' => error.class.name)
-              state = 'cleanup_failed'
-              break
-            end
-          end
+          state = @store.remove_resources!(journal, resources)
         elsif apply
           state = 'retained'
         end

@@ -20,9 +20,11 @@ module Maintenance
     Digest::SHA256.file(path).hexdigest
   end
 
-  def self.run(argv, cwd:, env:, log:, timeout: 300)
+  def self.run(argv, cwd:, env:, log:, timeout: 300, stderr_log: nil, input_path: nil)
     File.open(log, 'w') do |output|
-      pid = Process.spawn(env, *argv, chdir: cwd, unsetenv_others: true, pgroup: true, out: output, err: output)
+      options = { chdir: cwd, unsetenv_others: true, pgroup: true, out: output, err: stderr_log ? [stderr_log, 'w'] : output }
+      options[:in] = [input_path, 'r'] if input_path
+      pid = Process.spawn(env, *argv, **options)
       Timeout.timeout(timeout) { Process.wait2(pid).last }
     ensure
       if pid
@@ -82,6 +84,15 @@ module Maintenance
     def verify!
       refresh
       raise Failure, 'Source changed during discovery; rerun' unless manifest == @files
+    end
+
+    def git_identity
+      env = { 'PATH' => '/usr/bin:/bin', 'LC_ALL' => 'C', 'GIT_CONFIG_GLOBAL' => File::NULL, 'GIT_CONFIG_NOSYSTEM' => '1', 'GIT_OPTIONAL_LOCKS' => '0' }
+      head, status = Open3.capture2(env, '/usr/bin/git', '-C', @root, 'rev-parse', '--verify', '--quiet', 'HEAD', unsetenv_others: true)
+      raise Failure, 'Cannot inspect source HEAD' unless status.success? || status.exitstatus == 1
+      index, status = Open3.capture2(env, '/usr/bin/git', '-C', @root, 'ls-files', '--stage', '-v', '-z', unsetenv_others: true)
+      raise Failure, 'Cannot inspect source index' unless status.success?
+      { 'head' => head.strip.empty? ? nil : head.strip, 'index_sha256' => Digest::SHA256.hexdigest(index) }
     end
 
     def copy_to(destination)

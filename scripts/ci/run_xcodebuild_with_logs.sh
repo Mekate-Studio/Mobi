@@ -35,6 +35,9 @@ echo "Using SKIP_MACRO_VALIDATION=${skip_macro_validation}"
 cmd=(xcodebuild)
 if [[ "${MOBI_COLD_VALIDATION:-0}" == 1 ]]; then
   cmd+=(-disablePackageRepositoryCache -packageCachePath "${project_root}/build/cold-cache/swiftpm")
+elif [[ -n "${MOBI_XCODE_PACKAGES_DIR:-}" ]]; then
+  # Assessment test/build jobs share downloads, while retaining separate builds.
+  cmd+=(-clonedSourcePackagesDirPath "${MOBI_XCODE_PACKAGES_DIR}")
 fi
 
 # Xcode otherwise replaces the selected JDK with its own JAVA_HOME build setting.

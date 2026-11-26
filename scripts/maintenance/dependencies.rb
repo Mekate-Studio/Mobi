@@ -72,6 +72,15 @@ if $PROGRAM_NAME == __FILE__
       result = Maintenance::InteropWorkarounds.observe(root, releases: {}, source_files: source.files)
       source.verify!
       puts JSON.pretty_generate(result)
+    when 'verify-release-assessment'
+      raise Maintenance::Failure, 'Usage: verify-release-assessment REPORT_JSON' unless ARGV.size == 1
+      require_relative 'lib/assessment_packet'
+      result = Maintenance::AssessmentPacket.verify(root, ARGV.first)
+      puts JSON.pretty_generate(result)
+      exit(result['state'] == 'packet_verified' ? 0 : 2)
+    when 'assess-releases'
+      require_relative 'assessment_cli'
+      exit Maintenance::AssessmentCLI.call(root, ARGV)
     when 'watch-compatibility'
       require_relative 'watch_cli'
       exit Maintenance::WatchCLI.call(root, ARGV)
@@ -106,7 +115,7 @@ if $PROGRAM_NAME == __FILE__
       puts JSON.pretty_generate(result)
       exit(result['state'] == 'checks_passed' ? 0 : 2)
     else
-      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|assess-support|assess-compatibility|assess-interop-workarounds|watch-compatibility [--previous FILE] [--output DIR]|compatibility-watch-history|verify|evaluate <inventory.json> <evidence.json>|prepare-kotlin|rehearse-kotlin <version> <inputs|mobile> [current|apple-silicon]|rehearse-support <inputs|mobile>|rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade|direct-roundtrip|direct-resolution|direct-build-inputs|direct-mobile|direct-ios-release|direct-ios-archive>|rehearse-upstream [--experimental] [--compile-sdk 37] [--profile build-inputs|mobile|android-packaging|ios-release|ios-archive]|compatibility-report RUN_ID|rehearse-plugin-attribution BUILD_RUN_ID|plugin-report RUN_ID|review-advisories RUN_ID|review-toolchain-risk|attribute-bundled RUN_ID|bundled-report RUN_ID|review-bundled-advisories RUN_ID|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]] (execution commands accept trailing --store NAME)'
+      raise Maintenance::Failure, 'Usage: dependency_updates.sh [discover|assess-support|assess-compatibility|assess-interop-workarounds|assess-releases|verify-release-assessment REPORT_JSON|watch-compatibility [--previous FILE] [--output DIR]|compatibility-watch-history|verify|evaluate <inventory.json> <evidence.json>|prepare-kotlin|rehearse-kotlin <version> <inputs|mobile> [current|apple-silicon]|rehearse-support <inputs|mobile>|rehearse-compatibility <bridge-compile|bridge-mobile|bridge-review|direct-facade|direct-roundtrip|direct-resolution|direct-build-inputs|direct-mobile|direct-ios-release|direct-ios-archive>|rehearse-upstream [--experimental] [--compile-sdk 37] [--profile build-inputs|mobile|android-packaging|ios-release|ios-archive]|compatibility-report RUN_ID|rehearse-plugin-attribution BUILD_RUN_ID|plugin-report RUN_ID|review-advisories RUN_ID|review-toolchain-risk|attribute-bundled RUN_ID|bundled-report RUN_ID|review-bundled-advisories RUN_ID|rehearse-fixture <kotlin|elixir> [case]|recover RUN_ID [--stop|--hold|--release-hold]|cleanup RUN_ID [--apply] [--discard]] (execution commands accept trailing --store NAME)'
     end
   rescue StandardError, Interrupt => error
     warn JSON.generate('schema' => 1, 'state' => 'failed', 'message' => error.message)

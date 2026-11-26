@@ -7,13 +7,23 @@ operational. Discovery/notification alone does not satisfy this requirement.
 Normal cleanup validation against the adopted tuple is allowed. Do not manually
 investigate open dependency-update candidates while this prerequisite is unmet.
 
+## Assessment-to-adoption workflow
+
+Complete each dependency assessment locally, end to end, before requesting
+approval for an exact adoption packet. After approval and identity/freshness
+revalidation, apply the reviewed patch and open one adoption PR. Keep merge
+separate. Do not publish intermediate investigation PRs. The automation's own
+implementation PR is separate from dependency adoption. Preserve raw evidence
+locally/with CI artifacts and publish only compact decision evidence.
+
 ## Ordered increments
 
-1. Remove the unused Gradle preseed helper pair and its obsolete Renovate and
+1. **Complete in [PR #136](https://github.com/Mekate-Studio/Mobi/pull/136):**
+   remove the unused Gradle preseed helper pair and its obsolete Renovate and
    inventory tracking. Preserve Toolchain delegated Android Gradle/AGP bootstrap
    and the retired state of the hand-maintained iOS bridge. Correct the live
    index while retaining dated historical evidence and qualification limits.
-2. Implement bounded automated assessment, reusing existing repo-owned
+2. **In progress:** implement bounded automated assessment, reusing existing repo-owned
    maintenance/release-watch workflows, scripts, policy and relevant configured
    app automations. Audit them first; avoid duplicate schedules or reminders.
    Keep CI thin, operational behavior in scripts, and no mandatory private
@@ -38,6 +48,11 @@ investigate open dependency-update candidates while this prerequisite is unmet.
    assessment result before declaring this prerequisite complete. Surface
    meaningful decisions with code and execution cost visible; prepare concrete
    evidence before requesting critical approvals.
+
+   The [November 26 automated result](evidence/2026-11-26-automated-release-assessment.md)
+   passes both native phases and cleanup. Source-format, selected-input
+   provenance and provider/catalog gaps keep this prerequisite open. Continue
+   those automation slices; do not resume manual release assessment.
 3. Revisit interop only through that automation: nine active entries, two
    qualified removals and six historical experiments. IOS-10 custom exporter,
    IOS-08 Swift 5 exception, IOS-02 caller-isolation profile and IOS-17 coroutine
