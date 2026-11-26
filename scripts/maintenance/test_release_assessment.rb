@@ -364,6 +364,95 @@ module ReleaseAssessmentTest
     assert(delta['state'] == 'incomplete' && delta['resolved_ids'].empty? && delta['introduced_ids'].empty?)
   end
 
+  test('both advisory phases and shared records precede checksum budget exhaustion') do
+    Dir.mktmpdir do |root|
+      calls = []
+      transport = lambda do |url, payload = nil|
+        calls << [url, payload]
+        if url.end_with?('querybatch')
+          JSON.generate('results' => payload.fetch('queries').map { { 'vulns' => [{ 'id' => 'GHSA-aaaa-bbbb-cccc' }] } })
+        elsif url.include?('/vulns/')
+          JSON.generate('id' => 'GHSA-aaaa-bbbb-cccc', 'modified' => NOW.iso8601, 'affected' => [{}], 'database_specific' => { 'severity' => 'HIGH' })
+        else
+          'c' * 64
+        end
+      end
+      http = Maintenance::AssessmentHTTP.new(root, max_requests: 4, transport: transport)
+      inputs = %w[baseline candidate].each_with_index.to_h do |phase, index|
+        [phase, { 'queries' => [{ 'commit' => (index.zero? ? 'a' : 'b') * 40 }], 'origins' => {},
+          'archive_claims' => [{ 'component' => { 'group' => 'example', 'name' => phase, 'version' => '1.0.0' },
+            'identity' => { 'sha256' => 'c' * 64, 'bytes' => 100 } }] }]
+      end
+      receipts = Maintenance::AssessmentSecurity.collect_pair(http, inputs)
+      assert(http.requests == 4 && calls.map { |url, _| url.split('/').last } == %w[querybatch querybatch GHSA-aaaa-bbbb-cccc baseline-1.0.0.jar.sha256])
+      receipts.each do |phase, receipt|
+        assert(receipt['advisory_state'] == 'complete' && receipt['findings'].size == 1)
+        assert(receipt['findings'].first['queries'] == inputs.fetch(phase).fetch('queries'))
+        assert(receipt['queries_sha256'] == Maintenance.digest(inputs.fetch(phase).fetch('queries')))
+      end
+      assert(receipts['baseline']['records'].first == receipts['candidate']['records'].first)
+      assert(receipts['candidate']['state'] == 'incomplete' && receipts['candidate']['reasons'].include?('provider_request_budget'))
+      assert(Maintenance::AssessmentSecurity.finding_delta(receipts)['state'] == 'incomplete')
+    end
+  end
+
+  test('pair query failure stays attributed to its phase without hiding candidate findings') do
+    Dir.mktmpdir do |root|
+      transport = lambda do |url, payload = nil|
+        if url.end_with?('querybatch')
+          raise Maintenance::Failure, 'provider_http_503' if payload.fetch('queries').first['commit'] == 'a' * 40
+          JSON.generate('results' => [{ 'vulns' => [{ 'id' => 'GHSA-aaaa-bbbb-cccc' }] }])
+        else
+          JSON.generate('id' => 'GHSA-aaaa-bbbb-cccc', 'modified' => NOW.iso8601, 'affected' => [{}], 'database_specific' => { 'severity' => 'CRITICAL' })
+        end
+      end
+      http = Maintenance::AssessmentHTTP.new(root, transport: transport)
+      inputs = { 'baseline' => { 'queries' => [{ 'commit' => 'a' * 40 }], 'origins' => {} },
+        'candidate' => { 'queries' => [{ 'commit' => 'b' * 40 }], 'origins' => {} } }
+      receipts = Maintenance::AssessmentSecurity.collect_pair(http, inputs)
+      assert(receipts['baseline']['advisory_state'] == 'incomplete' && receipts['baseline']['reasons'].include?('provider_http_503'))
+      assert(receipts['candidate']['advisory_state'] == 'complete' && receipts['candidate']['findings'].first['severity'] == 'critical')
+      assert(receipts['candidate']['reasons'].empty? && receipts['baseline']['findings'].empty?)
+      assert(Maintenance::AssessmentSecurity.finding_delta(receipts)['introduced_ids'].empty?)
+    end
+  end
+
+  test('a failed shared record is fetched once and remains missing in both receipts') do
+    Dir.mktmpdir do |root|
+      calls = []
+      http = Maintenance::AssessmentHTTP.new(root, transport: lambda do |url, payload = nil|
+        calls << url
+        raise Maintenance::Failure, 'provider_http_503' if url.include?('/vulns/')
+        JSON.generate('results' => payload.fetch('queries').map { { 'vulns' => [{ 'id' => 'GHSA-aaaa-bbbb-cccc' }] } })
+      end)
+      inputs = { 'baseline' => { 'queries' => [{ 'commit' => 'a' * 40 }], 'origins' => {} },
+        'candidate' => { 'queries' => [{ 'commit' => 'b' * 40 }], 'origins' => {} } }
+      receipts = Maintenance::AssessmentSecurity.collect_pair(http, inputs)
+      assert(calls.count { |url| url.include?('/vulns/') } == 1)
+      receipts.each_value do |receipt|
+        assert(receipt['advisory_state'] == 'incomplete' && receipt['findings'].empty?)
+        assert(receipt['reasons'].include?('provider_http_503') && receipt['reasons'].include?('finding_record_coverage_incomplete'))
+      end
+      reject('phase') { Maintenance::AssessmentSecurity.collect_pair(http, inputs.reject { |phase, _| phase == 'candidate' }, now: NOW) }
+    end
+  end
+
+  test('an advisory record budget gap cannot become a complete pair or a cleared finding') do
+    Dir.mktmpdir do |root|
+      http = Maintenance::AssessmentHTTP.new(root, max_requests: 2, transport: lambda do |url, payload = nil|
+        raise 'Unexpected record transport after the budget cap' unless url.end_with?('querybatch')
+        JSON.generate('results' => payload.fetch('queries').map { { 'vulns' => [{ 'id' => 'GHSA-aaaa-bbbb-cccc' }] } })
+      end)
+      receipts = Maintenance::AssessmentSecurity.collect_pair(http, {
+        'baseline' => { 'queries' => [{ 'commit' => 'a' * 40 }], 'origins' => {} },
+        'candidate' => { 'queries' => [{ 'commit' => 'b' * 40 }], 'origins' => {} } })
+      assert(http.requests == 2)
+      receipts.each_value { |r| assert(r['advisory_state'] == 'incomplete' && r['reasons'].include?('provider_request_budget')) }
+      delta = Maintenance::AssessmentSecurity.finding_delta(receipts)
+      assert(delta['state'] == 'incomplete' && delta['resolved_ids'].empty? && delta['introduced_ids'].empty?)
+    end
+  end
+
   test('security collector retains findings and cannot accept omitted records or pagination') do
     http = Object.new
     http.define_singleton_method(:packet) do |url, request|

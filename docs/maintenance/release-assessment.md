@@ -77,7 +77,12 @@ acceptance are separate capabilities.
 
 Security compares fresh OSV records for named module graphs, locked Swift
 commits, observed delegated Gradle configurations and embedded Maven claims
-bound to downloaded JAR hashes. The existing owned Gradle observer and compiler
+bound to downloaded JAR hashes. Both phases' advisory query batches run before
+shared finding records are fetched once; archive checksum leads run afterward.
+Each receipt reports `advisory_state` independently from its broader provider
+state, so checksum-budget exhaustion cannot erase completed advisory coverage.
+Partial byte/provenance evidence still blocks adoption and keeps the existing
+finding-comparison guard conservative. The existing owned Gradle observer and compiler
 telemetry reader capture selected plugin paths and artifact identities. Their
 unsupported AGP/transform APIs and unrehearsed target scopes remain gaps. Published
 checksums provide independent reference leads where available. Embedded claims

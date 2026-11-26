@@ -9,6 +9,9 @@ The [local assessment command](release-assessment.md) records actual outcomes
 and gaps; its implementation does not itself close this gate.
 The [November 26 end-to-end result](evidence/2026-11-26-automated-release-assessment.md)
 records passing native phases, complete cleanup and the remaining coverage gaps.
+The [paired advisory-stage check](evidence/2026-11-26-paired-advisory-collection.md)
+records complete advisory requests for both captured input sets under a smaller
+stage budget, with the broader provenance gaps still blocking adoption.
 
 Main adopted Toolchain 0.14.1 in [PR #134](https://github.com/Mekate-Studio/Mobi/pull/134),
 merge `fcc7fd9effd60d832a26f07a7e2d4dcccfc94ec7`. Kotlin/exporter 2.5.0-RC,
